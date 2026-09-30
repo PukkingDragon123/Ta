@@ -19,20 +19,30 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin'
-      - uses: gradle/actions/setup-gradle@v4
+      - name: Restore decompiled Minecraft cache
+        id: mccache
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/mc
+          key: mc-decomp-26.3.0.23-beta-v2
       - name: Create Minecraft artifacts
-        run: ./gradlew createMinecraftArtifacts --no-configuration-cache -q
+        if: steps.mccache.outputs.cache-hit != 'true'
+        run: |
+          ./gradlew createMinecraftArtifacts --no-configuration-cache -q --no-daemon
+          mkdir -p /home/runner/mc/src
+          cp build/moddev/artifacts/minecraft-patched-*.jar /home/runner/mc/mc.jar
+          curl -sSL -o /tmp/vf.jar https://repo1.maven.org/maven2/org/vineflower/vineflower/1.12.0/vineflower-1.12.0.jar
+          java -Xmx6G -jar /tmp/vf.jar -din=1 -rbr=1 -dgs=1 -asc=1 -rsy=1 -iec=1 -jvn=1 -log=WARN -thr=4 /home/runner/mc/mc.jar /home/runner/mc/src > /tmp/vf.log 2>&1 || tail -50 /tmp/vf.log
+          cd /home/runner/mc/src && if ls *.jar >/dev/null 2>&1; then unzip -q -o *.jar && rm -f *.jar; fi
+          find /home/runner/mc/src -name '*.java' | wc -l
       - name: Probe
         env:
           COMMANDS: ${{ github.event.inputs.commands }}
         run: |
           set +e
-          ls -la build/moddev/artifacts
-          JAR=$(ls build/moddev/artifacts/*.jar | grep -v -- '-sources' | grep -v -- '-merged' | grep -v -- 'client-extra' | head -1)
-          SRC=$(ls build/moddev/artifacts/*-sources.jar | head -1)
-          echo "JAR=$JAR SRC=$SRC"
-          mkdir -p /tmp/src && (cd /tmp/src && unzip -q -o "$GITHUB_WORKSPACE/$SRC")
-          if [ -n "$COMMANDS" ]; then echo "$COMMANDS" | tr ';' '\n' > /tmp/cmds.txt; else cp .github/probe.txt /tmp/cmds.txt; fi
+          JAR=/home/runner/mc/mc.jar
+          cd /home/runner/mc/src
+          if [ -n "$COMMANDS" ]; then echo "$COMMANDS" | tr ';' '\n' > /tmp/cmds.txt; else cp $GITHUB_WORKSPACE/.github/probe.txt /tmp/cmds.txt; fi
           while IFS= read -r line; do
             line="$(echo "$line" | sed 's/^ *//;s/ *$//')"
             [ -z "$line" ] && continue
@@ -40,9 +50,11 @@ jobs:
             echo "=================== $line"
             case "$cmd" in
               javap) javap -p -cp "$JAR" "$arg" ;;
-              list) p="${arg//.//}"; (cd /tmp/src && find "$p" -name '*.java' | sort | awk -F/ '{f=$NF; sub(/\.java$/,"",f); d=$0; sub("/[^/]*$","",d); if(d!=last){printf "\n%s: ",d; last=d} printf "%s ",f} END{print ""}') ;;
-              src) f="/tmp/src/${arg//.//}.java"; cat -n "$f" ;;
-              grep) (cd /tmp/src && grep -rnE --include=*.java "$arg" . | head -300) ;;
+              list) p="${arg//.//}"; find "$p" -name '*.java' | sort | awk -F/ '{f=$NF; sub(/\.java$/,"",f); d=$0; sub("/[^/]*$","",d); if(d!=last){printf "\n%s: ",d; last=d} printf "%s ",f} END{print ""}' ;;
+              src) f="${arg//.//}.java"; grep -v '^import ' "$f" ;;
+              sig) f="${arg//.//}.java"; grep -nE '^\s*(public|protected|private|static|abstract|final|default|record|class|interface|enum|@)' "$f" | grep -v '^\s*[0-9]*:\s*import' ;;
+              grep) grep -rnE --include=*.java "$arg" . | head -250 ;;
+              find) find . -name "$arg" | head -100 ;;
               *) echo "unknown command $cmd" ;;
             esac
           done < /tmp/cmds.txt

@@ -2,9 +2,5 @@ list net.minecraft.client.model
 list net.minecraft.client.renderer.entity
 list net.minecraft.client.particle
 list net.minecraft.client.renderer.blockentity
-list net.minecraft.client.renderer.state
-list net.minecraft.world.entity
 list net.minecraft.world.attribute
-list net.minecraft.client.renderer.fog
-list net.minecraft.client.renderer.sky
-list net.neoforged.neoforge.client
+list net.minecraft.client.renderer.state
