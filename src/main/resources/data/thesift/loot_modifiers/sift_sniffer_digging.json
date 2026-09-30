@@ -1,0 +1,19 @@
+{
+  "type": "neoforge:add_table",
+  "condition": {
+    "type": "minecraft:all_of",
+    "terms": [
+      {
+        "type": "neoforge:loot_table_id",
+        "loot_table_id": "minecraft:gameplay/sniffer_digging"
+      },
+      {
+        "type": "minecraft:location_check",
+        "predicate": {
+          "dimension": "thesift:the_sift"
+        }
+      }
+    ]
+  },
+  "table": "thesift:gameplay/sift_sniffer_digging"
+}

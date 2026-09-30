@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "thesift:warden_core"
+  },
+  "max_uses": 1,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "thesift:star_shard",
+    "count": 24
+  },
+  "xp": 40,
+  "additional_wants": {
+    "id": "thesift:chrome_pearl",
+    "count": 16
+  }
+}

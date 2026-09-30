@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "thesift:chrome_pearl"
+  },
+  "max_uses": 16,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 3
+  },
+  "xp": 5
+}

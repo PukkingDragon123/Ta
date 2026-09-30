@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:choir_pod",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:echo_seed",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pitcher_bulb",
+          "weight": 2
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "thesift:gameplay/sift_sniffer_digging"
+}

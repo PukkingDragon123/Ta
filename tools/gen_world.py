@@ -260,7 +260,8 @@ def features():
                                                             'provider': state('chrome_reeds', age=0)}], 'prioritize_tip': False})
 
     def patch(name, feat, tries, per_chunk, extra=None, survive_block=None):
-        pl = [count(per_chunk) if isinstance(per_chunk, (int, dict)) else per_chunk] + ON_SURFACE[:2] + [BIOME] + surface_patch(tries)
+        first = per_chunk if isinstance(per_chunk, dict) and per_chunk.get('type') == 'minecraft:rarity_filter' else count(per_chunk)
+        pl = [first] + ON_SURFACE[:2] + [BIOME] + surface_patch(tries)
         if survive_block:
             pl.append(survive(survive_block))
         if extra:
@@ -343,7 +344,7 @@ def features():
             {'type': 'minecraft:environment_scan', 'allowed_search_condition': {'type': 'minecraft:matching_block_tag', 'tag': 'minecraft:air'},
              'direction_of_search': 'down' if surf == 'floor' else 'up', 'max_steps': 12,
              'target_condition': {'type': 'minecraft:has_sturdy_face', 'direction': 'up' if surf == 'floor' else 'down'}},
-            {'type': 'minecraft:random_offset', 'xz_spread': 0, 'y_spread': 1 if surf == 'floor' else -1}, BIOME])
+            {'type': 'minecraft:offset', 'x': 0, 'y': 1 if surf == 'floor' else -1, 'z': 0}, BIOME])
 
 
 # ============================================================================ biomes

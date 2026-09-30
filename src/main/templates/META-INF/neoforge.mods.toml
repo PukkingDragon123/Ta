@@ -8,7 +8,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
-logoFile="thesift_logo.png"
+iconFile="thesift_logo.png"
 credits="Inspired by the dreamy side of Minecraft."
 description='''
 ${mod_description}

@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "thesift:music_disc_lullaby"
+  },
+  "max_uses": 1,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "thesift:chrome_pearl",
+    "count": 10
+  },
+  "xp": 20
+}

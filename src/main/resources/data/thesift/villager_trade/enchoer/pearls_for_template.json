@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "thesift:siftite_upgrade_smithing_template"
+  },
+  "max_uses": 2,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "thesift:chrome_pearl",
+    "count": 16
+  },
+  "xp": 30
+}
