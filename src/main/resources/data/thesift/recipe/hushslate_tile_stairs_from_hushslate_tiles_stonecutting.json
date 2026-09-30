@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:hushslate_tiles",
+  "result": {
+    "count": 1,
+    "id": "thesift:hushslate_tile_stairs"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:lullwood_log",
+    "thesift:lullwood_wood",
+    "thesift:stripped_lullwood_log",
+    "thesift:stripped_lullwood_wood",
+    "thesift:lullwood_planks",
+    "thesift:lullwood_stairs",
+    "thesift:lullwood_slab",
+    "thesift:lullwood_fence",
+    "thesift:lullwood_fence_gate",
+    "thesift:lullwood_door",
+    "thesift:lullwood_trapdoor",
+    "thesift:lullwood_button",
+    "thesift:lullwood_pressure_plate",
+    "thesift:wishwood_log",
+    "thesift:wishwood_wood",
+    "thesift:stripped_wishwood_log",
+    "thesift:stripped_wishwood_wood",
+    "thesift:wishwood_planks",
+    "thesift:wishwood_stairs",
+    "thesift:wishwood_slab",
+    "thesift:wishwood_fence",
+    "thesift:wishwood_fence_gate",
+    "thesift:wishwood_door",
+    "thesift:wishwood_trapdoor",
+    "thesift:wishwood_button",
+    "thesift:wishwood_pressure_plate",
+    "thesift:sift_drum"
+  ]
+}

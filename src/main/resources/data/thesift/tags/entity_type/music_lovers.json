@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:bulb",
+    "thesift:enchoer",
+    "minecraft:allay",
+    "minecraft:sniffer",
+    "thesift:slumbler"
+  ]
+}

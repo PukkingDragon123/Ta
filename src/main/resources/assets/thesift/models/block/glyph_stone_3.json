@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "thesift:block/polished_dreamstone",
+    "side": "thesift:block/glyph_stone_3"
+  }
+}

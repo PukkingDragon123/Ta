@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "bell=false": {
+      "model": "thesift:block/glowbell_vine"
+    },
+    "bell=true": {
+      "model": "thesift:block/glowbell_vine_lit"
+    }
+  }
+}

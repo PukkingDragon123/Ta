@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:dreamstone_slab",
+    "thesift:cobbled_dreamstone_slab",
+    "thesift:polished_dreamstone_slab",
+    "thesift:dreamstone_brick_slab",
+    "thesift:mossy_dreamstone_brick_slab",
+    "thesift:dreamstone_tile_slab",
+    "thesift:cobbled_hushslate_slab",
+    "thesift:polished_hushslate_slab",
+    "thesift:hushslate_brick_slab",
+    "thesift:hushslate_tile_slab",
+    "thesift:dreamsandstone_slab",
+    "thesift:smooth_dreamsandstone_slab",
+    "thesift:cut_dreamsandstone_slab",
+    "thesift:blush_brick_slab",
+    "thesift:lullwood_slab",
+    "thesift:wishwood_slab"
+  ]
+}

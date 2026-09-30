@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": "thesift:dreamstone_bricks",
+    "M": "thesift:lumen_moss_block"
+  },
+  "pattern": [
+    "#M"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:mossy_dreamstone_bricks"
+  }
+}

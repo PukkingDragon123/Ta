@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:sift_grass_block",
+    "thesift:sift_soil",
+    "thesift:lumen_moss_block",
+    "#minecraft:dirt"
+  ]
+}

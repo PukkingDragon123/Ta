@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.9,
+  "ingredient": "thesift:raw_serbim",
+  "result": {
+    "id": "thesift:serbim_ingot"
+  }
+}

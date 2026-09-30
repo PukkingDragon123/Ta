@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:sift_plains",
+    "thesift:forest_mountains",
+    "thesift:rocky_dunes",
+    "thesift:chrome_lakes",
+    "thesift:deep_sift",
+    "thesift:wishing_grove"
+  ]
+}

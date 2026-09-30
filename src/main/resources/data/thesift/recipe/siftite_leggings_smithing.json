@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "#thesift:siftite_tool_materials",
+  "base": "minecraft:copper_leggings",
+  "result": {
+    "id": "thesift:siftite_leggings"
+  },
+  "template": "thesift:siftite_upgrade_smithing_template"
+}

@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:hushslate",
+    "thesift:cobbled_hushslate",
+    "thesift:hushslate_bricks",
+    "minecraft:sculk",
+    "minecraft:deepslate",
+    "minecraft:reinforced_deepslate",
+    "minecraft:deepslate_bricks",
+    "minecraft:deepslate_tiles"
+  ]
+}

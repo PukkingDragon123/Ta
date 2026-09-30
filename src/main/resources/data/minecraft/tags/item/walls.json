@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:cobbled_dreamstone_wall",
+    "thesift:polished_dreamstone_wall",
+    "thesift:dreamstone_brick_wall",
+    "thesift:mossy_dreamstone_brick_wall",
+    "thesift:dreamstone_tile_wall",
+    "thesift:cobbled_hushslate_wall",
+    "thesift:polished_hushslate_wall",
+    "thesift:hushslate_brick_wall",
+    "thesift:hushslate_tile_wall",
+    "thesift:dreamsandstone_wall",
+    "thesift:blush_brick_wall"
+  ]
+}

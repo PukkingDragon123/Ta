@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:dreamstone",
+  "result": {
+    "count": 1,
+    "id": "thesift:dreamstone_pillar"
+  }
+}

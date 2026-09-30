@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:lullwood_log",
+    "thesift:lullwood_wood",
+    "thesift:stripped_lullwood_log",
+    "thesift:stripped_lullwood_wood",
+    "thesift:wishwood_log",
+    "thesift:wishwood_wood",
+    "thesift:stripped_wishwood_log",
+    "thesift:stripped_wishwood_wood"
+  ]
+}

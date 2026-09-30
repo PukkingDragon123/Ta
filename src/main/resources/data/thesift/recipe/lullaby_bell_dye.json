@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:lullaby_bell"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:cyan_dye"
+  },
+  "group": "dye"
+}

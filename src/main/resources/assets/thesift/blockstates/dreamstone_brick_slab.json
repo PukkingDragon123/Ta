@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/dreamstone_brick_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/dreamstone_bricks"
+    },
+    "type=top": {
+      "model": "thesift:block/dreamstone_brick_slab_top"
+    }
+  }
+}

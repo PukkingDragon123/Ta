@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/polished_dreamstone_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/polished_dreamstone"
+    },
+    "type=top": {
+      "model": "thesift:block/polished_dreamstone_slab_top"
+    }
+  }
+}

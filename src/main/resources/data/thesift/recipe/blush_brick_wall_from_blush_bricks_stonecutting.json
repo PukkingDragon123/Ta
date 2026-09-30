@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:blush_bricks",
+  "result": {
+    "count": 1,
+    "id": "thesift:blush_brick_wall"
+  }
+}

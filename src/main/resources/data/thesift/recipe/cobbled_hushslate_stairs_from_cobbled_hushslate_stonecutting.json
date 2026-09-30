@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:cobbled_hushslate",
+  "result": {
+    "count": 1,
+    "id": "thesift:cobbled_hushslate_stairs"
+  }
+}

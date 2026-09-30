@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:hushslate",
+    "thesift:cobbled_hushslate",
+    "minecraft:sculk",
+    "minecraft:deepslate",
+    "thesift:lumen_moss_block"
+  ]
+}

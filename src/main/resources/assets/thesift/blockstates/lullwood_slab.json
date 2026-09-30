@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/lullwood_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/lullwood_planks"
+    },
+    "type=top": {
+      "model": "thesift:block/lullwood_slab_top"
+    }
+  }
+}

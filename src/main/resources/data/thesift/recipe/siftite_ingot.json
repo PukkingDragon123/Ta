@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:serbim_ingot",
+    "thesift:serbim_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:copper_ingot",
+    "thesift:chrome_pearl"
+  ],
+  "result": {
+    "count": 2,
+    "id": "thesift:siftite_ingot"
+  }
+}

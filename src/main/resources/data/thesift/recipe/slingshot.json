@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "thesift:lullwood_planks",
+    "S": "thesift:thick_hide"
+  },
+  "pattern": [
+    "#S#",
+    " # ",
+    " # "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:slingshot"
+  }
+}

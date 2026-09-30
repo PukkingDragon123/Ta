@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "cookingtime": 100,
+  "experience": 0.2,
+  "ingredient": "thesift:pitcher_bulb",
+  "result": {
+    "id": "thesift:glowing_slime_ball"
+  }
+}

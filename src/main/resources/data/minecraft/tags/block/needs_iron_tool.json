@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:serbim_ore",
+    "thesift:deep_serbim_ore",
+    "thesift:raw_serbim_block",
+    "thesift:serbim_block"
+  ]
+}

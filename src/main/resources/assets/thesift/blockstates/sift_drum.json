@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "beat=false,core=false": {
+      "model": "thesift:block/sift_drum"
+    },
+    "beat=false,core=true": {
+      "model": "thesift:block/sift_drum_core"
+    },
+    "beat=true,core=false": {
+      "model": "thesift:block/sift_drum_beat"
+    },
+    "beat=true,core=true": {
+      "model": "thesift:block/sift_drum_beat_core"
+    }
+  }
+}

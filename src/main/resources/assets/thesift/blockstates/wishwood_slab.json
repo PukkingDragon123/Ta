@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/wishwood_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/wishwood_planks"
+    },
+    "type=top": {
+      "model": "thesift:block/wishwood_slab_top"
+    }
+  }
+}

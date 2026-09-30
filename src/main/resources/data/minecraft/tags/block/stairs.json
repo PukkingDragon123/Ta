@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:dreamstone_stairs",
+    "thesift:cobbled_dreamstone_stairs",
+    "thesift:polished_dreamstone_stairs",
+    "thesift:dreamstone_brick_stairs",
+    "thesift:mossy_dreamstone_brick_stairs",
+    "thesift:dreamstone_tile_stairs",
+    "thesift:cobbled_hushslate_stairs",
+    "thesift:polished_hushslate_stairs",
+    "thesift:hushslate_brick_stairs",
+    "thesift:hushslate_tile_stairs",
+    "thesift:dreamsandstone_stairs",
+    "thesift:smooth_dreamsandstone_stairs",
+    "thesift:blush_brick_stairs",
+    "thesift:lullwood_stairs",
+    "thesift:wishwood_stairs"
+  ]
+}

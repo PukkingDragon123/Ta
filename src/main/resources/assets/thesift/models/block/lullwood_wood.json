@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "thesift:block/lullwood_log",
+    "side": "thesift:block/lullwood_log"
+  }
+}

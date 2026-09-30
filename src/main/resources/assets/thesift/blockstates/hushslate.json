@@ -1,0 +1,62 @@
+{
+  "variants": {
+    "axis=x": [
+      {
+        "model": "thesift:block/hushslate",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "thesift:block/hushslate_mirrored",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "thesift:block/hushslate",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "thesift:block/hushslate_mirrored",
+        "x": 90,
+        "y": 90
+      }
+    ],
+    "axis=y": [
+      {
+        "model": "thesift:block/hushslate"
+      },
+      {
+        "model": "thesift:block/hushslate_mirrored"
+      },
+      {
+        "model": "thesift:block/hushslate",
+        "y": 180
+      },
+      {
+        "model": "thesift:block/hushslate_mirrored",
+        "y": 180
+      }
+    ],
+    "axis=z": [
+      {
+        "model": "thesift:block/hushslate",
+        "x": 90
+      },
+      {
+        "model": "thesift:block/hushslate_mirrored",
+        "x": 90
+      },
+      {
+        "model": "thesift:block/hushslate",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "thesift:block/hushslate_mirrored",
+        "x": 90,
+        "y": 180
+      }
+    ]
+  }
+}

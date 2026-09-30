@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/polished_hushslate_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/polished_hushslate"
+    },
+    "type=top": {
+      "model": "thesift:block/polished_hushslate_slab_top"
+    }
+  }
+}

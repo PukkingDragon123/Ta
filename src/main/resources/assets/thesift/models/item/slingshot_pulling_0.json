@@ -1,0 +1,6 @@
+{
+  "parent": "thesift:item/slingshot",
+  "textures": {
+    "layer0": "thesift:item/slingshot_pulling_0"
+  }
+}

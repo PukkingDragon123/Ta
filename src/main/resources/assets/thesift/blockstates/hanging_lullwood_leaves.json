@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "tip=false": {
+      "model": "thesift:block/hanging_lullwood_leaves"
+    },
+    "tip=true": {
+      "model": "thesift:block/hanging_lullwood_leaves_tip"
+    }
+  }
+}

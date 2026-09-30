@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "food",
+  "key": {
+    "G": "thesift:glowcap",
+    "#": "minecraft:stick"
+  },
+  "pattern": [
+    "  G",
+    " G ",
+    "#  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:glowcap_skewer"
+  }
+}

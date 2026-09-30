@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "thesift:block/echo_frame_top",
+    "side": "thesift:block/echo_frame_side"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "spent=false": {
+      "model": "thesift:block/dream_snare"
+    },
+    "spent=true": {
+      "model": "thesift:block/dream_snare_spent"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "food",
+  "key": {
+    "G": "thesift:glowing_slime_ball",
+    "B": "thesift:pitcher_bulb",
+    "E": "#minecraft:eggs",
+    "P": "thesift:dreambloom"
+  },
+  "pattern": [
+    "GGG",
+    "BEB",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:sift_cake"
+  }
+}

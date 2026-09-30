@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:dreamstone",
+  "result": {
+    "count": 2,
+    "id": "thesift:dreamstone_slab"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "key": {
+    "I": "minecraft:iron_chain",
+    "N": "thesift:serbim_ingot",
+    "G": "thesift:soulpetal"
+  },
+  "pattern": [
+    " I ",
+    "NGN",
+    "N N"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:soul_chime"
+  }
+}

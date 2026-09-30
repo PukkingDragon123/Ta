@@ -1,0 +1,59 @@
+package com.thesift.entity;
+
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+
+/**
+ * Pathfinding-friendly hopping movement: the mob turns towards its path and bounds along in
+ * separate hops (slime-like) instead of walking. Used by Bulbs and Sifters.
+ */
+public class HopMoveControl<T extends Mob & HopMoveControl.Hopper> extends MoveControl<T> {
+    public interface Hopper {
+        int hopDelay();
+
+        void onHop();
+    }
+
+    private int jumpDelay;
+
+    public HopMoveControl(T mob) {
+        super(mob);
+    }
+
+    @Override
+    public void tick() {
+        if (this.operation != MoveControl.Operation.MOVE_TO) {
+            this.mob.setZza(0.0F);
+            this.mob.setSpeed(0.0F);
+            return;
+        }
+        this.operation = MoveControl.Operation.WAIT;
+        double dx = this.wantedX - this.mob.getX();
+        double dz = this.wantedZ - this.mob.getZ();
+        double dy = this.wantedY - this.mob.getY();
+        if (dx * dx + dy * dy + dz * dz < 2.5E-7) {
+            this.mob.setZza(0.0F);
+            return;
+        }
+        float yaw = (float) (Mth.atan2(dz, dx) * 180.0F / (float) Math.PI) - 90.0F;
+        this.mob.setYRot(this.rotlerp(this.mob.getYRot(), yaw, 40.0F));
+        this.mob.yBodyRot = this.mob.getYRot();
+        float speed = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        if (this.mob.onGround()) {
+            if (this.jumpDelay-- <= 0) {
+                this.jumpDelay = this.mob.hopDelay();
+                this.mob.setSpeed(speed);
+                this.mob.getJumpControl().jump();
+                this.mob.onHop();
+            } else {
+                this.mob.xxa = 0.0F;
+                this.mob.zza = 0.0F;
+                this.mob.setSpeed(0.0F);
+            }
+        } else {
+            this.mob.setSpeed(speed);
+        }
+    }
+}

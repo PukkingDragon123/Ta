@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "thesift:siftite"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "thesift:siftite"
+      }
+    ]
+  }
+}

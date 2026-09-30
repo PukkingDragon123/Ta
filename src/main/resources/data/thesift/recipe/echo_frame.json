@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "thesift:hushslate_bricks",
+    "S": "minecraft:echo_shard",
+    "P": "thesift:chrome_pearl"
+  },
+  "pattern": [
+    "#S#",
+    "SPS",
+    "#S#"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thesift:echo_frame"
+  }
+}

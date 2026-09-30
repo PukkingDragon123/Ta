@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "thesift:block/bulb_lantern"
+    },
+    "hanging=true": {
+      "model": "thesift:block/bulb_lantern_hanging"
+    }
+  }
+}

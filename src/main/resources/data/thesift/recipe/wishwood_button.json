@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thesift:wishwood_planks"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:wishwood_button"
+  },
+  "group": "wooden_button"
+}

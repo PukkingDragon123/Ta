@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": "thesift:dreamsandstone",
+  "result": {
+    "id": "thesift:smooth_dreamsandstone"
+  }
+}

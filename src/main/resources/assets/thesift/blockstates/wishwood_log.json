@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "thesift:block/wishwood_log_x"
+    },
+    "axis=y": {
+      "model": "thesift:block/wishwood_log_y"
+    },
+    "axis=z": {
+      "model": "thesift:block/wishwood_log_z"
+    }
+  }
+}

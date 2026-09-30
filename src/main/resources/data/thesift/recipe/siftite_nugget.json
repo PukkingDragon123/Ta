@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:siftite_ingot"
+  ],
+  "result": {
+    "count": 9,
+    "id": "thesift:siftite_nugget"
+  }
+}

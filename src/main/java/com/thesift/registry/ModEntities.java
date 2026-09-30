@@ -1,0 +1,33 @@
+package com.thesift.registry;
+
+import com.thesift.TheSift;
+import com.thesift.entity.Bulb;
+import com.thesift.entity.Enchoer;
+import com.thesift.entity.GlowballEntity;
+import com.thesift.entity.Riveter;
+import com.thesift.entity.Sifter;
+import com.thesift.entity.Slumbler;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+public final class ModEntities {
+    public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(TheSift.MODID);
+
+    public static final DeferredHolder<EntityType<?>, EntityType<Bulb>> BULB = ENTITIES.registerEntityType("bulb", Bulb::new, MobCategory.CREATURE,
+            b -> b.sized(0.6F, 0.6F).eyeHeight(0.42F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<Slumbler>> SLUMBLER = ENTITIES.registerEntityType("slumbler", Slumbler::new,
+            MobCategory.CREATURE, b -> b.sized(1.7F, 0.95F).eyeHeight(0.7F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.MONSTER,
+            b -> b.sized(0.8F, 0.85F).eyeHeight(0.6F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
+            MobCategory.CREATURE, b -> b.sized(0.8F, 2.6F).eyeHeight(2.25F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Riveter>> RIVETER = ENTITIES.registerEntityType("riveter", Riveter::new,
+            MobCategory.MONSTER, b -> b.sized(0.7F, 1.2F).eyeHeight(0.4F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<GlowballEntity>> GLOWBALL = ENTITIES.registerEntityType("glowball",
+            GlowballEntity::new, MobCategory.MISC, b -> b.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+
+    private ModEntities() {
+    }
+}

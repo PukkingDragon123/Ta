@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "thesift:serbim_ingot",
+    "C": "thesift:dreamstone",
+    "S": "thesift:siftite_upgrade_smithing_template"
+  },
+  "pattern": [
+    "#S#",
+    "#C#",
+    "###"
+  ],
+  "result": {
+    "count": 2,
+    "id": "thesift:siftite_upgrade_smithing_template"
+  }
+}

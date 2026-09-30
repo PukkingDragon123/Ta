@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    "minecraft:bowl",
+    "thesift:glowcap",
+    "thesift:pitcher_bulb",
+    "thesift:lullaby_bell"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:dream_stew"
+  }
+}
