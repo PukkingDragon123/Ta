@@ -51,7 +51,7 @@ jobs:
             case "$cmd" in
               javap) javap -p -cp "$JAR" "$arg" ;;
               list) p="${arg//.//}"; find "$p" -name '*.java' | sort | awk -F/ '{f=$NF; sub(/\.java$/,"",f); d=$0; sub("/[^/]*$","",d); if(d!=last){printf "\n%s: ",d; last=d} printf "%s ",f} END{print ""}' ;;
-              src) f="${arg//.//}.java"; grep -v '^import ' "$f" ;;
+              src) f="${arg//.//}.java"; cat "$f" ;;
               sig) f="${arg//.//}.java"; grep -nE '^\s*(public|protected|private|static|abstract|final|default|record|class|interface|enum|@)' "$f" | grep -v '^\s*[0-9]*:\s*import' ;;
               grep) grep -rnE --include=*.java "$arg" . | head -250 ;;
               find) find . -name "$arg" | head -100 ;;
