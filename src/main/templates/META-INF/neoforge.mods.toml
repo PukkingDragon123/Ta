@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="${mod_license}"
+issueTrackerURL="https://github.com/PukkingDragon123/Ta/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+logoFile="thesift_logo.png"
+credits="Inspired by the dreamy side of Minecraft."
+description='''
+${mod_description}
+
+Travel through the Ancient City portal into The Sift: a realm of cyan and pink fog, nebula skies,
+drifting souls, healing Chrome lakes, musical ruins and bouncy new creatures.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,49 @@
+name: API Probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      commands:
+        description: "Semicolon separated probe commands: 'javap <class>' | 'list <package>' | 'src <class>' | 'grep <regex>'"
+        required: true
+  push:
+    paths:
+      - '.github/probe.txt'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Create Minecraft artifacts
+        run: ./gradlew createMinecraftArtifacts --no-configuration-cache -q
+      - name: Probe
+        env:
+          COMMANDS: ${{ github.event.inputs.commands }}
+        run: |
+          set +e
+          ls -la build/moddev/artifacts
+          JAR=$(ls build/moddev/artifacts/*.jar | grep -v -- '-sources' | grep -v -- '-merged' | grep -v -- 'client-extra' | head -1)
+          SRC=$(ls build/moddev/artifacts/*-sources.jar | head -1)
+          echo "JAR=$JAR SRC=$SRC"
+          mkdir -p /tmp/src && (cd /tmp/src && unzip -q -o "$GITHUB_WORKSPACE/$SRC")
+          if [ -n "$COMMANDS" ]; then echo "$COMMANDS" | tr ';' '\n' > /tmp/cmds.txt; else cp .github/probe.txt /tmp/cmds.txt; fi
+          while IFS= read -r line; do
+            line="$(echo "$line" | sed 's/^ *//;s/ *$//')"
+            [ -z "$line" ] && continue
+            cmd="${line%% *}"; arg="${line#* }"
+            echo "=================== $line"
+            case "$cmd" in
+              javap) javap -p -cp "$JAR" "$arg" ;;
+              list) p="${arg//.//}"; (cd /tmp/src && find "$p" -name '*.java' | sort | awk -F/ '{f=$NF; sub(/\.java$/,"",f); d=$0; sub("/[^/]*$","",d); if(d!=last){printf "\n%s: ",d; last=d} printf "%s ",f} END{print ""}') ;;
+              src) f="/tmp/src/${arg//.//}.java"; cat -n "$f" ;;
+              grep) (cd /tmp/src && grep -rnE --include=*.java "$arg" . | head -300) ;;
+              *) echo "unknown command $cmd" ;;
+            esac
+          done < /tmp/cmds.txt
+          echo "=================== END"
