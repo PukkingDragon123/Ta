@@ -55,7 +55,7 @@ jobs:
               sig) f="${arg//.//}.java"; grep -nE '^\s*(public|protected|private|static|abstract|final|default|record|class|interface|enum|@)' "$f" | grep -v '^\s*[0-9]*:\s*import' ;;
               imp) f="${arg//.//}.java"; grep '^import ' "$f" ;;
               lines) set -- $arg; f="${1//.//}.java"; sed -n "${2},${3}p" "$f" ;;
-              grep) grep -rnE --include=*.java "$arg" . | head -250 ;;
+              grep) grep -rnE --include=*.java "$arg" . | head -3000 ;;
               find) find . -name "$arg" | head -100 ;;
               *) echo "unknown command $cmd" ;;
             esac
