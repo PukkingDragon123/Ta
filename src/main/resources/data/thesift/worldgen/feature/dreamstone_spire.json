@@ -1,0 +1,18 @@
+{
+  "type": "thesift:spire",
+  "body": {
+    "id": "thesift:dreamstone"
+  },
+  "band": {
+    "id": "thesift:blush_bricks"
+  },
+  "cap": {
+    "id": "thesift:sift_grass_block",
+    "properties": {
+      "snowy": "false"
+    }
+  },
+  "min_height": 14,
+  "max_height": 34,
+  "radius": 3.5
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:blushgrass"
+        },
+        "weight": 6
+      },
+      {
+        "data": {
+          "id": "thesift:coral_fern"
+        },
+        "weight": 1
+      }
+    ]
+  }
+}

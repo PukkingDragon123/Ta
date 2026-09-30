@@ -40,3 +40,4 @@ repo/
 !**/src/**/repo/
 __pycache__/
 *.pyc
+run-smoke/

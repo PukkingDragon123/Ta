@@ -1,0 +1,50 @@
+{
+  "ambient_light": 0.12,
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "thesift:music.sift"
+      }
+    },
+    "minecraft:gameplay/bed_rule": {
+      "can_set_spawn": "always",
+      "can_sleep": "never",
+      "error_message": {
+        "translate": "message.thesift.bed.dreaming"
+      }
+    },
+    "minecraft:gameplay/respawn_anchor_works": false,
+    "minecraft:gameplay/nether_portal_spawns_piglin": false,
+    "minecraft:gameplay/sky_light_level": 13.0,
+    "minecraft:visual/ambient_light_color": "#1c1234",
+    "minecraft:visual/cloud_color": "#ccffd6ec",
+    "minecraft:visual/cloud_height": 236.0,
+    "minecraft:visual/fog_color": "#e4c6f2",
+    "minecraft:visual/sky_color": "#8a7ce0",
+    "minecraft:visual/sky_light_color": "#f2d6ff",
+    "neoforge:custom_skybox": "thesift:nebula"
+  },
+  "coordinate_scale": 1.0,
+  "default_clock": "thesift:the_sift",
+  "has_ceiling": false,
+  "has_ender_dragon_fight": false,
+  "has_skylight": true,
+  "height": 384,
+  "infiniburn": "#minecraft:infiniburn_overworld",
+  "logical_height": 384,
+  "min_y": -64,
+  "monster_spawn_block_light_limit": 0,
+  "monster_spawn_light_level": 0,
+  "timelines": "#thesift:in_sift"
+}

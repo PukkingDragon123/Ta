@@ -1,0 +1,16 @@
+{
+  "type": "thesift:floating_island",
+  "top": {
+    "id": "thesift:lumen_moss_block"
+  },
+  "soil": {
+    "id": "thesift:dreamstone"
+  },
+  "stone": {
+    "id": "thesift:dreamstone_bricks"
+  },
+  "min_radius": 2,
+  "max_radius": 4,
+  "min_lift": 14,
+  "max_lift": 40
+}

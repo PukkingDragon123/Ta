@@ -39,3 +39,25 @@ jobs:
           name: the-sift-neoforge
           path: build/libs/*.jar
           if-no-files-found: error
+
+      - name: Smoke test (headless server, generates The Sift)
+        run: |
+          mkdir -p run-smoke
+          echo "eula=true" > run-smoke/eula.txt
+          printf 'online-mode=false\nlevel-seed=20260930\nspawn-protection=0\nsync-chunk-writes=false\n' > run-smoke/server.properties
+          timeout 1500 ./gradlew runSmokeServer --no-configuration-cache > smoke.log 2>&1 || true
+          grep -v SMOKEPNG smoke.log | grep -E "SMOKE|ERROR|Exception|Caused by|at com.thesift|WARN.*thesift|Failed|failed" | head -600 || true
+          grep -q "SMOKE TEST PASSED" smoke.log
+
+      - name: Smoke test images (base64)
+        if: always()
+        run: grep SMOKEPNG smoke.log | sed 's/.*SMOKEPNG/SMOKEPNG/' || true
+
+      - name: Upload smoke test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-log
+          path: smoke.log
+          if-no-files-found: ignore
+

@@ -1,0 +1,28 @@
+{
+  "feature": "thesift:chrome_spring",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 12
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:biased_to_bottom",
+        "max_inclusive": {
+          "below_top": 8
+        },
+        "min_inclusive": {
+          "above_bottom": 8
+        },
+        "inner": 8
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

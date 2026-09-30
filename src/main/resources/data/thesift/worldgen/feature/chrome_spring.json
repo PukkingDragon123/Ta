@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:spring_feature",
+  "state": {
+    "id": "thesift:chrome",
+    "properties": {
+      "falling": "true"
+    }
+  },
+  "valid_blocks": [
+    "thesift:dreamstone",
+    "thesift:sift_soil",
+    "thesift:hushslate",
+    "thesift:dreamsandstone"
+  ]
+}

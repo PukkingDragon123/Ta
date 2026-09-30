@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:lullaby_bell"
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:dreambloom"
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:soulpetal"
+        },
+        "weight": 2
+      },
+      {
+        "data": {
+          "id": "thesift:nebula_iris"
+        },
+        "weight": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "thesift:spire",
+  "body": {
+    "id": "thesift:dreamsandstone"
+  },
+  "band": {
+    "id": "thesift:blush_bricks"
+  },
+  "min_height": 7,
+  "max_height": 18,
+  "radius": 2.6
+}

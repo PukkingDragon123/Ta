@@ -30,6 +30,13 @@ neoForge {
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
+        smokeServer {
+            server()
+            programArgument '--nogui'
+            systemProperty 'thesift.smoketest', 'true'
+            systemProperty 'java.awt.headless', 'true'
+            gameDirectory = project.file('run-smoke')
+        }
         gameTestServer {
             type = 'gameTestServer'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id

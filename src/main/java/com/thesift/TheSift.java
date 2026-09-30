@@ -1,6 +1,7 @@
 package com.thesift;
 
 import com.mojang.logging.LogUtils;
+import com.thesift.dev.SmokeTest;
 import com.thesift.event.GameBusEvents;
 import com.thesift.event.ModBusEvents;
 import com.thesift.registry.ModBlockEntities;
@@ -49,6 +50,7 @@ public class TheSift {
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onNotePlayed);
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onVanillaGameEvent);
 
+        SmokeTest.registerIfEnabled();
         LOGGER.info("The Sift is dreaming...");
     }
 

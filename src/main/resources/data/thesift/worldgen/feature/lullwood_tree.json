@@ -1,0 +1,26 @@
+{
+  "type": "thesift:sift_tree",
+  "trunk": {
+    "id": "thesift:lullwood_log",
+    "properties": {
+      "axis": "y"
+    }
+  },
+  "leaves": {
+    "id": "thesift:lullwood_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "hanging": {
+    "id": "thesift:hanging_lullwood_leaves",
+    "properties": {
+      "tip": "true"
+    }
+  },
+  "style": "puff",
+  "min_height": 5,
+  "max_height": 8
+}

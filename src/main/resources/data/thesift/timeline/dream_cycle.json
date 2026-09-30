@@ -1,0 +1,48 @@
+{
+  "clock": "thesift:the_sift",
+  "period_ticks": 12000,
+  "tracks": {
+    "minecraft:visual/fog_color": {
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 3000,
+          "value": "#ffe3f3"
+        },
+        {
+          "ticks": 6000,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 9000,
+          "value": "#e3f7ff"
+        }
+      ],
+      "modifier": "multiply"
+    },
+    "minecraft:visual/sky_light_color": {
+      "keyframes": [
+        {
+          "ticks": 0,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 3000,
+          "value": "#ffd9ef"
+        },
+        {
+          "ticks": 6000,
+          "value": "#ffffff"
+        },
+        {
+          "ticks": 9000,
+          "value": "#d9f4ff"
+        }
+      ],
+      "modifier": "multiply"
+    }
+  }
+}

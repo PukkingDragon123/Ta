@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:dreambloom"
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:nebula_iris"
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:choir_lily"
+        },
+        "weight": 1
+      }
+    ]
+  }
+}

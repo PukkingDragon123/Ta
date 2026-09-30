@@ -201,6 +201,7 @@
   "jukebox_song.thesift.lullaby": "Sift - Lullaby of the Deep",
   "message.thesift.altar.need_drums": "The altar needs at least two Sift Drums around it.",
   "message.thesift.altar.need_levels": "You need more experience to perform the ritual.",
+  "message.thesift.bed.dreaming": "You are already dreaming.",
   "message.thesift.drum.core_removed": "The Warden Core slips free.",
   "message.thesift.drum.listen": "Listen...",
   "message.thesift.drum.need_sensors": "The drum needs at least three Sculk Sensors nearby to listen...",

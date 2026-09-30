@@ -913,7 +913,7 @@ def flush_tags():
 # --------------------------------------------------------------------------- main
 
 
-def main():
+def generate():
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)
@@ -926,11 +926,20 @@ def main():
     gen_sounds()
     gen_misc_tags()
     gen_transformers()
+
+
+def finalize():
     flush_tags()
     gen_lang()
+    os.makedirs(os.path.join(ROOT, 'build'), exist_ok=True)
     with open(os.path.join(ROOT, 'build', 'textures_needed.txt'), 'w') as f:
         f.write('\n'.join(sorted(TEXTURES)) + '\n')
     print(f'assets ok: {len(WRITTEN)} files, {len(TEXTURES)} textures referenced')
+
+
+def main():
+    generate()
+    finalize()
 
 
 if __name__ == '__main__':

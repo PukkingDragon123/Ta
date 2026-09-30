@@ -1,0 +1,20 @@
+{
+  "type": "thesift:floating_island",
+  "top": {
+    "id": "thesift:sift_grass_block",
+    "properties": {
+      "snowy": "false"
+    }
+  },
+  "soil": {
+    "id": "thesift:sift_soil"
+  },
+  "stone": {
+    "id": "thesift:dreamstone"
+  },
+  "min_radius": 4,
+  "max_radius": 9,
+  "min_lift": 28,
+  "max_lift": 60,
+  "decoration": "thesift:lullwood_tree"
+}

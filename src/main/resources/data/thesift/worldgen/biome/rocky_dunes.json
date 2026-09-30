@@ -1,0 +1,128 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.sift.loop",
+      "additions": {
+        "sound": "thesift:ambient.sift.additions",
+        "tick_chance": 0.0111
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "thesift:music.sift"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [
+            {
+              "type": "thesift:bulb",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 2
+            },
+            {
+              "type": "minecraft:sniffer",
+              "count": 1,
+              "weight": 2
+            }
+          ],
+          "monster": [
+            {
+              "type": "thesift:sifter",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 60
+            }
+          ],
+          "ambient": [],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:dream_pollen"
+          },
+          "probability": 0.006
+        },
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.002
+        },
+        {
+          "particle": {
+            "type": "thesift:wishing_star"
+          },
+          "probability": 0.0002
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#f2c3cf",
+    "minecraft:visual/sky_color": "#a88ae6",
+    "minecraft:visual/water_fog_color": "#8ff0ff"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.1,
+  "effects": {
+    "water_color": "#8ff0ff",
+    "grass_color": "#d9a6c4",
+    "foliage_color": "#e0b0c8"
+  },
+  "features": [
+    [],
+    [],
+    [
+      "thesift:dune_hoodoo",
+      "thesift:floating_islet"
+    ],
+    [],
+    [],
+    [],
+    [
+      "thesift:ore_serbim",
+      "thesift:ore_hushslate_blob"
+    ],
+    [],
+    [
+      "thesift:chrome_spring"
+    ],
+    [
+      "thesift:patch_pitcher_bulb_bush"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 1.2
+}

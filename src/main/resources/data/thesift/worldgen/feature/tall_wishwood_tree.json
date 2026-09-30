@@ -1,0 +1,20 @@
+{
+  "type": "thesift:sift_tree",
+  "trunk": {
+    "id": "thesift:wishwood_log",
+    "properties": {
+      "axis": "y"
+    }
+  },
+  "leaves": {
+    "id": "thesift:wishwood_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "style": "tall_wish",
+  "min_height": 9,
+  "max_height": 13
+}

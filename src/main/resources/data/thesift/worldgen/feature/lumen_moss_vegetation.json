@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:glimmer_sprouts"
+        },
+        "weight": 5
+      },
+      {
+        "data": {
+          "id": "thesift:glowcap"
+        },
+        "weight": 2
+      },
+      {
+        "data": {
+          "id": "thesift:echo_orchid"
+        },
+        "weight": 1
+      },
+      {
+        "data": {
+          "id": "thesift:lumen_moss_carpet"
+        },
+        "weight": 3
+      }
+    ]
+  }
+}

@@ -192,9 +192,13 @@ def gen_tabs():
     open(os.path.join(ROOT, "ModTabContents.java"), "w").write("\n".join(out))
 
 
-if __name__ == "__main__":
+def main():
     os.makedirs(ROOT, exist_ok=True)
     gen_blocks()
     gen_items()
     gen_tabs()
     print(f"generated {len(BLOCKS)} blocks, {len(ITEMS)} items")
+
+
+if __name__ == "__main__":
+    main()
