@@ -9,6 +9,7 @@ import java.util.OptionalInt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.ShriekParticleOption;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -154,7 +155,7 @@ public class Riveter extends Monster implements MusicListener {
         this.screamCooldown = 20 * 12;
         level.broadcastEntityEvent(this, EVENT_SCREAM);
         level.playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.RIVETER_SCREAM.get(), SoundSource.HOSTILE, 3.0F, 0.9F + this.random.nextFloat() * 0.2F);
-        level.sendParticles(ParticleTypes.SHRIEK, this.getX(), this.getY() + 0.3, this.getZ(), 1, 0, 0, 0, 0);
+        level.sendParticles(new ShriekParticleOption(0), this.getX(), this.getY() + 0.3, this.getZ(), 1, 0.0, 0.0, 0.0, 0.0);
         player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 160, 0), this);
 
         List<Warden> wardens = level.getEntitiesOfClass(Warden.class, new AABB(this.blockPosition()).inflate(48));

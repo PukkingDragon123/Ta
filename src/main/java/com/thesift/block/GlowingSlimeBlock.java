@@ -2,7 +2,7 @@ package com.thesift.block;
 
 import com.thesift.registry.ModParticles;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,16 +15,14 @@ public class GlowingSlimeBlock extends SlimeBlock {
     }
 
     @Override
-    public void updateEntityMovementAfterFallOn(BlockGetter level, Entity entity) {
-        double before = entity.getDeltaMovement().y;
-        super.updateEntityMovementAfterFallOn(level, entity);
-        if (before < -0.2 && entity.level().isClientSide()) {
-            Level l = entity.level();
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
+        if (fallDistance > 0.5 && level.isClientSide()) {
             for (int i = 0; i < 6; i++) {
-                l.addParticle(ModParticles.GLOW_SPLAT.get(), entity.getX() + (l.getRandom().nextDouble() - 0.5), entity.getY() + 0.1,
-                        entity.getZ() + (l.getRandom().nextDouble() - 0.5), 0, 0.1, 0);
+                level.addParticle(ModParticles.GLOW_SPLAT.get(), entity.getX() + (level.getRandom().nextDouble() - 0.5), entity.getY() + 0.1,
+                        entity.getZ() + (level.getRandom().nextDouble() - 0.5), 0, 0.1, 0);
             }
         }
+        super.fallOn(level, state, pos, entity, fallDistance);
     }
 
     @Override

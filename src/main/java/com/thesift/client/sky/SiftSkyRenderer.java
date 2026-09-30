@@ -82,7 +82,7 @@ public class SiftSkyRenderer implements CustomSkyboxRenderer {
         GpuBuffer indexBuffer = indices.getBuffer(FACES * 2 * 6);
         GpuBufferSlice transform = RenderSystem.getDynamicUniforms().writeTransform(view);
         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Sift sky",
-                mc.getMainRenderTarget().getColorTextureView(), Optional.empty(), mc.getMainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
+                mc.gameRenderer.mainRenderTarget().getColorTextureView(), Optional.empty(), mc.gameRenderer.mainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
             pass.setPipeline(RenderSystem.getCompiledPipeline(RenderPipelines.END_SKY));
             RenderSystem.bindDefaultUniforms(pass);
             pass.setUniform("DynamicTransforms", transform);

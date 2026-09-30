@@ -46,7 +46,6 @@ public class TheSift {
         modBus.addListener(ModBusEvents::addBlockEntityBlocks);
         modBus.addListener(ModCreativeTabs::addToVanillaTabs);
 
-        NeoForge.EVENT_BUS.addListener(GameBusEvents::onToolModify);
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onNotePlayed);
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onVanillaGameEvent);
 

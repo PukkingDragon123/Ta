@@ -150,7 +150,7 @@ public class SiftDrumBlock extends BaseEntityBlock {
         if (player.isShiftKeyDown() && state.getValue(CORE)) {
             if (level instanceof ServerLevel server && server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
                 drum.ejectCore(server);
-                player.displayClientMessage(Component.translatable("message.thesift.drum.core_removed"), true);
+                player.sendOverlayMessage(Component.translatable("message.thesift.drum.core_removed"));
             }
             return InteractionResult.SUCCESS;
         }

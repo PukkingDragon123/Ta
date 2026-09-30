@@ -99,7 +99,7 @@ public class EuphoryAltarBlockEntity extends BlockEntity {
         }
         if (!this.level.isClientSide()) {
             if (!player.getInventory().add(this.item)) {
-                player.drop(this.item, false);
+                net.minecraft.world.level.block.Block.popResource(this.level, this.worldPosition.above(), this.item);
             }
             this.item = ItemStack.EMPTY;
             this.sync();
@@ -110,13 +110,13 @@ public class EuphoryAltarBlockEntity extends BlockEntity {
     private void startRitual(ServerLevel level, Player player, ItemStack fuel) {
         this.scanDrums(level);
         if (this.drums.size() < 2) {
-            player.displayClientMessage(Component.translatable("message.thesift.altar.need_drums", this.drums.size()), true);
+            player.sendOverlayMessage(Component.translatable("message.thesift.altar.need_drums", this.drums.size()));
             return;
         }
         int cost = Math.min(10, 2 + this.drums.size() / 2);
         if (!player.getAbilities().instabuild) {
             if (player.experienceLevel < cost) {
-                player.displayClientMessage(Component.translatable("message.thesift.altar.need_levels", cost), true);
+                player.sendOverlayMessage(Component.translatable("message.thesift.altar.need_levels", cost));
                 return;
             }
             player.giveExperienceLevels(-cost);

@@ -210,9 +210,9 @@ block("bulb_lantern", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.LAN
       tags=["pickaxe"], tab="functional")
 block("glowing_slime_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SLIME_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 12)",
       cls="GlowingSlimeBlock", model="slime", tab="functional")
-block("soul_chime", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion()",
+block("soul_chime", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion()",
       cls="SoulChimeBlock", model="chime", tags=["pickaxe"], tab="functional")
-block("lingering_glow", "custom", "BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)",
+block("lingering_glow", "custom", "BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED)",
       cls="LingeringGlowBlock", model="none", item=False, loot="none")
 block("chrome", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8)",
       cls="ChromeLiquidBlock", model="liquid", item=False, loot="none")

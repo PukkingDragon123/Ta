@@ -889,6 +889,22 @@ def gen_misc_tags():
         tag('worldgen/biome', f'{NS}:is_sift', rl(b))
 
 
+def gen_transformers():
+    """Axe stripping via NeoForge's block transformer data map; tilling/paths via vanilla tags."""
+    values = {}
+    for w in spec.WOODS:
+        for src, dst in ((f'{w}_log', f'stripped_{w}_log'), (f'{w}_wood', f'stripped_{w}_wood')):
+            values[rl(src)] = {'transformer': 'minecraft:axe', 'transform_data': {
+                'block_state_provider': {'type': 'minecraft:rule_based', 'rules': [
+                    {'if_true': {'type': 'minecraft:matching_blocks', 'blocks': rl(src)},
+                     'then': {'type': 'minecraft:copy_properties', 'source': {'id': rl(dst), 'properties': {'axis': 'y'}}}}]},
+                'item_damage_per_use': 1, 'sound': 'minecraft:item.axe.strip'}}
+    write(os.path.join(RES, 'data', 'neoforge', 'data_maps', 'block', 'transformables.json'), {'values': values})
+    for b in ('sift_grass_block', 'sift_soil'):
+        tag('block', 'minecraft:turns_into_farmland', rl(b))
+    tag('block', 'minecraft:turns_into_dirt_path', rl('sift_grass_block'))
+
+
 def flush_tags():
     for (reg, ns, path), values in TAGS.items():
         write(os.path.join(RES, 'data', ns, 'tags', reg, path + '.json'), {'replace': False, 'values': values})
@@ -909,6 +925,7 @@ def main():
     gen_equipment()
     gen_sounds()
     gen_misc_tags()
+    gen_transformers()
     flush_tags()
     gen_lang()
     with open(os.path.join(ROOT, 'build', 'textures_needed.txt'), 'w') as f:

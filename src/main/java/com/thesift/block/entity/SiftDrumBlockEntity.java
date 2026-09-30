@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.ShriekParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,7 +53,7 @@ public class SiftDrumBlockEntity extends BlockEntity {
     private int[] pattern = new int[0];
     private long lastAnswerTick;
     private final List<BlockPos> sensors = new ArrayList<>();
-    private @Nullable PortalFrames.Frame frame;
+    private PortalFrames.@Nullable Frame frame;
 
     public SiftDrumBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.SIFT_DRUM.get(), pos, state);
@@ -63,13 +64,13 @@ public class SiftDrumBlockEntity extends BlockEntity {
     public boolean tryInsertCore(ServerLevel level, Player player) {
         List<BlockPos> found = findSensors(level);
         if (found.size() < 3) {
-            player.displayClientMessage(Component.translatable("message.thesift.drum.need_sensors", found.size()), true);
+            player.sendOverlayMessage(Component.translatable("message.thesift.drum.need_sensors", found.size()));
             level.playSound(null, this.worldPosition, SoundEvents.SCULK_CLICKING_STOP, SoundSource.BLOCKS, 1.0F, 0.6F);
             return false;
         }
         PortalFrames.Frame f = PortalFrames.find(level, this.worldPosition, 12);
         if (f == null) {
-            player.displayClientMessage(Component.translatable("message.thesift.drum.no_frame"), true);
+            player.sendOverlayMessage(Component.translatable("message.thesift.drum.no_frame"));
             level.playSound(null, this.worldPosition, SoundEvents.SCULK_CLICKING_STOP, SoundSource.BLOCKS, 1.0F, 0.6F);
             return false;
         }
@@ -215,7 +216,7 @@ public class SiftDrumBlockEntity extends BlockEntity {
         this.beatIndex = 0;
         level.playSound(null, this.worldPosition, ModSounds.RHYTHM_FAIL.get(), SoundSource.BLOCKS, 1.5F, 1.0F);
         for (BlockPos s : this.sensors) {
-            level.sendParticles(ParticleTypes.SHRIEK, s.getX() + 0.5, s.getY() + 0.6, s.getZ() + 0.5, 1, 0, 0, 0, 0);
+            level.sendParticles(new ShriekParticleOption(0), s.getX() + 0.5, s.getY() + 0.6, s.getZ() + 0.5, 1, 0.0, 0.0, 0.0, 0.0);
         }
         for (ServerPlayer p : level.getEntitiesOfClass(ServerPlayer.class, new AABB(this.worldPosition).inflate(16))) {
             p.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 80, 0));
@@ -299,7 +300,7 @@ public class SiftDrumBlockEntity extends BlockEntity {
 
     private void message(ServerLevel level, String key, int arg) {
         for (ServerPlayer p : level.getEntitiesOfClass(ServerPlayer.class, new AABB(this.worldPosition).inflate(20))) {
-            p.displayClientMessage(Component.translatable(key, arg, ROUNDS), true);
+            p.sendOverlayMessage(Component.translatable(key, arg, ROUNDS));
         }
     }
 

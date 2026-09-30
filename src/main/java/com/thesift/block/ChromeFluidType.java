@@ -43,7 +43,7 @@ public class ChromeFluidType extends FluidType {
 
     @Override
     public boolean move(LivingEntity entity, Vec3 movementVector, double gravity) {
-        if (entity.getType().is(ModTags.Entities.CHROME_DWELLERS)) {
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.CHROME_DWELLERS)) {
             // Slumblers glide through Chrome like water.
             entity.moveRelative(0.035F, movementVector);
             entity.move(MoverType.SELF, entity.getDeltaMovement());

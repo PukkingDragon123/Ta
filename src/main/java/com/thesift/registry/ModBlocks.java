@@ -296,9 +296,9 @@ public final class ModBlocks {
     public static final DeferredBlock<GlowingSlimeBlock> GLOWING_SLIME_BLOCK = BLOCKS.registerBlock("glowing_slime_block", GlowingSlimeBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SLIME_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 12));
     public static final DeferredBlock<SoulChimeBlock> SOUL_CHIME = BLOCKS.registerBlock("soul_chime", SoulChimeBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion());
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion());
     public static final DeferredBlock<LingeringGlowBlock> LINGERING_GLOW = BLOCKS.registerBlock("lingering_glow", LingeringGlowBlock::new,
-            () -> BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
+            () -> BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
     public static final DeferredBlock<ChromeLiquidBlock> CHROME = BLOCKS.registerBlock("chrome", ChromeLiquidBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8));
 
