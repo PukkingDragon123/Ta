@@ -556,7 +556,11 @@ def gen_item(i):
 # --------------------------------------------------------------------------- recipes
 
 
+VALID_CATEGORIES = {'building', 'redstone', 'equipment', 'misc'}
+
+
 def shaped(name, pattern, key, result, count=1, category='building', group=None):
+    category = category if category in VALID_CATEGORIES else 'misc'
     r = {'type': 'minecraft:crafting_shaped', 'category': category, 'key': {k: rl(v) if not v.startswith('#') else '#' + rl(v[1:]) for k, v in key.items()},
          'pattern': pattern, 'result': {'count': count, 'id': rl(result)}}
     if group:
@@ -565,6 +569,7 @@ def shaped(name, pattern, key, result, count=1, category='building', group=None)
 
 
 def shapeless(name, ingredients, result, count=1, category='misc', group=None):
+    category = category if category in VALID_CATEGORIES else 'misc'
     r = {'type': 'minecraft:crafting_shapeless', 'category': category,
          'ingredients': [rl(v) if not v.startswith('#') else '#' + rl(v[1:]) for v in ingredients], 'result': {'count': count, 'id': rl(result)}}
     if group:
