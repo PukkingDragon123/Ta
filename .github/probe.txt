@@ -1,13 +1,5 @@
-find GuiGraphics*.java
-sig net.minecraft.client.gui.screens.Screen
-grep public void render\(Gui
-grep static void renderEntityInInventory
-lines net.minecraft.client.gui.screens.inventory.InventoryScreen 1 40
-grep class BookViewScreen
-sig net.minecraft.client.gui.screens.inventory.BookViewScreen
-grep public void blit\(
-grep public void drawString\(
-grep public void renderItem\(
-grep public void fill\(
-find PageButton.java
-grep public void setScreen\(
+sig net.minecraft.client.gui.GuiGraphicsExtractor
+lines net.minecraft.client.gui.GuiGraphicsExtractor 295 370
+lines net.minecraft.client.gui.screens.inventory.InventoryScreen 90 200
+lines net.minecraft.client.gui.screens.inventory.BookViewScreen 95 215
+src net.minecraft.client.gui.screens.inventory.PageButton
