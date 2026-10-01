@@ -39,7 +39,6 @@ public class SculkHarmoner extends PathfinderMob {
         super(type, level);
         this.noPhysics = true;
         this.setNoGravity(true);
-        this.setInvulnerable(true);
         this.orbitPhase = this.random.nextFloat() * Mth.TWO_PI;
     }
 
