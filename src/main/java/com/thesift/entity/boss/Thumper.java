@@ -218,7 +218,7 @@ public class Thumper extends MiniBoss {
     }
 
     private void announce(ServerLevel level) {
-        this.level().broadcastEntityEvent(this, (byte) 60);
+        this.level().broadcastEntityEvent(this, (byte) 102);
         this.playSound(ModSounds.THUMPER_WINDUP.get(), 2.0F, 0.9F + this.random.nextFloat() * 0.2F);
     }
 
@@ -317,7 +317,7 @@ public class Thumper extends MiniBoss {
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id == 60) {
+        if (id == 102) {
             // the client hears the wind-up cue: a puff of dust
             for (int i = 0; i < 8; i++) {
                 this.level().addParticle(ParticleTypes.CLOUD, this.getRandomX(1.0), this.getY() + 0.2, this.getRandomZ(1.0), 0, 0.02, 0);

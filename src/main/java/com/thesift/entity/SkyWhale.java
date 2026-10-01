@@ -44,8 +44,8 @@ import org.jspecify.annotations.Nullable;
  * into the sky.
  */
 public class SkyWhale extends PathfinderMob {
-    private static final byte EVENT_SING = 63;
-    private static final byte EVENT_SPIT = 64;
+    private static final byte EVENT_SING = 100;
+    private static final byte EVENT_SPIT = 101;
     private static final long GEM_COOLDOWN = 24000L;
     private static final int ANSWER_TIMEOUT = 20 * 40;
 
