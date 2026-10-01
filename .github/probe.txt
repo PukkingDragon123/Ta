@@ -1,6 +1,17 @@
-list net.minecraft.client.model
-list net.minecraft.client.renderer.entity
-list net.minecraft.client.particle
-list net.minecraft.client.renderer.blockentity
-list net.minecraft.world.attribute
-list net.minecraft.client.renderer.state
+find Sniffer.java
+find Parrot.java
+find Pig.java
+find FlyingMoveControl.java
+find FlyingPathNavigation.java
+find WaterAvoidingRandomFlyingGoal.java
+find FlyingAnimal.java
+find SnifferRenderer.java
+find PigRenderer.java
+find SimpleEquipmentLayer.java
+find RenderLayer.java
+find ServerBossEvent.java
+grep NOTE_BLOCK_FLUTE =
+grep public static final .* SADDLE
+sig net.minecraft.world.entity.animal.sniffer.Sniffer
+sig net.minecraft.world.entity.animal.pig.Pig
+grep (tickRidden|getRiddenInput|getRiddenSpeed|getControllingPassenger)\(
