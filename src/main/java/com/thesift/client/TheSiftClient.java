@@ -122,7 +122,7 @@ public class TheSiftClient {
             @Override
             public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, FogData fogData) {
                 fogData.environmentalStart = 0.0F;
-                fogData.environmentalEnd = 5.0F;
+                fogData.environmentalEnd = 12.0F;
             }
         }, ModFluids.CHROME_TYPE.get());
     }

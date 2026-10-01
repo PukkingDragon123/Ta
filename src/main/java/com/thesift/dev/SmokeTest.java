@@ -41,7 +41,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -254,6 +256,25 @@ public final class SmokeTest {
                     .findNearestMapStructure(sift, HolderSet.direct(holder.get()), BlockPos.ZERO, 40, false);
             TheSift.LOGGER.info("SMOKE: nearest {} = {}", name, found == null ? "none" : found.getFirst());
             check(found != null, "structure locatable " + name);
+            if (found != null && found.getFirst().distManhattan(BlockPos.ZERO) < 260) {
+                // what actually got built: the start's box and the blocks inside it
+                BlockPos at = found.getFirst();
+                StructureStart start = sift.getChunk(at.getX() >> 4, at.getZ() >> 4).getStartForStructure(holder.get().value());
+                if (start != null && start.isValid()) {
+                    BoundingBox box = start.getBoundingBox();
+                    Map<String, Integer> mine = new TreeMap<>();
+                    for (BlockPos p : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
+                        Identifier id = BuiltInRegistries.BLOCK.getKey(sift.getBlockState(p).getBlock());
+                        if (id.getNamespace().equals(TheSift.MODID) || id.getPath().contains("sculk") || id.getPath().equals("chest")) {
+                            mine.merge(id.getPath(), 1, Integer::sum);
+                        }
+                    }
+                    TheSift.LOGGER.info("SMOKE: built {} box {} pieces {} blocks {}", name, box, start.getPieces().size(), mine);
+                    if (name.equals("deep_shrine")) {
+                        check(mine.getOrDefault("echo_frame", 0) > 0, "natural deep shrine keeps its echo frame gate");
+                    }
+                }
+            }
         }
         Map<String, Integer> starts = new TreeMap<>();
         for (int cx = -RADIUS; cx <= RADIUS; cx++) {

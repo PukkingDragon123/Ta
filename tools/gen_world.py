@@ -487,7 +487,7 @@ def biomes():
           spawns=mobs(monster=[('riveter', 40, 1, 2), ('sifter', 5, 1, 1)]),
           parts=particles(('glow_dust', 0.006), ('drifting_soul', 0.0015)),
           music=f'{NS}:music.deep_sift', ambient_loop=f'{NS}:ambient.deep_sift.loop',
-          feats=COMMON_UNDERGROUND + [(3, 'minecraft:amethyst_geode'), (7, 'minecraft:sculk_vein'), (7, 'minecraft:sculk_patch_deep_dark'),
+          feats=COMMON_UNDERGROUND + [(2, 'minecraft:amethyst_geode'), (7, 'minecraft:sculk_vein'), (7, 'minecraft:sculk_patch_deep_dark'),
                                       (9, 'lumen_moss_patch_floor'), (9, 'lumen_moss_patch_ceiling'), (9, 'glowbell_vine')])
 
 

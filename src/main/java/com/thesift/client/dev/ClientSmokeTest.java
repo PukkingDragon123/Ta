@@ -333,9 +333,12 @@ public final class ClientSmokeTest {
         scene("templates_instruments", 80, c -> c.camera(-45.5, 168, -224.5, -40, 146, -255));
         scene("templates_statues", 80, c -> c.camera(140.5, 168, -226.5, 150, 146, -255));
         scene("mob_lineup", 60, ClientSmokeTest::mobStage);
-        scene("mob_closeup_bulb", 40, c -> c.camera(-7.5, STAGE_Y + 2.2, STAGE_Z - 2.5, -8.5, STAGE_Y + 0.8, STAGE_Z + 6.5));
-        scene("mob_closeup_slumbler", 40, c -> c.camera(0.5, STAGE_Y + 3.0, STAGE_Z - 3.5, 0.5, STAGE_Y + 0.8, STAGE_Z + 6.5));
-        scene("mob_closeup_sifter_enchoer", 40, c -> c.camera(9.5, STAGE_Y + 3.0, STAGE_Z - 3.5, 9.5, STAGE_Y + 1.5, STAGE_Z + 6.5));
+        // the stage runs east (+x) to west; looking south, east is on the left of the picture
+        scene("mob_closeup_bulb", 40, c -> c.camera(-8.5, STAGE_Y + 1.6, STAGE_Z + 2.5, -8.5, STAGE_Y + 0.5, STAGE_Z + 6.0));
+        scene("mob_closeup_slumbler", 40, c -> c.camera(1.5, STAGE_Y + 2.2, STAGE_Z + 1.5, 1.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
+        scene("mob_closeup_sifter", 40, c -> c.camera(6.5, STAGE_Y + 1.8, STAGE_Z + 2.8, 6.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
+        scene("mob_closeup_enchoer", 40, c -> c.camera(10.5, STAGE_Y + 2.6, STAGE_Z + 1.5, 10.5, STAGE_Y + 1.6, STAGE_Z + 6.5));
+        scene("mob_closeup_riveter", 40, c -> c.camera(13.5, STAGE_Y + 2.0, STAGE_Z + 3.0, 13.5, STAGE_Y + 1.2, STAGE_Z + 6.5));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
