@@ -19,5 +19,11 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> EUPHORIA = EFFECTS.register("euphoria",
             () -> new EuphoriaEffect(MobEffectCategory.BENEFICIAL, 0xF59AD0));
 
+    /** The Conductor's Staff's song: stands still and sings for a few seconds. */
+    public static final DeferredHolder<MobEffect, MobEffect> ENTRANCED = EFFECTS.register("entranced",
+            () -> new com.thesift.effect.EntrancedEffect(MobEffectCategory.HARMFUL, 0x2EF2E2).addAttributeModifier(
+                    net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, TheSift.id("entranced_still"), -1.0,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+
     private ModEffects() {}
 }

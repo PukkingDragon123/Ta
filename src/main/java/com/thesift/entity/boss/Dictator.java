@@ -321,7 +321,7 @@ public class Dictator extends Monster {
     public void die(DamageSource source) {
         super.die(source);
         if (this.level() instanceof ServerLevel level) {
-            this.spawnAtLocation(level, new ItemStack(ModItems.CONDUCTORS_BATON.get()));
+            this.spawnAtLocation(level, new ItemStack(ModItems.CONDUCTORS_STAFF.get()));
             for (OrchestraMinion m : level.getEntitiesOfClass(OrchestraMinion.class, new AABB(this.blockPosition()).inflate(48.0))) {
                 m.kill(level);
             }

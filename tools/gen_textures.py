@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(__file__))
 import hdblocks as HB  # noqa: E402
+import hditems as HI  # noqa: E402
 import mcitems as MI  # noqa: E402
 import mctex as M  # noqa: E402
 import sprites as S  # noqa: E402
@@ -767,8 +768,40 @@ def items():
     eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
             'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'), 'sift_sniffer': ('#8c2f23', '#3f9d80'),
             'dictator': ('#141e2c', '#e6e1d3'), 'enforcer': ('#22324a', '#e2d5b8'), 'resonator': ('#16202e', '#3ff0e0'), 'howler': ('#1a2433', '#d8d0b8')}
-    for mob, (b, s) in eggs.items():
-        out(f'item/{mob}_spawn_egg', pal_sprite(S.EGG, {'b': hx(b), 's': hx(s), 'd': darken(hx(b), 0.45)}))
+    # modern-style portrait eggs at 32x: each egg wears its mob's face (and ears, antlers, crests)
+    E = {
+        'bulb': dict(face=['EEEE....EEEE', 'EEEE....EEEE', '.....MM.....', '.....MM.....'],
+                     top=['.ee....ee.', 'eiie..eiie', 'eiie..eiie', 'eiie..eiie', 'eiie..eiie', '.ee....ee.'],
+                     keys={'E': '#2f2777', 'M': '#4a3a9f', 'e': '#78a5e3', 'i': '#63c6df'}),
+        'slumbler': dict(face=['iiii....iiii', 'iEhi....iEhi', 'iEii....iEii', 'iiii....iiii', '............', 'mmmmmmmmmmmm', '.t.t.t.t.t.t'],
+                         keys={'i': '#ffd66b', 'E': '#1a1d38', 'h': '#ffffff', 'm': '#d9577f', 't': '#fff8ec'}),
+        'sifter': dict(face=['.ee......ee.', '.ee......ee.', '............', 'tTtTtTtTtTtT', 'mmmmmmmmmmmm', 'TtTtTtTtTtTt'],
+                       keys={'e': '#d9f6ff', 't': '#eaf7ff', 'T': '#17328c', 'm': '#17328c'}),
+        'enchoer': dict(face=['.ffffffff.', 'ffbffffbff', 'feefffeeff', 'ffffnnffff', 'ffffnnffff', 'fffmmmmfff', '.ffffffff.'],
+                        top=['a.a......a.a', 'aaa......aaa', '.aaa....aaa.', '..aa....aa..'],
+                        keys={'f': '#d5dfd4', 'b': '#4d6870', 'e': '#3a5059', 'n': '#aebdb4', 'm': '#6a807b', 'a': '#efe2b2'}),
+        'riveter': dict(face=['BBBBBBBBBB', 'ee..BB..ee', 'eeee..eeee', '.ee....ee.', '..........', '..tvvvvt..'],
+                        top=['h........h', '.h......h.', '.hh....hh.'], keys={'B': '#d9d4bf', 'e': '#a6fff5', 't': '#e9f4ef', 'v': '#07101c', 'h': '#1fa39b'}),
+        'harmoner': dict(face=['e........e', 'e........e', '...bbbb...', '...bbbb...', '....BB....'],
+                         top=['.t..t..t.', '.c..c..c.', '..c.c.c..', '...ccc...'],
+                         keys={'e': '#1a1830', 'b': '#ffd23f', 'B': '#c99a1f', 't': '#ff8a3d', 'c': '#ffd86b'}),
+        'sift_sniffer': dict(face=['..e....e..', '..........', '...nnnn...', '...nNNn...', '...nnnn...'],
+                             top=['.gggggggg.', 'gGggGggGgg', 'gggggggggg'], keys={'e': '#1a1a1a', 'n': '#f2b232', 'N': '#a86a12', 'g': '#3f9d80', 'G': '#2d7a62'}),
+        'dictator': dict(face=['.mmmmmmmm.', 'mEEmmmmEEm', 'mEgmmmmgEm', 'mmmmmmmmmm', 'mmmsmmsmmm', 'mmmvvvvmmm', '.mmmmmmmm.'],
+                         top=['...g....', 'g..h..g.', 'h..h..h.', 'h.hh.hh.'],
+                         keys={'m': '#e6e1d3', 'E': '#04080c', 'g': '#2ef2e2', 's': '#b9b2a0', 'v': '#04080c', 'h': '#141e2c'}),
+        'enforcer': dict(face=['bbbbbbbbbbbb', '.vgv....vgv.', '.vgv....vgv.', '............', 'tvtvtvtvtvtv', 'vtvtvtvtvtvt'],
+                         top=['...cccccc...', '..c..gg..c..', '...cccccc...', '.....hh.....'],
+                         keys={'b': '#e3ddcc', 'v': '#04080c', 'g': '#2ef2e2', 't': '#f2ecd8', 'c': '#c9a24a', 'h': '#b3ab96'}),
+        'resonator': dict(face=['.LLLLLL.', 'lwwggwwl', '.wwgpww.', '..wwww..', '........', '.s.s.s.s', '.s.s.s.s', '.s.s.s.s'],
+                          keys={'L': '#1f2c40', 'l': '#04080c', 'w': '#f4f0e5', 'g': '#2ef2e2', 'p': '#04080c', 's': '#3ff0e0'}),
+        'howler': dict(face=['.bb....bb.', '.gg....gg.', '..........', '..dddddd..', '.dvvvvvvd.', '.dvvggvvd.', '.dvvvvvvd.', '..dddddd..'],
+                       keys={'b': '#b3ab96', 'g': '#2ef2e2', 'd': '#e3ddcc', 'v': '#04080c'}),
+    }
+    for i, (mob, (b, s)) in enumerate(eggs.items()):
+        e = E[mob]
+        keys = {k: hx(v) for k, v in e['keys'].items()}
+        out(f'item/{mob}_spawn_egg', HI.egg(hx(b), hx(s), e.get('face'), keys, e.get('top'), seed=i))
 
 
 # ================================================================== the Dictator's things
@@ -1158,6 +1191,13 @@ def particles():
                          '..y............y..', '.yYy..........yYy.', '..y............y..', '..................', '........y.........', '.......yYy........'],
                      {'d': hx('#a8457a'), 'c': hx(c), 'w': hx('#fff0f7'), 'y': hx('#ffe89a'), 'Y': hx('#ffffff')})
         out(f'mob_effect/{name}', t)
+    # entranced: a glowing music note in a spiral
+    t = Tex(18, 18)
+    draw_map(t, ['..................', '.....dddddd.......', '...dd......dd.....', '..d...WWWWW..d....', '.d....WccccW..d...', '.d....Wc..cW..d...',
+                 'd.....Wc..cW...d..', 'd.....Wc..cW...d..', 'd.....Wc..cW...d..', 'd...WWWc.WWW...d..', 'd..WcccW.Wccd..d..', '.d.WcccW.Wccd.d...',
+                 '.d..WWW...WW..d...', '..d..........d....', '...dd......dd.....', '.....dddddd.......', '..................', '..................'],
+             {'d': hx('#15a89f'), 'c': hx('#2ef2e2'), 'W': hx('#e8fffc')})
+    out('mob_effect/entranced', t)
 
 
 # ================================================================== sky + logo
@@ -1259,6 +1299,59 @@ def logo():
     im.save(os.path.join(ROOT, 'src/main/resources/thesift_logo.png'))
 
 
+def hd_items():
+    """Every item sprite, drawn fresh at 32x in the glossy RPG style (tools/rpgitems.py)."""
+    import rpgitems
+    for name, img in rpgitems.all_items().items():
+        out(f'item/{name}', img)
+
+
+def boss_bar():
+    """The Dictator's health bar (2x texels): a sculk-steel frame with gold trim and phase ticks,
+    a glowing fill strip, an empty track, and a devil-head emblem."""
+    import rpgsprite as RS
+    import rpgitems as RI
+    t = Image.new('RGBA', (512, 64), (0, 0, 0, 0))
+    d = ImageDraw.Draw(t)
+    # frame plate 428 x 44
+    d.rounded_rectangle((6, 8, 421, 39), radius=8, fill=(14, 22, 32, 255), outline=(6, 10, 14, 255), width=2)
+    d.rounded_rectangle((9, 11, 418, 36), radius=6, outline=(42, 58, 82, 255), width=2)
+    d.line((14, 13, 413, 13), fill=(70, 96, 128, 255), width=1)
+    d.line((14, 34, 413, 34), fill=(10, 16, 22, 255), width=1)
+    d.rectangle((30, 18, 397, 31), fill=(184, 154, 82, 255))
+    d.rectangle((31, 19, 396, 30), fill=(5, 8, 12, 255))
+    for frac in (0.6, 0.25):
+        x = 32 + int(364 * frac)
+        d.rectangle((x - 1, 15, x, 33), fill=(220, 194, 122, 255))
+        d.rectangle((x - 1, 15, x, 16), fill=(255, 240, 180, 255))
+    # tuning-fork flourishes at both ends
+    for x0, sgn in ((0, 1), (427, -1)):
+        for dy in (14, 30):
+            d.rectangle((min(x0, x0 + sgn * 10), dy, max(x0, x0 + sgn * 10), dy + 3), fill=(184, 154, 82, 255))
+            d.rectangle((min(x0, x0 + sgn * 10), dy, max(x0, x0 + sgn * 10), dy), fill=(236, 214, 140, 255))
+        d.rectangle((min(x0 + sgn * 8, x0 + sgn * 12), 14, max(x0 + sgn * 8, x0 + sgn * 12), 33), fill=(184, 154, 82, 255))
+    # fill strip (y 44) and empty track (y 54), 364 x 10 each
+    fill_rows = [(200, 255, 250), (120, 250, 240), (46, 242, 226), (46, 242, 226), (40, 220, 210), (32, 196, 190), (26, 168, 162),
+                 (21, 140, 136), (16, 112, 110), (10, 70, 70)]
+    for y, c in enumerate(fill_rows):
+        d.line((0, 44 + y, 363, 44 + y), fill=(*c, 255))
+    for x in range(10, 364, 26):
+        d.rectangle((x, 46, x + 1, 50), fill=(220, 255, 252, 255))
+        d.rectangle((x + 2, 46, x + 3, 47), fill=(220, 255, 252, 255))
+        d.rectangle((x - 1, 49, x, 51), fill=(220, 255, 252, 255))
+    for y in range(10):
+        d.line((0, 54 + y, 363, 54 + y), fill=(18, 26, 36, 255) if y not in (0, 9) else (8, 12, 18, 255))
+    # devil emblem 32 x 32 at (448, 0)
+    sp = RS.Sprite()
+    sp.add(RS.capsule(9, 11, 3, 4, 2.0) | RS.capsule(3, 4, 6, 1, 1.4) | RS.capsule(23, 11, 29, 4, 2.0) | RS.capsule(29, 4, 26, 1, 1.4), '#e3ddcc', 'dome')
+    sp.add(RS.ellipse(16, 18, 10, 12), '#5a1a30', 'dome')
+    head = sp.render()
+    RI.overlay(head, ['bbb....bbb', '.eee..eee.', '.eEe..eEe.', '..........', '....nn....', '..........', 'mmmmmmmmmm', 'mfmfmmfmfm', '.mmmmmmmm.'],
+               {'b': (23, 8, 16), 'e': (4, 8, 12), 'E': (46, 242, 226), 'n': (4, 8, 12), 'm': (4, 8, 12), 'f': (244, 240, 229)}, 11, 12)
+    t.alpha_composite(head, (448, 0))
+    out('gui/conductor_bar', t)
+
+
 def main():
     stone_textures()
     soils()
@@ -1273,6 +1366,8 @@ def main():
     particles()
     nebula()
     logo()
+    hd_items()
+    boss_bar()
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]

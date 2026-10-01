@@ -41,6 +41,7 @@ public final class ModBusEvents {
         event.put(ModEntities.ENCHOER.get(), Enchoer.createAttributes().build());
         event.put(ModEntities.RIVETER.get(), Riveter.createAttributes().build());
         event.put(ModEntities.HARMONER.get(), Harmoner.createAttributes().build());
+        event.put(ModEntities.SCULK_HARMONER.get(), com.thesift.entity.SculkHarmoner.createAttributes().build());
         event.put(ModEntities.SIFT_SNIFFER.get(), SiftSniffer.createAttributes().build());
         event.put(ModEntities.DICTATOR.get(), Dictator.createAttributes().build());
         event.put(ModEntities.ENFORCER.get(), Enforcer.createAttributes().build());

@@ -27,7 +27,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> combat() {
-        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON);
+        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON, ModItems.CONDUCTORS_STAFF);
     }
 
     public static List<Supplier<? extends Item>> eggs() {

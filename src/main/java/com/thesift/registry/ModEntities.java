@@ -36,7 +36,11 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SiftSniffer>> SIFT_SNIFFER = ENTITIES.registerEntityType("sift_sniffer",
             SiftSniffer::new, MobCategory.CREATURE, b -> b.sized(1.9F, 1.75F).eyeHeight(1.05F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,
-            MobCategory.MONSTER, b -> b.sized(0.9F, 3.4F).eyeHeight(3.0F).clientTrackingRange(16).fireImmune());
+            MobCategory.MONSTER, b -> b.sized(0.9F, 3.8F).eyeHeight(3.3F).clientTrackingRange(16).fireImmune());
+    /** Summoned by the Conductor's Staff: circles its summoner and sings buffs over them. */
+    public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.SculkHarmoner>> SCULK_HARMONER = ENTITIES.registerEntityType(
+            "sculk_harmoner", com.thesift.entity.SculkHarmoner::new, MobCategory.MISC,
+            b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10).noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<Enforcer>> ENFORCER = ENTITIES.registerEntityType("enforcer", Enforcer::new,
             MobCategory.MONSTER, b -> b.sized(1.2F, 1.4F).eyeHeight(1.0F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Resonator>> RESONATOR = ENTITIES.registerEntityType("resonator", Resonator::new,

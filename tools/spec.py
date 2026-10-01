@@ -252,5 +252,7 @@ for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sif
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Baton")
+item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",
+     model="handheld", tab="combat", name="Conductor's Staff")
 item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")

@@ -29,6 +29,8 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
     private final ModelPart head;
     private final ModelPart crown;
     private final ModelPart coatTail;
+    /** Four ears: upper left, upper right, lower left, lower right. */
+    private final ModelPart[] ears = new ModelPart[4];
     private final ModelPart[] arms = new ModelPart[2];
     private final ModelPart[] forearms = new ModelPart[2];
     private final ModelPart[] legs = new ModelPart[2];
@@ -42,6 +44,10 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
         this.head = this.neck.getChild("head");
         this.crown = this.head.getChild("crown");
         this.coatTail = this.torso.getChild("coat_tail");
+        this.ears[0] = this.head.getChild("left_ear_upper");
+        this.ears[1] = this.head.getChild("right_ear_upper");
+        this.ears[2] = this.head.getChild("left_ear_lower");
+        this.ears[3] = this.head.getChild("right_ear_lower");
         String[] sides = {"left", "right"};
         for (int i = 0; i < 2; i++) {
             this.arms[i] = this.torso.getChild(sides[i] + "_arm");
@@ -75,6 +81,15 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
         this.head.xRot = s.xRot * Anim.DEG * 0.6F;
         this.head.zRot = Mth.sin(age * 0.045F) * 0.12F * rest;
         this.crown.yRot = Mth.sin(age * 0.03F) * 0.05F;
+
+        // --- four ears: each twitches on its own, all flatten back when he is angry
+        boolean angry = s.expression == com.thesift.client.Expression.ANGRY;
+        for (int i = 0; i < 4; i++) {
+            float sgn = i % 2 == 0 ? 1.0F : -1.0F;
+            float twitch = Anim.envelope(Mth.positiveModulo(age + i * 23.0F, 70.0F + i * 9.0F), 0.0F, 1.5F, 1.0F, 3.0F);
+            this.ears[i].zRot += sgn * (twitch * 0.35F + Mth.sin(age * 0.07F + i) * 0.04F);
+            this.ears[i].yRot += sgn * (angry ? 0.55F : 0.0F);
+        }
 
         // --- conducting: the baton traces a figure of eight, the left hand keeps the beat
         float beat = age * 0.12F;
@@ -133,6 +148,9 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
             this.crown.xScale = 1.0F + 0.3F * rear;
             this.crown.zScale = 1.0F + 0.3F * rear;
             this.crown.yScale = 1.0F + 0.4F * rear;
+            for (ModelPart ear : this.ears) {
+                ear.xRot -= 0.5F * rear;
+            }
         }
         // --- blink: folds down into himself
         if ((t = Anim.seconds(s.blink, age)) >= 0 && t < 0.35F) {

@@ -55,6 +55,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerLayers);
         modBus.addListener(TheSiftClient::registerRenderers);
         modBus.addListener(TheSiftClient::registerParticles);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.thesift.client.gui.ConductorBossBar::onBossBar);
         modBus.addListener(TheSiftClient::registerFluidModels);
         modBus.addListener(TheSiftClient::registerClientExtensions);
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
@@ -79,6 +80,7 @@ public class TheSiftClient {
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BULB.get(), BulbRenderer::new);
         event.registerEntityRenderer(ModEntities.HARMONER.get(), HarmonerRenderer::new);
+        event.registerEntityRenderer(ModEntities.SCULK_HARMONER.get(), com.thesift.client.renderer.SculkHarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFT_SNIFFER.get(), SiftSnifferRenderer::new);
         event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
         event.registerEntityRenderer(ModEntities.ENFORCER.get(),

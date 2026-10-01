@@ -96,6 +96,7 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "warden_core", ModItems.WARDEN_CORE));
         l.add(thing(ITEMS, "sift_cake", ModItems.SIFT_CAKE));
         l.add(thing(ITEMS, "baton", ModItems.CONDUCTORS_BATON));
+        l.add(thing(ITEMS, "staff", ModItems.CONDUCTORS_STAFF));
         // ---- places
         l.add(thing(PLACES, "portal", ModItems.SIFT_DRUM));
         l.add(thing(PLACES, "musical_temple", ModItems.HARMONY_STONE));

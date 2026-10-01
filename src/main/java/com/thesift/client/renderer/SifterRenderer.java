@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 
 public class SifterRenderer extends SiftMobRenderer<Sifter, SifterRenderState, SifterModel> {
-    private static final Identifier TEXTURE = TheSift.id("textures/entity/sifter/sifter.png");
+    private static final ExpressionTextures TEXTURES = ExpressionTextures.single("sifter", com.thesift.client.Expression.BLINK, com.thesift.client.Expression.ANGRY, com.thesift.client.Expression.HURT, com.thesift.client.Expression.DEAD);
 
     public SifterRenderer(EntityRendererProvider.Context context) {
         super(context, new SifterModel(context.bakeLayer(ModModelLayers.SIFTER)), 0.55F);
@@ -18,7 +18,7 @@ public class SifterRenderer extends SiftMobRenderer<Sifter, SifterRenderState, S
 
     @Override
     public Identifier getTextureLocation(SifterRenderState state) {
-        return TEXTURE;
+        return TEXTURES.get(state.expression);
     }
 
     @Override

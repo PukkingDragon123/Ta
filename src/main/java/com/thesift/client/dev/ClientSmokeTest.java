@@ -361,8 +361,8 @@ public final class ClientSmokeTest {
         scene("altar", 60, ClientSmokeTest::altarStage);
         scene("drums", 40, ClientSmokeTest::drumStage);
         // the Sift Codex, opened at a few spreads (live, animated creatures on the left pages)
-        int[][] codexPages = {{1, 0}, {2, 0}, {23, 0}, {24, 0}, {18, 0}, {19, 0}};
-        String[] codexNames = {"harmoner", "sniffer", "dictator", "enforcer", "castle", "drum"};
+        int[][] codexPages = {{1, 0}, {2, 0}, {24, 0}, {25, 0}, {19, 0}, {20, 0}, {13, 0}};
+        String[] codexNames = {"harmoner", "sniffer", "dictator", "enforcer", "castle", "drum", "staff"};
         for (int i = 0; i < codexPages.length; i++) {
             int page = codexPages[i][0];
             SCENES.add(new Scene("codex_" + codexNames[i], 50, c -> target = null,
@@ -489,6 +489,7 @@ public final class ClientSmokeTest {
         }
         // the Dictator and his orchestra, at the far end of the stage
         c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
+        c.spawn(ModEntities.SCULK_HARMONER.get(), 21.5, STAGE_Y + 2.5, STAGE_Z + 6.0, face, false);
         c.spawn(ModEntities.ENFORCER.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
         c.spawn(ModEntities.HOWLER.get(), 22.0, STAGE_Y, STAGE_Z + 4.0, face, false);
         c.spawn(ModEntities.RESONATOR.get(), 24.6, STAGE_Y, STAGE_Z + 5.5, face, false);
