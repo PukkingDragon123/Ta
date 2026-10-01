@@ -19,7 +19,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> items() {
-        return List.of(ModItems.SIFT_CAKE, ModItems.GLOWING_SLIME_BALL, ModItems.PITCHER_BULB, ModItems.THICK_HIDE, ModItems.CHROME_PEARL, ModItems.RAW_SERBIM, ModItems.SERBIM_INGOT, ModItems.SIFTITE_INGOT, ModItems.SIFTITE_NUGGET, ModItems.WARDEN_CORE, ModItems.CHOIR_POD, ModItems.ECHO_SEED, ModItems.DREAM_STEW, ModItems.GLOWCAP_SKEWER, ModItems.CHROME_BUCKET, ModItems.SLINGSHOT, ModItems.SIFTITE_UPGRADE_SMITHING_TEMPLATE, ModItems.STAR_SHARD, ModItems.DREAM_JOURNAL_FRAGMENT, ModItems.MUSIC_DISC_LULLABY);
+        return List.of(ModItems.SIFT_CAKE, ModItems.GLOWING_SLIME_BALL, ModItems.PITCHER_BULB, ModItems.THICK_HIDE, ModItems.CHROME_PEARL, ModItems.RAW_SERBIM, ModItems.SERBIM_INGOT, ModItems.SIFTITE_INGOT, ModItems.SIFTITE_NUGGET, ModItems.WARDEN_CORE, ModItems.CHOIR_POD, ModItems.ECHO_SEED, ModItems.DREAM_STEW, ModItems.GLOWCAP_SKEWER, ModItems.CHROME_BUCKET, ModItems.SLINGSHOT, ModItems.SIFTITE_UPGRADE_SMITHING_TEMPLATE, ModItems.STAR_SHARD, ModItems.DREAM_JOURNAL_FRAGMENT, ModItems.SIFT_CODEX, ModItems.MUSIC_DISC_LULLABY);
     }
 
     public static List<Supplier<? extends Item>> tools() {

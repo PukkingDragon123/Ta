@@ -359,6 +359,14 @@ public final class ClientSmokeTest {
         });
         scene("portal", 80, ClientSmokeTest::portalStage);
         scene("altar", 60, ClientSmokeTest::altarStage);
+        // the Sift Codex, opened at a few spreads (live, animated creatures on the left pages)
+        int[][] codexPages = {{1, 0}, {2, 0}, {22, 0}, {23, 0}, {18, 0}};
+        String[] codexNames = {"harmoner", "sniffer", "dictator", "enforcer", "castle"};
+        for (int i = 0; i < codexPages.length; i++) {
+            int page = codexPages[i][0];
+            SCENES.add(new Scene("codex_" + codexNames[i], 50, c -> target = null,
+                    () -> Minecraft.getInstance().gui.setScreen(new com.thesift.client.codex.SiftCodexScreen(page))));
+        }
         SCENES.add(new Scene("creative_blocks", 30, c -> {
             c.run("gamemode creative @a");
             target = null;

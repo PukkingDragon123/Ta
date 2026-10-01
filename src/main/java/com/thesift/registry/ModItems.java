@@ -189,6 +189,7 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> RESONATOR_SPAWN_EGG = ITEMS.registerItem("resonator_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.RESONATOR.get()));
     public static final DeferredItem<SpawnEggItem> HOWLER_SPAWN_EGG = ITEMS.registerItem("howler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HOWLER.get()));
     public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
+    public static final DeferredItem<SiftCodexItem> SIFT_CODEX = ITEMS.registerItem("sift_codex", SiftCodexItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> MUSIC_DISC_LULLABY = ITEMS.registerItem("music_disc_lullaby", Item::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG));
 
     private ModItems() {}
