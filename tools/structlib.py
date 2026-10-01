@@ -142,9 +142,10 @@ class Build:
             k = b.key()
             if k not in index:
                 index[k] = len(palette)
-                entry = Compound({'Name': String(b.name)})
+                # 26.3 block state format: "id" + lowercase "properties" (no datafixing happens at the current DataVersion)
+                entry = Compound({'id': String(b.name)})
                 if b.props:
-                    entry['Properties'] = Compound({kk: String(vv) for kk, vv in b.props.items()})
+                    entry['properties'] = Compound({kk: String(vv) for kk, vv in b.props.items()})
                 palette.append(entry)
             e = Compound({'pos': List[Int]([Int(x), Int(y), Int(z)]), 'state': Int(index[k])})
             if b.nbt:
