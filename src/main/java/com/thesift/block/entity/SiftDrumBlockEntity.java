@@ -128,6 +128,13 @@ public class SiftDrumBlockEntity extends BlockEntity {
         }
     }
 
+    /** A read-only snapshot of the ritual, for debugging and the CI smoke test. */
+    public record RitualState(String phase, int round, int beatIndex, int[] pattern, int timer) {}
+
+    public RitualState ritualState() {
+        return new RitualState(this.phase.name(), this.round, this.beatIndex, this.pattern.clone(), this.timer);
+    }
+
     // ------------------------------------------------------------------ ticking
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, SiftDrumBlockEntity drum) {

@@ -747,7 +747,75 @@ def gen_lang():
     write(os.path.join(A, 'lang', 'en_us.json'), dict(items))
 
 
+# Hand-written subtitles, in the style of vanilla's ("Bulb squeaks", "Chrome splashes").
+SUBTITLES = {
+    'entity.bulb.ambient': 'Bulb squeaks',
+    'entity.bulb.hurt': 'Bulb hurts',
+    'entity.bulb.death': 'Bulb dies',
+    'entity.bulb.hop': 'Bulb boings',
+    'entity.bulb.squish': 'Bulb squishes',
+    'entity.bulb.happy': 'Bulb chirps happily',
+    'entity.bulb.lay': 'Bulb plops out a slime ball',
+    'entity.bulb.eat': 'Bulb munches',
+    'entity.slumbler.ambient': 'Slumbler croaks',
+    'entity.slumbler.hurt': 'Slumbler hurts',
+    'entity.slumbler.death': 'Slumbler dies',
+    'entity.slumbler.yawn': 'Slumbler yawns',
+    'entity.slumbler.bite': 'Slumbler snaps',
+    'entity.slumbler.step': 'Footsteps',
+    'entity.sifter.ambient': 'Sifter chitters',
+    'entity.sifter.hurt': 'Sifter hurts',
+    'entity.sifter.death': 'Sifter dies',
+    'entity.sifter.chomp': 'Sifter chomps',
+    'entity.sifter.leap': 'Sifter bursts from the sand',
+    'entity.sifter.step': 'Footsteps',
+    'entity.enchoer.ambient': 'Enchoer chimes',
+    'entity.enchoer.hum': 'Enchoer hums',
+    'entity.enchoer.trade': 'Enchoer trades',
+    'entity.enchoer.yes': 'Enchoer agrees',
+    'entity.enchoer.no': 'Enchoer disagrees',
+    'entity.enchoer.hurt': 'Enchoer hurts',
+    'entity.enchoer.death': 'Enchoer shatters',
+    'entity.riveter.ambient': 'Riveter clicks',
+    'entity.riveter.scream': 'Riveter screams',
+    'entity.riveter.hurt': 'Riveter hurts',
+    'entity.riveter.death': 'Riveter dies',
+    'block.sift_drum.low': 'Sift Drum thumps',
+    'block.sift_drum.mid': 'Sift Drum beats',
+    'block.sift_drum.high': 'Sift Drum taps',
+    'block.sift_drum.boom': 'Sift Drum booms',
+    'block.euphory_altar.charge': 'Euphory Altar charges',
+    'block.euphory_altar.enchant': 'Euphory Altar enchants',
+    'block.euphory_altar.hum': 'Euphory Altar hums',
+    'block.sift_portal.ambient': 'Sift Portal whispers',
+    'block.sift_portal.activate': 'Sift Portal awakens',
+    'block.sift_portal.travel': 'Sift Portal noise fades',
+    'event.rhythm.call': 'Sculk calls a rhythm',
+    'event.rhythm.good': 'Rhythm matches',
+    'event.rhythm.fail': 'Sculk shrieks',
+    'event.rhythm.round': 'Sculk hums in harmony',
+    'block.chrome.ambient': 'Chrome shimmers',
+    'block.chrome.splash': 'Chrome splashes',
+    'block.harmony_stone.tone': 'Harmony Stone rings',
+    'block.harmony_seal.unlock': 'Harmony Seal unlocks',
+    'block.soul_chime.ring': 'Soul Chime rings',
+    'block.choir_lily.sing': 'Choir Lily sings',
+    'block.dream_snare.trigger': 'Dream Snare springs',
+    'block.crumbling_dreamstone.crumble': 'Dreamstone crumbles',
+    'item.slingshot.shoot': 'Slingshot fires',
+    'item.slingshot.pull': 'Slingshot stretches',
+    'entity.glowball.burst': 'Glowball bursts',
+    'item.warden_core.pulse': 'Warden Core throbs',
+    'ambient.sift.loop': 'The Sift breathes',
+    'ambient.sift.additions': 'Distant chimes',
+    'ambient.sift.mood': 'Dreamlike murmurs',
+    'ambient.deep_sift.loop': 'The Deep Sift rumbles',
+}
+
+
 def subtitle(s):
+    if s in SUBTITLES:
+        return SUBTITLES[s]
     parts = s.split('.')
     who = spec.title(parts[1]) if len(parts) > 2 else spec.title(parts[0])
     what = parts[-1].replace('_', ' ')

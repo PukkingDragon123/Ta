@@ -49,6 +49,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Headless end-to-end check used by CI (only active with -Dthesift.smoketest=true). Generates a
@@ -60,6 +61,7 @@ public final class SmokeTest {
     private static final List<Entity> SPAWNED = new ArrayList<>();
     private static final List<String> FAILURES = new ArrayList<>();
     private static int ticks = -1;
+    private static @Nullable MechanicsTest mechanics;
 
     private SmokeTest() {
     }
@@ -99,11 +101,13 @@ public final class SmokeTest {
             validateLoot(server);
             portals(server, sift);
             spawnMobs(sift);
+            mechanics = new MechanicsTest(server, sift, SmokeTest::check);
+            mechanics.start();
             ticks = 0;
         } catch (Throwable t) {
             TheSift.LOGGER.error("SMOKE FAIL: exception", t);
             FAILURES.add("exception " + t);
-            ticks = 1000;
+            ticks = 3001;
         }
     }
 
@@ -112,7 +116,11 @@ public final class SmokeTest {
             return;
         }
         ticks++;
-        if (ticks == 200 || ticks > 1000) {
+        if (mechanics != null && !mechanics.done()) {
+            mechanics.tick();
+        }
+        boolean finished = ticks >= 200 && (mechanics == null || mechanics.done());
+        if (finished || ticks > 3000) {
             for (Entity e : SPAWNED) {
                 TheSift.LOGGER.info("SMOKE: {} alive={} removal={} pos={} health={}", BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()), e.isAlive(),
                         e.getRemovalReason(), e.blockPosition(), e instanceof LivingEntity living ? living.getHealth() + "/" + living.getMaxHealth() : "-");
