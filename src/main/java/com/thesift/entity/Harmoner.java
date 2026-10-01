@@ -132,7 +132,7 @@ public class Harmoner extends Animal implements MusicListener {
         return this.entityData.get(TAME);
     }
 
-    public @Nullable java.util.UUID getOwnerId() {
+    public java.util.@Nullable UUID getOwnerId() {
         return this.owner;
     }
 
