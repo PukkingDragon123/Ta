@@ -1,4 +1,12 @@
-lines net.minecraft.client.renderer.entity.LivingEntityRenderer 286 300
-grep ID assignment
-grep public void setId\(
-grep public int getId\(\)
+src net.minecraft.client.renderer.entity.layers.SlimeOuterLayer
+src net.minecraft.client.renderer.entity.SlimeRenderer
+sig net.minecraft.client.renderer.entity.LivingEntityRenderer
+lines net.minecraft.client.renderer.entity.LivingEntityRenderer 90 200
+grep void makePoofParticles
+grep protected void tickDeath
+find SlimeModel.java
+sig net.minecraft.client.particle.Particle
+grep onGround = 
+sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState
+sig net.minecraft.client.renderer.SubmitNodeCollector
+sig net.minecraft.client.renderer.OrderedSubmitNodeCollector
