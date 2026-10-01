@@ -1,15 +1,15 @@
-lines net.minecraft.world.entity.animal.pig.Pig 76 240
-src net.minecraft.client.renderer.entity.SnifferRenderer
-src net.minecraft.client.renderer.entity.PigRenderer
-sig net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer
-grep boolean isSaddled\(
-grep enum LayerType
-lines net.minecraft.client.resources.model.EquipmentClientInfo 1 80
-sig net.minecraft.world.entity.ai.control.FlyingMoveControl
-sig net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal
-grep createNavigation\(Level
-lines net.minecraft.world.entity.animal.parrot.Parrot 100 175
-sig net.minecraft.client.renderer.entity.layers.RenderLayer
-sig net.minecraft.server.level.ServerBossEvent
-grep class SnifferModel
-find SnifferRenderState.java
+src net.minecraft.client.renderer.entity.layers.RenderLayer
+lines net.minecraft.world.entity.animal.parrot.Parrot 185 200
+sig net.minecraft.world.entity.ai.navigation.FlyingPathNavigation
+lines net.minecraft.world.entity.Mob 875 890
+lines net.minecraft.client.model.animal.sniffer.SnifferModel 1 110
+lines net.minecraft.world.entity.animal.sniffer.Sniffer 240 300
+lines net.minecraft.world.entity.animal.sniffer.Sniffer 360 390
+grep bossEvent
+lines net.minecraft.world.entity.boss.wither.WitherBoss 80 130
+grep void startSeenByPlayer\(
+grep class SonicBoom
+sig net.minecraft.world.entity.ai.behavior.warden.SonicBoom
+lines net.minecraft.world.entity.ai.behavior.warden.SonicBoom 60 110
+grep public static final .*SONIC_BOOM
+grep public static final .*EquipmentSlot SADDLE
