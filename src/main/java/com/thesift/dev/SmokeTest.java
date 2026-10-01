@@ -222,7 +222,7 @@ public final class SmokeTest {
     // ------------------------------------------------------------------ structures
 
     private static final String[] STRUCTURES = {"collapsed_tower", "musical_temple", "chrome_well", "abandoned_altar", "stone_instrument",
-            "ruined_bridge", "buried_settlement", "dream_statue", "deep_shrine", "sift_ruins"};
+            "ruined_bridge", "buried_settlement", "dream_statue", "deep_shrine", "sift_ruins", "sculk_castle"};
 
     private static void structures(ServerLevel sift) {
         // every template parses and can be stamped into the world
@@ -411,7 +411,8 @@ public final class SmokeTest {
 
     private static void spawnMobs(ServerLevel sift) {
         List<EntityType<?>> types = List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModEntities.ENCHOER.get(),
-                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.SIFT_SNIFFER.get());
+                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.SIFT_SNIFFER.get(), ModEntities.ENFORCER.get(),
+                ModEntities.RESONATOR.get(), ModEntities.HOWLER.get());
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);
         sift.setChunkForced(1, 0, true);

@@ -66,6 +66,12 @@ def entity_loot():
     table('entity', 'entities/enchoer', [pool([item('chrome_pearl', count=(1, 2)), item('star_shard', count=(1, 2))])])
     table('entity', 'entities/riveter', [pool([item('minecraft:echo_shard', count=(0, 1), extra=[LOOTING])]),
                                          pool([item('minecraft:sculk', count=(0, 2))])])
+    table('entity', 'entities/dictator', [pool([item('warden_core', 1)]), pool([item('minecraft:echo_shard', count=(6, 12))]),
+                                          pool([item('siftite_ingot', count=(3, 6))]), pool([item('music_disc_lullaby', 1)])])
+    for minion in ('enforcer', 'resonator', 'howler'):
+        table('entity', f'entities/{minion}', [pool([item('minecraft:sculk', count=(1, 3), extra=[LOOTING])]),
+                                              pool([item('minecraft:echo_shard', count=(0, 1), extra=[LOOTING])]),
+                                              pool([item('minecraft:bone', count=(0, 2))])])
 
 
 def chest_loot():
@@ -91,6 +97,16 @@ def chest_loot():
         pool([item('minecraft:echo_shard', 8, (2, 5)), item('minecraft:sculk_sensor', 6, (1, 3)), item('echo_frame', 5, (2, 6)),
               item('siftite_ingot', 4, (1, 2)), item('siftite_upgrade_smithing_template', 2), item('glowbell_vine', 6, (2, 4)),
               item('music_disc_lullaby', 2)], (3, 5)),
+    ])
+    table('chest', 'chests/sculk_castle', [
+        pool([item('minecraft:echo_shard', 8, (3, 8)), item('siftite_ingot', 6, (2, 4)), item('chrome_pearl', 6, (2, 4)),
+              item('minecraft:enchanted_book', 5, extra=[ENCHANT]), item('minecraft:diamond', 4, (1, 3)), item('siftite_upgrade_smithing_template', 3),
+              item('music_disc_lullaby', 2), item('star_shard', 5, (2, 4))], (4, 6)),
+        pool([item('warden_core', 1), item('minecraft:empty', 2)]),
+    ])
+    table('chest', 'chests/sculk_castle_landing', [
+        pool([item('minecraft:golden_apple', 3), item('minecraft:cooked_beef', 8, (2, 5)), item('glowing_slime_ball', 8, (2, 6)),
+              item('minecraft:arrow', 6, (4, 12)), item('chrome_pearl', 2), item('minecraft:empty', 4)], (2, 4)),
     ])
     table('chest', 'chests/chrome_well', [
         pool([item('chrome_bucket', 3), item('chrome_pearl', 5, (1, 2)), item('glowing_slime_ball', 10, (2, 5)), item('chrome_reeds', 8, (2, 6)),

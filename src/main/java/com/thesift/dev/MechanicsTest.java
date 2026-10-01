@@ -8,6 +8,8 @@ import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.SiftSniffer;
+import com.thesift.entity.boss.Dictator;
+import com.thesift.block.entity.ConductorsPodiumBlockEntity;
 import com.thesift.portal.PortalFrames;
 import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModEffects;
@@ -104,6 +106,41 @@ final class MechanicsTest {
         this.checkTrades();
         this.checkHarmoners();
         this.checkSniffer();
+        this.startDictator();
+    }
+
+    private @Nullable Dictator dictator;
+
+    /** A podium wakes the Dictator; at half health he should move on to his second phase. */
+    private void startDictator() {
+        int x = -24, z = 30;
+        int y = this.sift.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) + 2;
+        for (BlockPos p : BlockPos.betweenClosed(x - 5, y - 1, z - 5, x + 5, y - 1, z + 5)) {
+            this.sift.setBlock(p, ModBlocks.POLISHED_HUSHSLATE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        }
+        for (BlockPos p : BlockPos.betweenClosed(x - 5, y, z - 5, x + 5, y + 5, z + 5)) {
+            this.sift.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+        }
+        BlockPos at = new BlockPos(x, y, z);
+        this.sift.setBlock(at, ModBlocks.CONDUCTORS_PODIUM.get().defaultBlockState(), Block.UPDATE_ALL);
+        if (!(this.sift.getBlockEntity(at) instanceof ConductorsPodiumBlockEntity podium)) {
+            check(false, "dictator: podium block entity");
+            return;
+        }
+        this.sift.setChunkForced(x >> 4, z >> 4, true);
+        this.dictator = podium.wake(this.sift, at, null);
+        check(this.dictator != null && this.dictator.isAlive(), "dictator: the podium wakes the Dictator");
+        if (this.dictator != null) {
+            this.dictator.setHealth(this.dictator.getMaxHealth() * 0.5F);
+        }
+    }
+
+    private void checkDictator() {
+        Dictator d = this.dictator;
+        if (d == null) return;
+        TheSift.LOGGER.info("SMOKE: dictator alive={} phase={} health={}", d.isAlive(), d.getPhase(), d.getHealth());
+        check(d.isAlive() && d.getPhase() == 2, "dictator: at half health he enters his second phase");
+        d.discard();
     }
 
     private void checkHarmoners() {
@@ -323,6 +360,7 @@ final class MechanicsTest {
         }
         if (this.ticks == 200) {
             this.checkChromeSoak();
+            this.checkDictator();
         }
         if (this.ticks == 320) {
             this.checkAltar();

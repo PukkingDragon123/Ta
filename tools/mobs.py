@@ -427,6 +427,7 @@ HARMONER_VARIANTS = {
     'violet': ('#8c5ae0', '#e0c8ff', '#5e36a8', '#ff8ad8', '#ffd0f0', '#ffd23f'),
     'jade': ('#35c28f', '#c8ffe0', '#1f8a6a', '#c8ff5a', '#fff7a0', '#ff9a3d'),
     'coral': ('#ff7a4a', '#ffd8b8', '#c2462a', '#3fd0ef', '#c8f8ff', '#3a3060'),
+    'night': ('#27304d', '#4a5a86', '#161c30', '#2ef2e2', '#c8fffb', '#e3ddcc'),
 }
 
 
@@ -504,4 +505,264 @@ def harmoner() -> Model:
     return m
 
 
-ALL = {'bulb': bulb, 'slumbler': slumbler, 'sifter': sifter, 'enchoer': enchoer, 'riveter': riveter, 'harmoner': harmoner}
+# =========================================================================== THE DICTATOR & HIS ORCHESTRA
+SCULK = {
+    'hide': '#141e2c', 'hide_l': '#1f2c40', 'hide_d': '#0b1119',
+    'bone': '#e3ddcc', 'bone_l': '#f4f0e5', 'bone_d': '#b3ab96',
+    'glow': '#2ef2e2', 'glow_d': '#15a89f', 'void': '#04080c',
+}
+
+
+def dictator() -> Model:
+    """The Dictator: a tall, starved conductor of sculk. Long digitigrade legs, a tailcoat with
+    tarnished brass epaulettes, arms that reach past his knees, a white baton, a porcelain mask with
+    hollow glowing eyes and a stitched slit of a mouth, and a crown of sculk tines."""
+    pal = dict(SCULK)
+    pal.update({'coat': '#1a2a3e', 'coat_l': '#27405c', 'coat_d': '#101a28', 'brass': '#b89a52', 'brass_l': '#dcc27a', 'brass_d': '#7f6a35',
+                'mask': '#e6e1d3', 'mask_l': '#f6f2e8', 'mask_d': '#b9b2a0', 'shirt': '#c9c2b0'})
+    m = Model('dictator', (128, 128), pal, {'dictator': {}})
+    hide = dict(color='hide', pattern='mc', clusters=0.5)
+    coat = dict(color='coat', pattern='mc', clusters=0.4)
+    for side, sx in (('left', 1), ('right', -1)):
+        leg = m.part(f'{side}_leg', pivot=(2.2 * sx, 4, 0), rot=(-0.2, 0, 0))
+        leg.cube((-1, 0, -1), (2, 10, 2), **hide, faces={'north': dict(**hide, map=['..'] * 8 + ['bb', 'bb'], keys={'b': 'bone_d'})})
+        shin = leg.part(f'{side}_shin', pivot=(0, 10, 0), rot=(0.45, 0, 0))
+        shin.cube((-1, 0, -1), (2, 10, 2), **hide)
+        foot = shin.part(f'{side}_foot', pivot=(0, 10, 0), rot=(-0.25, 0, 0))
+        foot.cube((-1.5, 0, -4), (3, 1, 5), **hide, faces={'north': dict(**hide, map=['b.b'], keys={'b': 'bone'})})
+    body = m.part('body', pivot=(0, 4, 0))
+    body.cube((-3, -2, -1.5), (6, 2, 3), **hide)
+    torso = body.part('torso', pivot=(0, -2, 0), rot=(0.12, 0, 0))
+    torso.cube((-2, -6, -1.5), (4, 6, 3), **hide)
+    torso.cube((-3.5, -14, -2.5), (7, 8, 5), **coat, faces={
+        'north': dict(**coat, map=[
+            '..sss..',
+            '..sss..',
+            '.bsssb.',
+            '..sss..',
+            '.bsssb.',
+            '..sss..',
+            '.bsssb.',
+            '...s...',
+        ], keys={'s': 'shirt', 'b': 'brass'}),
+    })
+    torso.cube((-5, -15, -2.5), (10, 2, 5), **coat, faces={'up': dict(color='coat_l', pattern='mc', clusters=0.3)})
+    for sx in (1, -1):
+        torso.cube((3 if sx > 0 else -6, -16, -2), (3, 1, 4), color='brass', pattern='mc', clusters=0.3, rim=False,
+                   faces={'up': dict(color='brass_l', pattern='mc', clusters=0.2)})
+    tail = torso.part('coat_tail', pivot=(0, -7, 2.5), rot=(0.15, 0, 0))
+    tail.cube((-3.5, 0, 0), (7, 15, 1), **coat, faces={
+        'north': dict(**coat, map=['.......'] * 8 + ['...' + '_' + '...'] * 7),
+        'south': dict(**coat, map=['.......'] * 8 + ['...' + '_' + '...'] * 7),
+    })
+    neck = torso.part('neck', pivot=(0, -15, -0.5), rot=(0.15, 0, 0))
+    neck.cube((-1, -4, -1), (2, 4, 2), **hide)
+    head = neck.part('head', pivot=(0, -4, 0))
+    head.cube((-2.5, -9, -2.5), (5, 9, 5), **hide)
+    head.cube((-2.5, -8, -3.5), (5, 8, 1), color='mask', pattern='mc', clusters=0.15, faces={
+        'north': dict(color='mask', pattern='mc', clusters=0.0, map=[
+            '.....',
+            '.....',
+            'Ee.eE',
+            'EE.EE',
+            '.....',
+            '.sms.',
+            '..m..',
+            '.sms.',
+        ], keys={'E': 'void', 'e': 'glow', 's': 'mask_d', 'm': 'void'}, glow_keys='e'),
+    })
+    crown = head.part('crown', pivot=(0, -9, 0))
+    for i, (cx, cz, h, lean_x, lean_z) in enumerate(((0, -1.5, 7, -0.3, 0), (-2, -0.5, 6, -0.15, 0.45), (2, -0.5, 6, -0.15, -0.45),
+                                                     (-1.5, 1.5, 5, 0.35, 0.35), (1.5, 1.5, 5, 0.35, -0.35))):
+        tine = crown.part(f'tine_{i}', pivot=(cx, 0, cz), rot=(lean_x, 0, lean_z))
+        tine.cube((-0.5, -h, -0.5), (1, h, 1), color='hide', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': dict(color='hide', pattern='mc', clusters=0.0, rim=False, map=['g'] + ['.'] * (h - 1), keys={'g': 'glow'}, glow_keys='g'),
+            'south': dict(color='hide', pattern='mc', clusters=0.0, rim=False, map=['g'] + ['.'] * (h - 1), keys={'g': 'glow'}, glow_keys='g'),
+            'up': dict(color='glow', pattern='mc', clusters=0.0, glow=True),
+        })
+    for side, sx in (('left', 1), ('right', -1)):
+        arm = torso.part(f'{side}_arm', pivot=(5 * sx, -14, 0), rot=(0, 0, -0.08 * sx))
+        arm.cube((-1 if sx > 0 else -1, -1, -1), (2, 11, 2), **coat)
+        fore = arm.part(f'{side}_forearm', pivot=(0, 10, 0), rot=(-0.15, 0, 0))
+        fore.cube((-1, 0, -1), (2, 10, 2), **hide, faces={'north': dict(**hide, map=['bb', 'bb'] + ['..'] * 8, keys={'b': 'brass'})})
+        hand = fore.part(f'{side}_hand', pivot=(0, 10, 0))
+        hand.cube((-1.5, 0, -1.5), (3, 2, 3), color='bone', pattern='mc', clusters=0.2)
+        for f, fx in enumerate((-1, 0, 1)):
+            hand.cube((fx - 0.5, 2, -1.5 + (f % 2)), (1, 4 - (f % 2), 1), color='bone', pattern='mc', clusters=0.0, rim=False,
+                      faces={'down': dict(color='bone_d', pattern='mc', clusters=0.0)})
+        if sx < 0:
+            baton = hand.part('baton', pivot=(0, 2, 0), rot=(1.35, 0, 0))
+            baton.cube((-0.5, 0, -0.5), (1, 13, 1), color='bone_l', pattern='mc', clusters=0.0, rim=False, faces={
+                'north': dict(color='bone_l', pattern='mc', clusters=0.0, rim=False, map=['dd'[0]] * 2 + ['.'] * 9 + ['g', 'g'],
+                              keys={'d': 'hide', 'g': 'glow'}, glow_keys='g'),
+                'down': dict(color='glow', pattern='mc', clusters=0.0, glow=True),
+            })
+    return m
+
+
+def enforcer() -> Model:
+    """Enforcer (percussion): a squat living drum. The barrel of its body is laced with sinew
+    cords, its top is a taut membrane veined with sculk, three slit eyes glow on the shell and its
+    long arms end in bone mallets it beats against itself."""
+    pal = dict(SCULK)
+    pal.update({'skin': '#e2d5b8', 'skin_l': '#f0e6cf', 'skin_d': '#c4b494', 'cord': '#7a2a3a', 'cord_l': '#9c3a4e', 'cord_d': '#561c29',
+                'shell': '#22324a', 'shell_l': '#2f4563', 'shell_d': '#162133'})
+    m = Model('enforcer', (128, 64), pal, {'enforcer': {}})
+    hide = dict(color='hide', pattern='mc', clusters=0.5)
+    for side, sx in (('left', 1), ('right', -1)):
+        leg = m.part(f'{side}_leg', pivot=(4 * sx, 18, 0))
+        leg.cube((-2, 0, -2), (4, 6, 4), **hide, faces={'north': dict(**hide, map=['....', '.bb.'] + ['....'] * 4, keys={'b': 'bone'})})
+    body = m.part('body', pivot=(0, 18, 0))
+    lace = ['c.....c.....c.', '.c...c.c...c..', '..c.c...c.c...', '...c.....c....', '..c.c...c.c...', '.c...c.c...c..',
+            'c.....c.....c.', '.c...c.c...c..', '..c.c...c.c...', '...c.....c....', '..c.c...c.c...', '.c...c.c...c..']
+    shell = dict(color='shell', pattern='mc', clusters=0.4)
+    body.cube((-7, -13, -6), (14, 12, 12), **shell, faces={
+        'north': dict(**shell, map=[
+            '..............',
+            '..............',
+            '..EE..EE..EE..',
+            '..ee..ee..ee..',
+            '..............',
+            '..............',
+            '..............',
+            '..............',
+            '..............',
+            '..............',
+            '..............',
+            '..............',
+        ], keys={'E': 'void', 'e': 'glow'}, glow_keys='e'),
+        'east': dict(**shell, map=lace[:12], keys={'c': 'cord'}),
+        'west': dict(**shell, map=lace[:12], keys={'c': 'cord'}),
+        'south': dict(**shell, map=lace[:12], keys={'c': 'cord'}),
+    })
+    # the drum head: a taut membrane veined with sculk, in a bone hoop
+    body.cube((-7.5, -14, -6.5), (15, 1, 13), color='bone', pattern='mc', clusters=0.2, rim=False, faces={
+        'up': dict(color='skin', pattern='mc', clusters=0.25, map=[
+            'BBBBBBBBBBBBBBB',
+            'B.............B',
+            'B..v.......v..B',
+            'B...v.....v...B',
+            'B....v...v....B',
+            'B.....vvv.....B',
+            'B......g......B',
+            'B.....vvv.....B',
+            'B....v...v....B',
+            'B...v.....v...B',
+            'B..v.......v..B',
+            'B.............B',
+            'BBBBBBBBBBBBBBB',
+        ], keys={'B': 'bone', 'v': 'glow_d', 'g': 'glow'}, glow_keys='g'),
+    })
+    body.cube((-7.5, -2, -6.5), (15, 1, 13), color='bone', pattern='mc', clusters=0.2, rim=False)
+    jaw = body.part('jaw', pivot=(0, -4, -6))
+    jaw.cube((-5, 0, -1), (10, 2, 2), color='bone_d', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='void', pattern='mc', clusters=0.0, rim=False, map=['t.t.t.t.t.', '.t.t.t.t.t'], keys={'t': 'bone'}),
+    })
+    for side, sx in (('left', 1), ('right', -1)):
+        arm = body.part(f'{side}_arm', pivot=(7.5 * sx, -11, 0), rot=(0, 0, -0.15 * sx))
+        arm.cube((0 if sx > 0 else -3, -1, -1.5), (3, 12, 3), **hide)
+        mallet = arm.part(f'{side}_mallet', pivot=(1.5 * sx, 11, 0))
+        mallet.cube((-2.5, 0, -2.5), (5, 4, 5), color='bone', pattern='mc', clusters=0.3, faces={
+            'down': dict(color='bone_d', pattern='mc', clusters=0.2, map=['.....', '.ggg.', '.g.g.', '.ggg.', '.....'], keys={'g': 'glow_d'}),
+        })
+    return m
+
+
+def resonator() -> Model:
+    """Resonator (strings): a tall, spidery harp of a creature. Its body is a bone frame strung
+    with glowing sculk tendons, topped by a curled scroll of a head, and two long arms are strung
+    to its sides like the strings of a lyre. It stalks on four splayed legs."""
+    pal = dict(SCULK)
+    pal.update({'string': '#3ff0e0', 'string_d': '#1a8f88', 'peg': '#8a6a3c'})
+    m = Model('resonator', (64, 64), pal, {'resonator': {}})
+    hide = dict(color='hide', pattern='mc', clusters=0.5)
+    for i, (sx, sz) in enumerate(((1, -1), (-1, -1), (1, 1), (-1, 1))):
+        name = ('front' if sz < 0 else 'hind') + ('_left' if sx > 0 else '_right')
+        leg = m.part(f'{name}_leg', pivot=(1.5 * sx, 12, 1.5 * sz), rot=(0.45 * sz, 0, -0.75 * sx))
+        leg.cube((-0.5, 0, -0.5), (1, 9, 1), **hide)
+        shin = leg.part(f'{name}_shin', pivot=(0, 9, 0), rot=(-0.4 * sz, 0, 1.2 * sx))
+        shin.cube((-0.5, 0, -0.5), (1, 10, 1), color='bone', pattern='mc', clusters=0.0, rim=False,
+                  faces={'down': dict(color='bone_d', pattern='mc', clusters=0.0)})
+    body = m.part('body', pivot=(0, 12, 0))
+    body.cube((-2, -2, -2), (4, 3, 4), **hide)
+    frame = body.part('frame', pivot=(0, -2, 0))
+    # the harp frame: two bone posts, a curved top bar and the strings between them
+    frame.cube((-3.5, -14, -0.5), (1, 14, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+    frame.cube((2.5, -14, -0.5), (1, 14, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+    frame.cube((-3.5, -15, -1), (7, 1, 2), color='bone', pattern='mc', clusters=0.2, rim=False)
+    frame.cube((-2.5, -14, 0), (5, 14, 0), color='string', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._._.'] * 14, keys={}, glow_keys=''),
+        'south': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._._.'] * 14, keys={}, glow_keys=''),
+    })
+    frame.cube((-1, -12, -1.5), (2, 10, 1), **hide)
+    head = frame.part('head', pivot=(0, -15, 0))
+    # a violin scroll: a neck block curling forward into a spiral knob, with tuning pegs
+    head.cube((-1, -4, -1), (2, 4, 2), **hide)
+    head.cube((-1.5, -7, -2.5), (3, 3, 3), **hide, faces={
+        'north': dict(color='hide', pattern='mc', clusters=0.0, map=['g.g', '...', '.v.'], keys={'g': 'glow', 'v': 'void'}, glow_keys='g'),
+    })
+    head.cube((-1, -8, -4), (2, 2, 2), color='hide_l', pattern='mc', clusters=0.0, rim=False)
+    for py, sx in ((-2, 1), (-3, -1), (-1, -1)):
+        head.cube((1 if sx > 0 else -2, py, -0.5), (1, 1, 1), color='peg', pattern='mc', clusters=0.0, rim=False)
+    for side, sx in (('left', 1), ('right', -1)):
+        arm = frame.part(f'{side}_arm', pivot=(3.5 * sx, -13, 0), rot=(0, 0, -0.35 * sx))
+        arm.cube((-0.5, 0, -0.5), (1, 12, 1), **hide)
+        fore = arm.part(f'{side}_forearm', pivot=(0, 12, 0), rot=(0, 0, 0.5 * sx))
+        fore.cube((-0.5, 0, -0.5), (1, 9, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+        fore.cube((-1, 9, -1), (2, 1, 2), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+        # strings stretched from the arm back to the frame post
+        arm.cube((-3.5 if sx > 0 else 0.5, 1, 0), (3, 10, 0), color='string', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._.'] * 10),
+            'south': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._.'] * 10),
+        })
+    return m
+
+
+def howler() -> Model:
+    """Howler (wind): a hunched, four-legged pipe organ of sculk. A row of bone pipes rises from its
+    back, glowing in their throats as it draws breath, and its head is a flared horn bell."""
+    pal = dict(SCULK)
+    m = Model('howler', (128, 64), pal, {'howler': {}})
+    hide = dict(color='hide', pattern='mc', clusters=0.5)
+    for name, sx, sz in (('front_left', 1, -1), ('front_right', -1, -1), ('hind_left', 1, 1), ('hind_right', -1, 1)):
+        leg = m.part(f'{name}_leg', pivot=(3.5 * sx, 14, 5 * sz))
+        leg.cube((-1.5, 0, -1.5), (3, 10, 3), **hide, faces={'north': dict(**hide, map=['...'] * 8 + ['b.b', 'bbb'], keys={'b': 'bone'})})
+    body = m.part('body', pivot=(0, 14, 0), rot=(-0.12, 0, 0))
+    body.cube((-5, -8, -7), (10, 8, 14), **hide, faces={
+        'up': dict(color='hide_l', pattern='mc', clusters=0.4),
+        'down': dict(color='hide_d', pattern='mc', clusters=0.2),
+    })
+    pipes = body.part('pipes', pivot=(0, -8, 0))
+    for i, (px, pz, h) in enumerate(((-3, -3, 7), (-1, -4, 11), (1, -4, 13), (3, -3, 9), (-2, 1, 8), (0, 1, 14), (2, 1, 10))):
+        pipe = pipes.part(f'pipe_{i}', pivot=(px, 0, pz))
+        pipe.cube((-1, -h, -1), (2, h, 2), color='bone', pattern='mc', clusters=0.2, faces={
+            'up': dict(color='void', pattern='mc', clusters=0.0, map=['gg', 'gg'], keys={'g': 'glow_d'}, glow_keys='g'),
+            'north': dict(color='bone', pattern='mc', clusters=0.0, map=['dd', '..', '..', 'vv'] + ['..'] * (h - 4), keys={'d': 'bone_d', 'v': 'void'}),
+        })
+    head = body.part('head', pivot=(0, -4, -7))
+    head.cube((-2.5, -2.5, -5), (5, 5, 5), **hide, faces={
+        'east': dict(**hide, map=['.....', '.g...', '.....'], keys={'g': 'glow'}, glow_keys='g'),
+        'west': dict(**hide, map=['.....', '...g.', '.....'], keys={'g': 'glow'}, glow_keys='g'),
+    })
+    bell = head.part('bell', pivot=(0, 0, -5))
+    bell.cube((-4, -4, -2), (8, 8, 2), color='bone', pattern='mc', clusters=0.2, faces={
+        'north': dict(color='bone', pattern='mc', clusters=0.0, map=[
+            '.dddddd.',
+            'dvvvvvvd',
+            'dvvvvvvd',
+            'dvvggvvd',
+            'dvvggvvd',
+            'dvvvvvvd',
+            'dvvvvvvd',
+            '.dddddd.',
+        ], keys={'d': 'bone_d', 'v': 'void', 'g': 'glow_d'}, glow_keys='g'),
+    })
+    tail = body.part('tail', pivot=(0, -5, 7), rot=(0.6, 0, 0))
+    tail.cube((-1, -1, 0), (2, 2, 6), color='bone', pattern='mc', clusters=0.2, faces={
+        'south': dict(color='void', pattern='mc', clusters=0.0),
+    })
+    return m
+
+
+ALL = {'bulb': bulb, 'slumbler': slumbler, 'sifter': sifter, 'enchoer': enchoer, 'riveter': riveter, 'harmoner': harmoner,
+       'dictator': dictator, 'enforcer': enforcer, 'resonator': resonator, 'howler': howler}

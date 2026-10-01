@@ -487,6 +487,107 @@ def ruins(seed):
     return b
 
 
+# ================================================================== the Dictator's Sculk Castle
+
+
+def sculk_castle(seed):
+    """A tall tower of hushslate and sculk. Inside, a spiral of jump-apart steps climbs the wall
+    past checkpoint landings to a hatch in the roof; on the roof is the arena, ringed with spiked
+    battlements, and the Conductor's Podium where the Dictator waits. A slime-block floor catches
+    anyone who falls."""
+    S, H = 27, 72
+    c = S // 2
+    R = 10                      # outer wall radius
+    STEPS = 58
+    TOP = 2 + STEPS             # roof / arena floor level
+    b = Build(S, H, S, seed)
+    DT = B('minecraft:deepslate_tiles')
+    wall = b.mix((HUSH_BR, 9), (HUSH_CR, 3), (DT, 2), (SCULK, 2))
+    SOUL_L = B('minecraft:soul_lantern', hanging='false', waterlogged='false')
+    SLIME = B('minecraft:slime_block')
+    # foundation plinth and a sculk-stained skirt
+    b.disc(c, c, 0, 13, HUSH_TILE, pick=b.mix((HUSH_TILE, 8), (SCULK, 3), (DT, 2)))
+    b.cyl(c, c, 1, 2, 12.4, HUSH_BR, hollow=True, thickness=1.0, pick=wall)
+    # the tower
+    b.cyl(c, c, 1, TOP, R, HUSH_BR, hollow=True, thickness=2.0, pick=wall)
+    for y in range(6, TOP, 10):
+        b.cyl(c, c, y, y, R + 0.4, HUSH_CH, hollow=True, thickness=1.0)
+    # a soft landing: slime blocks across the ground floor around a sculk catalyst
+    b.disc(c, c, 0, R - 2, SLIME)
+    b.set(c, 0, c, B('minecraft:sculk_catalyst', bloom='false'))
+    # the central pillar, veined with glowing moss
+    b.cyl(c, c, 1, TOP - 1, 1.2, HUSH_POL, pick=lambda x, y, z: B('lumen_moss_block') if y % 7 == 3 else HUSH_POL)
+    # entrance on the south side
+    for dx in range(-1, 2):
+        for y in range(1, 5):
+            for z in range(c + R - 2, c + R + 1):
+                b.set(c + dx, y, z, AIR)
+    for dx in (-2, 2):
+        for y in range(1, 6):
+            b.set(c + dx, y, c + R, HUSH_CH)
+    for dx in range(-2, 3):
+        b.set(c + dx, 5, c + R, HUSH_CH)
+    # window slits
+    for k in range(8):
+        a = k * math.pi / 4 + 0.2
+        for y0 in range(10 + (k % 3) * 4, TOP - 4, 13):
+            for dy in range(3):
+                for rr in (R - 1, R):
+                    b.set(c + round(math.cos(a) * rr), y0 + dy, c + round(math.sin(a) * rr), AIR)
+    # the spiral of steps: 16 per turn, one block up each, ~1.7 blocks of air between them
+    a0 = math.pi / 2 + 0.6
+    last = []
+    for i in range(STEPS):
+        a = a0 + i * (2 * math.pi / 16)
+        y = 1 + i
+        landing = i > 0 and i % 16 == 0
+        for rr in (6.6, 7.6):
+            x, z = c + round(math.cos(a) * rr), c + round(math.sin(a) * rr)
+            blk = HUSH_TILE
+            if not landing and i % 7 == 5 and i > 8:
+                blk = CRUMBLE
+            b.set(x, y, z, blk)
+        if landing:
+            # a checkpoint: a wider ledge with a lantern, a sensor and a small supply chest
+            for da in (-0.14, 0.0, 0.14):
+                for rr in (5.6, 6.6, 7.6):
+                    b.set(c + round(math.cos(a + da) * rr), y, c + round(math.sin(a + da) * rr), HUSH_POL)
+            b.set(c + round(math.cos(a + 0.14) * 7.6), y + 1, c + round(math.sin(a + 0.14) * 7.6), SOUL_L)
+            b.set(c + round(math.cos(a - 0.14) * 7.6), y + 1, c + round(math.sin(a - 0.14) * 7.6), chest('chests/sculk_castle_landing', 'north'))
+        if i >= STEPS - 3:
+            last.append(a)
+    # the roof: the arena floor, with a hatch above the last steps
+    b.disc(c, c, TOP, 12, HUSH_TILE, pick=lambda x, y, z: HUSH_CH if abs(math.hypot(x - c, z - c) - 5.0) < 0.6 else
+           HUSH_POL if math.hypot(x - c, z - c) < 2.6 else HUSH_TILE)
+    for a in last:
+        for rr in (5.6, 6.6, 7.6):
+            b.set(c + round(math.cos(a) * rr), TOP, c + round(math.sin(a) * rr), AIR)
+    # battlements with sculk spikes
+    for k in range(48):
+        a = k * 2 * math.pi / 48
+        x, z = c + round(math.cos(a) * 12), c + round(math.sin(a) * 12)
+        b.set(x, TOP + 1, z, HUSH_BR)
+        if k % 2 == 0:
+            b.set(x, TOP + 2, z, HUSH_BR)
+        if k % 6 == 0:
+            for dy in range(3, 8):
+                b.set(x, TOP + dy, z, SCULK if dy < 6 else B('minecraft:deepslate_tile_wall', up='true', north='none', south='none', east='none',
+                                                                  west='none', waterlogged='false'))
+    # eight pillars around the arena, crowned with soul lanterns and sensors
+    for k in range(8):
+        a = k * math.pi / 4 + math.pi / 8
+        x, z = c + round(math.cos(a) * 9), c + round(math.sin(a) * 9)
+        for dy in range(1, 6):
+            b.set(x, TOP + dy, z, HUSH_CH if dy in (1, 5) else HUSH_POL)
+        b.set(x, TOP + 6, z, SOUL_L if k % 2 else SENSOR)
+    # the podium, and the vault behind it
+    b.set(c, TOP + 1, c, B('conductors_podium'))
+    b.set(c, TOP + 1, c - 4, chest('chests/sculk_castle', 'south'))
+    b.decay(0.015, min_y=3, protect=('thesift:conductors_podium', 'minecraft:chest', 'thesift:hushslate_tiles', 'thesift:polished_hushslate',
+                                      'thesift:crumbling_dreamstone', 'minecraft:slime_block', 'minecraft:soul_lantern'))
+    return b
+
+
 # ================================================================== registration
 
 STRUCTURES = {
@@ -504,6 +605,7 @@ STRUCTURES = {
     'dream_statue': ([enchoer_statue, bulb_statue], ['sift_plains', 'wishing_grove', 'forest_mountains', 'rocky_dunes'], 'surface_structures', 'beard_thin',
                      0, 28, 9),
     'deep_shrine': ([deep_shrine, lambda s: deep_shrine(s + 3)], ['deep_sift'], 'underground_structures', 'beard_box', None, 24, 8),
+    'sculk_castle': ([sculk_castle], ['rocky_dunes', 'forest_mountains', 'sift_plains'], 'surface_structures', 'beard_thin', 0, 40, 16),
     'sift_ruins': ([ruins, lambda s: ruins(s + 11), lambda s: ruins(s + 23)], ['sift_plains', 'forest_mountains', 'wishing_grove', 'rocky_dunes'],
                    'surface_structures', 'beard_thin', -1, 18, 6),
 }

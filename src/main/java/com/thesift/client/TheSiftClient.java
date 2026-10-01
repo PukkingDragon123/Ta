@@ -7,6 +7,11 @@ import com.thesift.client.model.ModelGeometry;
 import com.thesift.client.particle.SiftParticle;
 import com.thesift.client.renderer.BulbRenderer;
 import com.thesift.client.renderer.HarmonerRenderer;
+import com.thesift.client.model.boss.EnforcerModel;
+import com.thesift.client.model.boss.HowlerModel;
+import com.thesift.client.model.boss.ResonatorModel;
+import com.thesift.client.renderer.boss.DictatorRenderer;
+import com.thesift.client.renderer.boss.MinionRenderer;
 import com.thesift.client.renderer.SiftSnifferRenderer;
 import com.thesift.client.renderer.EnchoerRenderer;
 import com.thesift.client.renderer.EuphoryAltarRenderer;
@@ -61,6 +66,10 @@ public class TheSiftClient {
     private static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ModModelLayers.BULB, ModelGeometry::bulb);
         event.registerLayerDefinition(ModModelLayers.HARMONER, ModelGeometry::harmoner);
+        event.registerLayerDefinition(ModModelLayers.DICTATOR, ModelGeometry::dictator);
+        event.registerLayerDefinition(ModModelLayers.ENFORCER, ModelGeometry::enforcer);
+        event.registerLayerDefinition(ModModelLayers.RESONATOR, ModelGeometry::resonator);
+        event.registerLayerDefinition(ModModelLayers.HOWLER, ModelGeometry::howler);
         event.registerLayerDefinition(ModModelLayers.SLUMBLER, ModelGeometry::slumbler);
         event.registerLayerDefinition(ModModelLayers.SIFTER, ModelGeometry::sifter);
         event.registerLayerDefinition(ModModelLayers.ENCHOER, ModelGeometry::enchoer);
@@ -71,6 +80,13 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.BULB.get(), BulbRenderer::new);
         event.registerEntityRenderer(ModEntities.HARMONER.get(), HarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFT_SNIFFER.get(), SiftSnifferRenderer::new);
+        event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENFORCER.get(),
+                c -> new MinionRenderer<>(c, new EnforcerModel(c.bakeLayer(ModModelLayers.ENFORCER)), "enforcer", 0.8F));
+        event.registerEntityRenderer(ModEntities.RESONATOR.get(),
+                c -> new MinionRenderer<>(c, new ResonatorModel(c.bakeLayer(ModModelLayers.RESONATOR)), "resonator", 0.5F));
+        event.registerEntityRenderer(ModEntities.HOWLER.get(),
+                c -> new MinionRenderer<>(c, new HowlerModel(c.bakeLayer(ModModelLayers.HOWLER)), "howler", 0.8F));
         event.registerEntityRenderer(ModEntities.SLUMBLER.get(), SlumblerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);

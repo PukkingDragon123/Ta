@@ -332,6 +332,9 @@ public final class ClientSmokeTest {
         scene("templates_towers", 80, c -> c.camera(-200.5, 172, -212.5, -175, 150, -252));
         scene("templates_instruments", 80, c -> c.camera(-45.5, 168, -224.5, -40, 146, -255));
         scene("templates_statues", 80, c -> c.camera(140.5, 168, -226.5, 150, 146, -255));
+        // the Sculk Castle template (stamped at x=252, y=140, z=-260 by the server test; 27 wide, 72 tall)
+        scene("templates_castle", 100, c -> c.camera(265.5 + 46, 196, -246.5 + 40, 265.5, 168, -246.5));
+        scene("templates_castle_arena", 80, c -> c.camera(265.5 + 15, 214, -246.5 + 15, 265.5, 200, -246.5));
         scene("mob_lineup", 60, ClientSmokeTest::mobStage);
         // the stage runs east (+x) to west; looking south, east is on the left of the picture
         scene("mob_closeup_bulb", 40, c -> c.camera(-8.5, STAGE_Y + 1.6, STAGE_Z + 2.5, -8.5, STAGE_Y + 0.5, STAGE_Z + 6.0));
@@ -341,6 +344,7 @@ public final class ClientSmokeTest {
         scene("mob_closeup_riveter", 40, c -> c.camera(12.6, STAGE_Y + 1.6, STAGE_Z + 2.8, 13.5, STAGE_Y + 1.9, STAGE_Z + 6.5));
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
         scene("mob_closeup_sniffer", 40, c -> c.camera(-0.5, STAGE_Y + 3.4, STAGE_Z + 3.2, -3.5, STAGE_Y + 1.2, STAGE_Z + 8.5));
+        scene("mob_closeup_dictator", 40, c -> c.camera(19.5, STAGE_Y + 2.6, STAGE_Z - 2.5, 19.5, STAGE_Y + 1.8, STAGE_Z + 5.5));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -454,7 +458,7 @@ public final class ClientSmokeTest {
 
     private static void mobStage(Ctx c) {
         c.run("gamemode spectator @a");
-        floor(c, -16, STAGE_Z - 6, 16, STAGE_Z + 12);
+        floor(c, -16, STAGE_Z - 6, 26, STAGE_Z + 12);
         // a little dressing: flowers and grass along the back
         Block[] plants = plantsFor(c);
         for (int x = -16; x <= 16; x++) {
@@ -474,6 +478,11 @@ public final class ClientSmokeTest {
             sniffer.setTame(true);
             sniffer.setItemSlot(net.minecraft.world.entity.EquipmentSlot.SADDLE, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SADDLE));
         }
+        // the Dictator and his orchestra, at the far end of the stage
+        c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.5, face, false);
+        c.spawn(ModEntities.ENFORCER.get(), 16.5, STAGE_Y, STAGE_Z + 4.5, face, false);
+        c.spawn(ModEntities.RESONATOR.get(), 22.5, STAGE_Y, STAGE_Z + 4.5, face, false);
+        c.spawn(ModEntities.HOWLER.get(), 19.5, STAGE_Y, STAGE_Z + 3.0, face, false);
         // one Harmoner of every colour, perched in a row
         for (int i = 0; i < com.thesift.entity.Harmoner.VARIANTS; i++) {
             if (c.spawn(ModEntities.HARMONER.get(), -2.5 + i, STAGE_Y, STAGE_Z + 3.0, face, false) instanceof com.thesift.entity.Harmoner bird) {

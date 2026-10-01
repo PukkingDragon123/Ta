@@ -7,6 +7,10 @@ import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
 import com.thesift.entity.SiftSniffer;
+import com.thesift.entity.boss.Dictator;
+import com.thesift.entity.boss.Enforcer;
+import com.thesift.entity.boss.Howler;
+import com.thesift.entity.boss.Resonator;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +35,14 @@ public final class ModEntities {
             MobCategory.CREATURE, b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<SiftSniffer>> SIFT_SNIFFER = ENTITIES.registerEntityType("sift_sniffer",
             SiftSniffer::new, MobCategory.CREATURE, b -> b.sized(1.9F, 1.75F).eyeHeight(1.05F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,
+            MobCategory.MONSTER, b -> b.sized(0.9F, 3.4F).eyeHeight(3.0F).clientTrackingRange(16).fireImmune());
+    public static final DeferredHolder<EntityType<?>, EntityType<Enforcer>> ENFORCER = ENTITIES.registerEntityType("enforcer", Enforcer::new,
+            MobCategory.MONSTER, b -> b.sized(1.2F, 1.4F).eyeHeight(1.0F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Resonator>> RESONATOR = ENTITIES.registerEntityType("resonator", Resonator::new,
+            MobCategory.MONSTER, b -> b.sized(0.8F, 2.3F).eyeHeight(2.0F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Howler>> HOWLER = ENTITIES.registerEntityType("howler", Howler::new,
+            MobCategory.MONSTER, b -> b.sized(1.1F, 1.5F).eyeHeight(1.0F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<GlowballEntity>> GLOWBALL = ENTITIES.registerEntityType("glowball",
             GlowballEntity::new, MobCategory.MISC, b -> b.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
 

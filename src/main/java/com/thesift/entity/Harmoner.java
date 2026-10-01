@@ -62,15 +62,16 @@ public class Harmoner extends Animal implements MusicListener {
     private static final EntityDataAccessor<Boolean> GUIDING = SynchedEntityData.defineId(Harmoner.class, EntityDataSerializers.BOOLEAN);
     private static final byte EVENT_SING = 61;
 
-    public static final String[] NAMES = {"rose", "azure", "gold", "violet", "jade", "coral"};
+    public static final String[] NAMES = {"rose", "azure", "gold", "violet", "jade", "coral", "night"};
     /** The structure each colour leads to. */
-    public static final String[] STRUCTURES = {"abandoned_altar", "chrome_well", "dream_statue", "collapsed_tower", "sift_ruins", "musical_temple"};
-    public static final int[] COLORS = {0xE8577F, 0x3F8FE8, 0xF2B632, 0x8C5AE0, 0x35C28F, 0xFF7A4A};
+    public static final String[] STRUCTURES = {"abandoned_altar", "chrome_well", "dream_statue", "collapsed_tower", "sift_ruins", "musical_temple",
+            "sculk_castle"};
+    public static final int[] COLORS = {0xE8577F, 0x3F8FE8, 0xF2B632, 0x8C5AE0, 0x35C28F, 0xFF7A4A, 0x2EF2E2};
     public static final int VARIANTS = NAMES.length;
     /** Each colour's song, in semitones above F#3 (the note block's lowest note). */
     private static final int[][] SONGS = {
             {12, 16, 19, 24, 19}, {7, 11, 14, 19, 23, 19}, {14, 17, 21, 17, 14, 21}, {9, 12, 16, 21, 16}, {11, 14, 18, 23, 18, 14},
-            {16, 19, 23, 21, 19, 16}};
+            {16, 19, 23, 21, 19, 16}, {4, 3, 7, 6, 0, 1}};
     private static final int NOTE_TICKS = 4;
     private static final int GUIDE_TICKS = 20 * 150;
 
@@ -158,7 +159,8 @@ public class Harmoner extends Animal implements MusicListener {
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
             @Nullable SpawnGroupData data) {
-        this.setVariant(this.random.nextInt(VARIANTS));
+        // the midnight Harmoner, who knows the way to the Dictator's castle, is the rarest
+        this.setVariant(this.random.nextInt(14) == 0 ? VARIANTS - 1 : this.random.nextInt(VARIANTS - 1));
         return super.finalizeSpawn(level, difficulty, reason, data);
     }
 

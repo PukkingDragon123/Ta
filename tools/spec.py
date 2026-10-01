@@ -200,6 +200,8 @@ block("echo_frame", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).stren
       tags=["pickaxe", "needs_diamond", "portal_frame"], tab="functional")
 block("sift_portal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12)", cls="SiftPortalBlock", model="portal",
       item=False, loot="none")
+block("conductors_podium", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 7)",
+      cls="ConductorsPodiumBlock", model="cube_column", tab="functional", loot="none", name="Conductor's Podium")
 block("harmony_stone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0F, 3600000.0F)", cls="HarmonyStoneBlock", model="harmony",
       tab="functional", loot="none")
 block("harmony_seal", "custom", STONE + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 5)", cls="HarmonySealBlock",
@@ -246,6 +248,8 @@ for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
 item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
 for a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"siftite_{a}", cls=f"armor:{a}", tab="combat", model="armor")
-for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sift_sniffer"]:
+for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sift_sniffer", "dictator", "enforcer", "resonator", "howler"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
+item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant()",
+     model="handheld", tab="combat", name="Conductor's Baton")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")

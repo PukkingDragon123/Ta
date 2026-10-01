@@ -797,9 +797,48 @@ def items():
         rows[py][px_] = 'g'
         out(f'item/slingshot_pulling_{i}', pal_sprite([''.join(r) for r in rows], dict(base_keys, g=hx('#e8ff9a'))))
     eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
-            'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'), 'sift_sniffer': ('#8c2f23', '#3f9d80')}
+            'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'), 'sift_sniffer': ('#8c2f23', '#3f9d80'),
+            'dictator': ('#141e2c', '#e6e1d3'), 'enforcer': ('#22324a', '#e2d5b8'), 'resonator': ('#16202e', '#3ff0e0'), 'howler': ('#1a2433', '#d8d0b8')}
     for mob, (b, s) in eggs.items():
         out(f'item/{mob}_spawn_egg', pal_sprite(S.EGG, {'b': hx(b), 's': hx(s), 'd': darken(hx(b), 0.45)}))
+
+
+# ================================================================== the Dictator's things
+
+
+def dictator_things():
+    teal, teal_d, brass, brass_l = hx('#2ef2e2'), hx('#15a89f'), hx('#b89a52'), hx('#dcc27a')
+    # the podium: dark hushslate with a brass rail and glowing grooves; the top is a music stand of runes
+    side = M.polished(HUSH[1:6], 160)
+    for x in range(16):
+        side.set(x, 2, brass); side.set(x, 1, brass_l)
+        if x % 4 == 1:
+            for y in range(5, 13):
+                side.set(x, y, teal_d if y % 3 else teal)
+    out('block/conductors_podium_side', side)
+    top = M.polished(HUSH[1:6], 161)
+    draw_map(top, ['..........', '.bbbbbbbb.', '.b......b.', '.b.tttt.b.', '.b.t..t.b.', '.b.tttt.b.', '.b..tt..b.', '.b......b.', '.bbbbbbbb.',
+                   '..........'], {'b': brass, 't': teal}, 3, 3)
+    out('block/conductors_podium_top', top)
+    # the Conductor's Baton: a long white baton, a dark grip with a brass ferrule, a glowing sculk tip
+    out('item/conductors_baton', pal_sprite([
+        '..............gG',
+        '.............wgg',
+        '............ww..',
+        '...........wl...',
+        '..........wl....',
+        '.........wl.....',
+        '........wl......',
+        '.......wl.......',
+        '......wl........',
+        '.....bB.........',
+        '....dd..........',
+        '...dD...........',
+        '..dD............',
+        '.dD.............',
+        'dd..............',
+        '................',
+    ], {'w': hx('#f4f0e5'), 'l': hx('#c9c2b0'), 'g': teal_d, 'G': teal, 'b': brass, 'B': brass_l, 'd': hx('#141e2c'), 'D': hx('#2b3a52')}))
 
 
 # ================================================================== sniffer saddle
@@ -1112,6 +1151,7 @@ def main():
     items()
     armor_layers()
     sniffer_saddle()
+    dictator_things()
     particles()
     nebula()
     logo()

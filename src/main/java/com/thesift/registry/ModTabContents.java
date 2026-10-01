@@ -15,7 +15,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> functional() {
-        return List.of(ModItems.SIFT_DRUM, ModItems.EUPHORY_ALTAR, ModItems.ECHO_FRAME, ModItems.HARMONY_STONE, ModItems.HARMONY_SEAL, ModItems.DREAM_SNARE, ModItems.CRUMBLING_DREAMSTONE, ModItems.BULB_LANTERN, ModItems.GLOWING_SLIME_BLOCK, ModItems.SOUL_CHIME);
+        return List.of(ModItems.SIFT_DRUM, ModItems.EUPHORY_ALTAR, ModItems.ECHO_FRAME, ModItems.CONDUCTORS_PODIUM, ModItems.HARMONY_STONE, ModItems.HARMONY_SEAL, ModItems.DREAM_SNARE, ModItems.CRUMBLING_DREAMSTONE, ModItems.BULB_LANTERN, ModItems.GLOWING_SLIME_BLOCK, ModItems.SOUL_CHIME);
     }
 
     public static List<Supplier<? extends Item>> items() {
@@ -27,11 +27,11 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> combat() {
-        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS);
+        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON);
     }
 
     public static List<Supplier<? extends Item>> eggs() {
-        return List.of(ModItems.BULB_SPAWN_EGG, ModItems.SLUMBLER_SPAWN_EGG, ModItems.SIFTER_SPAWN_EGG, ModItems.ENCHOER_SPAWN_EGG, ModItems.RIVETER_SPAWN_EGG, ModItems.HARMONER_SPAWN_EGG, ModItems.SIFT_SNIFFER_SPAWN_EGG);
+        return List.of(ModItems.BULB_SPAWN_EGG, ModItems.SLUMBLER_SPAWN_EGG, ModItems.SIFTER_SPAWN_EGG, ModItems.ENCHOER_SPAWN_EGG, ModItems.RIVETER_SPAWN_EGG, ModItems.HARMONER_SPAWN_EGG, ModItems.SIFT_SNIFFER_SPAWN_EGG, ModItems.DICTATOR_SPAWN_EGG, ModItems.ENFORCER_SPAWN_EGG, ModItems.RESONATOR_SPAWN_EGG, ModItems.HOWLER_SPAWN_EGG);
     }
 
     private ModTabContents() {}

@@ -5,6 +5,10 @@ import com.thesift.entity.Enchoer;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
 import com.thesift.entity.SiftSniffer;
+import com.thesift.entity.boss.Dictator;
+import com.thesift.entity.boss.Enforcer;
+import com.thesift.entity.boss.Howler;
+import com.thesift.entity.boss.Resonator;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import com.thesift.registry.ModBlocks;
@@ -38,6 +42,10 @@ public final class ModBusEvents {
         event.put(ModEntities.RIVETER.get(), Riveter.createAttributes().build());
         event.put(ModEntities.HARMONER.get(), Harmoner.createAttributes().build());
         event.put(ModEntities.SIFT_SNIFFER.get(), SiftSniffer.createAttributes().build());
+        event.put(ModEntities.DICTATOR.get(), Dictator.createAttributes().build());
+        event.put(ModEntities.ENFORCER.get(), Enforcer.createAttributes().build());
+        event.put(ModEntities.RESONATOR.get(), Resonator.createAttributes().build());
+        event.put(ModEntities.HOWLER.get(), Howler.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
