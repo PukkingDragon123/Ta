@@ -183,4 +183,10 @@ public class Enchoer extends AbstractVillager implements MusicListener {
     public SoundEvent getNotifyTradeSound() {
         return ModSounds.ENCHOER_YES.get();
     }
+
+    /** Tufts of mint fur and a last little hum. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0x9FE3CF, 0xF2C1D8, KillBurst.NOTE, ModParticles.DRIFTING_SOUL.get());
+    }
 }

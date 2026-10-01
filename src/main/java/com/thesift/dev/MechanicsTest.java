@@ -131,7 +131,9 @@ final class MechanicsTest {
         this.dictator = podium.wake(this.sift, at, null);
         check(this.dictator != null && this.dictator.isAlive(), "dictator: the podium wakes the Dictator");
         if (this.dictator != null) {
-            this.dictator.setHealth(this.dictator.getMaxHealth() * 0.5F);
+            // a real blow, as a player would land it, takes him just under half health
+            this.dictator.setHealth(this.dictator.getMaxHealth() * 0.5F + 1.0F);
+            this.dictator.hurtServer(this.sift, this.sift.damageSources().generic(), 2.0F);
         }
     }
 

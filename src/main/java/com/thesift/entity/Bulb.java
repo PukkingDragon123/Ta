@@ -279,4 +279,17 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
         this.setVariant(input.getIntOr("Variant", 0));
         this.slimeTime = input.getIntOr("SlimeTime", 6000);
     }
+
+    private static final int[][] BURST = {{0x78A5E3, 0x63C6DF}, {0x3FD0EF, 0x9CF0FF}, {0xA58FE6, 0xE59AD0}, {0x3B4AA0, 0xFFF1A8}};
+
+    /** Killed, it bursts into jelly: droplets and stars in its own colours, and a few splats on the ground. */
+    @Override
+    public void makePoofParticles() {
+        int[] c = BURST[Math.floorMod(this.getVariant(), BURST.length)];
+        KillBurst.pop(this, c[0], c[1], KillBurst.DROP, null);
+        for (int i = 0; i < 5; i++) {
+            this.level().addParticle(ModParticles.SLIME_TRAIL.get(), this.getRandomX(0.9), this.getY() + 0.02, this.getRandomZ(0.9),
+                    ((c[1] >> 16) & 255) / 255.0, ((c[1] >> 8) & 255) / 255.0, (c[1] & 255) / 255.0);
+        }
+    }
 }

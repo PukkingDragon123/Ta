@@ -42,7 +42,8 @@ def main(previews=True):
         os.makedirs(os.path.join(TEX, name), exist_ok=True)
         for vname, (img, glow) in texs.items():
             img.save(os.path.join(TEX, name, f'{vname}.png'))
-            if glow is not None:
+            # emissive layers stay the same whatever the face is doing
+            if glow is not None and vname in m.variants:
                 glow.save(os.path.join(TEX, name, f'{vname}_glow.png'))
         if previews:
             os.makedirs(PREVIEW, exist_ok=True)

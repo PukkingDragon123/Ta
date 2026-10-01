@@ -104,6 +104,7 @@ public final class CodexEntries {
         l.add(thing(PLACES, "deep_shrine", ModItems.ECHO_FRAME));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         // ---- blocks & magic
+        l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
         l.add(thing(MAGIC, "euphory_altar", ModItems.EUPHORY_ALTAR));
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));
         l.add(thing(MAGIC, "flora", () -> ModBlocks.CORAL_BUSH.get().asItem()));

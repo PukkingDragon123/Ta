@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class EnchoerRenderer extends MobRenderer<Enchoer, EnchoerRenderState, EnchoerModel> {
+public class EnchoerRenderer extends SiftMobRenderer<Enchoer, EnchoerRenderState, EnchoerModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/enchoer/enchoer.png");
 
     public EnchoerRenderer(EntityRendererProvider.Context context) {

@@ -1,5 +1,6 @@
 package com.thesift.entity.boss;
 
+import com.thesift.entity.KillBurst;
 import java.util.EnumSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -156,5 +157,16 @@ public abstract class OrchestraMinion extends Monster {
         public void stop() {
             OrchestraMinion.this.windup = -1;
         }
+    }
+
+    /** Its colours for the burst of notes it leaves when it is silenced. */
+    protected int burstColor() {
+        return 0x2EF2E2;
+    }
+
+    /** Silenced: a burst of notes and sculk souls. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, this.burstColor(), 0xEAF8FF, KillBurst.NOTE, ParticleTypes.SCULK_SOUL);
     }
 }

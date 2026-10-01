@@ -1,16 +1,22 @@
 {
   "variants": {
-    "beat=false,core=false": {
+    "hit=0,core=false": {
       "model": "thesift:block/sift_drum"
     },
-    "beat=false,core=true": {
+    "hit=0,core=true": {
       "model": "thesift:block/sift_drum_core"
     },
-    "beat=true,core=false": {
-      "model": "thesift:block/sift_drum_beat"
+    "hit=1,core=false": {
+      "model": "thesift:block/sift_drum_hit1"
     },
-    "beat=true,core=true": {
-      "model": "thesift:block/sift_drum_beat_core"
+    "hit=1,core=true": {
+      "model": "thesift:block/sift_drum_hit1_core"
+    },
+    "hit=2,core=false": {
+      "model": "thesift:block/sift_drum_hit2"
+    },
+    "hit=2,core=true": {
+      "model": "thesift:block/sift_drum_hit2_core"
     }
   }
 }

@@ -42,7 +42,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class SiftDrumBlockEntity extends BlockEntity {
     public static final int ROUNDS = 3;
-    private static final int[] INTERVAL_CHOICES = {6, 10, 14};
+    /** Gaps between beats, in ticks: quick, steady and slow (0.4 s, 0.6 s, 0.8 s). */
+    private static final int[] INTERVAL_CHOICES = {8, 12, 16};
 
     private enum Phase { IDLE, CALL, ANSWER, FAILED, OPENING }
 
@@ -112,7 +113,8 @@ public class SiftDrumBlockEntity extends BlockEntity {
         }
         int expected = this.pattern[this.beatIndex - 1];
         int actual = (int) (now - this.lastAnswerTick);
-        int tolerance = 5 - this.round;
+        // generous enough to play by ear: 0.3 s early or late in the first round, 0.2 s by the last
+        int tolerance = 6 - this.round;
         if (Math.abs(actual - expected) <= tolerance) {
             this.flashSensor(level, this.beatIndex);
             level.playSound(null, this.worldPosition, ModSounds.RHYTHM_GOOD.get(), SoundSource.BLOCKS, 0.8F, 1.0F + this.beatIndex * 0.08F);

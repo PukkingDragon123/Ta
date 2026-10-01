@@ -245,4 +245,10 @@ public class Riveter extends Monster implements MusicListener {
     protected SoundEvent getDeathSound() {
         return ModSounds.RIVETER_DEATH.get();
     }
+
+    /** Sculk souls and cyan sparks. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0x2EE6D6, 0x1D3B4F, KillBurst.STAR, net.minecraft.core.particles.ParticleTypes.SCULK_SOUL);
+    }
 }

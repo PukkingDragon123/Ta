@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class HarmonerRenderer extends MobRenderer<Harmoner, HarmonerRenderState, HarmonerModel> {
+public class HarmonerRenderer extends SiftMobRenderer<Harmoner, HarmonerRenderState, HarmonerModel> {
     private static final Identifier[] TEXTURES = new Identifier[Harmoner.VARIANTS];
 
     static {

@@ -234,4 +234,10 @@ public class Slumbler extends PathfinderMob implements MusicListener {
             Slumbler.this.wakeTimer = 600 + Slumbler.this.random.nextInt(600);
         }
     }
+
+    /** Bubbles and droplets, like a popped soap bubble. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0x8FD0DC, 0xF59AD0, KillBurst.DROP, ModParticles.CHROME_BUBBLE.get());
+    }
 }

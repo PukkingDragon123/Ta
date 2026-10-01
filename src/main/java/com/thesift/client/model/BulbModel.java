@@ -10,14 +10,23 @@ import net.minecraft.util.Mth;
  * at the feet, so squash and stretch deforms the whole jelly from the ground up. Each ear is a
  * two-segment spring that lags behind the body.
  *
+ * <p>The jelly is see-through, so the model is drawn twice, like vanilla's slime: once opaque with
+ * only the darker {@code core} showing ({@link Pass#CORE}), then translucent with only the jelly
+ * ({@link Pass#JELLY}, see {@code BulbJellyLayer}). The core copies the body's squash so it wobbles
+ * along inside.</p>
+ *
  * <ul>
- *   <li>idle: slow jelly breathing, ears sway and perk up when a player is near</li>
+ *   <li>idle: slow jelly breathing, ears sway and perk up when a player is near, the odd ear flick</li>
  *   <li>move: stretch on take-off, splat on landing, feet tuck in the air and patter on the ground</li>
- *   <li>hurt: squishes flat, ears flop</li>
- *   <li>death: melts into a puddle instead of tipping over</li>
+ *   <li>happy (dancing): bops to the beat, ears swing</li>
+ *   <li>hurt: squishes flat, ears flop; death: the cartoon pop of SiftMobRenderer</li>
+ *   <li>sleepy: sinks a little lower, ears droop, breathes slowly</li>
  * </ul>
  */
 public class BulbModel extends EntityModel<BulbRenderState> {
+    public enum Pass { CORE, JELLY }
+
+    private final ModelPart core;
     private final ModelPart body;
     private final ModelPart leftEar;
     private final ModelPart leftEarTip;
@@ -28,9 +37,13 @@ public class BulbModel extends EntityModel<BulbRenderState> {
     private final ModelPart backLeftLeg;
     private final ModelPart backRightLeg;
 
-    public BulbModel(ModelPart root) {
-        super(root);
+    public BulbModel(ModelPart root, Pass pass) {
+        super(root, pass == Pass.JELLY ? net.minecraft.client.renderer.rendertype.RenderTypes::entityTranslucent
+                : net.minecraft.client.renderer.rendertype.RenderTypes::entityCutoutNoCull);
         this.body = root.getChild("body");
+        this.core = root.getChild("core");
+        this.body.visible = pass == Pass.JELLY;
+        this.core.visible = pass == Pass.CORE;
         this.leftEar = this.body.getChild("left_ear");
         this.leftEarTip = this.leftEar.getChild("left_ear_tip");
         this.rightEar = this.body.getChild("right_ear");
@@ -50,14 +63,11 @@ public class BulbModel extends EntityModel<BulbRenderState> {
 
         // --- squash & stretch plus a slow jelly breath
         float sq = Mth.clamp(s.squash, -0.45F, 0.6F);
-        float breathe = Mth.sin(age * 0.11F) * 0.025F;
-        float hurt = s.hasRedOverlay ? 1.0F : 0.0F;
-        float y = 1.0F + sq + breathe - hurt * 0.3F;
-        float wide = 1.0F - (sq + breathe) * 0.55F + hurt * 0.18F;
-        // death: melt into a wide, flat puddle
-        float melt = Anim.smooth(s.melt / 20.0F);
-        y *= 1.0F - melt * 0.82F;
-        wide *= 1.0F + melt * 0.55F;
+        float sleepy = s.sleepy ? 1.0F : 0.0F;
+        float breathe = Mth.sin(age * (s.sleepy ? 0.06F : 0.11F)) * (0.025F + sleepy * 0.02F);
+        float hurt = s.hasRedOverlay && s.dying <= 0.0F ? 1.0F : 0.0F;
+        float y = 1.0F + sq + breathe - hurt * 0.3F - sleepy * 0.08F;
+        float wide = 1.0F - (sq + breathe) * 0.55F + hurt * 0.18F + sleepy * 0.05F;
         this.body.yScale = y;
         this.body.xScale = wide;
         this.body.zScale = wide;
@@ -65,16 +75,19 @@ public class BulbModel extends EntityModel<BulbRenderState> {
         this.body.zRot = Mth.sin(pos * 0.6F) * 0.06F * walk;
         // the whole jelly turns a touch towards what it looks at
         this.body.yRot = s.yRot * Anim.DEG * 0.25F;
+        float melt = 0.0F;
 
-        // --- ears: springy two-segment wobble, perk up near players
-        float perk = s.earPerk;
-        float flop = Math.max(hurt, melt);
+        // --- ears: springy two-segment wobble, perk up near players; now and then one flicks
+        float perk = s.earPerk * (1.0F - sleepy);
+        float flop = Math.max(hurt, Math.max(melt, sleepy * 0.6F));
+        float flick = Anim.envelope(Mth.positiveModulo(age + s.variant * 17.0F, 130.0F), 0.0F, 2.0F, 1.0F, 4.0F);
         this.leftEar.xRot = s.earLeft * 1.1F - perk * 0.15F + Mth.sin(age * 0.08F) * 0.05F + flop * 0.9F;
         this.leftEar.zRot = s.earLeft * 0.2F + 0.06F + flop * 0.6F;
         this.leftEarTip.xRot = s.earLeft * 0.9F + Mth.sin(age * 0.08F - 0.8F) * 0.07F + (1.0F - perk) * 0.3F + flop * 0.6F;
         this.rightEar.xRot = s.earRight * 1.1F - perk * 0.15F + Mth.sin(age * 0.08F + 1.7F) * 0.05F + flop * 0.8F;
         this.rightEar.zRot = -s.earRight * 0.2F - 0.06F - flop * 0.6F;
         this.rightEarTip.xRot = s.earRight * 0.9F + Mth.sin(age * 0.08F + 0.9F) * 0.07F + (1.0F - perk) * 0.3F + flop * 0.6F;
+        this.leftEarTip.zRot = flick * 0.6F;
 
         // --- dancing: the whole bunny bops to the beat
         if (s.dancing) {
@@ -94,10 +107,13 @@ public class BulbModel extends EntityModel<BulbRenderState> {
         this.frontRightLeg.xRot = -air * 0.6F - step;
         this.backLeftLeg.xRot = air * 0.7F - step;
         this.backRightLeg.xRot = air * 0.7F + step;
-        boolean legs = melt < 0.5F;
-        this.frontLeftLeg.visible = legs;
-        this.frontRightLeg.visible = legs;
-        this.backLeftLeg.visible = legs;
-        this.backRightLeg.visible = legs;
+
+        // --- the core inside follows the jelly around
+        this.core.xScale = this.body.xScale;
+        this.core.yScale = this.body.yScale;
+        this.core.zScale = this.body.zScale;
+        this.core.xRot = this.body.xRot;
+        this.core.yRot = this.body.yRot;
+        this.core.zRot = this.body.zRot;
     }
 }

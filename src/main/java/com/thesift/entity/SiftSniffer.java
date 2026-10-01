@@ -214,4 +214,10 @@ public class SiftSniffer extends Sniffer {
         super.readAdditionalSaveData(input);
         this.setTame(input.getBooleanOr("SiftTame", false));
     }
+
+    /** Moss, dirt and hearts. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0xD24A3A, 0x5FBF73, KillBurst.HEART, ModParticles.FOOTSTEP_PUFF.get());
+    }
 }

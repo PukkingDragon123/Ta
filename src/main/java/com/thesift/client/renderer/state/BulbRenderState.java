@@ -1,8 +1,6 @@
 package com.thesift.client.renderer.state;
 
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-
-public class BulbRenderState extends LivingEntityRenderState {
+public class BulbRenderState extends SiftRenderState {
     public int variant;
     public float squash;
     public float earLeft;
@@ -10,7 +8,6 @@ public class BulbRenderState extends LivingEntityRenderState {
     public float earPerk;
     public boolean dancing;
     public boolean airborne;
-    public boolean blink;
-    /** Death progress in ticks; the Bulb melts instead of tipping over. */
-    public float melt;
+    /** Night-time doze when nothing is going on. */
+    public boolean sleepy;
 }

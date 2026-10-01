@@ -334,23 +334,15 @@ def faces(side, top, bottom, uv_side=None, uv_top=None):
 
 
 def gen_drum(bid):
+    import hdblocks as HB
     variants = {}
-    for beat in (False, True):
+    for hit in (0, 1, 2):
         for core in (False, True):
-            name = bid + ('_beat' if beat else '') + ('_core' if core else '')
-            top = f'{NS}:block/{bid}_top' + ('_beat' if beat else '')
-            side = f'{NS}:block/{bid}_side' + ('_core' if core else '')
-            h = 13 if beat else 14
-            m = {'parent': 'minecraft:block/block', 'textures': {'particle': side, 'top': top, 'side': side, 'rim': f'{NS}:block/{bid}_rim',
-                                                                    'bottom': f'{NS}:block/{bid}_bottom'},
-                 'elements': [
-                     el([0, 0, 0], [16, 2, 16], faces('#rim', '#rim', '#bottom', uv_side=[0, 14, 16, 16])),
-                     el([1, 2, 1], [15, h - 1, 15], faces('#side', '#top', '#bottom', uv_side=[1, 16 - (h - 1), 15, 14])),
-                     el([0, h - 2, 0], [16, h, 16], faces('#rim', '#top', '#rim', uv_side=[0, 0, 16, 2])),
-                 ]}
+            name = bid + ('' if hit == 0 else f'_hit{hit}') + ('_core' if core else '')
+            m = HB.drum_model(hit, core, NS, bid)
             note_textures(m)
             write(os.path.join(A, 'models/block', name + '.json'), m)
-            variants[f'beat={str(beat).lower()},core={str(core).lower()}'] = {'model': f'{NS}:block/{name}'}
+            variants[f'hit={hit},core={str(core).lower()}'] = {'model': f'{NS}:block/{name}'}
     write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': variants})
     item_block(bid)
 
@@ -696,7 +688,7 @@ def gen_recipes():
 def gen_particles():
     counts = {'drifting_soul': 4, 'chrome_droplet': 3, 'chrome_bubble': 1, 'dream_pollen': 2, 'sift_note': 1, 'resonance_ring': 1, 'glow_dust': 2,
               'lullwood_leaf': 3, 'wishwood_leaf': 3, 'sift_mist': 2, 'star_sparkle': 2, 'portal_soul': 3, 'footstep_puff': 3, 'glow_splat': 2, 'slime_trail': 3, 'guide_note': 1,
-              'wishing_star': 1, 'sleep_spore': 2}
+              'wishing_star': 1, 'sleep_spore': 2, 'kill_star': 4}
     for p, n in counts.items():
         texs = [f'{NS}:{p}_{i}' if n > 1 else f'{NS}:{p}' for i in range(n)]
         write(os.path.join(A, 'particles', p + '.json'), {'textures': texs})
@@ -760,6 +752,8 @@ def gen_lang():
         f'codex.{NS}.deep_shrine.body': 'Hushslate shrines in the caves of the Deep Sift. Each holds an Echo Frame - your way home - and a chest that sometimes keeps a Warden Core. Riveters roost nearby.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Conductor's Podium. Step up to it.",
+        f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
+        f'codex.{NS}.sift_drum.body': 'Left- or right-click the drum to play a beat; hold the button for a drum roll. Sneak and left-click to break it. Its voice comes from the block beneath: stone booms low, wood thumps, anything else taps high. A redstone pulse plays it too, and every beat ripples out to Euphory Altars and Sift creatures nearby.',
         f'codex.{NS}.euphory_altar.title': 'Euphory Altar', f'codex.{NS}.euphory_altar.tagline': 'Enchanting by music',
         f'codex.{NS}.euphory_altar.body': 'Set an item on the altar, surround it with Sift Drums and feed it a Chrome Pearl. The drums play themselves, the rings spin up and the item comes out enchanted beyond what a table can do.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',

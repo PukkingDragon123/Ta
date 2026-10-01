@@ -5,6 +5,7 @@ import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
+import com.thesift.entity.KillBurst;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
@@ -269,6 +270,14 @@ public class Dictator extends Monster {
     }
 
     @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+        boolean hurt = super.hurtServer(level, source, amount);
+        // every blow moves the performance on, even before his next tick
+        this.trackHealth(level);
+        return hurt;
+    }
+
+    @Override
     public boolean doHurtTarget(ServerLevel level, Entity target) {
         this.level().broadcastEntityEvent(this, EVENT_SLASH);
         return super.doHurtTarget(level, target);
@@ -381,5 +390,12 @@ public class Dictator extends Monster {
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
+    }
+
+    /** The last chord: a storm of notes and souls. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0x2EF2E2, 0xFFFFFF, KillBurst.NOTE, ParticleTypes.SCULK_SOUL);
+        KillBurst.pop(this, 0x7A5CFF, 0x2EF2E2, KillBurst.STAR, ModParticles.PORTAL_SOUL.get());
     }
 }

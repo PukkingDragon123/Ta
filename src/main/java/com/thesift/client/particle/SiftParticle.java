@@ -19,7 +19,7 @@ import org.joml.Quaternionf;
 public class SiftParticle extends SingleQuadParticle {
     public enum Kind {
         DRIFTING_SOUL, CHROME_DROPLET, CHROME_BUBBLE, DREAM_POLLEN, SIFT_NOTE, RESONANCE_RING, GLOW_DUST, LEAF, SIFT_MIST, STAR_SPARKLE,
-        PORTAL_SOUL, FOOTSTEP_PUFF, GLOW_SPLAT, WISHING_STAR, SLEEP_SPORE, SLIME_TRAIL, GUIDE_NOTE
+        PORTAL_SOUL, FOOTSTEP_PUFF, GLOW_SPLAT, WISHING_STAR, SLEEP_SPORE, SLIME_TRAIL, GUIDE_NOTE, KILL_STAR
     }
 
     /** Cyan -> pink -> pearl, the colours of Chrome and the Sift sky. */
@@ -38,6 +38,8 @@ public class SiftParticle extends SingleQuadParticle {
     private float maxAlpha = 1.0F;
     private final float colorShift;
     private final float ringRadius;
+    private int bounces;
+    private float squash;
 
     protected SiftParticle(Kind kind, ClientLevel level, double x, double y, double z, double xa, double ya, double za, SpriteSet sprites,
             RandomSource random) {
@@ -225,6 +227,27 @@ public class SiftParticle extends SingleQuadParticle {
                 this.fadeIn = 0.15F;
                 this.fadeOut = 0.4F;
             }
+            case KILL_STAR -> {
+                // thrown out of a dying mob: up and away, then it bounces along the ground
+                int rgb = (int) xa;
+                this.setColor(((rgb >> 16) & 255) / 255.0F, ((rgb >> 8) & 255) / 255.0F, (rgb & 255) / 255.0F);
+                double power = Math.max(0.3, za);
+                double ang = random.nextDouble() * Mth.TWO_PI;
+                double out = (0.06 + random.nextDouble() * 0.12) * power;
+                this.xd = Math.cos(ang) * out;
+                this.yd = (0.22 + random.nextDouble() * 0.18) * power;
+                this.zd = Math.sin(ang) * out;
+                this.lifetime = 34 + random.nextInt(22);
+                this.gravity = 0.9F;
+                this.hasPhysics = true;
+                this.friction = 0.97F;
+                size = 0.09F + random.nextFloat() * 0.05F;
+                this.fadeIn = 0.0F;
+                this.fadeOut = 0.25F;
+                this.roll = random.nextInt(4) * 0.4F;
+                this.oRoll = this.roll;
+                this.setSprite(sprites.get(Mth.clamp((int) ya, 0, 3), 3));
+            }
             case SLEEP_SPORE -> {
                 this.lifetime = 40 + random.nextInt(30);
                 if (xa == 0 && ya == 0 && za == 0) {
@@ -243,7 +266,11 @@ public class SiftParticle extends SingleQuadParticle {
         this.ringRadius = ring;
         this.quadSize = size;
         this.alpha = 0.0F;
-        this.setSpriteFromAge(sprites);
+        if (kind != Kind.KILL_STAR) {
+            this.setSpriteFromAge(sprites);
+        } else {
+            this.alpha = 1.0F;
+        }
     }
 
     private void pickSiftColor(float t) {
@@ -257,8 +284,23 @@ public class SiftParticle extends SingleQuadParticle {
 
     @Override
     public void tick() {
+        double fall = this.yd - 0.04 * this.gravity;
         super.tick();
         if (this.removed) {
+            return;
+        }
+        if (this.kind == Kind.KILL_STAR) {
+            if (this.onGround && fall < -0.05 && this.bounces < 4) {
+                // boing: bounce back up with a little less each time, squashing on impact
+                this.yd = -fall * 0.58;
+                this.bounces++;
+                this.squash = 1.0F;
+            }
+            this.squash *= 0.7F;
+            this.oRoll = this.roll;
+            this.roll += this.onGround ? 0.0F : this.spin * 2.5F;
+            this.quadSize = this.baseSize * (1.0F + 0.35F * this.squash);
+            this.alpha = this.maxAlpha * this.fade(this.age / (float) this.lifetime);
             return;
         }
         float life = this.age / (float) this.lifetime;

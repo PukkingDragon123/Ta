@@ -3,66 +3,94 @@ from modelkit import Model
 
 
 # =========================================================================== BULB
+JELLY = 200  # the Bulb's body is see-through jelly: this alpha over an opaque core
+
+# faces are painted at texel resolution (hd=True): the body's front is 24 x 20 texels
+BULB_FACE = {
+    'neutral': {2: '..gg', 3: '..g', 12: '....EEEEEE....EEEEEE', 13: '....EEEEEE....EEEEEE', 14: '..........MMMM', 15: '..........MMMM'},
+    'blink': {2: '..gg', 3: '..g', 13: '....EEEEEE....EEEEEE', 14: '..........MMMM', 15: '..........MMMM'},
+    'happy': {2: '..gg', 3: '..g', 11: '.....EEEE......EEEE', 12: '....E....E....E....E', 14: '.........MMMMMM', 15: '..........MttM',
+              16: '...........MM'},
+    'hurt': {2: '..gg', 3: '..g', 11: '....EE............EE', 12: '......EEE......EEE', 13: '....EE............EE', 15: '...........MM',
+             16: '..........M..M'},
+    'dead': {2: '..gg', 3: '..g', 10: '.....E..E......E..E', 11: '......EE........EE', 12: '......EE........EE', 13: '.....E..E......E..E',
+             15: '..........MMMM'},
+    'sleep': {2: '..gg', 3: '..g', 12: '....E....E....E....E', 13: '.....EEEE......EEEE', 15: '...........MM'},
+}
+
+
+def hd_rows(spec, w, h):
+    """Expands {row: text} into a full w x h texel map (unlisted rows and columns transparent)."""
+    rows = []
+    for y in range(h):
+        t = spec.get(y, '')
+        rows.append((t + '.' * w)[:w])
+    return rows
+
+
 def bulb() -> Model:
-    """The Sift bunny: a squishy jelly cube with two tall springy ears and four stubby feet."""
+    """The Sift bunny: a squishy cube of see-through jelly with a darker heart, two tall springy
+    ears and four stubby feet."""
     pal = {
         # top of the body is periwinkle blue, the lower band soft cyan (see the biome reference)
         'skin': '#78a5e3', 'skin_l': '#9cc3f3', 'skin_d': '#5d86cc',
         'belly': '#63c6df', 'belly_l': '#86dbee', 'belly_d': '#4aa9c9',
         'ear': '#78a5e3', 'ear_l': '#9cc3f3', 'ear_d': '#5d86cc', 'ear_in': '#63c6df',
         'foot': '#8fdcee', 'foot_l': '#b3ecf7', 'foot_d': '#6cc0da',
-        'eye': '#2f2777', 'mouth': '#4a3a9f', 'gloss': '#e3f3ff', 'drip': '#a9e6f5',
+        'eye': '#2f2777', 'mouth': '#4a3a9f', 'tongue': '#e98fc6', 'gloss': '#e3f3ff', 'drip': '#a9e6f5',
+        'core': '#4f6fc4', 'core_l': '#6a8ad8', 'core_d': '#3c56a6',
     }
     variants = {
         'bulb_sky': {},
         # the all-cyan "this little guy" colouring
         'bulb_blossom': {'skin': '#3fd0ef', 'skin_l': '#72e3fa', 'skin_d': '#27aed6', 'belly': '#3fd0ef', 'belly_l': '#72e3fa',
                          'belly_d': '#27aed6', 'ear': '#3fd0ef', 'ear_l': '#72e3fa', 'ear_d': '#27aed6', 'ear_in': '#27aed6',
-                         'foot': '#5fdcf3', 'foot_l': '#8deafa', 'foot_d': '#36bde0', 'eye': '#1b4f6b', 'mouth': '#1b4f6b'},
+                         'foot': '#5fdcf3', 'foot_l': '#8deafa', 'foot_d': '#36bde0', 'eye': '#1b4f6b', 'mouth': '#1b4f6b',
+                         'core': '#1d93c2', 'core_l': '#36aed8', 'core_d': '#137aa6'},
         'bulb_dusk': {'skin': '#a58fe6', 'skin_l': '#c3b2f6', 'skin_d': '#8770cf', 'belly': '#e59ad0', 'belly_l': '#f4b9e2', 'belly_d': '#c97bb5',
                       'ear': '#a58fe6', 'ear_l': '#c3b2f6', 'ear_d': '#8770cf', 'ear_in': '#e59ad0',
-                      'foot': '#f0b6de', 'foot_l': '#fbd2ee', 'foot_d': '#d895c4', 'eye': '#3a1f5e', 'mouth': '#5b2f7a'},
+                      'foot': '#f0b6de', 'foot_l': '#fbd2ee', 'foot_d': '#d895c4', 'eye': '#3a1f5e', 'mouth': '#5b2f7a',
+                      'core': '#7a5cc4', 'core_l': '#9378d8', 'core_d': '#6146a8'},
         'bulb_starry': {'skin': '#3b4aa0', 'skin_l': '#5566c0', 'skin_d': '#2b377d', 'belly': '#4e7fd0', 'belly_l': '#6a9be3', 'belly_d': '#3a66b3',
                         'ear': '#3b4aa0', 'ear_l': '#5566c0', 'ear_d': '#2b377d', 'ear_in': '#4e7fd0',
-                        'foot': '#6a9be3', 'foot_l': '#8bb5f0', 'foot_d': '#4e7fd0', 'eye': '#fff1a8', 'mouth': '#fff1a8', 'gloss': '#c9d3ff'},
+                        'foot': '#6a9be3', 'foot_l': '#8bb5f0', 'foot_d': '#4e7fd0', 'eye': '#fff1a8', 'mouth': '#fff1a8', 'gloss': '#c9d3ff',
+                        'core': '#fff1a8', 'core_l': '#fffbe0', 'core_d': '#e8cf6a'},
     }
-    m = Model('bulb', (64, 64), pal, variants)
+    m = Model('bulb', (64, 64), pal, variants, res=2, expressions=['blink', 'happy', 'hurt', 'dead', 'sleep'])
+    face_keys = {'E': 'eye', 'M': 'mouth', 't': 'tongue', 'g': 'gloss'}
+    face = {k: hd_rows(v, 24, 20) for k, v in BULB_FACE.items()}
     body = m.part('body', pivot=(0, 24, 0))
-    two_tone = dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.22)
+    two_tone = dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.22, opacity=JELLY)
     body.cube((-6, -13, -6), (12, 10, 12), **two_tone, faces={
-        'north': dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.0, map=[
-            '............',
-            '.g..........',
-            '............',
-            '............',
-            '............',
-            '............',
-            '..EEE..EEE..',
-            '.....MM.....',
-            '............',
-            '............',
-        ], keys={'E': 'eye', 'M': 'mouth', 'g': 'gloss'}),
-        'up': dict(color='skin', pattern='mc', clusters=0.25, map=[
-            '............',
-            '.gg.........',
-            '.g..........',
-        ], keys={'g': 'gloss'}),
-        'down': dict(color='belly_d', pattern='mc', clusters=0.2),
+        'north': dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.0, opacity=JELLY, hd=True, map=face['neutral'],
+                      keys=face_keys, expr={k: v for k, v in face.items() if k != 'neutral'}),
+        'up': dict(color='skin', pattern='mc', clusters=0.25, opacity=JELLY, hd=True,
+                   map=hd_rows({1: '.ggg', 2: '.gg', 3: '.g', 20: '..................g', 21: '.................gg'}, 24, 24), keys={'g': 'gloss'}),
+        'down': dict(color='belly_d', pattern='mc', clusters=0.2, opacity=JELLY),
     })
     for side, sx in (('left', 1), ('right', -1)):
         # ears sit on the back half of the top, three pixels apart
         ear = body.part(f'{side}_ear', pivot=(3 * sx, -13, 1.5))
-        ear.cube((-1.5, -4, -1), (3, 4, 2), color='ear', pattern='mc', clusters=0.15, rim=False, faces={
-            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, map=['...', '.i.', '.i.', '.i.'], keys={'i': 'ear_in'}),
+        ear.cube((-1.5, -4, -1), (3, 4, 2), color='ear', pattern='mc', clusters=0.15, rim=False, opacity=JELLY, faces={
+            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, opacity=JELLY, hd=True,
+                          map=['......', '..ii..', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iiii.'], keys={'i': 'ear_in'}),
         })
         tip = ear.part(f'{side}_ear_tip', pivot=(0, -4, 0))
-        tip.cube((-1.5, -3, -1), (3, 3, 2), color='ear', pattern='mc', clusters=0.15, rim=False, faces={
-            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, map=['...', '.i.', '.i.'], keys={'i': 'ear_in'}),
-            'up': dict(color='ear_l', pattern='mc', clusters=0.0),
+        tip.cube((-1.5, -3, -1), (3, 3, 2), color='ear', pattern='mc', clusters=0.15, rim=False, opacity=JELLY, faces={
+            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, opacity=JELLY, hd=True,
+                          map=['......', '......', '..ii..', '.iiii.', '.iiii.', '.iiii.'], keys={'i': 'ear_in'}),
+            'up': dict(color='ear_l', pattern='mc', clusters=0.0, opacity=JELLY, hd=True, map=['.g....', '......', '......', '......'],
+                       keys={'g': 'gloss'}),
         })
     for name, x, z in (('front_left', 1, -1), ('front_right', -1, -1), ('back_left', 1, 1), ('back_right', -1, 1)):
         leg = body.part(f'{name}_leg', pivot=(3.5 * x, -3, 3.5 * z))
-        leg.cube((-1.5, 0, -1.5), (3, 3, 3), color='foot', pattern='mc', clusters=0.4)
+        leg.cube((-1.5, 0, -1.5), (3, 3, 3), color='foot', pattern='mc', clusters=0.4, opacity=JELLY, faces={
+            'north': dict(color='foot', pattern='mc', clusters=0.2, opacity=JELLY, hd=True, map=['......'] * 4 + ['.d..d.', '.d..d.'],
+                          keys={'d': 'foot_d'}),
+        })
+    # the jelly's darker heart, seen through the body (drawn first, opaque; see BulbJellyLayer)
+    core = m.part('core', pivot=(0, 24, 0))
+    core.cube((-4, -11, -4), (8, 7, 8), color='core', pattern='mc', clusters=0.35, rim=True)
     return m
 
 
@@ -75,7 +103,7 @@ def slumbler() -> Model:
         'tongue': '#ff8fb0', 'teeth': '#fff8ec', 'eye': '#1a1d38', 'iris': '#ffd66b', 'eye_hi': '#ffffff',
         'lid': '#7fb6cf', 'gill': '#f59ad0', 'gill_d': '#c85f9f', 'claw': '#eae3f2', 'fin': '#bfe9f5',
     }
-    m = Model('slumbler', (128, 128), pal, {'slumbler': {}})
+    m = Model('slumbler', (128, 128), pal, {'slumbler': {}}, res=2, expressions=['angry', 'hurt', 'dead'])
     body = m.part('body', pivot=(0, 14, 0))
     body.cube((-8, -5, -11), (16, 9, 22), color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', faces={
         'up': dict(color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', map=[
@@ -148,9 +176,16 @@ def slumbler() -> Model:
     })
     for side, sx in (('left', 1), ('right', -1)):
         eye = head.part(f'{side}_eye', pivot=(5.5 * sx, -4, -6))
+        # big gold eyes with a slit pupil and a wet highlight (6 x 6 texels per face)
+        eye_keys = {'E': 'eye', 'h': 'eye_hi', 'i': 'iris', 'r': 'skin_d', 'l': 'lid', 'L': 'lid_d'}
         eye.cube((-1.5, -3, -1.5), (3, 3, 3), color='skin', pattern='mc', clusters=0.3, faces={
-            'north': dict(color='iris', pattern='mc', clusters=0.0, rim=False, map=['hE.', '.E.', '.E.'], keys={'E': 'eye', 'h': 'eye_hi'}),
-            ('east' if sx > 0 else 'west'): dict(color='iris', pattern='mc', clusters=0.0, rim=False, map=['.E.', '.E.', '.E.'], keys={'E': 'eye'}),
+            'north': dict(color='iris', pattern='mc', clusters=0.0, rim=False, hd=True, keys=eye_keys,
+                          map=['riiiir', 'iihEii', 'iiEEii', 'iiEEii', 'iiEEii', 'riiiir'],
+                          expr={'angry': ['LLLLLL', 'llllLL' if sx > 0 else 'LLllll', 'iiEEhi', 'iiEEii', 'iiEEii', 'riiiir'],
+                                'hurt': ['llllll', 'llllll', 'LLllLL', 'llLLll', 'llllll', 'llllll'],
+                                'dead': ['riiiir', 'iEiiEi', 'iiEEii', 'iiEEii', 'iEiiEi', 'riiiir']}),
+            ('east' if sx > 0 else 'west'): dict(color='iris', pattern='mc', clusters=0.0, rim=False, hd=True, keys=eye_keys,
+                                                 map=['riiiir', 'iiEEii', 'iiEEii', 'iiEEii', 'iiEEii', 'riiiir']),
         })
         lid = eye.part(f'{side}_eyelid')
         lid.cube((-1.5, -3, -1.5), (3, 3, 3), inflate=0.12, color='lid', pattern='mc', clusters=0.0, rim=False, faces={
@@ -197,7 +232,7 @@ def sifter() -> Model:
         'tooth': '#eaf7ff', 'tooth_d': '#a9cfe8', 'eye': '#d9f6ff', 'swirl': '#1892b2',
         'fin': '#0f6a8e', 'fin_l': '#1a86a8', 'fin_d': '#0b4f6d',
     }
-    m = Model('sifter', (64, 64), pal, {'sifter': {}})
+    m = Model('sifter', (64, 64), pal, {'sifter': {}}, res=2)
     body = m.part('body', pivot=(0, 24, 0))
     # torso column the head rests on
     body.cube((-3.5, -14, -2.5), (7, 4, 5), color='skin', pattern='mc', clusters=0.8)
@@ -264,7 +299,7 @@ def enchoer() -> Model:
         'paw': '#34507a', 'paw_l': '#466a9c', 'paw_d': '#243a5c', 'claw': '#e9e2c8',
         'antler': '#efe2b2', 'antler_l': '#fbf3d2', 'antler_d': '#c9b784',
     }
-    m = Model('enchoer', (128, 128), pal, {'enchoer': {}})
+    m = Model('enchoer', (128, 128), pal, {'enchoer': {}}, res=2)
     fur = dict(color='fur', pattern='mc', clusters=0.2, streaks=0.45)
     for side, sx in (('left', 1), ('right', -1)):
         leg = m.part(f'{side}_leg', pivot=(3.5 * sx, 18, 0.5))
@@ -334,7 +369,7 @@ def riveter() -> Model:
         'shin': '#1a8a87', 'shin_l': '#35b6ab', 'shin_d': '#0f5f5e',
         'eye': '#a6fff5', 'spot': '#3be6d8', 'maw': '#07101c', 'tooth': '#e9f4ef',
     }
-    m = Model('riveter', (64, 64), pal, {'riveter': {}})
+    m = Model('riveter', (64, 64), pal, {'riveter': {}}, res=2)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     body = m.part('body', pivot=(0, 24, 0))
     body.cube((-2.5, -13, -1.5), (5, 2, 3), color='bone', pattern='mc', clusters=0.4, rim=False)
@@ -453,7 +488,7 @@ def harmoner() -> Model:
         variants[f'harmoner_{name}'] = v
     pal = dict(variants['harmoner_rose'])
     pal.update({'eye': '#1a1830', 'eye_hi': '#ffffff', 'leg': '#4a3a5a', 'leg_l': '#6a5a7a', 'leg_d': '#33283f'})
-    m = Model('harmoner', (64, 64), pal, variants)
+    m = Model('harmoner', (64, 64), pal, variants, res=2)
     for side, sx in (('left', 1), ('right', -1)):
         leg = m.part(f'{side}_leg', pivot=(1.5 * sx, 20, 0.5))
         leg.cube((-0.5, 0, -0.5), (1, 3, 1), color='leg', pattern='mc', clusters=0.0, rim=False)
@@ -520,7 +555,7 @@ def dictator() -> Model:
     pal = dict(SCULK)
     pal.update({'coat': '#1a2a3e', 'coat_l': '#27405c', 'coat_d': '#101a28', 'brass': '#b89a52', 'brass_l': '#dcc27a', 'brass_d': '#7f6a35',
                 'mask': '#e6e1d3', 'mask_l': '#f6f2e8', 'mask_d': '#b9b2a0', 'shirt': '#c9c2b0'})
-    m = Model('dictator', (128, 128), pal, {'dictator': {}})
+    m = Model('dictator', (128, 128), pal, {'dictator': {}}, res=2)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     coat = dict(color='coat', pattern='mc', clusters=0.4)
     for side, sx in (('left', 1), ('right', -1)):
@@ -607,7 +642,7 @@ def enforcer() -> Model:
     pal = dict(SCULK)
     pal.update({'skin': '#e2d5b8', 'skin_l': '#f0e6cf', 'skin_d': '#c4b494', 'cord': '#7a2a3a', 'cord_l': '#9c3a4e', 'cord_d': '#561c29',
                 'shell': '#22324a', 'shell_l': '#2f4563', 'shell_d': '#162133'})
-    m = Model('enforcer', (128, 64), pal, {'enforcer': {}})
+    m = Model('enforcer', (128, 64), pal, {'enforcer': {}}, res=2)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     for side, sx in (('left', 1), ('right', -1)):
         leg = m.part(f'{side}_leg', pivot=(4 * sx, 18, 0))
@@ -674,7 +709,7 @@ def resonator() -> Model:
     to its sides like the strings of a lyre. It stalks on four splayed legs."""
     pal = dict(SCULK)
     pal.update({'string': '#3ff0e0', 'string_d': '#1a8f88', 'peg': '#8a6a3c'})
-    m = Model('resonator', (64, 64), pal, {'resonator': {}})
+    m = Model('resonator', (64, 64), pal, {'resonator': {}}, res=2)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     for i, (sx, sz) in enumerate(((1, -1), (-1, -1), (1, 1), (-1, 1))):
         name = ('front' if sz < 0 else 'hind') + ('_left' if sx > 0 else '_right')
@@ -722,7 +757,7 @@ def howler() -> Model:
     """Howler (wind): a hunched, four-legged pipe organ of sculk. A row of bone pipes rises from its
     back, glowing in their throats as it draws breath, and its head is a flared horn bell."""
     pal = dict(SCULK)
-    m = Model('howler', (128, 64), pal, {'howler': {}})
+    m = Model('howler', (128, 64), pal, {'howler': {}}, res=2)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     for name, sx, sz in (('front_left', 1, -1), ('front_right', -1, -1), ('hind_left', 1, 1), ('hind_right', -1, 1)):
         leg = m.part(f'{name}_leg', pivot=(3.5 * sx, 14, 5 * sz))

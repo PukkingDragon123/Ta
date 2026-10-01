@@ -359,9 +359,10 @@ public final class ClientSmokeTest {
         });
         scene("portal", 80, ClientSmokeTest::portalStage);
         scene("altar", 60, ClientSmokeTest::altarStage);
+        scene("drums", 40, ClientSmokeTest::drumStage);
         // the Sift Codex, opened at a few spreads (live, animated creatures on the left pages)
-        int[][] codexPages = {{1, 0}, {2, 0}, {22, 0}, {23, 0}, {18, 0}};
-        String[] codexNames = {"harmoner", "sniffer", "dictator", "enforcer", "castle"};
+        int[][] codexPages = {{1, 0}, {2, 0}, {23, 0}, {24, 0}, {18, 0}, {19, 0}};
+        String[] codexNames = {"harmoner", "sniffer", "dictator", "enforcer", "castle", "drum"};
         for (int i = 0; i < codexPages.length; i++) {
             int page = codexPages[i][0];
             SCENES.add(new Scene("codex_" + codexNames[i], 50, c -> target = null,
@@ -609,6 +610,17 @@ public final class ClientSmokeTest {
             PortalFrames.fill(c.sift(), f);
         }
         c.camera(x0 + 4.5, STAGE_Y + 3.5, z - 7.5, x0 + 1.5, STAGE_Y + 2.5, z + 0.5);
+    }
+
+    /** Three drums: at rest, mid-beat and with a glowing Warden Core inside. */
+    private static void drumStage(Ctx c) {
+        int x0 = -84, z0 = 0;
+        floor(c, x0 - 4, z0 - 4, x0 + 4, z0 + 4);
+        BlockState drum = ModBlocks.SIFT_DRUM.get().defaultBlockState();
+        c.set(x0 - 2, STAGE_Y, z0, drum);
+        c.set(x0, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.HIT, 1));
+        c.set(x0 + 2, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.CORE, true));
+        c.camera(x0 + 0.5, STAGE_Y + 2.6, z0 - 3.2, x0 + 0.5, STAGE_Y + 0.4, z0 + 0.5);
     }
 
     private static void altarStage(Ctx c) {

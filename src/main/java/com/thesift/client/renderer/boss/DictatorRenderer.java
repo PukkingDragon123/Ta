@@ -3,6 +3,7 @@ package com.thesift.client.renderer.boss;
 import com.thesift.TheSift;
 import com.thesift.client.model.ModModelLayers;
 import com.thesift.client.model.boss.DictatorModel;
+import com.thesift.client.renderer.SiftMobRenderer;
 import com.thesift.client.renderer.state.DictatorRenderState;
 import com.thesift.entity.boss.Dictator;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -12,7 +13,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class DictatorRenderer extends MobRenderer<Dictator, DictatorRenderState, DictatorModel> {
+public class DictatorRenderer extends SiftMobRenderer<Dictator, DictatorRenderState, DictatorModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/dictator/dictator.png");
     private static final Identifier GLOW = TheSift.id("textures/entity/dictator/dictator_glow.png");
 
@@ -42,7 +43,5 @@ public class DictatorRenderer extends MobRenderer<Dictator, DictatorRenderState,
         state.crescendo.copyFrom(entity.crescendoAnimation);
         state.slash.copyFrom(entity.slashAnimation);
         state.roar.copyFrom(entity.roarAnimation);
-        state.dying = state.deathTime;
-        state.deathTime = 0.0F;
     }
 }

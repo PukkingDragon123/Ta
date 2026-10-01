@@ -1,6 +1,7 @@
 package com.thesift.client.renderer.boss;
 
 import com.thesift.TheSift;
+import com.thesift.client.renderer.SiftMobRenderer;
 import com.thesift.client.renderer.state.MinionRenderState;
 import com.thesift.entity.boss.OrchestraMinion;
 import net.minecraft.client.model.EntityModel;
@@ -12,7 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 /** Renders an orchestra member; its sculk glows brighter while it winds up an attack. */
-public class MinionRenderer<T extends OrchestraMinion, M extends EntityModel<MinionRenderState>> extends MobRenderer<T, MinionRenderState, M> {
+public class MinionRenderer<T extends OrchestraMinion, M extends EntityModel<MinionRenderState>> extends SiftMobRenderer<T, MinionRenderState, M> {
     private final Identifier texture;
 
     public MinionRenderer(EntityRendererProvider.Context context, M model, String name, float shadow) {

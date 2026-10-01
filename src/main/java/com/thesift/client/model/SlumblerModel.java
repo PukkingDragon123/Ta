@@ -145,7 +145,7 @@ public class SlumblerModel extends EntityModel<SlumblerRenderState> {
             }
         }
 
-        boolean eyesShut = s.sleeping || yawnOpen > 0.55F || s.blink || roll > 0.6F;
+        boolean eyesShut = s.sleeping || yawnOpen > 0.55F || s.expression == com.thesift.client.Expression.BLINK || roll > 0.6F;
         this.leftEyelid.visible = eyesShut;
         this.rightEyelid.visible = eyesShut;
     }

@@ -45,6 +45,13 @@ public final class ModParticles {
     /** Sleepy spores released by Dream Snares. */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLEEP_SPORE = reg("sleep_spore", false);
 
+    /**
+     * Bouncy little stars, notes, hearts and droplets that burst out of a Sift mob when it is
+     * killed: xa carries the colour (0xRRGGBB), ya the shape (0 star, 1 note, 2 heart, 3 drop) and
+     * za how hard it is thrown.
+     */
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> KILL_STAR = reg("kill_star", true);
+
     private static DeferredHolder<ParticleType<?>, SimpleParticleType> reg(String name, boolean alwaysShow) {
         return PARTICLES.register(name, () -> new SimpleParticleType(alwaysShow));
     }

@@ -118,6 +118,7 @@ public class TheSiftClient {
         particle(event, ModParticles.GUIDE_NOTE, SiftParticle.Kind.GUIDE_NOTE);
         particle(event, ModParticles.WISHING_STAR, SiftParticle.Kind.WISHING_STAR);
         particle(event, ModParticles.SLEEP_SPORE, SiftParticle.Kind.SLEEP_SPORE);
+        particle(event, ModParticles.KILL_STAR, SiftParticle.Kind.KILL_STAR);
     }
 
     private static void registerFluidModels(RegisterFluidModelsEvent event) {

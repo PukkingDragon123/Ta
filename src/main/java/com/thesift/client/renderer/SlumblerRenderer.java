@@ -12,8 +12,9 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class SlumblerRenderer extends MobRenderer<Slumbler, SlumblerRenderState, SlumblerModel> {
-    private static final Identifier TEXTURE = TheSift.id("textures/entity/slumbler/slumbler.png");
+public class SlumblerRenderer extends SiftMobRenderer<Slumbler, SlumblerRenderState, SlumblerModel> {
+    private static final ExpressionTextures TEXTURES = ExpressionTextures.single("slumbler", com.thesift.client.Expression.ANGRY,
+            com.thesift.client.Expression.HURT, com.thesift.client.Expression.DEAD);
     private static final Identifier GLOW = TheSift.id("textures/entity/slumbler/slumbler_glow.png");
 
     public SlumblerRenderer(EntityRendererProvider.Context context) {
@@ -24,7 +25,12 @@ public class SlumblerRenderer extends MobRenderer<Slumbler, SlumblerRenderState,
 
     @Override
     public Identifier getTextureLocation(SlumblerRenderState state) {
-        return TEXTURE;
+        return TEXTURES.get(state.expression);
+    }
+
+    @Override
+    protected float bounciness() {
+        return 0.6F;
     }
 
     @Override
@@ -36,10 +42,7 @@ public class SlumblerRenderer extends MobRenderer<Slumbler, SlumblerRenderState,
     public void extractRenderState(Slumbler entity, SlumblerRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         state.sleeping = entity.isSlumbering();
-        state.blink = (entity.tickCount + entity.getId() * 31) % 131 < 4;
         state.yawn.copyFrom(entity.yawnAnimation);
         state.bite.copyFrom(entity.biteAnimation);
-        state.dying = state.deathTime;
-        state.deathTime = 0.0F;
     }
 }

@@ -258,4 +258,10 @@ public class Sifter extends Monster implements MusicListener {
             Sifter.this.setDeltaMovement(Sifter.this.getDeltaMovement().multiply(0.0, 1.0, 0.0));
         }
     }
+
+    /** A spray of pink sand and stars. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0xF1BDD4, 0xFFD98A, KillBurst.STAR, ModParticles.FOOTSTEP_PUFF.get());
+    }
 }

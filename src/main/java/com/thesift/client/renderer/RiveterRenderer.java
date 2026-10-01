@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class RiveterRenderer extends MobRenderer<Riveter, RiveterRenderState, RiveterModel> {
+public class RiveterRenderer extends SiftMobRenderer<Riveter, RiveterRenderState, RiveterModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/riveter/riveter.png");
     private static final Identifier GLOW = TheSift.id("textures/entity/riveter/riveter_glow.png");
 
@@ -40,7 +40,5 @@ public class RiveterRenderer extends MobRenderer<Riveter, RiveterRenderState, Ri
         state.hanging = entity.isHanging();
         state.sway = entity.sway.get(partialTicks);
         state.scream.copyFrom(entity.screamAnimation);
-        state.dying = state.deathTime;
-        state.deathTime = 0.0F;
     }
 }

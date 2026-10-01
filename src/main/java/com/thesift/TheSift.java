@@ -49,6 +49,7 @@ public class TheSift {
 
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onNotePlayed);
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onVanillaGameEvent);
+        NeoForge.EVENT_BUS.addListener(GameBusEvents::onLeftClickBlock);
 
         if (Boolean.getBoolean("thesift.smoketest")) {
             SmokeTest.registerIfEnabled(); // CI only

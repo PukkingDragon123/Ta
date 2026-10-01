@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 
-public class SifterRenderer extends MobRenderer<Sifter, SifterRenderState, SifterModel> {
+public class SifterRenderer extends SiftMobRenderer<Sifter, SifterRenderState, SifterModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/sifter/sifter.png");
 
     public SifterRenderer(EntityRendererProvider.Context context) {

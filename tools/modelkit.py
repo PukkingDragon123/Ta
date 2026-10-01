@@ -105,13 +105,20 @@ class Part:
 
 
 class Model:
-    def __init__(self, name: str, tex: tuple, palette: dict, variants: Optional[dict] = None):
+    """res: texels per model unit in the painted texture (the Java model keeps unit UVs, the PNG is
+    res times larger, so the game samples it at that density). expressions: extra textures to paint,
+    one per facial expression, from the 'expr' entries of the face specs."""
+
+    def __init__(self, name: str, tex: tuple, palette: dict, variants: Optional[dict] = None, res: int = 1,
+                 expressions: Optional[list] = None):
         self.name = name
         self.tex_w, self.tex_h = tex
         self.root = Part('root')
         self.palette = palette
         self.variants = variants or {'': {}}
         self.pixel_maps = []  # (cube, face, rows, key->palette, glow chars)
+        self.res = res
+        self.expressions = list(expressions or [])
 
     def part(self, name, pivot=(0, 0, 0), rot=(0, 0, 0)):
         return self.root.part(name, pivot, rot)
@@ -203,15 +210,18 @@ FACE_LIGHT = {'up': 0.16, 'north': 0.0, 'south': -0.12, 'west': -0.07, 'east': -
 
 
 class Painter:
-    def __init__(self, model: Model, palette: dict, seed: int):
+    def __init__(self, model: Model, palette: dict, seed: int, expression: str = ''):
         self.m = model
+        self.r = model.res
+        self.W, self.H = model.tex_w * self.r, model.tex_h * self.r
         self.pal = palette
-        self.img = Image.new('RGBA', (model.tex_w, model.tex_h), (0, 0, 0, 0))
-        self.glow = Image.new('RGBA', (model.tex_w, model.tex_h), (0, 0, 0, 0))
+        self.img = Image.new('RGBA', (self.W, self.H), (0, 0, 0, 0))
+        self.glow = Image.new('RGBA', (self.W, self.H), (0, 0, 0, 0))
         self.px = self.img.load()
         self.gx = self.glow.load()
         self.seed = seed
         self.any_glow = False
+        self.expression = expression
 
     def col(self, key):
         if isinstance(key, tuple):
@@ -220,7 +230,7 @@ class Painter:
         return hex_rgb(v) if isinstance(v, str) else v
 
     def put(self, x, y, c, glow=False):
-        if 0 <= x < self.m.tex_w and 0 <= y < self.m.tex_h:
+        if 0 <= x < self.W and 0 <= y < self.H:
             self.px[x, y] = c
             if glow:
                 self.gx[x, y] = c
@@ -233,6 +243,7 @@ class Painter:
 
     def paint_cube(self, cube: Cube, idx: int):
         rnd = random.Random(self.seed * 7919 + idx * 104729)
+        r = self.r
         for face, (fx, fy, fw, fh) in cube.faces().items():
             if fw <= 0 or fh <= 0:
                 continue
@@ -241,65 +252,131 @@ class Painter:
             spec.update(cube.paint.get('faces', {}).get(face, {}))
             if spec.get('skip'):
                 continue
-            self.paint_face(face, fx, fy, fw, fh, spec, rnd)
+            # a facial expression swaps in its own map (or any spec keys) for this face
+            ex = spec.get('expr', {}).get(self.expression) if self.expression else None
+            if ex is not None:
+                spec = dict(spec)
+                if isinstance(ex, dict):
+                    spec.update(ex)
+                else:
+                    spec['map'] = ex
+            self.paint_face(face, fx * r, fy * r, fw * r, fh * r, spec, rnd)
 
     def paint_mc(self, face, fx, fy, fw, fh, spec, rnd):
         """Vanilla-style face: flat base colour, a lit top rim, a shaded bottom rim and a few hand-sized
-        tone clusters (no per-pixel noise, no baked directional light - the engine shades faces)."""
+        tone clusters (no per-pixel noise, no baked directional light - the engine shades faces).
+
+        fw/fh are in texels. At res > 1 every feature gets the extra texels as detail rather than
+        as fatter pixels: two-step rims, highlight and core texels inside clusters, fine grain,
+        one-texel fur strands with lit tips and jagged fringe tufts."""
+        r = self.r
+        uw, uh = max(1, fw // r), max(1, fh // r)  # face size in model units
         base = self.col(spec['color'])
         lite = self.col(spec.get('lite', spec['color'] + '_l')) if (spec.get('lite') or (spec['color'] + '_l') in self.pal) else shade(base, 0.12)
         dark = self.col(spec.get('dark', spec['color'] + '_d')) if (spec.get('dark') or (spec['color'] + '_d') in self.pal) else shade(base, -0.12)
+        hi = shade(lite, 0.12)
+        lo = shade(dark, -0.12)
         vertical = face not in ('up', 'down')
         grid = [[base for _ in range(fw)] for _ in range(fh)]
         if face == 'down':
             grid = [[dark for _ in range(fw)] for _ in range(fh)]
-        if vertical and spec.get('rim', True) and fh >= 4:
-            for xx in range(fw):
-                grid[0][xx] = lite
-                grid[fh - 1][xx] = dark
+        rim = vertical and spec.get('rim', True) and uh >= 4
         bands = spec.get('bands')  # [(row_from, colour_key), ...] for two-tone bodies, e.g. a lighter belly band
         if bands and vertical:
             for row_from, key in bands:
-                for yy in range(max(0, row_from), fh - (1 if spec.get('rim', True) and fh >= 4 else 0)):
+                bc = self.col(key)
+                y_from = max(0, row_from * r)
+                for yy in range(y_from, fh):
                     for xx in range(fw):
-                        grid[yy][xx] = self.col(key)
-        shapes = [((0, 0), (1, 0)), ((0, 0), (0, 1)), ((0, 0), (1, 0), (0, 1)), ((0, 0), (1, 0), (1, 1)), ((0, 0),), ((0, 0), (1, 0), (2, 0))]
-        count = int(fw * fh * spec.get('clusters', 1.0) / 13)
+                        grid[yy][xx] = bc
+                if r > 1 and 0 < y_from < fh:
+                    # a soft seam where the band starts
+                    for xx in range(fw):
+                        grid[y_from][xx] = mix(bc, shade(bc, 0.25), 0.6)
+        if rim:
+            for xx in range(fw):
+                grid[0][xx] = lite
+                grid[fh - 1][xx] = dark
+                if r > 1:
+                    grid[1][xx] = mix(grid[1][xx], lite, 0.45)
+                    grid[fh - 2][xx] = mix(grid[fh - 2][xx], dark, 0.45)
+        protected = (lambda y: vertical and rim and (y <= (1 if r > 1 else 0) or y >= fh - (2 if r > 1 else 1)))
+        unit_shapes = [((0, 0), (1, 0)), ((0, 0), (0, 1)), ((0, 0), (1, 0), (0, 1)), ((0, 0), (1, 0), (1, 1)), ((0, 0),), ((0, 0), (1, 0), (2, 0))]
+
+        def cluster(x0, y0, sh, tone, accent_core=None):
+            """Paints a unit-shape cluster at texel scale, roughening its edges at res > 1."""
+            cells = []
+            for dx, dy in sh:
+                for sy in range(r):
+                    for sx in range(r):
+                        cells.append((x0 + dx * r + sx, y0 + dy * r + sy))
+            if r > 1 and len(cells) > 2:
+                # knock out a corner texel or two and let one spill over, so clusters aren't square
+                for _ in range(rnd.randrange(0, 3)):
+                    cells.pop(rnd.randrange(len(cells)))
+                ex, ey = rnd.choice(cells)
+                cells.append((ex + rnd.choice((-1, 1)), ey) if rnd.random() < 0.5 else (ex, ey + rnd.choice((-1, 1))))
+            for x, y in cells:
+                if 0 <= x < fw and 0 <= y < fh and not protected(y):
+                    grid[y][x] = tone
+            if accent_core is not None and r > 1 and cells:
+                x, y = min(cells, key=lambda c: c[0] + c[1])
+                if 0 <= x < fw and 0 <= y < fh and not protected(y):
+                    grid[y][x] = accent_core
+
+        count = int(uw * uh * spec.get('clusters', 1.0) / 13)
         for _ in range(count):
-            sh = rnd.choice(shapes)
+            sh = rnd.choice(unit_shapes)
             x0, y0 = rnd.randrange(fw), rnd.randrange(fh)
             upper = y0 < fh / 2 or face == 'up'
-            tone = lite if (rnd.random() < (0.55 if upper else 0.25)) else dark
-            for dx, dy in sh:
-                x, y = x0 + dx, y0 + dy
-                if 0 <= x < fw and 0 <= y < fh and not (vertical and (y == 0 or y == fh - 1) and fh >= 4):
-                    grid[y][x] = tone
+            if rnd.random() < (0.55 if upper else 0.25):
+                cluster(x0, y0, sh, lite, hi if rnd.random() < 0.6 else None)
+            else:
+                cluster(x0, y0, sh, dark, lo if rnd.random() < 0.4 else None)
+        # fine grain: single texels of the neighbouring tones (only where there is room for it)
+        if r > 1:
+            grain = spec.get('grain', 0.035) * spec.get('clusters', 1.0)
+            for _ in range(int(fw * fh * grain)):
+                x, y = rnd.randrange(fw), rnd.randrange(fh)
+                if protected(y):
+                    continue
+                upper = y < fh / 2 or face == 'up'
+                grid[y][x] = lite if rnd.random() < (0.6 if upper else 0.3) else dark
         # spots: hand-placed looking clusters of an accent colour (axolotl / frog style markings)
         if spec.get('spots'):
             acc = self.col(spec.get('accent', spec['color']))
-            for _ in range(max(1, int(fw * fh * spec['spots'] / 13))):
-                sh = rnd.choice(shapes[:4])
+            acc_d = shade(acc, -0.18)
+            for _ in range(max(1, int(uw * uh * spec['spots'] / 13))):
+                sh = rnd.choice(unit_shapes[:4])
                 x0, y0 = rnd.randrange(fw), rnd.randrange(fh)
-                for dx, dy in sh:
-                    x, y = x0 + dx, y0 + dy
-                    if 0 <= x < fw and 0 <= y < fh and not (vertical and y == 0 and fh >= 4):
-                        grid[y][x] = acc
-        # ribs: every n-th column in the accent colour (fins, membranes)
+                cells = [(x0 + dx * r + sx, y0 + dy * r + sy) for dx, dy in sh for sy in range(r) for sx in range(r)]
+                cs = set(cells)
+                for x, y in cells:
+                    if 0 <= x < fw and 0 <= y < fh and not (vertical and y == 0 and rim):
+                        # a darker lower-right edge gives each marking a little depth
+                        edge = r > 1 and ((x + 1, y) not in cs or (x, y + 1) not in cs)
+                        grid[y][x] = acc_d if edge else acc
+        # ribs: every n-th unit column in the accent colour (fins, membranes), with a lit edge
         if spec.get('ribs'):
             acc = self.col(spec.get('accent', spec['color']))
-            for xx in range(0, fw, spec['ribs']):
+            for xx in range(0, fw, spec['ribs'] * r):
                 for yy in range(fh):
                     grid[yy][xx] = acc
-        # fur: short vertical strands of the dark (sometimes light) tone
+                    if r > 1 and xx + 1 < fw:
+                        grid[yy][xx + 1] = mix(grid[yy][xx + 1], shade(acc, 0.3), 0.5)
+        # fur: short vertical strands of the dark (sometimes light) tone, one texel wide at res > 1
         streaks = spec.get('streaks', 0.0)
-        if streaks and fw > 1 and fh > 2:
+        if streaks and uw > 1 and uh > 2:
             for _ in range(int(fw * fh * streaks / 10)):
                 x0, y0 = rnd.randrange(fw), rnd.randrange(fh)
-                tone = dark if rnd.random() < 0.7 else lite
-                for dy in range(rnd.choice((2, 2, 3))):
+                light_strand = rnd.random() >= 0.7
+                tone = lite if light_strand else dark
+                length = rnd.choice((2, 2, 3)) * r - (rnd.randrange(r) if r > 1 else 0)
+                for dy in range(length):
                     y = y0 + dy
-                    if 0 <= y < fh and not (vertical and y == 0 and fh >= 4):
-                        grid[y][x0] = tone
+                    if 0 <= y < fh and not (vertical and y == 0 and rim):
+                        tip = r > 1 and ((light_strand and dy == 0) or (not light_strand and dy == length - 1))
+                        grid[y][x0] = (hi if light_strand else lo) if tip else tone
         alpha = spec.get('opacity', 255)
         glow_all = spec.get('glow', False)
         # ragged fur hem: the bottom rows of a side face are cut into tufts
@@ -307,10 +384,12 @@ class Painter:
         for yy in range(fh):
             for xx in range(fw):
                 if fringe:
-                    cut = min(fringe, (0, 2, 1, 2, 0, 1, 2)[(xx + spec.get('fringe_phase', 0)) % 7])
+                    cut = min(fringe, (0, 2, 1, 2, 0, 1, 2)[(xx // r + spec.get('fringe_phase', 0)) % 7]) * r
+                    if r > 1 and cut > 0 and xx % r == (xx // r) % r:
+                        cut -= 1  # jagged tuft tips
                     if yy >= fh - cut:
                         continue
-                if self.cut(spec, xx, yy, fw, fh):
+                if self.cut(spec, xx // r, yy // r, uw, uh):
                     continue
                 c = grid[yy][xx]
                 self.put(fx + xx, fy + yy, (c[0], c[1], c[2], alpha), glow_all)
@@ -339,6 +418,8 @@ class Painter:
     def paint_face(self, face, fx, fy, fw, fh, spec, rnd):
         if spec.get('pattern') == 'mc':
             return self.paint_mc(face, fx, fy, fw, fh, spec, rnd)
+        r = self.r
+        uw, uh = max(1, fw // r), max(1, fh // r)
         base = self.col(spec['color'])
         accent = self.col(spec.get('accent', spec['color']))
         light = FACE_LIGHT[face] + spec.get('light', 0.0)
@@ -348,6 +429,7 @@ class Painter:
         vertical = face not in ('up', 'down')
         for yy in range(fh):
             for xx in range(fw):
+                ux, uy = xx // r, yy // r
                 c = base
                 t = yy / max(1, fh - 1)
                 f = light
@@ -358,24 +440,24 @@ class Painter:
                     f += (n - 0.5) * 0.10
                 elif pattern == 'jelly':
                     f += (n - 0.5) * 0.06
-                    if vertical and yy == 0:
+                    if vertical and uy == 0:
                         f += 0.12
                 elif pattern == 'fur':
-                    f += (rnd.random() - 0.5) * 0.08 + (0.06 if (xx + (yy // 2)) % 3 == 0 else -0.02)
+                    f += (rnd.random() - 0.5) * 0.08 + (0.06 if (ux + (uy // 2)) % 3 == 0 else -0.02)
                 elif pattern == 'spots':
                     if rnd.random() < spec.get('density', 0.12):
                         c = accent
                     f += (n - 0.5) * 0.08
                 elif pattern == 'stripes':
-                    if (yy + spec.get('phase', 0)) % spec.get('period', 3) == 0:
+                    if (uy + spec.get('phase', 0)) % spec.get('period', 3) == 0:
                         c = accent
                     f += (n - 0.5) * 0.06
                 elif pattern == 'bands':
-                    if (xx + spec.get('phase', 0)) % spec.get('period', 4) < spec.get('width', 1):
+                    if (ux + spec.get('phase', 0)) % spec.get('period', 4) < spec.get('width', 1):
                         c = accent
                     f += (n - 0.5) * 0.06
                 elif pattern == 'crystal':
-                    diag = (xx + yy * 2 + spec.get('phase', 0)) % 7
+                    diag = (ux + uy * 2 + spec.get('phase', 0)) % 7
                     if diag == 0:
                         f += 0.22
                     elif diag == 1:
@@ -384,67 +466,79 @@ class Painter:
                         f -= 0.08
                     f += (n - 0.5) * 0.05
                 elif pattern == 'scales':
-                    if (xx + (yy % 2) * 2) % 4 == 0 and yy % 2 == 0:
+                    if (ux + (uy % 2) * 2) % 4 == 0 and uy % 2 == 0:
                         f -= 0.12
-                    elif (xx + (yy % 2) * 2) % 4 == 1:
+                    elif (ux + (uy % 2) * 2) % 4 == 1:
                         f += 0.05
                     f += (n - 0.5) * 0.05
                 elif pattern == 'stars':
                     f += (n - 0.5) * 0.06
-                    if rnd.random() < 0.05:
+                    if rnd.random() < 0.05 / (r * r):
                         c = self.col(spec.get('star', 'star'))
                         f = 0.1
                 elif pattern == 'membrane':
                     f += (n - 0.5) * 0.05
-                    if xx % spec.get('rib', 4) == 0:
+                    if ux % spec.get('rib', 4) == 0 and xx % r == 0:
                         c = accent
                 elif pattern == 'flat':
                     pass
                 col = shade(c, f)
-                if spec.get('outline', True) and (xx == 0 or yy == fh - 1 or xx == fw - 1) and fw > 2 and fh > 2 and vertical:
+                if spec.get('outline', True) and (xx < 1 or yy >= fh - 1 or xx >= fw - 1) and uw > 2 and uh > 2 and vertical:
                     col = shade(col, -0.10)
-                if self.cut(spec, xx, yy, fw, fh):
+                if self.cut(spec, ux, uy, uw, uh):
                     continue
                 self.put(fx + xx, fy + yy, col, glow_all)
         # ascii pixel map on top
         if 'map' in spec:
             self.draw_map(fx, fy, fw, fh, spec)
         if spec.get('shine') and face in ('up', 'north'):
-            self.put(fx + 1, fy + (0 if face == 'north' else fh - 2), shade(base, 0.6))
-            self.put(fx + 2, fy + (0 if face == 'north' else fh - 2), shade(base, 0.45))
+            self.put(fx + 1 * r, fy + (0 if face == 'north' else fh - 2 * r), shade(base, 0.6))
+            self.put(fx + 2 * r, fy + (0 if face == 'north' else fh - 2 * r), shade(base, 0.45))
 
     def draw_map(self, fx, fy, fw, fh, spec):
+        """ASCII art on a face. Maps are in model units (each character covers res x res texels)
+        unless the spec says hd=True, in which case every character is one texel - that is how
+        faces get their fine detail. 'shine' chars get a one-texel highlight in their top-left
+        corner when drawn at unit scale."""
         rows = spec['map']
         keys = spec.get('keys', {})
         glow_keys = set(spec.get('glow_keys', ''))
-        ox = spec.get('at', (0, 0))[0]
-        oy = spec.get('at', (0, 0))[1]
+        shine_keys = set(spec.get('shine_keys', ''))
+        shine = self.col(spec['shine_color']) if spec.get('shine_color') else (255, 255, 255, 255)
+        k = 1 if spec.get('hd') else self.r
+        at = spec.get('at', (0, 0))
+        ox, oy = at[0] * (1 if spec.get('hd') else self.r), at[1] * (1 if spec.get('hd') else self.r)
         if spec.get('center', True) and 'at' not in spec:
-            ox = (fw - len(rows[0])) // 2
+            ox = (fw - len(rows[0]) * k) // 2
             oy = 0
         for j, row in enumerate(rows):
             for i, ch in enumerate(row):
                 if ch in '. ':
                     continue
-                x, y = fx + ox + i, fy + oy + j
-                if not (fx <= x < fx + fw and fy <= y < fy + fh):
-                    continue
-                if ch == '_':
-                    self.px[x, y] = (0, 0, 0, 0)
-                    continue
-                k = keys.get(ch, ch)
-                c = self.col(k)
-                self.put(x, y, c, ch in glow_keys)
+                for sy in range(k):
+                    for sx in range(k):
+                        x, y = fx + ox + i * k + sx, fy + oy + j * k + sy
+                        if not (fx <= x < fx + fw and fy <= y < fy + fh):
+                            continue
+                        if ch == '_':
+                            self.px[x, y] = (0, 0, 0, 0)
+                            continue
+                        c = self.col(keys.get(ch, ch))
+                        if ch in shine_keys and k > 1 and sx == 0 and sy == 0:
+                            c = shine
+                        self.put(x, y, c, ch in glow_keys)
 
 
 def render_textures(model: Model, seed=1):
-    """Returns {variant: (texture, emissive or None)}."""
+    """Returns {variant: (texture, emissive or None)} plus {variant_expression: ...} for every
+    expression of the model."""
     out = {}
     for vname, overrides in model.variants.items():
         pal = dict(model.palette)
         pal.update(overrides)
-        p = Painter(model, pal, seed)
-        out[vname] = p.paint_all()
+        out[vname] = Painter(model, pal, seed).paint_all()
+        for ex in model.expressions:
+            out[f'{vname}_{ex}'] = Painter(model, pal, seed, ex).paint_all()
     return out
 
 
@@ -479,6 +573,7 @@ class Pose:
 
 def preview(model: Model, tex: Image.Image, pose: Optional[Pose] = None, yaw=35.0, pitch=22.0, scale=8, size=(360, 360), bg=(40, 44, 70, 255)):
     pose = pose or Pose()
+    res = model.res
     img = Image.new('RGBA', size, bg)
     draw = ImageDraw.Draw(img)
     tp = tex.load()
@@ -535,6 +630,7 @@ def preview(model: Model, tex: Image.Image, pose: Optional[Pose] = None, yaw=35.
             fx, fy, fw, fh = faces[name]
             if fw <= 0 or fh <= 0:
                 return
+            fx, fy, fw, fh, nu, nv = fx * res, fy * res, fw * res, fh * res, nu * res, nv * res
             for j in range(fh):
                 for i in range(fw):
                     col = tp[fx + i, fy + j]

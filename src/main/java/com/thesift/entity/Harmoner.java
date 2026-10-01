@@ -402,4 +402,11 @@ public class Harmoner extends Animal implements MusicListener {
             this.entityData.set(GUIDING, true);
         }
     }
+
+    /** A puff of feathers and notes in its own colour. */
+    @Override
+    public void makePoofParticles() {
+        int c = COLORS[Math.floorMod(this.getVariant(), COLORS.length)];
+        KillBurst.pop(this, c, 0xFFF4C2, KillBurst.NOTE, ModParticles.WISHWOOD_LEAF.get());
+    }
 }

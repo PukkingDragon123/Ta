@@ -12,6 +12,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(__file__))
+import hdblocks as HB  # noqa: E402
 import mcitems as MI  # noqa: E402
 import mctex as M  # noqa: E402
 import sprites as S  # noqa: E402
@@ -456,47 +457,10 @@ def flora():
 
 
 def functional():
-    drum_side = Tex()
-    for y in range(16):
-        for x in range(16):
-            c = LULL_WOOD[2] if (x // 2) % 2 == 0 else LULL_WOOD[1]
-            if y in (3, 12):
-                c = hx('#d9a94a')
-            if y in (4, 11) and x % 4 == 0:
-                c = hx('#fff0b0')
-            drum_side.set(x, y, c)
-    for i in range(16):
-        drum_side.set(i, 7 + (i % 4 in (1, 2)), hx('#e6d6ff'))
-    out('block/sift_drum_side', drum_side)
-    core = drum_side.copy()
-    for y in range(5, 11):
-        for x in range(5, 11):
-            d = abs(x - 7.5) + abs(y - 7.5)
-            if d < 3.5:
-                core.set(x, y, hx('#1ec8c8') if d < 1.8 else hx('#0f3945'))
-    out('block/sift_drum_side_core', core)
-    top = Tex()
-    for y in range(16):
-        for x in range(16):
-            d = math.hypot(x - 7.5, y - 7.5)
-            c = hx('#f3e6f5') if d < 6 else hx('#caa7d9') if d < 7 else hx('#8f6aa8')
-            if 2.5 < d < 3.3:
-                c = hx('#d8c2e8')
-            top.set(x, y, c)
-    out('block/sift_drum_top', top)
-    beat = top.copy()
-    for y in range(16):
-        for x in range(16):
-            d = math.hypot(x - 7.5, y - 7.5)
-            if d < 6:
-                beat.set(x, y, lerp(hx('#7fe8ff'), hx('#ff9fd8'), d / 6))
-    out('block/sift_drum_top_beat', beat)
-    rim = Tex()
-    for y in range(16):
-        for x in range(16):
-            rim.set(x, y, hx('#d9a94a') if (x + y) % 4 else hx('#fff0b0'))
-    out('block/sift_drum_rim', rim)
-    out('block/sift_drum_bottom', planks(LULL_WOOD, 99))
+    # the Sift Drum: a 3D drum painted at 32x onto a sheet (tools/hdblocks.py)
+    sheet, glow = HB.drum_sheets()
+    out('block/sift_drum', sheet)
+    out('block/sift_drum_glow', glow, CUTOUT)
     # euphory altar
     at = polished(DREAM, 101)
     for y in range(16):
@@ -1161,6 +1125,25 @@ def particles():
         draw_map(sp, ['..w..', '.wWw.', 'wWWWw', '.wWw.', '..w..'] if i == 0 else ['.w.w.', 'wWWWw', '.WWW.', 'wWWWw', '.w.w.'],
                  {'w': with_alpha(hx('#ffffff'), 160), 'W': hx('#ffffff')}, 1, 1)
         out(f'particle/sleep_spore_{i}', sp)
+    # kill stars: 16x16, white with stepped grey shading so they take the mob's colour
+    kill = [
+        ['.......W........', '.......W........', '......WWL.......', '......WWL.......', '.....WWWLL......', 'WWWWWWWWLLLLLLM.',
+         '.WWWWWWWLLLLLM..', '..WWWWWLLLLLM...', '...WWWWLLLLM....', '...WWWWLLLLM....', '..WWWWLMMLLLM...', '..WWWLM..MLLM...',
+         '.WWWLM....MLLM..', '.WWLM......MLM..', '.WLM........MM..', '................'],
+        ['......WWWWWWWW..', '......WLLLLLLM..', '......WWWWWWWM..', '......W......M..', '......W......M..', '......W......M..',
+         '......W......M..', '......W......M..', '......W......M..', '..WWWWL...WWWWM.', '.WWWLLLL.WWWLLLM', '.WWLLLLM.WWLLLLM',
+         '.WLLLLLM.WLLLLLM', '..LLLLM...LLLLM.', '................', '................'],
+        ['................', '..WWW.....WWW...', '.WWWWW...WWWWLL.', 'WWWWWWW.WWWWWLLM', 'WWWWWWWWWWWWLLLM', 'WWWWWWWWWWWLLLLM',
+         '.WWWWWWWWWLLLLM.', '..WWWWWWWLLLLM..', '...WWWWWLLLLM...', '....WWWLLLLM....', '.....WWLLLM.....', '......WLLM......',
+         '.......LM.......', '................', '................', '................'],
+        ['.......W........', '.......WL.......', '......WWLL......', '......WWLL......', '.....WWWLLL.....', '.....WWLLLL.....',
+         '....WWWLLLLM....', '....WWLLLLLM....', '...WWWLLLLLLM...', '...WWLLLLLLLM...', '...WWLLLLLLLM...', '...WLLLLLLLLM...',
+         '....LLLLLLLM....', '.....MMMMMM.....', '................', '................'],
+    ]
+    for i, rows in enumerate(kill):
+        t = Tex(16, 16)
+        draw_map(t, rows, {'W': hx('#ffffff'), 'L': hx('#d2d2d2'), 'M': hx('#9a9a9a')})
+        out(f'particle/kill_star_{i}', t)
     # mob effect icons (18x18)
     for name, c in (('deafened', '#7fe8e0'), ('euphoria', '#f59ad0')):
         t = Tex(18, 18)
