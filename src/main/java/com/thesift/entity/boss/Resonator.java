@@ -77,7 +77,6 @@ public class Resonator extends OrchestraMinion {
         if (target.hurtServer(level, this.damageSources().mobAttack(this), 5.0F)) {
             Vec3 pull = d.normalize().scale(-0.6);
             target.push(pull.x, 0.15, pull.z);
-            target.hurtMarked = true;
         }
     }
 

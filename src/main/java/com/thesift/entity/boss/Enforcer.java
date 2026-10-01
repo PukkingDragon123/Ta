@@ -84,7 +84,6 @@ public class Enforcer extends OrchestraMinion {
             Vec3 away = e.position().subtract(c).multiply(1, 0, 1).normalize();
             e.hurtServer(level, this.damageSources().mobAttack(this), 7.0F);
             e.push(away.x * 0.9, 0.55, away.z * 0.9);
-            e.hurtMarked = true;
         }
     }
 

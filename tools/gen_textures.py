@@ -841,6 +841,122 @@ def dictator_things():
     ], {'w': hx('#f4f0e5'), 'l': hx('#c9c2b0'), 'g': teal_d, 'G': teal, 'b': brass, 'B': brass_l, 'd': hx('#141e2c'), 'D': hx('#2b3a52')}))
 
 
+# ================================================================== the Sift Codex
+
+
+def codex():
+    """The Sift Codex: a two-page spread in a teal leather binding with brass corners (292x180),
+    category ribbons, page-turn arrows and the book's item icon. Laid out in one 512x256 sheet:
+      book spread at (0, 0) 292x180, tabs at (0, 184) 5 x 24x12 (selected row at y=196),
+      arrows at (128, 184): next 18x10, previous 18x10 (hover row at y=194)."""
+    W, Hh = 512, 256
+    t = Tex(W, Hh)
+    leather = [hx('#0f1828'), hx('#16233a'), hx('#1d2f4c'), hx('#28406a'), hx('#35548a')]
+    paper = [hx('#c9b78f'), hx('#ddcca6'), hx('#ebdfc2'), hx('#f4ead2'), hx('#fbf5e6')]
+    brass, brass_l, brass_d = hx('#b89a52'), hx('#dcc27a'), hx('#7f6a35')
+    teal = hx('#2ec9c0')
+    BW, BH = 292, 180
+    rnd = random.Random(7)
+    # cover
+    for y in range(BH):
+        for x in range(BW):
+            edge = x in (0, BW - 1) or y in (0, BH - 1)
+            c = leather[0] if edge else leather[2]
+            if not edge and (x in (1, BW - 2) or y in (1, BH - 2)):
+                c = leather[3]
+            if not edge and rnd.random() < 0.06:
+                c = leather[1] if rnd.random() < 0.6 else leather[3]
+            t.set(x, y, c)
+    # stitching along the cover edge
+    for x in range(6, BW - 6, 3):
+        t.set(x, 4, leather[4]); t.set(x, BH - 5, leather[4])
+    for y in range(6, BH - 6, 3):
+        t.set(4, y, leather[4]); t.set(BW - 5, y, leather[4])
+    # page block with stacked page edges, then the two pages and the spine gutter
+    px0, py0, px1, py1 = 9, 9, BW - 10, BH - 10
+    for y in range(py0, py1 + 1):
+        for x in range(px0, px1 + 1):
+            t.set(x, y, paper[0] if (y - py0) % 2 == 0 and (x < px0 + 3 or x > px1 - 3 or y > py1 - 3) else paper[1])
+    mid = BW // 2
+    for y in range(py0 + 2, py1 - 2):
+        for x in range(px0 + 3, px1 - 3):
+            d = abs(x + 0.5 - mid)
+            c = paper[3]
+            if d < 2:
+                c = paper[0]
+            elif d < 5:
+                c = paper[1]
+            elif d < 9:
+                c = paper[2]
+            elif rnd.random() < 0.025:
+                c = paper[2] if rnd.random() < 0.7 else paper[4]
+            t.set(x, y, c)
+    # brass corner caps
+    for (cx, cy, fx, fy) in ((0, 0, 1, 1), (BW - 1, 0, -1, 1), (0, BH - 1, 1, -1), (BW - 1, BH - 1, -1, -1)):
+        for i in range(10):
+            for j in range(10 - i):
+                c = brass_l if i == 0 or j == 0 else brass if i + j < 7 else brass_d
+                t.set(cx + fx * i, cy + fy * j, c)
+        t.set(cx + fx * 3, cy + fy * 3, teal)
+    # little sift star motifs in the page corners
+    for (sx, sy) in ((px0 + 8, py0 + 6), (mid - 12, py0 + 6), (mid + 8, py0 + 6), (px1 - 12, py0 + 6),
+                     (px0 + 8, py1 - 9), (mid - 12, py1 - 9), (mid + 8, py1 - 9), (px1 - 12, py1 - 9)):
+        for dx, dy in ((1, 0), (0, 1), (1, 1), (2, 1), (1, 2)):
+            t.set(sx + dx, sy + dy, hx('#9fd8dc') if (dx, dy) != (1, 1) else hx('#e98fb4'))
+    # a ribbon bookmark hanging from the top of the spine
+    for y in range(0, 26):
+        for x in range(mid - 2, mid + 2):
+            c = hx('#c2465c') if x < mid else hx('#9c3448')
+            if y > 22 and (x - (mid - 2)) in ((y - 23), 3 - (y - 23)):
+                continue
+            t.set(x, py0 + y, c)
+    # category tabs (unselected, then selected one row lower)
+    tab_colors = [hx('#3fb6cb'), hx('#e98fb4'), hx('#e8c25a'), hx('#7fd4a8'), hx('#2b3a52')]
+    for row, sel in ((184, False), (196, True)):
+        for i, tc in enumerate(tab_colors):
+            x0 = i * 26
+            for y in range(12):
+                for x in range(24):
+                    edge = x in (0, 23) or y == 0
+                    c = darken(tc, 0.45) if edge else lighten(tc, 0.18) if (sel and y < 3) else tc if sel else darken(tc, 0.15)
+                    t.set(x0 + x, row + y, c)
+            for x in range(8, 16):
+                t.set(x0 + x, row + 5, lighten(tc, 0.5) if sel else lighten(tc, 0.25))
+    # page turn arrows: next and previous, normal and hover
+    arrow = ['.......#..........', '.......##.........', '########o#........', '#oooooooo##.......', '#ooooooooo##......',
+             '#oooooooo##.......', '########o#........', '.......##.........', '.......#..........', '..................']
+    for row, hover in ((184, False), (194, True)):
+        body = brass_l if hover else brass
+        for j, line in enumerate(arrow):
+            for i, ch in enumerate(line):
+                if ch == '.':
+                    continue
+                c = brass_d if ch == '#' else body
+                t.set(128 + i, row + j, c)          # next (points right)
+                t.set(128 + 20 + 17 - i, row + j, c)  # previous (mirrored)
+    out('gui/codex', t)
+    # the item: a teal leather book with brass corners and a glowing sift star on the cover
+    out('item/sift_codex', pal_sprite([
+        '................',
+        '..bbbbbbbbbbbb..',
+        '.bLLLLLLLLLLLLp.',
+        '.bLllllllllllLp.',
+        '.bLll..ss..llLp.',
+        '.bLl..sggs..lLp.',
+        '.bLl.sggggs.lLp.',
+        '.bLl..sggs..lLp.',
+        '.bLll..ss..llLp.',
+        '.bLllllllllllLp.',
+        '.bLlllllllllllLp',
+        '.bBlllllllllllLp',
+        '.bBBllllllllllLp',
+        '.bbbbbbbbbbbbbpp',
+        '..pppppppppppppp',
+        '................',
+    ], {'b': hx('#0f1828'), 'L': hx('#28406a'), 'l': hx('#1d2f4c'), 's': hx('#15a89f'), 'g': hx('#2ef2e2'), 'B': hx('#b89a52'),
+        'p': hx('#f4ead2')}))
+
+
 # ================================================================== sniffer saddle
 
 
@@ -1152,6 +1268,7 @@ def main():
     armor_layers()
     sniffer_saddle()
     dictator_things()
+    codex()
     particles()
     nebula()
     logo()

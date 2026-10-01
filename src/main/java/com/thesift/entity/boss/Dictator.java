@@ -257,7 +257,6 @@ public class Dictator extends Monster {
                 if (Math.abs(d - r) < 0.7 && Math.abs(e.getY() - this.getY()) < 2.0) {
                     if (e.hurtServer(level, this.damageSources().sonicBoom(this), 8.0F)) {
                         e.push(0.0, 0.6, 0.0);
-                        e.hurtMarked = true;
                     }
                 }
             }

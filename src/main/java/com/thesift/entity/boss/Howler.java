@@ -86,7 +86,6 @@ public class Howler extends OrchestraMinion {
             double force = 1.0 - dist / BLAST_RANGE * 0.5;
             e.hurtServer(level, this.damageSources().mobAttack(this), 4.0F);
             e.push(dir.x * 2.2 * force, 0.4 * force, dir.z * 2.2 * force);
-            e.hurtMarked = true;
         }
     }
 

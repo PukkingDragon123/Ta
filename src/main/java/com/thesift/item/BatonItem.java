@@ -55,7 +55,6 @@ public class BatonItem extends Item {
                 hit.hurtServer(server, player.damageSources().sonicBoom(player), 8.0F);
                 Vec3 push = look.multiply(1, 0, 1).normalize();
                 hit.push(push.x * 0.8, 0.2, push.z * 0.8);
-                hit.hurtMarked = true;
             }
             player.getCooldowns().addCooldown(stack, 40);
             stack.hurtAndBreak(1, player, hand);
