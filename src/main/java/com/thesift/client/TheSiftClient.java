@@ -1,6 +1,7 @@
 package com.thesift.client;
 
 import com.thesift.TheSift;
+import com.thesift.client.dev.ClientSmokeTest;
 import com.thesift.client.model.ModModelLayers;
 import com.thesift.client.model.ModelGeometry;
 import com.thesift.client.particle.SiftParticle;
@@ -50,6 +51,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerFluidModels);
         modBus.addListener(TheSiftClient::registerClientExtensions);
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
+        ClientSmokeTest.registerIfEnabled();
     }
 
     private static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {

@@ -37,6 +37,12 @@ neoForge {
             systemProperty 'java.awt.headless', 'true'
             gameDirectory = project.file('run-smoke')
         }
+        smokeClient {
+            client()
+            systemProperty 'thesift.clientsmoke', 'true'
+            programArguments.addAll '--quickPlaySingleplayer', 'smoke', '--width', '1280', '--height', '720', '--graphicsBackend', 'opengl'
+            gameDirectory = project.file('run-client')
+        }
         gameTestServer {
             type = 'gameTestServer'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id

@@ -41,6 +41,8 @@ jobs:
           if-no-files-found: error
 
       - name: Smoke test (headless server, generates The Sift)
+        id: smoke
+        continue-on-error: true
         run: |
           mkdir -p run-smoke
           echo "eula=true" > run-smoke/eula.txt
@@ -53,11 +55,55 @@ jobs:
         if: always()
         run: grep SMOKEPNG smoke.log | sed 's/.*SMOKEPNG/SMOKEPNG/' || true
 
-      - name: Upload smoke test log
+      - name: Client smoke test (virtual display, software OpenGL, screenshots)
+        id: client
+        continue-on-error: true
+        run: |
+          test -f run-smoke/world/level.dat
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglx-mesa0 mesa-utils > /dev/null
+          python3 -m pip install --quiet --break-system-packages nbtlib pillow
+          mkdir -p run-client/saves
+          rm -rf run-client/saves/smoke
+          cp -r run-smoke/world run-client/saves/smoke
+          rm -f run-client/saves/smoke/session.lock
+          python3 .github/scripts/prepare_client_world.py run-client/saves/smoke/level.dat
+          printf 'onboardAccessibility:false\npauseOnLostFocus:false\ntutorialStep:none\nrenderDistance:8\nsimulationDistance:6\nnarrator:0\nsoundCategory_master:0.0\njoinedFirstServer:true\nskipMultiplayerWarning:true\nmaxFps:60\n' > run-client/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export GALLIUM_DRIVER=llvmpipe
+          xvfb-run -a glxinfo -B 2>&1 | head -12 || true
+          timeout 2700 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runSmokeClient --no-configuration-cache > client.log 2>&1 || true
+          grep -E "CLIENTSMOKE|ERROR|Exception|Caused by|at com.thesift|Backend|backend|OpenGL|Renderer|crash" client.log | head -500 || true
+          tail -40 client.log
+          ls -la run-client/screenshots || true
+          grep -q "CLIENTSMOKE PASSED" client.log
+
+      - name: Client screenshots (base64 JPEG)
+        if: always()
+        run: python3 .github/scripts/print_shots.py run-client/screenshots || true
+
+      - name: Upload smoke test logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-log
-          path: smoke.log
+          name: smoke-logs
+          path: |
+            smoke.log
+            client.log
+            run-client/crash-reports/
           if-no-files-found: ignore
 
+      - name: Upload client screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-screenshots
+          path: run-client/screenshots/
+          if-no-files-found: ignore
+
+      - name: Check smoke test results
+        if: always()
+        run: |
+          echo "server smoke: ${{ steps.smoke.outcome }}, client smoke: ${{ steps.client.outcome }}"
+          test "${{ steps.smoke.outcome }}" = "success"
+          test "${{ steps.client.outcome }}" = "success"
