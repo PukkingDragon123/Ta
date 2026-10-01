@@ -270,6 +270,26 @@ public final class SmokeTest {
                         }
                     }
                     TheSift.LOGGER.info("SMOKE: built {} box {} pieces {} blocks {}", name, box, start.getPieces().size(), mine);
+                    if (name.equals("chrome_well")) {
+                        // experiment: is the piece placeable at all? place it by hand over its whole box and recount
+                        var piece = start.getPieces().get(0);
+                        var chunk = sift.getChunk(at.getX() >> 4, at.getZ() >> 4);
+                        TheSift.LOGGER.info("SMOKE: chrome_well piece {} box {} chunk status {} refs {}", piece.getClass().getSimpleName(),
+                                piece.getBoundingBox(), chunk.getPersistedStatus(), chunk.getReferencesForStructure(holder.get().value()));
+                        BoundingBox pb = piece.getBoundingBox();
+                        for (int cx = pb.minX() >> 4; cx <= pb.maxX() >> 4; cx++) {
+                            for (int cz = pb.minZ() >> 4; cz <= pb.maxZ() >> 4; cz++) {
+                                BoundingBox cb = new BoundingBox(cx << 4, sift.getMinY(), cz << 4, (cx << 4) + 15, sift.getMaxY(), (cz << 4) + 15);
+                                start.placeInChunk(sift, sift.structureManager(), sift.getChunkSource().getGenerator(), sift.getRandom(), cb,
+                                        new net.minecraft.world.level.ChunkPos(cx, cz));
+                            }
+                        }
+                        int polished = 0;
+                        for (BlockPos p : BlockPos.betweenClosed(pb.minX(), pb.minY(), pb.minZ(), pb.maxX(), pb.maxY(), pb.maxZ())) {
+                            if (sift.getBlockState(p).is(ModBlocks.POLISHED_DREAMSTONE.get())) polished++;
+                        }
+                        TheSift.LOGGER.info("SMOKE: chrome_well after manual placement: polished dreamstone {}", polished);
+                    }
                     if (name.equals("deep_shrine")) {
                         check(mine.getOrDefault("echo_frame", 0) > 0, "natural deep shrine keeps its echo frame gate");
                     }
