@@ -56,23 +56,28 @@ reinforced deepslate) opened with the same drum ritual.
 ## What's inside
 
 ### Biomes
-* **Sift Plains**: soft blushgrass meadows, dreamblooms, soulpetals and lullwood groves.
+* **Sift Plains**: salmon Coral Turf thick with Coral Bushes and tall Coral Thickets, under pale
+  weeping lullwood trees.
 * **Forest Mountains**: high ground thick with fluffy lullwood and wishwood trees.
 * **Wishing Grove**: wishwood glades where wishing stars fall.
 * **Rocky Dunes**: rolling dreamsand, sandstone spires and boulders, with Sifters lurking below.
-* **Chrome Lakes**: wide lakes of Chrome under a nebula sky.
+* **Chrome Lakes**: wide, calm lakes of Chrome.
 * **Deep Sift**: hushslate caves full of sculk and glowing plants, watched over by Wardens.
 
-Cyan and pink fog, a rotating nebula sky, drifting souls, pollen, mist, glow dust and falling
-leaves are everywhere, and your footsteps leave puffs of dream dust.
+A clean cyan sky over mint haze, the odd drifting soul, pollen mote and falling leaf, and your
+footsteps leave puffs of dream dust.
 
 ### Creatures
 * **Bulb**: a bouncy, squishy jelly bunny that leaves a slime trail. Breed them with **Pitcher
   Bulbs**. Happy Bulbs plop out **Glowing Slime Balls**.
 * **Slumbler**: a huge, wide-mouthed Chrome salamander that lounges in lakes. Drops **Thick
   Hide** and, rarely, a **Chrome Pearl**.
-* **Sniffer**: lives in The Sift naturally and digs up its exclusive seeds (Choir Pods, Echo
-  Seeds and Pitcher Bulbs).
+* **Sniffer**: lives in The Sift and digs up its exclusive seeds (Choir Pods, Echo Seeds and
+  Pitcher Bulbs). Feed one Pitcher Bulbs or torchflower seeds until it trusts you, **saddle it and
+  ride it**: a ridden Sniffer ploughs through soft ground and sniffs out buried treasure nearby.
+* **Harmoner**: a colourful songbird. **Feed it seeds and it leads you to a structure**, singing
+  all the way. Rose: Abandoned Altar. Azure: Chrome Well. Gold: Dream Statue. Violet: Collapsed
+  Tower. Jade: Sift Ruins. Coral: Musical Temple. The rare Night Harmoner: the Sculk Castle.
 * **Sifter** (hostile): a box-headed dune lurker whose lid snaps open like a trap. It burrows
   in the sand and bursts out when you come near.
 * **Enchoer**: a big, sad, furry trader with moose antlers. Trades Sift goods for Chrome
@@ -80,8 +85,29 @@ leaves are everywhere, and your footsteps leave puffs of dream dust.
 * **Riveter** (hostile): the sculk bat. It hangs head-down from cave ceilings with its long claws
   dangling, and screams to wake nearby Wardens.
 
+### The Dictator
+High in the dunes and mountains stands the **Sculk Castle**. Climb the spiral of steps inside it
+(jump the gaps, mind the crumbling ones, rest at the lantern ledges; slime catches you if you
+fall) to the roof and step up to the **Conductor's Podium**. **The Dictator** rises behind it:
+tall, thin, terribly fast. He blinks behind you, slashes with his baton and calls up his alien
+orchestra:
+* **Enforcer** (percussion): a living drum that beats its own drum head to send a shockwave along
+  the ground. Jump it.
+* **Resonator** (strings): a spidery harp of sculk tendons that snaps a cutting string at you and
+  drags you in.
+* **Howler** (wind): a pipe organ on legs that inhales through its back pipes, then blasts you
+  away.
+
+At 60% he rolls rings of sound across the arena floor and summons the vocals, a **Warden**.
+Below 25% he gets even faster and drowns the arena in darkness. Beat him for the **Conductor's
+Baton**, a sword that fires sonic notes.
+
+### The Sift Codex
+A field guide in the creative Items tab. Its pages show every creature alive and animated, plus
+the items, places, music and the boss fight, with the page flipping as you turn it.
+
 ### Chrome
-A shifting cyan, pink and pearl liquid. It **heals** whatever soaks in it, but it is thick like
+A shifting cyan pearl liquid. It **heals** whatever soaks in it, but it is thick like
 quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
 
 ### Gear
