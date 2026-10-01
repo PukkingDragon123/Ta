@@ -51,7 +51,9 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerFluidModels);
         modBus.addListener(TheSiftClient::registerClientExtensions);
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
-        ClientSmokeTest.registerIfEnabled();
+        if (Boolean.getBoolean("thesift.clientsmoke")) {
+            ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
+        }
     }
 
     private static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
