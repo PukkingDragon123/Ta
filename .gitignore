@@ -42,3 +42,4 @@ __pycache__/
 *.pyc
 run-smoke/
 run-client/
+run-client-vk/

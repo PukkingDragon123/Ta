@@ -82,6 +82,27 @@ jobs:
         if: always()
         run: python3 .github/scripts/print_shots.py run-client/screenshots || true
 
+      - name: Client smoke test on Vulkan (software lavapipe, informational)
+        id: client_vk
+        continue-on-error: true
+        if: steps.client.outcome == 'success'
+        run: |
+          sudo apt-get install -y -qq mesa-vulkan-drivers libvulkan1 vulkan-tools > /dev/null
+          rm -rf run-client-vk && mkdir -p run-client-vk/saves
+          cp -r run-smoke/world run-client-vk/saves/smoke
+          rm -f run-client-vk/saves/smoke/session.lock
+          python3 .github/scripts/prepare_client_world.py run-client-vk/saves/smoke/level.dat
+          cp run-client/options.txt run-client-vk/options.txt
+          xvfb-run -a vulkaninfo --summary 2>&1 | grep -E "apiVersion|deviceName|driverName" | head -6 || true
+          timeout 2400 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runSmokeClientVulkan --no-configuration-cache > client-vk.log 2>&1 || true
+          grep -E "CLIENTSMOKE|ERROR|Exception|Caused by|at com.thesift|Vulkan|backend" client-vk.log | head -300 || true
+          tail -20 client-vk.log
+          grep -q "CLIENTSMOKE PASSED" client-vk.log
+
+      - name: Vulkan screenshots (base64 JPEG)
+        if: always()
+        run: python3 .github/scripts/print_shots.py run-client-vk/screenshots VK || true
+
       - name: Upload smoke test logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -90,7 +111,9 @@ jobs:
           path: |
             smoke.log
             client.log
+            client-vk.log
             run-client/crash-reports/
+            run-client-vk/crash-reports/
           if-no-files-found: ignore
 
       - name: Upload client screenshots
@@ -98,12 +121,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: client-screenshots
-          path: run-client/screenshots/
+          path: |
+            run-client/screenshots/
+            run-client-vk/screenshots/
           if-no-files-found: ignore
 
       - name: Check smoke test results
         if: always()
         run: |
-          echo "server smoke: ${{ steps.smoke.outcome }}, client smoke: ${{ steps.client.outcome }}"
+          echo "server smoke: ${{ steps.smoke.outcome }}, client smoke: ${{ steps.client.outcome }}, vulkan (informational): ${{ steps.client_vk.outcome }}"
           test "${{ steps.smoke.outcome }}" = "success"
           test "${{ steps.client.outcome }}" = "success"

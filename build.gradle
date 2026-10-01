@@ -43,6 +43,13 @@ neoForge {
             programArguments.addAll '--quickPlaySingleplayer', 'smoke', '--width', '1280', '--height', '720', '--graphicsBackend', 'opengl'
             gameDirectory = project.file('run-client')
         }
+        smokeClientVulkan {
+            client()
+            systemProperty 'thesift.clientsmoke', 'true'
+            systemProperty 'thesift.clientsmoke.quick', 'true'
+            programArguments.addAll '--quickPlaySingleplayer', 'smoke', '--width', '1280', '--height', '720', '--graphicsBackend', 'vulkan'
+            gameDirectory = project.file('run-client-vk')
+        }
         gameTestServer {
             type = 'gameTestServer'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id

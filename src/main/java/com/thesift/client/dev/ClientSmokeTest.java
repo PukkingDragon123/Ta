@@ -133,6 +133,9 @@ public final class ClientSmokeTest {
             return;
         }
         buildScenes();
+        if (Boolean.getBoolean("thesift.clientsmoke.quick")) {
+            SCENES.removeIf(scene -> !QUICK.contains(scene.name()));
+        }
         NeoForge.EVENT_BUS.addListener(ClientSmokeTest::onTick);
         TheSift.LOGGER.info("CLIENTSMOKE: enabled with {} scenes", SCENES.size());
     }
@@ -298,6 +301,10 @@ public final class ClientSmokeTest {
     private static void scene(String name, int settle, Consumer<Ctx> setup) {
         SCENES.add(new Scene(name, settle, setup, null));
     }
+
+    /** With -Dthesift.clientsmoke.quick=true only these scenes run (used for the second, Vulkan, pass). */
+    private static final java.util.Set<String> QUICK = java.util.Set.of("arrival_east", "overview", "mob_lineup", "mob_closeup_bulb", "blocks_1",
+            "chrome_pool", "in_chrome", "portal", "altar", "creative_items");
 
     private static void buildScenes() {
         scene("arrival_east", 160, c -> {
