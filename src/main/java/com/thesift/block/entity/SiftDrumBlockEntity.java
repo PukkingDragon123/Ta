@@ -68,7 +68,7 @@ public class SiftDrumBlockEntity extends BlockEntity {
             level.playSound(null, this.worldPosition, SoundEvents.SCULK_CLICKING_STOP, SoundSource.BLOCKS, 1.0F, 0.6F);
             return false;
         }
-        PortalFrames.Frame f = PortalFrames.find(level, this.worldPosition, 12);
+        PortalFrames.Frame f = PortalFrames.find(level, this.worldPosition, 16);
         if (f == null) {
             player.sendOverlayMessage(Component.translatable("message.thesift.drum.no_frame"));
             level.playSound(null, this.worldPosition, SoundEvents.SCULK_CLICKING_STOP, SoundSource.BLOCKS, 1.0F, 0.6F);

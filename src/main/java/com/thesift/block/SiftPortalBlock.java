@@ -57,7 +57,8 @@ public class SiftPortalBlock extends Block implements Portal {
             BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         Direction.Axis axis = state.getValue(AXIS);
         boolean inPlane = direction.getAxis() == Direction.Axis.Y || direction.getAxis() == axis;
-        if (inPlane && !neighborState.is(this) && !PortalFrames.isFrame(neighborState)) {
+        // the gate only collapses when its border is opened up, so it can stand on an Ancient City's deepslate floor
+        if (inPlane && !neighborState.is(this) && PortalFrames.isFillable(neighborState)) {
             return Blocks.AIR.defaultBlockState();
         }
         return super.updateShape(state, level, ticks, pos, direction, neighborPos, neighborState, random);

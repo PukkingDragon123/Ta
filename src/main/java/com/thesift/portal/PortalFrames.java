@@ -16,15 +16,30 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Finds portal frames of any shape: a vertical, fully enclosed pocket of air whose in-plane border
- * is made entirely of {@code #thesift:portal_frame} blocks. This recognises the great reinforced
- * deepslate frames at the heart of Ancient Cities as well as hand-built Echo Frame portals.
+ * Finds portal frames of any shape: a vertical, enclosed pocket of air in one plane whose border is
+ * solid and mostly made of {@code #thesift:portal_frame} blocks. That recognises the great reinforced
+ * deepslate gates at the heart of Ancient Cities (which stand on a deepslate floor) as well as
+ * hand-built Echo Frame portals.
  */
 public final class PortalFrames {
     public static final int MAX_CELLS = 700;
     public static final int MAX_SPAN = 34;
+    /** At least this many frame blocks must border the pocket... */
+    public static final int MIN_FRAME_BLOCKS = 8;
+    /** ...and they must make up at least this share of its border. */
+    public static final double MIN_FRAME_SHARE = 0.6;
+
+    private static final Direction.Axis[] AXES = {Direction.Axis.X, Direction.Axis.Z};
 
     public record Frame(Direction.Axis axis, Set<BlockPos> interior, BlockPos center) {}
+
+    /** Result of flooding one pocket: the cells reached, whether it stayed enclosed, and how much of its border is frame. */
+    public record Pocket(Set<BlockPos> cells, boolean enclosed, int frameBorder, int otherBorder) {
+        public boolean valid() {
+            int border = this.frameBorder + this.otherBorder;
+            return this.enclosed && this.frameBorder >= MIN_FRAME_BLOCKS && this.frameBorder >= border * MIN_FRAME_SHARE;
+        }
+    }
 
     private PortalFrames() {}
 
@@ -32,32 +47,47 @@ public final class PortalFrames {
         return state.is(ModTags.Blocks.PORTAL_FRAME);
     }
 
-    private static boolean isFillable(BlockState state) {
+    public static boolean isFillable(BlockState state) {
         return state.isAir() || state.is(ModBlocks.SIFT_PORTAL.get()) || state.canBeReplaced() && state.getFluidState().isEmpty();
     }
 
-    /** Search around {@code origin} for the nearest enclosed frame pocket. */
+    public static Direction[] planeDirections(Direction.Axis axis) {
+        return axis == Direction.Axis.X
+                ? new Direction[] {Direction.EAST, Direction.WEST, Direction.UP, Direction.DOWN}
+                : new Direction[] {Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN};
+    }
+
+    /**
+     * Search around {@code origin} for the best enclosed frame pocket: the one with the most frame
+     * blocks around it, then the nearest.
+     */
     public static @Nullable Frame find(Level level, BlockPos origin, int radius) {
         Frame best = null;
+        int bestFrames = 0;
         double bestDist = Double.MAX_VALUE;
-        Set<BlockPos> tried = new HashSet<>();
+        Set<BlockPos> triedX = new HashSet<>();
+        Set<BlockPos> triedZ = new HashSet<>();
         BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
-        for (int dy = -radius / 2; dy <= radius; dy++) {
+        for (int dy = -radius; dy <= radius; dy++) {
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dz = -radius; dz <= radius; dz++) {
                     p.set(origin.getX() + dx, origin.getY() + dy, origin.getZ() + dz);
                     if (!isFrame(level.getBlockState(p))) continue;
-                    BlockPos above = p.above();
-                    if (tried.contains(above) || !isFillable(level.getBlockState(above))) continue;
-                    for (Direction.Axis axis : new Direction.Axis[] {Direction.Axis.X, Direction.Axis.Z}) {
-                        Set<BlockPos> interior = flood(level, above, axis);
-                        if (interior != null) {
-                            tried.addAll(interior);
-                            BlockPos c = centerOf(interior);
-                            double d = c.distSqr(origin);
-                            if (d < bestDist) {
-                                bestDist = d;
-                                best = new Frame(axis, interior, c);
+                    for (Direction.Axis axis : AXES) {
+                        Set<BlockPos> tried = axis == Direction.Axis.X ? triedX : triedZ;
+                        for (Direction d : planeDirections(axis)) {
+                            BlockPos start = p.relative(d);
+                            if (tried.contains(start) || !isFillable(level.getBlockState(start))) continue;
+                            Pocket pocket = flood(level, start, axis);
+                            tried.addAll(pocket.cells());
+                            tried.add(start);
+                            if (!pocket.valid()) continue;
+                            BlockPos c = centerOf(pocket.cells());
+                            double dist = c.distSqr(origin);
+                            if (pocket.frameBorder() > bestFrames || pocket.frameBorder() == bestFrames && dist < bestDist) {
+                                bestFrames = pocket.frameBorder();
+                                bestDist = dist;
+                                best = new Frame(axis, pocket.cells(), c);
                             }
                         }
                     }
@@ -67,12 +97,13 @@ public final class PortalFrames {
         return best;
     }
 
-    /** Flood fill in the plane of {@code axis}; returns null if the pocket leaks or is too big/small. */
-    public static @Nullable Set<BlockPos> flood(Level level, BlockPos start, Direction.Axis axis) {
-        Direction[] dirs = axis == Direction.Axis.X
-                ? new Direction[] {Direction.EAST, Direction.WEST, Direction.UP, Direction.DOWN}
-                : new Direction[] {Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN};
+    /** Flood fill in the plane of {@code axis}, counting the frame and non-frame blocks around the pocket. */
+    public static Pocket flood(Level level, BlockPos start, Direction.Axis axis) {
+        Direction[] dirs = planeDirections(axis);
         Set<BlockPos> seen = new HashSet<>();
+        Set<BlockPos> border = new HashSet<>();
+        int frames = 0;
+        int others = 0;
         ArrayDeque<BlockPos> queue = new ArrayDeque<>();
         queue.add(start.immutable());
         seen.add(start.immutable());
@@ -80,28 +111,35 @@ public final class PortalFrames {
             BlockPos cur = queue.poll();
             if (seen.size() > MAX_CELLS || Math.abs(cur.getX() - start.getX()) > MAX_SPAN || Math.abs(cur.getZ() - start.getZ()) > MAX_SPAN
                     || Math.abs(cur.getY() - start.getY()) > MAX_SPAN) {
-                return null;
+                return new Pocket(seen, false, frames, others);
             }
             for (Direction d : dirs) {
                 BlockPos n = cur.relative(d);
                 if (seen.contains(n)) continue;
                 BlockState s = level.getBlockState(n);
-                if (isFrame(s)) continue;
-                if (!isFillable(s)) return null;
-                seen.add(n);
-                queue.add(n);
+                if (isFillable(s)) {
+                    seen.add(n);
+                    queue.add(n);
+                } else if (border.add(n)) {
+                    if (isFrame(s)) {
+                        frames++;
+                    } else if (!s.getFluidState().isEmpty()) {
+                        // water or Chrome leaking into the gap: not a portal
+                        return new Pocket(seen, false, frames, others);
+                    } else {
+                        others++;
+                    }
+                }
             }
         }
-        // A frame has to be at least 2 wide and 3 tall somewhere.
+        // A frame has to be at least 3 tall somewhere and hold a few cells.
         int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
         for (BlockPos b : seen) {
             minY = Math.min(minY, b.getY());
             maxY = Math.max(maxY, b.getY());
         }
-        if (seen.size() < 6 || maxY - minY < 2) {
-            return null;
-        }
-        return seen;
+        boolean bigEnough = seen.size() >= 6 && maxY - minY >= 2;
+        return new Pocket(seen, bigEnough, frames, others);
     }
 
     public static BlockPos centerOf(Set<BlockPos> cells) {

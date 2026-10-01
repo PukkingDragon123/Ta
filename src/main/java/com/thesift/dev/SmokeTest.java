@@ -35,6 +35,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -113,7 +114,8 @@ public final class SmokeTest {
         ticks++;
         if (ticks == 200 || ticks > 1000) {
             for (Entity e : SPAWNED) {
-                TheSift.LOGGER.info("SMOKE: {} alive={} pos={}", BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()), e.isAlive(), e.blockPosition());
+                TheSift.LOGGER.info("SMOKE: {} alive={} removal={} pos={} health={}", BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()), e.isAlive(),
+                        e.getRemovalReason(), e.blockPosition(), e instanceof LivingEntity living ? living.getHealth() + "/" + living.getMaxHealth() : "-");
             }
             if (FAILURES.isEmpty()) {
                 TheSift.LOGGER.info("SMOKE TEST PASSED");
@@ -316,6 +318,7 @@ public final class SmokeTest {
             check(n > 0, "ancient city centre has reinforced deepslate");
             if (n > 0) {
                 BlockPos centre = new BlockPos((int) (sx / n), (int) (sy / n), (int) (sz / n));
+                dumpSlice(sift, origin, size, centre.getX() - origin.getX());
                 PortalFrames.Frame gate = PortalFrames.find(sift, centre, 20);
                 TheSift.LOGGER.info("SMOKE: ancient city size={} frame blocks={} centre={} gate={}", size, n, centre,
                         gate == null ? "none" : gate.axis() + " cells=" + gate.interior().size() + " at " + gate.center());
@@ -332,11 +335,26 @@ public final class SmokeTest {
                 "arrival portal built");
     }
 
+    /** Logs one YZ slice of a placed template: # frame, o solid, . open. */
+    private static void dumpSlice(ServerLevel level, BlockPos origin, Vec3i size, int x) {
+        for (int y = size.getY() - 1; y >= 0; y--) {
+            StringBuilder row = new StringBuilder();
+            for (int z = 0; z < size.getZ(); z++) {
+                BlockState s = level.getBlockState(origin.offset(x, y, z));
+                row.append(PortalFrames.isFrame(s) ? '#' : PortalFrames.isFillable(s) ? '.' : 'o');
+            }
+            TheSift.LOGGER.info("SMOKE: gate x={} y={} {}", x, y, row);
+        }
+    }
+
     // ------------------------------------------------------------------ mobs
 
     private static void spawnMobs(ServerLevel sift) {
         List<EntityType<?>> types = List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModEntities.ENCHOER.get(),
                 ModEntities.RIVETER.get(), EntityTypes.SNIFFER);
+        // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
+        sift.setChunkForced(0, 0, true);
+        sift.setChunkForced(1, 0, true);
         int i = 0;
         for (EntityType<?> type : types) {
             int x = 8 + i * 4;
