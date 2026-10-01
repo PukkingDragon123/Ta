@@ -1,0 +1,807 @@
+package com.thesift.entity;
+
+import com.thesift.registry.ModEntities;
+import com.thesift.registry.ModFluids;
+import com.thesift.registry.ModItems;
+import com.thesift.registry.ModParticles;
+import com.thesift.registry.ModSounds;
+import java.util.EnumSet;
+import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * Stomper: a huge, shaggy mammoth-bullfrog of the Sift Plains with four eyes and a long trunk.
+ * Gentle and slow, but almost impossible to bring down. Every so often it plods to the nearest
+ * Chrome (or water) and drinks its fill through the trunk; when something hostile comes close - or
+ * someone hits it - it rears up, raises its trunk and hoses them with a stream of Chrome that
+ * stings and slows. Drums make it dance, and every dance ends in two ground-shaking stomps that
+ * fling hostile creatures away.
+ *
+ * <p>Fed Hummingblooms, two adults lay a Stomper Egg instead of giving birth. Babies (and only
+ * babies) can be tamed with Hummingblooms; they grow up tame, follow you, sit when told and can
+ * be ridden.</p>
+ */
+public class Stomper extends TamableAnimal {
+    private static final EntityDataAccessor<Float> CHROME = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DANCE = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.INT);
+    private static final byte EVENT_DRINK = 70;
+    private static final byte EVENT_SPRAY = 71;
+    private static final byte EVENT_STOMP = 72;
+    private static final byte EVENT_PUFF = 73;
+    private static final byte EVENT_SLAP = 74;
+    private static final byte EVENT_LAY = 75;
+    public static final int DANCE_LENGTH = 120;
+    /** The dance ends with two stomps, at these many ticks before the end. */
+    private static final int STOMP_1 = 34;
+    private static final int STOMP_2 = 12;
+    public static final int SPRAY_WINDUP = 20;
+    private static final int SPRAY_LENGTH = 30;
+    private static final double SPRAY_RANGE = 10.0;
+
+    public final AnimationState drinkAnimation = new AnimationState();
+    public final AnimationState sprayAnimation = new AnimationState();
+    public final AnimationState stompAnimation = new AnimationState();
+    public final AnimationState puffAnimation = new AnimationState();
+    public final AnimationState slapAnimation = new AnimationState();
+
+    private int drinkCooldown = 200;
+    private int sprayCooldown;
+    private int puffTimer = 60;
+    private boolean drinking;
+
+    public Stomper(EntityType<? extends TamableAnimal> type, Level level) {
+        super(type, level);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Animal.createAnimalAttributes()
+                .add(Attributes.MAX_HEALTH, 200.0)
+                .add(Attributes.ARMOR, 16.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.16)
+                .add(Attributes.ATTACK_DAMAGE, 9.0)
+                .add(Attributes.FOLLOW_RANGE, 24.0);
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new DanceGoal());
+        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(3, new SprayGoal());
+        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.1, true));
+        this.goalSelector.addGoal(5, new DrinkGoal());
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.1, 10.0F, 4.0F));
+        this.goalSelector.addGoal(7, new BreedGoal(this, 1.0));
+        this.goalSelector.addGoal(8, new TemptGoal(this, 1.1, s -> s.is(ModItems.HUMMINGBLOOM.get()), false));
+        this.goalSelector.addGoal(9, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CHROME, 0.0F);
+        builder.define(DANCE, 0);
+    }
+
+    /** How much Chrome is stored in the trunk and belly, 0..1. */
+    public float getChrome() {
+        return Mth.clamp(this.entityData.get(CHROME), 0.0F, 1.0F);
+    }
+
+    public void setChrome(float chrome) {
+        this.entityData.set(CHROME, Mth.clamp(chrome, 0.0F, 1.0F));
+    }
+
+    public boolean isDancing() {
+        return this.entityData.get(DANCE) > 0;
+    }
+
+    /** Ticks of dance left (counts down to 0). */
+    public int getDanceTicks() {
+        return this.entityData.get(DANCE);
+    }
+
+    public boolean isDrinking() {
+        return this.drinking;
+    }
+
+    @Override
+    public boolean isFood(ItemStack stack) {
+        return stack.is(ModItems.HUMMINGBLOOM.get());
+    }
+
+    @Override
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
+        return ModEntities.STOMPER.get().create(level, EntitySpawnReason.BREEDING);
+    }
+
+    // ------------------------------------------------------------------ drums & dancing
+
+    /**
+     * A drum was played at {@code pos}: every Stomper within {@code radius} starts to dance. Called
+     * by the Sift Drum and the conga drum.
+     */
+    public static void hearDrum(ServerLevel level, Vec3 pos, double radius) {
+        AABB box = new AABB(pos, pos).inflate(radius);
+        for (Stomper s : level.getEntitiesOfClass(Stomper.class, box, e -> e.isAlive() && e.distanceToSqr(pos) <= radius * radius)) {
+            s.startDance();
+        }
+    }
+
+    public void startDance() {
+        if (this.isDancing() || this.level().isClientSide()) {
+            return;
+        }
+        this.entityData.set(DANCE, DANCE_LENGTH);
+        this.getNavigation().stop();
+        this.playSound(ModSounds.STOMPER_HAPPY.get(), 1.4F, 0.9F + this.random.nextFloat() * 0.2F);
+        this.playSound(ModSounds.STOMPER_TRUMPET.get(), 1.2F, 1.1F);
+    }
+
+    private void tickDance(ServerLevel level, int left) {
+        if (left % 5 == 0) {
+            Vec3 head = this.headPos(1.9);
+            level.sendParticles(ModParticles.SIFT_NOTE.get(), head.x, head.y + 0.6, head.z, 0, this.random.nextDouble(), 0.0, 0.0, 1.0);
+        }
+        if (left % 10 == 0) {
+            level.sendParticles(ModParticles.DREAM_POLLEN.get(), this.getX(), this.getY() + 1.5, this.getZ(), 6, 1.0, 0.6, 1.0, 0.02);
+        }
+        if (left % 20 == 10 && left > STOMP_1 + 10) {
+            this.playSound(ModSounds.STOMPER_TRUMPET.get(), 1.0F, 1.0F + this.random.nextFloat() * 0.4F);
+        }
+        if (left == STOMP_1 + 6 || left == STOMP_2 + 6) {
+            level.broadcastEntityEvent(this, EVENT_STOMP);
+        }
+        if (left == STOMP_1 || left == STOMP_2) {
+            this.stomp(level, left == STOMP_2 ? 1.25F : 1.0F);
+        }
+    }
+
+    /** A huge stomp: the ground cracks in a ring and hostile creatures nearby are flung away. */
+    private void stomp(ServerLevel level, float power) {
+        double r = 6.0 * power;
+        this.playSound(ModSounds.STOMPER_STOMP.get(), 2.0F, 0.8F + this.random.nextFloat() * 0.15F);
+        BlockPos below = this.blockPosition().below();
+        BlockState ground = level.getBlockState(below);
+        if (ground.isAir()) {
+            ground = level.getBlockState(below.below());
+        }
+        if (!ground.isAir()) {
+            BlockParticleOption crack = new BlockParticleOption(ParticleTypes.BLOCK, ground);
+            for (int i = 0; i < 40; i++) {
+                double a = i * Mth.TWO_PI / 40.0;
+                for (double d = 1.4; d <= r; d += 1.4) {
+                    level.sendParticles(crack, this.getX() + Math.cos(a) * d, this.getY() + 0.1, this.getZ() + Math.sin(a) * d, 2, 0.15, 0.05, 0.15, 0.12);
+                }
+            }
+        }
+        level.sendParticles(ModParticles.RESONANCE_RING.get(), this.getX(), this.getY() + 0.1, this.getZ(), 0, r, 0.0, 0.0, 1.0);
+        level.sendParticles(ModParticles.RESONANCE_RING.get(), this.getX(), this.getY() + 0.15, this.getZ(), 0, r * 0.6, 0.0, 0.0, 1.0);
+        level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 0.2, this.getZ(), 30, 1.6, 0.1, 1.6, 0.08);
+        level.sendParticles(ParticleTypes.CLOUD, this.getX(), this.getY() + 0.2, this.getZ(), 16, 1.2, 0.1, 1.2, 0.15);
+        level.sendParticles(ModParticles.STAR_SPARKLE.get(), this.getX(), this.getY() + 0.5, this.getZ(), 20, 2.5, 0.4, 2.5, 0.05);
+        AABB box = this.getBoundingBox().inflate(r, 2.0, r);
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, box, this::isStompable)) {
+            double dx = e.getX() - this.getX();
+            double dz = e.getZ() - this.getZ();
+            double d = Math.max(0.5, Math.sqrt(dx * dx + dz * dz));
+            if (d > r + e.getBbWidth()) {
+                continue;
+            }
+            float falloff = (float) Mth.clamp(1.0 - d / (r + 1.5), 0.25, 1.0);
+            e.hurtServer(level, this.damageSources().mobAttack(this), 10.0F * power * falloff);
+            e.push(dx / d * 1.4 * falloff, 0.55 * falloff + 0.2, dz / d * 1.4 * falloff);
+        }
+    }
+
+    /** Never the drummer, never other Stompers, never anyone's pet: hostile creatures, mostly. */
+    private boolean isStompable(LivingEntity e) {
+        if (e == this || !e.isAlive() || e instanceof Player || e instanceof Stomper || isPet(e)) {
+            return false;
+        }
+        if (e instanceof Enemy) {
+            return true;
+        }
+        return e instanceof Mob mob && mob.getTarget() != null && (mob.getTarget() instanceof Player || mob.getTarget() == this);
+    }
+
+    static boolean isPet(Entity e) {
+        if (e instanceof TamableAnimal t && t.isTame()) {
+            return true;
+        }
+        if (e instanceof OwnableEntity o && o.getOwnerReference() != null) {
+            return true;
+        }
+        return e instanceof SiftSniffer s && s.isTame();
+    }
+
+    // ------------------------------------------------------------------ ticking
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.level() instanceof ServerLevel server) {
+            int dance = this.entityData.get(DANCE);
+            if (dance > 0) {
+                this.tickDance(server, dance);
+                this.entityData.set(DANCE, dance - 1);
+            }
+            if (this.drinkCooldown > 0) {
+                this.drinkCooldown--;
+            }
+            if (this.sprayCooldown > 0) {
+                this.sprayCooldown--;
+            }
+            if (--this.puffTimer <= 0) {
+                this.puffTimer = 90 + this.random.nextInt(200);
+                server.broadcastEntityEvent(this, EVENT_PUFF);
+                this.playSound(ModSounds.STOMPER_PUFF.get(), 0.6F, 0.8F + this.random.nextFloat() * 0.3F);
+            }
+        }
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        switch (id) {
+            case EVENT_DRINK -> this.drinkAnimation.start(this.tickCount);
+            case EVENT_SPRAY -> this.sprayAnimation.start(this.tickCount);
+            case EVENT_STOMP -> this.stompAnimation.start(this.tickCount);
+            case EVENT_SLAP -> this.slapAnimation.start(this.tickCount);
+            case EVENT_PUFF -> {
+                this.puffAnimation.start(this.tickCount);
+                this.puffSpiracles();
+            }
+            case EVENT_LAY -> {
+                for (int i = 0; i < 16; i++) {
+                    this.level().addParticle(ParticleTypes.HEART, this.getRandomX(1.0), this.getY() + 1.0 + this.random.nextDouble(), this.getRandomZ(1.0),
+                            0, 0.05, 0);
+                }
+            }
+            default -> super.handleEntityEvent(id);
+        }
+    }
+
+    /** Client: the three spiracles on the back blow out puffs (and Chrome mist when it is full). */
+    private void puffSpiracles() {
+        float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
+        double fx = -Mth.sin(yaw);
+        double fz = Mth.cos(yaw);
+        double s = this.getAgeScale();
+        double[][] holes = {{0.28, 0.2}, {-0.28, 0.2}, {0.0, -0.3}};
+        float chrome = this.getChrome();
+        for (double[] h : holes) {
+            // h[0] across (to the right), h[1] along (forwards)
+            double x = this.getX() + (fx * h[1] - fz * h[0]) * s;
+            double z = this.getZ() + (fz * h[1] + fx * h[0]) * s;
+            double y = this.getY() + 2.55 * s;
+            for (int i = 0; i < 5; i++) {
+                this.level().addParticle(ParticleTypes.CLOUD, x, y, z, (this.random.nextDouble() - 0.5) * 0.04, 0.12 + this.random.nextDouble() * 0.1,
+                        (this.random.nextDouble() - 0.5) * 0.04);
+            }
+            if (chrome > 0.05) {
+                for (int i = 0; i < 2 + (int) (chrome * 6); i++) {
+                    this.level().addParticle(ModParticles.CHROME_DROPLET.get(), x, y, z, (this.random.nextDouble() - 0.5) * 0.12,
+                            0.2 + this.random.nextDouble() * 0.2, (this.random.nextDouble() - 0.5) * 0.12);
+                }
+                this.level().addParticle(ModParticles.SIFT_MIST.get(), x, y + 0.3, z, 0, 0.01, 0);
+            }
+        }
+    }
+
+    /** Where the head (trunk base) is, {@code forward} blocks ahead of the body's centre. */
+    private Vec3 headPos(double forward) {
+        float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
+        double s = this.getAgeScale();
+        return new Vec3(this.getX() - Mth.sin(yaw) * forward * s, this.getY() + 1.2 * s, this.getZ() + Mth.cos(yaw) * forward * s);
+    }
+
+    // ------------------------------------------------------------------ combat
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        if (this.isDancing()) {
+            this.entityData.set(DANCE, 0);
+        }
+        return super.hurtServer(level, source, damage);
+    }
+
+    @Override
+    public boolean doHurtTarget(ServerLevel level, Entity target) {
+        level.broadcastEntityEvent(this, EVENT_SLAP);
+        this.playSound(ModSounds.STOMPER_TRUMPET.get(), 0.8F, 1.3F);
+        boolean hit = super.doHurtTarget(level, target);
+        if (hit) {
+            target.push(0.0, 0.35, 0.0);
+        }
+        return hit;
+    }
+
+    private @Nullable LivingEntity findSprayTarget() {
+        LivingEntity target = this.getTarget();
+        if (target != null && target.isAlive() && this.distanceTo(target) < SPRAY_RANGE + 2.0) {
+            return target;
+        }
+        List<Mob> near = this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(SPRAY_RANGE),
+                e -> e instanceof Enemy && e.isAlive() && this.hasLineOfSight(e));
+        Mob best = null;
+        double bestD = Double.MAX_VALUE;
+        for (Mob m : near) {
+            double d = this.distanceToSqr(m);
+            if (d < bestD) {
+                bestD = d;
+                best = m;
+            }
+        }
+        return best;
+    }
+
+    /** One tick of the Chrome stream from the raised trunk towards the target. */
+    private void sprayTick(ServerLevel level, LivingEntity target, int sprayTick) {
+        Vec3 tip = this.headPos(2.4).add(0.0, 0.9 * this.getAgeScale(), 0.0);
+        Vec3 aim = target.getBoundingBox().getCenter().subtract(tip);
+        if (aim.lengthSqr() < 1.0E-4) {
+            return;
+        }
+        Vec3 dir = aim.normalize();
+        for (int i = 0; i < 7; i++) {
+            double sp = 0.9 + this.random.nextDouble() * 0.6;
+            level.sendParticles(ModParticles.CHROME_DROPLET.get(), tip.x, tip.y, tip.z, 0, dir.x * sp + (this.random.nextDouble() - 0.5) * 0.15,
+                    dir.y * sp + 0.08 + (this.random.nextDouble() - 0.5) * 0.15, dir.z * sp + (this.random.nextDouble() - 0.5) * 0.15, 1.0);
+        }
+        if (sprayTick % 2 == 0) {
+            Vec3 mid = tip.add(dir.scale(Math.min(SPRAY_RANGE, aim.length()) * this.random.nextDouble()));
+            level.sendParticles(ModParticles.CHROME_BUBBLE.get(), mid.x, mid.y, mid.z, 3, 0.2, 0.2, 0.2, 0.02);
+            level.sendParticles(ParticleTypes.SPLASH, mid.x, mid.y, mid.z, 4, 0.3, 0.2, 0.3, 0.1);
+        }
+        if (sprayTick % 4 != 0) {
+            return;
+        }
+        AABB box = new AABB(tip, tip.add(dir.scale(SPRAY_RANGE))).inflate(2.0);
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, box, x -> x != this && x.isAlive())) {
+            if (e instanceof Stomper || isPet(e) || (e instanceof Player && e != target) || (this.isTame() && this.isOwnedBy(e))) {
+                continue;
+            }
+            Vec3 to = e.getBoundingBox().getCenter().subtract(tip);
+            double along = to.dot(dir);
+            if (along <= 0.0 || along > SPRAY_RANGE) {
+                continue;
+            }
+            double off = to.subtract(dir.scale(along)).length();
+            if (off < 0.6 + along * 0.18 + e.getBbWidth() * 0.5) {
+                if (e.hurtServer(level, this.damageSources().mobAttack(this), 3.0F)) {
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 80, 1));
+                    e.push(dir.x * 0.25, 0.08, dir.z * 0.25);
+                    level.sendParticles(ModParticles.CHROME_DROPLET.get(), e.getX(), e.getY() + e.getBbHeight() * 0.6, e.getZ(), 12, 0.3, 0.3, 0.3, 0.1);
+                    level.sendParticles(ParticleTypes.SPLASH, e.getX(), e.getY() + e.getBbHeight() * 0.6, e.getZ(), 10, 0.3, 0.3, 0.3, 0.1);
+                }
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------ breeding, taming, riding
+
+    /** Two well-fed Stompers lay an egg instead of having a live baby. */
+    @Override
+    public void spawnChildFromBreeding(ServerLevel level, Animal partner) {
+        this.finalizeSpawnChildFromBreeding(level, partner, null);
+        Vec3 mid = this.position().add(partner.position()).scale(0.5);
+        ItemStack egg = new ItemStack(ModItems.STOMPER_EGG.get());
+        net.minecraft.world.entity.item.ItemEntity drop = this.spawnAtLocation(level, egg, 1.0F);
+        if (drop != null) {
+            drop.setPos(mid.x, mid.y + 1.0, mid.z);
+            drop.setDeltaMovement((this.random.nextDouble() - 0.5) * 0.2, 0.35, (this.random.nextDouble() - 0.5) * 0.2);
+        }
+        level.broadcastEntityEvent(this, EVENT_LAY);
+        level.sendParticles(ParticleTypes.POOF, mid.x, mid.y + 0.8, mid.z, 20, 0.6, 0.4, 0.6, 0.05);
+        level.sendParticles(ModParticles.STAR_SPARKLE.get(), mid.x, mid.y + 1.0, mid.z, 24, 0.8, 0.6, 0.8, 0.05);
+        level.sendParticles(ModParticles.RESONANCE_RING.get(), mid.x, mid.y + 0.1, mid.z, 0, 2.5, 0.0, 0.0, 1.0);
+        this.playSound(ModSounds.STOMPER_LAY.get(), 1.2F, 0.9F);
+        this.playSound(ModSounds.STOMPER_HAPPY.get(), 1.2F, 1.1F);
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (this.isFood(stack) && this.isBaby() && !this.isTame()) {
+            if (this.level() instanceof ServerLevel server) {
+                this.usePlayerItem(player, hand, stack);
+                this.playSound(ModSounds.STOMPER_HAPPY.get(), 1.0F, 1.6F);
+                if (this.random.nextInt(3) == 0) {
+                    this.tame(player);
+                    this.setOrderedToSit(false);
+                    this.setPersistenceRequired();
+                    server.broadcastEntityEvent(this, (byte) 7);
+                    server.sendParticles(ModParticles.SIFT_NOTE.get(), this.getX(), this.getY() + 1.4, this.getZ(), 0, 0.5, 0.0, 0.0, 1.0);
+                    player.sendOverlayMessage(Component.translatable("message.thesift.stomper.tamed"));
+                } else {
+                    server.broadcastEntityEvent(this, (byte) 6);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+        if (this.isTame() && this.isOwnedBy(player) && !this.isFood(stack)) {
+            if (player.isSecondaryUseActive() || this.isBaby()) {
+                if (!this.level().isClientSide()) {
+                    this.setOrderedToSit(!this.isOrderedToSit());
+                    this.getNavigation().stop();
+                    this.setTarget(null);
+                }
+                return InteractionResult.SUCCESS;
+            }
+            if (!this.isVehicle() && stack.isEmpty()) {
+                if (!this.level().isClientSide()) {
+                    this.setOrderedToSit(false);
+                    player.startRiding(this);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public @Nullable LivingEntity getControllingPassenger() {
+        return this.isTame() && this.getFirstPassenger() instanceof Player player ? player : super.getControllingPassenger();
+    }
+
+    @Override
+    protected Vec3 getRiddenInput(Player controller, Vec3 selfInput) {
+        float forward = controller.zza;
+        if (forward <= 0.0F) {
+            forward *= 0.3F;
+        }
+        return new Vec3(controller.xxa * 0.4F, 0.0, forward);
+    }
+
+    @Override
+    protected float getRiddenSpeed(Player controller) {
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.4F;
+    }
+
+    @Override
+    protected void tickRidden(Player controller, Vec3 riddenInput) {
+        super.tickRidden(controller, riddenInput);
+        this.setRot(controller.getYRot(), controller.getXRot() * 0.5F);
+        this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+    }
+
+    // ------------------------------------------------------------------ sounds, save, death
+
+    @Override
+    protected @Nullable SoundEvent getAmbientSound() {
+        return ModSounds.STOMPER_AMBIENT.get();
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return 260;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return ModSounds.STOMPER_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.STOMPER_DEATH.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(ModSounds.STOMPER_STEP.get(), this.isBaby() ? 0.4F : 0.9F, this.isBaby() ? 1.4F : 0.8F);
+    }
+
+    @Override
+    public float getVoicePitch() {
+        return this.isBaby() ? 1.5F + this.random.nextFloat() * 0.2F : 0.9F + (this.random.nextFloat() - this.random.nextFloat()) * 0.1F;
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("Chrome", Math.round(this.getChrome() * 1000.0F));
+        output.putInt("DrinkCooldown", this.drinkCooldown);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.setChrome(input.getIntOr("Chrome", 0) / 1000.0F);
+        this.drinkCooldown = input.getIntOr("DrinkCooldown", 200);
+    }
+
+    /** A big wet pop: Chrome droplets, fur and hearts. */
+    @Override
+    public void makePoofParticles() {
+        KillBurst.pop(this, 0x4FA38E, 0xC58BB8, KillBurst.DROP, ModParticles.CHROME_DROPLET.get());
+    }
+
+    // ------------------------------------------------------------------ goals
+
+    /** Dances on the spot while a drum plays: sways, waves its trunk and stomps at the end. */
+    private final class DanceGoal extends Goal {
+        DanceGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            return Stomper.this.isDancing() && !Stomper.this.isVehicle();
+        }
+
+        @Override
+        public void start() {
+            Stomper.this.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            Stomper s = Stomper.this;
+            s.getNavigation().stop();
+            // turn slowly on the spot in time with the beat
+            int t = s.getDanceTicks();
+            if (t > STOMP_1 + 8) {
+                float turn = Mth.sin(t * 0.12F) * 4.0F;
+                s.setYRot(s.getYRot() + turn);
+                s.yBodyRot = s.getYRot();
+                s.yHeadRot = s.getYRot();
+            }
+        }
+    }
+
+    /** Rears up, raises its trunk (the telegraph), then hoses the target with Chrome. */
+    private final class SprayGoal extends Goal {
+        private @Nullable LivingEntity target;
+        private int ticks;
+
+        SprayGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            Stomper s = Stomper.this;
+            if (s.sprayCooldown > 0 || s.getChrome() < 0.2F || s.isDancing() || s.isVehicle() || s.isBaby()) {
+                return false;
+            }
+            this.target = s.findSprayTarget();
+            return this.target != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.target != null && this.target.isAlive() && this.ticks < SPRAY_WINDUP + SPRAY_LENGTH && Stomper.this.getChrome() > 0.0F;
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void start() {
+            Stomper s = Stomper.this;
+            this.ticks = 0;
+            s.getNavigation().stop();
+            s.level().broadcastEntityEvent(s, EVENT_SPRAY);
+            s.playSound(ModSounds.STOMPER_TRUMPET.get(), 1.6F, 0.8F);
+        }
+
+        @Override
+        public void tick() {
+            Stomper s = Stomper.this;
+            if (this.target == null || !(s.level() instanceof ServerLevel server)) {
+                return;
+            }
+            s.getNavigation().stop();
+            s.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+            // face the target with the whole body so the trunk points at it
+            double dx = this.target.getX() - s.getX();
+            double dz = this.target.getZ() - s.getZ();
+            float want = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0F;
+            s.setYRot(s.getYRot() + Mth.clamp(Mth.wrapDegrees(want - s.getYRot()), -8.0F, 8.0F));
+            s.yBodyRot = s.getYRot();
+            this.ticks++;
+            if (this.ticks < SPRAY_WINDUP) {
+                // the telegraph: drips from the raised trunk and a gurgle
+                Vec3 tip = s.headPos(2.0).add(0.0, 1.3 * s.getAgeScale(), 0.0);
+                server.sendParticles(ModParticles.CHROME_DROPLET.get(), tip.x, tip.y, tip.z, 2, 0.15, 0.1, 0.15, 0.02);
+                if (this.ticks == SPRAY_WINDUP - 4) {
+                    s.playSound(ModSounds.STOMPER_DRINK.get(), 1.0F, 1.4F);
+                }
+                return;
+            }
+            if (this.ticks == SPRAY_WINDUP) {
+                s.playSound(ModSounds.STOMPER_SPRAY.get(), 1.6F, 0.9F);
+            }
+            s.sprayTick(server, this.target, this.ticks - SPRAY_WINDUP);
+            s.setChrome(s.getChrome() - 0.011F);
+        }
+
+        @Override
+        public void stop() {
+            Stomper.this.sprayCooldown = 70 + Stomper.this.random.nextInt(40);
+            this.target = null;
+        }
+    }
+
+    /** Plods to the nearest Chrome (or water if there is none) and drinks through the trunk. */
+    private final class DrinkGoal extends Goal {
+        private @Nullable BlockPos fluid;
+        private boolean chrome;
+        private int timeout;
+        private int drinkTicks;
+
+        DrinkGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            Stomper s = Stomper.this;
+            if (s.drinkCooldown > 0 || s.getChrome() > 0.9F || s.isDancing() || s.isVehicle() || s.getTarget() != null || s.isOrderedToSit()
+                    || s.random.nextInt(40) != 0) {
+                return false;
+            }
+            this.fluid = this.find(true);
+            this.chrome = this.fluid != null;
+            if (this.fluid == null) {
+                this.fluid = this.find(false);
+            }
+            if (this.fluid == null) {
+                s.drinkCooldown = 300;
+                return false;
+            }
+            return true;
+        }
+
+        private @Nullable BlockPos find(boolean wantChrome) {
+            Stomper s = Stomper.this;
+            BlockPos here = s.blockPosition();
+            BlockPos best = null;
+            double bestD = Double.MAX_VALUE;
+            for (BlockPos p : BlockPos.betweenClosed(here.offset(-14, -4, -14), here.offset(14, 3, 14))) {
+                FluidState fs = s.level().getFluidState(p);
+                if (fs.isEmpty() || !s.level().getBlockState(p.above()).isAir()) {
+                    continue;
+                }
+                boolean ok = wantChrome ? fs.getType().isSame(ModFluids.CHROME.get()) : fs.is(FluidTags.WATER);
+                if (!ok) {
+                    continue;
+                }
+                double d = p.distSqr(here);
+                if (d < bestD) {
+                    bestD = d;
+                    best = p.immutable();
+                }
+            }
+            return best;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            Stomper s = Stomper.this;
+            return this.fluid != null && this.timeout > 0 && s.getTarget() == null && !s.isDancing() && !s.isVehicle();
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void start() {
+            this.timeout = 240;
+            this.drinkTicks = 0;
+            if (this.fluid != null) {
+                Stomper.this.getNavigation().moveTo(this.fluid.getX() + 0.5, this.fluid.getY() + 1.0, this.fluid.getZ() + 0.5, 0.9);
+            }
+        }
+
+        @Override
+        public void tick() {
+            Stomper s = Stomper.this;
+            if (this.fluid == null || !(s.level() instanceof ServerLevel server)) {
+                return;
+            }
+            this.timeout--;
+            Vec3 at = Vec3.atCenterOf(this.fluid);
+            s.getLookControl().setLookAt(at.x, at.y, at.z);
+            double dx = at.x - s.getX();
+            double dz = at.z - s.getZ();
+            double dist = Math.sqrt(dx * dx + dz * dz);
+            if (this.drinkTicks == 0) {
+                if (dist > 3.4 * s.getAgeScale() + 0.6) {
+                    if (s.getNavigation().isDone()) {
+                        s.getNavigation().moveTo(at.x, at.y + 0.5, at.z, 0.9);
+                    }
+                    return;
+                }
+                // arrived at the shore: dip the trunk
+                s.getNavigation().stop();
+                this.drinkTicks = 60;
+                this.timeout = 70;
+                s.drinking = true;
+                server.broadcastEntityEvent(s, EVENT_DRINK);
+            }
+            s.getNavigation().stop();
+            this.drinkTicks--;
+            Vec3 surface = new Vec3(at.x, this.fluid.getY() + 0.9, at.z);
+            if (this.drinkTicks % 2 == 0 && this.drinkTicks < 52) {
+                Vec3 mouth = s.headPos(1.6);
+                Vec3 up = mouth.subtract(surface).scale(0.08);
+                server.sendParticles(this.chrome ? ModParticles.CHROME_DROPLET.get() : ParticleTypes.SPLASH, surface.x, surface.y, surface.z, 0,
+                        up.x, up.y + 0.25, up.z, 1.0);
+                server.sendParticles(this.chrome ? ModParticles.CHROME_BUBBLE.get() : ParticleTypes.BUBBLE_POP, surface.x, surface.y, surface.z, 2, 0.3,
+                        0.05, 0.3, 0.01);
+            }
+            if (this.drinkTicks % 15 == 0) {
+                s.playSound(ModSounds.STOMPER_DRINK.get(), 1.0F, 0.8F + s.random.nextFloat() * 0.2F);
+            }
+            if (this.drinkTicks <= 0) {
+                s.setChrome(s.getChrome() + (this.chrome ? 0.6F : 0.3F));
+                server.sendParticles(ModParticles.STAR_SPARKLE.get(), s.getX(), s.getY() + 2.0, s.getZ(), 10, 0.8, 0.4, 0.8, 0.02);
+                s.playSound(ModSounds.STOMPER_HAPPY.get(), 1.0F, 1.0F);
+                this.fluid = null;
+            }
+        }
+
+        @Override
+        public void stop() {
+            Stomper s = Stomper.this;
+            s.drinking = false;
+            s.drinkCooldown = 500 + s.random.nextInt(700);
+            this.fluid = null;
+        }
+    }
+}

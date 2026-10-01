@@ -778,3 +778,8 @@ ALL = {'bulb': bulb, 'slumbler': slumbler, 'sifter': sifter, 'enchoer': enchoer,
 
 import bosses  # noqa: E402  (the mini-bosses, their young and the Conductor's Mask)
 ALL.update(bosses.ALL)
+
+# the wild creatures (Stomper, music fish, Sky Whale) live in tools/mobs_wild.py
+import mobs_wild  # noqa: E402
+
+ALL.update(mobs_wild.ALL)

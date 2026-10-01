@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "thesift:slumbler"
+    "thesift:slumbler",
+    "thesift:fanfare_eel",
+    "thesift:kazoo_fish",
+    "thesift:tubafish"
   ]
 }

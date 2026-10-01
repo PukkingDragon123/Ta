@@ -172,6 +172,8 @@ FLOWERS = {
 for f, (eff, secs, col) in FLOWERS.items():
     block(f, "flower", FLOWER, effect=eff, secs=secs, light=7 if f == "soulpetal" else 0, tags=["flowers", "small_flowers"], cls="SiftFlowerBlock")
     block(f"potted_{f}", "pot", "BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY)" + (".lightLevel(s -> 7)" if f == "soulpetal" else ""), plant=f, item=False, loot=f"pot:{f}")
+# the Stomper's favourite flower (taming and breeding food)
+block("hummingbloom", "flower", FLOWER, effect="MobEffects.SPEED", secs="5.0F", light=0, tags=["flowers", "small_flowers"], cls="SiftFlowerBlock")
 block("drift_petals", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PINK_PETALS)", cls="DriftPetalsBlock", model="flowerbed", tags=["hoe"], loot="petals")
 block("choir_lily", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).lightLevel(s -> 4)", cls="ChoirLilyBlock", model="double_cross",
       tags=["flowers"], loot="double_flower", item_kind="double")
@@ -255,6 +257,7 @@ for a in ["helmet", "chestplate", "leggings", "boots"]:
 for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sift_sniffer", "dictator", "thumper", "whistler", "strummer", "thumpling",
             "whistling", "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
+for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Baton")
 item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",
@@ -267,3 +270,13 @@ item("magic_strings", props="new Item.Properties().rarity(Rarity.RARE)")
 item("guitar", cls="GuitarItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
+
+# ---------------------------------------------------------------- the wild creatures' drops and gear
+item("stomper_meat", props="new Item.Properties().food(ModFoods.STOMPER_MEAT)", name="Raw Stomper Meat")
+item("stomper_steak", props="new Item.Properties().food(ModFoods.STOMPER_STEAK, ModFoods.STOMPER_STEAK_CONSUMABLE)")
+item("stomper_egg", cls="StomperEggItem", props="new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON)")
+item("kazoo_fish", props="new Item.Properties().food(ModFoods.KAZOO_FISH)", name="Raw Kazoo Fish")
+item("cooked_kazoo_fish", props="new Item.Properties().food(ModFoods.COOKED_KAZOO_FISH)")
+item("tuba_bubble")
+item("bubble_gun", cls="BubbleGunItem", props="new Item.Properties().durability(256)", model="handheld", tab="tools")
+item("skysong_gem", props="new Item.Properties().rarity(Rarity.EPIC)")

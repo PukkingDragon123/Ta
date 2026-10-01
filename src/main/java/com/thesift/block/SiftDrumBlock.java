@@ -140,6 +140,8 @@ public class SiftDrumBlock extends BaseEntityBlock {
             if (server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
                 drum.onPlayerBeat(player);
             }
+            // Stompers can't resist a drum
+            com.thesift.entity.Stomper.hearDrum(server, net.minecraft.world.phys.Vec3.atCenterOf(pos), 16.0);
         }
     }
 

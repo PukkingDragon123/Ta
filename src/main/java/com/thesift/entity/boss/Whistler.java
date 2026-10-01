@@ -238,7 +238,6 @@ public class Whistler extends MiniBoss {
                     if (e != this && !isBandmate(e) && this.diveHits.add(e.getId()) && e.hurtServer(level, this.damageSources().mobAttack(this), 11.0F)) {
                         Vec3 v = this.getDeltaMovement().multiply(1, 0, 1).normalize();
                         e.push(v.x * 1.2, 0.6, v.z * 1.2);
-                        e.hurtMarked = true;
                         level.sendParticles(ParticleTypes.SWEEP_ATTACK, e.getX(), e.getY() + 1.0, e.getZ(), 1, 0, 0, 0, 0);
                     }
                 }

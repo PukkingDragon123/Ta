@@ -54,6 +54,12 @@ public final class ModBusEvents {
         event.put(ModEntities.THUMPLING.get(), Thumpling.createAttributes().build());
         event.put(ModEntities.WHISTLING.get(), Whistling.createAttributes().build());
         event.put(ModEntities.STRUMLING.get(), Strumling.createAttributes().build());
+        // the wild creatures
+        event.put(ModEntities.STOMPER.get(), com.thesift.entity.Stomper.createAttributes().build());
+        event.put(ModEntities.FANFARE_EEL.get(), com.thesift.entity.FanfareEel.createAttributes().build());
+        event.put(ModEntities.KAZOO_FISH.get(), com.thesift.entity.KazooFish.createAttributes().build());
+        event.put(ModEntities.TUBAFISH.get(), com.thesift.entity.Tubafish.createAttributes().build());
+        event.put(ModEntities.SKY_WHALE.get(), com.thesift.entity.SkyWhale.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
@@ -71,6 +77,17 @@ public final class ModBusEvents {
                 ModBusEvents::checkSifter, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.RIVETER.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkRiveter, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        // the wild creatures
+        event.register(ModEntities.STOMPER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.FANFARE_EEL.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.OCEAN_FLOOR,
+                ModBusEvents::checkSiftFish, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.KAZOO_FISH.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.OCEAN_FLOOR,
+                ModBusEvents::checkSiftFish, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.TUBAFISH.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.OCEAN_FLOOR,
+                ModBusEvents::checkSiftFish, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.SKY_WHALE.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                ModBusEvents::checkSkyWhale, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
     public static void addBlockEntityBlocks(BlockEntityTypeAddBlocksEvent event) {
@@ -91,6 +108,24 @@ public final class ModBusEvents {
     private static <T extends Mob> boolean checkSifter(EntityType<T> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
             RandomSource random) {
         return level.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(type, level, reason, pos, random);
+    }
+
+    /** The music fish spawn inside Chrome (or water) that is at least two blocks deep. */
+    private static <T extends Mob> boolean checkSiftFish(EntityType<T> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
+            RandomSource random) {
+        net.minecraft.world.level.material.FluidState here = level.getFluidState(pos);
+        return !here.isEmpty() && !here.is(net.minecraft.tags.FluidTags.LAVA) && !level.getFluidState(pos.below()).isEmpty()
+                && !level.getFluidState(pos.below()).is(net.minecraft.tags.FluidTags.LAVA);
+    }
+
+    /** Sky Whales appear (rarely) out in the open under the sky; they rise to cruising height on spawning. */
+    private static <T extends Mob> boolean checkSkyWhale(EntityType<T> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
+            RandomSource random) {
+        if (EntitySpawnReason.isSpawner(reason)) {
+            return true;
+        }
+        return pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) && level.getFluidState(pos).isEmpty()
+                && random.nextInt(3) == 0;
     }
 
     private static boolean checkRiveter(EntityType<Riveter> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos, RandomSource random) {

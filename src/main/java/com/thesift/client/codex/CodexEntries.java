@@ -89,7 +89,39 @@ public final class CodexEntries {
         l.add(mob(CREATURES, "riveter", ModEntities.RIVETER, (e, t) -> {
             if (e instanceof Riveter r && t % 90 == 20) r.screamAnimation.start(r.tickCount);
         }));
+        // ---- the wild creatures
+        l.add(mob(CREATURES, "stomper", ModEntities.STOMPER, (e, t) -> {
+            if (e instanceof com.thesift.entity.Stomper s) {
+                if (t == 1) {
+                    s.setChrome(1.0F);
+                }
+                switch (t % 160) {
+                    case 10 -> s.puffAnimation.start(s.tickCount);
+                    case 40 -> s.sprayAnimation.start(s.tickCount);
+                    case 100 -> s.drinkAnimation.start(s.tickCount);
+                    case 150 -> s.puffAnimation.start(s.tickCount);
+                    default -> { }
+                }
+            }
+        }));
+        l.add(mob(CREATURES, "sky_whale", ModEntities.SKY_WHALE, (e, t) -> {
+            if (e instanceof com.thesift.entity.SkyWhale w && t % 120 == 10) w.singAnimation.start(w.tickCount);
+        }));
+        l.add(mob(CREATURES, "fanfare_eel", ModEntities.FANFARE_EEL, (e, t) -> {
+            if (e instanceof com.thesift.entity.FanfareEel f && t % 50 == 10) f.biteAnimation.start(f.tickCount);
+        }));
+        l.add(mob(CREATURES, "kazoo_fish", ModEntities.KAZOO_FISH, (e, t) -> { }));
+        l.add(mob(CREATURES, "tubafish", ModEntities.TUBAFISH, (e, t) -> {
+            if (e instanceof com.thesift.entity.Tubafish f) {
+                // puff up and down on the page
+                f.puffO = f.puff;
+                float target = (t / 60) % 2 == 1 ? 1.0F : 0.0F;
+                f.puff += (target - f.puff) * (target > f.puff ? 0.35F : 0.06F);
+            }
+        }));
         // ---- items
+        l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));
+        l.add(thing(ITEMS, "skysong_gem", ModItems.SKYSONG_GEM));
         l.add(thing(ITEMS, "siftite", ModItems.SIFTITE_PICKAXE));
         l.add(thing(ITEMS, "slingshot", ModItems.SLINGSHOT));
         l.add(thing(ITEMS, "chrome", ModItems.CHROME_BUCKET));

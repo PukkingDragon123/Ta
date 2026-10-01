@@ -128,6 +128,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> DREAMBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.DREAMBLOOM);
     public static final DeferredItem<BlockItem> SOULPETAL = ITEMS.registerSimpleBlockItem(ModBlocks.SOULPETAL);
     public static final DeferredItem<BlockItem> NEBULA_IRIS = ITEMS.registerSimpleBlockItem(ModBlocks.NEBULA_IRIS);
+    public static final DeferredItem<BlockItem> HUMMINGBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.HUMMINGBLOOM);
     public static final DeferredItem<BlockItem> DRIFT_PETALS = ITEMS.registerSimpleBlockItem(ModBlocks.DRIFT_PETALS);
     public static final DeferredItem<DoubleHighBlockItem> CHOIR_LILY = ITEMS.registerItem("choir_lily", p -> new DoubleHighBlockItem(ModBlocks.CHOIR_LILY.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<BlockItem> ECHO_ORCHID = ITEMS.registerSimpleBlockItem(ModBlocks.ECHO_ORCHID);
@@ -193,6 +194,11 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> THUMPLING_SPAWN_EGG = ITEMS.registerItem("thumpling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPLING.get()));
     public static final DeferredItem<SpawnEggItem> WHISTLING_SPAWN_EGG = ITEMS.registerItem("whistling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLING.get()));
     public static final DeferredItem<SpawnEggItem> STRUMLING_SPAWN_EGG = ITEMS.registerItem("strumling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMLING.get()));
+    public static final DeferredItem<SpawnEggItem> STOMPER_SPAWN_EGG = ITEMS.registerItem("stomper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STOMPER.get()));
+    public static final DeferredItem<SpawnEggItem> FANFARE_EEL_SPAWN_EGG = ITEMS.registerItem("fanfare_eel_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.FANFARE_EEL.get()));
+    public static final DeferredItem<SpawnEggItem> KAZOO_FISH_SPAWN_EGG = ITEMS.registerItem("kazoo_fish_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.KAZOO_FISH.get()));
+    public static final DeferredItem<SpawnEggItem> TUBAFISH_SPAWN_EGG = ITEMS.registerItem("tubafish_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.TUBAFISH.get()));
+    public static final DeferredItem<SpawnEggItem> SKY_WHALE_SPAWN_EGG = ITEMS.registerItem("sky_whale_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SKY_WHALE.get()));
     public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<StaffItem> CONDUCTORS_STAFF = ITEMS.registerItem("conductors_staff", StaffItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<CongaDrumItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", CongaDrumItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
@@ -202,6 +208,14 @@ public final class ModItems {
     public static final DeferredItem<GuitarItem> GUITAR = ITEMS.registerItem("guitar", GuitarItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftCodexItem> SIFT_CODEX = ITEMS.registerItem("sift_codex", SiftCodexItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> MUSIC_DISC_LULLABY = ITEMS.registerItem("music_disc_lullaby", Item::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG));
+    public static final DeferredItem<Item> STOMPER_MEAT = ITEMS.registerItem("stomper_meat", Item::new, () -> new Item.Properties().food(ModFoods.STOMPER_MEAT));
+    public static final DeferredItem<Item> STOMPER_STEAK = ITEMS.registerItem("stomper_steak", Item::new, () -> new Item.Properties().food(ModFoods.STOMPER_STEAK, ModFoods.STOMPER_STEAK_CONSUMABLE));
+    public static final DeferredItem<StomperEggItem> STOMPER_EGG = ITEMS.registerItem("stomper_egg", StomperEggItem::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> KAZOO_FISH = ITEMS.registerItem("kazoo_fish", Item::new, () -> new Item.Properties().food(ModFoods.KAZOO_FISH));
+    public static final DeferredItem<Item> COOKED_KAZOO_FISH = ITEMS.registerItem("cooked_kazoo_fish", Item::new, () -> new Item.Properties().food(ModFoods.COOKED_KAZOO_FISH));
+    public static final DeferredItem<Item> TUBA_BUBBLE = ITEMS.registerItem("tuba_bubble", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<BubbleGunItem> BUBBLE_GUN = ITEMS.registerItem("bubble_gun", BubbleGunItem::new, () -> new Item.Properties().durability(256));
+    public static final DeferredItem<Item> SKYSONG_GEM = ITEMS.registerItem("skysong_gem", Item::new, () -> new Item.Properties().rarity(Rarity.EPIC));
 
     private ModItems() {}
 }

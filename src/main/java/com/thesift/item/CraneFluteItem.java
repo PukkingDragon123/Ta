@@ -62,6 +62,6 @@ public class CraneFluteItem extends Item {
 
     /** The whale song (see the Sky Whale); true if something in the sky answered. */
     private static boolean whaleSong(ServerLevel level, Player player) {
-        return false;
+        return com.thesift.entity.SkyWhale.answerSong(level, player);
     }
 }

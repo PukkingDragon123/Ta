@@ -135,6 +135,45 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> SLINGSHOT_PULL = reg("item.slingshot.pull");
     public static final DeferredHolder<SoundEvent, SoundEvent> GLOWBALL_BURST = reg("entity.glowball.burst");
     public static final DeferredHolder<SoundEvent, SoundEvent> WARDEN_CORE_PULSE = reg("item.warden_core.pulse");
+    // ---- Stomper
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_AMBIENT = reg("entity.stomper.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_HURT = reg("entity.stomper.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_DEATH = reg("entity.stomper.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_STEP = reg("entity.stomper.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_TRUMPET = reg("entity.stomper.trumpet");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_SPRAY = reg("entity.stomper.spray");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_DRINK = reg("entity.stomper.drink");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_STOMP = reg("entity.stomper.stomp");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_PUFF = reg("entity.stomper.puff");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_HAPPY = reg("entity.stomper.happy");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_LAY = reg("entity.stomper.lay");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_HATCH = reg("entity.stomper.hatch");
+    // ---- music fish
+    public static final DeferredHolder<SoundEvent, SoundEvent> FANFARE_EEL_AMBIENT = reg("entity.fanfare_eel.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FANFARE_EEL_BLAST = reg("entity.fanfare_eel.blast");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FANFARE_EEL_HURT = reg("entity.fanfare_eel.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FANFARE_EEL_DEATH = reg("entity.fanfare_eel.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> FANFARE_EEL_FLOP = reg("entity.fanfare_eel.flop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_AMBIENT = reg("entity.kazoo_fish.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_HURT = reg("entity.kazoo_fish.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_DEATH = reg("entity.kazoo_fish.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_FLOP = reg("entity.kazoo_fish.flop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_AMBIENT = reg("entity.tubafish.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_PUFF = reg("entity.tubafish.puff");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_DEFLATE = reg("entity.tubafish.deflate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_HURT = reg("entity.tubafish.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_DEATH = reg("entity.tubafish.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_FLOP = reg("entity.tubafish.flop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLE_GUN_SHOOT = reg("item.bubble_gun.shoot");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLE_POP = reg("entity.bubble.pop");
+    // ---- Sky Whale
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_AMBIENT = reg("entity.sky_whale.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_SONG = reg("entity.sky_whale.song");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_MOO = reg("entity.sky_whale.moo");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_HURT = reg("entity.sky_whale.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_DEATH = reg("entity.sky_whale.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_SPIT = reg("entity.sky_whale.spit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SKY_WHALE_FLAP = reg("entity.sky_whale.flap");
     // ---- Ambience
     public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_SIFT_LOOP = reg("ambient.sift.loop");
     public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_SIFT_ADDITIONS = reg("ambient.sift.additions");

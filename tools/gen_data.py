@@ -81,6 +81,26 @@ def entity_loot():
                                               pool([item('minecraft:bone', count=(0, 2))])])
 
 
+# the wild creatures: cooked when they die on fire, like vanilla meat and fish
+SMELT_IF_BURNING = {'type': 'minecraft:furnace_smelt', 'condition': {'type': 'minecraft:any_of', 'terms': [
+    {'type': 'minecraft:entity_properties', 'entity': 'this', 'predicate': {'minecraft:flags': {'is_on_fire': True}}},
+    {'type': 'minecraft:entity_properties', 'entity': 'direct_attacker', 'predicate': {'minecraft:equipment': {'mainhand': {'predicates': {
+        'minecraft:enchantments': [{'enchantments': '#minecraft:smelts_loot'}]}}}}}]}}
+
+
+def wild_creature_loot():
+    table('entity', 'entities/stomper', [pool([item('stomper_meat', count=(2, 5), extra=[SMELT_IF_BURNING, LOOTING])]),
+                                         pool([item('thick_hide', count=(0, 2), extra=[LOOTING])])])
+    table('entity', 'entities/kazoo_fish', [pool([item('kazoo_fish', extra=[SMELT_IF_BURNING])]),
+                                            pool([item('minecraft:bone_meal')], condition=chance(0.05))])
+    table('entity', 'entities/tubafish', [pool([item('tuba_bubble', count=(2, 4), extra=[LOOTING])]),
+                                          pool([item('minecraft:bone_meal')], condition=chance(0.05))])
+    table('entity', 'entities/fanfare_eel', [pool([item('minecraft:gold_nugget', count=(1, 3), extra=[LOOTING])]),
+                                             pool([item('minecraft:copper_ingot', count=(0, 1), extra=[LOOTING])])])
+    table('entity', 'entities/sky_whale', [pool([item('star_shard', count=(2, 4), extra=[LOOTING])]),
+                                           pool([item('minecraft:white_wool', count=(2, 5))])])
+
+
 def chest_loot():
     table('chest', 'chests/sift_ruins', [
         pool([item('glowing_slime_ball', 10, (2, 6)), item('pitcher_bulb', 10, (1, 3)), item('dream_journal_fragment', 8), item('chrome_pearl', 3),
@@ -202,6 +222,7 @@ def jukebox():
 
 def generate():
     entity_loot()
+    wild_creature_loot()
     chest_loot()
     sniffer_and_modifiers()
     trades()

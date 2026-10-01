@@ -62,7 +62,6 @@ public class Strumling extends OrchestraMinion {
         Vec3 d = target.position().subtract(this.position());
         Vec3 h = d.multiply(1, 0, 1);
         this.setDeltaMovement(h.normalize().scale(Math.min(1.0, h.length() * 0.2)).add(0, 0.42, 0));
-        this.hasImpulse = true;
     }
 
     @Override

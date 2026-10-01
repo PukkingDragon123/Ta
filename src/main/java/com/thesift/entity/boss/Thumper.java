@@ -274,7 +274,6 @@ public class Thumper extends MiniBoss {
             }
             if (e.hurtServer(level, this.damageSources().mobAttack(this), 13.0F)) {
                 e.push(this.chargeDir.x * 2.2, 0.7, this.chargeDir.z * 2.2);
-                e.hurtMarked = true;
                 this.playSound(ModSounds.THUMPER_SLAM.get(), 2.0F, 1.3F);
             }
         }

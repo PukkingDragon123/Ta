@@ -57,13 +57,48 @@
                 "max_inclusive": 3
               },
               "weight": 6
+            },
+            {
+              "type": "thesift:stomper",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 2
+            },
+            {
+              "type": "thesift:sky_whale",
+              "count": 1,
+              "weight": 1
             }
           ],
           "monster": [],
           "ambient": [],
-          "water_creature": [],
+          "water_creature": [
+            {
+              "type": "thesift:fanfare_eel",
+              "count": 1,
+              "weight": 2
+            },
+            {
+              "type": "thesift:tubafish",
+              "count": 1,
+              "weight": 2
+            }
+          ],
           "underground_water_creature": [],
-          "water_ambient": [],
+          "water_ambient": [
+            {
+              "type": "thesift:kazoo_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 3,
+                "max_inclusive": 6
+              },
+              "weight": 8
+            }
+          ],
           "axolotls": [],
           "misc": []
         }
@@ -149,7 +184,8 @@
       "thesift:patch_sift_flowers",
       "thesift:patch_drift_petals",
       "thesift:patch_glimmer_sprouts",
-      "thesift:patch_pitcher_bulb_bush"
+      "thesift:patch_pitcher_bulb_bush",
+      "thesift:patch_hummingbloom"
     ],
     []
   ],

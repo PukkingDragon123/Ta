@@ -76,8 +76,8 @@ public class CongaDrumItem extends Item {
                 e.hurtServer(level, level.damageSources().playerAttack(player), (float) (4.0 + 8.0 * k));
             }
             e.push(dx / d * (1.2 + 1.8 * k), 0.5 + 0.5 * k, dz / d * (1.2 + 1.8 * k));
-            e.hurtMarked = true;
         }
         com.thesift.music.Resonance.pulse(level, feet, 1.0F, 12);
+        com.thesift.entity.Stomper.hearDrum(level, player.position(), 24.0);
     }
 }

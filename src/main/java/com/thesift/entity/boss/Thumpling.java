@@ -69,7 +69,6 @@ public class Thumpling extends OrchestraMinion {
                 double dz = e.getZ() - this.getZ();
                 double d = Math.max(0.1, Math.sqrt(dx * dx + dz * dz));
                 e.push(dx / d * 0.6, 0.35, dz / d * 0.6);
-                e.hurtMarked = true;
             }
         }
     }

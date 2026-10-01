@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "T": "thesift:tuba_bubble",
+    "C": "minecraft:copper_ingot",
+    "G": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    " TT",
+    "GCT",
+    "G  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:bubble_gun"
+  }
+}

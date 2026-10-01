@@ -260,7 +260,6 @@ public class Dictator extends Monster {
             for (Player p : level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(6.0))) {
                 Vec3 away = p.position().subtract(this.position()).multiply(1, 0, 1).normalize();
                 p.push(away.x * 1.2, 0.5, away.z * 1.2);
-                p.hurtMarked = true;
             }
             this.level().broadcastEntityEvent(this, EVENT_CRESCENDO);
         }
@@ -405,7 +404,6 @@ public class Dictator extends Monster {
                 for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.8))) {
                     if (e != this && !MiniBoss.isBandmate(e) && this.hits.add(e.getId()) && e.hurtServer(level, this.damageSources().mobAttack(this), 14.0F)) {
                         e.push(this.chargeDir.x * 2.0, 0.6, this.chargeDir.z * 2.0);
-                        e.hurtMarked = true;
                         this.corrupt(e);
                     }
                 }
@@ -454,7 +452,6 @@ public class Dictator extends Monster {
                     for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.8))) {
                         if (e != this && !MiniBoss.isBandmate(e) && this.hits.add(e.getId()) && e.hurtServer(level, this.damageSources().mobAttack(this), 12.0F)) {
                             e.push(this.chargeDir.x, 0.6, this.chargeDir.z);
-                            e.hurtMarked = true;
                             this.corrupt(e);
                         }
                     }
@@ -501,7 +498,6 @@ public class Dictator extends Monster {
                     if (target.hurtServer(level, this.damageSources().mobAttack(this), 6.0F)) {
                         Vec3 pull = d.normalize().scale(-1.4);
                         target.push(pull.x, 0.45, pull.z);
-                        target.hurtMarked = true;
                         this.corrupt(target);
                     }
                 }
@@ -566,7 +562,6 @@ public class Dictator extends Monster {
             if (e.hurtServer(level, this.damageSources().mobAttack(this), damage)) {
                 Vec3 away = e.position().subtract(this.position()).multiply(1, 0, 1).normalize();
                 e.push(away.x * push, lift, away.z * push);
-                e.hurtMarked = true;
                 this.corrupt(e);
             }
         }

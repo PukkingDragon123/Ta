@@ -795,6 +795,7 @@ def gen_lang():
         f'entity.{NS}.sift_sniffer': 'Sniffer',
         f'message.{NS}.sniffer.tamed': 'The Sniffer nuzzles you. It trusts you now - give it a saddle and ride it!',
         f'message.{NS}.sniffer.treasure': 'Your Sniffer smells treasure %s blocks away!',
+        f'message.{NS}.harmoner.tamed': 'The Harmoner chirps and settles on your shoulder. It will follow you - and sing along with your flute.',
         f'message.{NS}.harmoner.lost': 'The Harmoner tilts its head. It cannot sense any place of its colour nearby.',
         f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards an Abandoned Altar!',
         f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and takes off towards a Chrome Well!',
@@ -1110,6 +1111,115 @@ SOUNDS = {
 STREAM = {'music.sift', 'music.deep_sift', 'music_disc.lullaby', 'ambient.sift.loop', 'ambient.deep_sift.loop'}
 
 
+# --------------------------------------------------------------------------- the wild creatures (Stomper, music fish, Sky Whale)
+SOUNDS.update({
+    'entity.stomper.ambient': [('mob/frog/idle1', 1.0, 0.45), ('mob/frog/idle4', 1.0, 0.4), ('mob/sniffer/idle3', 0.9, 0.6), ('mob/frog/idle7', 1.0, 0.42)],
+    'entity.stomper.hurt': [('mob/ravager/hurt1', 1.0, 0.8), ('mob/frog/hurt2', 1.0, 0.45), ('mob/ravager/hurt3', 1.0, 0.75)],
+    'entity.stomper.death': [('mob/ravager/death1', 1.0, 0.7), ('mob/frog/death1', 1.0, 0.4)],
+    'entity.stomper.step': [('mob/ravager/step1', 0.8, 0.7), ('mob/ravager/step2', 0.8, 0.7), ('mob/camel/step1', 0.8, 0.6), ('mob/ravager/step4', 0.8, 0.65)],
+    'entity.stomper.trumpet': [('item/goat_horn/call3', 0.9, 0.75), ('item/goat_horn/call6', 0.9, 0.7), ('block/note_block/trumpet', 1.0, 0.6)],
+    'entity.stomper.spray': [('liquid/splash', 1.0, 0.7), ('liquid/splash2', 1.0, 0.65), ('mob/dolphin/blowhole1', 1.0, 0.6)],
+    'entity.stomper.drink': [('random/drink', 1.0, 0.5), ('liquid/swim3', 0.8, 0.6), ('random/drink', 1.0, 0.45)],
+    'entity.stomper.stomp': [('random/explode2', 0.6, 0.5), ('block/note_block/basedrum', 1.0, 0.4), ('mob/ravager/stun1', 0.8, 0.6)],
+    'entity.stomper.puff': [('mob/dolphin/blowhole1', 0.8, 0.8), ('mob/dolphin/blowhole2', 0.8, 0.7)],
+    'entity.stomper.happy': [('mob/sniffer/happy1', 1.0, 0.6), ('mob/frog/idle6', 1.0, 0.6), ('mob/sniffer/happy3', 1.0, 0.65)],
+    'entity.stomper.lay': [('mob/turtle/egg/drop_egg1', 1.0, 0.7), ('mob/turtle/egg/drop_egg2', 1.0, 0.7)],
+    'entity.stomper.hatch': [('mob/turtle/egg/egg_crack1', 1.0, 0.8), ('mob/turtle/baby/egg_hatched1', 1.0, 0.8), ('mob/turtle/egg/egg_break1', 1.0, 0.8)],
+    'entity.fanfare_eel.ambient': [('mob/guardian/guardian_idle1', 0.6, 1.4), ('block/note_block/trumpet', 0.4, 1.3), ('mob/guardian/guardian_idle3', 0.6, 1.5)],
+    'entity.fanfare_eel.blast': [('block/note_block/trumpet', 1.0, 0.8), ('block/note_block/trumpet_exposed', 1.0, 0.9), ('item/goat_horn/call0', 0.6, 1.5)],
+    'entity.fanfare_eel.hurt': [('mob/guardian/guardian_hit1', 0.8, 1.3), ('mob/guardian/guardian_hit2', 0.8, 1.3)],
+    'entity.fanfare_eel.death': [('mob/guardian/guardian_death', 0.9, 1.3), ('block/note_block/trumpet_weathered', 0.8, 0.5)],
+    'entity.fanfare_eel.flop': [('mob/guardian/flop1', 0.8, 1.3), ('mob/guardian/flop2', 0.8, 1.3)],
+    'entity.kazoo_fish.ambient': [('block/note_block/didgeridoo', 0.35, 1.9), ('block/note_block/bit', 0.25, 1.4), ('block/note_block/didgeridoo', 0.35, 1.7)],
+    'entity.kazoo_fish.hurt': [('mob/pufferfish/hurt1', 0.8, 1.6), ('block/note_block/didgeridoo', 0.4, 2.0)],
+    'entity.kazoo_fish.death': [('mob/pufferfish/death1', 0.8, 1.6), ('mob/pufferfish/death2', 0.8, 1.6)],
+    'entity.kazoo_fish.flop': [('mob/pufferfish/flop1', 0.6, 1.4), ('mob/pufferfish/flop2', 0.6, 1.4)],
+    'entity.tubafish.ambient': [('block/note_block/bass', 0.6, 0.5), ('block/note_block/didgeridoo', 0.5, 0.5), ('block/bubble_column/bubble1', 0.5, 0.6)],
+    'entity.tubafish.puff': [('mob/pufferfish/blow_up1', 1.0, 0.6), ('block/note_block/didgeridoo', 1.0, 0.5), ('mob/pufferfish/blow_up2', 1.0, 0.55)],
+    'entity.tubafish.deflate': [('mob/pufferfish/blow_out1', 1.0, 0.6), ('mob/pufferfish/blow_out2', 1.0, 0.6)],
+    'entity.tubafish.hurt': [('mob/pufferfish/hurt1', 1.0, 0.6), ('mob/pufferfish/hurt2', 1.0, 0.6)],
+    'entity.tubafish.death': [('mob/pufferfish/death1', 1.0, 0.55), ('block/note_block/bass', 1.0, 0.5)],
+    'entity.tubafish.flop': [('mob/pufferfish/flop3', 0.8, 0.6), ('mob/pufferfish/flop4', 0.8, 0.6)],
+    'item.bubble_gun.shoot': [('block/bubble_column/bubble1', 1.0, 1.2), ('mob/pufferfish/blow_out2', 0.6, 1.6), ('block/bubble_column/bubble3', 1.0, 1.3)],
+    'entity.bubble.pop': [('block/bubble_column/bubble2', 1.0, 1.4), ('random/pop', 0.8, 1.2)],
+    'entity.sky_whale.ambient': [('item/goat_horn/call1', 0.9, 0.5), ('item/goat_horn/call4', 0.9, 0.45), ('mob/happy_ghast/ambient3', 1.0, 0.5)],
+    'entity.sky_whale.song': [('item/goat_horn/call2', 1.2, 0.55), ('item/goat_horn/call5', 1.2, 0.5), ('item/goat_horn/call7', 1.2, 0.5)],
+    'entity.sky_whale.moo': [('mob/cow/say2', 1.0, 0.35), ('mob/cow/say3', 1.0, 0.38), ('mob/cow/say1', 1.0, 0.33)],
+    'entity.sky_whale.hurt': [('mob/cow/hurt1', 1.0, 0.4), ('mob/happy_ghast/hurt1', 1.0, 0.6)],
+    'entity.sky_whale.death': [('mob/happy_ghast/death', 1.0, 0.5), ('mob/cow/hurt3', 1.0, 0.3)],
+    'entity.sky_whale.spit': [('random/pop', 1.0, 0.5), ('block/amethyst/shimmer', 1.0, 1.0), ('random/levelup', 0.6, 1.6)],
+    'entity.sky_whale.flap': [('mob/phantom/flap1', 0.8, 0.4), ('mob/phantom/flap2', 0.8, 0.4)],
+})
+SUBTITLES.update({
+    'entity.stomper.ambient': 'Stomper rumbles', 'entity.stomper.hurt': 'Stomper hurts', 'entity.stomper.death': 'Stomper dies',
+    'entity.stomper.step': 'Heavy footsteps', 'entity.stomper.trumpet': 'Stomper trumpets', 'entity.stomper.spray': 'Stomper sprays Chrome',
+    'entity.stomper.drink': 'Stomper slurps', 'entity.stomper.stomp': 'Stomper stomps', 'entity.stomper.puff': 'Stomper puffs',
+    'entity.stomper.happy': 'Stomper croaks happily', 'entity.stomper.lay': 'Stomper lays an egg', 'entity.stomper.hatch': 'Stomper Egg hatches',
+    'entity.fanfare_eel.ambient': 'Fanfare Eel toots', 'entity.fanfare_eel.blast': 'Fanfare Eel blasts', 'entity.fanfare_eel.hurt': 'Fanfare Eel hurts',
+    'entity.fanfare_eel.death': 'Fanfare Eel dies', 'entity.fanfare_eel.flop': 'Fanfare Eel flops',
+    'entity.kazoo_fish.ambient': 'Kazoo Fish buzzes', 'entity.kazoo_fish.hurt': 'Kazoo Fish hurts', 'entity.kazoo_fish.death': 'Kazoo Fish dies',
+    'entity.kazoo_fish.flop': 'Kazoo Fish flops',
+    'entity.tubafish.ambient': 'Tubafish burbles', 'entity.tubafish.puff': 'Tubafish blasts and swells', 'entity.tubafish.deflate': 'Tubafish deflates',
+    'entity.tubafish.hurt': 'Tubafish hurts', 'entity.tubafish.death': 'Tubafish dies', 'entity.tubafish.flop': 'Tubafish flops',
+    'item.bubble_gun.shoot': 'Bubble Gun blows', 'entity.bubble.pop': 'Bubble pops',
+    'entity.sky_whale.ambient': 'Sky Whale sings', 'entity.sky_whale.song': 'Sky Whale answers', 'entity.sky_whale.moo': 'Sky Whale moos',
+    'entity.sky_whale.hurt': 'Sky Whale hurts', 'entity.sky_whale.death': 'Sky Whale dies', 'entity.sky_whale.spit': 'Sky Whale spits out a gem',
+    'entity.sky_whale.flap': 'Sky Whale flaps',
+})
+
+
+def gen_wild_creatures():
+    """Recipes, tags and text for the Stomper, the music fish and the Sky Whale."""
+    # cooking
+    smelt('stomper_steak', 'stomper_meat', 'stomper_steak', 0.35, 200, ('smelting', 'smoking'))
+    smelt('stomper_steak_campfire', 'stomper_meat', 'stomper_steak', 0.35, 1200, ('campfire_cooking',))
+    smelt('cooked_kazoo_fish', 'kazoo_fish', 'cooked_kazoo_fish', 0.35, 200, ('smelting', 'smoking'))
+    smelt('cooked_kazoo_fish_campfire', 'kazoo_fish', 'cooked_kazoo_fish', 0.35, 1200, ('campfire_cooking',))
+    # gear
+    shaped('bubble_gun', [' TT', 'GCT', 'G  '], {'T': 'tuba_bubble', 'C': 'minecraft:copper_ingot', 'G': 'minecraft:gold_ingot'}, 'bubble_gun', 1,
+           'equipment')
+    shaped('enchanted_golden_apple_from_skysong_gem', ['GGG', 'GAG', 'GSG'], {'G': 'minecraft:gold_block', 'A': 'minecraft:apple', 'S': 'skysong_gem'},
+           'minecraft:enchanted_golden_apple', 1, 'misc')
+    shapeless('hummingbloom_dye', ['hummingbloom'], 'minecraft:purple_dye', 1, 'misc', 'dye')
+    # tags
+    tag('item', 'minecraft:meat', rl('stomper_meat'))
+    tag('item', 'minecraft:meat', rl('stomper_steak'))
+    tag('item', 'minecraft:fishes', rl('kazoo_fish'))
+    tag('item', 'minecraft:fishes', rl('cooked_kazoo_fish'))
+    tag('item', f'{NS}:slumbler_food', rl('kazoo_fish'))
+    tag('block', 'minecraft:bee_attractive', rl('hummingbloom'))
+    tag('block', f'{NS}:resonant', rl('hummingbloom'))
+    for e in ['stomper', 'sky_whale']:
+        tag('entity_type', f'{NS}:music_lovers', rl(e))
+    tag('entity_type', 'minecraft:fall_damage_immune', rl('sky_whale'))
+    for e in ['fanfare_eel', 'kazoo_fish', 'tubafish']:
+        tag('entity_type', 'minecraft:aquatic', rl(e))
+        tag('entity_type', f'{NS}:chrome_dwellers', rl(e))
+    # names, messages and the Codex
+    LANG.update({
+        f'entity.{NS}.stomper': 'Stomper', f'entity.{NS}.fanfare_eel': 'Fanfare Eel', f'entity.{NS}.kazoo_fish': 'Kazoo Fish',
+        f'entity.{NS}.tubafish': 'Tubafish', f'entity.{NS}.sky_whale': 'Sky Whale', f'entity.{NS}.bubble': 'Bubble',
+        f'message.{NS}.stomper.tamed': 'The little Stomper trumpets and nuzzles you with its trunk. It is yours now!',
+        f'message.{NS}.sky_whale.heard': 'Far above, something vast hears your song...',
+        f'message.{NS}.sky_whale.gem': 'The Sky Whale sings back - and spits out a glittering Skysong Gem!',
+        f'message.{NS}.sky_whale.no_gem': 'The Sky Whale sings back warmly. It has no gem left to give today.',
+        f'codex.{NS}.stomper.title': 'Stomper', f'codex.{NS}.stomper.tagline': 'Mammoth, bullfrog, both',
+        f'codex.{NS}.stomper.body': "Four eyes, one trunk, no tusks and a back that puffs like a kettle. Stompers slurp Chrome through their trunks and hose any monster - or you, if you hit one - with it. Drums make them dance, ending in two stomps that send monsters flying. Feed two Hummingblooms for an egg; tame babies with them and they grow up to carry you.",
+        f'codex.{NS}.sky_whale.title': 'Sky Whale', f'codex.{NS}.sky_whale.tagline': 'Rare - the singer in the clouds',
+        f'codex.{NS}.sky_whale.body': "A shaggy whale with a bull's horns and a bull's nose, rowing through the sky on furry flippers. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you: the bird joins in, the whale answers, glides down, sings to you and spits out a Skysong Gem. Each whale gives one gem a day.",
+        f'codex.{NS}.fanfare_eel.title': 'Fanfare Eel', f'codex.{NS}.fanfare_eel.tagline': 'Hostile - brass with teeth',
+        f'codex.{NS}.fanfare_eel.body': 'A long, rippling, brass-orange eel whose mouth is a trumpet bell. It hunts anything swimming in the Chrome lakes - fish and visitors alike - and every bite comes with a blast of sound. Fight it from the shore if you can.',
+        f'codex.{NS}.kazoo_fish.title': 'Kazoo Fish', f'codex.{NS}.kazoo_fish.tagline': 'Small, silly, delicious',
+        f'codex.{NS}.kazoo_fish.body': 'Teal and orange schooling fish with a kazoo for a nose and eyes that never quite agree with each other. Schools follow a leader and buzz little tunes; scare one and they all scatter. Cook them for a decent meal.',
+        f'codex.{NS}.tubafish.title': 'Tubafish', f'codex.{NS}.tubafish.tagline': 'Do not poke the tuba',
+        f'codex.{NS}.tubafish.body': 'A huge, round brass pufferfish with a tuba bell on its back. Get too close and it blasts a low note, swells up with its spikes out and blows a storm of bubbles - and touching it then stings. It drops Tuba Bubbles, which make a Bubble Gun.',
+        f'codex.{NS}.bubble_gun.title': 'Bubble Gun', f'codex.{NS}.bubble_gun.tagline': 'Up you go!',
+        f'codex.{NS}.bubble_gun.body': 'Built from Tuba Bubbles, copper and gold. Each squeeze blows a big wobbly bubble that pops on whatever it hits, stinging a little and lifting it gently into the air. No ammo needed, just a breath between shots.',
+        f'codex.{NS}.skysong_gem.title': 'Skysong Gem', f'codex.{NS}.skysong_gem.tagline': 'A gift from the clouds',
+        f'codex.{NS}.skysong_gem.body': 'Spat out by a Sky Whale that answered your song. Set one below an apple in a ring of gold blocks to craft an Enchanted Golden Apple.',
+    })
+
+
 def gen_sounds():
     out = {}
     for ev, lst in SOUNDS.items():
@@ -1237,6 +1347,7 @@ def generate():
     gen_sounds()
     gen_misc_tags()
     gen_transformers()
+    gen_wild_creatures()
 
 
 def finalize():

@@ -202,7 +202,6 @@ public abstract class MiniBoss extends Monster {
                 double dz = e.getZ() - this.getZ();
                 double d = Math.max(0.01, Math.sqrt(dx * dx + dz * dz));
                 e.push(dx / d * push, lift, dz / d * push);
-                e.hurtMarked = true;
                 hits++;
             }
         }

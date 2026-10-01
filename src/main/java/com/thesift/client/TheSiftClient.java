@@ -91,6 +91,12 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.SIFTER, ModelGeometry::sifter);
         event.registerLayerDefinition(ModModelLayers.ENCHOER, ModelGeometry::enchoer);
         event.registerLayerDefinition(ModModelLayers.RIVETER, ModelGeometry::riveter);
+        // the wild creatures
+        event.registerLayerDefinition(ModModelLayers.STOMPER, ModelGeometry::stomper);
+        event.registerLayerDefinition(ModModelLayers.FANFARE_EEL, ModelGeometry::fanfare_eel);
+        event.registerLayerDefinition(ModModelLayers.KAZOO_FISH, ModelGeometry::kazoo_fish);
+        event.registerLayerDefinition(ModModelLayers.TUBAFISH, ModelGeometry::tubafish);
+        event.registerLayerDefinition(ModModelLayers.SKY_WHALE, ModelGeometry::sky_whale);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -120,6 +126,19 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.GLOWBALL.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerBlockEntityRenderer(ModBlockEntities.EUPHORY_ALTAR.get(), EuphoryAltarRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.INSTRUMENT_ALTAR.get(), com.thesift.client.renderer.InstrumentAltarRenderer::new);
+        // the wild creatures
+        event.registerEntityRenderer(ModEntities.STOMPER.get(), com.thesift.client.renderer.StomperRenderer::new);
+        event.registerEntityRenderer(ModEntities.SKY_WHALE.get(), com.thesift.client.renderer.SkyWhaleRenderer::new);
+        event.registerEntityRenderer(ModEntities.FANFARE_EEL.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
+                new com.thesift.client.model.FanfareEelModel(c.bakeLayer(ModModelLayers.FANFARE_EEL)), "fanfare_eel", 0.35F, 1.0F,
+                Expression.BLINK, Expression.ANGRY, Expression.HURT, Expression.DEAD));
+        event.registerEntityRenderer(ModEntities.KAZOO_FISH.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
+                new com.thesift.client.model.KazooFishModel(c.bakeLayer(ModModelLayers.KAZOO_FISH)), "kazoo_fish", 0.2F, 1.0F,
+                Expression.BLINK, Expression.HURT, Expression.DEAD));
+        event.registerEntityRenderer(ModEntities.TUBAFISH.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
+                new com.thesift.client.model.TubafishModel(c.bakeLayer(ModModelLayers.TUBAFISH)), "tubafish", 0.6F, 1.25F,
+                Expression.BLINK, Expression.HAPPY, Expression.ANGRY, Expression.HURT, Expression.DEAD));
+        event.registerEntityRenderer(ModEntities.BUBBLE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.4F, true));
     }
 
     private static void particle(RegisterParticleProvidersEvent event, DeferredHolder<ParticleType<?>, SimpleParticleType> type, SiftParticle.Kind kind) {

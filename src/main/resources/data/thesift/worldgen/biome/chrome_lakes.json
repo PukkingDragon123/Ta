@@ -47,9 +47,34 @@
           ],
           "monster": [],
           "ambient": [],
-          "water_creature": [],
+          "water_creature": [
+            {
+              "type": "thesift:fanfare_eel",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 5
+            },
+            {
+              "type": "thesift:tubafish",
+              "count": 1,
+              "weight": 4
+            }
+          ],
           "underground_water_creature": [],
-          "water_ambient": [],
+          "water_ambient": [
+            {
+              "type": "thesift:kazoo_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 3,
+                "max_inclusive": 7
+              },
+              "weight": 12
+            }
+          ],
           "axolotls": [],
           "misc": []
         }

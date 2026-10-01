@@ -257,6 +257,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY));
     public static final DeferredBlock<FlowerPotBlock> POTTED_NEBULA_IRIS = BLOCKS.registerBlock("potted_nebula_iris", p -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, NEBULA_IRIS, p),
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY));
+    public static final DeferredBlock<SiftFlowerBlock> HUMMINGBLOOM = BLOCKS.registerBlock("hummingbloom", p -> new SiftFlowerBlock(MobEffects.SPEED, 5.0F, 0, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY));
     public static final DeferredBlock<DriftPetalsBlock> DRIFT_PETALS = BLOCKS.registerBlock("drift_petals", DriftPetalsBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PINK_PETALS));
     public static final DeferredBlock<ChoirLilyBlock> CHOIR_LILY = BLOCKS.registerBlock("choir_lily", ChoirLilyBlock::new,

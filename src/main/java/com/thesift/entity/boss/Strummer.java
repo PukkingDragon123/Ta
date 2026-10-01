@@ -124,7 +124,6 @@ public class Strummer extends MiniBoss {
                         if (e != this && !isBandmate(e) && to.length() < 4.2 && to.normalize().dot(f) > 0.2
                                 && e.hurtServer(level, this.damageSources().mobAttack(this), 7.0F)) {
                             e.push(f.x * 0.5, 0.25, f.z * 0.5);
-                            e.hurtMarked = true;
                         }
                     }
                     level.sendParticles(ParticleTypes.SWEEP_ATTACK, this.getX() + f.x * 2.0, this.getY() + 1.6, this.getZ() + f.z * 2.0, 2, 0.5, 0.2, 0.5, 0);
@@ -165,7 +164,6 @@ public class Strummer extends MiniBoss {
                     Vec3 h = d.multiply(1, 0, 1);
                     double len = Math.max(1.0, h.length());
                     this.setDeltaMovement(h.normalize().scale(Math.min(1.5, len * 0.16)).add(0, 0.55 + Math.max(0.0, d.y) * 0.08, 0));
-                    this.hasImpulse = true;
                     this.setState(POUNCE);
                 }
             }
@@ -228,7 +226,6 @@ public class Strummer extends MiniBoss {
                     if (target.hurtServer(level, this.damageSources().mobAttack(this), 4.0F)) {
                         Vec3 pull = d.normalize().scale(-1.3);
                         target.push(pull.x, 0.45, pull.z);
-                        target.hurtMarked = true;
                     }
                 }
                 if (t >= 26) {

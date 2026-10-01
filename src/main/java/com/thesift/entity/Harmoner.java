@@ -86,6 +86,9 @@ public class Harmoner extends Animal implements MusicListener {
     private int songNote = -1;
     private int songTimer;
     private int singCooldown = 200;
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> TAME = net.minecraft.network.syncher.SynchedEntityData.defineId(
+            Harmoner.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+    private java.util.@Nullable UUID owner;
 
     public Harmoner(EntityType<? extends Animal> type, Level level) {
         super(type, level);
@@ -107,6 +110,7 @@ public class Harmoner extends Animal implements MusicListener {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(2, new GuideGoal());
+        this.goalSelector.addGoal(3, new FollowOwner());
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.1, s -> s.is(ModTags.Items.HARMONER_FOOD), false));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
@@ -120,6 +124,16 @@ public class Harmoner extends Animal implements MusicListener {
         super.defineSynchedData(builder);
         builder.define(VARIANT, 0);
         builder.define(GUIDING, false);
+        builder.define(TAME, false);
+    }
+
+    /** Tamed by sneaking and offering it a Hummingbloom: it follows you and sings along with your flute. */
+    public boolean isTame() {
+        return this.entityData.get(TAME);
+    }
+
+    public @Nullable java.util.UUID getOwnerId() {
+        return this.owner;
     }
 
     public int getVariant() {
@@ -169,6 +183,22 @@ public class Harmoner extends Animal implements MusicListener {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (player.isShiftKeyDown() && !this.isTame() && !this.isBaby() && stack.is(com.thesift.registry.ModItems.HUMMINGBLOOM.get())) {
+            if (this.level() instanceof ServerLevel server) {
+                this.usePlayerItem(player, hand, stack);
+                if (this.random.nextInt(3) == 0) {
+                    this.entityData.set(TAME, true);
+                    this.owner = player.getUUID();
+                    this.setPersistenceRequired();
+                    server.sendParticles(ParticleTypes.HEART, this.getX(), this.getY() + this.getBbHeight() + 0.2, this.getZ(), 7, 0.3, 0.2, 0.3, 0.0);
+                    this.playSound(ModSounds.HARMONER_SING.get(), 1.0F, pitch(13));
+                    player.sendOverlayMessage(Component.translatable("message.thesift.harmoner.tamed"));
+                } else {
+                    server.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + this.getBbHeight() + 0.2, this.getZ(), 6, 0.2, 0.2, 0.2, 0.0);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
         if (this.isFood(stack) && !this.isBaby() && !this.isGuiding() && this.getAge() == 0 && !this.isInLove()) {
             if (this.level() instanceof ServerLevel server) {
                 this.usePlayerItem(player, hand, stack);
@@ -221,6 +251,37 @@ public class Harmoner extends Animal implements MusicListener {
     }
 
     /** Leads the way: flies a stretch towards the target, waits for the player, circles on arrival. */
+    /** A tamed Harmoner flies after its owner when it falls behind. */
+    private final class FollowOwner extends Goal {
+        FollowOwner() {
+            this.setFlags(java.util.EnumSet.of(Goal.Flag.MOVE));
+        }
+
+        private @Nullable Player owner() {
+            Harmoner h = Harmoner.this;
+            return h.owner == null ? null : h.level().getPlayerByUUID(h.owner);
+        }
+
+        @Override
+        public boolean canUse() {
+            Player p = this.owner();
+            return Harmoner.this.isTame() && !Harmoner.this.isGuiding() && p != null && p.distanceToSqr(Harmoner.this) > 64.0;
+        }
+
+        @Override
+        public void tick() {
+            Player p = this.owner();
+            if (p == null) {
+                return;
+            }
+            if (p.distanceToSqr(Harmoner.this) > 900.0) {
+                Harmoner.this.teleportTo(p.getX(), p.getY() + 1.5, p.getZ());
+            } else {
+                Harmoner.this.getNavigation().moveTo(p.getX(), p.getY() + 1.5, p.getZ(), 1.2);
+            }
+        }
+    }
+
     private final class GuideGoal extends Goal {
         private int repath;
 
@@ -384,6 +445,10 @@ public class Harmoner extends Animal implements MusicListener {
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("Variant", this.getVariant());
+        output.putBoolean("Tame", this.isTame());
+        if (this.owner != null) {
+            output.putString("Owner", this.owner.toString());
+        }
         output.putInt("GuideTicks", this.guideTicks);
         if (this.guideTarget != null) {
             output.putInt("GuideX", this.guideTarget.getX());
@@ -396,6 +461,9 @@ public class Harmoner extends Animal implements MusicListener {
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         this.setVariant(input.getIntOr("Variant", 0));
+        this.entityData.set(TAME, input.getBooleanOr("Tame", false));
+        String o = input.getStringOr("Owner", "");
+        this.owner = o.isEmpty() ? null : java.util.UUID.fromString(o);
         this.guideTicks = input.getIntOr("GuideTicks", 0);
         if (this.guideTicks > 0) {
             this.guideTarget = new BlockPos(input.getIntOr("GuideX", 0), input.getIntOr("GuideY", 64), input.getIntOr("GuideZ", 0));

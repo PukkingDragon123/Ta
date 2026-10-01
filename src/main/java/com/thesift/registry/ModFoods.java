@@ -28,5 +28,18 @@ public final class ModFoods {
 
     public static final FoodProperties GLOWCAP_SKEWER = new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build();
 
+    // ---- the wild creatures
+    public static final FoodProperties STOMPER_MEAT = new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build();
+    /** A slab of Stomper: hugely filling, and you feel as sturdy as one for a while. */
+    public static final FoodProperties STOMPER_STEAK = new FoodProperties.Builder().nutrition(12).saturationModifier(1.0F).build();
+    public static final Consumable STOMPER_STEAK_CONSUMABLE = Consumables.defaultFood()
+            .consumeSeconds(2.4F)
+            .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                    new MobEffectInstance(MobEffects.RESISTANCE, 600, 0),
+                    new MobEffectInstance(MobEffects.STRENGTH, 300, 0))))
+            .build();
+    public static final FoodProperties KAZOO_FISH = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build();
+    public static final FoodProperties COOKED_KAZOO_FISH = new FoodProperties.Builder().nutrition(6).saturationModifier(0.6F).build();
+
     private ModFoods() {}
 }

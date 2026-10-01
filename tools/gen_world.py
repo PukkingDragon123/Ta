@@ -343,6 +343,9 @@ def features():
     patch('patch_pitcher_bulb_bush', 'pitcher_bulb_bush', 8, rarity(6), survive_block='pitcher_bulb_bush')
     patch('patch_chrome_reeds', 'chrome_reeds', 20, 4, survive_block='chrome_reeds')
     patch('patch_glowcap_surface', 'glowcap', 12, rarity(4), survive_block='glowcap')
+    # the Stomper's favourite flower, in lavender clumps on the plains
+    feature('hummingbloom', {'type': 'minecraft:simple_block', 'to_place': state('hummingbloom')})
+    patch('patch_hummingbloom', 'hummingbloom', 20, rarity(3), survive_block='hummingbloom')
     # lakes, springs, disks, boulders
     feature('chrome_pool', {'type': 'minecraft:lake', 'barrier': state('dreamstone'), 'can_place_feature': {'type': 'minecraft:true'},
                             'can_replace_with_air_or_fluid': {'type': 'minecraft:not', 'predicate': {'type': 'minecraft:matching_block_tag',
@@ -417,14 +420,14 @@ def features():
 CARVERS = ['minecraft:cave', 'minecraft:cave_extra_underground', 'minecraft:canyon']
 
 
-def mobs(creature=(), monster=(), ambient=(), water=()):
+def mobs(creature=(), monster=(), ambient=(), water=(), water_ambient=()):
     def entries(lst):
         return [{'type': rl(t), 'count': ({'type': 'minecraft:uniform', 'min_inclusive': a, 'max_inclusive': b} if a != b else a), 'weight': wt}
                 for t, wt, a, b in lst]
 
     return {'argument': {'spawn_costs': {}, 'spawns_by_category': {
         'creature': entries(creature), 'monster': entries(monster), 'ambient': entries(ambient), 'water_creature': entries(water),
-        'underground_water_creature': [], 'water_ambient': [], 'axolotls': [], 'misc': []}}, 'modifier': 'overlay'}
+        'underground_water_creature': [], 'water_ambient': entries(water_ambient), 'axolotls': [], 'misc': []}}, 'modifier': 'overlay'}
 
 
 def particles(*entries):
@@ -467,11 +470,13 @@ DREAMY_PARTICLES = [('drifting_soul', 0.0008), ('dream_pollen', 0.0012), ('glow_
 
 def biomes():
     biome('sift_plains', fog='#aef0e2', sky='#5ed6c6', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
-          spawns=mobs(creature=[('bulb', 12, 2, 4), ('sift_sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]),
+          spawns=mobs(creature=[('bulb', 12, 2, 4), ('sift_sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]
+                      + [('stomper', 2, 1, 3), ('sky_whale', 1, 1, 1)],
+                      water=[('fanfare_eel', 2, 1, 1), ('tubafish', 2, 1, 1)], water_ambient=[('kazoo_fish', 8, 3, 6)]),
           parts=particles(*DREAMY_PARTICLES),
           feats=[(1, 'chrome_pool_surface'), (2, 'floating_island'), (2, 'floating_islet'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_sift_plains'), (9, 'patch_coral_thicket'), (9, 'patch_coral_bush'), (9, 'patch_sift_flowers'),
-                 (9, 'patch_drift_petals'), (9, 'patch_pitcher_bulb_bush'), (9, 'patch_glimmer_sprouts')])
+                 (9, 'patch_drift_petals'), (9, 'patch_pitcher_bulb_bush'), (9, 'patch_glimmer_sprouts')] + [(9, 'patch_hummingbloom')])
     biome('forest_mountains', fog='#a2e8de', sky='#5ed6c6', water='#7fe8ff', grass='#4fc9b8', foliage='#5fd8d0', temp=0.5, down=0.8,
           spawns=mobs(creature=[('bulb', 6, 2, 3), ('sift_sniffer', 4, 1, 2), ('enchoer', 2, 1, 1), ('harmoner', 6, 1, 3)]),
           parts=particles(('lullwood_leaf', 0.002), ('drifting_soul', 0.002), ('sift_mist', 0.001), ('glow_dust', 0.002), ('wishing_star', 0.00012)),
@@ -483,12 +488,14 @@ def biomes():
           parts=particles(('dream_pollen', 0.003), ('glow_dust', 0.0015), ('wishing_star', 0.0002)),
           feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_dune_scrub'), (9, 'patch_pitcher_bulb_bush')])
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
-          spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)]),
+          spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)],
+                      water=[('fanfare_eel', 5, 1, 2), ('tubafish', 4, 1, 1)], water_ambient=[('kazoo_fish', 12, 3, 7)]),
           parts=particles(('chrome_bubble', 0.002), ('sift_mist', 0.0012), ('drifting_soul', 0.002), ('wishing_star', 0.00015)),
           feats=[(2, 'floating_islet'), (6, 'disk_dreamsand')] + COMMON_UNDERGROUND +
                 [(9, 'patch_chrome_reeds'), (9, 'patch_blushgrass'), (9, 'trees_sift_plains')])
     biome('wishing_grove', fog='#b4eee2', sky='#5ed6c6', water='#ffb8e6', grass='#f59ac6', foliage='#f9b3d4', temp=0.8, down=0.7,
-          spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2), ('harmoner', 8, 1, 3)]),
+          spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2), ('harmoner', 8, 1, 3)]
+                      + [('sky_whale', 1, 1, 1)]),
           parts=particles(('wishwood_leaf', 0.003), ('star_sparkle', 0.002), ('drifting_soul', 0.003), ('wishing_star', 0.0003)),
           feats=[(2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_wishing_grove'), (9, 'patch_grove_flowers'), (9, 'patch_drift_petals'), (9, 'patch_blushgrass'), (9, 'patch_pitcher_bulb_bush')])

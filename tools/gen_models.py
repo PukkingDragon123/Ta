@@ -33,9 +33,22 @@ POSES = {
                               plume_2={'rot': (0, 0, 0.3)})},
 }
 
+# the wild creatures (tools/mobs_wild.py)
+POSES.update({
+    'stomper': {'rest': Pose(), 'spray': Pose(head={'rot': (-0.35, 0, 0)}, trunk_0={'rot': (-1.6, 0, 0)}, trunk_1={'rot': (-0.4, 0, 0)},
+                                              trunk_2={'rot': (-0.2, 0, 0)}, trunk_3={'rot': (0.1, 0, 0)}),
+                'stomp': Pose(body={'rot': (-0.35, 0, 0)}, front_left_leg={'rot': (-0.6, 0, 0)}, front_right_leg={'rot': (-0.6, 0, 0)},
+                              jaw={'rot': (0.5, 0, 0)}, throat={'scale': (1.3, 1.6, 1.3)})},
+    'sky_whale': {'rest': Pose(), 'sing': Pose(jaw={'rot': (0.55, 0, 0)}, head={'rot': (-0.2, 0, 0)}, left_flipper={'rot': (0, 0, -0.6)},
+                                               right_flipper={'rot': (0, 0, 0.6)}, tail1={'rot': (0.2, 0, 0)}, tail2={'rot': (0.25, 0, 0)})},
+    'tubafish': {'rest': Pose(), 'puffed': Pose(body={'scale': (1.7, 1.7, 1.7)}, **{f'spike_{i}': {'scale': (1.6, 1.8, 1.6)} for i in range(13)})},
+    'fanfare_eel': {'rest': Pose(), 'swim': Pose(**{f'segment_{i}': {'rot': (0, 0.35 * (1 if i % 2 else -1), 0)} for i in range(5)})},
+})
+WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 9, 'kazoo_fish': 18, 'tubafish': 11}
+
 
 PREVIEW_SCALE = {'enchoer': 7, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'whistler': 4, 'strummer': 4, 'thumpling': 12,
-                 'whistling': 12, 'strumling': 12, 'conductor_mask': 10}
+                 'whistling': 12, 'strumling': 12, 'conductor_mask': 10, **WILD_SCALE}
 ONLY = [a for a in sys.argv[1:] if not a.startswith('-')]
 
 
