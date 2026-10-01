@@ -635,82 +635,103 @@ def dictator() -> Model:
     return m
 
 
+MINION_EXPR = ['blink', 'angry', 'hurt', 'dead']
+
+
 def enforcer() -> Model:
-    """Enforcer (percussion): a squat living drum. The barrel of its body is laced with sinew
-    cords, its top is a taut membrane veined with sculk, three slit eyes glow on the shell and its
-    long arms end in bone mallets it beats against itself."""
+    """Enforcer (percussion): a grumpy living drum. Its whole body is the drum - a laced barrel
+    with a sculk-veined head on top - and its face is on the shell: two big glowing eyes under a
+    bone brow ridge (each brow its own part, so it can scowl), a hinged jaw full of teeth, gorilla
+    arms that end in bone mallets, and a little cymbal on a stalk at its back that shivers after
+    every slam."""
     pal = dict(SCULK)
     pal.update({'skin': '#e2d5b8', 'skin_l': '#f0e6cf', 'skin_d': '#c4b494', 'cord': '#7a2a3a', 'cord_l': '#9c3a4e', 'cord_d': '#561c29',
-                'shell': '#22324a', 'shell_l': '#2f4563', 'shell_d': '#162133'})
-    m = Model('enforcer', (128, 64), pal, {'enforcer': {}}, res=2)
+                'shell': '#22324a', 'shell_l': '#2f4563', 'shell_d': '#162133', 'brass': '#c9a24a', 'brass_l': '#ead27e', 'brass_d': '#8a6a2a',
+                'tooth': '#f2ecd8'})
+    m = Model('enforcer', (128, 64), pal, {'enforcer': {}}, res=2, expressions=MINION_EXPR)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     for side, sx in (('left', 1), ('right', -1)):
         leg = m.part(f'{side}_leg', pivot=(4 * sx, 18, 0))
-        leg.cube((-2, 0, -2), (4, 6, 4), **hide, faces={'north': dict(**hide, map=['....', '.bb.'] + ['....'] * 4, keys={'b': 'bone'})})
+        leg.cube((-2.5, 0, -2.5), (5, 6, 5), **hide, faces={
+            'north': dict(**hide, hd=True, map=['..........'] * 9 + ['.bb.bb.bb.', '.BB.BB.BB.', 'bbbbbbbbbb'], keys={'b': 'bone', 'B': 'bone_d'})})
     body = m.part('body', pivot=(0, 18, 0))
     lace = ['c.....c.....c.', '.c...c.c...c..', '..c.c...c.c...', '...c.....c....', '..c.c...c.c...', '.c...c.c...c..',
             'c.....c.....c.', '.c...c.c...c..', '..c.c...c.c...', '...c.....c....', '..c.c...c.c...', '.c...c.c...c..']
     shell = dict(color='shell', pattern='mc', clusters=0.4)
+    # the face, 28 x 24 texels: eyes in dark sockets; the jaw and brows are separate parts
+    E = {'V': 'void', 'g': 'glow', 'G': 'glow_d', 'w': 'bone_l', 's': 'shell_d'}
+
+    def face(rows):
+        return hd_rows(rows, 28, 24)
+    eyes = {
+        'neutral': {5: '....VVVVVV........VVVVVV', 6: '...VVggggVV......VVggggVV', 7: '...VgwgGGgV......VgwgGGgV', 8: '...VgggGGgV......VgggGGgV',
+                    9: '...VVggggVV......VVggggVV', 10: '....VVVVVV........VVVVVV'},
+        'blink': {8: '...ssssssss......ssssssss', 9: '....VVVVVV........VVVVVV'},
+        'angry': {7: '...VVVVVVVV......VVVVVVVV', 8: '...VgggGGgV......VgGGgggV', 9: '...VVggggVV......VVggggVV', 10: '....VVVVVV........VVVVVV'},
+        'hurt': {6: '...VV..............VV', 7: '.....VVV..........VVV', 8: '.......VV........VV', 9: '.....VVV..........VVV', 10: '...VV..............VV'},
+        'dead': {5: '....V....V........V....V', 6: '.....V..V..........V..V', 7: '......VV............VV', 8: '......VV............VV',
+                 9: '.....V..V..........V..V', 10: '....V....V........V....V'},
+    }
     body.cube((-7, -13, -6), (14, 12, 12), **shell, faces={
-        'north': dict(**shell, map=[
-            '..............',
-            '..............',
-            '..EE..EE..EE..',
-            '..ee..ee..ee..',
-            '..............',
-            '..............',
-            '..............',
-            '..............',
-            '..............',
-            '..............',
-            '..............',
-            '..............',
-        ], keys={'E': 'void', 'e': 'glow'}, glow_keys='e'),
+        'north': dict(**shell, hd=True, map=face(eyes['neutral']), keys=E, glow_keys='gG',
+                      expr={k: face(v) for k, v in eyes.items() if k != 'neutral'}),
         'east': dict(**shell, map=lace[:12], keys={'c': 'cord'}),
         'west': dict(**shell, map=lace[:12], keys={'c': 'cord'}),
         'south': dict(**shell, map=lace[:12], keys={'c': 'cord'}),
     })
-    # the drum head: a taut membrane veined with sculk, in a bone hoop
+    # the drum head: a taut membrane veined with sculk, in a bone hoop; and the bottom hoop
     body.cube((-7.5, -14, -6.5), (15, 1, 13), color='bone', pattern='mc', clusters=0.2, rim=False, faces={
         'up': dict(color='skin', pattern='mc', clusters=0.25, map=[
-            'BBBBBBBBBBBBBBB',
-            'B.............B',
-            'B..v.......v..B',
-            'B...v.....v...B',
-            'B....v...v....B',
-            'B.....vvv.....B',
-            'B......g......B',
-            'B.....vvv.....B',
-            'B....v...v....B',
-            'B...v.....v...B',
-            'B..v.......v..B',
-            'B.............B',
-            'BBBBBBBBBBBBBBB',
+            'BBBBBBBBBBBBBBB', 'B.............B', 'B..v.......v..B', 'B...v.....v...B', 'B....v...v....B', 'B.....vvv.....B', 'B......g......B',
+            'B.....vvv.....B', 'B....v...v....B', 'B...v.....v...B', 'B..v.......v..B', 'B.............B', 'BBBBBBBBBBBBBBB',
         ], keys={'B': 'bone', 'v': 'glow_d', 'g': 'glow'}, glow_keys='g'),
     })
     body.cube((-7.5, -2, -6.5), (15, 1, 13), color='bone', pattern='mc', clusters=0.2, rim=False)
-    jaw = body.part('jaw', pivot=(0, -4, -6))
-    jaw.cube((-5, 0, -1), (10, 2, 2), color='bone_d', pattern='mc', clusters=0.0, rim=False, faces={
-        'north': dict(color='void', pattern='mc', clusters=0.0, rim=False, map=['t.t.t.t.t.', '.t.t.t.t.t'], keys={'t': 'bone'}),
+    for side, sx in (('left', 1), ('right', -1)):
+        brow = body.part(f'{side}_brow', pivot=(3.5 * sx, -11.5, -6))
+        brow.cube((-3, -1, -1.5), (6, 2, 1.5), color='bone', pattern='mc', clusters=0.2, faces={
+            'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=['wwwwwwwwwwww', '............', '............', 'dddddddddddd'],
+                          keys={'w': 'bone_l', 'd': 'bone_d'})})
+    jaw = body.part('jaw', pivot=(0, -5.5, -6))
+    jaw.cube((-5.5, 0, -1.5), (11, 3, 2), color='bone_d', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='void', pattern='mc', clusters=0.0, rim=False, hd=True,
+                      map=['tTtTtTtTtTtTtTtTtTtTtT', 'tTtTtTtTtTtTtTtTtTtTtT', '.t..t..t..t..t..t..t..', '......................',
+                           '..t..t..t..t..t..t..t.', 'tTtTtTtTtTtTtTtTtTtTtT'], keys={'t': 'tooth', 'T': 'bone_d'}),
+        'up': dict(color='void', pattern='mc', clusters=0.0),
     })
     for side, sx in (('left', 1), ('right', -1)):
         arm = body.part(f'{side}_arm', pivot=(7.5 * sx, -11, 0), rot=(0, 0, -0.15 * sx))
-        arm.cube((0 if sx > 0 else -3, -1, -1.5), (3, 12, 3), **hide)
-        mallet = arm.part(f'{side}_mallet', pivot=(1.5 * sx, 11, 0))
+        arm.cube((0 if sx > 0 else -3, -1, -1.5), (3, 7, 3), **hide, faces={'up': dict(color='bone', pattern='mc', clusters=0.2)})
+        fore = arm.part(f'{side}_forearm', pivot=(1.5 * sx, 6, 0))
+        fore.cube((-2, 0, -2), (4, 6, 4), **hide, faces={
+            'north': dict(**hide, hd=True, map=['........', '.c....c.', '..c..c..', '...cc...'], keys={'c': 'cord'})})
+        mallet = fore.part(f'{side}_mallet', pivot=(0, 6, 0))
         mallet.cube((-2.5, 0, -2.5), (5, 4, 5), color='bone', pattern='mc', clusters=0.3, faces={
             'down': dict(color='bone_d', pattern='mc', clusters=0.2, map=['.....', '.ggg.', '.g.g.', '.ggg.', '.....'], keys={'g': 'glow_d'}),
         })
+    cymbal = body.part('cymbal', pivot=(0, -14, 4.5), rot=(-0.25, 0, 0))
+    cymbal.cube((-0.5, -5, -0.5), (1, 5, 1), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    disc = cymbal.part('cymbal_disc', pivot=(0, -5, 0), rot=(0.15, 0, 0))
+    disc.cube((-4, -1, -4), (8, 1, 8), color='brass', pattern='mc', clusters=0.2, rim=False, faces={
+        'up': dict(color='brass', pattern='mc', clusters=0.2, hd=True, keys={'l': 'brass_l', 'd': 'brass_d', 'g': 'glow'}, glow_keys='g',
+                   map=['....dddddddd....', '..dd........dd..', '.d..llllllll..d.', '.d.l........l.d.', 'd.l..dddddd..l.d', 'd.l.d......d.l.d',
+                        'd.l.d..gg..d.l.d', 'd.l.d.gggg.d.l.d', 'd.l.d.gggg.d.l.d', 'd.l.d..gg..d.l.d', 'd.l.d......d.l.d', 'd.l..dddddd..l.d',
+                        '.d.l........l.d.', '.d..llllllll..d.', '..dd........dd..', '....dddddddd....']),
+    })
     return m
 
 
 def resonator() -> Model:
-    """Resonator (strings): a tall, spidery harp of a creature. Its body is a bone frame strung
-    with glowing sculk tendons, topped by a curled scroll of a head, and two long arms are strung
-    to its sides like the strings of a lyre. It stalks on four splayed legs."""
+    """Resonator (strings): a haughty diva of a violin on four spider legs. Its body is a fiddle
+    of sculk - two bouts and a waist, glowing f-holes, four tendon strings over a bone bridge - on a
+    long neck ending in a scroll with a single heavy-lidded eye and tuning-peg ears. It plays
+    itself with a bow of bone and tendon held in its right hand."""
     pal = dict(SCULK)
-    pal.update({'string': '#3ff0e0', 'string_d': '#1a8f88', 'peg': '#8a6a3c'})
-    m = Model('resonator', (64, 64), pal, {'resonator': {}}, res=2)
+    pal.update({'string': '#3ff0e0', 'string_d': '#1a8f88', 'peg': '#8a6a3c', 'peg_l': '#b08a52', 'wood': '#2a1f3a', 'wood_l': '#3a2c50',
+                'wood_d': '#1a1326', 'rosin': '#e9d8a6'})
+    m = Model('resonator', (64, 64), pal, {'resonator': {}}, res=2, expressions=MINION_EXPR)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
+    wood = dict(color='wood', pattern='mc', clusters=0.4)
     for i, (sx, sz) in enumerate(((1, -1), (-1, -1), (1, 1), (-1, 1))):
         name = ('front' if sz < 0 else 'hind') + ('_left' if sx > 0 else '_right')
         leg = m.part(f'{name}_leg', pivot=(1.5 * sx, 12, 1.5 * sz), rot=(0.45 * sz, 0, -0.75 * sx))
@@ -721,49 +742,75 @@ def resonator() -> Model:
     body = m.part('body', pivot=(0, 12, 0))
     body.cube((-2, -2, -2), (4, 3, 4), **hide)
     frame = body.part('frame', pivot=(0, -2, 0))
-    # the harp frame: two bone posts, a curved top bar and the strings between them
-    frame.cube((-3.5, -14, -0.5), (1, 14, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
-    frame.cube((2.5, -14, -0.5), (1, 14, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
-    frame.cube((-3.5, -15, -1), (7, 1, 2), color='bone', pattern='mc', clusters=0.2, rim=False)
-    frame.cube((-2.5, -14, 0), (5, 14, 0), color='string', pattern='mc', clusters=0.0, rim=False, faces={
-        'north': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._._.'] * 14, keys={}, glow_keys=''),
-        'south': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._._.'] * 14, keys={}, glow_keys=''),
+    S = {'s': 'string', 'S': 'string_d', 'f': 'glow', 'b': 'bone', 'B': 'bone_d', 'v': 'void'}
+    # lower bout with f-holes, the bridge and the tailpiece; strings run up the whole fiddle
+    frame.cube((-4, -7, -1.5), (8, 7, 3), **wood, faces={'north': dict(**wood, hd=True, keys=S, glow_keys='fs', map=[
+        '......s.s.s.s...', '......s.s.s.s...', '..f...s.s.s.s.f.', '.f.f..s.s.s.s.f.', '..f..bbbbbbbb.f.', '..f...s.s.s.s.f.', '.f.f..s.s.s.s.ff',
+        '..f...s.s.s.s.f.', '......s.s.s.s...', '......BBBBBBB...', '.......BBBBB....', '.......BBBBB....', '........BBB.....', '................']),
     })
-    frame.cube((-1, -12, -1.5), (2, 10, 1), **hide)
-    head = frame.part('head', pivot=(0, -15, 0))
-    # a violin scroll: a neck block curling forward into a spiral knob, with tuning pegs
-    head.cube((-1, -4, -1), (2, 4, 2), **hide)
-    head.cube((-1.5, -7, -2.5), (3, 3, 3), **hide, faces={
-        'north': dict(color='hide', pattern='mc', clusters=0.0, map=['g.g', '...', '.v.'], keys={'g': 'glow', 'v': 'void'}, glow_keys='g'),
-    })
-    head.cube((-1, -8, -4), (2, 2, 2), color='hide_l', pattern='mc', clusters=0.0, rim=False)
-    for py, sx in ((-2, 1), (-3, -1), (-1, -1)):
-        head.cube((1 if sx > 0 else -2, py, -0.5), (1, 1, 1), color='peg', pattern='mc', clusters=0.0, rim=False)
+    frame.cube((-2.5, -10, -1.5), (5, 3, 3), **wood, faces={'north': dict(**wood, hd=True, keys=S, glow_keys='s',
+                                                                          map=['...s.s.s.s', '...s.s.s.s', '...s.s.s.s', '...s.s.s.s', '...s.s.s.s', '...s.s.s.s'])})
+    frame.cube((-3.5, -15, -1.5), (7, 5, 3), **wood, faces={'north': dict(**wood, hd=True, keys=S, glow_keys='s',
+                                                                          map=['.....s.s.s.s'] * 10)})
     for side, sx in (('left', 1), ('right', -1)):
-        arm = frame.part(f'{side}_arm', pivot=(3.5 * sx, -13, 0), rot=(0, 0, -0.35 * sx))
-        arm.cube((-0.5, 0, -0.5), (1, 12, 1), **hide)
-        fore = arm.part(f'{side}_forearm', pivot=(0, 12, 0), rot=(0, 0, 0.5 * sx))
+        arm = frame.part(f'{side}_arm', pivot=(3.5 * sx, -14, 0), rot=(0, 0, -0.35 * sx))
+        arm.cube((-0.5, 0, -0.5), (1, 11, 1), **hide)
+        fore = arm.part(f'{side}_forearm', pivot=(0, 11, 0), rot=(0, 0, 0.5 * sx))
         fore.cube((-0.5, 0, -0.5), (1, 9, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
-        fore.cube((-1, 9, -1), (2, 1, 2), color='bone_d', pattern='mc', clusters=0.0, rim=False)
-        # strings stretched from the arm back to the frame post
-        arm.cube((-3.5 if sx > 0 else 0.5, 1, 0), (3, 10, 0), color='string', pattern='mc', clusters=0.0, rim=False, faces={
-            'north': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._.'] * 10),
-            'south': dict(color='string', pattern='mc', clusters=0.0, rim=False, map=['._.'] * 10),
-        })
+        fore.cube((-1, 9, -1), (2, 2, 2), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+        if sx < 0:
+            bow = fore.part('bow', pivot=(0, 10, 0), rot=(0.0, 0, 1.25))
+            bow.cube((-0.5, -15, -0.5), (1, 16, 1), color='bone_l', pattern='mc', clusters=0.0, rim=False)
+            bow.cube((0.5, -14, 0), (1, 14, 0), color='string', pattern='mc', clusters=0.0, rim=False, faces={
+                'north': dict(color='string', pattern='mc', clusters=0.0, rim=False, hd=True, map=['s.'] * 28, keys={'s': 'rosin'}),
+                'south': dict(color='string', pattern='mc', clusters=0.0, rim=False, hd=True, map=['s.'] * 28, keys={'s': 'rosin'}),
+            })
+    neck = frame.part('neck', pivot=(0, -15, 0))
+    neck.cube((-0.75, -7, -0.75), (1.5, 7, 1.5), color='wood_d', pattern='mc', clusters=0.0, rim=False,
+              faces={'north': dict(color='wood_d', pattern='mc', clusters=0.0, rim=False, hd=True, map=['.s.'] * 14, keys={'s': 'string'}, glow_keys='s')})
+    head = neck.part('head', pivot=(0, -7, 0))
+    F = {'l': 'void', 'w': 'bone_l', 'g': 'glow', 'p': 'void', 'm': 'void', 'L': 'hide_l'}
+
+    def eye(rows):
+        return hd_rows(rows, 8, 8)
+    faces = {
+        'neutral': {1: '.LLLLLL.', 2: 'llwggwwl', 3: '.wwgpww.', 4: '..wwww..', 6: '...mm...'},
+        'blink': {1: '.LLLLLL.', 2: 'LLLLLLLL', 3: 'llllllll', 6: '...mm...'},
+        'angry': {1: 'LLLLLLLL', 2: 'llllllll', 3: '.wggpgw.', 4: '..wwww..', 6: '..mmmm..'},
+        'hurt': {2: 'll....ll', 3: '..llll..', 4: 'll....ll', 6: '..m..m..', 7: '...mm...'},
+        'dead': {1: '.l....l.', 2: '..l..l..', 3: '...ll...', 4: '..l..l..', 5: '.l....l.', 7: '..mmmm..'},
+    }
+    head.cube((-2, -4, -2.5), (4, 4, 4), **hide, faces={
+        'north': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=eye(faces['neutral']), keys=F, glow_keys='g',
+                      expr={k: eye(v) for k, v in faces.items() if k != 'neutral'}),
+    })
+    # the scroll curling over the top of the head
+    head.cube((-1, -6, -1.5), (2, 2, 4), color='wood_l', pattern='mc', clusters=0.0, rim=False)
+    head.cube((-1, -7, 1.5), (2, 3, 2), color='wood', pattern='mc', clusters=0.0, rim=False,
+              faces={'south': dict(color='wood', pattern='mc', clusters=0.0, rim=False, hd=True, map=['.ww.', 'w..w', 'w.ww', '.ww.', '....', '....'],
+                                   keys={'w': 'wood_l'})})
+    for side, sx in (('left', 1), ('right', -1)):
+        pegs = head.part(f'{side}_pegs', pivot=(2 * sx, -2, 0))
+        for py in (-1.5, 0.5):
+            pegs.cube((0 if sx > 0 else -2, py, -0.5), (2, 1, 1), color='peg', pattern='mc', clusters=0.0, rim=False,
+                      faces={'up': dict(color='peg_l', pattern='mc', clusters=0.0)})
     return m
 
 
 def howler() -> Model:
-    """Howler (wind): a hunched, four-legged pipe organ of sculk. A row of bone pipes rises from its
-    back, glowing in their throats as it draws breath, and its head is a flared horn bell."""
+    """Howler (wind): a cheeky loudmouth of a pipe organ on four stocky legs. A pleated bellows
+    body that swells as it breathes in, a row of bone pipes glowing in their throats, beady eyes
+    under a heavy brow, cheeks that puff up, floppy hound ears and a huge flared horn of a mouth."""
     pal = dict(SCULK)
-    m = Model('howler', (128, 64), pal, {'howler': {}}, res=2)
+    pal.update({'pleat': '#2a3a52', 'pleat_d': '#0f1724'})
+    m = Model('howler', (128, 64), pal, {'howler': {}}, res=2, expressions=MINION_EXPR)
     hide = dict(color='hide', pattern='mc', clusters=0.5)
     for name, sx, sz in (('front_left', 1, -1), ('front_right', -1, -1), ('hind_left', 1, 1), ('hind_right', -1, 1)):
         leg = m.part(f'{name}_leg', pivot=(3.5 * sx, 14, 5 * sz))
-        leg.cube((-1.5, 0, -1.5), (3, 10, 3), **hide, faces={'north': dict(**hide, map=['...'] * 8 + ['b.b', 'bbb'], keys={'b': 'bone'})})
+        leg.cube((-1.5, 0, -1.5), (3, 10, 3), **hide, faces={
+            'north': dict(**hide, hd=True, map=['......'] * 16 + ['b.bb.b', 'bbbbbb', 'BBBBBB', 'bBbBbB'], keys={'b': 'bone', 'B': 'bone_d'})})
     body = m.part('body', pivot=(0, 14, 0), rot=(-0.12, 0, 0))
-    body.cube((-5, -8, -7), (10, 8, 14), **hide, faces={
+    body.cube((-5, -8, -7), (10, 8, 14), **hide, ribs=2, accent='pleat', faces={
         'up': dict(color='hide_l', pattern='mc', clusters=0.4),
         'down': dict(color='hide_d', pattern='mc', clusters=0.2),
     })
@@ -771,31 +818,43 @@ def howler() -> Model:
     for i, (px, pz, h) in enumerate(((-3, -3, 7), (-1, -4, 11), (1, -4, 13), (3, -3, 9), (-2, 1, 8), (0, 1, 14), (2, 1, 10))):
         pipe = pipes.part(f'pipe_{i}', pivot=(px, 0, pz))
         pipe.cube((-1, -h, -1), (2, h, 2), color='bone', pattern='mc', clusters=0.2, faces={
-            'up': dict(color='void', pattern='mc', clusters=0.0, map=['gg', 'gg'], keys={'g': 'glow_d'}, glow_keys='g'),
-            'north': dict(color='bone', pattern='mc', clusters=0.0, map=['dd', '..', '..', 'vv'] + ['..'] * (h - 4), keys={'d': 'bone_d', 'v': 'void'}),
+            'up': dict(color='void', pattern='mc', clusters=0.0, hd=True, map=['dddd', 'dggd', 'dggd', 'dddd'], keys={'g': 'glow', 'd': 'glow_d'}, glow_keys='gd'),
+            'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=['dddd', 'llll', '....', '....', '.vv.', 'vvvv', 'vvvv', '.vv.'],
+                          keys={'d': 'bone_d', 'v': 'void', 'l': 'bone_l'}),
         })
     head = body.part('head', pivot=(0, -4, -7))
-    head.cube((-2.5, -2.5, -5), (5, 5, 5), **hide, faces={
-        'east': dict(**hide, map=['.....', '.g...', '.....'], keys={'g': 'glow'}, glow_keys='g'),
-        'west': dict(**hide, map=['.....', '...g.', '.....'], keys={'g': 'glow'}, glow_keys='g'),
+    F = {'b': 'bone_d', 'g': 'glow', 'h': 'bone_l', 'v': 'void'}
+
+    def face(rows):
+        return hd_rows(rows, 12, 16)
+    faces = {
+        'neutral': {1: '.bbb....bbb.', 2: '..hg....hg..', 3: '..gg....gg..'},
+        'blink': {1: '.bbb....bbb.', 3: '..bb....bb..'},
+        'angry': {0: '.b........b.', 1: '..bb....bb..', 2: '...bg..gb...', 3: '..gg....gg..'},
+        'hurt': {1: '.b........b.', 2: '..bb....bb..', 3: '.b..b..b..b.'},
+        'dead': {1: '.v.v....v.v.', 2: '..v......v..', 3: '.v.v....v.v.'},
+    }
+    head.cube((-3, -6, -4), (6, 8, 4), **hide, faces={
+        'north': dict(**hide, hd=True, map=face(faces['neutral']), keys=F, glow_keys='g', expr={k: face(v) for k, v in faces.items() if k != 'neutral'}),
     })
-    bell = head.part('bell', pivot=(0, 0, -5))
+    for side, sx in (('left', 1), ('right', -1)):
+        cheek = head.part(f'{side}_cheek', pivot=(3 * sx, -1, -2.5))
+        cheek.cube((0 if sx > 0 else -2, -2, -1.5), (2, 3, 3), color='hide_l', pattern='mc', clusters=0.3)
+        ear = head.part(f'{side}_ear', pivot=(3 * sx, -5.5, -1), rot=(0, 0, -0.3 * sx))
+        ear.cube((0 if sx > 0 else -1, 0, -1.5), (1, 7, 3), color='hide_l', pattern='mc', clusters=0.3, fringe=1, faces={
+            ('east' if sx > 0 else 'west'): dict(color='hide_l', pattern='mc', clusters=0.2, hd=True, keys={'i': 'pleat'},
+                                                 map=['......', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iii..', '..i...']),
+        })
+    bell = head.part('bell', pivot=(0, -0.5, -4))
     bell.cube((-4, -4, -2), (8, 8, 2), color='bone', pattern='mc', clusters=0.2, faces={
-        'north': dict(color='bone', pattern='mc', clusters=0.0, map=[
-            '.dddddd.',
-            'dvvvvvvd',
-            'dvvvvvvd',
-            'dvvggvvd',
-            'dvvggvvd',
-            'dvvvvvvd',
-            'dvvvvvvd',
-            '.dddddd.',
-        ], keys={'d': 'bone_d', 'v': 'void', 'g': 'glow_d'}, glow_keys='g'),
+        'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, keys={'d': 'bone_d', 'v': 'void', 'g': 'glow_d', 'G': 'glow', 'l': 'bone_l'},
+                      glow_keys='gG', map=[
+                          '..llllllllllll..', '.ldddddddddddddl', 'ldvvvvvvvvvvvvdl', 'ldvvvvvvvvvvvvdl', 'ldvvvvvvvvvvvvdl', 'ldvvvvggggvvvvdl',
+                          'ldvvvggGGggvvvdl', 'ldvvvgGGGGgvvvdl', 'ldvvvgGGGGgvvvdl', 'ldvvvggGGggvvvdl', 'ldvvvvggggvvvvdl', 'ldvvvvvvvvvvvvdl',
+                          'ldvvvvvvvvvvvvdl', 'ldvvvvvvvvvvvvdl', '.ldddddddddddddl', '..dddddddddddd..']),
     })
     tail = body.part('tail', pivot=(0, -5, 7), rot=(0.6, 0, 0))
-    tail.cube((-1, -1, 0), (2, 2, 6), color='bone', pattern='mc', clusters=0.2, faces={
-        'south': dict(color='void', pattern='mc', clusters=0.0),
-    })
+    tail.cube((-1, -1, 0), (2, 2, 6), color='bone', pattern='mc', clusters=0.2, faces={'south': dict(color='void', pattern='mc', clusters=0.0)})
     return m
 
 

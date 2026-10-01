@@ -16,6 +16,11 @@ public final class ExpressionTextures {
      * @param painted   the expressions tools/mobs.py paints for this mob
      */
     public ExpressionTextures(String mob, String[] variants, Expression... painted) {
+        this(mob, variants, "", painted);
+    }
+
+    /** suffix: appended after the expression, e.g. "_glow" for emissive layers. */
+    public ExpressionTextures(String mob, String[] variants, String suffix, Expression... painted) {
         Set<Expression> have = EnumSet.of(Expression.NEUTRAL);
         have.addAll(java.util.List.of(painted));
         Expression[] all = Expression.values();
@@ -26,7 +31,7 @@ public final class ExpressionTextures {
                 while (!have.contains(use)) {
                     use = use.fallback();
                 }
-                this.table[v][e.ordinal()] = TheSift.id("textures/entity/" + mob + "/" + variants[v] + use.suffix() + ".png");
+                this.table[v][e.ordinal()] = TheSift.id("textures/entity/" + mob + "/" + variants[v] + use.suffix() + suffix + ".png");
             }
         }
     }

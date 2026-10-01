@@ -103,4 +103,9 @@ public class Howler extends OrchestraMinion {
     protected SoundEvent getDeathSound() {
         return ModSounds.HOWLER_DEATH.get();
     }
+
+    @Override
+    protected int burstColor() {
+        return 0x7FF7EE;
+    }
 }

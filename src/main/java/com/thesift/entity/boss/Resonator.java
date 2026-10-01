@@ -125,4 +125,9 @@ public class Resonator extends OrchestraMinion {
     protected SoundEvent getDeathSound() {
         return ModSounds.RESONATOR_DEATH.get();
     }
+
+    @Override
+    protected int burstColor() {
+        return 0xB98CFF;
+    }
 }

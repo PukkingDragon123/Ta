@@ -101,4 +101,9 @@ public class Enforcer extends OrchestraMinion {
     protected SoundEvent getDeathSound() {
         return ModSounds.ENFORCER_DEATH.get();
     }
+
+    @Override
+    protected int burstColor() {
+        return 0xFFB347;
+    }
 }

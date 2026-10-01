@@ -39,7 +39,7 @@ public class BulbModel extends EntityModel<BulbRenderState> {
 
     public BulbModel(ModelPart root, Pass pass) {
         super(root, pass == Pass.JELLY ? net.minecraft.client.renderer.rendertype.RenderTypes::entityTranslucent
-                : net.minecraft.client.renderer.rendertype.RenderTypes::entityCutoutNoCull);
+                : net.minecraft.client.renderer.rendertype.RenderTypes::entityCutout);
         this.body = root.getChild("body");
         this.core = root.getChild("core");
         this.body.visible = pass == Pass.JELLY;

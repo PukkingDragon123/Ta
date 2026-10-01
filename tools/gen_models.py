@@ -2,6 +2,8 @@
 import os
 import sys
 
+from PIL import Image
+
 sys.path.insert(0, os.path.dirname(__file__))
 from modelkit import Pose, preview, render_textures  # noqa: E402
 import mobs  # noqa: E402
@@ -40,11 +42,12 @@ def main(previews=True):
         methods.append(m.java_method(name))
         texs = render_textures(m)
         os.makedirs(os.path.join(TEX, name), exist_ok=True)
+        glowing = any(g is not None for _, g in texs.values())
         for vname, (img, glow) in texs.items():
             img.save(os.path.join(TEX, name, f'{vname}.png'))
-            # emissive layers stay the same whatever the face is doing
-            if glow is not None and vname in m.variants:
-                glow.save(os.path.join(TEX, name, f'{vname}_glow.png'))
+            # every face gets its own emissive layer (an empty one if the face has nothing glowing)
+            if glowing:
+                (glow if glow is not None else Image.new('RGBA', img.size, (0, 0, 0, 0))).save(os.path.join(TEX, name, f'{vname}_glow.png'))
         if previews:
             os.makedirs(PREVIEW, exist_ok=True)
             first = next(iter(texs.values()))[0]
