@@ -32,6 +32,7 @@ public class SiftCodexScreen extends Screen {
     private static final int BH = 180;
     private static final int PAGE_W = 128;
     private static final int FLIP_TICKS = 8;
+    private static final int SHOWCASE_ID = Integer.MAX_VALUE - 1000;
     private static final int INK = 0xFF2B1D10;
     private static final int INK_SOFT = 0xFF5A4630;
     private static final int[] TAB_INK = {0xFF1F7F90, 0xFFB0507A, 0xFF9C7A20, 0xFF3F8F68, 0xFF1D2B47};
@@ -94,6 +95,8 @@ public class SiftCodexScreen extends Screen {
         if (e.entity() != null && this.minecraft.level != null) {
             Entity made = e.entity().get().create(this.minecraft.level, EntitySpawnReason.LOAD);
             if (made instanceof LivingEntity living) {
+                // never added to a level, so it needs an id of its own before a renderer asks for one
+                living.setId(SHOWCASE_ID - this.index);
                 this.showcase = living;
             }
         }

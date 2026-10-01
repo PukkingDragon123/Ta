@@ -62,7 +62,7 @@ public class SiftParticle extends SingleQuadParticle {
                 this.xd = xa + (random.nextDouble() - 0.5) * 0.01;
                 this.yd = 0.008 + random.nextDouble() * 0.012 + ya;
                 this.zd = za + (random.nextDouble() - 0.5) * 0.01;
-                size = 0.12F + random.nextFloat() * 0.08F;
+                size = 0.07F + random.nextFloat() * 0.04F;
                 this.fadeIn = 0.2F;
                 this.fadeOut = 0.4F;
                 this.maxAlpha = 0.85F;
@@ -153,7 +153,7 @@ public class SiftParticle extends SingleQuadParticle {
             }
             case STAR_SPARKLE -> {
                 this.lifetime = 12 + random.nextInt(14);
-                size = 0.06F + random.nextFloat() * 0.06F;
+                size = 0.04F + random.nextFloat() * 0.04F;
                 this.setColor(1.0F, 0.97F, 0.85F);
                 this.fadeIn = 0.2F;
                 this.fadeOut = 0.5F;
@@ -220,7 +220,7 @@ public class SiftParticle extends SingleQuadParticle {
                 this.yd = -0.25 - random.nextDouble() * 0.2;
                 this.zd = Math.sin(ang) * speed;
                 this.friction = 1.0F;
-                size = 0.35F + random.nextFloat() * 0.25F;
+                size = 0.16F + random.nextFloat() * 0.1F;
                 this.setColor(1.0F, 0.95F, 0.8F);
                 this.fadeIn = 0.15F;
                 this.fadeOut = 0.4F;

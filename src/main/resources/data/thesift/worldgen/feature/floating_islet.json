@@ -1,7 +1,10 @@
 {
   "type": "thesift:floating_island",
   "top": {
-    "id": "thesift:lumen_moss_block"
+    "id": "thesift:coral_turf",
+    "properties": {
+      "snowy": "false"
+    }
   },
   "soil": {
     "id": "thesift:sift_soil"

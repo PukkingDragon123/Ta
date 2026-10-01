@@ -1059,6 +1059,7 @@ def gen_misc_tags():
         tag('block', f'{NS}:sift_plantable', rl(b))
         tag('block', 'minecraft:sniffer_diggable_block', rl(b))
     tag('block', f'{NS}:sift_plantable', '#minecraft:dirt')
+    tag('block', f'{NS}:sift_plantable', rl('dreamsand'))
     tag('block', f'{NS}:portal_frame', 'minecraft:reinforced_deepslate')
     for b in ['hushslate', 'cobbled_hushslate', 'minecraft:sculk', 'minecraft:deepslate', 'lumen_moss_block']:
         tag('block', f'{NS}:deep_sift_ground', rl(b))

@@ -29,7 +29,7 @@ HUSH_MORTAR = hx('#0e1822')
 SAND = ramp('#cf7fa4', '#dd95b6', '#e8a9c6', '#f1bdd4', '#f8d0e1', '#fde3ee')
 BLUSH = ramp('#7a2442', '#983457', '#b3496d', '#c96284', '#dc7e9b', '#eb9db4')
 BLUSH_MORTAR = hx('#4a1528')
-SOIL = ramp('#4f3552', '#5f4262', '#715173', '#846285', '#977596')
+SOIL = ramp('#6a4252', '#7b4f5f', '#8d5e6d', '#9e6e7c', '#b0808c')
 GRASS = ramp('#2d9a98', '#3cb3ab', '#50c8bb', '#69dbca', '#8cebd9')
 LUMEN = ramp('#1f6f80', '#29889a', '#34a2b0', '#43bcc4', '#62d6d6')
 SERBIM = ramp('#1f6d94', '#2b8fbb', '#3fb0da', '#66d2f0', '#9aeefc', '#d4fbff')
@@ -215,7 +215,7 @@ def soils():
     out('block/sift_grass_block_top', top)
     out('block/sift_grass_block_side', M.grass_side(GRASS, soil, 54))
     # coral turf: the salmon-pink ground of the reference biome
-    coral = ramp('#d8646f', '#e8757d', '#f2868b', '#f9989a', '#ffaeac')
+    coral = ramp('#d65866', '#e6666f', '#ef7481', '#f87d8d', '#fc8f9d')
     out('block/coral_turf_top', M.stone(coral, 57, light=9, dark=9, core=0.25))
     out('block/coral_turf_side', M.grass_side(coral, soil, 59))
     moss = M.stone(LUMEN, 55, light=8, dark=6, core=0.2)
@@ -434,19 +434,22 @@ def flora():
         if i == 2:
             t.set(7, 16 - h - 1, hx('#79b7ff')); t.set(6, 16 - h, hx('#3b7fe0')); t.set(8, 16 - h, hx('#3b7fe0'))
         out(f'block/echo_orchid_crop_stage{i}', t, CUTOUT)
-    for i in range(4):
-        t = Tex()
-        rnd = random.Random(90 + i)
-        size = 4 + i * 3
-        for y in range(16 - size, 16):
-            for x in range(8 - size // 2, 8 + size // 2):
-                if rnd.random() < 0.55:
-                    t.set(x, y, hx('#3f9d80') if rnd.random() < 0.5 else hx('#5bbf95'))
-        if i >= 2:
-            for _ in range(2 if i == 2 else 4):
-                x, y = rnd.randrange(8 - size // 2, 8 + size // 2 - 1), rnd.randrange(16 - size, 14)
-                t.set(x, y, hx('#7fe3e6')); t.set(x + 1, y, hx('#c2f7f3')); t.set(x, y + 1, hx('#4fb9c4')); t.set(x + 1, y + 1, hx('#7fe3e6'))
-        out(f'block/pitcher_bulb_bush_stage{i}', t, CUTOUT)
+    # pitcher bulb bush: a sweet-berry-style bush; bulbs swell from the third stage
+    bush = {'d': hx('#2f7a64'), 'm': hx('#3f9d80'), 'l': hx('#5bbf95'), 'b': hx('#4fb9c4'), 'B': hx('#7fe3e6'), 'W': hx('#d8fbf6'),
+            's': hx('#2b6650')}
+    stages = [
+        ['................'] * 11 + ['.......l........', '......lm.l......', '.....mmlmm......', '......s.s.......', '.......s........'],
+        ['................'] * 7 + ['......l..l......', '.....lml.ml.....', '....mmlmmlmm....', '.....dmmmmd.....', '....lmdmmdml....',
+                                  '.....dmssmd.....', '......s..s......', '.......ss.......', '.......s........'],
+        ['................'] * 4 + ['.....l....l.....', '....lml..lml....', '...mmlmmmmlmm...', '..lmdmBbmmdml...', '...mmdbbmdmm....',
+                                  '..lmmdmmmBbml...', '...dmmdmmbbm....', '....dmmssmmd....', '.....dms.smd....', '......s..s......',
+                                  '.......ss.......', '.......s........'],
+        ['................'] * 2 + ['....l.....l.....', '...lml...lml....', '..mmlmmmmmlmm...', '.lmBbdmmmdmBbl..', '..mbbmWBmmmbbm..',
+                                  '.lmmdmbBbmdmml..', '..dmmBbbbmmmd...', '.lmmdmbbmmBbml..', '..dmmmmmdmbbm...', '...dmmdssmmd....',
+                                  '....dms..smd....', '.....s....s.....', '......s..s......', '.......ss.......'],
+    ]
+    for i, rows in enumerate(stages):
+        out(f'block/pitcher_bulb_bush_stage{i}', pal_sprite(rows, bush), CUTOUT)
 
 
 # ================================================================== functional blocks
@@ -735,8 +738,9 @@ def items():
     out('item/glowing_slime_ball', pal_sprite(S.SLIME_BALL, {'d': hx('#3fb88f'), 'm': hx('#8ff7c8'), 'l': hx('#e8ff9a'), 'W': hx('#ffffff')}))
     out('item/pitcher_bulb', pal_sprite(S.PITCHER_BULB, {'g': hx('#3f9d80'), 'd': hx('#2f86a0'), 'm': hx('#4fb9c4'), 'l': hx('#7fe3e6'),
                                                         'W': hx('#e9fffb')}))
-    out('item/thick_hide', pal_sprite(S.HIDE, {'d': hx('#4f6f8a'), 'm': hx('#6f94ad'), 'l': hx('#9fc4d6'), 's': hx('#c9b1ee')}))
-    out('item/star_shard', pal_sprite(S.STAR_SHARD, {'W': hx('#fffbe0'), 'l': hx('#ffe89a'), 'm': hx('#d9a94a')}))
+    out('item/thick_hide', pal_sprite(S.HIDE, {'d': hx('#33485e'), 'm': hx('#5b7f99'), 'l': hx('#86abc2'), 's': hx('#6a90a8')}))
+    out('item/star_shard', pal_sprite(S.STAR_SHARD, {'W': hx('#fffbe0'), 'l': hx('#ffe89a'), 'm': hx('#f2c65a'),
+                                                       'd': hx('#c48a2c'), 'o': hx('#6e4a16')}))
     out('item/dream_journal_fragment', pal_sprite(S.JOURNAL, {'p': hx('#b89a7a'), 'P': hx('#f0e2c8'), 'i': hx('#6f5fb0')}))
     out('item/dream_stew', pal_sprite(S.STEW, {'S': hx('#c9a6f0'), 'y': hx('#ffe07a'), 'p': hx('#ff9fd8'), 'c': hx('#7fe3e6'), 'b': hx('#8a5a3a'),
                                               'B': hx('#6a4028')}))
@@ -1055,9 +1059,17 @@ def particles():
                     t.set(x, y, with_alpha(color, int(255 * a)))
         return t
 
-    for i in range(4):
-        t = blob(8, hx('#ffffff'), lambda d, i=i: max(0.0, 1 - d) ** (0.6 + i * 0.2))
-        t.set(3, 3 - (i % 2), hx('#ffffff'))
+    # vanilla-style stepped orbs: a white core, a light ring and a grey rim, shrinking frame by frame
+    grey = {'W': hx('#ffffff'), 'L': hx('#d6d6d6'), 'M': hx('#a3a3a3')}
+    orbs = [
+        ['..MMMM..', '.MLLLLM.', 'MLLWWLLM', 'MLWWWWLM', 'MLWWWWLM', 'MLLWWLLM', '.MLLLLM.', '..MMMM..'],
+        ['........', '..MMMM..', '.MLLLLM.', '.MLWWLM.', '.MLWWLM.', '.MLLLLM.', '..MMMM..', '........'],
+        ['........', '........', '..MLLM..', '..LWWL..', '..LWWL..', '..MLLM..', '........', '........'],
+        ['........', '........', '........', '...WL...', '...LM...', '........', '........', '........'],
+    ]
+    for i, rows in enumerate(orbs):
+        t = Tex(8, 8)
+        draw_map(t, rows, grey)
         out(f'particle/drifting_soul_{i}', t)
     for i in range(3):
         t = Tex(8, 8)
@@ -1099,8 +1111,18 @@ def particles():
             t = Tex(8, 8)
             draw_map(t, sh, {'a': pal[-1], 'b': pal[2], 'c': pal[0]}, 1, 1)
             out(f'particle/{w}_leaf_{i}', t)
+    # mist: blocky cloud puffs in three flat alpha steps (no smooth gradients)
     for i in range(2):
-        out(f'particle/sift_mist_{i}', blob(16, hx('#ffffff'), lambda d, i=i: max(0.0, 1 - d) ** (1.5 + i)))
+        t = Tex(16, 16)
+        rnd = random.Random(1106 + i)
+        lobes = [(7.5, 8.5, 5.2)] + [(7.5 + rnd.uniform(-4, 4), 8 + rnd.uniform(-3, 2), rnd.uniform(2.5, 3.6)) for _ in range(3)]
+        for y in range(16):
+            for x in range(16):
+                d = min(math.hypot(x + 0.5 - cx, (y + 0.5 - cy) * 1.25) / r for cx, cy, r in lobes)
+                if d < 1.0:
+                    a = 255 if d < 0.45 else 170 if d < 0.75 else 90
+                    t.set(x, y, with_alpha(hx('#ffffff'), a))
+        out(f'particle/sift_mist_{i}', t)
     for i in range(2):
         st = Tex(8, 8)
         arms = 3 - i
@@ -1109,10 +1131,11 @@ def particles():
         st.set(3, 3, hx('#ffffff'))
         out(f'particle/star_sparkle_{i}', st)
     for i in range(3):
-        t = blob(8, hx('#ffffff'), lambda d, i=i: max(0.0, 1 - d * (1.2 - i * 0.15)))
+        t = Tex(8, 8)
+        draw_map(t, orbs[i + 1] if i < 2 else orbs[3], grey)
         out(f'particle/portal_soul_{i}', t)
     for i in range(3):
-        out(f'particle/footstep_puff_{i}', blob(8, hx('#ffffff'), lambda d, i=i: 0.8 if (d < 0.9 - i * 0.2) else 0))
+        out(f'particle/footstep_puff_{i}', blob(8, hx('#ffffff'), lambda d, i=i: (1.0 if d < 0.45 - i * 0.1 else 0.75) if d < 0.9 - i * 0.2 else 0))
     for i in range(2):
         out(f'particle/glow_splat_{i}', blob(4 + i * 2, hx('#ffffff'), lambda d: 1.0 if d < 0.85 else 0))
     # slime trail: hand-drawn jelly splotches (tinted per Bulb), with a bright gloss pixel
@@ -1130,13 +1153,8 @@ def particles():
                 elif ch == 'w':
                     t.set(x, y, hx('#ffffff'))
         out(f'particle/slime_trail_{i}', t)
-    ws = Tex(16, 16)
-    for k in range(-7, 8):
-        a = int(255 * (1 - abs(k) / 8))
-        ws.set(7 + k, 7, with_alpha(hx('#ffffff'), a)); ws.set(7, 7 + k, with_alpha(hx('#ffffff'), a))
-    for k in range(-3, 4):
-        a = int(200 * (1 - abs(k) / 4))
-        ws.set(7 + k, 7 + k, with_alpha(hx('#ffffff'), a)); ws.set(7 + k, 7 - k, with_alpha(hx('#ffffff'), a))
+    ws = Tex(8, 8)
+    draw_map(ws, ['...M...', '...L...', '..LWL..', 'MLWWWLM', '..LWL..', '...L...', '...M...'], grey)
     out('particle/wishing_star', ws)
     for i in range(2):
         sp = Tex(8, 8)

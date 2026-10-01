@@ -68,13 +68,13 @@
           "particle": {
             "type": "thesift:dream_pollen"
           },
-          "probability": 0.006
+          "probability": 0.003
         },
         {
           "particle": {
             "type": "thesift:glow_dust"
           },
-          "probability": 0.002
+          "probability": 0.0015
         },
         {
           "particle": {
@@ -119,6 +119,7 @@
       "thesift:chrome_spring"
     ],
     [
+      "thesift:patch_dune_scrub",
       "thesift:patch_pitcher_bulb_bush"
     ],
     []

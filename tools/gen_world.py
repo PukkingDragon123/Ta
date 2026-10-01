@@ -125,7 +125,7 @@ def terrain_density():
     ripples = _df('noise', noise='minecraft:surface_secondary', xz_scale=5.0, y_scale=0.0)
     mesa = _clamp01(_df('mul', left=_df('add', left=_df('noise', noise='minecraft:pillar_rareness', xz_scale=1.6, y_scale=0.0), right=-0.55),
                          right=9.0))
-    shape = _df('add', left=_df('add', left=_df('mul', left=crest, right=0.075), right=_df('mul', left=ripples, right=0.006)),
+    shape = _df('add', left=_df('add', left=_df('mul', left=crest, right=0.075), right=_df('mul', left=ripples, right=0.0015)),
                 right=_df('mul', left=mesa, right=0.11))
     w('worldgen/density_function/sift/offset', _df('cache', input=_df('add', left='minecraft:overworld/offset', right=_df('mul', left=dunes_mask, right=shape))))
     chain = [('offset', 'depth'), ('depth', 'sloped_cheese'), ('sloped_cheese', 'final_density'), ('offset', 'preliminary_surface_level'),
@@ -286,7 +286,7 @@ def features():
     feature('floating_island', {'type': f'{NS}:floating_island', 'top': state('sift_grass_block', snowy=False), 'soil': state('sift_soil'),
                                 'stone': state('dreamstone'), 'min_radius': 4, 'max_radius': 9, 'min_lift': 28, 'max_lift': 60,
                                 'decoration': f'{NS}:lullwood_tree'})
-    feature('floating_islet', {'type': f'{NS}:floating_island', 'top': state('lumen_moss_block'), 'soil': state('sift_soil'),
+    feature('floating_islet', {'type': f'{NS}:floating_island', 'top': state('coral_turf', snowy=False), 'soil': state('sift_soil'),
                                'stone': state('dreamstone'), 'min_radius': 2, 'max_radius': 4, 'min_lift': 14, 'max_lift': 40})
     placed('floating_island', 'floating_island', [rarity(14)] + ON_SURFACE)
     placed('floating_islet', 'floating_islet', [rarity(10)] + ON_SURFACE)
@@ -300,6 +300,7 @@ def features():
     feature('blushgrass', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('blushgrass'), 6), (state('coral_fern'), 1)])})
     feature('tall_blushgrass', {'type': 'minecraft:simple_block', 'to_place': state('tall_blushgrass')})
     feature('coral_bush', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('coral_bush'), 6), (state('coral_fern'), 1)])})
+    feature('dune_scrub', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('coral_fern'), 4), (state('coral_bush'), 1)])})
     feature('coral_thicket', {'type': 'minecraft:simple_block', 'to_place': state('coral_thicket')})
     feature('sift_flowers', {'type': 'minecraft:simple_block', 'to_place': weighted([
         (state('lullaby_bell'), 3), (state('dreambloom'), 3), (state('soulpetal'), 2), (state('nebula_iris'), 2)])})
@@ -334,6 +335,7 @@ def features():
     # the reference biome: thick coral growth over pink turf
     patch('patch_coral_bush', 'coral_bush', 64, 7, survive_block='coral_bush')
     patch('patch_coral_thicket', 'coral_thicket', 48, 7, survive_block='coral_thicket')
+    patch('patch_dune_scrub', 'dune_scrub', 10, 2, survive_block='coral_fern')
     patch('patch_sift_flowers', 'sift_flowers', 24, 2, survive_block='lullaby_bell')
     patch('patch_grove_flowers', 'grove_flowers', 24, 3, survive_block='dreambloom')
     patch('patch_drift_petals', 'drift_petals', 32, 1, survive_block='drift_petals')
@@ -364,7 +366,7 @@ def features():
                                                                                                          'fluids': rl('chrome')}}, BIOME])
     feature('dream_boulder', {'type': 'minecraft:block_blob', 'can_place_on': {'type': 'minecraft:matching_blocks',
                                                                                 'blocks': [rl('sift_grass_block'), rl('sift_soil'), rl('dreamstone')]},
-                              'state': state('mossy_dreamstone_bricks')})
+                              'state': state('cobbled_dreamstone')})
     placed('dream_boulder', 'dream_boulder', [rarity(3)] + ON_SURFACE)
     # ores
     feature('ore_serbim', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 0.5, 'size': 5, 'targets': [
@@ -478,8 +480,8 @@ def biomes():
                  (9, 'patch_glimmer_sprouts')])
     biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
           spawns=mobs(creature=[('bulb', 2, 1, 2), ('sift_sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 3)]),
-          parts=particles(('dream_pollen', 0.006), ('glow_dust', 0.002), ('wishing_star', 0.0002)),
-          feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_pitcher_bulb_bush')])
+          parts=particles(('dream_pollen', 0.003), ('glow_dust', 0.0015), ('wishing_star', 0.0002)),
+          feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_dune_scrub'), (9, 'patch_pitcher_bulb_bush')])
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
           spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)]),
           parts=particles(('chrome_bubble', 0.002), ('sift_mist', 0.0012), ('drifting_soul', 0.002), ('wishing_star', 0.00015)),

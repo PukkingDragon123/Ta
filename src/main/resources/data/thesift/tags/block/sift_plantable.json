@@ -5,6 +5,7 @@
     "thesift:coral_turf",
     "thesift:sift_soil",
     "thesift:lumen_moss_block",
-    "#minecraft:dirt"
+    "#minecraft:dirt",
+    "thesift:dreamsand"
   ]
 }

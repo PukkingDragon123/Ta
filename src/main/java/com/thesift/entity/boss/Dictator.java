@@ -125,15 +125,20 @@ public class Dictator extends Monster {
 
     // ------------------------------------------------------------------ the performance
 
+    /** Keeps the boss bar and the phase in step with his health, every tick, AI or not. */
+    private void trackHealth(ServerLevel level) {
+        float hp = this.getHealth() / this.getMaxHealth();
+        this.bossEvent.setProgress(hp);
+        int phase = hp > 0.6F ? 1 : hp > 0.25F ? 2 : 3;
+        if (phase != this.getPhase() && this.isAlive()) {
+            this.enterPhase(level, phase);
+        }
+    }
+
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
-        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
-        float hp = this.getHealth() / this.getMaxHealth();
-        int phase = hp > 0.6F ? 1 : hp > 0.25F ? 2 : 3;
-        if (phase != this.getPhase()) {
-            this.enterPhase(level, phase);
-        }
+        int phase = this.getPhase();
         LivingEntity target = this.getTarget();
         if (target == null || !target.isAlive()) {
             return;
@@ -284,6 +289,9 @@ public class Dictator extends Monster {
     @Override
     public void tick() {
         super.tick();
+        if (this.level() instanceof ServerLevel server) {
+            this.trackHealth(server);
+        }
         if (this.level().isClientSide()) {
             if (this.random.nextInt(4) == 0) {
                 this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getRandomX(0.6), this.getY() + this.random.nextDouble() * 3.0,
