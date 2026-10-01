@@ -442,6 +442,7 @@ public final class ClientSmokeTest {
         c.camera(tx + dx / len * reach * 1.6, ty + 0.5, tz + dz / len * reach * 1.6, tx, ty, tz);
     }
 
+    private static void floor(Ctx c, int x0, int z0, int x1, int z1) {
         c.fill(x0, STAGE_Y - 1, z0, x1, STAGE_Y - 1, z1, ModBlocks.SIFT_GRASS_BLOCK.get().defaultBlockState());
         c.fill(x0, STAGE_Y, z0, x1, STAGE_Y + 6, z1, Blocks.AIR.defaultBlockState());
     }
