@@ -239,8 +239,19 @@ public final class SmokeTest {
                 Vec3i size = template.get().getSize();
                 check(size.getX() > 0 && size.getY() > 0, "template size " + id);
                 BlockPos at = new BlockPos(x, 140, -260);
-                template.get().placeInWorld(sift, at, at, new StructurePlaceSettings(), sift.getRandom(), Block.UPDATE_CLIENTS);
-                TheSift.LOGGER.info("SMOKE: placed {} size {} at {}", id, size, at);
+                boolean ok = template.get().placeInWorld(sift, at, at, new StructurePlaceSettings(), sift.getRandom(), Block.UPDATE_CLIENTS);
+                int inTemplate = 0;
+                for (Block b : new Block[] {ModBlocks.POLISHED_DREAMSTONE.get(), ModBlocks.BLUSH_BRICKS.get(), ModBlocks.HUSHSLATE_BRICKS.get(),
+                        ModBlocks.DREAMSTONE_BRICKS.get()}) {
+                    inTemplate += template.get().filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), b).size();
+                }
+                int solid = 0;
+                for (BlockPos q : BlockPos.betweenClosed(at, at.offset(size).offset(-1, -1, -1))) {
+                    if (!sift.getBlockState(q).isAir()) solid++;
+                }
+                TheSift.LOGGER.info("SMOKE: placed {} size {} at {} ok={} signature blocks in template {} non-air in world {}", id, size, at, ok,
+                        inTemplate, solid);
+                check(solid > 0, "template actually placed " + id);
                 x += size.getX() + 4;
             }
         }
