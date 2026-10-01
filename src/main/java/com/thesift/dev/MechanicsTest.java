@@ -4,6 +4,7 @@ import com.thesift.TheSift;
 import com.thesift.block.SiftDrumBlock;
 import com.thesift.block.entity.EuphoryAltarBlockEntity;
 import com.thesift.block.entity.SiftDrumBlockEntity;
+import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.portal.PortalFrames;
 import com.thesift.registry.ModBlocks;
@@ -32,6 +33,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -95,6 +98,24 @@ final class MechanicsTest {
         this.startGlowball();
         this.startChromeSoak();
         this.startAltar();
+        this.checkTrades();
+    }
+
+    private void checkTrades() {
+        Enchoer e = ModEntities.ENCHOER.get().create(this.sift, EntitySpawnReason.COMMAND);
+        if (e == null) {
+            check(false, "trades: enchoer created");
+            return;
+        }
+        MerchantOffers offers = e.getOffers();
+        List<String> described = new ArrayList<>();
+        for (MerchantOffer o : offers) {
+            described.add(o.getCostA().getCount() + "x" + o.getCostA().getItem() + (o.getCostB().isEmpty() ? "" : "+" + o.getCostB().getItem()) + " -> "
+                    + o.getResult().getCount() + "x" + o.getResult().getItem());
+        }
+        TheSift.LOGGER.info("SMOKE: enchoer offers {}: {}", offers.size(), described);
+        check(offers.size() >= 5, "trades: an Enchoer has a full set of offers");
+        e.discard();
     }
 
     private void startAltar() {
