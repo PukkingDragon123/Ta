@@ -104,13 +104,13 @@
     "min_y": -64
   },
   "noise_router": {
-    "chunk_surface_level": "minecraft:overworld/chunk_surface_level",
+    "chunk_surface_level": "thesift:sift/chunk_surface_level",
     "continents": "minecraft:overworld/continents",
     "depth": "minecraft:overworld/depth",
     "erosion": "minecraft:overworld/erosion",
     "final_density": {
       "type": "minecraft:max",
-      "left": "minecraft:overworld/final_density",
+      "left": "thesift:sift/final_density",
       "right": {
         "type": "minecraft:interpolated",
         "cell_size_xz": 4,

@@ -38,6 +38,18 @@
                         }
                       },
                       {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:steep"
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "id": "thesift:dreamsandstone"
+                          }
+                        }
+                      },
+                      {
                         "type": "minecraft:block",
                         "result_state": {
                           "id": "thesift:dreamsand"

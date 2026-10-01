@@ -82,6 +82,60 @@ def dimension():
 # ============================================================================ terrain
 
 
+def _swap(obj, mapping):
+    if isinstance(obj, str):
+        return mapping.get(obj, obj)
+    if isinstance(obj, list):
+        return [_swap(x, mapping) for x in obj]
+    if isinstance(obj, dict):
+        return {k: _swap(v, mapping) for k, v in obj.items()}
+    return obj
+
+
+def _df(t, **kw):
+    return {'type': f'minecraft:{t}', **kw}
+
+
+def _clamp01(x):
+    return _df('clamp', input=x, min=0.0, max=1.0)
+
+
+def _ramp(x, start, per):
+    """0 below `start`, rising by `per` per unit of x, capped at 1."""
+    return _clamp01(_df('mul', left=_df('add', left=x, right=-start), right=per))
+
+
+def terrain_density():
+    """Overworld-style terrain with The Sift's own shapes added to the terrain offset.
+
+    Copies of the vanilla offset -> depth -> sloped_cheese -> final_density chain (and the surface
+    level estimate built from the offset) point at `thesift:sift/offset`, which is the vanilla offset plus:
+      * wind-carved dune crests (ridged noise) wherever the climate makes Rocky Dunes,
+      * flat-topped sandstone mesas rising out of those dunes.
+    An offset change of 0.01 moves the surface by roughly 1.3 blocks.
+    Returns the router entries to use.
+    """
+    dfs = os.path.join(VD, 'worldgen/density_function/overworld')
+    temperature, humidity, continents = 'minecraft:overworld/temperature', 'minecraft:overworld/vegetation', 'minecraft:overworld/continents'
+    # 0..1 where the climate matches Rocky Dunes (hot, dry, inland), fading out towards other biomes and coasts
+    dunes_mask = _df('mul', left=_df('mul', left=_ramp(temperature, 0.25, 6.0), right=_ramp(_df('mul', left=humidity, right=-1.0), -0.15, 6.0)),
+                     right=_ramp(continents, -0.05, 5.0))
+    crest = _df('add', left=0.45, right=_df('mul', left=_df('abs', input=_df('noise', noise='minecraft:surface', xz_scale=1.25, y_scale=0.0)),
+                                               right=-1.0))
+    ripples = _df('noise', noise='minecraft:surface_secondary', xz_scale=5.0, y_scale=0.0)
+    mesa = _clamp01(_df('mul', left=_df('add', left=_df('noise', noise='minecraft:pillar_rareness', xz_scale=1.6, y_scale=0.0), right=-0.55),
+                         right=9.0))
+    shape = _df('add', left=_df('add', left=_df('mul', left=crest, right=0.075), right=_df('mul', left=ripples, right=0.006)),
+                right=_df('mul', left=mesa, right=0.11))
+    w('worldgen/density_function/sift/offset', _df('cache', input=_df('add', left='minecraft:overworld/offset', right=_df('mul', left=dunes_mask, right=shape))))
+    chain = [('offset', 'depth'), ('depth', 'sloped_cheese'), ('sloped_cheese', 'final_density'), ('offset', 'preliminary_surface_level'),
+             ('preliminary_surface_level', 'chunk_surface_level')]
+    for ref, name in chain:
+        src = json.load(open(os.path.join(dfs, name + '.json')))
+        w(f'worldgen/density_function/sift/{name}', _swap(src, {f'minecraft:overworld/{ref}': f'{NS}:sift/{ref}'}))
+    return {'final_density': f'{NS}:sift/final_density', 'chunk_surface_level': f'{NS}:sift/chunk_surface_level'}
+
+
 def noise_settings():
     ov = json.load(open(os.path.join(VD, 'worldgen/noise_settings/overworld.json')))
     ns = copy.deepcopy(ov)
@@ -101,7 +155,9 @@ def noise_settings():
                                                   'right': -0.42},
                  'right': band},
         'right': {'type': 'minecraft:mul', 'left': {'type': 'minecraft:add', 'left': band, 'right': -1.0}, 'right': 1.5}}}
-    ns['noise_router']['final_density'] = {'type': 'minecraft:max', 'left': ov['noise_router']['final_density'], 'right': islands}
+    router = terrain_density()
+    ns['noise_router']['final_density'] = {'type': 'minecraft:max', 'left': router['final_density'], 'right': islands}
+    ns['noise_router']['chunk_surface_level'] = router['chunk_surface_level']
     w('worldgen/noise_settings/the_sift', ns)
     # surface rules
     grass = {'type': 'minecraft:block', 'result_state': state('sift_grass_block', snowy=False)}
@@ -125,7 +181,7 @@ def noise_settings():
     noise_patch = {'type': 'minecraft:noise_threshold', 'max_threshold': 1.0, 'min_threshold': 0.25, 'noise': 'minecraft:surface'}
     surface = seq(
         cond('minecraft:on_floor', seq(
-            cond(biome_is('rocky_dunes'), seq(cond('minecraft:on_ceiling', sandstone), sand)),
+            cond(biome_is('rocky_dunes'), seq(cond('minecraft:on_ceiling', sandstone), cond({'type': 'minecraft:steep'}, sandstone), sand)),
             cond(biome_is('chrome_lakes'), seq(cond('minecraft:not_underwater', grass), sand)),
             cond(biome_is('forest_mountains'), seq(cond(high, seq(cond(noise_patch, cobbled), dreamstone)), cond('minecraft:not_underwater', grass), sand)),
             cond('minecraft:not_underwater', grass),
