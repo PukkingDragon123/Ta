@@ -193,7 +193,8 @@ public final class ClientSmokeTest {
             }
             Vec3 want = target;
             boolean inPlace = want == null || mc.level.dimension() == ModDimensions.THE_SIFT && mc.player.position().distanceTo(want) < 1.5;
-            boolean rendered = scene.clientAction() != null || mc.levelRenderer.hasRenderedAllSections();
+            // software rendering may never quite finish the far sections; 30 s of trying is plenty for a screenshot
+            boolean rendered = scene.clientAction() != null || mc.levelRenderer.hasRenderedAllSections() || sceneTick > 20 * 30;
             readyTicks = inPlace && rendered ? readyTicks + 1 : 0;
             boolean overdue = sceneTick > 20 * 90;
             if (readyTicks >= scene.settleTicks() || overdue) {
