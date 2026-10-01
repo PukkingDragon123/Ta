@@ -1,17 +1,15 @@
-find Sniffer.java
-find Parrot.java
-find Pig.java
-find FlyingMoveControl.java
-find FlyingPathNavigation.java
-find WaterAvoidingRandomFlyingGoal.java
-find FlyingAnimal.java
-find SnifferRenderer.java
-find PigRenderer.java
-find SimpleEquipmentLayer.java
-find RenderLayer.java
-find ServerBossEvent.java
-grep NOTE_BLOCK_FLUTE =
-grep public static final .* SADDLE
-sig net.minecraft.world.entity.animal.sniffer.Sniffer
-sig net.minecraft.world.entity.animal.pig.Pig
-grep (tickRidden|getRiddenInput|getRiddenSpeed|getControllingPassenger)\(
+lines net.minecraft.world.entity.animal.pig.Pig 76 240
+src net.minecraft.client.renderer.entity.SnifferRenderer
+src net.minecraft.client.renderer.entity.PigRenderer
+sig net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer
+grep boolean isSaddled\(
+grep enum LayerType
+lines net.minecraft.client.resources.model.EquipmentClientInfo 1 80
+sig net.minecraft.world.entity.ai.control.FlyingMoveControl
+sig net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal
+grep createNavigation\(Level
+lines net.minecraft.world.entity.animal.parrot.Parrot 100 175
+sig net.minecraft.client.renderer.entity.layers.RenderLayer
+sig net.minecraft.server.level.ServerBossEvent
+grep class SnifferModel
+find SnifferRenderState.java
