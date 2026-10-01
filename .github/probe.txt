@@ -1,12 +1,21 @@
-src net.minecraft.client.renderer.entity.layers.SlimeOuterLayer
-src net.minecraft.client.renderer.entity.SlimeRenderer
-sig net.minecraft.client.renderer.entity.LivingEntityRenderer
-lines net.minecraft.client.renderer.entity.LivingEntityRenderer 90 200
-grep void makePoofParticles
-grep protected void tickDeath
-find SlimeModel.java
-sig net.minecraft.client.particle.Particle
-grep onGround = 
-sig net.minecraft.client.renderer.entity.state.LivingEntityRenderState
-sig net.minecraft.client.renderer.SubmitNodeCollector
-sig net.minecraft.client.renderer.OrderedSubmitNodeCollector
+sig net.minecraft.core.particles.DustParticleOptions
+sig net.minecraft.world.phys.AABB
+sig net.minecraft.client.resources.sounds.SimpleSoundInstance
+sig net.minecraft.client.sounds.MusicManager
+sig net.minecraft.client.sounds.SoundManager
+sig net.minecraft.client.gui.GuiGraphicsExtractor
+sig net.minecraft.server.level.ServerBossEvent
+sig net.minecraft.world.BossEvent
+find Spider.java
+sig net.minecraft.world.entity.projectile.Projectile
+sig net.minecraft.world.item.ItemCooldowns
+sig net.minecraft.world.entity.TamableAnimal
+grep public static .*spawnProjectile
+sig net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile
+sig net.minecraft.world.level.block.BaseEntityBlock
+sig net.minecraft.world.entity.ai.navigation.FlyingPathNavigation
+sig net.minecraft.world.entity.monster.Vex
+sig net.minecraft.client.renderer.LevelRenderer
+grep class .*SpawnerBlockEntity
+sig net.minecraft.world.level.BaseSpawner
+sig net.minecraft.world.entity.Mob
