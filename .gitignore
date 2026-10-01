@@ -44,3 +44,4 @@ run-smoke/
 run-client/
 run-client-vk/
 /*.jar
+.claude/worktrees/
