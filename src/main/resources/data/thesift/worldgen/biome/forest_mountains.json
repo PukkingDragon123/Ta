@@ -96,8 +96,8 @@
       ],
       "modifier": "append"
     },
-    "minecraft:visual/fog_color": "#c9d4f6",
-    "minecraft:visual/sky_color": "#7f8ff0",
+    "minecraft:visual/fog_color": "#a2e8de",
+    "minecraft:visual/sky_color": "#5ed6c6",
     "minecraft:visual/water_fog_color": "#7fe8ff"
   },
   "carvers": [

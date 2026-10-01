@@ -78,6 +78,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CHISELED_BLUSH_BRICKS = ITEMS.registerSimpleBlockItem(ModBlocks.CHISELED_BLUSH_BRICKS);
     public static final DeferredItem<BlockItem> SIFT_SOIL = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_SOIL);
     public static final DeferredItem<BlockItem> SIFT_GRASS_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_GRASS_BLOCK);
+    public static final DeferredItem<BlockItem> CORAL_TURF = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_TURF);
     public static final DeferredItem<BlockItem> LUMEN_MOSS_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.LUMEN_MOSS_BLOCK);
     public static final DeferredItem<BlockItem> LUMEN_MOSS_CARPET = ITEMS.registerSimpleBlockItem(ModBlocks.LUMEN_MOSS_CARPET);
     public static final DeferredItem<BlockItem> SERBIM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.SERBIM_ORE);
@@ -120,6 +121,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> BLUSHGRASS = ITEMS.registerSimpleBlockItem(ModBlocks.BLUSHGRASS);
     public static final DeferredItem<DoubleHighBlockItem> TALL_BLUSHGRASS = ITEMS.registerItem("tall_blushgrass", p -> new DoubleHighBlockItem(ModBlocks.TALL_BLUSHGRASS.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<BlockItem> CORAL_FERN = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_FERN);
+    public static final DeferredItem<BlockItem> CORAL_BUSH = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_BUSH);
+    public static final DeferredItem<DoubleHighBlockItem> CORAL_THICKET = ITEMS.registerItem("coral_thicket", p -> new DoubleHighBlockItem(ModBlocks.CORAL_THICKET.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<BlockItem> GLIMMER_SPROUTS = ITEMS.registerSimpleBlockItem(ModBlocks.GLIMMER_SPROUTS);
     public static final DeferredItem<BlockItem> LULLABY_BELL = ITEMS.registerSimpleBlockItem(ModBlocks.LULLABY_BELL);
     public static final DeferredItem<BlockItem> DREAMBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.DREAMBLOOM);

@@ -1064,3 +1064,61 @@ DOOR_ITEM = [
     '....dlllllld....',
     '....dddddddd....',
 ]
+
+
+# ---- reference-biome coral: chunky flame-like branching in four salmon tones (L light, p base, d dark, D deepest)
+CORAL_PAL = {'L': '#ffa9aa', 'p': '#f37d84', 'd': '#e0606c', 'D': '#c44a5a'}
+CORAL_BUSH = ([
+    '................',
+    '..L.......L.....',
+    '..LL...L..LL..L.',
+    '.LpL..LL.LpL.LL.',
+    '.LppL.LpLLpp.Lp.',
+    '..pppLppLppd.pp.',
+    'L.ppdpppppdp.pd.',
+    'LLpdppdppppdppd.',
+    '.LppdppdppdpppdL',
+    '.ppdpppppdppdppL',
+    '..pdppdppppdpp..',
+    '..ddpddpdpdppd..',
+    '...dpdDdpdDdd...',
+    '....dDdDddDd....',
+    '.....DdDDdD.....',
+    '......DDDD......',
+], CORAL_PAL)
+CORAL_THICKET_TOP = ([
+    '....L......L....',
+    '...LL..L..LL..L.',
+    '.L.Lp..LL.Lp.LL.',
+    '.LLpp.LpL.pp.Lp.',
+    '..Lpp.Lpp.ppLpp.',
+    'L.ppp.ppd.pp.pd.',
+    'LLppdLppp.pdLpd.',
+    '.Lpdp.ppdLppppd.',
+    '.ppdpLpppppdppd.',
+    '..pdpppdppdpppd.',
+    'L.ppdppdpdppdpL.',
+    'LLpdppdpdpppdppL',
+    '.ppdpdppdppdpp..',
+    '..pdppdpdpppdp..',
+    '..dpppdpppdpdd..',
+    '..ddpdppdpdpd...',
+], CORAL_PAL)
+CORAL_THICKET_BOTTOM = ([
+    '.Lpd.Ldpp.Lpd.p.',
+    '.pdp.dppL.pdp.pd',
+    '..pdpdpp.Lpdppd.',
+    'L.dpppdp.pdpdpL.',
+    'Lp.dpdpdppdppd..',
+    '.pd.ddpdppdpdd..',
+    '..dp.dpdpddpd.p.',
+    '...DddpdpdDd.pd.',
+    '....DdDdddD.dd..',
+    '.....DDdDDDdD...',
+    '......DdDDD.....',
+    '......DDDD......',
+    '......DdD.......',
+    '.......DDD......',
+    '.......DD.......',
+    '.......DD.......',
+], CORAL_PAL)

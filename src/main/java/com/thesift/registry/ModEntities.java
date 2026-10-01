@@ -16,11 +16,11 @@ public final class ModEntities {
     public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(TheSift.MODID);
 
     public static final DeferredHolder<EntityType<?>, EntityType<Bulb>> BULB = ENTITIES.registerEntityType("bulb", Bulb::new, MobCategory.CREATURE,
-            b -> b.sized(0.6F, 0.6F).eyeHeight(0.42F).clientTrackingRange(8));
+            b -> b.sized(0.75F, 0.85F).eyeHeight(0.45F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Slumbler>> SLUMBLER = ENTITIES.registerEntityType("slumbler", Slumbler::new,
             MobCategory.CREATURE, b -> b.sized(1.7F, 0.95F).eyeHeight(0.7F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.MONSTER,
-            b -> b.sized(0.8F, 0.85F).eyeHeight(0.6F).clientTrackingRange(8));
+            b -> b.sized(0.9F, 1.2F).eyeHeight(0.95F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
             MobCategory.CREATURE, b -> b.sized(0.8F, 2.6F).eyeHeight(2.25F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Riveter>> RIVETER = ENTITIES.registerEntityType("riveter", Riveter::new,

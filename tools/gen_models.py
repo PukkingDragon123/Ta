@@ -16,7 +16,7 @@ POSES = {
                                                  left_ear_tip={'rot': (0.5, 0, 0)}, right_ear_tip={'rot': (0.4, 0, 0)}),
              'land': Pose(body={'scale': (1.25, 0.7, 1.25)}, left_ear={'rot': (-0.5, 0, 0.3)}, right_ear={'rot': (-0.5, 0, -0.3)})},
     'slumbler': {'rest': Pose(), 'yawn': Pose(head={'rot': (-0.35, 0, 0)}, jaw={'rot': (0.9, 0, 0)})},
-    'sifter': {'rest': Pose(), 'chomp': Pose(jaw={'rot': (0.9, 0, 0)}), 'burrowed': Pose(body={'pos': (0, 8, 0)})},
+    'sifter': {'rest': Pose(), 'chomp': Pose(lid={'rot': (-0.9, 0, 0)}), 'walk': Pose(left_leg={'rot': (0.5, 0, 0)}, right_leg={'rot': (-0.5, 0, 0)})},
     'enchoer': {'rest': Pose(), 'spread': Pose(left_wing={'rot': (0, 1.4, -0.9)}, right_wing={'rot': (0, -1.4, 0.9)},
                                                left_wing_tip={'rot': (-0.3, 0, 0)}, right_wing_tip={'rot': (-0.3, 0, 0)})},
     'riveter': {'rest': Pose(), 'scream': Pose(left_wing={'rot': (0, 1.0, -0.4)}, right_wing={'rot': (0, -1.0, 0.4)},

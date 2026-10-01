@@ -4,86 +4,65 @@ from modelkit import Model
 
 # =========================================================================== BULB
 def bulb() -> Model:
+    """The Sift bunny: a squishy jelly cube with two tall springy ears and four stubby feet."""
     pal = {
-        'skin': '#7fe3e6', 'skin_d': '#4fb9c4', 'skin_l': '#c2f7f3', 'belly': '#e9fffb',
-        'ear_in': '#ff9ccf', 'cheek': '#ff9ccf', 'eye': '#1b2340', 'eye_hi': '#ffffff',
-        'lure': '#fff59a', 'lure_d': '#f5c84c', 'stalk': '#6cc28f', 'mouth': '#2a3a5a', 'foot': '#5fc4cf',
-        'star': '#fff7c2',
+        # top of the body is periwinkle blue, the lower band soft cyan (see the biome reference)
+        'skin': '#78a5e3', 'skin_l': '#9cc3f3', 'skin_d': '#5d86cc',
+        'belly': '#63c6df', 'belly_l': '#86dbee', 'belly_d': '#4aa9c9',
+        'ear': '#78a5e3', 'ear_l': '#9cc3f3', 'ear_d': '#5d86cc', 'ear_in': '#63c6df',
+        'foot': '#8fdcee', 'foot_l': '#b3ecf7', 'foot_d': '#6cc0da',
+        'eye': '#2f2777', 'mouth': '#4a3a9f', 'gloss': '#e3f3ff', 'drip': '#a9e6f5',
     }
     variants = {
         'bulb_sky': {},
-        'bulb_blossom': {'skin': '#f7a8d2', 'skin_d': '#d77fb3', 'skin_l': '#ffd6ec', 'belly': '#fff0f8', 'ear_in': '#8fe6ec',
-                         'cheek': '#ff7fb8', 'lure': '#b8fbff', 'lure_d': '#6fdde8', 'foot': '#e98fc2', 'stalk': '#b06fb0'},
-        'bulb_dusk': {'skin': '#b7a3f0', 'skin_d': '#8b77cf', 'skin_l': '#dfd5ff', 'belly': '#f6f1ff', 'ear_in': '#ffc1e4',
-                      'cheek': '#ffa9d8', 'lure': '#ffe0a3', 'lure_d': '#f0a860', 'foot': '#9d88e0', 'stalk': '#7d6fc0'},
-        'bulb_starry': {'skin': '#3d4396', 'skin_d': '#282c6b', 'skin_l': '#6a70c8', 'belly': '#9aa0ee', 'ear_in': '#f59ad0',
-                        'cheek': '#f59ad0', 'eye': '#0b0e22', 'lure': '#fff7c2', 'lure_d': '#ffd36b', 'foot': '#343a88', 'stalk': '#5a4fb0'},
+        # the all-cyan "this little guy" colouring
+        'bulb_blossom': {'skin': '#3fd0ef', 'skin_l': '#72e3fa', 'skin_d': '#27aed6', 'belly': '#3fd0ef', 'belly_l': '#72e3fa',
+                         'belly_d': '#27aed6', 'ear': '#3fd0ef', 'ear_l': '#72e3fa', 'ear_d': '#27aed6', 'ear_in': '#27aed6',
+                         'foot': '#5fdcf3', 'foot_l': '#8deafa', 'foot_d': '#36bde0', 'eye': '#1b4f6b', 'mouth': '#1b4f6b'},
+        'bulb_dusk': {'skin': '#a58fe6', 'skin_l': '#c3b2f6', 'skin_d': '#8770cf', 'belly': '#e59ad0', 'belly_l': '#f4b9e2', 'belly_d': '#c97bb5',
+                      'ear': '#a58fe6', 'ear_l': '#c3b2f6', 'ear_d': '#8770cf', 'ear_in': '#e59ad0',
+                      'foot': '#f0b6de', 'foot_l': '#fbd2ee', 'foot_d': '#d895c4', 'eye': '#3a1f5e', 'mouth': '#5b2f7a'},
+        'bulb_starry': {'skin': '#3b4aa0', 'skin_l': '#5566c0', 'skin_d': '#2b377d', 'belly': '#4e7fd0', 'belly_l': '#6a9be3', 'belly_d': '#3a66b3',
+                        'ear': '#3b4aa0', 'ear_l': '#5566c0', 'ear_d': '#2b377d', 'ear_in': '#4e7fd0',
+                        'foot': '#6a9be3', 'foot_l': '#8bb5f0', 'foot_d': '#4e7fd0', 'eye': '#fff1a8', 'mouth': '#fff1a8', 'gloss': '#c9d3ff'},
     }
     m = Model('bulb', (64, 64), pal, variants)
-    jelly = dict(color='skin', pattern='jelly', shine=True)
     body = m.part('body', pivot=(0, 24, 0))
-    face_body = dict(jelly)
-    face_body['faces'] = {
-        'north': dict(color='skin', pattern='jelly', map=[
-            '..bbbbb..',
-            '.bbbbbbb.',
-            '.bbbbbbb.',
-            '..bbbbb..',
-            '.........',
-            '.........',
-        ], keys={'b': 'belly'}),
-        'down': dict(color='skin_d', pattern='flat'),
-        'south': dict(color='skin', pattern='jelly', map=['.........', '...lll...', '..l...l..'], keys={'l': 'skin_l'}),
-    }
-    body.cube((-4.5, -6, -4), (9, 6, 8), **face_body)
-    head = body.part('head', pivot=(0, -6, -0.5))
-    head.cube((-4, -7, -4), (8, 7, 7), color='skin', pattern='jelly', shine=True, faces={
-        'north': dict(color='skin', pattern='jelly', map=[
-            '........',
-            '.hE..hE.',
-            '.EE..EE.',
-            '.EE..EE.',
-            'c..mm..c',
-            'c......c',
-            '........',
-        ], keys={'E': 'eye', 'h': 'eye_hi', 'c': 'cheek', 'm': 'mouth'}),
-        'up': dict(color='skin', pattern='jelly', map=['........', '........', '..llll..', '.l....l.'], keys={'l': 'skin_l'}),
-    })
-    # soft cheek puffs round out the silhouette
-    head.cube((-4.5, -4, -3.5), (1, 3, 5), color='skin', pattern='jelly')
-    head.cube((3.5, -4, -3.5), (1, 3, 5), color='skin', pattern='jelly')
-    lids = head.part('eyelids')
-    lids.cube((-4, -6, -4.02), (8, 3, 0), color='skin', pattern='flat', outline=False, faces={
-        'north': dict(color='skin', pattern='flat', outline=False, map=['_..__.._', '_..__.._', '_dd__dd_'], keys={'d': 'skin_d'}),
-        'south': dict(color='skin', skip=True),
+    two_tone = dict(color='skin', pattern='mc', bands=[(4, 'belly')], clusters=0.22)
+    body.cube((-6, -13, -6), (12, 10, 12), **two_tone, faces={
+        'north': dict(color='skin', pattern='mc', bands=[(4, 'belly')], clusters=0.0, map=[
+            '............',
+            '.g..........',
+            '............',
+            '............',
+            '............',
+            '.EEE....EEE.',
+            '.EEE....EEE.',
+            '.....MM.....',
+            '............',
+            '............',
+        ], keys={'E': 'eye', 'M': 'mouth', 'g': 'gloss'}),
+        'up': dict(color='skin', pattern='mc', clusters=0.25, map=[
+            '............',
+            '.gg.........',
+            '.g..........',
+        ], keys={'g': 'gloss'}),
+        'down': dict(color='belly_d', pattern='mc', clusters=0.2),
     })
     for side, sx in (('left', 1), ('right', -1)):
-        ear = head.part(f'{side}_ear', pivot=(2.3 * sx, -6.5, 0.5), rot=(-0.12, 0, 0.18 * sx))
-        ear.cube((-1, -5, -0.5), (2, 5, 1), color='skin', pattern='jelly', faces={
-            'north': dict(color='skin', pattern='jelly', map=['..', 'ii', 'ii', 'ii', 'ii'], keys={'i': 'ear_in'}),
+        # ears sit on the back half of the top, three pixels apart
+        ear = body.part(f'{side}_ear', pivot=(3 * sx, -13, 1.5))
+        ear.cube((-1.5, -4, -1), (3, 4, 2), color='ear', pattern='mc', clusters=0.15, rim=False, faces={
+            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, map=['...', '.i.', '.i.', '.i.'], keys={'i': 'ear_in'}),
         })
-        tip = ear.part(f'{side}_ear_tip', pivot=(0, -5, 0))
-        tip.cube((-1, -4, -0.5), (2, 4, 1), color='skin', pattern='jelly', faces={
-            'north': dict(color='skin', pattern='jelly', map=['_.', 'ii', 'ii', 'ii'] if sx > 0 else ['._', 'ii', 'ii', 'ii'], keys={'i': 'ear_in'}),
-            'south': dict(color='skin', pattern='jelly', map=['_.'] if sx > 0 else ['._']),
+        tip = ear.part(f'{side}_ear_tip', pivot=(0, -4, 0))
+        tip.cube((-1.5, -3, -1), (3, 3, 2), color='ear', pattern='mc', clusters=0.15, rim=False, faces={
+            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, map=['...', '.i.', '.i.'], keys={'i': 'ear_in'}),
+            'up': dict(color='ear_l', pattern='mc', clusters=0.0),
         })
-    stalk = head.part('stalk', pivot=(0, -7, -1.5), rot=(-0.25, 0, 0))
-    stalk.cube((-0.5, -3, -0.5), (1, 3, 1), color='stalk', pattern='flat')
-    lure = stalk.part('lure', pivot=(0, -3, 0))
-    lure.cube((-1, -2, -1), (2, 2, 2), color='lure', pattern='flat', glow=True, outline=False, faces={
-        'north': dict(color='lure', pattern='flat', glow=True, map=['w.', '..'], keys={'w': (255, 255, 240, 255)}, glow_keys='w'),
-        'down': dict(color='lure_d', pattern='flat', glow=True),
-    })
-    tail = body.part('tail', pivot=(0, -3, 4))
-    tail.cube((-1.5, -1.5, 0), (3, 3, 2), color='belly', pattern='fur')
-    for side, sx in (('left', 1), ('right', -1)):
-        foot = body.part(f'{side}_foot', pivot=(2.6 * sx, 0, 1.5))
-        foot.cube((-1, -1, -2.5), (2, 1, 4), color='foot', pattern='flat', faces={
-            'up': dict(color='skin', pattern='jelly'),
-            'north': dict(color='foot', pattern='flat', map=['ww'], keys={'w': 'belly'}),
-        })
-        paw = body.part(f'{side}_paw', pivot=(2.2 * sx, 0, -3.2))
-        paw.cube((-1, -1.5, -1), (2, 1.5, 2), color='foot', pattern='flat')
+    for name, x, z in (('front_left', 1, -1), ('front_right', -1, -1), ('back_left', 1, 1), ('back_right', -1, 1)):
+        leg = body.part(f'{name}_leg', pivot=(3.5 * x, -3, 3.5 * z))
+        leg.cube((-1.5, 0, -1.5), (3, 3, 3), color='foot', pattern='mc', clusters=0.4)
     return m
 
 
@@ -208,56 +187,83 @@ def slumbler() -> Model:
 
 # =========================================================================== SIFTER
 def sifter() -> Model:
+    """A dune lurker that is mostly mouth: a flat box head whose lid snaps open like a trap,
+    on a stubby two-legged body with little fins and tan toes."""
     pal = {
-        'skin': '#58cbe3', 'skin_d': '#2f86b0', 'skin_l': '#a6ecf6', 'ring': '#2a6fa6', 'belly': '#c5f3f8',
-        'mouth': '#ffd23f', 'mouth_d': '#d99a16', 'maw': '#5a1f3a', 'teeth': '#fffbe8', 'eye': '#101a33',
-        'pupil': '#fff27a', 'tip': '#ffe07a', 'leg': '#3f9fc5', 'leg_d': '#26719a', 'claw': '#e8f7ff',
+        'skin': '#1fa3c1', 'skin_l': '#3ec0d6', 'skin_d': '#157e9f', 'deep': '#0e5a7d',
+        'tan': '#f2cd98', 'tan_l': '#fde3b9', 'tan_d': '#d7a46c',
+        'mouth': '#17328c', 'mouth_l': '#2246ad', 'mouth_d': '#0c1e5c',
+        'tooth': '#eaf7ff', 'tooth_d': '#a9cfe8', 'eye': '#d9f6ff', 'swirl': '#1892b2',
+        'fin': '#0f6a8e', 'fin_l': '#1a86a8', 'fin_d': '#0b4f6d',
     }
     m = Model('sifter', (64, 64), pal, {'sifter': {}})
-    body = m.part('body', pivot=(0, 17, 0))
-    body.cube((-5, -9, -4.5), (10, 10, 9), color='skin', pattern='spots', accent='ring', density=0.08, faces={
-        'north': dict(color='skin', pattern='speckle', map=[
-            '..........',
-            '.ee....ee.',
-            'eppe..eppe',
-            '.ee....ee.',
-            '..........',
-            '.mmmmmmmm.',
-            'mMMMMMMMMm',
-            'mTMTMTMTMm',
-            'mMMMMMMMMm',
-            '.mmmmmmmm.',
-        ], keys={'e': 'eye', 'p': 'pupil', 'm': 'mouth', 'M': 'maw', 'T': 'teeth'}, glow_keys='p'),
-        'down': dict(color='belly', pattern='flat'),
-    })
-    body.cube((-4, -12, -3.5), (8, 3, 7), color='skin', pattern='spots', accent='ring', density=0.12, faces={
-        'up': dict(color='skin', pattern='spots', accent='ring', density=0.12, shine=True),
-    })
-    jaw = body.part('jaw', pivot=(0, 0, -4.5))
-    jaw.cube((-4.5, -1, -2), (9, 3, 3), color='mouth', pattern='flat', faces={
-        'up': dict(color='maw', pattern='flat', map=['T.T.T.T.T', '.........', '.........'], keys={'T': 'teeth'}),
-        'north': dict(color='mouth', pattern='flat', map=['.........', '.........', 'ddddddddd'], keys={'d': 'mouth_d'}),
-    })
+    body = m.part('body', pivot=(0, 24, 0))
+    # torso column the head rests on
+    body.cube((-3.5, -14, -2.5), (7, 4, 5), color='skin', pattern='mc', clusters=0.8)
     for side, sx in (('left', 1), ('right', -1)):
-        ant = body.part(f'{side}_antenna', pivot=(3.2 * sx, -11.5, -0.5), rot=(-0.25, 0, 0.45 * sx))
-        ant.cube((-0.5, -6, -0.5), (1, 6, 1), color='skin_d', pattern='flat')
-        tip = ant.part(f'{side}_antenna_tip', pivot=(0, -6, 0))
-        tip.cube((-1.5, -3, -0.5), (3, 3, 1), color='tip', pattern='flat', glow=True, faces={
-            'north': dict(color='tip', pattern='flat', glow=True, map=['_._', '...', '_._'] , keys={}),
-            'south': dict(color='tip', pattern='flat', glow=True, map=['_._', '...', '_._'], keys={}),
+        leg = body.part(f'{side}_leg', pivot=(1.75 * sx, -10, 0))
+        leg.cube((-1.75, 0, -2), (3.5, 10, 4), color='skin', pattern='mc', clusters=0.9, faces={
+            'north': dict(color='skin', pattern='mc', clusters=0.7, map=[
+                '...', '...', '...', '...', '...', '...', '...', '...', 't.t', 'TTT'], keys={'t': 'tan', 'T': 'tan_d'}),
+            'east': dict(color='skin', pattern='mc', clusters=0.7, map=['....'] * 8 + ['t..t', 'TTTT'], keys={'t': 'tan', 'T': 'tan_d'}),
+            'west': dict(color='skin', pattern='mc', clusters=0.7, map=['....'] * 8 + ['t..t', 'TTTT'], keys={'t': 'tan', 'T': 'tan_d'}),
+            'south': dict(color='skin', pattern='mc', clusters=0.7, map=['...'] * 9 + ['TTT'], keys={'T': 'tan_d'}),
+            'down': dict(color='tan_d', pattern='mc', clusters=0.0),
         })
-    for i, tx in enumerate((-3, -1, 1, 3)):
-        t = body.part(f'tentacle_{i}', pivot=(tx, 0.5, -2.5 + abs(tx) * 0.3))
-        t.cube((-0.5, 0, -0.5), (1, 4, 1), color='skin_l', pattern='flat', faces={
-            'north': dict(color='skin_l', pattern='flat', map=['.', '.', '.', 'd'], keys={'d': 'ring'}),
+        fin = body.part(f'{side}_fin', pivot=(3.5 * sx, -13.5, 0), rot=(0, 0, -0.35 * sx))
+        fin.cube((0 if sx > 0 else -1, 0, -1.5), (1, 5, 3), color='fin', pattern='mc', clusters=0.5)
+    head = body.part('head', pivot=(0, -14, 0))
+    # lower jaw: a tan tray with a deep navy floor
+    head.cube((-7, -2, -7.5), (14, 2, 14), color='tan', pattern='mc', clusters=0.4, rim=False, faces={
+        'up': dict(color='mouth', pattern='mc', clusters=0.5, map=[
+            'TTTTTTTTTTTTTT',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'T............T',
+            'TTTTTTTTTTTTTT',
+        ], keys={'T': 'tan_l'}),
+        'down': dict(color='skin_d', pattern='mc', clusters=0.4),
+        'north': dict(color='tan', pattern='mc', clusters=0.3, rim=False, map=['..............', 'TTTTTTTTTTTTTT'], keys={'T': 'tan_d'}),
+    })
+    for i, tx in enumerate((-4.5, -0.5, 3.5)):
+        tooth = head.part(f'lower_tooth_{i}', pivot=(tx, -2, -7))
+        tooth.cube((0, -1, 0), (1, 1, 1), color='tooth', pattern='mc', clusters=0.0, rim=False)
+    # upper jaw: the lid, hinged at the back of the head
+    lid = head.part('lid', pivot=(0, -2, 6.5))
+    lid.cube((-7, -3, -14), (14, 3, 14), color='skin', pattern='mc', clusters=0.8, faces={
+        'up': dict(color='skin', pattern='mc', clusters=0.25, map=[
+            '..............',
+            '..............',
+            '...rrrrrrr....',
+            '..r.......r...',
+            '..r.rrrrr..r..',
+            '..r.r....r.r..',
+            '..r.r.rr.r.r..',
+            '..r.r..r.r.r..',
+            '..r..rr..r.r..',
+            '..r.....r..r..',
+            '...r...r..r...',
+            '....rrr..r....',
+            '..........',
+            '..............',
+        ], keys={'r': 'swirl'}),
+        'down': dict(color='mouth', pattern='mc', clusters=0.4),
+        'north': dict(color='skin', pattern='mc', clusters=0.2, map=['..............', '.e..........e.', '..............'], keys={'e': 'eye'}),
+    })
+    for i, (tx, h) in enumerate(((-6, 2), (-3.5, 1), (2.5, 1), (5, 2))):
+        tooth = lid.part(f'upper_tooth_{i}', pivot=(tx, 0, -13.5))
+        tooth.cube((0, 0, 0), (1, h, 1), color='tooth', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': dict(color='tooth', pattern='mc', clusters=0.0, rim=False, map=['.', 'd'] if h == 2 else ['.'], keys={'d': 'tooth_d'}),
         })
-    for side, sx in (('left', 1), ('right', -1)):
-        for end, sz in (('front', -2.8), ('hind', 2.8)):
-            leg = body.part(f'{side}_{end}_leg', pivot=(4.2 * sx, -0.5, sz), rot=(0, 0, -0.35 * sx))
-            leg.cube((-1, 0, -1), (2, 8, 2), color='leg', pattern='stripes', accent='leg_d', period=3, faces={
-                'north': dict(color='leg', pattern='stripes', accent='leg_d', period=3, map=['..', '..', '..', '..', '..', '..', '..', 'cc'],
-                              keys={'c': 'claw'}),
-            })
     return m
 
 

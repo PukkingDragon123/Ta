@@ -211,6 +211,16 @@ def soils():
     for _ in range(3):
         top.set(rnd.randrange(16), rnd.randrange(16), hx('#f7a8d2'))
     out('block/sift_grass_block_top', top)
+    # coral turf: the salmon-pink ground of the reference biome
+    coral = ramp('#d8646f', '#e8757d', '#f2868b', '#f9989a', '#ffaeac')
+    ct = stone(coral[1:5], 57, cells=(4, 2, 1))
+    rnd = random.Random(58)
+    for _ in range(8):
+        ct.set(rnd.randrange(16), rnd.randrange(16), coral[0])
+    for _ in range(5):
+        ct.set(rnd.randrange(16), rnd.randrange(16), coral[4])
+    out('block/coral_turf_top', ct)
+    out('block/coral_turf_side', grass_side(coral, SOIL, 59))
     out('block/sift_grass_block_side', grass_side(GRASS, SOIL, 54))
     moss = stone(LUMEN, 55, cells=(4, 2, 1))
     rnd = random.Random(56)
@@ -397,7 +407,8 @@ def flora():
                        ('glimmer_sprouts', S.GLIMMER_SPROUTS), ('tall_blushgrass_top', S.TALL_BLUSHGRASS_TOP),
                        ('tall_blushgrass_bottom', S.TALL_BLUSHGRASS_BOTTOM), ('choir_lily_top', S.CHOIR_LILY_TOP),
                        ('choir_lily_bottom', S.CHOIR_LILY_BOTTOM), ('chrome_reeds', S.CHROME_REEDS), ('drift_petals', S.DRIFT_PETALS),
-                       ('drift_petals_stem', S.DRIFT_PETALS_STEM), ('dream_snare', S.DREAM_SNARE)):
+                       ('drift_petals_stem', S.DRIFT_PETALS_STEM), ('dream_snare', S.DREAM_SNARE), ('coral_bush', S.CORAL_BUSH),
+                       ('coral_thicket_top', S.CORAL_THICKET_TOP), ('coral_thicket_bottom', S.CORAL_THICKET_BOTTOM)):
         out(f'block/{name}', sprite(data), CUTOUT)
     spent = sprite(S.DREAM_SNARE)
     for y in range(16):
@@ -914,6 +925,21 @@ def particles():
         out(f'particle/footstep_puff_{i}', blob(8, hx('#ffffff'), lambda d, i=i: 0.8 if (d < 0.9 - i * 0.2) else 0))
     for i in range(2):
         out(f'particle/glow_splat_{i}', blob(4 + i * 2, hx('#ffffff'), lambda d: 1.0 if d < 0.85 else 0))
+    # slime trail: hand-drawn jelly splotches (tinted per Bulb), with a bright gloss pixel
+    trails = [
+        ['..####..', '.######.', '##w#####', '########', '.#######', '..#####.', '...##...', '........'],
+        ['........', '..###...', '.#w####.', '########', '.######.', '..####..', '.##.....', '........'],
+        ['...##...', '.#####..', '.#w#####', '.#######', '..######', '...####.', '....#...', '........'],
+    ]
+    for i, rows in enumerate(trails):
+        t = Tex(8, 8)
+        for y, row in enumerate(rows):
+            for x, ch in enumerate(row):
+                if ch == '#':
+                    t.set(x, y, with_alpha(hx('#ffffff'), 200))
+                elif ch == 'w':
+                    t.set(x, y, hx('#ffffff'))
+        out(f'particle/slime_trail_{i}', t)
     ws = Tex(16, 16)
     for k in range(-7, 8):
         a = int(255 * (1 - abs(k) / 8))
@@ -996,27 +1022,19 @@ def nebula():
         else:
             d = np.stack([-S_, -T_, -np.ones_like(S_)], -1)
         d = d / np.linalg.norm(d, axis=-1, keepdims=True)
-        n1 = fbm3(d)
-        n2 = fbm3(d[..., [1, 2, 0]] * 1.3)
-        n3 = fbm3(d[..., [2, 0, 1]] * 0.8)
-        col = np.broadcast_to(deep, d.shape).copy()
-        c1 = np.clip((n1 - 0.45) * 3.0, 0, 1)[..., None]
-        c2 = np.clip((n2 - 0.5) * 3.2, 0, 1)[..., None]
-        c3 = np.clip((n3 - 0.5) * 2.5, 0, 1)[..., None]
-        col = col * (1 - c3 * 0.7) + purple * c3 * 0.7
-        col = col * (1 - c1 * 0.75) + cyan * c1 * 0.75
-        col = col * (1 - c2 * 0.7) + pink * c2 * 0.7
-        # soft aurora ribbon around the horizon
-        horizon = np.exp(-((d[..., 1] - 0.12) ** 2) / 0.02)[..., None]
-        wave = (0.5 + 0.5 * np.sin(np.arctan2(d[..., 2], d[..., 0]) * 5 + n1 * 6))[..., None]
-        col = col + (cyan * wave + pink * (1 - wave)) * horizon * 0.25
-        # below the horizon the sky fades into the Sift's pink haze
-        below = np.clip(-d[..., 1] * 1.5, 0, 1)[..., None]
-        col = col * (1 - below) + np.array([0.55, 0.42, 0.7]) * below
-        # stars
-        star = rng.random(d.shape[:2])
-        bright = (star > 0.9965).astype(np.float32)[..., None]
-        col = col + bright * np.array([1.0, 0.97, 0.9]) * (0.6 + 0.4 * rng.random(d.shape[:2]))[..., None]
+        # clean cyan sky (see the biome reference): turquoise overhead, pale mint at the horizon
+        zenith = np.array([0.29, 0.78, 0.72])
+        mid = np.array([0.37, 0.84, 0.78])
+        horizon = np.array([0.66, 0.94, 0.88])
+        below = np.array([0.56, 0.88, 0.82])
+        e = d[..., 1][..., None]
+        up = np.clip(e, 0, 1) ** 0.55
+        col = np.where(up < 0.5, horizon * (1 - up * 2) + mid * (up * 2), mid * (2 - up * 2) + zenith * (up * 2 - 1))
+        down = np.clip(-e * 3, 0, 1)
+        col = np.where(e < 0, horizon * (1 - down) + below * down, col)
+        # the faintest high wisps so the dome isn't dead flat
+        wisp = np.clip((fbm3(d * 1.4) - 0.58) * 2.0, 0, 1)[..., None] * np.clip(e * 3, 0, 1)
+        col = col * (1 - wisp * 0.08) + np.array([0.85, 0.98, 0.95]) * wisp * 0.08
         ox, oy = (face % 3) * N, (face // 3) * N
         img[oy:oy + N, ox:ox + N] = np.clip(col, 0, 1)
     im = Image.fromarray((img * 255).astype(np.uint8), 'RGB').convert('RGBA')

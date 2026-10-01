@@ -7,19 +7,13 @@ import com.thesift.client.renderer.state.SifterRenderState;
 import com.thesift.entity.Sifter;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 
 public class SifterRenderer extends MobRenderer<Sifter, SifterRenderState, SifterModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/sifter/sifter.png");
-    private static final Identifier GLOW = TheSift.id("textures/entity/sifter/sifter_glow.png");
 
     public SifterRenderer(EntityRendererProvider.Context context) {
-        super(context, new SifterModel(context.bakeLayer(ModModelLayers.SIFTER)), 0.5F);
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW, (s, age) -> 0.8F + 0.2F * Mth.sin(age * 0.2F), this.model,
-                RenderTypes::entityTranslucentEmissive, false));
+        super(context, new SifterModel(context.bakeLayer(ModModelLayers.SIFTER)), 0.55F);
     }
 
     @Override

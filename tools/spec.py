@@ -100,6 +100,8 @@ block("chiseled_blush_bricks", "cube", BRICK + f".mapColor({BLUSH_COLOR})", tags
 block("sift_soil", "cube", "BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT).mapColor(MapColor.TERRACOTTA_PINK)", tags=["shovel", "dirt"])
 block("sift_grass_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.COLOR_PINK)",
       cls="SiftGrassBlock", model="grass_block", tags=["shovel", "dirt"], loot="silk:sift_soil")
+block("coral_turf", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.COLOR_PINK)",
+      cls="SiftGrassBlock", model="grass_block", tags=["shovel", "dirt"], loot="silk:sift_soil")
 block("lumen_moss_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_BLOCK).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 6)",
       cls="LumenMossBlock", model="cube_all", tags=["hoe", "dirt"])
 block("lumen_moss_carpet", "carpet", "BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_CARPET).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4)",
@@ -157,6 +159,9 @@ block("blushgrass", "custom", PLANT, cls="BlushgrassBlock", model="cross", tags=
 block("tall_blushgrass", "custom", PLANT, cls="SiftDoublePlantBlock", model="double_cross", tags=["replaceable_plants"], loot="double_grass",
       item_kind="double")
 block("coral_fern", "custom", PLANT, cls="SiftPlantBlock", model="cross", tags=["replaceable_plants"], loot="grass")
+block("coral_bush", "custom", PLANT, cls="SiftPlantBlock", model="cross", tags=["replaceable_plants", "sword_efficient"], loot="shears")
+block("coral_thicket", "custom", PLANT, cls="SiftDoublePlantBlock", model="double_cross", tags=["replaceable_plants"], loot="double_grass",
+      item_kind="double")
 block("glimmer_sprouts", "custom", PLANT + ".lightLevel(s -> 5)", cls="SiftPlantBlock", model="cross", tags=["replaceable_plants"], loot="shears")
 FLOWERS = {
     "lullaby_bell": ("MobEffects.REGENERATION", "4.0F", "cyan"),

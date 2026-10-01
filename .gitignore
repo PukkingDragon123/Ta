@@ -43,3 +43,4 @@ __pycache__/
 run-smoke/
 run-client/
 run-client-vk/
+/*.jar

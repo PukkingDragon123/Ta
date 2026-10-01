@@ -161,6 +161,7 @@ def noise_settings():
     w('worldgen/noise_settings/the_sift', ns)
     # surface rules
     grass = {'type': 'minecraft:block', 'result_state': state('sift_grass_block', snowy=False)}
+    turf = {'type': 'minecraft:block', 'result_state': state('coral_turf', snowy=False)}
     soil = {'type': 'minecraft:block', 'result_state': state('sift_soil')}
     sand = {'type': 'minecraft:block', 'result_state': state('dreamsand')}
     sandstone = {'type': 'minecraft:block', 'result_state': state('dreamsandstone')}
@@ -183,6 +184,7 @@ def noise_settings():
         cond('minecraft:on_floor', seq(
             cond(biome_is('rocky_dunes'), seq(cond('minecraft:on_ceiling', sandstone), cond({'type': 'minecraft:steep'}, sandstone), sand)),
             cond(biome_is('chrome_lakes'), seq(cond('minecraft:not_underwater', grass), sand)),
+            cond(biome_is('sift_plains'), seq(cond('minecraft:not_underwater', turf), sand)),
             cond(biome_is('forest_mountains'), seq(cond(high, seq(cond(noise_patch, cobbled), dreamstone)), cond('minecraft:not_underwater', grass), sand)),
             cond('minecraft:not_underwater', grass),
             sand)),
@@ -297,6 +299,8 @@ def features():
     # ground cover
     feature('blushgrass', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('blushgrass'), 6), (state('coral_fern'), 1)])})
     feature('tall_blushgrass', {'type': 'minecraft:simple_block', 'to_place': state('tall_blushgrass')})
+    feature('coral_bush', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('coral_bush'), 6), (state('coral_fern'), 1)])})
+    feature('coral_thicket', {'type': 'minecraft:simple_block', 'to_place': state('coral_thicket')})
     feature('sift_flowers', {'type': 'minecraft:simple_block', 'to_place': weighted([
         (state('lullaby_bell'), 3), (state('dreambloom'), 3), (state('soulpetal'), 2), (state('nebula_iris'), 2)])})
     feature('grove_flowers', {'type': 'minecraft:simple_block', 'to_place': weighted([
@@ -327,6 +331,9 @@ def features():
     patch('patch_blushgrass', 'blushgrass', 32, 3, survive_block='blushgrass')
     patch('patch_blushgrass_dense', 'blushgrass', 48, 6, survive_block='blushgrass')
     patch('patch_tall_blushgrass', 'tall_blushgrass', 16, 1, survive_block='tall_blushgrass')
+    # the reference biome: thick coral growth over pink turf
+    patch('patch_coral_bush', 'coral_bush', 64, 7, survive_block='coral_bush')
+    patch('patch_coral_thicket', 'coral_thicket', 48, 7, survive_block='coral_thicket')
     patch('patch_sift_flowers', 'sift_flowers', 24, 2, survive_block='lullaby_bell')
     patch('patch_grove_flowers', 'grove_flowers', 24, 3, survive_block='dreambloom')
     patch('patch_drift_petals', 'drift_petals', 32, 1, survive_block='drift_petals')
@@ -457,28 +464,28 @@ DREAMY_PARTICLES = [('drifting_soul', 0.0025), ('dream_pollen', 0.004), ('glow_d
 
 
 def biomes():
-    biome('sift_plains', fog='#e8c4f0', sky='#8f86e8', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
+    biome('sift_plains', fog='#aef0e2', sky='#5ed6c6', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
           spawns=mobs(creature=[('bulb', 12, 2, 4), ('minecraft:sniffer', 3, 1, 2), ('enchoer', 1, 1, 1)]),
           parts=particles(*DREAMY_PARTICLES),
           feats=[(1, 'chrome_pool_surface'), (2, 'floating_island'), (2, 'floating_islet'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
-                [(9, 'trees_sift_plains'), (9, 'patch_blushgrass_dense'), (9, 'patch_tall_blushgrass'), (9, 'patch_sift_flowers'),
+                [(9, 'trees_sift_plains'), (9, 'patch_coral_thicket'), (9, 'patch_coral_bush'), (9, 'patch_sift_flowers'),
                  (9, 'patch_drift_petals'), (9, 'patch_pitcher_bulb_bush'), (9, 'patch_glimmer_sprouts')])
-    biome('forest_mountains', fog='#c9d4f6', sky='#7f8ff0', water='#7fe8ff', grass='#4fc9b8', foliage='#5fd8d0', temp=0.5, down=0.8,
+    biome('forest_mountains', fog='#a2e8de', sky='#5ed6c6', water='#7fe8ff', grass='#4fc9b8', foliage='#5fd8d0', temp=0.5, down=0.8,
           spawns=mobs(creature=[('bulb', 6, 2, 3), ('minecraft:sniffer', 4, 1, 2), ('enchoer', 2, 1, 1)]),
           parts=particles(('lullwood_leaf', 0.002), ('drifting_soul', 0.002), ('sift_mist', 0.001), ('glow_dust', 0.002), ('wishing_star', 0.00012)),
           feats=[(2, 'dreamstone_spire'), (2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_forest_mountains'), (9, 'patch_blushgrass'), (9, 'patch_sift_flowers'), (9, 'patch_glowcap_surface'),
                  (9, 'patch_glimmer_sprouts')])
-    biome('rocky_dunes', fog='#f2c3cf', sky='#a88ae6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
+    biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
           spawns=mobs(creature=[('bulb', 2, 1, 2), ('minecraft:sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 3)]),
           parts=particles(('dream_pollen', 0.006), ('glow_dust', 0.002), ('wishing_star', 0.0002)),
           feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_pitcher_bulb_bush')])
-    biome('chrome_lakes', fog='#c6e6f7', sky='#86a8f0', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
+    biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
           spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)]),
           parts=particles(('chrome_bubble', 0.002), ('sift_mist', 0.0012), ('drifting_soul', 0.002), ('wishing_star', 0.00015)),
           feats=[(2, 'floating_islet'), (6, 'disk_dreamsand')] + COMMON_UNDERGROUND +
                 [(9, 'patch_chrome_reeds'), (9, 'patch_blushgrass'), (9, 'trees_sift_plains')])
-    biome('wishing_grove', fog='#f4c8e6', sky='#b08ae8', water='#ffb8e6', grass='#f59ac6', foliage='#f9b3d4', temp=0.8, down=0.7,
+    biome('wishing_grove', fog='#b4eee2', sky='#5ed6c6', water='#ffb8e6', grass='#f59ac6', foliage='#f9b3d4', temp=0.8, down=0.7,
           spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2)]),
           parts=particles(('wishwood_leaf', 0.003), ('star_sparkle', 0.002), ('drifting_soul', 0.003), ('wishing_star', 0.0003)),
           feats=[(2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
@@ -514,7 +521,7 @@ def dimension_json():
 
 
 def carver_tags():
-    for b in ['dreamstone', 'hushslate', 'sift_soil', 'sift_grass_block', 'dreamsand', 'dreamsandstone', 'lumen_moss_block', 'cobbled_dreamstone',
+    for b in ['dreamstone', 'hushslate', 'sift_soil', 'sift_grass_block', 'coral_turf', 'dreamsand', 'dreamsandstone', 'lumen_moss_block', 'cobbled_dreamstone',
               'mossy_dreamstone_bricks']:
         GA.tag('block', 'minecraft:overworld_carver_replaceables', rl(b))
     for b in ['dreamstone', 'hushslate', 'dreamsand', 'sift_soil']:

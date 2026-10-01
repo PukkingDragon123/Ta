@@ -93,6 +93,7 @@ public class TheSiftClient {
         particle(event, ModParticles.PORTAL_SOUL, SiftParticle.Kind.PORTAL_SOUL);
         particle(event, ModParticles.FOOTSTEP_PUFF, SiftParticle.Kind.FOOTSTEP_PUFF);
         particle(event, ModParticles.GLOW_SPLAT, SiftParticle.Kind.GLOW_SPLAT);
+        particle(event, ModParticles.SLIME_TRAIL, SiftParticle.Kind.SLIME_TRAIL);
         particle(event, ModParticles.WISHING_STAR, SiftParticle.Kind.WISHING_STAR);
         particle(event, ModParticles.SLEEP_SPORE, SiftParticle.Kind.SLEEP_SPORE);
     }

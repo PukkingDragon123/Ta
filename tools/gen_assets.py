@@ -695,7 +695,7 @@ def gen_recipes():
 
 def gen_particles():
     counts = {'drifting_soul': 4, 'chrome_droplet': 3, 'chrome_bubble': 1, 'dream_pollen': 2, 'sift_note': 1, 'resonance_ring': 1, 'glow_dust': 2,
-              'lullwood_leaf': 3, 'wishwood_leaf': 3, 'sift_mist': 2, 'star_sparkle': 2, 'portal_soul': 3, 'footstep_puff': 3, 'glow_splat': 2,
+              'lullwood_leaf': 3, 'wishwood_leaf': 3, 'sift_mist': 2, 'star_sparkle': 2, 'portal_soul': 3, 'footstep_puff': 3, 'glow_splat': 2, 'slime_trail': 3,
               'wishing_star': 1, 'sleep_spore': 2}
     for p, n in counts.items():
         texs = [f'{NS}:{p}_{i}' if n > 1 else f'{NS}:{p}' for i in range(n)]
@@ -915,7 +915,7 @@ def gen_sounds():
 
 
 def gen_misc_tags():
-    for b in ['sift_grass_block', 'sift_soil', 'lumen_moss_block']:
+    for b in ['sift_grass_block', 'coral_turf', 'sift_soil', 'lumen_moss_block']:
         tag('block', f'{NS}:sift_plantable', rl(b))
         tag('block', 'minecraft:sniffer_diggable_block', rl(b))
     tag('block', f'{NS}:sift_plantable', '#minecraft:dirt')
@@ -937,6 +937,7 @@ def gen_misc_tags():
     tag('block', 'minecraft:enderman_holdable', rl('dreamsand'))
     tag('block', 'minecraft:enderman_holdable', rl('sift_grass_block'))
     tag('block', 'minecraft:animals_spawnable_on', rl('sift_grass_block'))
+    tag('block', 'minecraft:animals_spawnable_on', rl('coral_turf'))
     tag('block', 'minecraft:sniffer_egg_hatch_boost', rl('lumen_moss_block'))
     tag('block', 'minecraft:mineable/hoe', rl('hanging_lullwood_leaves'))
     tag('block', 'minecraft:mineable/axe', rl('sift_drum'))
@@ -976,9 +977,10 @@ def gen_transformers():
                      'then': {'type': 'minecraft:copy_properties', 'source': {'id': rl(dst), 'properties': {'axis': 'y'}}}}]},
                 'item_damage_per_use': 1, 'sound': 'minecraft:item.axe.strip'}}
     write(os.path.join(RES, 'data', 'neoforge', 'data_maps', 'block', 'transformables.json'), {'values': values})
-    for b in ('sift_grass_block', 'sift_soil'):
+    for b in ('sift_grass_block', 'coral_turf', 'sift_soil'):
         tag('block', 'minecraft:turns_into_farmland', rl(b))
     tag('block', 'minecraft:turns_into_dirt_path', rl('sift_grass_block'))
+    tag('block', 'minecraft:turns_into_dirt_path', rl('coral_turf'))
 
 
 def flush_tags():

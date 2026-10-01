@@ -243,7 +243,49 @@ class Painter:
                 continue
             self.paint_face(face, fx, fy, fw, fh, spec, rnd)
 
+    def paint_mc(self, face, fx, fy, fw, fh, spec, rnd):
+        """Vanilla-style face: flat base colour, a lit top rim, a shaded bottom rim and a few hand-sized
+        tone clusters (no per-pixel noise, no baked directional light - the engine shades faces)."""
+        base = self.col(spec['color'])
+        lite = self.col(spec.get('lite', spec['color'] + '_l')) if (spec.get('lite') or (spec['color'] + '_l') in self.pal) else shade(base, 0.12)
+        dark = self.col(spec.get('dark', spec['color'] + '_d')) if (spec.get('dark') or (spec['color'] + '_d') in self.pal) else shade(base, -0.12)
+        vertical = face not in ('up', 'down')
+        grid = [[base for _ in range(fw)] for _ in range(fh)]
+        if face == 'down':
+            grid = [[dark for _ in range(fw)] for _ in range(fh)]
+        if vertical and spec.get('rim', True) and fh >= 4:
+            for xx in range(fw):
+                grid[0][xx] = lite
+                grid[fh - 1][xx] = dark
+        bands = spec.get('bands')  # [(row_from, colour_key), ...] for two-tone bodies, e.g. a lighter belly band
+        if bands and vertical:
+            for row_from, key in bands:
+                for yy in range(max(0, row_from), fh - (1 if spec.get('rim', True) and fh >= 4 else 0)):
+                    for xx in range(fw):
+                        grid[yy][xx] = self.col(key)
+        shapes = [((0, 0), (1, 0)), ((0, 0), (0, 1)), ((0, 0), (1, 0), (0, 1)), ((0, 0), (1, 0), (1, 1)), ((0, 0),), ((0, 0), (1, 0), (2, 0))]
+        count = int(fw * fh * spec.get('clusters', 1.0) / 13)
+        for _ in range(count):
+            sh = rnd.choice(shapes)
+            x0, y0 = rnd.randrange(fw), rnd.randrange(fh)
+            upper = y0 < fh / 2 or face == 'up'
+            tone = lite if (rnd.random() < (0.55 if upper else 0.25)) else dark
+            for dx, dy in sh:
+                x, y = x0 + dx, y0 + dy
+                if 0 <= x < fw and 0 <= y < fh and not (vertical and (y == 0 or y == fh - 1) and fh >= 4):
+                    grid[y][x] = tone
+        alpha = spec.get('opacity', 255)
+        glow_all = spec.get('glow', False)
+        for yy in range(fh):
+            for xx in range(fw):
+                c = grid[yy][xx]
+                self.put(fx + xx, fy + yy, (c[0], c[1], c[2], alpha), glow_all)
+        if 'map' in spec:
+            self.draw_map(fx, fy, fw, fh, spec)
+
     def paint_face(self, face, fx, fy, fw, fh, spec, rnd):
+        if spec.get('pattern') == 'mc':
+            return self.paint_mc(face, fx, fy, fw, fh, spec, rnd)
         base = self.col(spec['color'])
         accent = self.col(spec.get('accent', spec['color']))
         light = FACE_LIGHT[face] + spec.get('light', 0.0)

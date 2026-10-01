@@ -188,9 +188,7 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
             this.squash.kick(-impact);
             this.earLeft.kick(impact * 1.4F);
             this.earRight.kick(impact * 1.2F);
-            if (this.random.nextInt(2) == 0) {
-                this.level().addParticle(ModParticles.FOOTSTEP_PUFF.get(), this.getX(), this.getY() + 0.05, this.getZ(), 0, 0.02, 0);
-            }
+            this.slimeTrail(1 + this.random.nextInt(2));
         } else if (!onGround && this.wasOnGround && vy > 0) {
             // Take-off: stretch tall and let the ears trail.
             this.squash.kick(0.28F);
@@ -202,12 +200,26 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
         // Ears perk up when a player is close by, droop a little otherwise.
         Player near = this.level().getNearestPlayer(this, 6.0);
         this.earPerk.setTarget(near != null ? 1.0F : 0.0F);
+        if (onGround && this.getDeltaMovement().horizontalDistanceSqr() > 0.0004 && this.random.nextInt(6) == 0) {
+            this.slimeTrail(1);
+        }
         this.squash.tick();
         this.earLeft.tick();
         this.earRight.tick();
         this.earPerk.tick();
         if (this.getVariant() == 3 && this.random.nextInt(10) == 0) {
             this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getRandomX(0.6), this.getRandomY(), this.getRandomZ(0.6), 0, 0.01, 0);
+        }
+    }
+
+    /** Jelly tint of each variant, for the slime it leaves behind. */
+    private static final float[][] SLIME_TINT = {{0.42F, 0.80F, 0.90F}, {0.30F, 0.84F, 0.95F}, {0.92F, 0.62F, 0.84F}, {0.34F, 0.50F, 0.86F}};
+
+    private void slimeTrail(int count) {
+        float[] c = SLIME_TINT[Mth.clamp(this.getVariant(), 0, SLIME_TINT.length - 1)];
+        for (int i = 0; i < count; i++) {
+            this.level().addParticle(ModParticles.SLIME_TRAIL.get(), this.getX() + (this.random.nextDouble() - 0.5) * 0.5, this.getY() + 0.02,
+                    this.getZ() + (this.random.nextDouble() - 0.5) * 0.5, c[0], c[1], c[2]);
         }
     }
 

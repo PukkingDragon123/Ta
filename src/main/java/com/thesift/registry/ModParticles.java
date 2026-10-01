@@ -38,6 +38,8 @@ public final class ModParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> GLOW_SPLAT = reg("glow_splat", true);
     /** A shooting "wishing star" streak (spawned high in the sky). */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> WISHING_STAR = reg("wishing_star", true);
+    /** Flat jelly splotches Bulbs leave where they land. */
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLIME_TRAIL = reg("slime_trail", false);
     /** Sleepy spores released by Dream Snares. */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLEEP_SPORE = reg("sleep_spore", false);
 

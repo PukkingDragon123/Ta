@@ -11,4 +11,6 @@ public class BulbRenderState extends LivingEntityRenderState {
     public boolean dancing;
     public boolean airborne;
     public boolean blink;
+    /** Death progress in ticks; the Bulb melts instead of tipping over. */
+    public float melt;
 }

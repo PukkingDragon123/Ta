@@ -7,27 +7,21 @@ import com.thesift.client.renderer.state.BulbRenderState;
 import com.thesift.entity.Bulb;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class BulbRenderer extends MobRenderer<Bulb, BulbRenderState, BulbModel> {
     private static final String[] VARIANTS = {"sky", "blossom", "dusk", "starry"};
     private static final Identifier[] TEXTURES = new Identifier[VARIANTS.length];
-    private static final Identifier[] GLOW = new Identifier[VARIANTS.length];
 
     static {
         for (int i = 0; i < VARIANTS.length; i++) {
             TEXTURES[i] = TheSift.id("textures/entity/bulb/bulb_" + VARIANTS[i] + ".png");
-            GLOW[i] = TheSift.id("textures/entity/bulb/bulb_" + VARIANTS[i] + "_glow.png");
         }
     }
 
     public BulbRenderer(EntityRendererProvider.Context context) {
-        super(context, new BulbModel(context.bakeLayer(ModModelLayers.BULB)), 0.35F);
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW[s.variant], (s, age) -> 0.7F + 0.3F * Mth.sin(age * 0.09F), this.model,
-                RenderTypes::entityTranslucentEmissive, false));
+        super(context, new BulbModel(context.bakeLayer(ModModelLayers.BULB)), 0.42F);
     }
 
     @Override
@@ -51,5 +45,8 @@ public class BulbRenderer extends MobRenderer<Bulb, BulbRenderState, BulbModel> 
         state.dancing = entity.isDancing();
         state.airborne = !entity.onGround();
         state.blink = (entity.tickCount + entity.getId() * 37) % 83 < 3;
+        // melt into a puddle (BulbModel) rather than the usual tip-over
+        state.melt = state.deathTime;
+        state.deathTime = 0.0F;
     }
 }

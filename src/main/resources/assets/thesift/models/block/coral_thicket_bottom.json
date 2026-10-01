@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/tinted_cross",
+  "textures": {
+    "cross": "thesift:block/coral_thicket_bottom"
+  }
+}

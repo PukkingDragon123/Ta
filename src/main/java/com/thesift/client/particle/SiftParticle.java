@@ -19,7 +19,7 @@ import org.joml.Quaternionf;
 public class SiftParticle extends SingleQuadParticle {
     public enum Kind {
         DRIFTING_SOUL, CHROME_DROPLET, CHROME_BUBBLE, DREAM_POLLEN, SIFT_NOTE, RESONANCE_RING, GLOW_DUST, LEAF, SIFT_MIST, STAR_SPARKLE,
-        PORTAL_SOUL, FOOTSTEP_PUFF, GLOW_SPLAT, WISHING_STAR, SLEEP_SPORE
+        PORTAL_SOUL, FOOTSTEP_PUFF, GLOW_SPLAT, WISHING_STAR, SLEEP_SPORE, SLIME_TRAIL
     }
 
     /** Cyan -> pink -> pearl, the colours of Chrome and the Sift sky. */
@@ -175,6 +175,20 @@ public class SiftParticle extends SingleQuadParticle {
                 this.setColor(0.95F, 0.9F, 1.0F);
                 glow = false;
             }
+            case SLIME_TRAIL -> {
+                // a flat jelly splotch left behind by hopping Bulbs; xa/ya/za carry its tint
+                this.lifetime = 50 + random.nextInt(30);
+                this.xd = 0;
+                this.yd = 0;
+                this.zd = 0;
+                this.setColor((float) xa, (float) ya, (float) za);
+                size = 0.16F + random.nextFloat() * 0.1F;
+                this.fadeIn = 0.0F;
+                this.fadeOut = 0.6F;
+                this.maxAlpha = 0.7F;
+                this.roll = random.nextInt(4) * Mth.HALF_PI;
+                glow = false;
+            }
             case GLOW_SPLAT -> {
                 this.lifetime = 14 + random.nextInt(12);
                 this.gravity = 0.6F;
@@ -308,7 +322,7 @@ public class SiftParticle extends SingleQuadParticle {
 
     @Override
     public SingleQuadParticle.FacingCameraMode getFacingCameraMode() {
-        if (this.kind == Kind.RESONANCE_RING) {
+        if (this.kind == Kind.RESONANCE_RING || this.kind == Kind.SLIME_TRAIL) {
             // Lie flat on the ground like a ripple.
             return (Quaternionf target, Camera camera, float partial) -> target.rotationX(-Mth.HALF_PI);
         }

@@ -145,6 +145,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT).mapColor(MapColor.TERRACOTTA_PINK));
     public static final DeferredBlock<SiftGrassBlock> SIFT_GRASS_BLOCK = BLOCKS.registerBlock("sift_grass_block", SiftGrassBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<SiftGrassBlock> CORAL_TURF = BLOCKS.registerBlock("coral_turf", SiftGrassBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.COLOR_PINK));
     public static final DeferredBlock<LumenMossBlock> LUMEN_MOSS_BLOCK = BLOCKS.registerBlock("lumen_moss_block", LumenMossBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_BLOCK).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 6));
     public static final DeferredBlock<CarpetBlock> LUMEN_MOSS_CARPET = BLOCKS.registerBlock("lumen_moss_carpet", CarpetBlock::new,
@@ -232,6 +234,10 @@ public final class ModBlocks {
     public static final DeferredBlock<SiftDoublePlantBlock> TALL_BLUSHGRASS = BLOCKS.registerBlock("tall_blushgrass", SiftDoublePlantBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_PINK));
     public static final DeferredBlock<SiftPlantBlock> CORAL_FERN = BLOCKS.registerBlock("coral_fern", SiftPlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<SiftPlantBlock> CORAL_BUSH = BLOCKS.registerBlock("coral_bush", SiftPlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<SiftDoublePlantBlock> CORAL_THICKET = BLOCKS.registerBlock("coral_thicket", SiftDoublePlantBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_PINK));
     public static final DeferredBlock<SiftPlantBlock> GLIMMER_SPROUTS = BLOCKS.registerBlock("glimmer_sprouts", SiftPlantBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_PINK).lightLevel(s -> 5));

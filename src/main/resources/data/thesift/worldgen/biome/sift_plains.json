@@ -96,8 +96,8 @@
       ],
       "modifier": "append"
     },
-    "minecraft:visual/fog_color": "#e8c4f0",
-    "minecraft:visual/sky_color": "#8f86e8",
+    "minecraft:visual/fog_color": "#aef0e2",
+    "minecraft:visual/sky_color": "#5ed6c6",
     "minecraft:visual/water_fog_color": "#7fe8ff"
   },
   "carvers": [
@@ -135,8 +135,8 @@
     ],
     [
       "thesift:trees_sift_plains",
-      "thesift:patch_blushgrass_dense",
-      "thesift:patch_tall_blushgrass",
+      "thesift:patch_coral_bush",
+      "thesift:patch_coral_thicket",
       "thesift:patch_sift_flowers",
       "thesift:patch_drift_petals",
       "thesift:patch_glimmer_sprouts",

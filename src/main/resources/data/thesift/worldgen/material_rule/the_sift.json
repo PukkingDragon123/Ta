@@ -96,6 +96,39 @@
                   "if_true": {
                     "type": "minecraft:biome",
                     "biome_is": [
+                      "thesift:sift_plains"
+                    ]
+                  },
+                  "then_run": {
+                    "type": "minecraft:sequence",
+                    "sequence": [
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": "minecraft:not_underwater",
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "id": "thesift:coral_turf",
+                            "properties": {
+                              "snowy": "false"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "id": "thesift:dreamsand"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": {
+                    "type": "minecraft:biome",
+                    "biome_is": [
                       "thesift:forest_mountains"
                     ]
                   },

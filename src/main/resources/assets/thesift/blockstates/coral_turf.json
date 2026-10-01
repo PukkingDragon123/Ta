@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "snowy=false": [
+      {
+        "model": "thesift:block/coral_turf"
+      },
+      {
+        "model": "thesift:block/coral_turf",
+        "y": 90
+      },
+      {
+        "model": "thesift:block/coral_turf",
+        "y": 180
+      },
+      {
+        "model": "thesift:block/coral_turf",
+        "y": 270
+      }
+    ],
+    "snowy=true": {
+      "model": "thesift:block/coral_turf_snow"
+    }
+  }
+}
