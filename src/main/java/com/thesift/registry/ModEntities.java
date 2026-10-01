@@ -22,9 +22,9 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.MONSTER,
             b -> b.sized(0.9F, 1.2F).eyeHeight(0.95F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
-            MobCategory.CREATURE, b -> b.sized(0.8F, 2.6F).eyeHeight(2.25F).clientTrackingRange(10));
+            MobCategory.CREATURE, b -> b.sized(1.0F, 2.5F).eyeHeight(1.8F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Riveter>> RIVETER = ENTITIES.registerEntityType("riveter", Riveter::new,
-            MobCategory.MONSTER, b -> b.sized(0.7F, 1.2F).eyeHeight(0.4F).clientTrackingRange(8));
+            MobCategory.MONSTER, b -> b.sized(0.8F, 1.9F).eyeHeight(0.4F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<GlowballEntity>> GLOWBALL = ENTITIES.registerEntityType("glowball",
             GlowballEntity::new, MobCategory.MISC, b -> b.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
 

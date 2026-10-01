@@ -67,16 +67,18 @@ Cyan and pink fog, a rotating nebula sky, drifting souls, pollen, mist, glow dus
 leaves are everywhere, and your footsteps leave puffs of dream dust.
 
 ### Creatures
-* **Bulb**: a bouncy, squashy bunny. Breed them with **Pitcher Bulbs**. Happy Bulbs plop out
-  **Glowing Slime Balls**.
+* **Bulb**: a bouncy, squishy jelly bunny that leaves a slime trail. Breed them with **Pitcher
+  Bulbs**. Happy Bulbs plop out **Glowing Slime Balls**.
 * **Slumbler**: a huge, wide-mouthed Chrome salamander that lounges in lakes. Drops **Thick
   Hide** and, rarely, a **Chrome Pearl**.
 * **Sniffer**: lives in The Sift naturally and digs up its exclusive seeds (Choir Pods, Echo
   Seeds and Pitcher Bulbs).
-* **Sifter** (hostile): a cyan, squid-like burrower that bursts out of the dunes.
-* **Enchoer**: a tall, crystalline trader with wing-like arms. Trades Sift goods for Chrome
-  Pearls.
-* **Riveter** (hostile): hangs from cave ceilings and screams to wake nearby Wardens.
+* **Sifter** (hostile): a box-headed dune lurker whose lid snaps open like a trap. It burrows
+  in the sand and bursts out when you come near.
+* **Enchoer**: a big, sad, furry trader with moose antlers. Trades Sift goods for Chrome
+  Pearls and hums along to music.
+* **Riveter** (hostile): the sculk bat. It hangs head-down from cave ceilings with its long claws
+  dangling, and screams to wake nearby Wardens.
 
 ### Chrome
 A shifting cyan, pink and pearl liquid. It **heals** whatever soaks in it, but it is thick like

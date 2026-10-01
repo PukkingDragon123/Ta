@@ -39,5 +39,7 @@ public class SlumblerRenderer extends MobRenderer<Slumbler, SlumblerRenderState,
         state.blink = (entity.tickCount + entity.getId() * 31) % 131 < 4;
         state.yawn.copyFrom(entity.yawnAnimation);
         state.bite.copyFrom(entity.biteAnimation);
+        state.dying = state.deathTime;
+        state.deathTime = 0.0F;
     }
 }

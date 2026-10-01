@@ -114,7 +114,38 @@ public class SlumblerModel extends EntityModel<SlumblerRenderState> {
         this.rightGills.zRot -= yawnOpen * 0.4F;
         this.body.zScale = 1.0F + yawnOpen * 0.04F;
 
-        boolean eyesShut = s.sleeping || yawnOpen > 0.55F || s.blink;
+        // --- hurt: the head jerks up, the body flinches and the tail whips
+        if (s.hasRedOverlay) {
+            this.head.xRot -= 0.3F;
+            this.jaw.xRot += 0.35F;
+            this.body.yScale *= 0.92F;
+            this.body.xScale *= 1.05F;
+            for (int i = 0; i < 3; i++) {
+                this.tail[i].yRot += 0.35F * (i + 1) * Mth.sin(age * 1.4F);
+            }
+            this.leftGills.yRot += 0.4F;
+            this.rightGills.yRot -= 0.4F;
+        }
+
+        // --- death: rolls belly-up, legs stiff in the air, jaw lolling open
+        float roll = Anim.smooth(s.dying / 14.0F);
+        if (roll > 0.0F) {
+            this.body.zRot = roll * (float) Math.PI;
+            this.body.y += roll * 5.0F;
+            this.jaw.xRot = Math.max(this.jaw.xRot, roll * 0.5F);
+            for (int i = 0; i < 4; i++) {
+                float sgn = i % 2 == 0 ? 1.0F : -1.0F;
+                this.legs[i].yRot *= 1.0F - roll;
+                this.legs[i].zRot = -sgn * 0.2F * roll + Mth.sin(age * 1.8F + i) * 0.08F * (1.0F - roll);
+                this.feet[i].zRot = sgn * 0.15F * roll;
+            }
+            for (int i = 0; i < 3; i++) {
+                this.tail[i].yRot *= 1.0F - roll;
+                this.tail[i].xRot = -0.15F * roll;
+            }
+        }
+
+        boolean eyesShut = s.sleeping || yawnOpen > 0.55F || s.blink || roll > 0.6F;
         this.leftEyelid.visible = eyesShut;
         this.rightEyelid.visible = eyesShut;
     }

@@ -17,11 +17,14 @@ POSES = {
              'land': Pose(body={'scale': (1.25, 0.7, 1.25)}, left_ear={'rot': (-0.5, 0, 0.3)}, right_ear={'rot': (-0.5, 0, -0.3)})},
     'slumbler': {'rest': Pose(), 'yawn': Pose(head={'rot': (-0.35, 0, 0)}, jaw={'rot': (0.9, 0, 0)})},
     'sifter': {'rest': Pose(), 'chomp': Pose(lid={'rot': (-0.9, 0, 0)}), 'walk': Pose(left_leg={'rot': (0.5, 0, 0)}, right_leg={'rot': (-0.5, 0, 0)})},
-    'enchoer': {'rest': Pose(), 'spread': Pose(left_wing={'rot': (0, 1.4, -0.9)}, right_wing={'rot': (0, -1.4, 0.9)},
-                                               left_wing_tip={'rot': (-0.3, 0, 0)}, right_wing_tip={'rot': (-0.3, 0, 0)})},
-    'riveter': {'rest': Pose(), 'scream': Pose(left_wing={'rot': (0, 1.0, -0.4)}, right_wing={'rot': (0, -1.0, 0.4)},
-                                               left_wing_tip={'rot': (0, 1.2, 0)}, right_wing_tip={'rot': (0, -1.2, 0)},
-                                               jaw={'rot': (0.9, 0, 0)}, head={'rot': (0.3, 0, 0)})},
+    'enchoer': {'rest': Pose(), 'ponder': Pose(right_arm={'rot': (-1.25, 0.45, 0)}, right_forearm={'rot': (-1.3, 0, 0)}, head={'rot': (0.15, 0, 0.12)}),
+                'sing': Pose(left_arm={'rot': (0, 0, -1.1)}, right_arm={'rot': (0, 0, 1.1)}, left_forearm={'rot': (0, 0, -0.5)},
+                             right_forearm={'rot': (0, 0, 0.5)}, head={'rot': (-0.45, 0, 0)})},
+    'riveter': {'rest': Pose(),
+                'hang': Pose(body={'rot': (0, 0, 3.14159), 'pos': (0, -30, 0)}, left_wing={'rot': (3.0, 0, 0.1)}, right_wing={'rot': (3.0, 0, -0.1)},
+                             head={'rot': (-0.5, 0, 0)}),
+                'scream': Pose(left_wing={'rot': (0, 0, -1.3)}, right_wing={'rot': (0, 0, 1.3)}, jaw={'rot': (0.8, 0, 0)}, head={'rot': (-0.2, 0, 0)},
+                               **{f'{s}_claw_{i}': {'rot': (0, 0, (i - 1.5) * 0.25 * (1 if s == 'left' else -1))} for s in ('left', 'right') for i in range(4)})},
 }
 
 

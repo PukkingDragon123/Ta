@@ -274,14 +274,67 @@ class Painter:
                 x, y = x0 + dx, y0 + dy
                 if 0 <= x < fw and 0 <= y < fh and not (vertical and (y == 0 or y == fh - 1) and fh >= 4):
                     grid[y][x] = tone
+        # spots: hand-placed looking clusters of an accent colour (axolotl / frog style markings)
+        if spec.get('spots'):
+            acc = self.col(spec.get('accent', spec['color']))
+            for _ in range(max(1, int(fw * fh * spec['spots'] / 13))):
+                sh = rnd.choice(shapes[:4])
+                x0, y0 = rnd.randrange(fw), rnd.randrange(fh)
+                for dx, dy in sh:
+                    x, y = x0 + dx, y0 + dy
+                    if 0 <= x < fw and 0 <= y < fh and not (vertical and y == 0 and fh >= 4):
+                        grid[y][x] = acc
+        # ribs: every n-th column in the accent colour (fins, membranes)
+        if spec.get('ribs'):
+            acc = self.col(spec.get('accent', spec['color']))
+            for xx in range(0, fw, spec['ribs']):
+                for yy in range(fh):
+                    grid[yy][xx] = acc
+        # fur: short vertical strands of the dark (sometimes light) tone
+        streaks = spec.get('streaks', 0.0)
+        if streaks and fw > 1 and fh > 2:
+            for _ in range(int(fw * fh * streaks / 10)):
+                x0, y0 = rnd.randrange(fw), rnd.randrange(fh)
+                tone = dark if rnd.random() < 0.7 else lite
+                for dy in range(rnd.choice((2, 2, 3))):
+                    y = y0 + dy
+                    if 0 <= y < fh and not (vertical and y == 0 and fh >= 4):
+                        grid[y][x0] = tone
         alpha = spec.get('opacity', 255)
         glow_all = spec.get('glow', False)
+        # ragged fur hem: the bottom rows of a side face are cut into tufts
+        fringe = spec.get('fringe', 0) if vertical else 0
         for yy in range(fh):
             for xx in range(fw):
+                if fringe:
+                    cut = min(fringe, (0, 2, 1, 2, 0, 1, 2)[(xx + spec.get('fringe_phase', 0)) % 7])
+                    if yy >= fh - cut:
+                        continue
+                if self.cut(spec, xx, yy, fw, fh):
+                    continue
                 c = grid[yy][xx]
                 self.put(fx + xx, fy + yy, (c[0], c[1], c[2], alpha), glow_all)
         if 'map' in spec:
             self.draw_map(fx, fy, fw, fh, spec)
+
+    @staticmethod
+    def cut(spec, xx, yy, fw, fh):
+        """True where an alpha mode cuts a texel out of a thin plane."""
+        alpha_mode = spec.get('alpha')
+        if alpha_mode == 'membrane':
+            # ragged trailing edge on the bottom rows (or the outer columns)
+            edge = spec.get('edge', 'bottom')
+            depth = spec.get('edge_depth', 2)
+            if edge == 'bottom':
+                scallop = depth - int(abs(math.sin((xx + 1) * math.pi / spec.get('scallop', 3))) * depth + 0.5)
+                return yy >= fh - 1 - scallop
+            if edge == 'outer':
+                scallop = int(abs(math.sin((yy + 1) * math.pi / spec.get('scallop', 3))) * depth + 0.5)
+                return xx >= fw - 1 - (depth - scallop)
+        elif alpha_mode == 'frill':
+            # feathery frill: comb teeth
+            return yy < fh // 3 and xx % 2 == 1
+        return False
 
     def paint_face(self, face, fx, fy, fw, fh, spec, rnd):
         if spec.get('pattern') == 'mc':
@@ -350,23 +403,8 @@ class Painter:
                 col = shade(c, f)
                 if spec.get('outline', True) and (xx == 0 or yy == fh - 1 or xx == fw - 1) and fw > 2 and fh > 2 and vertical:
                     col = shade(col, -0.10)
-                alpha_mode = spec.get('alpha')
-                if alpha_mode == 'membrane':
-                    # ragged trailing edge on the bottom rows
-                    edge = spec.get('edge', 'bottom')
-                    depth = spec.get('edge_depth', 2)
-                    if edge == 'bottom':
-                        scallop = depth - int(abs(math.sin((xx + 1) * math.pi / spec.get('scallop', 3))) * depth + 0.5)
-                        if yy >= fh - 1 - scallop:
-                            continue
-                    elif edge == 'outer':
-                        scallop = int(abs(math.sin((yy + 1) * math.pi / spec.get('scallop', 3))) * depth + 0.5)
-                        if xx >= fw - 1 - (depth - scallop):
-                            continue
-                elif alpha_mode == 'frill':
-                    # feathery frill: comb teeth
-                    if yy < fh // 3 and (xx % 2 == 1):
-                        continue
+                if self.cut(spec, xx, yy, fw, fh):
+                    continue
                 self.put(fx + xx, fy + yy, col, glow_all)
         # ascii pixel map on top
         if 'map' in spec:

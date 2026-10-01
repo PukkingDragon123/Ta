@@ -193,6 +193,10 @@ public class Riveter extends Monster implements MusicListener {
             if (this.random.nextInt(20) == 0) {
                 this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getRandomX(0.4), this.getY() + 0.1, this.getRandomZ(0.4), 0, -0.01, 0);
             }
+            // dissolving into sculk souls as it shrivels
+            if (this.deathTime > 2 && this.random.nextInt(2) == 0) {
+                this.level().addParticle(ParticleTypes.SCULK_SOUL, this.getRandomX(0.6), this.getRandomY(), this.getRandomZ(0.6), 0, 0.03, 0);
+            }
         }
     }
 

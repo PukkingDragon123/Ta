@@ -33,9 +33,9 @@ import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Enchoer: a tall, crystalline wanderer of the Sift with a crest of antlers and two pairs of
- * folding wings. Enchoers barter in Sift goods - saplings, seeds, pearls, drums and even the
- * occasional Warden Core. They hum along to any music they hear, spreading their wings wide.
+ * Enchoer: a big, gentle, melancholy wanderer of the Sift - a mound of mint fur with a pale sad face
+ * and broad moose antlers. Enchoers barter in Sift goods - saplings, seeds, pearls, drums and even
+ * the occasional Warden Core. They hum along to any music they hear, spreading their arms wide.
  */
 public class Enchoer extends AbstractVillager implements MusicListener {
     private static final EntityDataAccessor<Integer> SINGING = SynchedEntityData.defineId(Enchoer.class, EntityDataSerializers.INT);
