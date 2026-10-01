@@ -59,7 +59,7 @@ public class SlingshotItem extends ProjectileWeaponItem {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        boolean hasAmmo = !player.getProjectile(stack).isEmpty();
+        boolean hasAmmo = AMMO.test(player.getProjectile(stack));
         if (!player.hasInfiniteMaterials() && !hasAmmo) {
             return InteractionResult.FAIL;
         }
@@ -74,6 +74,10 @@ public class SlingshotItem extends ProjectileWeaponItem {
             return false;
         }
         ItemStack ammo = player.getProjectile(stack);
+        if (!AMMO.test(ammo)) {
+            // creative players get a stand-in arrow from vanilla; fling a slime ball instead
+            ammo = ItemStack.EMPTY;
+        }
         if (ammo.isEmpty() && !player.hasInfiniteMaterials()) {
             return false;
         }
