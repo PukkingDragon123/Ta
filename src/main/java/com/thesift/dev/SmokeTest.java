@@ -1,5 +1,6 @@
 package com.thesift.dev;
 
+import com.mojang.datafixers.util.Pair;
 import com.thesift.TheSift;
 import com.thesift.portal.PortalFrames;
 import com.thesift.portal.SiftTeleporter;
@@ -14,12 +15,20 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +40,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -81,6 +94,7 @@ public final class SmokeTest {
             }
             TheSift.LOGGER.info("SMOKE: generated {} chunks in {} ms", (2 * RADIUS + 1) * (2 * RADIUS + 1), System.currentTimeMillis() - t0);
             maps(sift);
+            structures(sift);
             validateLoot(server);
             portals(server, sift);
             spawnMobs(sift);
@@ -191,6 +205,55 @@ public final class SmokeTest {
         for (int i = 0; i < b64.length(); i += 3000) {
             TheSift.LOGGER.info("SMOKEPNG {} {}", name, b64.substring(i, Math.min(b64.length(), i + 3000)));
         }
+    }
+
+    // ------------------------------------------------------------------ structures
+
+    private static final String[] STRUCTURES = {"collapsed_tower", "musical_temple", "chrome_well", "abandoned_altar", "stone_instrument",
+            "ruined_bridge", "buried_settlement", "dream_statue", "deep_shrine", "sift_ruins"};
+
+    private static void structures(ServerLevel sift) {
+        // every template parses and can be stamped into the world
+        StructureTemplateManager templates = sift.getStructureManager();
+        int x = -240;
+        for (String name : STRUCTURES) {
+            for (int i = 0; i < 4; i++) {
+                Identifier id = TheSift.id(name + "/" + name + "_" + i);
+                Optional<StructureTemplate> template = templates.get(id);
+                if (template.isEmpty()) {
+                    check(i > 0, "template " + id);
+                    break;
+                }
+                Vec3i size = template.get().getSize();
+                check(size.getX() > 0 && size.getY() > 0, "template size " + id);
+                BlockPos at = new BlockPos(x, 140, -260);
+                template.get().placeInWorld(sift, at, at, new StructurePlaceSettings(), sift.getRandom(), Block.UPDATE_CLIENTS);
+                TheSift.LOGGER.info("SMOKE: placed {} size {} at {}", id, size, at);
+                x += size.getX() + 4;
+            }
+        }
+        // every structure can be found by the chunk generator
+        Registry<Structure> registry = sift.registryAccess().lookupOrThrow(Registries.STRUCTURE);
+        for (String name : STRUCTURES) {
+            Optional<Holder.Reference<Structure>> holder = registry.get(ResourceKey.create(Registries.STRUCTURE, TheSift.id(name)));
+            check(holder.isPresent(), "structure registered " + name);
+            if (holder.isEmpty()) {
+                continue;
+            }
+            Pair<BlockPos, Holder<Structure>> found = sift.getChunkSource().getGenerator()
+                    .findNearestMapStructure(sift, HolderSet.direct(holder.get()), BlockPos.ZERO, 40, false);
+            TheSift.LOGGER.info("SMOKE: nearest {} = {}", name, found == null ? "none" : found.getFirst());
+            check(found != null, "structure locatable " + name);
+        }
+        Map<String, Integer> starts = new TreeMap<>();
+        for (int cx = -RADIUS; cx <= RADIUS; cx++) {
+            for (int cz = -RADIUS; cz <= RADIUS; cz++) {
+                for (Structure st : sift.getChunk(cx, cz).getAllStarts().keySet()) {
+                    starts.merge(String.valueOf(registry.getKey(st)), 1, Integer::sum);
+                }
+            }
+        }
+        TheSift.LOGGER.info("SMOKE: structure starts near spawn {}", starts);
     }
 
     // ------------------------------------------------------------------ data

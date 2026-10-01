@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 77333757,
+    "separation": 8,
+    "spacing": 26
+  },
+  "structures": [
+    {
+      "structure": "thesift:abandoned_altar",
+      "weight": 1
+    }
+  ]
+}

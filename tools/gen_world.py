@@ -370,6 +370,11 @@ def biome(name, *, fog, sky, water, grass, foliage, temp, down, spawns, parts, f
     steps = [[] for _ in range(11)]
     for step, f in feats:
         steps[step].append(rl(f))
+    # Every biome must list shared features in the same relative order (vanilla rejects order cycles),
+    # so sort each step by one global order: our features in creation order, then vanilla ones.
+    order = [rl(n) for n in PLACED]
+    for st in steps:
+        st.sort(key=lambda f: (order.index(f) if f in order else len(order), f))
     w(f'worldgen/biome/{name}', {
         'attributes': {
             'minecraft:audio/ambient_sounds': {'loop': ambient_loop,

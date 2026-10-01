@@ -98,16 +98,16 @@
       "thesift:ore_hushslate_blob"
     ],
     [
-      "minecraft:sculk_vein",
-      "minecraft:sculk_patch_deep_dark"
+      "minecraft:sculk_patch_deep_dark",
+      "minecraft:sculk_vein"
     ],
     [
       "thesift:chrome_spring"
     ],
     [
+      "thesift:glowbell_vine",
       "thesift:lumen_moss_patch_floor",
-      "thesift:lumen_moss_patch_ceiling",
-      "thesift:glowbell_vine"
+      "thesift:lumen_moss_patch_ceiling"
     ],
     []
   ],

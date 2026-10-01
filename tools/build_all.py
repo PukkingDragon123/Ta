@@ -7,6 +7,7 @@ import gen_assets  # noqa: E402
 import gen_data  # noqa: E402
 import gen_java  # noqa: E402
 import gen_models  # noqa: E402
+import gen_structures  # noqa: E402
 import gen_textures  # noqa: E402
 import gen_world  # noqa: E402
 
@@ -15,6 +16,7 @@ if __name__ == '__main__':
     gen_assets.generate()
     gen_world.generate()
     gen_data.generate()
+    gen_structures.generate()
     gen_assets.finalize()
     gen_models.main('--no-preview' not in sys.argv)
     gen_textures.main()
