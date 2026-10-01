@@ -12,6 +12,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(__file__))
+import mcitems as MI  # noqa: E402
+import mctex as M  # noqa: E402
 import sprites as S  # noqa: E402
 from texlib import (Tex, bricks, cobbled, darken, draw_map, fbm, hx, iridescent, lerp, lighten, polished, quantize, ramp,  # noqa: E402
                     shade_sprite, stone, tiles, value_noise, with_alpha)
@@ -33,11 +35,11 @@ LUMEN = ramp('#1f6f80', '#29889a', '#34a2b0', '#43bcc4', '#62d6d6')
 SERBIM = ramp('#1f6d94', '#2b8fbb', '#3fb0da', '#66d2f0', '#9aeefc', '#d4fbff')
 SIFTITE = ramp('#2a8ea8', '#3fb6cb', '#63d6e2', '#9aeaf0', '#d8fbfd')
 SIFTITE_PINK = hx('#f29bd6')
-LULL_BARK = ramp('#4f4a6d', '#625c82', '#766f97', '#8b84ab')
+LULL_BARK = ramp('#1b2830', '#24353e', '#2f444e', '#3c5560', '#4a6670')
 LULL_WOOD = ramp('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea', '#e3def3')
-WISH_BARK = ramp('#5a2744', '#6f3355', '#844267', '#9a5379')
+WISH_BARK = ramp('#4a1f38', '#5a2744', '#6f3355', '#844267', '#9a5379')
 WISH_WOOD = ramp('#c9738f', '#d98aa4', '#e6a0b8', '#f0b6ca', '#f8cbdb')
-LULL_LEAF = ramp('#2fa9b2', '#43c3c6', '#60d8d6', '#86e9e2', '#b3f5ef', '#e2fffb')
+LULL_LEAF = ramp('#7f97a6', '#a4bac6', '#bfd2db', '#d6e5eb', '#ebf3f6', '#f8fcfd')
 WISH_LEAF = ramp('#d86aa4', '#e886b8', '#f3a2cb', '#f9bcdb', '#fdd5e8', '#fff0f7')
 
 NEEDED = []
@@ -87,20 +89,22 @@ def crack(t, seed, color, n=2):
 
 
 def moss_over(t, seed, pal, glow=None, density=0.35):
+    """Moss patches creeping down from the top: two tones, lit along their upper edges."""
     n = fbm(16, 16, seed, (8, 4, 2))
     rnd = random.Random(seed)
+    moss = [[n[y, x] + (0.25 if y < 4 else 0.1 if y < 8 else 0) > 1 - density for x in range(16)] for y in range(16)]
     for y in range(16):
         for x in range(16):
-            v = n[y, x] + (0.15 if y < 5 else 0)
-            if v > 1 - density:
-                t.set(x, y, pal[min(len(pal) - 1, int((v - (1 - density)) / density * len(pal)))])
-                if glow and rnd.random() < 0.06:
+            if moss[y][x]:
+                top = y == 0 or not moss[y - 1][x]
+                t.set(x, y, pal[3] if top else pal[1] if (x + y) % 5 else pal[0])
+                if glow and rnd.random() < 0.04:
                     t.set(x, y, glow)
     return t
 
 
 def chiseled(pal, motif, seed, keys):
-    t = polished(pal, seed)
+    t = M.polished(pal[1:6], seed)
     draw_map(t, motif, keys, 3, 3)
     return t
 
@@ -120,57 +124,57 @@ RUNE = [
 
 
 def stone_textures():
-    out('block/dreamstone', stone(DREAM[1:5], 11, flecks=(DREAM[5], 6)))
-    out('block/cobbled_dreamstone', cobbled(DREAM[:5], 12, DREAM_MORTAR))
-    out('block/polished_dreamstone', polished(DREAM, 13))
-    out('block/dreamstone_bricks', bricks(DREAM[1:], DREAM_MORTAR, 14))
-    out('block/cracked_dreamstone_bricks', crack(bricks(DREAM[1:], DREAM_MORTAR, 14), 15, DREAM_MORTAR, 3))
-    out('block/mossy_dreamstone_bricks', moss_over(bricks(DREAM[1:], DREAM_MORTAR, 14), 16, LUMEN, hx('#c8fff6')))
-    out('block/dreamstone_tiles', tiles(DREAM[1:], DREAM_MORTAR, 17))
-    out('block/chiseled_dreamstone', chiseled(DREAM, RUNE, 18, {'L': DREAM[5], 'd': DREAM[0]}))
-    pil = stone(DREAM[2:5], 19, cells=(16, 4, 2))
+    D = DREAM
+    out('block/dreamstone', M.stone(D[0:5], 11))
+    out('block/cobbled_dreamstone', M.cobbled(D[0:5], DREAM_MORTAR, 12))
+    out('block/polished_dreamstone', M.polished(D[1:6], 13))
+    out('block/dreamstone_bricks', M.bricks(D[1:6], DREAM_MORTAR, 14))
+    out('block/cracked_dreamstone_bricks', crack(M.bricks(D[1:6], DREAM_MORTAR, 14), 15, DREAM_MORTAR, 3))
+    out('block/mossy_dreamstone_bricks', moss_over(M.bricks(D[1:6], DREAM_MORTAR, 14), 16, LUMEN))
+    out('block/dreamstone_tiles', M.tiles(D[1:6], DREAM_MORTAR, 17))
+    out('block/chiseled_dreamstone', chiseled(D, RUNE, 18, {'L': D[5], 'd': D[0]}))
+    pil = M.stone(D[1:6], 19, light=3, dark=3)
     for y in range(16):
-        pil.set(0, y, DREAM[5]); pil.set(1, y, DREAM[4]); pil.set(14, y, DREAM[1]); pil.set(15, y, DREAM[0])
-        if y % 5 == 0:
+        pil.set(0, y, D[5]); pil.set(1, y, D[4]); pil.set(14, y, D[1]); pil.set(15, y, D[0])
+        if y % 8 == 0:
             for x in range(2, 14):
-                pil.set(x, y, DREAM[1])
+                pil.set(x, y, D[1])
     out('block/dreamstone_pillar_side', pil)
-    out('block/dreamstone_pillar_top', polished(DREAM, 20))
-    hs = stone(HUSH[1:5], 21, flecks=(hx('#3fd6d0'), 2), cells=(16, 4, 2))
+    out('block/dreamstone_pillar_top', M.polished(D[1:6], 20))
+    hs = M.stone(HUSH[0:5], 21, flecks=(hx('#3fd6d0'), 2))
     for y in range(0, 16, 4):
         for x in range(16):
-            if random.Random(y * 16 + x).random() < 0.6:
+            if random.Random(y * 16 + x).random() < 0.5:
                 hs.set(x, y, HUSH[1])
     out('block/hushslate', hs)
-    out('block/hushslate_top', polished(HUSH, 22, inner=False))
-    out('block/cobbled_hushslate', cobbled(HUSH[:5], 23, HUSH_MORTAR))
-    out('block/polished_hushslate', polished(HUSH, 24))
-    out('block/hushslate_bricks', bricks(HUSH[1:], HUSH_MORTAR, 25))
-    out('block/cracked_hushslate_bricks', crack(bricks(HUSH[1:], HUSH_MORTAR, 25), 26, HUSH_MORTAR, 3))
-    out('block/hushslate_tiles', tiles(HUSH[1:], HUSH_MORTAR, 27, 4))
+    out('block/hushslate_top', M.polished(HUSH[0:5], 22, inner=False))
+    out('block/cobbled_hushslate', M.cobbled(HUSH[0:5], HUSH_MORTAR, 23))
+    out('block/polished_hushslate', M.polished(HUSH[1:6], 24))
+    out('block/hushslate_bricks', M.bricks(HUSH[1:6], HUSH_MORTAR, 25))
+    out('block/cracked_hushslate_bricks', crack(M.bricks(HUSH[1:6], HUSH_MORTAR, 25), 26, HUSH_MORTAR, 3))
+    out('block/hushslate_tiles', M.tiles(HUSH[1:6], HUSH_MORTAR, 27, 4))
     out('block/chiseled_hushslate', chiseled(HUSH, RUNE, 28, {'L': hx('#4fe8e0'), 'd': HUSH[0]}))
     # sand & sandstone
-    out('block/dreamsand', stone(SAND[1:5], 31, flecks=(hx('#fff4fa'), 10), cells=(4, 2, 1)))
-    ss = stone(SAND[1:5], 32, cells=(8, 4, 2))
+    out('block/dreamsand', M.grain(SAND[0:5], 31))
+    ss = M.stone(SAND[1:6], 32, light=3, dark=4, core=0.0)
     for x in range(16):
         ss.set(x, 0, SAND[5]); ss.set(x, 1, SAND[4]); ss.set(x, 2, SAND[2])
         ss.set(x, 10, SAND[1]); ss.set(x, 11, SAND[2])
         ss.set(x, 15, SAND[0])
     out('block/dreamsandstone', ss)
-    out('block/dreamsandstone_top', stone(SAND[2:6], 33, cells=(8, 4, 2)))
-    bot = stone(SAND[1:4], 34)
-    out('block/dreamsandstone_bottom', crack(bot, 35, SAND[0], 2))
-    out('block/smooth_dreamsandstone', stone(SAND[2:5], 36, cells=(16, 8, 8)))
-    cut = stone(SAND[2:5], 37, cells=(16, 8, 4))
+    out('block/dreamsandstone_top', M.stone(SAND[1:6], 33, light=4, dark=3, core=0.0))
+    out('block/dreamsandstone_bottom', crack(M.stone(SAND[0:5], 34, light=3, dark=5, core=0.0), 35, SAND[0], 2))
+    out('block/smooth_dreamsandstone', M.stone(SAND[1:6], 36, light=2, dark=2, core=0.0))
+    cut = M.stone(SAND[1:6], 37, light=2, dark=2, core=0.0)
     for x in range(16):
         cut.set(x, 0, SAND[5]); cut.set(x, 15, SAND[0]); cut.set(x, 7, SAND[1]); cut.set(x, 8, SAND[4])
     out('block/cut_dreamsandstone', cut)
-    ch = polished(SAND, 38)
+    ch = M.polished(SAND[1:6], 38)
     draw_map(ch, ['..........', '..hh..hh..', '.h..hh..h.', '.h..pp..h.', '..h.pp.h..', '...hppg...', '..h.pp.h..', '.h..pp..h.', '..hh..hh..',
                   '..........'], {'h': SAND[0], 'p': hx('#c95b8f'), 'g': hx('#ffe89a')}, 3, 3)
     out('block/chiseled_dreamsandstone', ch)
     for i in range(4):
-        sus = stone(SAND[1:5], 31, flecks=(hx('#fff4fa'), 10 - i * 2), cells=(4, 2, 1))
+        sus = M.grain(SAND[0:5], 31)
         rnd = random.Random(40 + i)
         for _ in range(2 + i * 2):
             x, y = rnd.randrange(3, 13), rnd.randrange(3, 13)
@@ -179,8 +183,8 @@ def stone_textures():
             sus.set(rnd.randrange(16), rnd.randrange(16), SAND[0])
         out(f'block/suspicious_dreamsand_{i}', sus)
     # blush bricks
-    out('block/blush_bricks', bricks(BLUSH[1:], BLUSH_MORTAR, 41, rows=4, width=8))
-    out('block/cracked_blush_bricks', crack(bricks(BLUSH[1:], BLUSH_MORTAR, 41), 42, BLUSH_MORTAR, 3))
+    out('block/blush_bricks', M.bricks(BLUSH[1:6], BLUSH_MORTAR, 41))
+    out('block/cracked_blush_bricks', crack(M.bricks(BLUSH[1:6], BLUSH_MORTAR, 41), 42, BLUSH_MORTAR, 3))
     out('block/chiseled_blush_bricks', chiseled(BLUSH, ['..........', '...gggg...', '..g....g..', '.g.pPPp.g.', '.g.PWWP.g.', '.g.PWWP.g.',
                                                         '.g.pPPp.g.', '..g....g..', '...gggg...', '..........'], 43,
                                                 {'g': hx('#ffd98a'), 'p': BLUSH[0], 'P': BLUSH[4], 'W': hx('#ffe8f0')}))
@@ -202,70 +206,48 @@ def grass_side(top_pal, soil_pal, seed):
 
 
 def soils():
-    soil = stone(SOIL[:4], 51, flecks=(SOIL[4], 7), cells=(4, 2, 1))
+    soil = M.soil(SOIL[0:5], 51)
     out('block/sift_soil', soil)
-    top = stone(GRASS[:5], 52, cells=(4, 2, 1))
+    top = M.stone(GRASS[0:5], 52, light=8, dark=8, core=0.2)
     rnd = random.Random(53)
-    for _ in range(9):
-        top.set(rnd.randrange(16), rnd.randrange(16), GRASS[4])
     for _ in range(3):
         top.set(rnd.randrange(16), rnd.randrange(16), hx('#f7a8d2'))
     out('block/sift_grass_block_top', top)
+    out('block/sift_grass_block_side', M.grass_side(GRASS, soil, 54))
     # coral turf: the salmon-pink ground of the reference biome
     coral = ramp('#d8646f', '#e8757d', '#f2868b', '#f9989a', '#ffaeac')
-    ct = stone(coral[1:5], 57, cells=(4, 2, 1))
-    rnd = random.Random(58)
-    for _ in range(8):
-        ct.set(rnd.randrange(16), rnd.randrange(16), coral[0])
-    for _ in range(5):
-        ct.set(rnd.randrange(16), rnd.randrange(16), coral[4])
-    out('block/coral_turf_top', ct)
-    out('block/coral_turf_side', grass_side(coral, SOIL, 59))
-    out('block/sift_grass_block_side', grass_side(GRASS, SOIL, 54))
-    moss = stone(LUMEN, 55, cells=(4, 2, 1))
+    out('block/coral_turf_top', M.stone(coral, 57, light=9, dark=9, core=0.25))
+    out('block/coral_turf_side', M.grass_side(coral, soil, 59))
+    moss = M.stone(LUMEN, 55, light=8, dark=6, core=0.2)
     rnd = random.Random(56)
-    for _ in range(10):
-        x, y = rnd.randrange(16), rnd.randrange(16)
-        moss.set(x, y, hx('#c8fff6'))
+    for _ in range(5):
+        moss.set(rnd.randrange(16), rnd.randrange(16), hx('#c8fff6'))
     out('block/lumen_moss_block', moss)
     # ores
-    for name, base, seed in (('serbim_ore', DREAM[1:5], 61), ('deep_serbim_ore', HUSH[1:5], 62)):
-        t = stone(base, seed)
-        rnd = random.Random(seed)
-        for _ in range(4):
-            cx, cy = rnd.randrange(2, 13), rnd.randrange(2, 13)
-            for dx, dy, c in ((0, 0, 4), (1, 0, 3), (0, 1, 2), (1, 1, 1), (-1, 0, 3), (0, -1, 5)):
-                if rnd.random() < 0.85:
-                    t.set(cx + dx, cy + dy, SERBIM[c])
-        out(f'block/{name}', t)
-    rb = stone(SERBIM[:4], 63, cells=(4, 4, 2))
-    out('block/raw_serbim_block', crack(rb, 64, SERBIM[0], 3))
-    sb = polished(SERBIM[1:], 65)
+    for name, base, seed in (('serbim_ore', M.stone(DREAM[0:5], 61), 61), ('deep_serbim_ore', M.stone(HUSH[0:5], 62), 62)):
+        out(f'block/{name}', M.ore(base, [SERBIM[0], SERBIM[2], SERBIM[3], SERBIM[5]], seed, outline=None))
+    rb = M.cobbled(SERBIM[0:5], SERBIM[0], 63)
+    out('block/raw_serbim_block', rb)
+    sb = M.polished(SERBIM[1:6], 65)
+    for x in range(3, 13):
+        sb.set(x, 5, SERBIM[4]); sb.set(x, 10, SERBIM[2])
     for (x, y) in ((3, 3), (12, 3), (3, 12), (12, 12)):
-        sb.set(x, y, SERBIM[0]); sb.set(x + 1, y + 1, SERBIM[5])
+        sb.set(x, y, SERBIM[0])
     out('block/serbim_block', sb)
-    sf = Tex()
-    for y in range(16):
-        for x in range(16):
-            c = iridescent(x, y, 1.0, 0.35)
-            c = lerp(c, SIFTITE[2], 0.45)
-            sf.set(x, y, c)
-    for i in range(16):
-        sf.set(i, 0, SIFTITE[4]); sf.set(0, i, SIFTITE[4]); sf.set(i, 15, SIFTITE[0]); sf.set(15, i, SIFTITE[0])
+    sf = M.polished(SIFTITE, 66)
     for i in range(3, 13):
-        sf.set(i, i, lighten(SIFTITE[3], 0.3))
-        sf.set(i, 15 - i, SIFTITE_PINK if i % 3 == 0 else SIFTITE[3])
+        sf.set(i, i, SIFTITE[4])
+        if i % 3 == 0:
+            sf.set(i, 15 - i, SIFTITE_PINK)
     out('block/siftite_block', sf)
     g = Tex()
-    for y in range(16):
-        for x in range(16):
-            edge = x in (0, 15) or y in (0, 15)
-            if edge:
-                g.set(x, y, with_alpha(iridescent(x, y), 230))
-            elif (x + y) % 13 == 0 or (x - y) % 11 == 3:
-                g.set(x, y, with_alpha(hx('#ffffff'), 120))
-            else:
-                g.set(x, y, with_alpha(iridescent(x, y, 2.0), 50))
+    frame = with_alpha(hx('#cdeff5'), 255)
+    for i in range(16):
+        g.set(i, 0, frame); g.set(0, i, frame); g.set(i, 15, with_alpha(hx('#9fd2e0'), 255)); g.set(15, i, with_alpha(hx('#9fd2e0'), 255))
+    for k in range(4):
+        g.set(3 + k, 6 - k, with_alpha(hx('#ffffff'), 200))
+        g.set(9 + k, 12 - k, with_alpha(hx('#ffffff'), 170))
+    g.set(4, 6, with_alpha(hx('#ffc6ea'), 200))
     out('block/chrome_glass', g)
 
 
@@ -349,7 +331,7 @@ def leaves(pal, seed, blossom=None):
 
 
 def door(wood, bark, seed, top):
-    t = planks(wood, seed)
+    t = M.planks(wood, seed)
     for y in range(16):
         t.set(0, y, bark[1]); t.set(15, y, bark[1])
     if top:
@@ -368,7 +350,7 @@ def door(wood, bark, seed, top):
 
 
 def trapdoor(wood, bark, seed):
-    t = planks(wood, seed)
+    t = M.planks(wood, seed)
     for i in range(16):
         t.set(i, 0, bark[1]); t.set(i, 15, bark[1]); t.set(0, i, bark[1]); t.set(15, i, bark[1])
     for y in (4, 5, 10, 11):
@@ -378,15 +360,15 @@ def trapdoor(wood, bark, seed):
 
 
 def woods():
-    for w, bark, wood, leafp, blossom in (('lullwood', LULL_BARK, LULL_WOOD, LULL_LEAF, hx('#fff4a8')),
+    for w, bark, wood, leafp, blossom in (('lullwood', LULL_BARK, LULL_WOOD, LULL_LEAF, None),
                                           ('wishwood', WISH_BARK, WISH_WOOD, WISH_LEAF, hx('#ffe89a'))):
         seed = 70 if w == 'lullwood' else 80
-        out(f'block/{w}_log', log_side(bark, seed))
-        out(f'block/{w}_log_top', log_top(bark, wood, seed))
-        out(f'block/stripped_{w}_log', log_side(wood[1:], seed + 1))
-        out(f'block/stripped_{w}_log_top', log_top(wood[:3], wood, seed + 1))
-        out(f'block/{w}_planks', planks(wood, seed + 2))
-        out(f'block/{w}_leaves', leaves(leafp, seed + 3, blossom if w == 'wishwood' else None), LEAVES_META)
+        out(f'block/{w}_log', M.log_side(bark, seed))
+        out(f'block/{w}_log_top', M.log_top(bark, wood))
+        out(f'block/stripped_{w}_log', M.log_side(wood, seed + 1))
+        out(f'block/stripped_{w}_log_top', M.log_top(wood, wood))
+        out(f'block/{w}_planks', M.planks(wood, seed + 2))
+        out(f'block/{w}_leaves', M.leaves(leafp, seed + 3, blossom), LEAVES_META)
         out(f'block/{w}_door_top', door(wood, bark, seed + 4, True), CUTOUT)
         out(f'block/{w}_door_bottom', door(wood, bark, seed + 4, False), CUTOUT)
         out(f'block/{w}_trapdoor', trapdoor(wood, bark, seed + 5), CUTOUT)
@@ -764,25 +746,24 @@ def items():
                                                       'P': hx('#ff9fd8')}))
     out('item/sift_cake', pal_sprite(S.CAKE_ITEM, {'W': hx('#fff0fa'), 'w': hx('#ffd6ec'), 's': hx('#7fe3e6'), 'p': hx('#f0a9cb'),
                                                   'P': hx('#7fe3e6'), 'g': hx('#fff7c2'), 'd': hx('#c77fa6')}))
-    tools = {'sword': S.SWORD, 'pickaxe': S.PICKAXE, 'axe': S.AXE, 'shovel': S.SHOVEL, 'hoe': S.HOE, 'spear': S.SPEAR}
-    for t, rows in tools.items():
-        k = tool_keys(SIFTITE, '#4a3a6e')
-        img = pal_sprite(rows, k)
-        # a pink glint along the edge, like light on Siftite
+    # tools and armour: vanilla silhouettes, shaded by rule (see mcitems.py), with a pink glint
+    gear = [hx('#164f66'), SIFTITE[0], SIFTITE[1], SIFTITE[3], SIFTITE[4]]
+
+    def glint(img, n):
+        k = 0
         for y in range(16):
             for x in range(16):
-                if img.get(x, y)[:3] == SIFTITE[-1][:3] and (x + y) % 4 == 0:
-                    img.set(x, y, SIFTITE_PINK)
-        out(f'item/siftite_{t}', img)
-    out('item/siftite_spear_in_hand', pal_sprite(S.SPEAR, tool_keys(SIFTITE, '#4a3a6e')))
-    for a, rows in (('helmet', S.HELMET), ('chestplate', S.CHESTPLATE), ('leggings', S.LEGGINGS), ('boots', S.BOOTS)):
-        k = tool_keys(SIFTITE)
-        img = pal_sprite(rows, k)
-        for y in range(16):
-            for x in range(16):
-                if img.get(x, y)[:3] == SIFTITE[-3][:3] and (x * 3 + y) % 7 == 0:
-                    img.set(x, y, SIFTITE_PINK)
-        out(f'item/siftite_{a}', img)
+                if img.get(x, y)[:3] == gear[4][:3] and k < n:
+                    k += 1
+                    if k == n:
+                        img.set(x, y, SIFTITE_PINK)
+        return img
+
+    for t, fn in MI.TOOLS.items():
+        out(f'item/siftite_{t}', glint(MI.shade(fn(), gear), 2))
+    out('item/siftite_spear_in_hand', glint(MI.shade(MI.spear(), gear), 2))
+    for a, rows in MI.ARMOR.items():
+        out(f'item/siftite_{a}', glint(MI.shade(MI.mask(rows), gear), 1))
     # slingshot + pulling frames
     base_keys = {'h': hx('#8a6a4a'), 'w': hx('#6fe2dc')}
     out('item/slingshot', pal_sprite(S.SLINGSHOT, base_keys))

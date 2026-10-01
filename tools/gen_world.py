@@ -39,8 +39,8 @@ def dimension():
                 {'ticks': 0, 'value': '#ffffff'}, {'ticks': 3000, 'value': '#ffe3f3'}, {'ticks': 6000, 'value': '#ffffff'},
                 {'ticks': 9000, 'value': '#e3f7ff'}], 'modifier': 'multiply'},
             'minecraft:visual/sky_light_color': {'keyframes': [
-                {'ticks': 0, 'value': '#ffffff'}, {'ticks': 3000, 'value': '#ffd9ef'}, {'ticks': 6000, 'value': '#ffffff'},
-                {'ticks': 9000, 'value': '#d9f4ff'}], 'modifier': 'multiply'},
+                {'ticks': 0, 'value': '#ffffff'}, {'ticks': 3000, 'value': '#fff6fb'}, {'ticks': 6000, 'value': '#ffffff'},
+                {'ticks': 9000, 'value': '#f4fbff'}], 'modifier': 'multiply'},
         }})
     GA.tag('timeline', f'{NS}:in_sift', '#minecraft:universal')
     GA.tag('timeline', f'{NS}:in_sift', f'{NS}:dream_cycle')
@@ -54,13 +54,13 @@ def dimension():
                                             'error_message': {'translate': f'message.{NS}.bed.dreaming'}},
             'minecraft:gameplay/respawn_anchor_works': False,
             'minecraft:gameplay/nether_portal_spawns_piglin': False,
-            'minecraft:gameplay/sky_light_level': 13.0,
-            'minecraft:visual/ambient_light_color': '#1c1234',
-            'minecraft:visual/cloud_color': '#ccffd6ec',
+            'minecraft:gameplay/sky_light_level': 15.0,
+            'minecraft:visual/ambient_light_color': '#161c1e',
+            'minecraft:visual/cloud_color': '#00ffffff',
             'minecraft:visual/cloud_height': 236.0,
-            'minecraft:visual/fog_color': '#e4c6f2',
-            'minecraft:visual/sky_color': '#8a7ce0',
-            'minecraft:visual/sky_light_color': '#f2d6ff',
+            'minecraft:visual/fog_color': '#aef0e2',
+            'minecraft:visual/sky_color': '#5ed6c6',
+            'minecraft:visual/sky_light_color': '#fffdf8',
             'neoforge:custom_skybox': f'{NS}:nebula',
         },
         'coordinate_scale': 1.0,
@@ -460,7 +460,7 @@ def biome(name, *, fog, sky, water, grass, foliage, temp, down, spawns, parts, f
 
 
 COMMON_UNDERGROUND = [(6, 'ore_serbim'), (6, 'ore_hushslate_blob'), (8, 'chrome_spring')]
-DREAMY_PARTICLES = [('drifting_soul', 0.0025), ('dream_pollen', 0.004), ('glow_dust', 0.003), ('sift_mist', 0.0006), ('wishing_star', 0.00012)]
+DREAMY_PARTICLES = [('drifting_soul', 0.0008), ('dream_pollen', 0.0012), ('glow_dust', 0.0008), ('sift_mist', 0.0003), ('wishing_star', 0.00005)]
 
 
 def biomes():

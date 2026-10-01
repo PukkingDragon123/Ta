@@ -31,7 +31,7 @@
         },
         {
           "ticks": 3000,
-          "value": "#ffd9ef"
+          "value": "#fff6fb"
         },
         {
           "ticks": 6000,
@@ -39,7 +39,7 @@
         },
         {
           "ticks": 9000,
-          "value": "#d9f4ff"
+          "value": "#f4fbff"
         }
       ],
       "modifier": "multiply"

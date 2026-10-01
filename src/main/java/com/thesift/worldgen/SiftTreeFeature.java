@@ -70,7 +70,7 @@ public record SiftTreeFeature(BlockState trunk, BlockState leaves, Optional<Bloc
         }
         b.finish(this.leaves);
         if (this.hanging.isPresent()) {
-            b.hangCurtains(this.hanging.get(), wide ? 0.22F : 0.14F, wide ? 4 : 3);
+            b.hangCurtains(this.hanging.get(), wide ? 0.4F : 0.32F, wide ? 5 : 4);
         }
         return true;
     }

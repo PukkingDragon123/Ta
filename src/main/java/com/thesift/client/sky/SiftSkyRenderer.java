@@ -24,9 +24,10 @@ import org.joml.Matrix4fc;
 import org.joml.Vector3f;
 
 /**
- * The Sift's sky: a seamless nebula cube map (baked by tools/gen_textures.py) that slowly wheels
- * overhead. Faces are laid out 3x2 in one texture; each face maps (s, t) in [-1, 1] to a direction
- * exactly like the generator does, so the edges line up.
+ * The Sift's sky: a seamless cube map (baked by tools/gen_textures.py) holding a clean cyan
+ * gradient, turquoise overhead and pale mint at the horizon. Faces are laid out 3x2 in one texture;
+ * each face maps (s, t) in [-1, 1] to a direction exactly like the generator does, so the edges
+ * line up.
  */
 public class SiftSkyRenderer implements CustomSkyboxRenderer {
     private static final Identifier TEXTURE = TheSift.id("textures/environment/nebula.png");
@@ -75,8 +76,8 @@ public class SiftSkyRenderer implements CustomSkyboxRenderer {
             this.buffer = this.build();
         }
         AbstractTexture texture = mc.getTextureManager().getTexture(TEXTURE);
-        float time = mc.level != null ? (mc.level.getGameTime() % 240000L) + mc.getDeltaTracker().getGameTimeDeltaPartialTick(false) : 0.0F;
-        Matrix4f view = new Matrix4f(modelViewMatrix).rotateZ(0.35F).rotateY(time * 0.00012F);
+        // the gradient must stay level with the horizon, so the dome never tilts or turns
+        Matrix4f view = new Matrix4f(modelViewMatrix);
         RenderSystem.setShaderFog(skyFog);
         RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
         GpuBuffer indexBuffer = indices.getBuffer(FACES * 2 * 6);
