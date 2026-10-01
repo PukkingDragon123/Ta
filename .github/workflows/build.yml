@@ -61,7 +61,7 @@ jobs:
         run: |
           test -f run-smoke/world/level.dat
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglx-mesa0 mesa-utils > /dev/null
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglx-mesa0 libegl1 libegl-mesa0 libgles2 mesa-utils > /dev/null
           python3 -m pip install --quiet --break-system-packages nbtlib pillow
           mkdir -p run-client/saves
           rm -rf run-client/saves/smoke
@@ -72,7 +72,18 @@ jobs:
           export LIBGL_ALWAYS_SOFTWARE=1
           export GALLIUM_DRIVER=llvmpipe
           xvfb-run -a glxinfo -B 2>&1 | head -12 || true
-          timeout 2700 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runSmokeClient --no-configuration-cache > client.log 2>&1 || true
+          # the game wants an sRGB-capable framebuffer, which Xvfb's GLX visuals lack; Mesa's EGL has it
+          export SDL_VIDEO_FORCE_EGL=1
+          (timeout 2400 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runSmokeClient --no-configuration-cache > client.log 2>&1 || true) &
+          pid=$!
+          # don't sit on the "no graphics backend" dialog for the whole timeout
+          while kill -0 $pid 2>/dev/null; do
+            if grep -q "No supported graphics backend\|Failed to create backend Vulkan" client.log 2>/dev/null; then
+              echo "graphics backend failed; stopping"; sleep 5; pkill -f runSmokeClient || true; pkill -f java || true; break
+            fi
+            sleep 10
+          done
+          wait $pid || true
           grep -E "CLIENTSMOKE|ERROR|Exception|Caused by|at com.thesift|Backend|backend|OpenGL|Renderer|crash" client.log | head -500 || true
           tail -40 client.log
           ls -la run-client/screenshots || true
@@ -94,7 +105,8 @@ jobs:
           python3 .github/scripts/prepare_client_world.py run-client-vk/saves/smoke/level.dat
           cp run-client/options.txt run-client-vk/options.txt
           xvfb-run -a vulkaninfo --summary 2>&1 | grep -E "apiVersion|deviceName|driverName" | head -6 || true
-          timeout 2400 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runSmokeClientVulkan --no-configuration-cache > client-vk.log 2>&1 || true
+          unset SDL_VIDEO_FORCE_EGL
+          timeout 1500 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runSmokeClientVulkan --no-configuration-cache > client-vk.log 2>&1 || true
           grep -E "CLIENTSMOKE|ERROR|Exception|Caused by|at com.thesift|Vulkan|backend" client-vk.log | head -300 || true
           tail -20 client-vk.log
           grep -q "CLIENTSMOKE PASSED" client-vk.log
