@@ -20,7 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 /**
- * A member of the Dictator's alien orchestra. Every player has one signature attack: it winds up
+ * One of the young of the Conductor's three great players - a Thumpling, a Whistling or a
+ * Strumling - and the rank and file of his orchestra. Every one has a signature attack: it winds up
  * (so you can see it coming), then plays its note. Subclasses say how far it reaches and what the
  * note does.
  */
@@ -64,7 +65,7 @@ public abstract class OrchestraMinion extends Monster {
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 12.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, OrchestraMinion.class, Dictator.class));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, OrchestraMinion.class, Dictator.class, MiniBoss.class));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
@@ -73,7 +74,7 @@ public abstract class OrchestraMinion extends Monster {
 
     /** Members of the orchestra (and their conductor) never hurt each other. */
     protected static boolean isBandmate(LivingEntity e) {
-        return e instanceof OrchestraMinion || e instanceof Dictator;
+        return MiniBoss.isBandmate(e);
     }
 
     @Override

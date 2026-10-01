@@ -68,8 +68,15 @@ def entity_loot():
                                          pool([item('minecraft:sculk', count=(0, 2))])])
     table('entity', 'entities/dictator', [pool([item('warden_core', 1)]), pool([item('minecraft:echo_shard', count=(6, 12))]),
                                           pool([item('siftite_ingot', count=(3, 6))]), pool([item('music_disc_lullaby', 1)])])
-    for minion in ('enforcer', 'resonator', 'howler'):
-        table('entity', f'entities/{minion}', [pool([item('minecraft:sculk', count=(1, 3), extra=[LOOTING])]),
+    table('entity', 'entities/thumper', [pool([item('conga_drum', 1)]), pool([item('minecraft:turtle_scute', count=(2, 5))]),
+                                         pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
+    table('entity', 'entities/whistler', [pool([item('crane_beak', 1)]), pool([item('minecraft:feather', count=(6, 12))]),
+                                          pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
+    table('entity', 'entities/strummer', [pool([item('magic_strings', 1)]), pool([item('minecraft:string', count=(8, 16))]),
+                                          pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
+    for minion in ('thumpling', 'whistling', 'strumling'):
+        extra = {'thumpling': 'minecraft:turtle_scute', 'whistling': 'minecraft:feather', 'strumling': 'minecraft:string'}[minion]
+        table('entity', f'entities/{minion}', [pool([item(extra, count=(0, 2), extra=[LOOTING])]),
                                               pool([item('minecraft:echo_shard', count=(0, 1), extra=[LOOTING])]),
                                               pool([item('minecraft:bone', count=(0, 2))])])
 
@@ -80,17 +87,23 @@ def chest_loot():
               item('raw_serbim', 8, (1, 4)), item('lullwood_sapling', 6, (1, 2)), item('wishwood_sapling', 4, (1, 2)), item('choir_pod', 3),
               item('echo_seed', 3), item('minecraft:book', 5, extra=[ENCHANT])], (3, 6)),
         pool([item('star_shard', 4), item('serbim_ingot', 6, (1, 3)), item('siftite_nugget', 5, (2, 5)), item('minecraft:empty', 10)], (1, 2)),
+        pool([item('minecraft:turtle_scute', 3, (1, 2)), item('minecraft:string', 5, (2, 6)), item('minecraft:feather', 5, (2, 5)),
+              item('minecraft:name_tag', 1), item('minecraft:empty', 8)]),
     ])
     table('chest', 'chests/tower_top', [
         pool([item('dream_journal_fragment', 10, (1, 2)), item('chrome_pearl', 6, (1, 2)), item('serbim_ingot', 8, (2, 5)), item('siftite_ingot', 3),
               item('music_disc_lullaby', 2), item('slingshot', 3), item('minecraft:book', 8, extra=[ENCHANT]), item('star_shard', 5, (1, 3))], (3, 5)),
         pool([item('siftite_upgrade_smithing_template', 1), item('minecraft:empty', 3)]),
+        pool([item('minecraft:feather', 4, (3, 8)), item('minecraft:phantom_membrane', 2, (1, 3)), item('minecraft:golden_apple', 2),
+              item('minecraft:empty', 4)]),
     ])
     table('chest', 'chests/temple_vault', [
         pool([item('siftite_upgrade_smithing_template', 1, (1, 2))]),
         pool([item('chrome_pearl', 8, (2, 4)), item('siftite_ingot', 6, (1, 3)), item('sift_drum', 4), item('echo_frame', 4, (2, 4)),
               item('music_disc_lullaby', 3), item('minecraft:enchanted_book', 4, extra=[ENCHANT]), item('star_shard', 6, (2, 4))], (3, 5)),
         pool([item('warden_core', 1), item('minecraft:empty', 7)]),
+        pool([item('minecraft:enchanted_golden_apple', 1), item('minecraft:totem_of_undying', 1), item('minecraft:heart_of_the_sea', 1),
+              item('minecraft:empty', 9)]),
     ])
     table('chest', 'chests/deep_shrine', [
         pool([item('warden_core', 1)], condition=chance(0.35)),

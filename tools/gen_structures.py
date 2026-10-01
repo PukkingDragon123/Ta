@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 import gen_assets as GA  # noqa: E402
-from structlib import AIR, B, Build, chest, stairs, suspicious  # noqa: E402
+from structlib import AIR, B, Build, chest, sigil, spawner, stairs, suspicious  # noqa: E402
 
 NS = 'thesift'
 OUT = os.path.join(GA.RES, 'data', NS, 'structure')
@@ -139,6 +139,10 @@ def tower(seed, collapsed, roof):
             if b.get(x, f + 1, z) is None or b.get(x, f + 1, z).name == AIR.name:
                 b.set(x, f + 1, z, MOSS_CARPET)
     b.set(c + 2, floors[0] + 1, c + 2, LANTERN)
+    # the Whistler's chicks nest in the tower; the Whistler itself answers at the door of the roofed ones
+    b.set(c - 1, floors[0] + 1, c + 1, spawner('whistling', 2, 4, 10))
+    if roof or seed % 2 == 0:
+        b.set(c, 0, c + R + 1, sigil(1))
     if collapsed:
         # shear the top off at a jagged, tilted line and pile rubble around the base
         cut = max(top + 3, H - 5) - seed % 2
@@ -150,7 +154,7 @@ def tower(seed, collapsed, roof):
             x, z = b.rnd.randrange(size), b.rnd.randrange(size)
             if math.hypot(x - c, z - c) > R + 0.5:
                 b.set(x, 1, z, b.rnd.choice([BLUSH, BLUSH_CR, DS_COB, B('blush_brick_slab', type='bottom', waterlogged='false')]))
-        b.decay(0.03, top_bias=0.08, protect=('minecraft:chest', 'thesift:harmony_stone', 'thesift:harmony_seal'), min_y=2)
+        b.decay(0.03, top_bias=0.08, protect=('minecraft:chest', 'thesift:harmony_stone', 'thesift:harmony_seal', 'minecraft:spawner'), min_y=2)
     else:
         b.decay(0.015, top_bias=0.02, protect=('minecraft:chest', 'thesift:harmony_stone', 'thesift:harmony_seal'), min_y=2)
     b.drape(HANG.with_(tip='false'), 0.03, 4)
@@ -210,10 +214,13 @@ def temple(seed):
     for x in range(c - 4, c + 5):
         b.set(x, V - 2, c + 10, glyph(x + seed))
     b.set(c - 2, 1, c + 6, CRUMBLE)
+    b.set(c - 3, 1, c + 4, spawner('thumpling', 2, 4, 10))
+    b.set(c, y0, c - 7, sigil(0))
     # trap snares on the stairs up to the dais
     for (x, z) in ((c - 2, c + 12), (c + 2, c + 12), (c + 12, c)):
         b.set(x, y0 + 1, z, SNARE)
-    b.decay(0.05, top_bias=0.06, protect=('minecraft:chest', 'thesift:harmony_stone', 'thesift:harmony_seal', 'thesift:euphory_altar'),
+    b.decay(0.05, top_bias=0.06, protect=('minecraft:chest', 'thesift:harmony_stone', 'thesift:harmony_seal', 'thesift:euphory_altar',
+                                          'thesift:encore_sigil', 'minecraft:spawner'),
             min_y=y0 + 2)
     b.overgrow(['dreamstone_tiles', 'polished_dreamstone', 'cracked_dreamstone_bricks'], FLOWERS, 0.12)
     return b
@@ -296,7 +303,11 @@ def giant_harp(seed):
     for x in (4, 9, 14):
         b.set(x, 2, z + 2, CHIME)
     b.set(9, 2, z - 2, DRUM)
-    b.decay(0.02, top_bias=0.05, min_y=3, protect=('minecraft:iron_chain',))
+    # the harp's strings are home to a Strumling brood, and their webs
+    b.set(12, 2, z - 2, spawner('strumling', 3, 6, 10))
+    for (x, y) in ((6, 6), (8, 9), (11, 7), (13, 4), (7, 3)):
+        b.set(x, y, z, B('minecraft:cobweb'))
+    b.decay(0.02, top_bias=0.05, min_y=3, protect=('minecraft:iron_chain', 'minecraft:spawner', 'minecraft:cobweb'))
     b.drape(HANG, 0.02, 3)
     return b
 
@@ -312,7 +323,8 @@ def giant_drum(seed):
         a = k * math.tau / 8
         b.set(c + round(math.cos(a) * 6.4), 6, c + round(math.sin(a) * 6.4), B('lullwood_planks'))
     b.set(c, 1, c, chest('chests/sift_ruins'))
-    b.decay(0.03, min_y=1, protect=('minecraft:chest',))
+    b.set(c + 2, 1, c, spawner('thumpling', 2, 4, 10))
+    b.decay(0.03, min_y=1, protect=('minecraft:chest', 'minecraft:spawner'))
     return b
 
 
@@ -424,7 +436,7 @@ def bulb_statue(seed):
 # ================================================================== deep sift shrine
 
 
-def deep_shrine(seed):
+def deep_shrine(seed, boss=False):
     S = 17
     H = 11
     b = Build(S, H, S, seed)
@@ -450,7 +462,16 @@ def deep_shrine(seed):
     b.set(c + 4, 1, S - 4, B('minecraft:sculk_catalyst', bloom='false'))
     for i in range(5):
         b.set(c - 2 + i, H - 1, c, glyph(seed + i))
-    b.decay(0.02, min_y=2, protect=('thesift:echo_frame', 'minecraft:chest', 'thesift:sift_drum', 'minecraft:sculk_sensor'))
+    # the Strummer's lair: webs in the corners, a brood spawner, and in some shrines its sigil
+    for x in (3, S - 4):
+        for z in (3, S - 4):
+            for (dx, dy, dz) in ((0, H - 2, 0), (1, H - 2, 0), (0, H - 2, 1), (0, H - 3, 0)):
+                b.set(x + dx * (1 if x < c else -1), dy, z + dz * (1 if z < c else -1), B('minecraft:cobweb'))
+    b.set(c + 4, 1, c, spawner('strumling', 3, 6, 10))
+    if boss:
+        b.set(c, 0, c + 2, sigil(2))
+    b.decay(0.02, min_y=2, protect=('thesift:echo_frame', 'minecraft:chest', 'thesift:sift_drum', 'minecraft:sculk_sensor', 'minecraft:spawner',
+                                     'minecraft:cobweb'))
     return b
 
 
@@ -479,9 +500,11 @@ def ruins(seed):
     for x in range(c - 3, c + 4):
         b.set(x, 7, S - 4, DS_CH if x == c else DS_BR)
     b.set(c, 1, c, chest('chests/sift_ruins', 'south'))
+    if seed % 2 == 0:
+        b.set(c + 2, 1, c - 2, spawner(('thumpling', 'whistling', 'strumling')[seed % 3], 2, 4, 9))
     for _ in range(6):
         b.set(b.rnd.randrange(3, S - 3), 0, b.rnd.randrange(3, S - 3), suspicious('archaeology/sift_common'))
-    b.decay(0.06, top_bias=0.2, min_y=2, protect=('minecraft:chest',))
+    b.decay(0.06, top_bias=0.2, min_y=2, protect=('minecraft:chest', 'minecraft:spawner'))
     b.overgrow(['dreamstone_tiles', 'blush_bricks', 'mossy_dreamstone_bricks'], FLOWERS, 0.3)
     b.drape(HANG, 0.03, 2)
     return b
@@ -580,10 +603,20 @@ def sculk_castle(seed):
         for dy in range(1, 6):
             b.set(x, TOP + dy, z, HUSH_CH if dy in (1, 5) else HUSH_POL)
         b.set(x, TOP + 6, z, SOUL_L if k % 2 else SENSOR)
-    # the podium, and the vault behind it
-    b.set(c, TOP + 1, c, B('conductors_podium'))
-    b.set(c, TOP + 1, c - 4, chest('chests/sculk_castle', 'south'))
-    b.decay(0.015, min_y=3, protect=('thesift:conductors_podium', 'minecraft:chest', 'thesift:hushslate_tiles', 'thesift:polished_hushslate',
+    # the Grand Stage: a raised round stage, the podium at its heart and three Instrument Altars
+    # waiting for the drum, the flute and the guitar; the vault chest beside it
+    b.disc(c, c, TOP + 1, 5.4, HUSH_POL, pick=lambda x, y, z: HUSH_CH if math.hypot(x - c, z - c) > 4.6 else
+           B('lumen_moss_block') if abs(math.hypot(x - c, z - c) - 2.0) < 0.5 else HUSH_POL)
+    for k in range(3):
+        a = math.pi / 2 + k * math.tau / 3
+        ax, az = c + round(math.cos(a) * 3.6), c + round(math.sin(a) * 3.6)
+        b.set(ax, TOP + 2, az, B('instrument_altar'))
+    for k in range(6):
+        a = k * math.tau / 6 + math.pi / 6
+        b.set(c + round(math.cos(a) * 5.0), TOP + 2, c + round(math.sin(a) * 5.0), SOUL_L if k % 2 else DRUM)
+    b.set(c, TOP + 2, c, B('conductors_podium'))
+    b.set(c + 7, TOP + 1, c, chest('chests/sculk_castle', 'west'))
+    b.decay(0.015, min_y=3, protect=('thesift:conductors_podium', 'thesift:instrument_altar', 'thesift:sift_drum', 'minecraft:chest', 'thesift:hushslate_tiles', 'thesift:polished_hushslate',
                                       'thesift:crumbling_dreamstone', 'minecraft:slime_block', 'minecraft:soul_lantern'))
     return b
 
@@ -604,7 +637,7 @@ STRUCTURES = {
     'buried_settlement': ([settlement, lambda s: settlement(s + 9)], ['rocky_dunes'], 'underground_structures', 'bury', -7, 28, 9),
     'dream_statue': ([enchoer_statue, bulb_statue], ['sift_plains', 'wishing_grove', 'forest_mountains', 'rocky_dunes'], 'surface_structures', 'beard_thin',
                      0, 28, 9),
-    'deep_shrine': ([deep_shrine, lambda s: deep_shrine(s + 3)], ['deep_sift'], 'underground_structures', 'beard_box', None, 24, 8),
+    'deep_shrine': ([deep_shrine, lambda s: deep_shrine(s + 3, True)], ['deep_sift'], 'underground_structures', 'beard_box', None, 24, 8),
     'sculk_castle': ([sculk_castle], ['rocky_dunes', 'forest_mountains', 'sift_plains'], 'surface_structures', 'beard_thin', 0, 40, 16),
     'sift_ruins': ([ruins, lambda s: ruins(s + 11), lambda s: ruins(s + 23)], ['sift_plains', 'forest_mountains', 'wishing_grove', 'rocky_dunes'],
                    'surface_structures', 'beard_thin', -1, 18, 6),

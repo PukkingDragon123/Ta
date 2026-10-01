@@ -7,9 +7,16 @@ import com.thesift.client.model.ModelGeometry;
 import com.thesift.client.particle.SiftParticle;
 import com.thesift.client.renderer.BulbRenderer;
 import com.thesift.client.renderer.HarmonerRenderer;
-import com.thesift.client.model.boss.EnforcerModel;
-import com.thesift.client.model.boss.HowlerModel;
-import com.thesift.client.model.boss.ResonatorModel;
+import com.thesift.client.model.boss.StrumlingModel;
+import com.thesift.client.model.boss.StrummerModel;
+import com.thesift.client.model.boss.ThumperModel;
+import com.thesift.client.model.boss.ThumplingModel;
+import com.thesift.client.model.boss.WhistlerModel;
+import com.thesift.client.model.boss.WhistlingModel;
+import com.thesift.client.renderer.boss.MiniBossRenderer;
+import com.thesift.entity.boss.Thumper;
+import com.thesift.entity.boss.Whistler;
+import com.thesift.entity.boss.Strummer;
 import com.thesift.client.renderer.boss.DictatorRenderer;
 import com.thesift.client.renderer.boss.MinionRenderer;
 import com.thesift.client.renderer.SiftSnifferRenderer;
@@ -57,6 +64,11 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerParticles);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.thesift.client.gui.ConductorBossBar::onBossBar);
         modBus.addListener(TheSiftClient::registerFluidModels);
+        modBus.addListener(ClientEffects::registerOverlays);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onClientTick);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onPlaySound);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onFogColor);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onRenderFog);
         modBus.addListener(TheSiftClient::registerClientExtensions);
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         if (Boolean.getBoolean("thesift.clientsmoke")) {
@@ -68,9 +80,13 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.BULB, ModelGeometry::bulb);
         event.registerLayerDefinition(ModModelLayers.HARMONER, ModelGeometry::harmoner);
         event.registerLayerDefinition(ModModelLayers.DICTATOR, ModelGeometry::dictator);
-        event.registerLayerDefinition(ModModelLayers.ENFORCER, ModelGeometry::enforcer);
-        event.registerLayerDefinition(ModModelLayers.RESONATOR, ModelGeometry::resonator);
-        event.registerLayerDefinition(ModModelLayers.HOWLER, ModelGeometry::howler);
+        event.registerLayerDefinition(ModModelLayers.THUMPER, ModelGeometry::thumper);
+        event.registerLayerDefinition(ModModelLayers.WHISTLER, ModelGeometry::whistler);
+        event.registerLayerDefinition(ModModelLayers.STRUMMER, ModelGeometry::strummer);
+        event.registerLayerDefinition(ModModelLayers.THUMPLING, ModelGeometry::thumpling);
+        event.registerLayerDefinition(ModModelLayers.WHISTLING, ModelGeometry::whistling);
+        event.registerLayerDefinition(ModModelLayers.STRUMLING, ModelGeometry::strumling);
+        event.registerLayerDefinition(ModModelLayers.CONDUCTOR_MASK, ModelGeometry::conductor_mask);
         event.registerLayerDefinition(ModModelLayers.SLUMBLER, ModelGeometry::slumbler);
         event.registerLayerDefinition(ModModelLayers.SIFTER, ModelGeometry::sifter);
         event.registerLayerDefinition(ModModelLayers.ENCHOER, ModelGeometry::enchoer);
@@ -83,18 +99,27 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.SCULK_HARMONER.get(), com.thesift.client.renderer.SculkHarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFT_SNIFFER.get(), SiftSnifferRenderer::new);
         event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENFORCER.get(),
-                c -> new MinionRenderer<>(c, new EnforcerModel(c.bakeLayer(ModModelLayers.ENFORCER)), "enforcer", 0.8F));
-        event.registerEntityRenderer(ModEntities.RESONATOR.get(),
-                c -> new MinionRenderer<>(c, new ResonatorModel(c.bakeLayer(ModModelLayers.RESONATOR)), "resonator", 0.5F));
-        event.registerEntityRenderer(ModEntities.HOWLER.get(),
-                c -> new MinionRenderer<>(c, new HowlerModel(c.bakeLayer(ModModelLayers.HOWLER)), "howler", 0.8F));
+        event.registerEntityRenderer(ModEntities.THUMPER.get(), c -> new MiniBossRenderer<Thumper, ThumperModel>(c, new ThumperModel(c.bakeLayer(ModModelLayers.THUMPER)),
+                "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.DAZED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
+        event.registerEntityRenderer(ModEntities.WHISTLER.get(), c -> new MiniBossRenderer<Whistler, WhistlerModel>(c, new WhistlerModel(c.bakeLayer(ModModelLayers.WHISTLER)),
+                "whistler", Whistler.SCALE, 0.6F, (e, s) -> s.bossState == Whistler.STUNNED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
+        event.registerEntityRenderer(ModEntities.STRUMMER.get(), c -> new MiniBossRenderer<Strummer, StrummerModel>(c, new StrummerModel(c.bakeLayer(ModModelLayers.STRUMMER)),
+                "strummer", Strummer.SCALE, 0.9F, (e, s) -> null));
+        event.registerEntityRenderer(ModEntities.THUMPLING.get(),
+                c -> new MinionRenderer<>(c, new ThumplingModel(c.bakeLayer(ModModelLayers.THUMPLING)), "thumpling", 0.4F));
+        event.registerEntityRenderer(ModEntities.WHISTLING.get(),
+                c -> new MinionRenderer<>(c, new WhistlingModel(c.bakeLayer(ModModelLayers.WHISTLING)), "whistling", 0.35F));
+        event.registerEntityRenderer(ModEntities.STRUMLING.get(),
+                c -> new MinionRenderer<>(c, new StrumlingModel(c.bakeLayer(ModModelLayers.STRUMLING)), "strumling", 0.4F));
+        event.registerEntityRenderer(ModEntities.CONDUCTOR_MASK.get(), com.thesift.client.renderer.boss.ConductorMaskRenderer::new);
+        event.registerEntityRenderer(ModEntities.WEB_SHOT.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.2F, false));
         event.registerEntityRenderer(ModEntities.SLUMBLER.get(), SlumblerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);
         event.registerEntityRenderer(ModEntities.RIVETER.get(), RiveterRenderer::new);
         event.registerEntityRenderer(ModEntities.GLOWBALL.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerBlockEntityRenderer(ModBlockEntities.EUPHORY_ALTAR.get(), EuphoryAltarRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.INSTRUMENT_ALTAR.get(), com.thesift.client.renderer.InstrumentAltarRenderer::new);
     }
 
     private static void particle(RegisterParticleProvidersEvent event, DeferredHolder<ParticleType<?>, SimpleParticleType> type, SiftParticle.Kind kind) {

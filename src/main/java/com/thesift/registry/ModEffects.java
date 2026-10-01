@@ -25,5 +25,12 @@ public final class ModEffects {
                     net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, TheSift.id("entranced_still"), -1.0,
                     net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
+    /** The Crane Flute's whirl of feathers: turns projectiles, softens blows, clouds your view. */
+    public static final DeferredHolder<MobEffect, MobEffect> FEATHER_SHIELD = EFFECTS.register("feather_shield",
+            () -> new com.thesift.effect.FeatherShieldEffect(MobEffectCategory.BENEFICIAL, 0xF2F1EA));
+    /** The Conductor's curse: a slow wither that darkens your sight the longer it lasts. */
+    public static final DeferredHolder<MobEffect, MobEffect> SCULK_CORRUPTION = EFFECTS.register("sculk_corruption",
+            () -> new com.thesift.effect.SculkCorruptionEffect(MobEffectCategory.HARMFUL, 0x0B5A5A));
+
     private ModEffects() {}
 }

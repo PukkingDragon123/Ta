@@ -412,8 +412,8 @@ public final class SmokeTest {
 
     private static void spawnMobs(ServerLevel sift) {
         List<EntityType<?>> types = List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModEntities.ENCHOER.get(),
-                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.SIFT_SNIFFER.get(), ModEntities.ENFORCER.get(),
-                ModEntities.RESONATOR.get(), ModEntities.HOWLER.get());
+                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.SIFT_SNIFFER.get(), ModEntities.THUMPER.get(),
+                ModEntities.WHISTLER.get(), ModEntities.STRUMMER.get(), ModEntities.THUMPLING.get(), ModEntities.WHISTLING.get(), ModEntities.STRUMLING.get());
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);
         sift.setChunkForced(1, 0, true);

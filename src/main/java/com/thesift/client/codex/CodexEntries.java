@@ -123,9 +123,24 @@ public final class CodexEntries {
         BiConsumer<LivingEntity, Integer> attack = (e, t) -> {
             if (e instanceof OrchestraMinion m && t % 70 == 15) m.attackAnimation.start(m.tickCount);
         };
-        l.add(mob(DICTATOR, "enforcer", ModEntities.ENFORCER, attack));
-        l.add(mob(DICTATOR, "resonator", ModEntities.RESONATOR, attack));
-        l.add(mob(DICTATOR, "howler", ModEntities.HOWLER, attack));
+        BiConsumer<LivingEntity, Integer> perform = (e, t) -> {
+            // the page acts out its attacks one after another
+            if (e instanceof com.thesift.entity.boss.MiniBoss b && t % 90 == 5) {
+                b.codexPose((t / 90) % 4 + 1);
+            }
+        };
+        l.add(mob(DICTATOR, "thumper", ModEntities.THUMPER, perform));
+        l.add(mob(DICTATOR, "whistler", ModEntities.WHISTLER, perform));
+        l.add(mob(DICTATOR, "strummer", ModEntities.STRUMMER, perform));
+        l.add(mob(DICTATOR, "thumpling", ModEntities.THUMPLING, attack));
+        l.add(mob(DICTATOR, "whistling", ModEntities.WHISTLING, attack));
+        l.add(mob(DICTATOR, "strumling", ModEntities.STRUMLING, attack));
+        l.add(thing(DICTATOR, "stage", ModItems.INSTRUMENT_ALTAR));
+        l.add(thing(DICTATOR, "sculk_corruption", () -> Items.SCULK_VEIN));
+        l.add(thing(DICTATOR, "encore_sigil", ModItems.ENCORE_SIGIL));
+        l.add(thing(DICTATOR, "conga_drum", ModItems.CONGA_DRUM));
+        l.add(thing(DICTATOR, "crane_flute", ModItems.CRANE_FLUTE));
+        l.add(thing(DICTATOR, "guitar", ModItems.GUITAR));
         l.add(thing(DICTATOR, "vocals", () -> Items.SCULK_SHRIEKER));
         return l;
     }

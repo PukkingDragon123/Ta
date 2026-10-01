@@ -202,6 +202,10 @@ block("sift_portal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NETH
       item=False, loot="none")
 block("conductors_podium", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 7)",
       cls="ConductorsPodiumBlock", model="cube_column", tab="functional", loot="none", name="Conductor's Podium")
+block("encore_sigil", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(s -> 6)",
+      cls="EncoreSigilBlock", model="cube_column", tab="functional", loot="none", name="Encore Sigil")
+block("instrument_altar", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion()",
+      cls="InstrumentAltarBlock", model="cube_column", tab="functional", loot="none", name="Instrument Altar")
 block("harmony_stone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0F, 3600000.0F)", cls="HarmonyStoneBlock", model="harmony",
       tab="functional", loot="none")
 block("harmony_seal", "custom", STONE + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 5)", cls="HarmonySealBlock",
@@ -248,11 +252,18 @@ for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
 item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
 for a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"siftite_{a}", cls=f"armor:{a}", tab="combat", model="armor")
-for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sift_sniffer", "dictator", "enforcer", "resonator", "howler"]:
+for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sift_sniffer", "dictator", "thumper", "whistler", "strummer", "thumpling",
+            "whistling", "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Baton")
 item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Staff")
+# the three instruments taken from the Conductor's great players
+item("conga_drum", cls="CongaDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
+item("crane_beak", props="new Item.Properties().rarity(Rarity.RARE)")
+item("crane_flute", cls="CraneFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+item("magic_strings", props="new Item.Properties().rarity(Rarity.RARE)")
+item("guitar", cls="GuitarItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")

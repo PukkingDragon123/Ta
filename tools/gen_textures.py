@@ -767,7 +767,7 @@ def items():
         out(f'item/slingshot_pulling_{i}', pal_sprite([''.join(r) for r in rows], dict(base_keys, g=hx('#e8ff9a'))))
     eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
             'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'), 'sift_sniffer': ('#8c2f23', '#3f9d80'),
-            'dictator': ('#141e2c', '#e6e1d3'), 'enforcer': ('#22324a', '#e2d5b8'), 'resonator': ('#16202e', '#3ff0e0'), 'howler': ('#1a2433', '#d8d0b8')}
+            'dictator': ('#141e2c', '#e6e1d3')}
     # modern-style portrait eggs at 32x: each egg wears its mob's face (and ears, antlers, crests)
     E = {
         'bulb': dict(face=['EEEE....EEEE', 'EEEE....EEEE', '.....MM.....', '.....MM.....'],
@@ -790,18 +790,115 @@ def items():
         'dictator': dict(face=['.mmmmmmmm.', 'mEEmmmmEEm', 'mEgmmmmgEm', 'mmmmmmmmmm', 'mmmsmmsmmm', 'mmmvvvvmmm', '.mmmmmmmm.'],
                          top=['...g....', 'g..h..g.', 'h..h..h.', 'h.hh.hh.'],
                          keys={'m': '#e6e1d3', 'E': '#04080c', 'g': '#2ef2e2', 's': '#b9b2a0', 'v': '#04080c', 'h': '#141e2c'}),
-        'enforcer': dict(face=['bbbbbbbbbbbb', '.vgv....vgv.', '.vgv....vgv.', '............', 'tvtvtvtvtvtv', 'vtvtvtvtvtvt'],
-                         top=['...cccccc...', '..c..gg..c..', '...cccccc...', '.....hh.....'],
-                         keys={'b': '#e3ddcc', 'v': '#04080c', 'g': '#2ef2e2', 't': '#f2ecd8', 'c': '#c9a24a', 'h': '#b3ab96'}),
-        'resonator': dict(face=['.LLLLLL.', 'lwwggwwl', '.wwgpww.', '..wwww..', '........', '.s.s.s.s', '.s.s.s.s', '.s.s.s.s'],
-                          keys={'L': '#1f2c40', 'l': '#04080c', 'w': '#f4f0e5', 'g': '#2ef2e2', 'p': '#04080c', 's': '#3ff0e0'}),
-        'howler': dict(face=['.bb....bb.', '.gg....gg.', '..........', '..dddddd..', '.dvvvvvvd.', '.dvvggvvd.', '.dvvvvvvd.', '..dddddd..'],
-                       keys={'b': '#b3ab96', 'g': '#2ef2e2', 'd': '#e3ddcc', 'v': '#04080c'}),
     }
     for i, (mob, (b, s)) in enumerate(eggs.items()):
         e = E[mob]
         keys = {k: hx(v) for k, v in e['keys'].items()}
         out(f'item/{mob}_spawn_egg', HI.egg(hx(b), hx(s), e.get('face'), keys, e.get('top'), seed=i))
+
+
+# ================================================================== the Grand Stage and the Encore Sigils
+
+
+def stage_things():
+    teal, teal_d, brass, brass_l = hx('#2ef2e2'), hx('#15a89f'), hx('#b89a52'), hx('#dcc27a')
+    violet, violet_l = hx('#7a3ab8'), hx('#c46cff')
+    # Encore Sigil: a hushslate floor tile carved with a ring of three notes - drum, flute, strings
+    top = M.polished(HUSH[1:6], 170)
+    draw_map(top, ['....vvvvvv....', '..vv......vv..', '.v...VVVV...v.', '.v..V....V..v.', 'v..V..bb..V..v', 'v..V.b..b.V..v', 'v..V.b..b.V..v',
+                   'v..V..bb..V..v', '.v..V....V..v.', '.v...VVVV...v.', '..vv......vv..', '....vvvvvv....'], {'v': violet, 'V': violet_l, 'b': brass_l}, 1, 2)
+    out('block/encore_sigil_top', top)
+    side = M.polished(HUSH[1:6], 171)
+    for x in range(16):
+        side.set(x, 1, brass)
+        side.set(x, 14, brass)
+        if x % 5 == 2:
+            for y in range(4, 12):
+                side.set(x, y, violet if y % 2 else violet_l)
+    out('block/encore_sigil_side', side)
+    # Instrument Altar: a pedestal of polished hushslate with a gold rim and a glowing cradle on top
+    top = M.polished(HUSH[1:6], 172)
+    draw_map(top, ['bbbbbbbbbbbbbb', 'b............b', 'b..tttttttt..b', 'b..t......t..b', 'b..t.TTTT.t..b', 'b..t.T..T.t..b', 'b..t.T..T.t..b',
+                   'b..t.TTTT.t..b', 'b..t......t..b', 'b..tttttttt..b', 'b............b', 'bbbbbbbbbbbbbb'], {'b': brass, 't': teal_d, 'T': teal}, 1, 2)
+    out('block/instrument_altar_top', top)
+    side = M.polished(HUSH[1:6], 173)
+    for x in range(16):
+        side.set(x, 0, brass_l)
+        side.set(x, 1, brass)
+        side.set(x, 15, brass)
+        if x in (3, 12):
+            for y in range(3, 14):
+                side.set(x, y, teal if y % 4 == 0 else teal_d)
+    for y in range(5, 11):
+        for x in range(6, 10):
+            side.set(x, y, teal_d if (x + y) % 2 else teal)
+    out('block/instrument_altar_side', side)
+    overlays()
+
+
+def overlays():
+    """Full-screen overlays: the Sculk Corruption vignette and the Feather Shield."""
+    import math
+    import random
+    rnd = random.Random(77)
+    # the vignette: clear in the middle, closing in to a deep sculk black, veined with tendrils
+    N = 256
+    v = Image.new('RGBA', (N, N), (0, 0, 0, 0))
+    px = v.load()
+    veins = [(rnd.uniform(0, math.tau), rnd.uniform(0.5, 1.6)) for _ in range(26)]
+    for y in range(N):
+        for x in range(N):
+            dx, dy = (x + 0.5) / N * 2 - 1, (y + 0.5) / N * 2 - 1
+            r = math.hypot(dx * 1.05, dy)
+            a = math.atan2(dy, dx)
+            k = max(0.0, min(1.0, (r - 0.42) / 0.5))
+            k = k * k * (3 - 2 * k)
+            vein = 0.0
+            for (va, wob) in veins:
+                d = math.atan2(math.sin(a - va - math.sin(r * 7 * wob) * 0.12), math.cos(a - va - math.sin(r * 7 * wob) * 0.12))
+                reach = 0.3 + 0.25 * wob / 1.6
+                if abs(d) < 0.035 * (1.2 - r) + 0.01 and r > reach:
+                    vein = max(vein, 1.0 - abs(d) / (0.035 * (1.2 - r) + 0.01))
+            alpha = max(k, vein * 0.95 * min(1.0, (r - 0.25) * 2))
+            if alpha <= 0.01:
+                continue
+            col = (2, 10, 14) if vein < 0.5 else (8, 60, 66)
+            if vein > 0.85 and rnd.random() < 0.02:
+                col = (46, 242, 226)
+            px[x, y] = (*col, int(alpha * 255))
+    out('misc/sculk_vignette', v)
+    # feathers: two 128 x 256 panels of soft white feathers fanned around the edges
+    f = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
+    d = ImageDraw.Draw(f)
+    for panel in range(2):
+        ox = panel * 128
+        layer = Image.new('RGBA', (128, 256), (0, 0, 0, 0))
+        ld = ImageDraw.Draw(layer)
+        for i in range(220 if panel == 0 else 120):
+            a = rnd.uniform(0, math.tau)
+            r = rnd.uniform(0.55, 1.15) ** 0.7
+            cx, cy = 64 + math.cos(a) * 64 * r, 128 + math.sin(a) * 128 * r
+            L = rnd.uniform(34, 64)
+            Wd = L * 0.32
+            ang = a + math.pi + rnd.uniform(-0.4, 0.4)
+            pts = []
+            for t in range(0, 21):
+                u = t / 20
+                w = math.sin(u * math.pi) ** 0.8 * Wd * (1.0 - 0.3 * u)
+                pts.append((u * L, w))
+            pts += [(u, -w) for (u, w) in reversed(pts)]
+            ca, sa = math.cos(ang), math.sin(ang)
+            poly = [(cx + u * ca * 0.5 - w * sa * 0.5, cy + u * sa - w * ca) for (u, w) in pts]
+            shade = rnd.randint(214, 255)
+            ld.polygon(poly, fill=(shade, shade, min(255, shade + 4), 255), outline=(170, 176, 196, 255))
+            # the shaft
+            ld.line([(cx, cy), (cx + L * ca * 0.5, cy + L * sa)], fill=(150, 156, 178, 255), width=1)
+            for b in range(3, int(L) - 4, 4):
+                bx, by = cx + b * ca * 0.5, cy + b * sa
+                for sgn in (1, -1):
+                    ld.line([(bx, by), (bx + (ca * 0.5 * 3 - sgn * sa * 0.5 * Wd * 0.6), by + (sa * 3 + sgn * ca * Wd * 0.6))], fill=(198, 202, 220, 255), width=1)
+        f.alpha_composite(layer, (ox, 0))
+    out('misc/feather_shield', f)
 
 
 # ================================================================== the Dictator's things
@@ -1300,10 +1397,15 @@ def logo():
 
 
 def hd_items():
-    """Every item sprite, drawn fresh at 32x in the glossy RPG style (tools/rpgitems.py)."""
-    import rpgitems
-    for name, img in rpgitems.all_items().items():
+    """Every item sprite, hand-drawn at 16x in the vanilla style (tools/items16.py), plus the mob
+    effect icons and flower sprites drawn alongside them."""
+    import items16
+    for name, img in items16.all_items().items():
         out(f'item/{name}', img)
+    for name, img in items16.effect_icons().items():
+        out(f'mob_effect/{name}', img)
+    for name, img in items16.flower_textures().items():
+        out(f'block/{name}', img)
 
 
 def boss_bar():
@@ -1362,6 +1464,7 @@ def main():
     armor_layers()
     sniffer_saddle()
     dictator_things()
+    stage_things()
     codex()
     particles()
     nebula()

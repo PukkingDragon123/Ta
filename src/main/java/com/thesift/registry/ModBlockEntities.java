@@ -16,6 +16,10 @@ public final class ModBlockEntities {
             () -> new BlockEntityType<>(SiftDrumBlockEntity::new, ModBlocks.SIFT_DRUM.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EuphoryAltarBlockEntity>> EUPHORY_ALTAR = BLOCK_ENTITIES.register("euphory_altar",
             () -> new BlockEntityType<>(EuphoryAltarBlockEntity::new, ModBlocks.EUPHORY_ALTAR.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.thesift.block.entity.EncoreSigilBlockEntity>> ENCORE_SIGIL = BLOCK_ENTITIES.register(
+            "encore_sigil", () -> new BlockEntityType<>(com.thesift.block.entity.EncoreSigilBlockEntity::new, ModBlocks.ENCORE_SIGIL.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.thesift.block.entity.InstrumentAltarBlockEntity>> INSTRUMENT_ALTAR = BLOCK_ENTITIES.register(
+            "instrument_altar", () -> new BlockEntityType<>(com.thesift.block.entity.InstrumentAltarBlockEntity::new, ModBlocks.INSTRUMENT_ALTAR.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConductorsPodiumBlockEntity>> CONDUCTORS_PODIUM = BLOCK_ENTITIES.register(
             "conductors_podium", () -> new BlockEntityType<>(ConductorsPodiumBlockEntity::new, ModBlocks.CONDUCTORS_PODIUM.get()));
 

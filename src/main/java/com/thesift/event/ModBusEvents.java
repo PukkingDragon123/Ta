@@ -6,9 +6,12 @@ import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
 import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.boss.Dictator;
-import com.thesift.entity.boss.Enforcer;
-import com.thesift.entity.boss.Howler;
-import com.thesift.entity.boss.Resonator;
+import com.thesift.entity.boss.Strumling;
+import com.thesift.entity.boss.Strummer;
+import com.thesift.entity.boss.Thumper;
+import com.thesift.entity.boss.Thumpling;
+import com.thesift.entity.boss.Whistler;
+import com.thesift.entity.boss.Whistling;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import com.thesift.registry.ModBlocks;
@@ -44,9 +47,13 @@ public final class ModBusEvents {
         event.put(ModEntities.SCULK_HARMONER.get(), com.thesift.entity.SculkHarmoner.createAttributes().build());
         event.put(ModEntities.SIFT_SNIFFER.get(), SiftSniffer.createAttributes().build());
         event.put(ModEntities.DICTATOR.get(), Dictator.createAttributes().build());
-        event.put(ModEntities.ENFORCER.get(), Enforcer.createAttributes().build());
-        event.put(ModEntities.RESONATOR.get(), Resonator.createAttributes().build());
-        event.put(ModEntities.HOWLER.get(), Howler.createAttributes().build());
+        event.put(ModEntities.THUMPER.get(), Thumper.createAttributes().build());
+        event.put(ModEntities.CONDUCTOR_MASK.get(), com.thesift.entity.boss.ConductorMask.createAttributes().build());
+        event.put(ModEntities.WHISTLER.get(), Whistler.createAttributes().build());
+        event.put(ModEntities.STRUMMER.get(), Strummer.createAttributes().build());
+        event.put(ModEntities.THUMPLING.get(), Thumpling.createAttributes().build());
+        event.put(ModEntities.WHISTLING.get(), Whistling.createAttributes().build());
+        event.put(ModEntities.STRUMLING.get(), Strumling.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {

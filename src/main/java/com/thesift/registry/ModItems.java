@@ -138,6 +138,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> EUPHORY_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.EUPHORY_ALTAR);
     public static final DeferredItem<BlockItem> ECHO_FRAME = ITEMS.registerSimpleBlockItem(ModBlocks.ECHO_FRAME);
     public static final DeferredItem<BlockItem> CONDUCTORS_PODIUM = ITEMS.registerSimpleBlockItem(ModBlocks.CONDUCTORS_PODIUM);
+    public static final DeferredItem<BlockItem> ENCORE_SIGIL = ITEMS.registerSimpleBlockItem(ModBlocks.ENCORE_SIGIL);
+    public static final DeferredItem<BlockItem> INSTRUMENT_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.INSTRUMENT_ALTAR);
     public static final DeferredItem<BlockItem> HARMONY_STONE = ITEMS.registerSimpleBlockItem(ModBlocks.HARMONY_STONE);
     public static final DeferredItem<BlockItem> HARMONY_SEAL = ITEMS.registerSimpleBlockItem(ModBlocks.HARMONY_SEAL);
     public static final DeferredItem<BlockItem> GLYPH_STONE = ITEMS.registerSimpleBlockItem(ModBlocks.GLYPH_STONE);
@@ -185,11 +187,19 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> HARMONER_SPAWN_EGG = ITEMS.registerItem("harmoner_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HARMONER.get()));
     public static final DeferredItem<SpawnEggItem> SIFT_SNIFFER_SPAWN_EGG = ITEMS.registerItem("sift_sniffer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFT_SNIFFER.get()));
     public static final DeferredItem<SpawnEggItem> DICTATOR_SPAWN_EGG = ITEMS.registerItem("dictator_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.DICTATOR.get()));
-    public static final DeferredItem<SpawnEggItem> ENFORCER_SPAWN_EGG = ITEMS.registerItem("enforcer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.ENFORCER.get()));
-    public static final DeferredItem<SpawnEggItem> RESONATOR_SPAWN_EGG = ITEMS.registerItem("resonator_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.RESONATOR.get()));
-    public static final DeferredItem<SpawnEggItem> HOWLER_SPAWN_EGG = ITEMS.registerItem("howler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HOWLER.get()));
+    public static final DeferredItem<SpawnEggItem> THUMPER_SPAWN_EGG = ITEMS.registerItem("thumper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPER.get()));
+    public static final DeferredItem<SpawnEggItem> WHISTLER_SPAWN_EGG = ITEMS.registerItem("whistler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLER.get()));
+    public static final DeferredItem<SpawnEggItem> STRUMMER_SPAWN_EGG = ITEMS.registerItem("strummer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMMER.get()));
+    public static final DeferredItem<SpawnEggItem> THUMPLING_SPAWN_EGG = ITEMS.registerItem("thumpling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPLING.get()));
+    public static final DeferredItem<SpawnEggItem> WHISTLING_SPAWN_EGG = ITEMS.registerItem("whistling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLING.get()));
+    public static final DeferredItem<SpawnEggItem> STRUMLING_SPAWN_EGG = ITEMS.registerItem("strumling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMLING.get()));
     public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<StaffItem> CONDUCTORS_STAFF = ITEMS.registerItem("conductors_staff", StaffItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+    public static final DeferredItem<CongaDrumItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", CongaDrumItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
+    public static final DeferredItem<Item> CRANE_BEAK = ITEMS.registerItem("crane_beak", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<CraneFluteItem> CRANE_FLUTE = ITEMS.registerItem("crane_flute", CraneFluteItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> MAGIC_STRINGS = ITEMS.registerItem("magic_strings", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<GuitarItem> GUITAR = ITEMS.registerItem("guitar", GuitarItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftCodexItem> SIFT_CODEX = ITEMS.registerItem("sift_codex", SiftCodexItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> MUSIC_DISC_LULLABY = ITEMS.registerItem("music_disc_lullaby", Item::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG));
 

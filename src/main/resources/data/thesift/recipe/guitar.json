@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "thesift:magic_strings",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "  S",
+    "PS ",
+    "PP "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:guitar"
+  }
+}

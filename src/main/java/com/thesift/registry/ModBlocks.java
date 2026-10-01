@@ -287,6 +287,10 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12));
     public static final DeferredBlock<ConductorsPodiumBlock> CONDUCTORS_PODIUM = BLOCKS.registerBlock("conductors_podium", ConductorsPodiumBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 7));
+    public static final DeferredBlock<EncoreSigilBlock> ENCORE_SIGIL = BLOCKS.registerBlock("encore_sigil", EncoreSigilBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(s -> 6));
+    public static final DeferredBlock<InstrumentAltarBlock> INSTRUMENT_ALTAR = BLOCKS.registerBlock("instrument_altar", InstrumentAltarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion());
     public static final DeferredBlock<HarmonyStoneBlock> HARMONY_STONE = BLOCKS.registerBlock("harmony_stone", HarmonyStoneBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0F, 3600000.0F));
     public static final DeferredBlock<HarmonySealBlock> HARMONY_SEAL = BLOCKS.registerBlock("harmony_seal", HarmonySealBlock::new,

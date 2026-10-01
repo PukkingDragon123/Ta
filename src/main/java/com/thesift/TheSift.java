@@ -50,6 +50,9 @@ public class TheSift {
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onNotePlayed);
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onVanillaGameEvent);
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onLeftClickBlock);
+        NeoForge.EVENT_BUS.addListener(com.thesift.world.TemporaryBlocks::onLevelTick);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent e) ->
+                com.thesift.effect.FeatherShieldEffect.onIncomingDamage(e, com.thesift.registry.ModEffects.FEATHER_SHIELD));
 
         if (Boolean.getBoolean("thesift.smoketest")) {
             SmokeTest.registerIfEnabled(); // CI only

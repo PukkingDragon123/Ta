@@ -360,9 +360,11 @@ public final class ClientSmokeTest {
         scene("portal", 80, ClientSmokeTest::portalStage);
         scene("altar", 60, ClientSmokeTest::altarStage);
         scene("drums", 40, ClientSmokeTest::drumStage);
+        scene("bosses", 60, ClientSmokeTest::bossStage);
+        scene("bosses_close", 40, c -> c.camera(-118.5, STAGE_Y + 4.5, -9.0, -120.5, STAGE_Y + 2.0, 0.5));
         // the Sift Codex, opened at a few spreads (live, animated creatures on the left pages)
         int[][] codexPages = {{1, 0}, {2, 0}, {24, 0}, {25, 0}, {19, 0}, {20, 0}, {13, 0}};
-        String[] codexNames = {"harmoner", "sniffer", "dictator", "enforcer", "castle", "drum", "staff"};
+        String[] codexNames = {"harmoner", "sniffer", "dictator", "thumper", "castle", "drum", "staff"};
         for (int i = 0; i < codexPages.length; i++) {
             int page = codexPages[i][0];
             SCENES.add(new Scene("codex_" + codexNames[i], 50, c -> target = null,
@@ -490,9 +492,9 @@ public final class ClientSmokeTest {
         // the Dictator and his orchestra, at the far end of the stage
         c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
         c.spawn(ModEntities.SCULK_HARMONER.get(), 21.5, STAGE_Y + 2.5, STAGE_Z + 6.0, face, false);
-        c.spawn(ModEntities.ENFORCER.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
-        c.spawn(ModEntities.HOWLER.get(), 22.0, STAGE_Y, STAGE_Z + 4.0, face, false);
-        c.spawn(ModEntities.RESONATOR.get(), 24.6, STAGE_Y, STAGE_Z + 5.5, face, false);
+        c.spawn(ModEntities.THUMPLING.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
+        c.spawn(ModEntities.WHISTLING.get(), 22.0, STAGE_Y, STAGE_Z + 4.0, face, false);
+        c.spawn(ModEntities.STRUMLING.get(), 24.6, STAGE_Y, STAGE_Z + 5.5, face, false);
         // one Harmoner of every colour, perched in a row
         for (int i = 0; i < com.thesift.entity.Harmoner.VARIANTS; i++) {
             if (c.spawn(ModEntities.HARMONER.get(), -2.5 + i, STAGE_Y, STAGE_Z + 3.0, face, false) instanceof com.thesift.entity.Harmoner bird) {
@@ -622,6 +624,26 @@ public final class ClientSmokeTest {
         c.set(x0, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.HIT, 1));
         c.set(x0 + 2, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.CORE, true));
         c.camera(x0 + 0.5, STAGE_Y + 2.6, z0 - 3.2, x0 + 0.5, STAGE_Y + 0.4, z0 + 0.5);
+    }
+
+    /** The three mini-bosses with their young, the Mask, and the Grand Stage's altars. */
+    private static void bossStage(Ctx c) {
+        int x0 = -120, z0 = 0;
+        floor(c, x0 - 14, z0 - 8, x0 + 14, z0 + 8);
+        float face = 180.0F;
+        c.spawn(ModEntities.THUMPER.get(), x0 - 8.5, STAGE_Y, z0 + 2.5, 160.0F, false);
+        c.spawn(ModEntities.STRUMMER.get(), x0 + 0.5, STAGE_Y, z0 + 2.5, face, false);
+        c.spawn(ModEntities.WHISTLER.get(), x0 + 8.5, STAGE_Y + 2.5, z0 + 2.5, 200.0F, false);
+        c.spawn(ModEntities.THUMPLING.get(), x0 - 5.5, STAGE_Y, z0 - 1.5, face, false);
+        c.spawn(ModEntities.STRUMLING.get(), x0 + 3.0, STAGE_Y, z0 - 1.5, face, false);
+        c.spawn(ModEntities.WHISTLING.get(), x0 + 6.0, STAGE_Y, z0 - 1.5, face, false);
+        c.spawn(ModEntities.CONDUCTOR_MASK.get(), x0 + 12.0, STAGE_Y + 1.0, z0 - 3.0, face, false);
+        BlockState altar = ModBlocks.INSTRUMENT_ALTAR.get().defaultBlockState();
+        for (int i = 0; i < 3; i++) {
+            c.set(x0 - 12 + i * 2, STAGE_Y, z0 - 4, altar);
+        }
+        c.set(x0 - 12, STAGE_Y, z0 - 6, ModBlocks.ENCORE_SIGIL.get().defaultBlockState());
+        c.camera(x0 + 0.5, STAGE_Y + 6.0, z0 - 14.0, x0 + 0.5, STAGE_Y + 1.5, z0 + 1.0);
     }
 
     private static void altarStage(Ctx c) {

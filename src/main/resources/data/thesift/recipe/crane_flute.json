@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "thesift:crane_beak",
+    "minecraft:feather",
+    "minecraft:feather",
+    "minecraft:echo_shard"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:crane_flute"
+  }
+}

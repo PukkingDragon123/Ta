@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Conductor's Podium at the top of the Sculk Castle. When a player climbs up to it, the
- * Dictator rises behind it and the performance begins. Once he has been defeated it falls silent.
+ * The Conductor's Podium at the heart of the Grand Stage on top of the Sculk Castle. Fill the three
+ * Instrument Altars around it and the performance begins.
  */
 public class ConductorsPodiumBlock extends BaseEntityBlock {
     public ConductorsPodiumBlock(BlockBehaviour.Properties properties) {
@@ -34,6 +34,6 @@ public class ConductorsPodiumBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.CONDUCTORS_PODIUM.get(), ConductorsPodiumBlockEntity::serverTick);
+        return createTickerHelper(type, ModBlockEntities.CONDUCTORS_PODIUM.get(), ConductorsPodiumBlockEntity::tick);
     }
 }

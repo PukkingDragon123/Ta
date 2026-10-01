@@ -120,58 +120,143 @@
     ],
     "subtitle": "subtitles.thesift.entity.dictator.crescendo"
   },
-  "entity.enforcer.ambient": {
+  "entity.thumper.ambient": {
     "sounds": [
+      {
+        "name": "minecraft:entity.turtle.ambient_land",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.4
+      },
+      {
+        "name": "minecraft:entity.ravager.ambient",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumper.ambient"
+  },
+  "entity.thumper.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.turtle.hurt",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.4
+      },
       {
         "name": "minecraft:block.note_block.basedrum",
         "type": "event",
-        "volume": 0.6,
+        "volume": 1.0,
         "pitch": 0.6
       }
     ],
-    "subtitle": "subtitles.thesift.entity.enforcer.ambient"
+    "subtitle": "subtitles.thesift.entity.thumper.hurt"
   },
-  "entity.enforcer.hurt": {
+  "entity.thumper.death": {
     "sounds": [
       {
-        "name": "minecraft:entity.ravager.hurt",
+        "name": "minecraft:entity.turtle.death",
         "type": "event",
-        "volume": 0.8,
-        "pitch": 1.4
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.enforcer.hurt"
-  },
-  "entity.enforcer.death": {
-    "sounds": [
+        "volume": 1.2,
+        "pitch": 0.35
+      },
       {
         "name": "minecraft:entity.ravager.death",
         "type": "event",
-        "volume": 0.9,
-        "pitch": 1.4
+        "volume": 0.8,
+        "pitch": 1.2
       }
     ],
-    "subtitle": "subtitles.thesift.entity.enforcer.death"
+    "subtitle": "subtitles.thesift.entity.thumper.death"
   },
-  "entity.enforcer.windup": {
+  "entity.thumper.windup": {
     "sounds": [
       {
         "name": "minecraft:entity.ravager.roar",
         "type": "event",
-        "volume": 0.6,
-        "pitch": 1.6
+        "volume": 0.7,
+        "pitch": 1.3
       }
     ],
-    "subtitle": "subtitles.thesift.entity.enforcer.windup"
+    "subtitle": "subtitles.thesift.entity.thumper.windup"
   },
-  "entity.enforcer.slam": {
+  "entity.thumper.slam": {
     "sounds": [
       {
         "name": "minecraft:entity.warden.attack_impact",
         "type": "event",
         "volume": 1.0,
-        "pitch": 0.7
+        "pitch": 0.6
       },
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event",
+        "volume": 0.4,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumper.slam"
+  },
+  "entity.thumper.roar": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.ravager.roar",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumper.roar"
+  },
+  "entity.thumper.spin": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.turtle.shamble",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:item.trident.riptide_1",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumper.spin"
+  },
+  "entity.thumper.dazed": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.ravager.stunned",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumper.dazed"
+  },
+  "entity.thumper.clank": {
+    "sounds": [
+      {
+        "name": "minecraft:block.anvil.land",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.8
+      },
+      {
+        "name": "minecraft:item.shield.block",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumper.clank"
+  },
+  "entity.thumper.drum_hit": {
+    "sounds": [
       {
         "name": "minecraft:block.note_block.basedrum",
         "type": "event",
@@ -179,14 +264,138 @@
         "pitch": 0.5
       }
     ],
-    "subtitle": "subtitles.thesift.entity.enforcer.slam"
+    "subtitle": "subtitles.thesift.entity.thumper.drum_hit"
   },
-  "entity.resonator.ambient": {
+  "entity.whistler.ambient": {
     "sounds": [
       {
-        "name": "minecraft:block.note_block.harp",
+        "name": "minecraft:entity.parrot.ambient",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.ambient"
+  },
+  "entity.whistler.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.phantom.hurt",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block.note_block.flute",
         "type": "event",
         "volume": 0.5,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.hurt"
+  },
+  "entity.whistler.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.phantom.death",
+        "type": "event",
+        "volume": 1.2,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.death"
+  },
+  "entity.whistler.charge": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.sonic_charge",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.charge"
+  },
+  "entity.whistler.lock": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.guardian.attack",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.lock"
+  },
+  "entity.whistler.break": {
+    "sounds": [
+      {
+        "name": "minecraft:block.amethyst_cluster.break",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.break"
+  },
+  "entity.whistler.screech": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.phantom.ambient",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:entity.parrot.imitate.phantom",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.screech"
+  },
+  "entity.whistler.dive": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.phantom.swoop",
+        "type": "event",
+        "volume": 1.2,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistler.dive"
+  },
+  "entity.strummer.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.spider.ambient",
+        "type": "event",
+        "volume": 0.8,
         "pitch": 0.6
       },
       {
@@ -196,42 +405,93 @@
         "pitch": 0.8
       }
     ],
-    "subtitle": "subtitles.thesift.entity.resonator.ambient"
+    "subtitle": "subtitles.thesift.entity.strummer.ambient"
   },
-  "entity.resonator.hurt": {
+  "entity.strummer.hurt": {
     "sounds": [
       {
         "name": "minecraft:entity.spider.hurt",
         "type": "event",
-        "volume": 0.8,
-        "pitch": 1.2
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:block.note_block.guitar",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.5
       }
     ],
-    "subtitle": "subtitles.thesift.entity.resonator.hurt"
+    "subtitle": "subtitles.thesift.entity.strummer.hurt"
   },
-  "entity.resonator.death": {
+  "entity.strummer.death": {
     "sounds": [
       {
         "name": "minecraft:entity.spider.death",
         "type": "event",
-        "volume": 0.9,
+        "volume": 1.2,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:block.note_block.guitar",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strummer.death"
+  },
+  "entity.strummer.slash": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.attack.sweep",
+        "type": "event",
+        "volume": 1.0,
         "pitch": 1.2
       }
     ],
-    "subtitle": "subtitles.thesift.entity.resonator.death"
+    "subtitle": "subtitles.thesift.entity.strummer.slash"
   },
-  "entity.resonator.draw": {
+  "entity.strummer.spit": {
     "sounds": [
       {
-        "name": "minecraft:item.crossbow.loading_middle",
+        "name": "minecraft:entity.llama.spit",
         "type": "event",
         "volume": 1.0,
-        "pitch": 0.8
+        "pitch": 0.7
       }
     ],
-    "subtitle": "subtitles.thesift.entity.resonator.draw"
+    "subtitle": "subtitles.thesift.entity.strummer.spit"
   },
-  "entity.resonator.pluck": {
+  "entity.strummer.hiss": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.spider.ambient",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strummer.hiss"
+  },
+  "entity.strummer.land": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.spider.step",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:entity.warden.attack_impact",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strummer.land"
+  },
+  "entity.strummer.chord": {
     "sounds": [
       {
         "name": "minecraft:block.note_block.guitar",
@@ -243,71 +503,245 @@
         "name": "minecraft:block.note_block.harp",
         "type": "event",
         "volume": 0.8,
-        "pitch": 1.2
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.resonator.pluck"
-  },
-  "entity.howler.ambient": {
-    "sounds": [
+        "pitch": 1.0
+      },
       {
-        "name": "minecraft:block.note_block.didgeridoo",
+        "name": "minecraft:block.note_block.bell",
         "type": "event",
         "volume": 0.6,
-        "pitch": 0.6
+        "pitch": 1.0
       }
     ],
-    "subtitle": "subtitles.thesift.entity.howler.ambient"
+    "subtitle": "subtitles.thesift.entity.strummer.chord"
   },
-  "entity.howler.hurt": {
+  "entity.strummer.draw": {
     "sounds": [
       {
-        "name": "minecraft:entity.ghast.hurt",
+        "name": "minecraft:item.crossbow.loading_middle",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strummer.draw"
+  },
+  "entity.strummer.pluck": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.guitar",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:item.crossbow.shoot",
         "type": "event",
         "volume": 0.7,
-        "pitch": 1.4
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.howler.hurt"
-  },
-  "entity.howler.death": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.ghast.death",
-        "type": "event",
-        "volume": 0.8,
         "pitch": 1.2
       }
     ],
-    "subtitle": "subtitles.thesift.entity.howler.death"
+    "subtitle": "subtitles.thesift.entity.strummer.pluck"
   },
-  "entity.howler.inhale": {
+  "entity.thumpling.ambient": {
     "sounds": [
       {
-        "name": "minecraft:entity.warden.sonic_charge",
+        "name": "minecraft:entity.turtle.ambient_land",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumpling.ambient"
+  },
+  "entity.thumpling.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.turtle.hurt_baby",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumpling.hurt"
+  },
+  "entity.thumpling.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.turtle.death_baby",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.thumpling.death"
+  },
+  "entity.whistling.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.chicken.ambient",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 0.4,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistling.ambient"
+  },
+  "entity.whistling.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.chicken.hurt",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistling.hurt"
+  },
+  "entity.whistling.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.chicken.death",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.whistling.death"
+  },
+  "entity.strumling.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.spider.ambient",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strumling.ambient"
+  },
+  "entity.strumling.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.spider.hurt",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strumling.hurt"
+  },
+  "entity.strumling.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.spider.death",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.strumling.death"
+  },
+  "entity.conductor_mask.rise": {
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.activate",
         "type": "event",
         "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:entity.warden.emerge",
+        "type": "event",
+        "volume": 0.8,
         "pitch": 1.4
       }
     ],
-    "subtitle": "subtitles.thesift.entity.howler.inhale"
+    "subtitle": "subtitles.thesift.entity.conductor_mask.rise"
   },
-  "entity.howler.blast": {
+  "entity.conductor_mask.transform": {
     "sounds": [
       {
         "name": "minecraft:entity.warden.sonic_boom",
         "type": "event",
-        "volume": 0.8,
-        "pitch": 1.3
+        "volume": 1.0,
+        "pitch": 0.6
       },
       {
-        "name": "minecraft:block.note_block.didgeridoo",
+        "name": "minecraft:entity.wither.spawn",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.conductor_mask.transform"
+  },
+  "item.conga_drum.boom": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.basedrum",
         "type": "event",
         "volume": 1.0,
         "pitch": 0.5
+      },
+      {
+        "name": "minecraft:entity.generic.explode",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.8
       }
     ],
-    "subtitle": "subtitles.thesift.entity.howler.blast"
+    "subtitle": "subtitles.thesift.item.conga_drum.boom"
+  },
+  "item.crane_flute.play": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.item.crane_flute.play"
+  },
+  "item.crane_flute.shield": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.parrot.fly",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:item.elytra.flying",
+        "type": "event",
+        "volume": 0.4,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.item.crane_flute.shield"
+  },
+  "item.guitar.strum": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.guitar",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:block.note_block.harp",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.item.guitar.strum"
   },
   "item.conductors_baton.note": {
     "sounds": [

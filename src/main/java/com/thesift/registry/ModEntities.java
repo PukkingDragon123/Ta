@@ -8,9 +8,13 @@ import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
 import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.boss.Dictator;
-import com.thesift.entity.boss.Enforcer;
-import com.thesift.entity.boss.Howler;
-import com.thesift.entity.boss.Resonator;
+import com.thesift.entity.boss.Strumling;
+import com.thesift.entity.boss.Strummer;
+import com.thesift.entity.boss.Thumper;
+import com.thesift.entity.boss.Thumpling;
+import com.thesift.entity.boss.WebShot;
+import com.thesift.entity.boss.Whistler;
+import com.thesift.entity.boss.Whistling;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import net.minecraft.world.entity.EntityType;
@@ -41,12 +45,23 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.SculkHarmoner>> SCULK_HARMONER = ENTITIES.registerEntityType(
             "sculk_harmoner", com.thesift.entity.SculkHarmoner::new, MobCategory.MISC,
             b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10).noSummon());
-    public static final DeferredHolder<EntityType<?>, EntityType<Enforcer>> ENFORCER = ENTITIES.registerEntityType("enforcer", Enforcer::new,
-            MobCategory.MONSTER, b -> b.sized(1.2F, 1.4F).eyeHeight(1.0F).clientTrackingRange(10));
-    public static final DeferredHolder<EntityType<?>, EntityType<Resonator>> RESONATOR = ENTITIES.registerEntityType("resonator", Resonator::new,
-            MobCategory.MONSTER, b -> b.sized(0.8F, 2.3F).eyeHeight(2.0F).clientTrackingRange(10));
-    public static final DeferredHolder<EntityType<?>, EntityType<Howler>> HOWLER = ENTITIES.registerEntityType("howler", Howler::new,
-            MobCategory.MONSTER, b -> b.sized(1.1F, 1.5F).eyeHeight(1.0F).clientTrackingRange(10));
+    // the Conductor's three great players, and their young
+    public static final DeferredHolder<EntityType<?>, EntityType<Thumper>> THUMPER = ENTITIES.registerEntityType("thumper", Thumper::new,
+            MobCategory.MONSTER, b -> b.sized(3.0F, 3.9F).eyeHeight(2.0F).clientTrackingRange(16));
+    public static final DeferredHolder<EntityType<?>, EntityType<Whistler>> WHISTLER = ENTITIES.registerEntityType("whistler", Whistler::new,
+            MobCategory.MONSTER, b -> b.sized(1.6F, 2.6F).eyeHeight(2.25F).clientTrackingRange(16));
+    public static final DeferredHolder<EntityType<?>, EntityType<Strummer>> STRUMMER = ENTITIES.registerEntityType("strummer", Strummer::new,
+            MobCategory.MONSTER, b -> b.sized(2.6F, 2.8F).eyeHeight(2.4F).clientTrackingRange(16));
+    public static final DeferredHolder<EntityType<?>, EntityType<Thumpling>> THUMPLING = ENTITIES.registerEntityType("thumpling", Thumpling::new,
+            MobCategory.MONSTER, b -> b.sized(0.7F, 0.55F).eyeHeight(0.35F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Whistling>> WHISTLING = ENTITIES.registerEntityType("whistling", Whistling::new,
+            MobCategory.MONSTER, b -> b.sized(0.5F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Strumling>> STRUMLING = ENTITIES.registerEntityType("strumling", Strumling::new,
+            MobCategory.MONSTER, b -> b.sized(0.8F, 0.5F).eyeHeight(0.3F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.boss.ConductorMask>> CONDUCTOR_MASK = ENTITIES.registerEntityType(
+            "conductor_mask", com.thesift.entity.boss.ConductorMask::new, MobCategory.MISC, b -> b.sized(1.2F, 2.4F).clientTrackingRange(16).fireImmune());
+    public static final DeferredHolder<EntityType<?>, EntityType<WebShot>> WEB_SHOT = ENTITIES.registerEntityType("web_shot", WebShot::new,
+            MobCategory.MISC, b -> b.sized(0.4F, 0.4F).clientTrackingRange(6).updateInterval(5));
     public static final DeferredHolder<EntityType<?>, EntityType<GlowballEntity>> GLOWBALL = ENTITIES.registerEntityType("glowball",
             GlowballEntity::new, MobCategory.MISC, b -> b.sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
 

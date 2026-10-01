@@ -185,6 +185,18 @@ def chest(loot, facing='north'):
     return B('minecraft:chest', nbt={'id': 'minecraft:chest', 'LootTable': rl(loot)}, facing=facing, type='single', waterlogged='false')
 
 
+def spawner(mob, count=2, nearby=5, rng=12, delay=(200, 500)):
+    """A vanilla mob spawner of one of the Conductor's young."""
+    return B('minecraft:spawner', nbt={'id': 'minecraft:mob_spawner', 'SpawnData': {'entity': {'id': rl(mob)}}, 'SpawnCount': count,
+                                        'MaxNearbyEntities': nearby, 'RequiredPlayerRange': rng, 'MinSpawnDelay': delay[0], 'MaxSpawnDelay': delay[1],
+                                        'Delay': 40, 'SpawnRange': 4})
+
+
+def sigil(boss):
+    """An Encore Sigil: wakes one of the three mini-bosses (0 Thumper, 1 Whistler, 2 Strummer)."""
+    return B('encore_sigil', boss=boss, spent='false')
+
+
 def suspicious(loot):
     return B('suspicious_dreamsand', nbt={'id': 'minecraft:brushable_block', 'LootTable': rl(loot)}, dusted=0)
 
