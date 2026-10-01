@@ -75,7 +75,7 @@ public class SiftSniffer extends Sniffer {
                     this.setPersistenceRequired();
                     server.sendParticles(ParticleTypes.HEART, this.getX(), this.getY() + this.getBbHeight(), this.getZ(), 7, 0.6, 0.3, 0.6, 0.0);
                     this.playSound(ModSounds.SNIFFER_HAPPY.get(), 1.0F, 1.0F);
-                    player.displayClientMessage(Component.translatable("message.thesift.sniffer.tamed"), true);
+                    player.sendOverlayMessage(Component.translatable("message.thesift.sniffer.tamed"));
                 } else {
                     server.sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY() + this.getBbHeight(), this.getZ(), 6, 0.5, 0.2, 0.5, 0.01);
                 }
@@ -198,7 +198,7 @@ public class SiftSniffer extends Sniffer {
         }
         level.sendParticles(ModParticles.STAR_SPARKLE.get(), to.x, to.y + 0.6, to.z, 8, 0.3, 0.3, 0.3, 0.01);
         this.playSound(ModSounds.SNIFFER_HAPPY.get(), 0.8F, 1.2F);
-        rider.displayClientMessage(Component.translatable("message.thesift.sniffer.treasure", (int) Math.sqrt(bestDist)), true);
+        rider.sendOverlayMessage(Component.translatable("message.thesift.sniffer.treasure", (int) Math.sqrt(bestDist)));
     }
 
     // ------------------------------------------------------------------ save

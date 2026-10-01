@@ -186,7 +186,7 @@ public class Harmoner extends Animal implements MusicListener {
             this.playSound(ModSounds.HARMONER_SING.get(), 1.0F, pitch(6));
             this.playSound(ModSounds.HARMONER_SING.get(), 1.0F, pitch(1));
             if (player != null) {
-                player.displayClientMessage(Component.translatable("message.thesift.harmoner.lost"), true);
+                player.sendOverlayMessage(Component.translatable("message.thesift.harmoner.lost"));
             }
             return false;
         }
@@ -196,7 +196,7 @@ public class Harmoner extends Animal implements MusicListener {
         this.entityData.set(GUIDING, true);
         this.startSong();
         if (player != null) {
-            player.displayClientMessage(Component.translatable("message.thesift.harmoner.guide." + NAMES[this.getVariant()]), true);
+            player.sendOverlayMessage(Component.translatable("message.thesift.harmoner.guide." + NAMES[this.getVariant()]));
         }
         return true;
     }
