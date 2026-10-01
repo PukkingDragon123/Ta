@@ -344,7 +344,7 @@ public final class ClientSmokeTest {
         scene("mob_closeup_riveter", 40, c -> c.camera(12.6, STAGE_Y + 1.6, STAGE_Z + 2.8, 13.5, STAGE_Y + 1.9, STAGE_Z + 6.5));
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
         scene("mob_closeup_sniffer", 40, c -> c.camera(-0.5, STAGE_Y + 3.4, STAGE_Z + 3.2, -3.5, STAGE_Y + 1.2, STAGE_Z + 8.5));
-        scene("mob_closeup_dictator", 40, c -> c.camera(19.5, STAGE_Y + 2.6, STAGE_Z - 2.5, 19.5, STAGE_Y + 1.8, STAGE_Z + 5.5));
+        scene("mob_closeup_dictator", 40, c -> c.camera(20.0, STAGE_Y + 2.8, STAGE_Z - 3.0, 20.0, STAGE_Y + 2.0, STAGE_Z + 5.5));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -487,10 +487,10 @@ public final class ClientSmokeTest {
             sniffer.setItemSlot(net.minecraft.world.entity.EquipmentSlot.SADDLE, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SADDLE));
         }
         // the Dictator and his orchestra, at the far end of the stage
-        c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.5, face, false);
-        c.spawn(ModEntities.ENFORCER.get(), 16.5, STAGE_Y, STAGE_Z + 4.5, face, false);
-        c.spawn(ModEntities.RESONATOR.get(), 22.5, STAGE_Y, STAGE_Z + 4.5, face, false);
-        c.spawn(ModEntities.HOWLER.get(), 19.5, STAGE_Y, STAGE_Z + 3.0, face, false);
+        c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
+        c.spawn(ModEntities.ENFORCER.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
+        c.spawn(ModEntities.HOWLER.get(), 22.0, STAGE_Y, STAGE_Z + 4.0, face, false);
+        c.spawn(ModEntities.RESONATOR.get(), 24.6, STAGE_Y, STAGE_Z + 5.5, face, false);
         // one Harmoner of every colour, perched in a row
         for (int i = 0; i < com.thesift.entity.Harmoner.VARIANTS; i++) {
             if (c.spawn(ModEntities.HARMONER.get(), -2.5 + i, STAGE_Y, STAGE_Z + 3.0, face, false) instanceof com.thesift.entity.Harmoner bird) {
