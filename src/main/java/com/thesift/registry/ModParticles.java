@@ -40,6 +40,8 @@ public final class ModParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> WISHING_STAR = reg("wishing_star", true);
     /** Flat jelly splotches Bulbs leave where they land. */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLIME_TRAIL = reg("slime_trail", false);
+    /** Notes a guiding Harmoner leaves behind; xa/ya/za carry its colour. */
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> GUIDE_NOTE = reg("guide_note", true);
     /** Sleepy spores released by Dream Snares. */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLEEP_SPORE = reg("sleep_spore", false);
 

@@ -19,7 +19,7 @@ import org.joml.Quaternionf;
 public class SiftParticle extends SingleQuadParticle {
     public enum Kind {
         DRIFTING_SOUL, CHROME_DROPLET, CHROME_BUBBLE, DREAM_POLLEN, SIFT_NOTE, RESONANCE_RING, GLOW_DUST, LEAF, SIFT_MIST, STAR_SPARKLE,
-        PORTAL_SOUL, FOOTSTEP_PUFF, GLOW_SPLAT, WISHING_STAR, SLEEP_SPORE, SLIME_TRAIL
+        PORTAL_SOUL, FOOTSTEP_PUFF, GLOW_SPLAT, WISHING_STAR, SLEEP_SPORE, SLIME_TRAIL, GUIDE_NOTE
     }
 
     /** Cyan -> pink -> pearl, the colours of Chrome and the Sift sky. */
@@ -174,6 +174,17 @@ public class SiftParticle extends SingleQuadParticle {
                 this.maxAlpha = 0.7F;
                 this.setColor(0.95F, 0.9F, 1.0F);
                 glow = false;
+            }
+            case GUIDE_NOTE -> {
+                // a Harmoner's trail: drifting, slowly sinking notes in the bird's own colour
+                this.lifetime = 40 + random.nextInt(20);
+                this.xd = (random.nextDouble() - 0.5) * 0.03;
+                this.yd = -0.004;
+                this.zd = (random.nextDouble() - 0.5) * 0.03;
+                this.setColor((float) xa, (float) ya, (float) za);
+                size = 0.13F + random.nextFloat() * 0.05F;
+                this.fadeIn = 0.05F;
+                this.fadeOut = 0.4F;
             }
             case SLIME_TRAIL -> {
                 // a flat jelly splotch left behind by hopping Bulbs; xa/ya/za carry its tint

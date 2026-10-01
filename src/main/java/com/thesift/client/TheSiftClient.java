@@ -6,6 +6,8 @@ import com.thesift.client.model.ModModelLayers;
 import com.thesift.client.model.ModelGeometry;
 import com.thesift.client.particle.SiftParticle;
 import com.thesift.client.renderer.BulbRenderer;
+import com.thesift.client.renderer.HarmonerRenderer;
+import com.thesift.client.renderer.SiftSnifferRenderer;
 import com.thesift.client.renderer.EnchoerRenderer;
 import com.thesift.client.renderer.EuphoryAltarRenderer;
 import com.thesift.client.renderer.RiveterRenderer;
@@ -58,6 +60,7 @@ public class TheSiftClient {
 
     private static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ModModelLayers.BULB, ModelGeometry::bulb);
+        event.registerLayerDefinition(ModModelLayers.HARMONER, ModelGeometry::harmoner);
         event.registerLayerDefinition(ModModelLayers.SLUMBLER, ModelGeometry::slumbler);
         event.registerLayerDefinition(ModModelLayers.SIFTER, ModelGeometry::sifter);
         event.registerLayerDefinition(ModModelLayers.ENCHOER, ModelGeometry::enchoer);
@@ -66,6 +69,8 @@ public class TheSiftClient {
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BULB.get(), BulbRenderer::new);
+        event.registerEntityRenderer(ModEntities.HARMONER.get(), HarmonerRenderer::new);
+        event.registerEntityRenderer(ModEntities.SIFT_SNIFFER.get(), SiftSnifferRenderer::new);
         event.registerEntityRenderer(ModEntities.SLUMBLER.get(), SlumblerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);
@@ -94,6 +99,7 @@ public class TheSiftClient {
         particle(event, ModParticles.FOOTSTEP_PUFF, SiftParticle.Kind.FOOTSTEP_PUFF);
         particle(event, ModParticles.GLOW_SPLAT, SiftParticle.Kind.GLOW_SPLAT);
         particle(event, ModParticles.SLIME_TRAIL, SiftParticle.Kind.SLIME_TRAIL);
+        particle(event, ModParticles.GUIDE_NOTE, SiftParticle.Kind.GUIDE_NOTE);
         particle(event, ModParticles.WISHING_STAR, SiftParticle.Kind.WISHING_STAR);
         particle(event, ModParticles.SLEEP_SPORE, SiftParticle.Kind.SLEEP_SPORE);
     }

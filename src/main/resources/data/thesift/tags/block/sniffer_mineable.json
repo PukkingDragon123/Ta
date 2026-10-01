@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:dirt",
+    "#minecraft:sand",
+    "minecraft:gravel",
+    "minecraft:clay",
+    "minecraft:mud",
+    "minecraft:moss_block",
+    "minecraft:snow_block",
+    "minecraft:suspicious_sand",
+    "minecraft:suspicious_gravel",
+    "thesift:dreamsand",
+    "thesift:suspicious_dreamsand",
+    "thesift:sift_soil",
+    "thesift:sift_grass_block",
+    "thesift:coral_turf",
+    "thesift:lumen_moss_block"
+  ]
+}

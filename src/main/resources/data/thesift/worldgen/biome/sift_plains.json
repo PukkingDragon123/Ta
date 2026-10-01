@@ -36,7 +36,7 @@
               "weight": 12
             },
             {
-              "type": "minecraft:sniffer",
+              "type": "thesift:sift_sniffer",
               "count": {
                 "type": "minecraft:uniform",
                 "min_inclusive": 1,
@@ -48,6 +48,15 @@
               "type": "thesift:enchoer",
               "count": 1,
               "weight": 1
+            },
+            {
+              "type": "thesift:harmoner",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 6
             }
           ],
           "monster": [],

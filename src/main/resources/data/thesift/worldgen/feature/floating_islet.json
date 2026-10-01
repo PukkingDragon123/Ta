@@ -4,10 +4,10 @@
     "id": "thesift:lumen_moss_block"
   },
   "soil": {
-    "id": "thesift:dreamstone"
+    "id": "thesift:sift_soil"
   },
   "stone": {
-    "id": "thesift:dreamstone_bricks"
+    "id": "thesift:dreamstone"
   },
   "min_radius": 2,
   "max_radius": 4,

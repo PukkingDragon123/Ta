@@ -6,6 +6,8 @@ import com.thesift.block.entity.EuphoryAltarBlockEntity;
 import com.thesift.block.entity.SiftDrumBlockEntity;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
+import com.thesift.entity.Harmoner;
+import com.thesift.entity.SiftSniffer;
 import com.thesift.portal.PortalFrames;
 import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModEffects;
@@ -28,6 +30,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -99,6 +102,42 @@ final class MechanicsTest {
         this.startChromeSoak();
         this.startAltar();
         this.checkTrades();
+        this.checkHarmoners();
+        this.checkSniffer();
+    }
+
+    private void checkHarmoners() {
+        int found = 0;
+        for (int v = 0; v < Harmoner.VARIANTS; v++) {
+            Harmoner h = ModEntities.HARMONER.get().create(this.sift, EntitySpawnReason.COMMAND);
+            if (h == null) {
+                check(false, "harmoner: created");
+                return;
+            }
+            h.setVariant(v);
+            h.snapTo(8.5, this.sift.getHeight(Heightmap.Types.MOTION_BLOCKING, 8, 8) + 2, 8.5, 0.0F, 0.0F);
+            boolean ok = h.startGuiding(this.sift, null);
+            TheSift.LOGGER.info("SMOKE: harmoner {} -> {} at {}", Harmoner.NAMES[v], Harmoner.STRUCTURES[v], h.getGuideTarget());
+            if (ok && h.isGuiding() && h.getGuideTarget() != null) {
+                found++;
+            }
+            h.discard();
+        }
+        check(found >= 4, "harmoner: fed Harmoners find the structures of their colour (" + found + "/" + Harmoner.VARIANTS + ")");
+    }
+
+    private void checkSniffer() {
+        SiftSniffer s = ModEntities.SIFT_SNIFFER.get().create(this.sift, EntitySpawnReason.COMMAND);
+        if (s == null) {
+            check(false, "sniffer: created");
+            return;
+        }
+        check(!s.canUseSlot(EquipmentSlot.SADDLE), "sniffer: a wild Sniffer refuses the saddle");
+        s.setTame(true);
+        check(s.canUseSlot(EquipmentSlot.SADDLE), "sniffer: a tamed Sniffer accepts a saddle");
+        s.setItemSlot(EquipmentSlot.SADDLE, new ItemStack(Items.SADDLE));
+        check(s.isSaddled(), "sniffer: saddled");
+        s.discard();
     }
 
     private void checkTrades() {

@@ -695,7 +695,7 @@ def gen_recipes():
 
 def gen_particles():
     counts = {'drifting_soul': 4, 'chrome_droplet': 3, 'chrome_bubble': 1, 'dream_pollen': 2, 'sift_note': 1, 'resonance_ring': 1, 'glow_dust': 2,
-              'lullwood_leaf': 3, 'wishwood_leaf': 3, 'sift_mist': 2, 'star_sparkle': 2, 'portal_soul': 3, 'footstep_puff': 3, 'glow_splat': 2, 'slime_trail': 3,
+              'lullwood_leaf': 3, 'wishwood_leaf': 3, 'sift_mist': 2, 'star_sparkle': 2, 'portal_soul': 3, 'footstep_puff': 3, 'glow_splat': 2, 'slime_trail': 3, 'guide_note': 1,
               'wishing_star': 1, 'sleep_spore': 2}
     for p, n in counts.items():
         texs = [f'{NS}:{p}_{i}' if n > 1 else f'{NS}:{p}' for i in range(n)]
@@ -716,6 +716,17 @@ def gen_lang():
         f'itemGroup.{NS}.blocks': 'The Sift: Blocks', f'itemGroup.{NS}.items': 'The Sift: Items & Gear',
         f'entity.{NS}.bulb': 'Bulb', f'entity.{NS}.slumbler': 'Slumbler', f'entity.{NS}.sifter': 'Sifter', f'entity.{NS}.enchoer': 'Enchoer',
         f'entity.{NS}.riveter': 'Riveter', f'entity.{NS}.glowball': 'Glowball',
+        f'entity.{NS}.harmoner': 'Harmoner',
+        f'entity.{NS}.sift_sniffer': 'Sniffer',
+        f'message.{NS}.sniffer.tamed': 'The Sniffer nuzzles you. It trusts you now - give it a saddle and ride it!',
+        f'message.{NS}.sniffer.treasure': 'Your Sniffer smells treasure %s blocks away!',
+        f'message.{NS}.harmoner.lost': 'The Harmoner tilts its head. It cannot sense any place of its colour nearby.',
+        f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards an Abandoned Altar!',
+        f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and takes off towards a Chrome Well!',
+        f'message.{NS}.harmoner.guide.gold': 'The Gold Harmoner sings and takes off towards a Dream Statue!',
+        f'message.{NS}.harmoner.guide.violet': 'The Violet Harmoner sings and takes off towards a Collapsed Tower!',
+        f'message.{NS}.harmoner.guide.jade': 'The Jade Harmoner sings and takes off towards the Sift Ruins!',
+        f'message.{NS}.harmoner.guide.coral': 'The Coral Harmoner sings and takes off towards a Musical Temple!',
         f'effect.{NS}.deafened': 'Deafened', f'effect.{NS}.euphoria': 'Euphoria',
         f'biome.{NS}.sift_plains': 'Sift Plains', f'biome.{NS}.forest_mountains': 'Forest Mountains', f'biome.{NS}.rocky_dunes': 'Rocky Dunes',
         f'biome.{NS}.chrome_lakes': 'Chrome Lakes', f'biome.{NS}.deep_sift': 'Deep Sift', f'biome.{NS}.wishing_grove': 'Wishing Grove',
@@ -749,6 +760,13 @@ def gen_lang():
 
 # Hand-written subtitles, in the style of vanilla's ("Bulb squeaks", "Chrome splashes").
 SUBTITLES = {
+    'entity.sift_sniffer.happy': 'Sniffer delights',
+    'entity.sift_sniffer.plough': 'Sniffer ploughs through the ground',
+    'entity.sift_sniffer.sniff': 'Sniffer sniffs',
+    'entity.harmoner.ambient': 'Harmoner chirps',
+    'entity.harmoner.sing': 'Harmoner sings',
+    'entity.harmoner.hurt': 'Harmoner hurts',
+    'entity.harmoner.death': 'Harmoner dies',
     'entity.bulb.ambient': 'Bulb squeaks',
     'entity.bulb.hurt': 'Bulb hurts',
     'entity.bulb.death': 'Bulb dies',
@@ -826,6 +844,13 @@ def subtitle(s):
 
 # event -> list of (vanilla sound, volume, pitch)
 SOUNDS = {
+    'entity.sift_sniffer.happy': [('event:entity.sniffer.happy', 1.0, 1.0)],
+    'entity.sift_sniffer.plough': [('event:entity.sniffer.digging', 1.0, 1.1), ('dig/gravel1', 0.8, 0.8)],
+    'entity.sift_sniffer.sniff': [('event:entity.sniffer.sniffing', 1.0, 1.0)],
+    'entity.harmoner.ambient': [('mob/parrot/idle1', 0.7, 1.3), ('mob/parrot/idle2', 0.7, 1.4), ('mob/parrot/idle3', 0.7, 1.2)],
+    'entity.harmoner.sing': [('block/note_block/flute', 0.9, 1.0)],
+    'entity.harmoner.hurt': [('mob/parrot/hurt1', 0.8, 1.3), ('mob/parrot/hurt2', 0.8, 1.3)],
+    'entity.harmoner.death': [('mob/parrot/death1', 0.9, 1.2), ('mob/parrot/death2', 0.9, 1.2)],
     'entity.bulb.ambient': [('mob/rabbit/idle1', 0.6, 1.4), ('mob/rabbit/idle2', 0.6, 1.5), ('mob/slime/small1', 0.5, 1.6)],
     'entity.bulb.hurt': [('mob/rabbit/hurt1', 0.8, 1.3), ('mob/rabbit/hurt2', 0.8, 1.3)],
     'entity.bulb.death': [('mob/rabbit/hurt3', 0.9, 1.1), ('mob/slime/big1', 0.6, 1.8)],
@@ -902,6 +927,12 @@ def gen_sounds():
         entries = []
         for name, vol, pitch in lst:
             e = {'name': f'minecraft:{name}', 'volume': vol, 'pitch': pitch}
+            if name.startswith('event:'):
+                # a vanilla sound event, used as-is
+                e = {'name': 'minecraft:' + name[6:], 'type': 'event', 'volume': vol, 'pitch': pitch}
+            elif name.startswith('block/note_block/'):
+                # note block sounds live under note/<short name>.ogg; refer to the vanilla events instead
+                e = {'name': 'minecraft:block.note_block.' + name.rsplit('/', 1)[1], 'type': 'event', 'volume': vol, 'pitch': pitch}
             if ev in STREAM:
                 e['stream'] = True
             entries.append(e)
@@ -945,6 +976,9 @@ def gen_misc_tags():
     tag('block', 'minecraft:inside_step_sound_blocks', rl('drift_petals'))
     # items
     tag('item', f'{NS}:bulb_food', rl('pitcher_bulb'))
+    for seed in ('echo_seed', 'choir_pod', 'minecraft:wheat_seeds', 'minecraft:melon_seeds', 'minecraft:pumpkin_seeds', 'minecraft:beetroot_seeds',
+                 'minecraft:torchflower_seeds', 'minecraft:pitcher_pod'):
+        tag('item', f'{NS}:harmoner_food', rl(seed))
     for i in ['glowcap', 'minecraft:tropical_fish', 'minecraft:cod', 'glowcap_skewer']:
         tag('item', f'{NS}:slumbler_food', rl(i))
     tag('item', f'{NS}:slingshot_ammo', rl('glowing_slime_ball'))
@@ -957,10 +991,17 @@ def gen_misc_tags():
         tag('item', f'minecraft:{vt}', rl(f'siftite_{a}'))
         tag('item', 'minecraft:trimmable_armor', rl(f'siftite_{a}'))
     tag('item', 'minecraft:sniffer_food', rl('pitcher_bulb'))
+    for b in ['#minecraft:dirt', '#minecraft:sand', 'minecraft:gravel', 'minecraft:clay', 'minecraft:mud', 'minecraft:moss_block', 'minecraft:snow_block',
+              'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'dreamsand', 'suspicious_dreamsand', 'sift_soil', 'sift_grass_block',
+              'coral_turf', 'lumen_moss_block']:
+        tag('block', f'{NS}:sniffer_mineable', rl(b))
+    for b in ['minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'suspicious_dreamsand', 'serbim_ore', 'deep_serbim_ore', 'minecraft:chest',
+              'minecraft:barrel', 'minecraft:decorated_pot', 'minecraft:diamond_ore', 'minecraft:deepslate_diamond_ore', 'minecraft:emerald_ore']:
+        tag('block', f'{NS}:sniffer_treasure', rl(b))
     tag('item', 'minecraft:frog_food', rl('glowing_slime_ball')) if False else None
     # entity types
     tag('entity_type', f'{NS}:chrome_dwellers', rl('slumbler'))
-    for e in ['bulb', 'enchoer', 'minecraft:allay', 'minecraft:sniffer', 'slumbler']:
+    for e in ['bulb', 'enchoer', 'harmoner', 'sift_sniffer', 'minecraft:allay', 'minecraft:sniffer', 'slumbler']:
         tag('entity_type', f'{NS}:music_lovers', rl(e))
     for b in ['sift_plains', 'forest_mountains', 'rocky_dunes', 'chrome_lakes', 'deep_sift', 'wishing_grove']:
         tag('worldgen/biome', f'{NS}:is_sift', rl(b))

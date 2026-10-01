@@ -31,7 +31,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> eggs() {
-        return List.of(ModItems.BULB_SPAWN_EGG, ModItems.SLUMBLER_SPAWN_EGG, ModItems.SIFTER_SPAWN_EGG, ModItems.ENCHOER_SPAWN_EGG, ModItems.RIVETER_SPAWN_EGG);
+        return List.of(ModItems.BULB_SPAWN_EGG, ModItems.SLUMBLER_SPAWN_EGG, ModItems.SIFTER_SPAWN_EGG, ModItems.ENCHOER_SPAWN_EGG, ModItems.RIVETER_SPAWN_EGG, ModItems.HARMONER_SPAWN_EGG, ModItems.SIFT_SNIFFER_SPAWN_EGG);
     }
 
     private ModTabContents() {}

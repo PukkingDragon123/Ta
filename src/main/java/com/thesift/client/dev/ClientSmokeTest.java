@@ -339,6 +339,8 @@ public final class ClientSmokeTest {
         scene("mob_closeup_sifter", 40, c -> c.camera(6.5, STAGE_Y + 1.8, STAGE_Z + 2.8, 6.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
         scene("mob_closeup_enchoer", 40, c -> c.camera(10.5, STAGE_Y + 2.6, STAGE_Z + 1.5, 10.5, STAGE_Y + 1.6, STAGE_Z + 6.5));
         scene("mob_closeup_riveter", 40, c -> c.camera(12.6, STAGE_Y + 1.6, STAGE_Z + 2.8, 13.5, STAGE_Y + 1.9, STAGE_Z + 6.5));
+        scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
+        scene("mob_closeup_sniffer", 40, c -> c.camera(-0.5, STAGE_Y + 3.4, STAGE_Z + 3.2, -3.5, STAGE_Y + 1.2, STAGE_Z + 8.5));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -467,7 +469,17 @@ public final class ClientSmokeTest {
         if (baby instanceof net.minecraft.world.entity.AgeableMob ageable) {
             ageable.setAge(-24000);
         }
-        c.spawn(EntityTypes.SNIFFER, -3.5, STAGE_Y, STAGE_Z + 8.5, face, false);
+        // a tamed, saddled Sift Sniffer
+        if (c.spawn(ModEntities.SIFT_SNIFFER.get(), -3.5, STAGE_Y, STAGE_Z + 8.5, face, false) instanceof com.thesift.entity.SiftSniffer sniffer) {
+            sniffer.setTame(true);
+            sniffer.setItemSlot(net.minecraft.world.entity.EquipmentSlot.SADDLE, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SADDLE));
+        }
+        // one Harmoner of every colour, perched in a row
+        for (int i = 0; i < com.thesift.entity.Harmoner.VARIANTS; i++) {
+            if (c.spawn(ModEntities.HARMONER.get(), -2.5 + i, STAGE_Y, STAGE_Z + 3.0, face, false) instanceof com.thesift.entity.Harmoner bird) {
+                bird.setVariant(i);
+            }
+        }
         c.spawn(ModEntities.SLUMBLER.get(), 1.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.spawn(ModEntities.SIFTER.get(), 6.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.spawn(ModEntities.ENCHOER.get(), 10.5, STAGE_Y, STAGE_Z + 6.5, face, false);
@@ -493,6 +505,11 @@ public final class ClientSmokeTest {
         }
         c.spawn(ModEntities.SLUMBLER.get(), 4.5, STAGE_Y, z0 + 8.5, 200.0F, true);
         c.spawn(ModEntities.ENCHOER.get(), -4.5, STAGE_Y, z0 + 10.5, 160.0F, true);
+        for (int i = 0; i < 3; i++) {
+            if (c.spawn(ModEntities.HARMONER.get(), -2.5 + i * 3, STAGE_Y + 3, z0 + 7.5, i * 120.0F, true) instanceof com.thesift.entity.Harmoner bird) {
+                bird.setVariant(i * 2);
+            }
+        }
         c.camera(0.5, STAGE_Y + 7, z0 - 6.5, 0.5, STAGE_Y, z0 + 7);
     }
 

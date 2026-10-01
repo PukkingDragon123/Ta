@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:echo_seed",
+    "thesift:choir_pod",
+    "minecraft:wheat_seeds",
+    "minecraft:melon_seeds",
+    "minecraft:pumpkin_seeds",
+    "minecraft:beetroot_seeds",
+    "minecraft:torchflower_seeds",
+    "minecraft:pitcher_pod"
+  ]
+}

@@ -1,4 +1,103 @@
 {
+  "entity.sift_sniffer.happy": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.sniffer.happy",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sift_sniffer.happy"
+  },
+  "entity.sift_sniffer.plough": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.sniffer.digging",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:dig/gravel1",
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sift_sniffer.plough"
+  },
+  "entity.sift_sniffer.sniff": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.sniffer.sniffing",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sift_sniffer.sniff"
+  },
+  "entity.harmoner.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/idle1",
+        "volume": 0.7,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/parrot/idle2",
+        "volume": 0.7,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/parrot/idle3",
+        "volume": 0.7,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.harmoner.ambient"
+  },
+  "entity.harmoner.sing": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.harmoner.sing"
+  },
+  "entity.harmoner.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/hurt1",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/parrot/hurt2",
+        "volume": 0.8,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.harmoner.hurt"
+  },
+  "entity.harmoner.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/death1",
+        "volume": 0.9,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/parrot/death2",
+        "volume": 0.9,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.harmoner.death"
+  },
   "entity.bulb.ambient": {
     "sounds": [
       {
@@ -87,7 +186,8 @@
   "entity.bulb.happy": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/chime",
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
         "volume": 0.7,
         "pitch": 1.5
       },
@@ -502,7 +602,8 @@
   "block.sift_drum.low": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/basedrum",
+        "name": "minecraft:block.note_block.basedrum",
+        "type": "event",
         "volume": 1.0,
         "pitch": 0.7
       }
@@ -512,12 +613,14 @@
   "block.sift_drum.mid": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/basedrum",
+        "name": "minecraft:block.note_block.basedrum",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.0
       },
       {
-        "name": "minecraft:block/note_block/hat",
+        "name": "minecraft:block.note_block.hat",
+        "type": "event",
         "volume": 0.3,
         "pitch": 0.8
       }
@@ -527,7 +630,8 @@
   "block.sift_drum.high": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/snare",
+        "name": "minecraft:block.note_block.snare",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.0
       }
@@ -537,7 +641,8 @@
   "block.sift_drum.boom": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/basedrum",
+        "name": "minecraft:block.note_block.basedrum",
+        "type": "event",
         "volume": 1.0,
         "pitch": 0.5
       },
@@ -652,7 +757,8 @@
   "event.rhythm.good": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/chime",
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.2
       },
@@ -677,12 +783,14 @@
   "event.rhythm.round": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/bell",
+        "name": "minecraft:block.note_block.bell",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.0
       },
       {
-        "name": "minecraft:block/note_block/bell",
+        "name": "minecraft:block.note_block.bell",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.26
       }
@@ -722,7 +830,8 @@
   "block.harmony_stone.tone": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/chime",
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.0
       }
@@ -752,12 +861,14 @@
         "pitch": 1.6
       },
       {
-        "name": "minecraft:block/note_block/chime",
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
         "volume": 0.8,
         "pitch": 1.2
       },
       {
-        "name": "minecraft:block/note_block/chime",
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
         "volume": 0.8,
         "pitch": 1.5
       }
@@ -767,7 +878,8 @@
   "block.choir_lily.sing": {
     "sounds": [
       {
-        "name": "minecraft:block/note_block/flute",
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
         "volume": 0.8,
         "pitch": 1.0
       },
@@ -898,7 +1010,8 @@
         "pitch": 1.2
       },
       {
-        "name": "minecraft:block/note_block/chime",
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
         "volume": 0.3,
         "pitch": 0.8
       }

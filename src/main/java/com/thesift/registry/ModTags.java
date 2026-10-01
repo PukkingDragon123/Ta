@@ -21,6 +21,10 @@ public final class ModTags {
         public static final TagKey<Block> RIVETER_ROOST = tag("riveter_roost");
         public static final TagKey<Block> INCORRECT_FOR_SIFTITE_TOOL = tag("incorrect_for_siftite_tool");
         public static final TagKey<Block> RESONANT = tag("resonant");
+        /** Soft ground a ridden Sniffer ploughs straight through. */
+        public static final TagKey<Block> SNIFFER_MINEABLE = tag("sniffer_mineable");
+        /** What a ridden Sniffer sniffs out: buried and hidden treasure. */
+        public static final TagKey<Block> SNIFFER_TREASURE = tag("sniffer_treasure");
 
         private static TagKey<Block> tag(String name) {
             return TagKey.create(Registries.BLOCK, TheSift.id(name));
@@ -29,6 +33,8 @@ public final class ModTags {
 
     public static final class Items {
         public static final TagKey<Item> BULB_FOOD = tag("bulb_food");
+        /** Seeds a Harmoner will eat - and then lead you to the structure of its colour. */
+        public static final TagKey<Item> HARMONER_FOOD = tag("harmoner_food");
         public static final TagKey<Item> SLUMBLER_FOOD = tag("slumbler_food");
         public static final TagKey<Item> SLINGSHOT_AMMO = tag("slingshot_ammo");
         public static final TagKey<Item> SIFTITE_TOOL_MATERIALS = tag("siftite_tool_materials");

@@ -660,7 +660,16 @@ def functional():
     for (x, y) in ((7, 7), (8, 7), (7, 8), (8, 8)):
         gp.set(x, y, hx('#fff7c2'))
     out('block/glow_particle', gp)
-    # chrome fluid: animated shimmering still + flow textures and an overlay
+    # chrome fluid: calm vanilla-water-like ripples in cyan pearl, with the odd pink glint
+    CHROME = [hx('#86d4e0'), hx('#95dbe5'), hx('#a5e2ea'), hx('#bae9ef'), hx('#e2f8fa')]
+    GLINT = hx('#ffd3ee')
+
+    def chrome_px(x, y, t, n=16):
+        # integer spatial and temporal frequencies, so the texture tiles and the animation loops
+        k = math.tau / n
+        w = math.sin(k * (x + y) + t) + 0.6 * math.sin(k * (x - 2 * y) - t) + 0.35 * math.sin(k * (3 * x + y) + 2 * t)
+        return CHROME[0 if w < -1.2 else 1 if w < -0.3 else 2 if w < 0.6 else 3 if w < 1.4 else 4]
+
     frames = 32
     st = Image.new('RGBA', (16, 16 * frames))
     sp = st.load()
@@ -668,8 +677,10 @@ def functional():
         t = f / frames * math.tau
         for y in range(16):
             for x in range(16):
-                c = iridescent(x, y, t, 0.4)
-                sp[x, y + f * 16] = (c[0], c[1], c[2], 235)
+                c = chrome_px(x, y, t)
+                if c == CHROME[4] and (x * 7 + y * 3 + f) % 11 == 0:
+                    c = GLINT
+                sp[x, y + f * 16] = (c[0], c[1], c[2], 225)
     out('block/chrome_still', st, {'animation': {'frametime': 3}})
     fl = Image.new('RGBA', (32, 32 * frames))
     fp = fl.load()
@@ -677,8 +688,8 @@ def functional():
         t = f / frames * math.tau
         for y in range(32):
             for x in range(32):
-                c = iridescent(x * 0.5, (y - f) * 0.5, t, 0.5)
-                fp[x, y + f * 32] = (c[0], c[1], c[2], 235)
+                c = chrome_px(x, y - f, t, 32)
+                fp[x, y + f * 32] = (c[0], c[1], c[2], 225)
     out('block/chrome_flow', fl, {'animation': {'frametime': 2}})
     ov = Tex()
     for y in range(16):
@@ -785,10 +796,52 @@ def items():
                     rows[yy][xx] = 'w'
         rows[py][px_] = 'g'
         out(f'item/slingshot_pulling_{i}', pal_sprite([''.join(r) for r in rows], dict(base_keys, g=hx('#e8ff9a'))))
-    eggs = {'bulb': ('#7fe3e6', '#ff9ccf'), 'slumbler': ('#9fd6e2', '#6f8fd0'), 'sifter': ('#58cbe3', '#ffd23f'),
-            'enchoer': ('#3fb8b0', '#a9f5ff'), 'riveter': ('#dcd7ea', '#1ec8c8')}
+    eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
+            'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'), 'sift_sniffer': ('#8c2f23', '#3f9d80')}
     for mob, (b, s) in eggs.items():
         out(f'item/{mob}_spawn_egg', pal_sprite(S.EGG, {'b': hx(b), 's': hx(s), 'd': darken(hx(b), 0.45)}))
+
+
+# ================================================================== sniffer saddle
+
+
+def sniffer_saddle():
+    """Saddle overlay for the vanilla Sniffer model (192x192). Painted onto the outer fur cube's
+    faces: top at (102, 0) 25x40, west side at (62, 40) 40x24, east side at (127, 40) 40x24."""
+    t = Tex(192, 192)
+    leather = [hx('#4a2a12'), hx('#5c3619'), hx('#7b4a26'), hx('#9b6436'), hx('#b97e48')]
+    cloth = [hx('#b8404f'), hx('#e0606c'), hx('#f37d84'), hx('#ffa9aa')]
+    gold, iron = hx('#ffd97a'), hx('#c8c8d0')
+    ux, vy = 102, 0
+    # coral blanket with a gold hem, under the seat
+    for v in range(10, 30):
+        for u in range(3, 22):
+            edge = v in (10, 29) or u in (3, 21)
+            t.set(ux + u, vy + v, gold if edge else cloth[2] if (u + v) % 4 else cloth[1])
+    # the leather seat with a raised rim, stitching and a lit front edge
+    for v in range(13, 27):
+        for u in range(6, 19):
+            rim = v in (13, 26) or u in (6, 18)
+            c = leather[1] if rim else leather[2]
+            if v == 14 and 7 <= u <= 17:
+                c = leather[3]
+            if (u in (8, 16) and 15 <= v <= 24 and v % 2 == 0):
+                c = leather[4]
+            t.set(ux + u, vy + v, c)
+    t.set(ux + 12, vy + 20, iron)
+    # blanket and girth straps down both flanks
+    for fx in (62, 127):
+        for u in range(10, 31):
+            for v in range(40, 44):
+                edge = v == 43 or u in (10, 30)
+                t.set(fx + u, v, gold if edge else cloth[2] if v < 42 else cloth[1])
+        for u in range(19, 22):
+            for v in range(44, 58):
+                t.set(fx + u, v, leather[1] if u == 21 else leather[2])
+        for u in range(18, 23):
+            t.set(fx + u, 51, iron)
+        t.set(fx + 20, 52, iron)
+    out('entity/sift_sniffer/saddle', t)
 
 
 # ================================================================== armor layers
@@ -872,6 +925,7 @@ def particles():
     note = Tex(8, 8)
     draw_map(note, ['...WWW..', '...W.WW.', '...W..W.', '...W....', '.WWW....', 'WWWW....', 'WWW.....', '........'], {'W': hx('#ffffff')})
     out('particle/sift_note', note)
+    out('particle/guide_note', note)
     ring = Tex(16, 16)
     for y in range(16):
         for x in range(16):
@@ -1057,6 +1111,7 @@ def main():
     functional()
     items()
     armor_layers()
+    sniffer_saddle()
     particles()
     nebula()
     logo()

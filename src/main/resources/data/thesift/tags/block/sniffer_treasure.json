@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:suspicious_sand",
+    "minecraft:suspicious_gravel",
+    "thesift:suspicious_dreamsand",
+    "thesift:serbim_ore",
+    "thesift:deep_serbim_ore",
+    "minecraft:chest",
+    "minecraft:barrel",
+    "minecraft:decorated_pot",
+    "minecraft:diamond_ore",
+    "minecraft:deepslate_diamond_ore",
+    "minecraft:emerald_ore"
+  ]
+}

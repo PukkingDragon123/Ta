@@ -2,7 +2,9 @@ package com.thesift.event;
 
 import com.thesift.entity.Bulb;
 import com.thesift.entity.Enchoer;
+import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
+import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import com.thesift.registry.ModBlocks;
@@ -34,10 +36,16 @@ public final class ModBusEvents {
         event.put(ModEntities.SIFTER.get(), Sifter.createAttributes().build());
         event.put(ModEntities.ENCHOER.get(), Enchoer.createAttributes().build());
         event.put(ModEntities.RIVETER.get(), Riveter.createAttributes().build());
+        event.put(ModEntities.HARMONER.get(), Harmoner.createAttributes().build());
+        event.put(ModEntities.SIFT_SNIFFER.get(), SiftSniffer.createAttributes().build());
     }
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntities.BULB.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.SIFT_SNIFFER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.HARMONER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.ENCHOER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);

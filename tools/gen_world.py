@@ -286,10 +286,10 @@ def features():
     feature('floating_island', {'type': f'{NS}:floating_island', 'top': state('sift_grass_block', snowy=False), 'soil': state('sift_soil'),
                                 'stone': state('dreamstone'), 'min_radius': 4, 'max_radius': 9, 'min_lift': 28, 'max_lift': 60,
                                 'decoration': f'{NS}:lullwood_tree'})
-    feature('floating_islet', {'type': f'{NS}:floating_island', 'top': state('lumen_moss_block'), 'soil': state('dreamstone'),
-                               'stone': state('dreamstone_bricks'), 'min_radius': 2, 'max_radius': 4, 'min_lift': 14, 'max_lift': 40})
-    placed('floating_island', 'floating_island', [rarity(9)] + ON_SURFACE)
-    placed('floating_islet', 'floating_islet', [rarity(5)] + ON_SURFACE)
+    feature('floating_islet', {'type': f'{NS}:floating_island', 'top': state('lumen_moss_block'), 'soil': state('sift_soil'),
+                               'stone': state('dreamstone'), 'min_radius': 2, 'max_radius': 4, 'min_lift': 14, 'max_lift': 40})
+    placed('floating_island', 'floating_island', [rarity(14)] + ON_SURFACE)
+    placed('floating_islet', 'floating_islet', [rarity(10)] + ON_SURFACE)
     feature('dreamstone_spire', {'type': f'{NS}:spire', 'body': state('dreamstone'), 'band': state('blush_bricks'),
                                  'cap': state('sift_grass_block', snowy=False), 'min_height': 14, 'max_height': 34, 'radius': 3.5})
     feature('dune_hoodoo', {'type': f'{NS}:spire', 'body': state('dreamsandstone'), 'band': state('blush_bricks'), 'min_height': 7,
@@ -465,19 +465,19 @@ DREAMY_PARTICLES = [('drifting_soul', 0.0008), ('dream_pollen', 0.0012), ('glow_
 
 def biomes():
     biome('sift_plains', fog='#aef0e2', sky='#5ed6c6', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
-          spawns=mobs(creature=[('bulb', 12, 2, 4), ('minecraft:sniffer', 3, 1, 2), ('enchoer', 1, 1, 1)]),
+          spawns=mobs(creature=[('bulb', 12, 2, 4), ('sift_sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]),
           parts=particles(*DREAMY_PARTICLES),
           feats=[(1, 'chrome_pool_surface'), (2, 'floating_island'), (2, 'floating_islet'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_sift_plains'), (9, 'patch_coral_thicket'), (9, 'patch_coral_bush'), (9, 'patch_sift_flowers'),
                  (9, 'patch_drift_petals'), (9, 'patch_pitcher_bulb_bush'), (9, 'patch_glimmer_sprouts')])
     biome('forest_mountains', fog='#a2e8de', sky='#5ed6c6', water='#7fe8ff', grass='#4fc9b8', foliage='#5fd8d0', temp=0.5, down=0.8,
-          spawns=mobs(creature=[('bulb', 6, 2, 3), ('minecraft:sniffer', 4, 1, 2), ('enchoer', 2, 1, 1)]),
+          spawns=mobs(creature=[('bulb', 6, 2, 3), ('sift_sniffer', 4, 1, 2), ('enchoer', 2, 1, 1), ('harmoner', 6, 1, 3)]),
           parts=particles(('lullwood_leaf', 0.002), ('drifting_soul', 0.002), ('sift_mist', 0.001), ('glow_dust', 0.002), ('wishing_star', 0.00012)),
           feats=[(2, 'dreamstone_spire'), (2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_forest_mountains'), (9, 'patch_blushgrass'), (9, 'patch_sift_flowers'), (9, 'patch_glowcap_surface'),
                  (9, 'patch_glimmer_sprouts')])
     biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
-          spawns=mobs(creature=[('bulb', 2, 1, 2), ('minecraft:sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 3)]),
+          spawns=mobs(creature=[('bulb', 2, 1, 2), ('sift_sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 3)]),
           parts=particles(('dream_pollen', 0.006), ('glow_dust', 0.002), ('wishing_star', 0.0002)),
           feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_pitcher_bulb_bush')])
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
@@ -486,7 +486,7 @@ def biomes():
           feats=[(2, 'floating_islet'), (6, 'disk_dreamsand')] + COMMON_UNDERGROUND +
                 [(9, 'patch_chrome_reeds'), (9, 'patch_blushgrass'), (9, 'trees_sift_plains')])
     biome('wishing_grove', fog='#b4eee2', sky='#5ed6c6', water='#ffb8e6', grass='#f59ac6', foliage='#f9b3d4', temp=0.8, down=0.7,
-          spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2)]),
+          spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2), ('harmoner', 8, 1, 3)]),
           parts=particles(('wishwood_leaf', 0.003), ('star_sparkle', 0.002), ('drifting_soul', 0.003), ('wishing_star', 0.0003)),
           feats=[(2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_wishing_grove'), (9, 'patch_grove_flowers'), (9, 'patch_drift_petals'), (9, 'patch_blushgrass'), (9, 'patch_pitcher_bulb_bush')])

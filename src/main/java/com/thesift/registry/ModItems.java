@@ -181,6 +181,8 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> SIFTER_SPAWN_EGG = ITEMS.registerItem("sifter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFTER.get()));
     public static final DeferredItem<SpawnEggItem> ENCHOER_SPAWN_EGG = ITEMS.registerItem("enchoer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.ENCHOER.get()));
     public static final DeferredItem<SpawnEggItem> RIVETER_SPAWN_EGG = ITEMS.registerItem("riveter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.RIVETER.get()));
+    public static final DeferredItem<SpawnEggItem> HARMONER_SPAWN_EGG = ITEMS.registerItem("harmoner_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HARMONER.get()));
+    public static final DeferredItem<SpawnEggItem> SIFT_SNIFFER_SPAWN_EGG = ITEMS.registerItem("sift_sniffer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFT_SNIFFER.get()));
     public static final DeferredItem<Item> MUSIC_DISC_LULLABY = ITEMS.registerItem("music_disc_lullaby", Item::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG));
 
     private ModItems() {}
