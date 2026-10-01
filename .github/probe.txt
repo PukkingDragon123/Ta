@@ -1,5 +1,4 @@
-sig net.minecraft.client.gui.GuiGraphicsExtractor
-lines net.minecraft.client.gui.GuiGraphicsExtractor 295 370
-lines net.minecraft.client.gui.screens.inventory.InventoryScreen 90 200
-lines net.minecraft.client.gui.screens.inventory.BookViewScreen 95 215
-src net.minecraft.client.gui.screens.inventory.PageButton
+lines net.minecraft.client.renderer.entity.LivingEntityRenderer 286 300
+grep ID assignment
+grep public void setId\(
+grep public int getId\(\)
