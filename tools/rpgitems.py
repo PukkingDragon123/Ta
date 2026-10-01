@@ -390,15 +390,29 @@ def baton():
 
 
 def staff():
+    """The Conductor's Staff: a twisted dark shaft bound in gold, a human skull with glowing eye
+    sockets, and two gold prongs rising from it to cradle a sculk orb."""
     s = Sprite()
-    s.add(capsule(4, 28, 20, 12, 1.4), '#2a3550', 'dome', gloss=0.4)
-    s.add(capsule(5, 27, 9, 23, 1.9), '#3e1a46', 'dome', gloss=0.3)
-    s.add(capsule(15, 17, 13, 19, 1.9) | capsule(19.5, 12.5, 18, 14, 1.9), GOLD, 'dome')
-    # the tuning fork prongs cradling a sculk orb
-    s.add(capsule(19, 12, 18, 4, 1.1) | capsule(20, 13, 28, 14, 1.1), GOLD, 'dome')
-    s.add(ellipse(24, 8, 4, 4), GLOW, 'dome', gloss=1.6)
-    s.add(ellipse(24, 8, 1.4, 1.4), '#ffffff', 'flat', gloss=0, outline=False)
-    return s.render()
+    s.add(capsule(3, 29, 17, 15, 1.6), '#5e3a78', 'dome', gloss=0.6)
+    # twisted gold bindings
+    for t in (0.2, 0.45, 0.7):
+        x, y = 3 + 14 * t, 29 - 14 * t
+        s.add(capsule(x - 1.3, y - 1.3, x + 1.3, y + 1.3, 0.75), GOLD, 'dome')
+    s.add(capsule(16, 16, 18.5, 13.5, 2.1), GOLD, 'dome')
+    # prongs curving up from behind the skull around the orb
+    s.add(capsule(17, 10, 18, 5, 1.0) | capsule(18, 5, 21, 1.8, 1.0), GOLD, 'dome')
+    s.add(capsule(24, 14, 28, 13, 1.0) | capsule(28, 13, 30.2, 10, 1.0), GOLD, 'dome')
+    s.add(ellipse(25.5, 5.5, 3.6, 3.6), GLOW, 'dome', gloss=1.8)
+    # the skull: cranium, cheekbones and jaw
+    skull = ['#5e5648', '#a39a84', '#ddd6c2', '#f3efe4', '#ffffff']
+    s.add(ellipse(21.5, 10.5, 5.6, 5.0), skull, 'dome', gloss=0.9)
+    s.add(rrect(18.5, 13, 24.5, 17.5, 1.5), skull, 'bevel', depth=1.2, gloss=0.3)
+    img = s.render()
+    v, g, d = (24, 14, 30), (63, 245, 230), (150, 140, 112)
+    overlay(img, ['vvv.vvv', 'vgv.vgv', 'vvv.vvv', '...v...', '.ddddd.', '.d.d.d.'], {'v': v, 'g': g, 'd': d}, 18, 10)
+    for (x, y) in ((29, 2), (14, 6), (30, 17)):
+        overlay(img, ['.w.', 'wWw', '.w.'], {'w': (160, 255, 248), 'W': (255, 255, 255)}, x - 1, y - 1)
+    return img
 
 
 # ----------------------------------------------------------------------------- spawn eggs

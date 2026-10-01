@@ -722,14 +722,26 @@ def dictator() -> Model:
             hand.cube((fx - 0.5, 2, -1.5 + (f % 2)), (1, 4 - (f % 2), 1), color='skin_d', pattern='mc', clusters=0.0, rim=False,
                       faces={'down': dict(color='horn', pattern='mc', clusters=0.0)})
         if sx < 0:
-            # the tuning-fork staff, held like a sceptre
+            # the Conductor's Staff (the same one he drops): a twisted shaft bound in gold, a human
+            # skull with glowing sockets, and gold prongs rising from it to cradle a sculk orb
             staff = hand.part('baton', pivot=(0, 2, 0), rot=(1.35, 0, 0))
-            staff.cube((-0.5, -8, -0.5), (1, 24, 1), color='armor_d', pattern='mc', clusters=0.0, rim=False, faces={
-                'north': dict(color='armor_d', pattern='mc', clusters=0.0, rim=False, hd=True, map=['bb', '..', '..', '..'] * 12, keys={'b': 'brass'})})
-            staff.cube((-1.5, 15, -0.5), (3, 1, 1), color='brass', pattern='mc', clusters=0.0, rim=False)
-            for px_ in (-1.5, 0.5):
-                staff.cube((px_, 16, -0.5), (1, 4, 1), color='brass_l', pattern='mc', clusters=0.0, rim=False)
-            staff.cube((-1, 16.5, -1), (2, 2, 2), color='glow', pattern='mc', clusters=0.0, rim=False, glow=True)
+            staff.cube((-0.5, -8, -0.5), (1, 22, 1), color='cape_l', pattern='mc', clusters=0.0, rim=False, faces={
+                'north': dict(color='cape_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['bb', '..', '..', '.c', 'c.', '..'] * 7 + ['bb', '..'],
+                              keys={'b': 'brass', 'c': 'cape'})})
+            staff.cube((-1, 13, -1), (2, 1, 2), color='brass', pattern='mc', clusters=0.0, rim=False)
+            skull = staff.part('staff_skull', pivot=(0, 14, 0))
+            skull.cube((-2, 0, -2), (4, 4, 4), color='horn_l', pattern='mc', clusters=0.0, faces={
+                # the staff points forward from his hand, so the skull's face looks along +y: paint every side
+                'north': dict(color='horn_l', pattern='mc', clusters=0.0, hd=True, keys={'v': 'void', 'g': 'glow', 'd': 'horn_d'}, glow_keys='g',
+                              map=['........', '.vv..vv.', '.vg..gv.', '.vv..vv.', '...vv...', '........', '.dddddd.', '.d.dd.d.']),
+                'down': dict(color='horn_l', pattern='mc', clusters=0.0, hd=True, keys={'v': 'void', 'g': 'glow', 'd': 'horn_d'}, glow_keys='g',
+                             map=['........', '.vv..vv.', '.vg..gv.', '.vv..vv.', '...vv...', '........', '.dddddd.', '.d.dd.d.']),
+            })
+            for sx_ in (1, -1):
+                prong = skull.part(f'staff_prong_{"l" if sx_ > 0 else "r"}', pivot=(1.7 * sx_, 3.5, 0), rot=(0, 0, -0.35 * sx_))
+                prong.cube((-0.5, 0, -0.5), (1, 5, 1), color='brass_l', pattern='mc', clusters=0.0, rim=False)
+                prong.cube((-0.5 - 0.5 * sx_, 4.5, -0.5), (1, 1, 1), color='brass', pattern='mc', clusters=0.0, rim=False)
+            skull.cube((-1.25, 5.5, -1.25), (2.5, 2.5, 2.5), color='glow', pattern='mc', clusters=0.0, rim=False, glow=True)
     return m
 
 
