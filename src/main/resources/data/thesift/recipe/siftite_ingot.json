@@ -3,13 +3,10 @@
   "category": "misc",
   "ingredients": [
     "thesift:serbim_ingot",
-    "thesift:serbim_ingot",
-    "minecraft:copper_ingot",
-    "minecraft:copper_ingot",
-    "thesift:chrome_pearl"
+    "minecraft:copper_ingot"
   ],
   "result": {
-    "count": 2,
+    "count": 1,
     "id": "thesift:siftite_ingot"
   }
 }

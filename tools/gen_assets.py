@@ -654,7 +654,7 @@ def gen_recipes():
     shaped('raw_serbim_block', ['###', '###', '###'], {'#': 'raw_serbim'}, 'raw_serbim_block')
     shapeless('raw_serbim_from_block', ['raw_serbim_block'], 'raw_serbim', 9)
     # Serbim + Copper = Siftite
-    shapeless('siftite_ingot', ['serbim_ingot', 'serbim_ingot', 'minecraft:copper_ingot', 'minecraft:copper_ingot', 'chrome_pearl'], 'siftite_ingot', 2)
+    shapeless('siftite_ingot', ['serbim_ingot', 'minecraft:copper_ingot'], 'siftite_ingot', 1)
     shaped('siftite_block', ['###', '###', '###'], {'#': 'siftite_ingot'}, 'siftite_block')
     shapeless('siftite_ingot_from_block', ['siftite_block'], 'siftite_ingot', 9)
     shaped('siftite_ingot_from_nuggets', ['###', '###', '###'], {'#': 'siftite_nugget'}, 'siftite_ingot', 1, 'misc')
@@ -673,6 +673,9 @@ def gen_recipes():
     shapeless('glowing_slime_ball_from_block', ['glowing_slime_block'], 'glowing_slime_ball', 9)
     shaped('chrome_glass', [' # ', '#C#', ' # '], {'#': 'minecraft:glass', 'C': 'chrome_bucket'}, 'chrome_glass', 4)
     shaped('sift_drum', ['HHH', 'W W', 'WSW'], {'H': 'thick_hide', 'W': 'lullwood_planks', 'S': 'serbim_ingot'}, 'sift_drum', 1, 'redstone')
+    # the first drum has to be built in the Overworld: echo shards come from the Ancient City the portal is opened in
+    shaped('sift_drum_from_overworld', ['LLL', 'PEP', 'PNP'], {'L': 'minecraft:leather', 'P': '#minecraft:planks', 'E': 'minecraft:echo_shard',
+                                                             'N': 'minecraft:note_block'}, 'sift_drum', 1, 'redstone')
     shaped('euphory_altar', [' P ', 'SDS', 'DDD'], {'P': 'chrome_pearl', 'S': 'siftite_ingot', 'D': 'polished_dreamstone'}, 'euphory_altar', 1, 'misc')
     shaped('echo_frame', ['#S#', 'SPS', '#S#'], {'#': 'hushslate_bricks', 'S': 'minecraft:echo_shard', 'P': 'chrome_pearl'}, 'echo_frame', 4, 'misc')
     shaped('soul_chime', [' I ', 'NGN', 'N N'], {'I': 'minecraft:iron_chain', 'N': 'serbim_ingot', 'G': 'soulpetal'}, 'soul_chime', 1, 'decorations')

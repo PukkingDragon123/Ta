@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "L": "minecraft:leather",
+    "P": "#minecraft:planks",
+    "E": "minecraft:echo_shard",
+    "N": "minecraft:note_block"
+  },
+  "pattern": [
+    "LLL",
+    "PEP",
+    "PNP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:sift_drum"
+  }
+}

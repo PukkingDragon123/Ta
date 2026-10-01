@@ -214,7 +214,7 @@ public final class SmokeTest {
 
     private static void structures(ServerLevel sift) {
         // every template parses and can be stamped into the world
-        StructureTemplateManager templates = sift.getStructureManager();
+        StructureTemplateManager templates = sift.getStructureTemplateManager();
         int x = -240;
         for (String name : STRUCTURES) {
             for (int i = 0; i < 4; i++) {
@@ -293,6 +293,37 @@ public final class SmokeTest {
         if (frame != null) {
             PortalFrames.fill(sift, frame);
             check(sift.getBlockState(base.offset(0, 1, 0)).is(ModBlocks.SIFT_PORTAL.get()), "portal filled");
+        }
+        // The real Ancient City gate: stamp a vanilla city centre high in the sky and light it like the drum ritual does.
+        Optional<StructureTemplate> city = sift.getStructureTemplateManager().get(Identifier.withDefaultNamespace("ancient_city/city_center/city_center_1"));
+        check(city.isPresent(), "ancient city centre template");
+        if (city.isPresent()) {
+            BlockPos origin = new BlockPos(400, 250, 400);
+            city.get().placeInWorld(sift, origin, origin, new StructurePlaceSettings(), sift.getRandom(), Block.UPDATE_CLIENTS);
+            Vec3i size = city.get().getSize();
+            long sx = 0;
+            long sy = 0;
+            long sz = 0;
+            int n = 0;
+            for (BlockPos q : BlockPos.betweenClosed(origin, origin.offset(size).offset(-1, -1, -1))) {
+                if (sift.getBlockState(q).is(Blocks.REINFORCED_DEEPSLATE)) {
+                    sx += q.getX();
+                    sy += q.getY();
+                    sz += q.getZ();
+                    n++;
+                }
+            }
+            check(n > 0, "ancient city centre has reinforced deepslate");
+            if (n > 0) {
+                BlockPos centre = new BlockPos((int) (sx / n), (int) (sy / n), (int) (sz / n));
+                PortalFrames.Frame gate = PortalFrames.find(sift, centre, 20);
+                TheSift.LOGGER.info("SMOKE: ancient city size={} frame blocks={} centre={} gate={}", size, n, centre,
+                        gate == null ? "none" : gate.axis() + " cells=" + gate.interior().size() + " at " + gate.center());
+                check(gate != null, "ancient city gate recognised as a portal frame");
+                if (gate != null) {
+                    PortalFrames.fill(sift, gate);
+                }
+            }
         }
         ServerLevel overworld = server.overworld();
         BlockPos arrival = SiftTeleporter.buildArrivalPortal(overworld, new BlockPos(64, 80, 64), Direction.Axis.X);

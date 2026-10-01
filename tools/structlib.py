@@ -1,4 +1,6 @@
 """Tiny voxel-building DSL that writes vanilla structure template NBT."""
+import gzip
+import io
 import math
 import random
 
@@ -155,7 +157,11 @@ class Build:
             'blocks': blocks,
             'entities': List[Compound]([]),
         })
-        nbtlib.File(root).save(path, gzipped=True)
+        # gzip with a fixed mtime so regenerating unchanged structures leaves the files byte-identical
+        raw = io.BytesIO()
+        nbtlib.File(root).write(raw)
+        with open(path, 'wb') as f, gzip.GzipFile(filename='', mode='wb', fileobj=f, mtime=0) as gz:
+            gz.write(raw.getvalue())
         return len(self.blocks)
 
 
