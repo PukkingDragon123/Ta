@@ -1454,6 +1454,115 @@ def boss_bar():
     out('gui/conductor_bar', t)
 
 
+def mini_boss_bars():
+    """Health bars for the three great players, in the same layout as the Conductor's (2x texels):
+    a sculk-and-bone frame dressed for each - drum scutes for the Thumper, feather tips and flute
+    holes for the Whistler, strings and webs for the Strummer - a glowing fill in its colour, and
+    a skull emblem."""
+    import math
+    BONE, BONE_L, BONE_D = (222, 214, 192), (246, 240, 224), (150, 140, 118)
+    HIDE, HIDE_L, HIDE_D = (12, 38, 44), (24, 66, 72), (5, 18, 22)
+    GLOW = (41, 223, 235)
+
+    def ramp(c):
+        rows = []
+        for i in range(10):
+            k = 1.0 - i / 9.0
+            hi = 0.55 if i < 2 else 0.0
+            rows.append(tuple(min(255, int(v * (0.35 + 0.75 * k) + 255 * hi * (1 - i / 2))) for v in c))
+        return rows
+
+    def emblem(rows, keys):
+        e = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+        for y, row in enumerate(rows):
+            for x, ch in enumerate(row):
+                if ch != '.':
+                    for dy in (0, 1):
+                        for dx in (0, 1):
+                            e.putpixel((x * 2 + dx, y * 2 + dy), (*keys[ch], 255))
+        return e
+    K = {'b': BONE, 'l': BONE_L, 'd': BONE_D, 'k': (8, 12, 14), 'g': GLOW, 'h': HIDE, 'H': HIDE_L, 'r': (205, 80, 52), 'R': (240, 130, 70),
+         'y': (226, 190, 96), 'v': (196, 108, 255), 'V': (122, 58, 184), 's': (127, 247, 255)}
+    bars = {
+        'thumper': ((255, 159, 58), [
+            '................', '......rRRr......', '.....rrrrrr.....', '....dbbbbbbd....', '...dlbbbbbbbd...', '..dbkkbbbbkkbd..', '..dbkgbbbbgkbd..',
+            '..dbkkbbbbkkbd..', '..dbbbbddbbbbd..', '...dbbkddkbbd...', '...hdbbbbbbdh...', '..hHhddbbddhHh..', '..hhhhkkkkhhhh..', '...hhkbkbkbhh...',
+            '....hhhhhhhh....', '................']),
+        'whistler': ((159, 248, 255), [
+            '................', '.......dd.......', '......dbbd......', '.....dbllbd.....', '....dbbbbbbd....', '....dbkgbbbbyyyy', '....dbkkbbbyyyyy',
+            '....dbbbbbbdyy..', '.....dbbbbd.....', '......hddh......', '.....hhsshh.....', '....hHhsshHh....', '...hh.hssh.hh...', '..h...hssh...h..',
+            '......hhhh......', '................']),
+        'strummer': ((196, 108, 255), [
+            '..s..........s..', '...s........s...', '....s.dddd.s....', '.....dbbbbd.....', '....dbbbbbbd....', '...dggbbbbggd...', '..dggkgbbgkggd..',
+            '..dgggbbbbgggd..', '...dbbbddbbbd...', '....dbkkkkbd....', '.....dbbbbd.....', '...vV.dbbd.Vv...', '..v..V.dd.V..v..', '.v....V..V....v.',
+            '..............v.', '................']),
+    }
+    for name, (col, em) in bars.items():
+        t = Image.new('RGBA', (512, 64), (0, 0, 0, 0))
+        d = ImageDraw.Draw(t)
+        # the frame: sculk hide over a bone rim
+        d.rounded_rectangle((6, 8, 421, 39), radius=8, fill=(*HIDE, 255), outline=(*HIDE_D, 255), width=2)
+        d.rounded_rectangle((9, 11, 418, 36), radius=6, outline=(*HIDE_L, 255), width=2)
+        d.rectangle((30, 18, 397, 31), fill=(*BONE_D, 255))
+        d.rectangle((31, 19, 396, 30), fill=(4, 10, 12, 255))
+        # sculk veins and glowing specks creeping over the frame
+        rnd = random.Random(hash(name) & 0xffff)
+        for _ in range(26):
+            x = rnd.randrange(14, 410)
+            y = rnd.choice((13, 14, 33, 34))
+            d.point((x, y), fill=(*GLOW, 255) if rnd.random() < 0.4 else (*HIDE_L, 255))
+            d.point((x + 1, y), fill=(*HIDE_L, 255))
+        if name == 'thumper':
+            # bone scutes along both rims, drum-cord crosses at the ends
+            for x in range(18, 410, 22):
+                for y0 in (9, 33):
+                    d.polygon([(x, y0 + 3), (x + 4, y0), (x + 12, y0), (x + 16, y0 + 3), (x + 12, y0 + 6), (x + 4, y0 + 6)], fill=(*BONE, 255), outline=(*BONE_D, 255))
+                    d.point((x + 6, y0 + 2), fill=(*BONE_L, 255))
+            for x0 in (0, 412):
+                for k in range(4):
+                    d.line((x0 + k * 4, 12, x0 + 12 - k * 4, 36), fill=(205, 80, 52, 255), width=2)
+        elif name == 'whistler':
+            # feather tips fanning out of both ends, flute holes along the bottom rim
+            for x0, sgn in ((14, -1), (413, 1)):
+                for k in range(5):
+                    a = (k - 2) * 0.32
+                    x1 = x0 + sgn * int(16 * math.cos(a))
+                    y1 = 24 + int(16 * math.sin(a))
+                    d.line((x0, 24, x1, y1), fill=(*BONE_L, 255), width=3)
+                    d.point((x1, y1), fill=(*GLOW, 255))
+            for x in range(40, 390, 18):
+                d.ellipse((x, 33, x + 4, 37), fill=(4, 10, 12, 255), outline=(*BONE_D, 255))
+                d.point((x + 2, 35), fill=(*GLOW, 255))
+        else:
+            # four glowing strings over the frame, webs in the corners, spider legs at the ends
+            for i, y in enumerate((12, 15, 32, 35)):
+                d.line((10, y, 417, y), fill=(127, 247, 255, 255) if i % 2 == 0 else (90, 180, 200, 255), width=1)
+            for cx, cy, sx, sy in ((8, 10, 1, 1), (419, 10, -1, 1), (8, 37, 1, -1), (419, 37, -1, -1)):
+                for k in range(3):
+                    d.line((cx, cy, cx + sx * (6 + k * 4), cy + sy * (12 - k * 4)), fill=(230, 230, 240, 200), width=1)
+                for r in (4, 8):
+                    d.line((cx + sx * r, cy, cx, cy + sy * r), fill=(230, 230, 240, 200), width=1)
+            for x0, sgn in ((6, -1), (421, 1)):
+                for k, y in enumerate((14, 22, 30)):
+                    d.line((x0, y, x0 + sgn * 6, y - 4), fill=(*BONE, 255), width=2)
+                    d.line((x0 + sgn * 6, y - 4, x0 + sgn * 9, y + 4), fill=(*BONE_D, 255), width=2)
+        # phase ticks (bone) at 66% and 33%
+        for frac in (0.66, 0.33):
+            x = 32 + int(364 * frac)
+            d.rectangle((x - 1, 15, x, 33), fill=(*BONE, 255))
+            d.rectangle((x - 1, 15, x, 16), fill=(*BONE_L, 255))
+        # fill strip (y 44) with a pulse pattern, empty track (y 54)
+        for y, c in enumerate(ramp(col)):
+            d.line((0, 44 + y, 363, 44 + y), fill=(*c, 255))
+        for x in range(8, 364, 22):
+            d.rectangle((x, 46, x + 1, 47), fill=(255, 255, 255, 220))
+            d.point((x + 2, 49), fill=(255, 255, 255, 160))
+        for y in range(10):
+            d.line((0, 54 + y, 363, 54 + y), fill=(10, 26, 30, 255) if y not in (0, 9) else (4, 12, 14, 255))
+        t.alpha_composite(emblem(em, K), (448, 0))
+        out(f'gui/{name}_bar', t)
+
+
 def main():
     stone_textures()
     soils()
@@ -1471,6 +1580,7 @@ def main():
     logo()
     hd_items()
     boss_bar()
+    mini_boss_bars()
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]

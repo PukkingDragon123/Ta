@@ -54,7 +54,7 @@ public abstract class MiniBoss extends Monster {
     protected MiniBoss(EntityType<? extends Monster> type, Level level, BossEvent.BossBarColor color) {
         super(type, level);
         this.xpReward = 120;
-        this.bossEvent = new ServerBossEvent(UUID.randomUUID(), this.getDisplayName(), color, BossEvent.BossBarOverlay.NOTCHED_6);
+        this.bossEvent = new ServerBossEvent(UUID.randomUUID(), Component.translatable(type.getDescriptionId()), color, BossEvent.BossBarOverlay.NOTCHED_6);
         this.setPersistenceRequired();
     }
 
@@ -223,7 +223,7 @@ public abstract class MiniBoss extends Monster {
     @Override
     public void setCustomName(Component name) {
         super.setCustomName(name);
-        this.bossEvent.setName(this.getDisplayName());
+        this.bossEvent.setName(name == null ? Component.translatable(this.getType().getDescriptionId()) : this.getDisplayName());
     }
 
     @Override

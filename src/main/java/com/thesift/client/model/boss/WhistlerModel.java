@@ -32,6 +32,8 @@ public class WhistlerModel extends EntityModel<MiniBossRenderState> {
     private final ModelPart leftShin;
     private final ModelPart rightShin;
 
+    private final ModelPart[] tendrils = new ModelPart[2];
+
     public WhistlerModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
@@ -49,6 +51,8 @@ public class WhistlerModel extends EntityModel<MiniBossRenderState> {
         this.rightLeg = root.getChild("right_leg");
         this.leftShin = this.leftLeg.getChild("left_shin");
         this.rightShin = this.rightLeg.getChild("right_shin");
+        this.tendrils[0] = this.head.getChild("left_tendril");
+        this.tendrils[1] = this.head.getChild("right_tendril");
     }
 
     @Override
@@ -64,6 +68,14 @@ public class WhistlerModel extends EntityModel<MiniBossRenderState> {
         for (int i = 0; i < 5; i++) {
             ModelPart sp = this.spines.getChild("spine_" + i);
             sp.xRot += Mth.sin(age * 0.15F + i * 0.7F) * 0.06F;
+        }
+        // the Warden's tendrils: a restless twitch, a shiver when it is hurt or attacking
+        float shiver = (s.hurtTicks >= 0.0F ? 1.0F : 0.0F) + (s.bossState != com.thesift.entity.boss.MiniBoss.IDLE ? 0.5F : 0.0F);
+        for (int i = 0; i < 2; i++) {
+            float sgn = i == 0 ? 1.0F : -1.0F;
+            float tw = Mth.sin(s.ageInTicks * (0.11F + i * 0.02F) + i) * 0.18F + Mth.sin(s.ageInTicks * 1.7F + i) * 0.08F * shiver;
+            this.tendrils[i].zRot += sgn * tw;
+            this.tendrils[i].xRot += Mth.sin(s.ageInTicks * 0.07F + i * 2.0F) * 0.12F;
         }
         if (perched) {
             // folded and stalking: wings swept back along the body, a heron's careful walk

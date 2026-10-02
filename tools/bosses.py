@@ -605,3 +605,485 @@ def conductor_mask() -> Model:
 
 ALL = {'thumper': thumper, 'thumpling': thumpling, 'whistler': whistler, 'whistling': whistling, 'strummer': strummer, 'strumling': strumling,
        'conductor_mask': conductor_mask}
+
+
+# =========================================================================== SCULK REMAKE
+# The three great players, remade as Warden-kin: near-black hide crusted with teal sculk that
+# glows in specks, bone showing through everywhere - ribcages, skulls, claws, teeth - glowing
+# hearts in their chests and the Warden's twitching tendrils.
+WARDEN = {
+    'hide': '#0d1217', 'hide_l': '#16222a', 'hide_d': '#070a0d',
+    'sculk': '#034150', 'sculk_l': '#074857', 'sculk_d': '#062e37',
+    'bone': '#bbc39b', 'bone_l': '#d1d6b6', 'bone_d': '#819988', 'bone_k': '#4e5c55',
+    'glow': '#29dfeb', 'glow_d': '#0f8c99', 'void': '#04070a', 'tooth': '#e2e6cc',
+}
+
+
+def sculk_patches(w, h, seed, density=0.5, glow=0.18):
+    """Hide crusted with sculk: soft-edged teal blobs, with glowing specks inside them."""
+    import random
+    rnd = random.Random(seed)
+    blobs = [(rnd.uniform(0, w), rnd.uniform(0, h), rnd.uniform(1.5, 4.5)) for _ in range(max(1, int(w * h * density / 40)))]
+
+    def fn(x, y):
+        best = 0.0
+        for (bx, by, r) in blobs:
+            d = ((x - bx) ** 2 + (y - by) ** 2) ** 0.5
+            best = max(best, 1.0 - d / r)
+        if best <= 0.0:
+            return 'k' if rnd.random() < 0.04 else '.'
+        if best > 0.55 and rnd.random() < glow:
+            return 'g'
+        return 'S' if best > 0.45 else 's'
+    return gen(w, h, fn)
+
+
+def ribcage(w, h, heart=True):
+    """A ribcage seen from the front: a sternum down the middle, ribs arching out from it, and a
+    glowing heart showing through the gaps."""
+    cx = (w - 1) / 2
+
+    def fn(x, y):
+        dx = abs(x - cx)
+        if dx < 1.0 and y < h - 2:
+            return 'l' if y % 3 == 0 else 'b'
+        if heart and dx < 3.2 and abs(y - h * 0.42) < 2.6 - dx * 0.5:
+            return 'G' if dx < 1.6 and abs(y - h * 0.42) < 1.2 else 'g'
+        rib = (y - dx * 0.35) % 4
+        reach = w / 2 - 1 - y * 0.12
+        if dx < reach and dx > 1.0:
+            if rib < 1.0:
+                return 'l'
+            if rib < 2.0:
+                return 'b'
+            if rib < 2.6:
+                return 'd'
+        return '.'
+    return gen(w, h, fn)
+
+
+def fangs(w, h, step=3):
+    """Hanging teeth like the Warden's: pale at the root, darkening and tapering to points."""
+    def fn(x, y):
+        i = x % step
+        length = h - (x * 7 % 3)
+        if i == step - 1 or y >= length:
+            return '.'
+        width = step - 1 - int(y / max(1, length) * (step - 1) + 0.4)
+        if i >= width:
+            return '.'
+        return 'l' if y == 0 else ('b' if y < length * 0.6 else 'd')
+    return gen(w, h, fn)
+
+
+def vertebrae(w, h):
+    def fn(x, y):
+        if y % 3 == 2:
+            return 'k'
+        return 'l' if x == 0 or y % 3 == 0 else 'b'
+    return gen(w, h, fn)
+
+
+WK = {'s': 'sculk', 'S': 'sculk_l', 'g': 'glow', 'G': 'glow', 'k': 'hide_l', 'b': 'bone', 'l': 'bone_l', 'd': 'bone_d', 'v': 'void', 'w': 'tooth'}
+WGLOW = 'gG'
+
+
+def hide_face(w, h, seed, density=0.5, glow=0.18, **extra):
+    """A face spec: dark hide crusted with glowing sculk."""
+    spec = dict(color='hide', pattern='mc', clusters=0.3, hd=True, map=sculk_patches(w, h, seed, density, glow), keys=WK, glow_keys=WGLOW)
+    spec.update(extra)
+    return spec
+
+
+def tendril(part, name, pivot, rot, length=6):
+    """A Warden tendril: a flat glowing curl."""
+    t = part.part(name, pivot=pivot, rot=rot)
+    rows = gen(4, length * 2, lambda x, y: ('g' if (x == 1 or x == 2) else ('G' if x == 0 and y % 3 == 0 else '.'))
+               if y < length * 2 - 3 else ('g' if x == (y % 2) + 1 else '.'))
+    t.cube((-1, -length, 0), (2, length, 0), color='glow_d', pattern='mc', clusters=0.0, rim=False, faces={
+        f: dict(color='glow_d', pattern='mc', clusters=0.0, rim=False, hd=True, map=[r.replace('.', '_') for r in rows], keys={'g': 'glow', 'G': 'tooth'},
+                glow_keys='gG') for f in ('north', 'south')})
+    return t
+
+
+WARDEN_SKULL = {
+    # 18 x 14 texels: deep sockets with a glowing pupil each, a ridge of bone, nostril pits
+    'neutral': {1: '.llllllllllllllll.', 2: 'lbbbbbbbbbbbbbbbbl', 3: 'bvvvvbbbbbbbbvvvvb', 4: 'vvggvvbbbbbbvvggvv', 5: 'vvGgvvbbbbbbvvgGvv',
+                6: 'bvvvvbbbbbbbbvvvvb', 7: '.bbbbbbbddbbbbbbb.', 8: '..bbbbbvbbvbbbbb..', 9: '..dbbbbbbbbbbbbd..'},
+    'blink': {1: '.llllllllllllllll.', 2: 'lbbbbbbbbbbbbbbbbl', 3: 'bddddbbbbbbbbddddb', 4: 'vvvvvvbbbbbbvvvvvv', 6: 'bbbbbbbbbbbbbbbbbb',
+              7: '.bbbbbbbddbbbbbbb.', 8: '..bbbbbvbbvbbbbb..', 9: '..dbbbbbbbbbbbbd..'},
+    'angry': {1: 'll..............ll', 2: 'lbll..........llbl', 3: 'bvvvvlbbbbbblvvvvb', 4: 'vvGGvvbbbbbbvvGGvv', 5: 'vvGGvvbbbbbbvvGGvv',
+              6: 'bvvvvbbbbbbbbvvvvb', 7: '.bbbbbbbddbbbbbbb.', 8: '..bbbbbvbbvbbbbb..', 9: '..dbbbbbbbbbbbbd..'},
+    'hurt': {1: '.llllllllllllllll.', 2: 'lbbbbbbbbbbbbbbbbl', 3: 'bvbbvbbbbbbbbvbbvb', 4: 'bbvvbbbbbbbbbbvvbb', 5: 'bvbbvbbbbbbbbvbbvb',
+             7: '.bbbbbbbddbbbbbbb.', 8: '..bbbbbvbbvbbbbb..'},
+    'dead': {1: '.llllllllllllllll.', 2: 'lbbbbbbbbbbbbbbbbl', 3: 'bvbbvbbbbbbbbvbbvb', 4: 'bbvvbbbbbbbbbbvvbb', 5: 'bvbbvbbbbbbbbvbbvb',
+             7: '.bbbbbbbddbbbbbbb.', 8: '..bbbbbbbbbbbbbb..'},
+}
+
+
+def thumper_sculk() -> Model:
+    """The Thumper, remade: a Warden-kin turtle. Its shell is sculk-crusted hide with great bone
+    ribs arching over it like a cage, glowing specks in every seam; under it a ribcage with a
+    beating heart of light. Its head is a turtle's skull - deep sockets with glowing pupils, a
+    hooked bone beak, a jaw of hanging fangs - with two Warden tendrils that twitch. On its back,
+    the war drum: pale hide stretched over a bone hoop, veined with glowing sculk - still its only
+    weak point."""
+    pal = dict(SCULK)
+    pal.update(WARDEN)
+    pal.update({'drum': '#16222a', 'drum_l': '#24343e', 'drum_d': '#070a0d', 'skin': '#d6cfb0', 'skin_l': '#ece6cc', 'skin_d': '#a89f80',
+                'cord': '#bbc39b', 'cord_d': '#819988'})
+    m = Model('thumper', (256, 160), pal, {'thumper': {}}, res=2, expressions=EXPR)
+    body = m.part('body', pivot=(0, 14, 0))
+    # the belly: a ribcage with the heart glowing through
+    body.cube((-10, 1, -12), (20, 3, 24), color='hide', pattern='mc', clusters=0.2, faces={
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=ribcage(40, 48), keys=WK, glow_keys=WGLOW),
+        'north': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=fangs(40, 6), keys=WK),
+    })
+    # the shell: rim, dome and crown, all crusted with sculk
+    body.cube((-12, -3, -14), (24, 4, 28), color='hide', pattern='mc', clusters=0.3, faces={
+        **{f: hide_face(56 if f in ('east', 'west') else 48, 8, 11 + i, 0.6) for i, f in enumerate(('north', 'south', 'east', 'west'))},
+        'up': hide_face(48, 56, 15, 0.55),
+        'down': dict(color='hide_d', pattern='mc', clusters=0.0),
+    })
+    body.cube((-10, -8, -12), (20, 5, 24), color='hide', pattern='mc', clusters=0.3, faces={
+        **{f: hide_face(48 if f in ('east', 'west') else 40, 10, 21 + i, 0.6) for i, f in enumerate(('north', 'south', 'east', 'west'))},
+        'up': hide_face(40, 48, 25, 0.6),
+    })
+    body.cube((-7, -11, -9), (14, 3, 18), color='hide', pattern='mc', clusters=0.3, faces={
+        **{f: hide_face(36 if f in ('east', 'west') else 28, 6, 31 + i, 0.7) for i, f in enumerate(('north', 'south', 'east', 'west'))},
+        'up': hide_face(28, 36, 35, 0.7, 0.25),
+    })
+    # great bone ribs arching over the shell, front to back
+    bone = dict(color='bone', pattern='mc', clusters=0.0, rim=False)
+    for i, z in enumerate((-10, -5, 5, 10)):
+        for sx in (1, -1):
+            body.cube((10.5 * sx - (1 if sx > 0 else 0) * 0 - 0.75, -7, z - 0.75), (1.5, 9, 1.5), **bone, faces={
+                'north': dict(**bone, hd=True, map=['ll', 'bb'] * 8 + ['dd', 'dd'], keys=WK)})
+            body.cube((7.5 * sx - 0.75, -10, z - 0.75), (1.5, 3.5, 1.5), **bone)
+        body.cube((-7.5, -11.5, z - 0.75), (15, 1.5, 1.5), **bone, faces={
+            'up': dict(**bone, hd=True, map=['l' * 30, 'b' * 30, 'd' * 30], keys=WK)})
+    # sculk growths along the ridge, like shriekers, each with a glowing mouth
+    for i, z in enumerate((-7, 7)):
+        g = body.part(f'growth_{i}', pivot=(0, -11, z))
+        g.cube((-1.5, -3, -1.5), (3, 3, 3), color='sculk', pattern='mc', clusters=0.2,
+               faces={'up': dict(color='void', pattern='mc', clusters=0.0, hd=True, map=['......', '.gggg.', '.gGGg.', '.gGGg.', '.gggg.', '......'],
+                                 keys=WK, glow_keys=WGLOW)})
+        g.cube((-2.5, -4, -0.25), (5, 1, 0.5), color='bone', pattern='mc', clusters=0.0, rim=False)
+    # the drum: pale hide on a bone hoop, veined with glowing sculk
+    drum = body.part('drum', pivot=(0, -11, 1))
+    lace = gen(24, 18, lambda x, y: 'c' if (x + y) % 8 in (0, 1) or (x - y) % 8 in (0, 1) else ('s' if (x * 3 + y * 5) % 23 == 0 else ('d' if y in (0, 17) else '.')))
+    drum.cube((-6, -9, -6), (12, 9, 12), color='drum', pattern='mc', clusters=0.4, faces={
+        f: dict(color='drum', pattern='mc', clusters=0.2, hd=True, map=lace, keys={'c': 'cord', 'd': 'drum_d', 's': 'glow'}, glow_keys='s')
+        for f in ('north', 'south', 'east', 'west')})
+    head_map = gen(26, 26, lambda x, y: 'B' if min(x, y, 25 - x, 25 - y) < 2 else (
+        'g' if (abs(x - 12.5) + abs(y - 12.5) < 3.2) else
+        'v' if ((x * 7 + y * 3) % 11 == 0 and abs(x - 12.5) + abs(y - 12.5) < 11) or (abs(x - y) < 0.6 or abs(x + y - 25) < 0.6) and min(x, y, 25 - x, 25 - y) > 3 else '.'))
+    drum.cube((-6.5, -10, -6.5), (13, 1, 13), color='skin', pattern='mc', clusters=0.2, rim=False, faces={
+        'up': dict(color='skin', pattern='mc', clusters=0.2, hd=True, map=head_map, keys={'B': 'bone', 'v': 'glow_d', 'g': 'glow'}, glow_keys='vg'),
+        **{f: dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True, map=['l' * 26, 'd' * 26], keys=WK) for f in ('north', 'south', 'east', 'west')},
+    })
+    drum.cube((-6.5, -1, -6.5), (13, 1, 13), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    for side, sx in (('left', 1), ('right', -1)):
+        stick = drum.part(f'{side}_stick', pivot=(4 * sx, -8, 5.5), rot=(0.5, 0, 0.5 * sx))
+        # a leg bone with a knuckle at the end
+        stick.cube((-0.5, -9, -0.5), (1, 9, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+        stick.cube((-1, -11, -1), (2, 2, 2), color='bone_l', pattern='mc', clusters=0.0, rim=False)
+    # neck and skull head
+    neck = body.part('neck', pivot=(0, -1, -12))
+    neck.cube((-3.5, -3.5, -6), (7, 7, 7), color='hide', pattern='mc', clusters=0.3, faces={
+        'east': hide_face(14, 14, 41), 'west': hide_face(14, 14, 42), 'up': hide_face(14, 14, 43),
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=vertebrae(14, 14), keys=WK)})
+    head = neck.part('head', pivot=(0, -1, -6))
+    head.cube((-4.5, -5, -8), (9, 7, 8), color='bone', pattern='mc', clusters=0.2, faces={
+        'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=hd_rows(WARDEN_SKULL['neutral'], 18, 14), keys=WK, glow_keys=WGLOW,
+                      expr={k: hd_rows(v, 18, 14) for k, v in WARDEN_SKULL.items() if k != 'neutral'}),
+        'up': hide_face(18, 16, 44, 0.8),
+        'east': hide_face(16, 14, 45, 0.6), 'west': hide_face(16, 14, 46, 0.6),
+    })
+    # the hooked bone beak
+    head.cube((-2, -1, -10), (4, 3, 2), color='bone_l', pattern='mc', clusters=0.0, rim=False, faces={'up': dict(color='bone_l', pattern='mc', clusters=0.0)})
+    head.cube((-1, 2, -10), (2, 1, 1), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    for side, sx in (('left', 1), ('right', -1)):
+        brow = head.part(f'{side}_brow', pivot=(2.6 * sx, -4.2, -8))
+        brow.cube((-2, -0.75, -1), (4, 1.5, 1.5), color='bone_d', pattern='mc', clusters=0.0, rim=False,
+                  faces={'up': dict(color='bone', pattern='mc', clusters=0.0)})
+        tendril(head, f'{side}_tendril', (3.5 * sx, -5, -3), (0.2, 0, 0.6 * sx), 7)
+    jaw = head.part('jaw', pivot=(0, 2, -1))
+    jaw.cube((-4, 0, -7), (8, 2, 7), color='bone_d', pattern='mc', clusters=0.3, faces={
+        'up': dict(color='void', pattern='mc', clusters=0.0, hd=True, map=['.' * 16, '.wwwwwwwwwwwwww.'] + ['.' * 16] * 12, keys=WK),
+        'north': dict(color='bone_d', pattern='mc', clusters=0.0, hd=True, map=fangs(16, 4, 2), keys=WK),
+        'down': dict(color='hide', pattern='mc', clusters=0.3)})
+    jaw.cube((-1, -1, -8), (2, 3, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+    # columns of legs: hide with bone knee plates and long bone claws
+    for name, sx, sz in (('front_left', 1, -1), ('front_right', -1, -1), ('hind_left', 1, 1), ('hind_right', -1, 1)):
+        leg = body.part(f'{name}_leg', pivot=(9 * sx, 2, 8.5 * sz))
+        leg.cube((-3, -1, -3), (6, 9, 6), color='hide', pattern='mc', clusters=0.3, faces={
+            'north': hide_face(12, 18, 50 + sx + sz * 3, 0.6, bands=None),
+            'east': hide_face(12, 18, 60 + sx + sz * 3, 0.6), 'west': hide_face(12, 18, 70 + sx + sz * 3, 0.6)})
+        leg.cube((-2.5, 0, -3.5), (5, 3, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+        leg.cube((-3.5, 6, -3.5), (7, 2, 7), color='hide_d', pattern='mc', clusters=0.3, faces={
+            'north': dict(color='hide_d', pattern='mc', clusters=0.0, hd=True, map=['ww.ww.ww.ww.ww', 'll.ll.ll.ll.ll', 'bb.bb.bb.bb.bb', 'dd.dd.dd.dd.dd'], keys=WK)})
+    tail = body.part('tail', pivot=(0, 0, 13))
+    tail.cube((-1.5, -1, 0), (3, 3, 5), color='hide', pattern='mc', clusters=0.3, faces={'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True,
+                                                                                                  map=vertebrae(6, 10), keys=WK)})
+    tail.cube((-1, -0.5, 5), (2, 2, 3), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    return m
+
+
+WARDEN_BIRD = {
+    # 10 x 8 texels on each side of the crane's skull: a big socket with a glowing eye
+    'neutral': {1: '..vvvv....', 2: '.vvggvv...', 3: '.vgGgvv...', 4: '.vvggvv...', 5: '..vvvv....'},
+    'blink': {3: '.dddddd...', 4: '..vvvv....'},
+    'angry': {1: 'll........', 2: '.vlggvv...', 3: '.vgGGvv...', 4: '.vvggvv...', 5: '..vvvv....'},
+    'hurt': {1: '.v...v....', 2: '..v.v.....', 3: '...v......', 4: '..v.v.....', 5: '.v...v....'},
+    'dead': {1: '.v...v....', 2: '..v.v.....', 3: '...v......', 4: '..v.v.....', 5: '.v...v....'},
+}
+
+
+def whistler_sculk() -> Model:
+    """The Whistler, remade: a Warden-kin crane, half skeleton. A ribcage body crusted with sculk
+    and a soul-heart glowing between the ribs; a long neck of bare vertebrae; a bird's skull with
+    a bone flute for a beak, glowing in its finger holes, and two tendrils streaming back; wings
+    of bone struts with tattered, glowing-veined sculk membrane between them; flute-pipe spines
+    of bone along its back; bone stilt legs."""
+    pal = dict(SCULK)
+    pal.update(WARDEN)
+    pal.update({'membrane': '#0b2a31', 'membrane_l': '#11414a', 'membrane_d': '#061a1f'})
+    m = Model('whistler', (128, 160), pal, {'whistler': {}}, res=2, expressions=EXPR)
+    body = m.part('body', pivot=(0, 6, 0))
+    body.cube((-4, -4, -7), (8, 8, 14), color='hide', pattern='mc', clusters=0.2, faces={
+        'east': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=[r for r in ribcage(28, 16, heart=False)], keys=WK),
+        'west': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=[r for r in ribcage(28, 16, heart=False)], keys=WK),
+        'north': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=ribcage(16, 16), keys=WK, glow_keys=WGLOW),
+        'up': hide_face(16, 28, 81, 0.7, 0.25),
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=fangs(16, 28, 4), keys=WK),
+        'south': hide_face(16, 16, 82),
+    })
+    # the soul-heart, hanging in the ribcage
+    body.cube((-1.5, -1.5, -7.5), (3, 3, 2), color='glow', pattern='mc', clusters=0.0, rim=False, glow=True)
+    spines = body.part('spines', pivot=(0, -4, 0))
+    for i, (z, h) in enumerate(((-4.5, 5), (-2, 8), (0.5, 10), (3, 8), (5.5, 5))):
+        sp = spines.part(f'spine_{i}', pivot=(0, 0, z), rot=(0.55, 0, 0))
+        hole_rows = ['..', 'oo', '..', '..'] * (h // 2)
+        sp.cube((-0.75, -h, -0.75), (1.5, h, 1.5), color='bone', pattern='mc', clusters=0.0, rim=False, faces={
+            **{f: dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True, map=(['ll', '..'] + hole_rows)[:h * 2], keys={'o': 'glow', 'l': 'bone_l'},
+                       glow_keys='o') for f in ('north', 'south', 'east', 'west')},
+            'up': dict(color='glow', pattern='mc', clusters=0.0, glow=True),
+        })
+    # the long neck of bare vertebrae
+    neck = body.part('neck', pivot=(0, -2, -6.5), rot=(-0.35, 0, 0))
+    neck.cube((-1.5, -9, -1.5), (3, 9, 3), color='bone', pattern='mc', clusters=0.0, faces={
+        f: dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=vertebrae(6, 18), keys=WK) for f in ('north', 'south', 'east', 'west')})
+    neck2 = neck.part('neck_upper', pivot=(0, -9, 0), rot=(0.5, 0, 0))
+    neck2.cube((-1.25, -8, -1.25), (2.5, 8, 2.5), color='bone', pattern='mc', clusters=0.0, faces={
+        f: dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=vertebrae(5, 16), keys=WK) for f in ('north', 'south', 'east', 'west')})
+    head = neck2.part('head', pivot=(0, -8, 0), rot=(-0.15, 0, 0))
+    EK = dict(WK)
+    EK.update({'v': 'void'})
+    head.cube((-2, -3.5, -3.5), (4, 4, 5), color='bone', pattern='mc', clusters=0.0, faces={
+        'east': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=hd_rows(WARDEN_BIRD['neutral'], 10, 8), keys=EK, glow_keys=WGLOW,
+                     expr={e: hd_rows(r, 10, 8) for e, r in WARDEN_BIRD.items() if e != 'neutral'}),
+        'west': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=[r[::-1] for r in hd_rows(WARDEN_BIRD['neutral'], 10, 8)], keys=EK, glow_keys=WGLOW,
+                     expr={e: [x[::-1] for x in hd_rows(r, 10, 8)] for e, r in WARDEN_BIRD.items() if e != 'neutral'}),
+        'up': hide_face(8, 10, 83, 0.9, 0.3),
+        'south': dict(color='bone_d', pattern='mc', clusters=0.0),
+    })
+    for side, sx in (('left', 1), ('right', -1)):
+        tendril(head, f'{side}_tendril', (1.6 * sx, -3.5, 1.0), (-1.1, 0.3 * sx, 0.25 * sx), 8)
+    # the flute beak of bone, its finger holes glowing
+    beak = head.part('beak', pivot=(0, -1.75, -3.5))
+    beak.cube((-0.75, -0.75, -13), (1.5, 1.5, 13), color='bone_l', pattern='mc', clusters=0.0, rim=False, faces={
+        'up': dict(color='bone_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['lll'] * 26, keys=WK),
+        'east': dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True, map=['l' * 26, '.' * 26, 'd' * 26], keys=WK),
+        'west': dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True, map=['l' * 26, '.' * 26, 'd' * 26], keys=WK),
+    })
+    beak.cube((-0.5, -1.0, -11), (1, 0.25, 9), color='void', pattern='mc', clusters=0.0, rim=False, faces={
+        'up': dict(color='bone_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['.o'] * 9, keys={'o': 'glow'}, glow_keys='o')})
+    beak.cube((-1.0, -1.0, -1.5), (2, 2, 1.5), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    jaw = beak.part('jaw', pivot=(0, 0.75, 0))
+    jaw.cube((-0.6, 0, -12), (1.2, 0.6, 12), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    # wings: bone struts with tattered membrane, veins glowing
+    def membrane(w, h, seed, sx):
+        import random
+        rnd = random.Random(seed)
+        holes = [(rnd.uniform(0, w), rnd.uniform(h * 0.4, h), rnd.uniform(0.8, 2.2)) for _ in range(5)]
+
+        def fn(x, y):
+            xo = x if sx > 0 else w - 1 - x
+            if y >= h - 1 - (((xo // 3) * 5) % 4):
+                return '_'
+            for (hx, hy, r) in holes:
+                if (x - hx) ** 2 + (y - hy) ** 2 < r * r:
+                    return '_'
+            if y <= 1:
+                return 'b'
+            if (xo + y * 2) % 9 == 0 or (xo - y) % 11 == 0:
+                return 'g' if y % 3 else 'G'
+            return 'm' if (x + y) % 5 == 0 else '.'
+        return gen(w, h, fn)
+    mk = {'b': 'bone', 'g': 'glow_d', 'G': 'glow', 'm': 'membrane_l', '_': '_'}
+    for side, sx in (('left', 1), ('right', -1)):
+        wing = body.part(f'{side}_wing', pivot=(4 * sx, -3, -4))
+        wing.cube((0 if sx > 0 else -12, -0.5, 0), (12, 1, 12), color='membrane', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='membrane', pattern='mc', clusters=0.0, hd=True, map=membrane(24, 24, 90 + sx, sx), keys=mk, glow_keys='gG'),
+            'down': dict(color='membrane_d', pattern='mc', clusters=0.0, hd=True, map=membrane(24, 24, 90 + sx, sx), keys=mk, glow_keys='gG'),
+        })
+        wing.cube((0 if sx > 0 else -12, -1, -0.5), (12, 1.5, 1.5), color='bone', pattern='mc', clusters=0.0, rim=False)
+        tip = wing.part(f'{side}_wing_tip', pivot=(12 * sx, 0, 0))
+        tip.cube((0 if sx > 0 else -14, -0.5, 0), (14, 1, 13), color='membrane', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='membrane', pattern='mc', clusters=0.0, hd=True, map=membrane(28, 26, 95 + sx, sx), keys=mk, glow_keys='gG'),
+            'down': dict(color='membrane_d', pattern='mc', clusters=0.0, hd=True, map=membrane(28, 26, 95 + sx, sx), keys=mk, glow_keys='gG'),
+        })
+        # finger bones fanning out through the membrane
+        for k, a in enumerate((0.15, 0.55, 0.95)):
+            finger = tip.part(f'{side}_finger_{k}', pivot=(0, -0.5, 0), rot=(0, -a * sx if sx > 0 else a, 0))
+            finger.cube((0 if sx > 0 else -14, -0.5, -0.5), (14, 1, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+        tip.cube((12 * sx - (1 if sx > 0 else 0), -0.75, 9), (1, 1.5, 2), color='glow', pattern='mc', clusters=0.0, rim=False, glow=True)
+    tail = body.part('tail', pivot=(0, -2, 6.5), rot=(-0.2, 0, 0))
+    tail.cube((-3.5, -1, 0), (7, 2, 7), color='membrane', pattern='mc', clusters=0.0, rim=False, faces={
+        'up': dict(color='membrane', pattern='mc', clusters=0.0, hd=True, map=membrane(14, 14, 99, 1), keys=mk, glow_keys='gG')})
+    tail.cube((-0.5, -1.2, 0), (1, 1, 6), color='bone', pattern='mc', clusters=0.0, rim=False)
+    for side, sx in (('left', 1), ('right', -1)):
+        thigh = m.part(f'{side}_leg', pivot=(2 * sx, 9, 1))
+        thigh.cube((-1, 0, -1), (2, 5, 2), color='hide', pattern='mc', clusters=0.2, faces={'north': hide_face(4, 10, 100 + sx)})
+        shin = thigh.part(f'{side}_shin', pivot=(0, 5, 0))
+        shin.cube((-0.5, 0, -0.5), (1, 9.5, 1), color='bone', pattern='mc', clusters=0.0, rim=False)
+        foot = shin.part(f'{side}_foot', pivot=(0, 9.5, 0))
+        foot.cube((-1.5, 0, -3), (3, 0.5, 4), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    return m
+
+
+WARDEN_SPIDER = {
+    # 16 x 10 texels: eight glowing eyes in bone-ringed sockets, and fangs
+    'neutral': {0: '.dd..dddd..dd...', 1: 'dggd.dGGd.dggd..', 2: 'dggd.dGGd.dggd..', 3: '.dd..dddd..dd...', 4: 'dgd.......dgd...',
+                6: '...wwww..wwww...', 7: '....ww....ww....', 8: '....w......w....'},
+    'blink': {1: 'dddd.dddd.dddd..', 4: 'ddd.......ddd...', 6: '...wwww..wwww...', 7: '....ww....ww....'},
+    'angry': {0: 'd..........d....', 1: 'dGGd.dGGd.dGGd..', 2: 'dggd.dGGd.dggd..', 3: '.dd..dddd..dd...', 4: 'dGd.......dGd...',
+              5: '...wwww..wwww...', 6: '...w..w..w..w...', 7: '....ww....ww....', 8: '....w......w....'},
+    'hurt': {1: 'd..d.d..d.d..d..', 2: '.dd...dd...dd...', 3: 'd..d.d..d.d..d..', 6: '....ww....ww....'},
+    'dead': {1: 'd..d.d..d.d..d..', 2: '.dd...dd...dd...', 3: 'd..d.d..d.d..d..', 6: '....ww....ww....'},
+}
+MANTIS_SKULL = {
+    'neutral': {1: '..bbbbbb..', 2: '.bvbbbbvb.', 3: '..bwwwwb..', 4: '...wvvw...', 5: '...w..w...'},
+    'blink': {1: '..bbbbbb..', 2: '.bdbbbbdb.', 3: '..bwwwwb..', 4: '...wvvw...'},
+    'angry': {1: '.bbbbbbbb.', 2: '.bvbbbbvb.', 3: '.bwwwwwwb.', 4: '.wvvvvvvw.', 5: '.w.w..w.w.'},
+    'hurt': {1: '..bbbbbb..', 2: '.bdbbbbdb.', 3: '...wwww...'},
+    'dead': {1: '..bbbbbb..', 2: '.bdbbbbdb.', 3: '...wwww...'},
+}
+
+
+def strummer_sculk() -> Model:
+    """The Strummer, remade: a Warden-kin mantis of bone riding a sculk spider. The spider is a
+    black, sculk-crusted body on legs of hide and bone, eight glowing eyes in bone sockets, a
+    swollen abdomen like a sculk sensor - glowing sound holes and two twitching tendrils - with
+    the strings running from it up to the mantis's hands. The mantis is a skeleton: a spine with
+    ribs, a triangular skull with two huge glowing compound eyes and tendril antennae, tattered
+    sculk wings, and scythe arms of bare bone."""
+    pal = dict(SCULK)
+    pal.update(WARDEN)
+    pal.update({'string': '#7ff7ff', 'membrane': '#0b2a31', 'membrane_l': '#11414a', 'eye_f': '#0a3f46'})
+    m = Model('strummer', (128, 160), pal, {'strummer': {}}, res=2, expressions=EXPR)
+    spider = m.part('spider', pivot=(0, 17.5, 0))
+    spider.cube((-5, -3, -5), (10, 6, 10), color='hide', pattern='mc', clusters=0.3, faces={
+        'up': hide_face(20, 20, 110, 0.7, 0.25), 'east': hide_face(20, 12, 111), 'west': hide_face(20, 12, 112),
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=ribcage(20, 20, heart=False), keys=WK)})
+    head = spider.part('spider_head', pivot=(0, 0, -5))
+    head.cube((-4, -2.5, -5), (8, 5, 5), color='bone', pattern='mc', clusters=0.2, faces={
+        'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=hd_rows(WARDEN_SPIDER['neutral'], 16, 10), keys=EK_SPIDER, glow_keys=WGLOW,
+                      expr={k: hd_rows(v, 16, 10) for k, v in WARDEN_SPIDER.items() if k != 'neutral'}),
+        'up': hide_face(16, 10, 113, 0.8), 'east': hide_face(10, 10, 114), 'west': hide_face(10, 10, 115)})
+    for side, sx in (('left', 1), ('right', -1)):
+        fang = head.part(f'{side}_fang', pivot=(1.5 * sx, 2, -5))
+        fang.cube((-0.75, 0, -0.75), (1.5, 3.5, 1.5), color='bone_l', pattern='mc', clusters=0.0, rim=False, faces={
+            'down': dict(color='bone_d', pattern='mc', clusters=0.0)})
+    # the abdomen: a living sculk sensor - glowing sound holes, crusted hide, and tendrils
+    abd = spider.part('abdomen', pivot=(0, -1, 4.5), rot=(-0.15, 0, 0))
+    holes = gen(28, 30, lambda x, y: 'G' if any(((x - cx) ** 2 + (y - cy) ** 2) < r for (cx, cy, r) in ((13.5, 12, 9), (6, 22, 4), (21, 22, 4))) else (
+        'g' if any(((x - cx) ** 2 + (y - cy) ** 2) < r for (cx, cy, r) in ((13.5, 12, 20), (6, 22, 10), (21, 22, 10))) else (
+            'b' if any(abs(((x - cx) ** 2 + (y - cy) ** 2) ** 0.5 - rr) < 0.8 for (cx, cy, rr) in ((13.5, 12, 5.2), (6, 22, 3.7), (21, 22, 3.7))) else
+            ('s' if (x * 5 + y * 3) % 7 == 0 else ('S' if (x * 3 + y * 5) % 11 == 0 else '.')))))
+    abd.cube((-7, -7, 0), (14, 10, 15), color='hide', pattern='mc', clusters=0.3, faces={
+        'up': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=holes, keys=WK, glow_keys=WGLOW),
+        'south': hide_face(28, 20, 116, 0.8, 0.3),
+        'east': hide_face(30, 20, 117, 0.7), 'west': hide_face(30, 20, 118, 0.7),
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=fangs(28, 30, 4), keys=WK),
+    })
+    abd.cube((-1.5, -2, 15), (3, 3, 2), color='bone', pattern='mc', clusters=0.0, rim=False, faces={'south': dict(color='glow', pattern='mc', clusters=0.0, glow=True)})
+    for side, sx in (('left', 1), ('right', -1)):
+        tendril(abd, f'{side}_abdomen_tendril', (4 * sx, -7, 6), (-0.3, 0, 0.5 * sx), 8)
+    # eight legs: a femur of crusted hide, a shin of bare bone with a claw
+    for i, z in enumerate((-3.5, -1.2, 1.2, 3.5)):
+        for side, sx in (('left', 1), ('right', -1)):
+            yaw = (0.55, 0.2, -0.2, -0.55)[i] * sx
+            leg = spider.part(f'{side}_leg_{i}', pivot=(4.5 * sx, 0, z), rot=(0, yaw, -0.75 * sx))
+            leg.cube((0 if sx > 0 else -10, -0.75, -0.75), (10, 1.5, 1.5), color='hide', pattern='mc', clusters=0.0, rim=False,
+                     faces={'up': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=['s.g.' * 5, '.S..' * 5, '....' * 5], keys=WK, glow_keys=WGLOW)})
+            shin = leg.part(f'{side}_shin_{i}', pivot=(10 * sx, 0, 0), rot=(0, 0, 1.75 * sx))
+            shin.cube((0 if sx > 0 else -15, -0.6, -0.6), (15, 1.2, 1.2), color='bone', pattern='mc', clusters=0.0, rim=False,
+                      faces={'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=['ld' * 15, 'bb' * 15], keys=WK)})
+    # the mantis: a skeleton on the spider's back
+    mantis = spider.part('mantis', pivot=(0, -3, -1.5), rot=(0.08, 0, 0))
+    mantis.cube((-2, -11, -2), (4, 11, 4), color='hide', pattern='mc', clusters=0.0, faces={
+        'north': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=ribcage(8, 22), keys=WK, glow_keys=WGLOW),
+        'south': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=vertebrae(8, 22), keys=WK),
+        'east': hide_face(8, 22, 120), 'west': hide_face(8, 22, 121)})
+    mantis.cube((-2.5, -4, -2.5), (5, 4, 5), color='bone', pattern='mc', clusters=0.0, faces={'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True,
+                                                                                                         map=fangs(10, 8, 2), keys=WK)})
+    mk = {'b': 'bone', 'g': 'glow_d', 'G': 'glow', 'm': 'membrane_l', '_': '_'}
+    for side, sx in (('left', 1), ('right', -1)):
+        w = mantis.part(f'{side}_mantis_wing', pivot=(1.5 * sx, -9, 2), rot=(0.35, 0.2 * sx, 0.12 * sx))
+        w.cube((-1.5, 0, 0), (3, 12, 0), color='membrane', pattern='mc', clusters=0.0, rim=False, faces={
+            f: dict(color='membrane', pattern='mc', clusters=0.0, rim=False, hd=True, map=gen(6, 24, lambda x, y: '_' if (y > 18 and (x + y) % 3 == 0) or (y == 23)
+                                                                                                else 'b' if x in (0, 5) and y < 8 else ('G' if x == 2 and y % 4 == 0 else ('g' if x == 2 else '.'))),
+                    keys=mk, glow_keys='gG') for f in ('north', 'south')})
+    mhead = mantis.part('mantis_head', pivot=(0, -11, -0.5))
+    mhead.cube((-2.5, -3.5, -2.5), (5, 3.5, 3), color='bone', pattern='mc', clusters=0.0, faces={
+        'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=hd_rows(MANTIS_SKULL['neutral'], 10, 7), keys=WK,
+                      expr={k: hd_rows(v, 10, 7) for k, v in MANTIS_SKULL.items() if k != 'neutral'}),
+        'up': hide_face(10, 6, 122, 0.9, 0.3)})
+    for side, sx in (('left', 1), ('right', -1)):
+        eye = mhead.part(f'{side}_mantis_eye', pivot=(2.5 * sx, -3, -1))
+        eye.cube((-1.25, -1.5, -1.5), (2.5, 3, 3), color='glow', pattern='mc', clusters=0.0, rim=False, faces={
+            f: dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=compound(6, 6), keys={'f': 'eye_f', 'g': 'glow_d', 'G': 'glow'},
+                    glow_keys='gG') for f in ('north', 'south', 'east', 'west', 'up')})
+        ant = tendril(mhead, f'{side}_antenna', (0.8 * sx, -3.5, -2), (-0.6, 0, 0.25 * sx), 9)
+    for side, sx in (('left', 1), ('right', -1)):
+        arm = mantis.part(f'{side}_arm', pivot=(2.2 * sx, -9.5, -1.5), rot=(-0.7, 0, -0.15 * sx))
+        arm.cube((-0.75, 0, -0.75), (1.5, 5, 1.5), color='bone', pattern='mc', clusters=0.0, rim=False)
+        fem = arm.part(f'{side}_femur', pivot=(0, 5, 0), rot=(-1.4, 0, 0))
+        fem.cube((-0.75, 0, -0.75), (1.5, 7, 1.5), color='bone', pattern='mc', clusters=0.0, faces={'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True,
+                                                                                                                  map=['ll.'] + ['w..', 'd..'] * 6 + ['...'], keys=WK)})
+        for k in range(3):
+            fem.cube((-0.25, 1.5 + k * 2, -1.5), (0.5, 1, 0.75), color='tooth', pattern='mc', clusters=0.0, rim=False)
+        tib = fem.part(f'{side}_hand', pivot=(0, 7, 0), rot=(2.5, 0, 0))
+        tib.cube((-0.5, 0, -0.5), (1, 5, 1), color='bone_l', pattern='mc', clusters=0.0, rim=False)
+        tib.cube((-0.5, 4.5, -1.5), (1, 1, 1.5), color='tooth', pattern='mc', clusters=0.0, rim=False)
+        strings = tib.part(f'{side}_strings', pivot=(0, 4.5, 0), rot=(-1.1, 0, 0))
+        strings.cube((0, 0, -1.5), (0, 12, 3), color='string', pattern='mc', clusters=0.0, rim=False, faces={
+            f: dict(color='string', pattern='mc', clusters=0.0, rim=False, hd=True, map=['s_s_s_'[::(1 if f == 'east' else -1)]] * 24,
+                    keys={'s': 'string'}, glow_keys='s') for f in ('east', 'west')})
+    return m
+
+
+EK_SPIDER = dict(WK)
+EK_SPIDER.update({'d': 'bone_d', 'v': 'void'})
+
+def _resculk(fn, colours):
+    """A minion, repainted in Warden-kin colours (same shapes, new palette)."""
+    def make():
+        m = fn()
+        m.palette.update(colours)
+        return m
+    return make
+
+
+ALL.update({
+    'thumper': thumper_sculk, 'whistler': whistler_sculk, 'strummer': strummer_sculk,
+    'thumpling': _resculk(thumpling, {'shell': '#0d1217', 'shell_l': '#16222a', 'shell_d': '#070a0d', 'seam': '#034150', 'ring': '#074857',
+                                      'skin': '#bbc39b', 'skin_l': '#d1d6b6', 'skin_d': '#819988', 'plas': '#4e5c55', 'drum': '#16222a',
+                                      'drum_l': '#24343e', 'drum_d': '#070a0d', 'hide': '#d6cfb0', 'rope': '#bbc39b', 'eye': '#04070a', 'white': '#29dfeb',
+                                      'beak': '#4e5c55'}),
+    'whistling': _resculk(whistling, {'plume': '#16222a', 'plume_l': '#24343e', 'plume_d': '#0d1217', 'ink': '#034150', 'ink_l': '#074857',
+                                      'crown': '#29dfeb', 'flute': '#bbc39b', 'flute_l': '#d1d6b6', 'eye': '#04070a', 'white': '#29dfeb', 'leg': '#819988'}),
+    'strumling': _resculk(strumling, {'spider': '#0d1217', 'spider_l': '#16222a', 'spider_d': '#070a0d', 'mark': '#29dfeb', 'fang': '#d1d6b6'}),
+})

@@ -40,6 +40,8 @@ public class StrummerModel extends EntityModel<MiniBossRenderState> {
     private final ModelPart leftWing;
     private final ModelPart rightWing;
 
+    private final ModelPart[] tendrils = new ModelPart[2];
+
     public StrummerModel(ModelPart root) {
         super(root);
         this.spider = root.getChild("spider");
@@ -67,6 +69,8 @@ public class StrummerModel extends EntityModel<MiniBossRenderState> {
         this.rightStrings = this.rightHand.getChild("right_strings");
         this.leftWing = this.mantis.getChild("left_mantis_wing");
         this.rightWing = this.mantis.getChild("right_mantis_wing");
+        this.tendrils[0] = this.abdomen.getChild("left_abdomen_tendril");
+        this.tendrils[1] = this.abdomen.getChild("right_abdomen_tendril");
     }
 
     @Override
@@ -125,6 +129,14 @@ public class StrummerModel extends EntityModel<MiniBossRenderState> {
         this.leftStrings.zRot = Mth.sin(age * 3.0F) * 0.03F;
         this.rightStrings.zRot = Mth.sin(age * 3.3F + 1.0F) * 0.03F;
 
+        // the Warden's tendrils: a restless twitch, a shiver when it is hurt or attacking
+        float shiver = (s.hurtTicks >= 0.0F ? 1.0F : 0.0F) + (s.bossState != com.thesift.entity.boss.MiniBoss.IDLE ? 0.5F : 0.0F);
+        for (int i = 0; i < 2; i++) {
+            float sgn = i == 0 ? 1.0F : -1.0F;
+            float tw = Mth.sin(s.ageInTicks * (0.11F + i * 0.02F) + i) * 0.18F + Mth.sin(s.ageInTicks * 1.7F + i) * 0.08F * shiver;
+            this.tendrils[i].zRot += sgn * tw;
+            this.tendrils[i].xRot += Mth.sin(s.ageInTicks * 0.07F + i * 2.0F) * 0.12F;
+        }
         switch (st) {
             case Strummer.SLASH -> {
                 float raise = Anim.envelope(t, 0.0F, 6.0F, 1.0F, 1.0F) + Anim.envelope(t, 9.0F, 4.0F, 1.0F, 1.0F);

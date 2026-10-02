@@ -37,6 +37,8 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
     private final ModelPart hindRight;
     private final ModelPart tail;
 
+    private final ModelPart[] tendrils = new ModelPart[2];
+
     public ThumperModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
@@ -53,6 +55,8 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
         this.hindLeft = this.body.getChild("hind_left_leg");
         this.hindRight = this.body.getChild("hind_right_leg");
         this.tail = this.body.getChild("tail");
+        this.tendrils[0] = this.head.getChild("left_tendril");
+        this.tendrils[1] = this.head.getChild("right_tendril");
     }
 
     @Override
@@ -91,6 +95,14 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
         this.leftBrow.y += angry ? 0.5F : 0.0F;
         this.rightBrow.y += angry ? 0.5F : 0.0F;
 
+        // the Warden's tendrils: a restless twitch, a shiver when it is hurt or attacking
+        float shiver = (s.hurtTicks >= 0.0F ? 1.0F : 0.0F) + (s.bossState != com.thesift.entity.boss.MiniBoss.IDLE ? 0.5F : 0.0F);
+        for (int i = 0; i < 2; i++) {
+            float sgn = i == 0 ? 1.0F : -1.0F;
+            float tw = Mth.sin(s.ageInTicks * (0.11F + i * 0.02F) + i) * 0.18F + Mth.sin(s.ageInTicks * 1.7F + i) * 0.08F * shiver;
+            this.tendrils[i].zRot += sgn * tw;
+            this.tendrils[i].xRot += Mth.sin(s.ageInTicks * 0.07F + i * 2.0F) * 0.12F;
+        }
         switch (st) {
             case Thumper.SLAM -> {
                 float up = Anim.envelope(t, 0.0F, 18.0F, 2.0F, 2.5F);
