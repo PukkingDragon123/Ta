@@ -171,6 +171,9 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> WHITE_LULLWOOD_SAPLING = ITEMS.registerSimpleBlockItem(ModBlocks.WHITE_LULLWOOD_SAPLING);
     public static final DeferredItem<BlockItem> PUFFBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.PUFFBLOOM);
     public static final DeferredItem<BlockItem> SWIFTER_DEN = ITEMS.registerSimpleBlockItem(ModBlocks.SWIFTER_DEN);
+    public static final DeferredItem<BlockItem> CHIME_SAND = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_SAND);
+    public static final DeferredItem<BlockItem> CHIME_GLASS = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_GLASS);
+    public static final DeferredItem<BlockItem> CHIME_GLASS_PANE = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_GLASS_PANE);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -275,6 +278,9 @@ public final class ModItems {
     public static final DeferredItem<SculkBloomItem> SCULK_BLOOM = ITEMS.registerItem("sculk_bloom", SculkBloomItem::new, () -> new Item.Properties().useBlockDescriptionPrefix().rarity(Rarity.RARE));
     public static final DeferredItem<Item> SWIFTER_FLUFF = ITEMS.registerItem("swifter_fluff", Item::new, () -> new Item.Properties());
     public static final DeferredItem<SpawnEggItem> SWIFTER_SPAWN_EGG = ITEMS.registerItem("swifter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSwifter.SWIFTER.get()));
+    public static final DeferredItem<ChromeFishBucketItem> CHROME_KAZOO_FISH_BUCKET = ITEMS.registerItem("chrome_kazoo_fish_bucket", p -> new ChromeFishBucketItem(ModEntities.KAZOO_FISH.get(), p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY).component(net.minecraft.core.component.DataComponents.FOOD, ModFoods.KAZOO_FISH));
+    public static final DeferredItem<ChromeFishBucketItem> CHROME_TUBAFISH_BUCKET = ITEMS.registerItem("chrome_tubafish_bucket", p -> new ChromeFishBucketItem(ModEntities.TUBAFISH.get(), p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY).component(net.minecraft.core.component.DataComponents.FOOD, ModSeaFoods.TUBAFISH));
+    public static final DeferredItem<ChromeFishBucketItem> CHROME_FANFARE_EEL_BUCKET = ITEMS.registerItem("chrome_fanfare_eel_bucket", p -> new ChromeFishBucketItem(ModEntities.FANFARE_EEL.get(), p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY).component(net.minecraft.core.component.DataComponents.FOOD, ModSeaFoods.FANFARE_EEL));
 
     private ModItems() {}
 }

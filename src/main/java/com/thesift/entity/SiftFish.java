@@ -1,26 +1,42 @@
 package com.thesift.entity;
 
+import com.thesift.registry.ModChrome;
+import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Bucketable;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Base for the Sift's music fish. They swim through Chrome as easily as through water: steering
  * is done here directly (no pathfinding), each fish picking points inside the liquid to swim to.
- * Out of the liquid they flop about and slowly dry out.
+ * Out of the liquid they flop about and slowly dry out. Like vanilla's fish they fit in a bucket -
+ * a Chrome Bucket (A3 Chrome: see {@link #canBePickedUpWithBucket} and ModChrome.fishBucket).
  */
-public abstract class SiftFish extends PathfinderMob {
+public abstract class SiftFish extends PathfinderMob implements Bucketable {
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(SiftFish.class, EntityDataSerializers.BOOLEAN);
     private @Nullable Vec3 swimTarget;
     private int retarget;
     private int dryTicks;
@@ -178,9 +194,75 @@ public abstract class SiftFish extends PathfinderMob {
         }
     }
 
+    // ---- A3 Chrome: Chrome fish buckets, exactly like vanilla's fish buckets (AbstractFish)
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(FROM_BUCKET, false);
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putBoolean("FromBucket", this.fromBucket());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.setFromBucket(input.getBooleanOr("FromBucket", false));
+    }
+
+    @Override
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
+    }
+
+    @Override
+    public void setFromBucket(boolean fromBucket) {
+        this.entityData.set(FROM_BUCKET, fromBucket);
+    }
+
+    @Override
+    public void saveToBucketTag(ItemStack bucket) {
+        Bucketable.saveDefaultDataToBucketTag(this, bucket);
+    }
+
+    @Override
+    public void loadFromBucketTag(CompoundTag tag) {
+        Bucketable.loadDefaultDataFromBucketTag(this, tag);
+    }
+
+    @Override
+    public ItemStack getBucketItemStack() {
+        return ModChrome.fishBucket(this.getType());
+    }
+
+    @Override
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
+    }
+
+    /** These fish live in Chrome: a Chrome Bucket scoops them up (if the fish has a bucket of its own). */
+    @Override
+    public boolean canBePickedUpWithBucket(ItemStack stack) {
+        return stack.is(ModItems.CHROME_BUCKET.get()) && !this.getBucketItemStack().isEmpty();
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
+    }
+
+    @Override
+    public boolean requiresCustomPersistence() {
+        return super.requiresCustomPersistence() || this.fromBucket();
+    }
+
     @Override
     public boolean removeWhenFarAway(double distSqr) {
-        return !this.hasCustomName() && !this.isPersistenceRequired();
+        return !this.fromBucket() && !this.hasCustomName() && !this.isPersistenceRequired();
     }
 
     @Override

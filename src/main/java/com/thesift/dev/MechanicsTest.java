@@ -49,7 +49,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Gameplay checks for the CI smoke test: plays the Warden Core rhythm ritual at a real Ancient City
  * gate in the Overworld (including one deliberate mistake), walks a pig through the portal it
- * opens, flings a Glowball at a Warden and soaks a hurt Bulb in Chrome.
+ * opens, flings a Glowball at a Warden and soaks a hurt Bulb in Chrome (it comes out Rainbow Dazed, not healed).
  */
 final class MechanicsTest {
     private enum Stage { RITUAL, PIG, DONE }
@@ -98,6 +98,7 @@ final class MechanicsTest {
         this.startRitual();
         this.startGlowball();
         this.startChromeSoak();
+        ChromeTest.run(this.sift, this.check); // A3 Chrome: chime sand, chrome fish bucket
         this.startAltar();
         this.checkTrades();
         this.checkHarmoners();
@@ -487,6 +488,8 @@ final class MechanicsTest {
         Mob m = this.soaker;
         if (m == null) return;
         TheSift.LOGGER.info("SMOKE: bulb soaking in chrome: health {} -> {} at {}", this.soakerStartHealth, m.getHealth(), m.blockPosition());
-        check(m.isAlive() && m.getHealth() > this.soakerStartHealth, "chrome: soaking heals");
+        // A3 Chrome: Chrome no longer heals; it leaves you Rainbow Dazed
+        check(m.isAlive() && m.hasEffect(com.thesift.registry.ModChrome.RAINBOW_DAZE), "chrome: soaking dazes");
+        check(m.getHealth() <= this.soakerStartHealth, "chrome: soaking no longer heals");
     }
 }

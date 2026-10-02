@@ -128,6 +128,8 @@ def item_entry(i):
     if cls.startswith("egg:"):
         m = const(cls.split(":")[1])
         return "SpawnEggItem", f"ITEMS.registerItem(\"{id}\", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.{m}.get()))"
+    if i.get("factory"):  # A3 Chrome: items built by a lambda (the Chrome fish buckets)
+        return cls, f"ITEMS.registerItem(\"{id}\", {i['factory']}, () -> {props})"
     return cls, f"ITEMS.registerItem(\"{id}\", {cls}::new, () -> {props})"
 
 

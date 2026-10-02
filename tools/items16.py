@@ -776,31 +776,6 @@ def bulb_lantern():
     return grid(rows, pal)
 
 
-def chrome_bucket():
-    # the vanilla bucket, brimming with liquid chrome
-    rows = [
-        '................',
-        '.....aaaaaa.....',
-        '...aaeeiiiiaa...',
-        '..aebdgffddbea..',
-        '..abgjjgfwfgba..',
-        '..aaabfggfbaaa..',
-        '..alkaaaaaacha..',
-        '..allllkkhccha..',
-        '..allmlkkhccka..',
-        '..aklmlkkhccka..',
-        '..aclmlkkhccha..',
-        '...alllkkhcha...',
-        '...akllkhhcha...',
-        '....aklkhcha....',
-        '.....aaaaaa.....',
-        '................',
-    ]
-    pal = {'a': '#2c2c3a', 'c': '#6c6c80', 'e': '#74748a', 'h': '#9090a6', 'i': '#9494aa', 'k': '#a6a6ba', 'l': '#d6d6e4', 'm': '#ffffff',
-           'b': CHROME[1], 'd': '#6a62cf', 'f': CHROME[2], 'g': CHROME[3], 'j': CHROME[4], 'w': CHROME[5]}
-    return grid(rows, pal)
-
-
 def dream_journal_fragment():
     """A torn page from a dream journal, with violet writing and a doodled star."""
     rows = [
@@ -1684,7 +1659,7 @@ def all_items():
     for f in (siftite_ingot, serbim_ingot, siftite_nugget, raw_serbim, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
               choir_pod, pitcher_bulb, warden_core, thick_hide):
         out[f.__name__] = f()
-    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, chrome_bucket, dream_journal_fragment, sift_codex,
+    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, dream_journal_fragment, sift_codex,
               music_disc_lullaby, soul_chime, drift_petals, glowbell_vine, siftite_upgrade_smithing_template, conductors_baton):
         out[f.__name__] = f()
     out['lullwood_door'] = door(('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea'), '#24353e', '#4a6470', '#2a2450')

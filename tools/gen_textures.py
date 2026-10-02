@@ -628,50 +628,7 @@ def functional():
     import siege  # the Thumper's arena: the Ancient Cannon
     siege.block_textures(out)
     __import__('echoer_world').block_textures(out)  # A2 Echoer: The Echoer device, the hut's hearthstone
-    # chrome fluid: calm vanilla-water-like ripples in cyan pearl, with the odd pink glint
-    CHROME = [hx('#86d4e0'), hx('#95dbe5'), hx('#a5e2ea'), hx('#bae9ef'), hx('#e2f8fa')]
-    GLINT = hx('#ffd3ee')
-
-    def chrome_px(x, y, t, n=16):
-        # integer spatial and temporal frequencies, so the texture tiles and the animation loops
-        k = math.tau / n
-        w = math.sin(k * (x + y) + t) + 0.6 * math.sin(k * (x - 2 * y) - t) + 0.35 * math.sin(k * (3 * x + y) + 2 * t)
-        return CHROME[0 if w < -1.2 else 1 if w < -0.3 else 2 if w < 0.6 else 3 if w < 1.4 else 4]
-
-    frames = 32
-    st = Image.new('RGBA', (16, 16 * frames))
-    sp = st.load()
-    for f in range(frames):
-        t = f / frames * math.tau
-        for y in range(16):
-            for x in range(16):
-                c = chrome_px(x, y, t)
-                if c == CHROME[4] and (x * 7 + y * 3 + f) % 11 == 0:
-                    c = GLINT
-                sp[x, y + f * 16] = (c[0], c[1], c[2], 225)
-    out('block/chrome_still', st, {'animation': {'frametime': 3}})
-    fl = Image.new('RGBA', (32, 32 * frames))
-    fp = fl.load()
-    for f in range(frames):
-        t = f / frames * math.tau
-        for y in range(32):
-            for x in range(32):
-                c = chrome_px(x, y - f, t, 32)
-                fp[x, y + f * 32] = (c[0], c[1], c[2], 225)
-    out('block/chrome_flow', fl, {'animation': {'frametime': 2}})
-    ov = Tex()
-    for y in range(16):
-        for x in range(16):
-            c = iridescent(x, y, 0.0, 0.3)
-            ov.set(x, y, with_alpha(c, 200))
-    out('block/chrome_overlay', ov)
-    misc = Image.new('RGBA', (64, 64))
-    mp = misc.load()
-    for y in range(64):
-        for x in range(64):
-            c = iridescent(x * 0.25, y * 0.25, 0.0, 0.3)
-            mp[x, y] = (c[0], c[1], c[2], 150)
-    out('misc/in_chrome', misc)
+    # the Chrome fluid's textures are painted by tools/chrome.py (A3 Chrome)
 
 
 # ================================================================== items
@@ -2023,6 +1980,7 @@ def main():
         out(name, img)
     __import__('sea_art').block_textures(out)  # sea & sky: glowkelp, anemone, coral sand, cloud, chime bell, organ reed
     __import__('swifter_art').block_textures(out)  # A2 Swifter & White Forest: white turf/leaves, puffbloom, den, fluff
+    __import__('chrome').textures(out)  # A3 Chrome: rainbow fluid, chime sand/glass, fish buckets, Rainbow Daze
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]

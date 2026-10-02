@@ -36,7 +36,6 @@ import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Mth;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -80,6 +79,7 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RiderInput::onInteractionKey); // A1: Stomper rider stomp
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         CaravansClient.register(modBus); // C: Caravans, music crystals, the cavern's shifting fog
+        ChromeClient.register(modBus); // A3 Chrome: rainbow tint, ripples, note bursts, Rainbow Daze
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }
@@ -171,7 +171,7 @@ public class TheSiftClient {
 
     private static void registerFluidModels(RegisterFluidModelsEvent event) {
         event.register(new FluidModel.Unbaked(new Material(TheSift.id("block/chrome_still")), new Material(TheSift.id("block/chrome_flow")),
-                new Material(TheSift.id("block/chrome_overlay")), null), ModFluids.CHROME, ModFluids.FLOWING_CHROME);
+                new Material(TheSift.id("block/chrome_overlay")), ChromeClient.TINT), ModFluids.CHROME, ModFluids.FLOWING_CHROME); // A3 Chrome: rainbow tint
     }
 
     private static void registerClientExtensions(RegisterClientExtensionsEvent event) {
@@ -186,9 +186,8 @@ public class TheSiftClient {
             @Override
             public void modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount,
                     Vector4f fluidFogColor) {
-                // Chrome shimmers between cyan and pink as you sink through it.
-                float t = (Mth.sin((level.getGameTime() + partialTick) * 0.03F) + 1.0F) * 0.5F;
-                fluidFogColor.set(Mth.lerp(t, 0.45F, 0.95F), Mth.lerp(t, 0.85F, 0.6F), Mth.lerp(t, 0.95F, 0.85F), 1.0F);
+                // A3 Chrome: the fog turns through the rainbow in step with Chrome's surface
+                ChromeClient.fogColor(camera, level, partialTick, fluidFogColor);
             }
 
             @Override

@@ -367,6 +367,12 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY));
     public static final DeferredBlock<SwifterDenBlock> SWIFTER_DEN = BLOCKS.registerBlock("swifter_den", SwifterDenBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.HAY_BLOCK).mapColor(MapColor.SNOW).strength(0.8F).sound(SoundType.WOOL).noOcclusion());
+    public static final DeferredBlock<ChimeSandBlock> CHIME_SAND = BLOCKS.registerBlock("chime_sand", ChimeSandBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.QUARTZ));
+    public static final DeferredBlock<ChimeGlassBlock> CHIME_GLASS = BLOCKS.registerBlock("chime_glass", ChimeGlassBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).sound(com.thesift.block.ChimeGlassBlock.SOUND));
+    public static final DeferredBlock<ChimeGlassPaneBlock> CHIME_GLASS_PANE = BLOCKS.registerBlock("chime_glass_pane", ChimeGlassPaneBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS_PANE).sound(com.thesift.block.ChimeGlassBlock.SOUND));
 
     private ModBlocks() {}
 }

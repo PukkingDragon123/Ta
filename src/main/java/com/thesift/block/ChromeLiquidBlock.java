@@ -1,10 +1,11 @@
 package com.thesift.block;
 
+import com.thesift.effect.RainbowDazeEffect;
 import com.thesift.registry.ModFluids;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
+import com.thesift.registry.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -17,8 +18,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * The Chrome liquid block. Heals living things that soak in it; its thick, quicksand-like
- * movement lives in {@link ChromeFluidType#move}.
+ * The Chrome liquid block. Anything that soaks in it comes out Rainbow Dazed (Chrome no longer
+ * heals); its creatures - the music fish and Slumblers - are used to it. The thick, quicksand-like
+ * movement lives in {@link ChromeFluidType#move}; ripples, colour and the daze's visions live in
+ * client/ChromeClient, and Chrome meeting water in world/ChromeReactions.
  */
 public class ChromeLiquidBlock extends LiquidBlock {
     public ChromeLiquidBlock(BlockBehaviour.Properties properties) {
@@ -32,11 +35,8 @@ public class ChromeLiquidBlock extends LiquidBlock {
             entity.clearFire();
         }
         if (level instanceof ServerLevel server && entity instanceof LivingEntity living && living.isAlive()) {
-            if (living.tickCount % 30 == 0 && living.getHealth() < living.getMaxHealth()) {
-                living.heal(1.0F);
-                server.sendParticles(ModParticles.CHROME_DROPLET.get(), living.getX(), living.getY() + living.getBbHeight() * 0.6, living.getZ(),
-                        4, 0.3, 0.3, 0.3, 0.02);
-                server.sendParticles(ParticleTypes.HEART, living.getX(), living.getY() + living.getBbHeight() + 0.2, living.getZ(), 1, 0.2, 0.0, 0.2, 0.0);
+            if (!living.getType().builtInRegistryHolder().is(ModTags.Entities.CHROME_DWELLERS)) {
+                RainbowDazeEffect.soak(living);
             }
             if (living.tickCount % 50 == 0 && server.getRandom().nextInt(3) == 0) {
                 server.playSound(null, pos, ModSounds.CHROME_SPLASH.get(), SoundSource.BLOCKS, 0.3F, 0.8F + server.getRandom().nextFloat() * 0.4F);

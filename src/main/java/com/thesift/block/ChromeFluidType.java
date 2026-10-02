@@ -13,8 +13,8 @@ import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidType;
 
 /**
- * Chrome: a shifting cyan/pink/pearl liquid. It heals whatever bathes in it, but it is thick like
- * quicksand: you slowly sink and cannot swim up. Hold Sneak to wade back up to the surface.
+ * Chrome: a thick liquid rainbow. Bathing in it leaves you Rainbow Dazed (it no longer heals), and
+ * it is thick like quicksand: you slowly sink and cannot swim up. Hold Sneak to wade back up.
  */
 public class ChromeFluidType extends FluidType {
     public ChromeFluidType() {

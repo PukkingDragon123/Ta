@@ -347,3 +347,5 @@ for _d in ITEMS:
 __import__("sculk_bloom").declare(block, item)
 # ---------------------------------------------------------------- A2 Swifter & White Forest (tools/swifter.py)
 __import__("swifter").declare(block, item)
+# ---------------------------------------------------------------- A3 Chrome: Chime Sand/Glass, Chrome fish buckets (tools/chrome.py)
+__import__("chrome").declare(block, item)

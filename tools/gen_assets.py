@@ -321,6 +321,8 @@ def gen_block(b):
         echoer_world.gen_block(sys.modules[__name__], bid, k)
     elif k == 'swifter_den':  # A2 Swifter: the den, a nest of fluff and twigs
         __import__('swifter').gen_den(sys.modules[__name__], bid)
+    elif k == 'chime_pane':  # A3 Chrome: the Chime Glass Pane
+        __import__('chrome').gen_block(sys.modules[__name__], b)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -756,8 +758,8 @@ def gen_lang():
         f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite gear. Tools beat Netherite and knock foes flying. Armour: no Deafening, softer sonic booms, helmet breathes water, legs and boots swim fast, full set halves Sculk Corruption.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
-        f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid that heals',
-        f'codex.{NS}.chrome.body': 'A shifting cyan pearl liquid. Soaking in Chrome heals you, but it is thick like quicksand and you sink slowly: hold Shift to rise. Collect it with a bucket.',
+        f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
+        f'codex.{NS}.chrome.body': 'A thick, shimmering liquid rainbow. Waves of colour roll across every lake, rings spread behind anything that swims or wades, and the surface bursts into colour when music plays nearby. It no longer heals: a soak leaves you Rainbow Dazed, the world swaying and turning through the colours until it wears off. It is thick like quicksand - hold Shift to rise. Where Chrome meets flowing water it settles into Chime Sand, which tinkles underfoot and smelts into Chime Glass: every block rings its own note, so a wall of it plays like a xylophone. Scoop Kazoo Fish, Tubafish and Fanfare Eels up in a Chrome Bucket to carry them home.',
         f'codex.{NS}.warden_core.title': 'Warden Core', f'codex.{NS}.warden_core.tagline': 'The heart of the ritual',
         f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the deepest shrines. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
         f'codex.{NS}.sift_cake.title': 'Sift Cake', f'codex.{NS}.sift_cake.tagline': 'A treat from the plains',
@@ -1457,6 +1459,7 @@ def generate():
     plants_h.generate(sys.modules[__name__])
     import echoer_world  # A2 Echoer: the Echoer's ceremony, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
     echoer_world.generate(sys.modules[__name__])
+    __import__('chrome').assets(sys.modules[__name__])  # A3 Chrome: chime glass recipes/tags, particles, Rainbow Daze post effect
 
 
 def finalize():

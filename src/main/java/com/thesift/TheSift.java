@@ -43,6 +43,7 @@ public class TheSift {
         com.thesift.registry.ModSeaSky.register(modBus); // sea & sky: the Gobbler, ocean/cloud worldgen, Tide Song calming
         com.thesift.registry.ModEchoer.register(modBus); // A2 Echoer: Soul Golems, Nibs, The Echoer device, the Echoer's Hut
         com.thesift.registry.ModSwifter.register(modBus); // A2 Swifter & White Forest: the Swifter, its dens, white lullwood, fluff
+        com.thesift.registry.ModChrome.register(modBus); // A3 Chrome: Rainbow Daze, Chrome particles, Chime Sand reaction, note bursts
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
