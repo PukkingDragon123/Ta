@@ -72,6 +72,9 @@ public final class CodexEntries {
         }));
         l.add(mob(CREATURES, "sniffer", () -> net.minecraft.world.entity.EntityTypes.SNIFFER, (e, t) -> { }));
         l.add(mob(CREATURES, "enchoer", ModEntities.ENCHOER, (e, t) -> { }));
+        // A2 Echoer: its household and the meadow wisps
+        l.add(mob(CREATURES, "soul_golem", com.thesift.registry.ModEchoer.SOUL_GOLEM, (e, t) -> { }));
+        l.add(mob(CREATURES, "nib", com.thesift.registry.ModEchoer.NIB, (e, t) -> { }));
         l.add(mob(CREATURES, "slumbler", ModEntities.SLUMBLER, (e, t) -> {
             if (e instanceof Slumbler s && t % 120 == 20) s.yawnAnimation.start(s.tickCount);
         }));
@@ -143,9 +146,11 @@ public final class CodexEntries {
         l.add(thing(PLACES, "deep_shrine", ModItems.SIFT_GATE_FRAME));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "caravan_colony", ModItems.PRISM_BLOCK)); // C
+        l.add(thing(PLACES, "echoer_hut", ModItems.SOUL_GOLEM_CORE)); // A2 Echoer
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
         l.add(thing(MAGIC, "euphory_altar", ModItems.EUPHORY_ALTAR));
+        l.add(thing(MAGIC, "echoer_device", ModItems.ECHOER_DEVICE)); // A2 Echoer
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));
         l.add(thing(MAGIC, "music_crystal", ModItems.MUSIC_CRYSTAL)); // C
         l.add(thing(MAGIC, "flora", () -> ModBlocks.CORAL_BUSH.get().asItem()));

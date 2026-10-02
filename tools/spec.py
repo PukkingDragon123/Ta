@@ -329,3 +329,17 @@ for _a in ["helmet", "chestplate", "leggings", "boots"]:
 item("caravan_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")
 # ---------------------------------------------------------------- sea & sky (F + W): kelp, clouds, the Gobbler's drops, fish meat, sushi
 __import__("sea_spec").declare(block, item)
+# ---------------------------------------------------------------- A2 Echoer: the Echoer's Hut and its household
+# The Echoer device (a mining-beam horn), the hut's hearthstone, the Soul Golem's core, Nib Dust (Nibs' treasure)
+block("echoer_device", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops()"
+      ".lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4)",
+      cls="EchoerDeviceBlock", model="echoer_device", tags=["pickaxe"], tab="functional", name="The Echoer")
+block("echoer_hut_heart", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).noLootTable().lightLevel(s -> 9)",
+      cls="EchoerHutHeartBlock", model="echoer_hut_heart", item=False, loot="none", tab="functional", name="Echoer's Hearthstone")
+item("soul_golem_core", cls="SoulGolemCoreItem", props="new Item.Properties().stacksTo(16).rarity(Rarity.RARE)")
+item("nib_dust", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
+item("soul_golem_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModEchoer.SOUL_GOLEM.get())", tab="eggs")
+item("nib_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModEchoer.NIB.get())", tab="eggs")
+for _d in ITEMS:
+    if _d["id"] == "enchoer_spawn_egg":
+        _d["name"] = "Echoer Spawn Egg"

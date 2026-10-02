@@ -60,6 +60,7 @@ public class TheSiftClient {
         SeaSkyClient.register(modBus); // sea & sky: the Gobbler's model and renderer
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.thesift.client.gui.ConductorBossBar::onBossBar);
         modBus.addListener(TheSiftClient::registerFluidModels);
+        EchoerClient.register(modBus); // A2 Echoer: Soul Golems and Nibs
         modBus.addListener(ClientEffects::registerOverlays);
         modBus.addListener(com.thesift.client.music.InstrumentHud::registerOverlays); // songs (agent D)
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onClientTick);

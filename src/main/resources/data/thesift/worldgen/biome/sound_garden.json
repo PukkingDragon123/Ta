@@ -62,7 +62,17 @@
             }
           ],
           "monster": [],
-          "ambient": [],
+          "ambient": [
+            {
+              "type": "thesift:nib",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 4
+              },
+              "weight": 12
+            }
+          ],
           "water_creature": [],
           "underground_water_creature": [],
           "water_ambient": [],

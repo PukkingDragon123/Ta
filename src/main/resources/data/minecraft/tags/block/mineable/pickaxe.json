@@ -78,6 +78,7 @@
     "thesift:prism_ore",
     "thesift:deep_prism_ore",
     "thesift:prism_block",
-    "thesift:music_crystal"
+    "thesift:music_crystal",
+    "thesift:echoer_device"
   ]
 }

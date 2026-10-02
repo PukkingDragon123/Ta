@@ -345,6 +345,10 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6));
     public static final DeferredBlock<OrganReedBlock> ORGAN_REED = BLOCKS.registerBlock("organ_reed", OrganReedBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 4));
+    public static final DeferredBlock<EchoerDeviceBlock> ECHOER_DEVICE = BLOCKS.registerBlock("echoer_device", EchoerDeviceBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4));
+    public static final DeferredBlock<EchoerHutHeartBlock> ECHOER_HUT_HEART = BLOCKS.registerBlock("echoer_hut_heart", EchoerHutHeartBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).noLootTable().lightLevel(s -> 9));
 
     private ModBlocks() {}
 }

@@ -627,6 +627,7 @@ def functional():
     out('block/glow_particle', gp)
     import siege  # the Thumper's arena: the Ancient Cannon
     siege.block_textures(out)
+    __import__('echoer_world').block_textures(out)  # A2 Echoer: The Echoer device, the hut's hearthstone
     # chrome fluid: calm vanilla-water-like ripples in cyan pearl, with the odd pink glint
     CHROME = [hx('#86d4e0'), hx('#95dbe5'), hx('#a5e2ea'), hx('#bae9ef'), hx('#e2f8fa')]
     GLINT = hx('#ffd3ee')

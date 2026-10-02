@@ -36,8 +36,6 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -181,20 +179,21 @@ final class MechanicsTest {
         s.discard();
     }
 
+    /** A2 Echoer: the Echoer no longer trades - its ceremony reward table must give something. */
     private void checkTrades() {
         Enchoer e = ModEntities.ENCHOER.get().create(this.sift, EntitySpawnReason.COMMAND);
         if (e == null) {
-            check(false, "trades: enchoer created");
+            check(false, "echoer: created");
             return;
         }
-        MerchantOffers offers = e.getOffers();
-        List<String> described = new ArrayList<>();
-        for (MerchantOffer o : offers) {
-            described.add(o.getCostA().getCount() + "x" + o.getCostA().getItem() + (o.getCostB().isEmpty() ? "" : "+" + o.getCostB().getItem()) + " -> "
-                    + o.getResult().getCount() + "x" + o.getResult().getItem());
+        e.snapTo(0.5, 100.0, 0.5, 0.0F, 0.0F);
+        List<ItemStack> got = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            e.dropFromGiftLootTable(this.sift, com.thesift.registry.ModEchoer.ECHOER_REWARD, (l, stack) -> got.add(stack));
+            e.dropFromGiftLootTable(this.sift, com.thesift.registry.ModEchoer.NIB_TRANSFORM_LOOT, (l, stack) -> got.add(stack));
         }
-        TheSift.LOGGER.info("SMOKE: enchoer offers {}: {}", offers.size(), described);
-        check(offers.size() >= 5, "trades: an Enchoer has a full set of offers");
+        TheSift.LOGGER.info("SMOKE: echoer rewards and nib treasure {}", got);
+        check(got.size() >= 32, "echoer: the offering reward and nib transform loot tables give items");
         e.discard();
     }
 

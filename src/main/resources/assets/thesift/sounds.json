@@ -2347,6 +2347,206 @@
     ],
     "subtitle": "subtitles.thesift.entity.sculk_parasite.burst"
   },
+  "entity.soul_golem.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst/resonate1",
+        "volume": 0.5,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:block/amethyst/resonate3",
+        "volume": 0.5,
+        "pitch": 1.7
+      },
+      {
+        "name": "minecraft:mob/allay/idle_without_item1",
+        "volume": 0.4,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.ambient"
+  },
+  "entity.soul_golem.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:block/basalt/break1",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block/basalt/break2",
+        "volume": 0.8,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.hurt"
+  },
+  "entity.soul_golem.death": {
+    "sounds": [
+      {
+        "name": "minecraft:block/basalt/break3",
+        "volume": 1.0,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:block/amethyst_cluster/break1",
+        "volume": 0.8,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.death"
+  },
+  "entity.soul_golem.step": {
+    "sounds": [
+      {
+        "name": "minecraft:block/basalt/step1",
+        "volume": 0.3,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:block/basalt/step3",
+        "volume": 0.3,
+        "pitch": 1.7
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.step"
+  },
+  "entity.soul_golem.dig": {
+    "sounds": [
+      {
+        "name": "minecraft:item/brush/brushing_sand1",
+        "volume": 0.6,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:item/brush/brushing_sand2",
+        "volume": 0.6,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.dig"
+  },
+  "entity.soul_golem.find": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst/shimmer",
+        "volume": 1.0,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/allay/item_given1",
+        "volume": 0.8,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.find"
+  },
+  "entity.soul_golem.slump": {
+    "sounds": [
+      {
+        "name": "minecraft:block/beacon/deactivate",
+        "volume": 0.6,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.slump"
+  },
+  "entity.soul_golem.recharge": {
+    "sounds": [
+      {
+        "name": "minecraft:block/beacon/power2",
+        "volume": 0.6,
+        "pitch": 1.8
+      },
+      {
+        "name": "minecraft:block/amethyst/resonate2",
+        "volume": 0.8,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.soul_golem.recharge"
+  },
+  "entity.nib.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst/shimmer",
+        "volume": 0.25,
+        "pitch": 1.9
+      },
+      {
+        "name": "minecraft:mob/allay/idle_without_item2",
+        "volume": 0.15,
+        "pitch": 1.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.nib.ambient"
+  },
+  "entity.nib.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst_cluster/break2",
+        "volume": 0.5,
+        "pitch": 1.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.nib.hurt"
+  },
+  "entity.nib.transform": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst/resonate4",
+        "volume": 1.0,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/allay/item_thrown1",
+        "volume": 0.8,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.nib.transform"
+  },
+  "block.echoer_device.charge": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/warden/sonic_charge1",
+        "volume": 0.7,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/warden/sonic_charge2",
+        "volume": 0.7,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.echoer_device.charge"
+  },
+  "block.echoer_device.fire": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/warden/sonic_boom1",
+        "volume": 0.7,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:mob/warden/sonic_boom2",
+        "volume": 0.7,
+        "pitch": 1.7
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.echoer_device.fire"
+  },
+  "block.echoer_device.fizzle": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst_cluster/break3",
+        "volume": 0.8,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.echoer_device.fizzle"
+  },
   "entity.gobbler.ambient": {
     "sounds": [
       {

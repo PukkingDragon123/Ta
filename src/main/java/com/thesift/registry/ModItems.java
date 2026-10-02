@@ -165,6 +165,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CLOUD_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.CLOUD_BLOCK);
     public static final DeferredItem<BlockItem> CHIME_BELL = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_BELL);
     public static final DeferredItem<DoubleHighBlockItem> ORGAN_REED = ITEMS.registerItem("organ_reed", p -> new DoubleHighBlockItem(ModBlocks.ORGAN_REED.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<BlockItem> ECHOER_DEVICE = ITEMS.registerSimpleBlockItem(ModBlocks.ECHOER_DEVICE);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -262,6 +263,10 @@ public final class ModItems {
     public static final DeferredItem<Item> GOBBLER_SUSHI = ITEMS.registerItem("gobbler_sushi", Item::new, () -> new Item.Properties().food(ModSeaFoods.GOBBLER_SUSHI, ModSeaFoods.GOBBLER_SUSHI_CONSUMABLE));
     public static final DeferredItem<Item> SUSHI_PLATTER = ITEMS.registerItem("sushi_platter", Item::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON).food(ModSeaFoods.SUSHI_PLATTER, ModSeaFoods.SUSHI_PLATTER_CONSUMABLE));
     public static final DeferredItem<SpawnEggItem> GOBBLER_SPAWN_EGG = ITEMS.registerItem("gobbler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSeaSky.GOBBLER.get()));
+    public static final DeferredItem<SoulGolemCoreItem> SOUL_GOLEM_CORE = ITEMS.registerItem("soul_golem_core", SoulGolemCoreItem::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> NIB_DUST = ITEMS.registerItem("nib_dust", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<SpawnEggItem> SOUL_GOLEM_SPAWN_EGG = ITEMS.registerItem("soul_golem_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEchoer.SOUL_GOLEM.get()));
+    public static final DeferredItem<SpawnEggItem> NIB_SPAWN_EGG = ITEMS.registerItem("nib_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEchoer.NIB.get()));
 
     private ModItems() {}
 }

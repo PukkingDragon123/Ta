@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "spent=false": {
+      "model": "thesift:block/echoer_hut_heart"
+    },
+    "spent=true": {
+      "model": "thesift:block/echoer_hut_heart_spent"
+    }
+  }
+}

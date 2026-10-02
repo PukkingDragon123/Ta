@@ -19,9 +19,12 @@ POSES = {
              'land': Pose(body={'scale': (1.25, 0.7, 1.25)}, left_ear={'rot': (-0.5, 0, 0.3)}, right_ear={'rot': (-0.5, 0, -0.3)})},
     'slumbler': {'rest': Pose(), 'yawn': Pose(head={'rot': (-0.35, 0, 0)}, jaw={'rot': (0.9, 0, 0)})},
     'sifter': {'rest': Pose(), 'chomp': Pose(lid={'rot': (-0.9, 0, 0)}), 'walk': Pose(left_leg={'rot': (0.5, 0, 0)}, right_leg={'rot': (-0.5, 0, 0)})},
-    'enchoer': {'rest': Pose(), 'ponder': Pose(right_arm={'rot': (-1.25, 0.45, 0)}, right_forearm={'rot': (-1.3, 0, 0)}, head={'rot': (0.15, 0, 0.12)}),
-                'sing': Pose(left_arm={'rot': (0, 0, -1.1)}, right_arm={'rot': (0, 0, 1.1)}, left_forearm={'rot': (0, 0, -0.5)},
-                             right_forearm={'rot': (0, 0, 0.5)}, head={'rot': (-0.45, 0, 0)})},
+    # A2 Echoer: 'bow' (neck curled down in greeting) and 'sleep' (neck folded back over the body)
+    'enchoer': {'rest': Pose(), 'bow': Pose(neck_0={'rot': (1.3, 0, 0)}, neck_1={'rot': (0.3, 0, 0)}, neck_2={'rot': (0.25, 0, 0)},
+                                            neck_3={'rot': (0.2, 0, 0)}, head={'rot': (0.6, 0, 0)}),
+                'sleep': Pose(body={'pos': (0, 7, 0)}, neck_0={'rot': (-0.4, 0.6, 0)}, neck_1={'rot': (-0.3, 0.4, 0)}, neck_2={'rot': (0.2, 0.4, 0)},
+                              neck_3={'rot': (0.4, 0.4, 0)}, neck_4={'rot': (0.5, 0.3, 0)}, head={'rot': (0.9, 0, 0)})},
+    'soul_golem': {'rest': Pose(), 'slump': Pose(body={'rot': (0.5, 0, 0), 'pos': (0, 1, 0)}, stalk={'rot': (0.9, 0, 0)})},
     'riveter': {'rest': Pose(),
                 'hang': Pose(body={'rot': (0, 0, 3.14159), 'pos': (0, -30, 0)}, left_wing={'rot': (3.0, 0, 0.1)}, right_wing={'rot': (3.0, 0, -0.1)},
                              head={'rot': (-0.5, 0, 0)}),
@@ -47,7 +50,7 @@ POSES.update({
 WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 9, 'kazoo_fish': 18, 'tubafish': 11}
 
 
-PREVIEW_SCALE = {'enchoer': 7, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'strummer': 4,
+PREVIEW_SCALE = {'enchoer': 6, 'soul_golem': 16, 'nib': 30, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'strummer': 4,
                  'strumling': 12, 'conductor_mask': 10, **WILD_SCALE}
 # the Sculk Parasite (tools/parasite.py)
 # 'coil' is the wind-up of its lunge, as SculkParasiteModel poses it: reared up, folded into a zigzag, sting raised, jaws open

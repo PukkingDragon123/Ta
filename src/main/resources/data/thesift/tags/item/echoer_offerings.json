@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:siftite_ingot",
+    "thesift:serbim_ingot",
+    {
+      "id": "thesift:prism_gem",
+      "required": false
+    }
+  ]
+}

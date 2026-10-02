@@ -1,4 +1,4 @@
-"""Loot tables, loot modifiers, Enchoer trades and other data for The Sift."""
+"""Loot tables, loot modifiers and other data for The Sift (the Echoer no longer trades: see tools/echoer_world.py)."""
 import os
 import sys
 
@@ -185,43 +185,6 @@ def sniffer_and_modifiers():
         'table': f'{NS}:gameplay/ancient_city_extras'})
 
 
-def trades():
-    def trade(name, wants, gives, max_uses=8, xp=5, wants_count=1, gives_count=1, wants2=None):
-        t = {'gives': {'id': rl(gives), **({'count': gives_count} if gives_count > 1 else {})}, 'max_uses': max_uses, 'reputation_discount': 0.05,
-             'wants': {'id': rl(wants), **({'count': wants_count} if wants_count > 1 else {})}, 'xp': xp}
-        if wants2:
-            t['additional_wants'] = {'id': rl(wants2[0]), 'count': wants2[1]}
-        w(f'villager_trade/enchoer/{name}', t)
-        return f'{NS}:enchoer/{name}'
-
-    common = [
-        trade('pearl_for_saplings', 'chrome_pearl', 'lullwood_sapling', gives_count=3),
-        trade('pearl_for_wish_saplings', 'chrome_pearl', 'wishwood_sapling', gives_count=2),
-        trade('slime_for_pearl', 'glowing_slime_ball', 'chrome_pearl', wants_count=12, max_uses=12),
-        trade('hide_for_pearl', 'thick_hide', 'chrome_pearl', wants_count=4, max_uses=12),
-        trade('pearl_for_choir_pods', 'chrome_pearl', 'choir_pod', gives_count=2),
-        trade('pearl_for_echo_seeds', 'chrome_pearl', 'echo_seed', gives_count=2),
-        trade('pearl_for_bulbs', 'chrome_pearl', 'pitcher_bulb', gives_count=4),
-        trade('pearl_for_glowbells', 'chrome_pearl', 'glowbell_vine', gives_count=3),
-        trade('shards_for_pearls', 'star_shard', 'chrome_pearl', gives_count=2, max_uses=16),
-        trade('emerald_for_pearl', 'minecraft:emerald', 'chrome_pearl', wants_count=3, max_uses=16),
-        trade('pearl_for_raw_serbim', 'chrome_pearl', 'raw_serbim', gives_count=3),
-    ]
-    rare = [
-        trade('pearls_for_drum', 'chrome_pearl', 'sift_drum', wants_count=6, max_uses=4, xp=15),
-        trade('pearls_for_template', 'chrome_pearl', 'siftite_upgrade_smithing_template', wants_count=16, max_uses=2, xp=30),
-        trade('pearls_for_disc', 'chrome_pearl', 'music_disc_lullaby', wants_count=10, max_uses=1, xp=20),
-        trade('pearls_for_slingshot', 'chrome_pearl', 'slingshot', wants_count=8, max_uses=2, xp=15),
-        trade('shards_for_warden_core', 'star_shard', 'warden_core', wants_count=24, max_uses=1, xp=40, wants2=('chrome_pearl', 16)),
-    ]
-    for t in common:
-        GA.tag('villager_trade', f'{NS}:enchoer/common', t)
-    for t in rare:
-        GA.tag('villager_trade', f'{NS}:enchoer/rare', t)
-    w('trade_set/enchoer/common', {'amount': 5, 'random_sequence': f'{NS}:trade_set/enchoer/common', 'trades': f'#{NS}:enchoer/common'})
-    w('trade_set/enchoer/rare', {'amount': 2, 'random_sequence': f'{NS}:trade_set/enchoer/rare', 'trades': f'#{NS}:enchoer/rare'})
-
-
 def jukebox():
     w('jukebox_song/lullaby', {'comparator_output': 7, 'description': {'translate': f'jukebox_song.{NS}.lullaby'}, 'length_in_seconds': 154.0,
                                'sound_event': f'{NS}:music_disc.lullaby'})
@@ -232,7 +195,6 @@ def generate():
     wild_creature_loot()
     chest_loot()
     sniffer_and_modifiers()
-    trades()
     jukebox()
     __import__('songs').generate()  # songs & instruments (agent D)
     __import__('caravans').generate()  # C: Caravans, music crystals, prism

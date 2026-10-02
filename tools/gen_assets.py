@@ -316,6 +316,9 @@ def gen_block(b):
         __import__('caravans').gen_crystal(bid)
     elif k.startswith('sea_'):  # sea & sky: glowkelp, anemone, chime bell, organ reed
         __import__('sea_sky').gen_block(sys.modules[__name__], b)
+    elif k in ('echoer_device', 'echoer_hut_heart'):
+        import echoer_world  # A2 Echoer: The Echoer device and the hut's hearthstone
+        echoer_world.gen_block(sys.modules[__name__], bid, k)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -726,7 +729,7 @@ def gen_equipment():
 def gen_lang():
     LANG.update({
         f'itemGroup.{NS}.blocks': 'The Sift: Blocks', f'itemGroup.{NS}.items': 'The Sift: Items & Gear',
-        f'entity.{NS}.bulb': 'Bulb', f'entity.{NS}.slumbler': 'Slumbler', f'entity.{NS}.sifter': 'Sifter', f'entity.{NS}.enchoer': 'Enchoer',
+        f'entity.{NS}.bulb': 'Bulb', f'entity.{NS}.slumbler': 'Slumbler', f'entity.{NS}.sifter': 'Sifter', f'entity.{NS}.enchoer': 'Echoer',
         f'entity.{NS}.riveter': 'Riveter', f'entity.{NS}.glowball': 'Glowball',
         f'entity.{NS}.harmoner': 'Harmoner', f'entity.{NS}.sculk_harmoner': 'Sculk Harmoner',
         f'codex.{NS}.chapter.creatures': 'Creatures',
@@ -740,8 +743,7 @@ def gen_lang():
         f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose - Abandoned Altar. Azure - Chrome Well. Gold - Dream Statue. Violet - Collapsed Tower. Jade - Sift Ruins. Coral - Musical Temple. The rare Night - the Sculk Castle.',
         f'codex.{NS}.sniffer.title': 'Sniffer', f'codex.{NS}.sniffer.tagline': 'The Sift remembers its seeds',
         f'codex.{NS}.sniffer.body': 'Ordinary Sniffers wander the Sift\'s plains and forests. Wherever one digs here it turns up the dimension\'s own ancient seeds as well as its usual finds: Choir Pods, Echo Seeds and Pitcher Bulbs. Breed them with torchflower seeds, or bring a Sniffer egg through the gate yourself.',
-        f'codex.{NS}.enchoer.title': 'Enchoer', f'codex.{NS}.enchoer.tagline': 'Gentle, sad trader',
-        f'codex.{NS}.enchoer.body': 'A big mound of mint fur with moose antlers and a melancholy face. Enchoers trade saplings, seeds, drums, pearls and the occasional Warden Core. Play music near one and it spreads its arms and hums along. It hides its face when hurt.',
+        # A2 Echoer: the Echoer's codex page is in tools/echoer_world.py
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Chrome lake salamander',
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
         f'codex.{NS}.sifter.title': 'Sifter', f'codex.{NS}.sifter.tagline': 'Hostile - dune lurker',
@@ -777,7 +779,7 @@ def gen_lang():
         f'codex.{NS}.euphory_altar.title': 'Euphory Altar', f'codex.{NS}.euphory_altar.tagline': 'Enchanting by music',
         f'codex.{NS}.euphory_altar.body': 'Set an item on the altar, surround it with Sift Drums and feed it a Chrome Pearl. The drums play themselves, the rings spin up and the item comes out enchanted beyond what a table can do.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',
-        f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Enchoers hum, Harmoners sing along and Riveters fall still. Soul Chimes ring when powered; Dream Snares lull whatever steps in them to sleep.',
+        f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Riveters fall still. Soul Chimes ring when powered; Dream Snares lull whatever steps in them to sleep.',
         f'codex.{NS}.flora.title': 'Coral Flora', f'codex.{NS}.flora.tagline': 'The pink plains',
         f'codex.{NS}.flora.body': 'Coral Bushes and tall Coral Thickets grow thick across the salmon Coral Turf of the Sift Plains, under pale weeping Lullwood trees.',
         f'codex.{NS}.dictator.title': 'The Conductor', f'codex.{NS}.dictator.tagline': 'Three movements, each more godlike',
@@ -871,6 +873,8 @@ def gen_lang():
         f'message.{NS}.altar.need_drums': 'The altar needs at least two Sift Drums around it.',
         f'message.{NS}.altar.need_levels': 'You need more experience to perform the ritual.',
     })
+    import echoer_world  # A2 Echoer: the Echoer, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
+    LANG.update(echoer_world.lang())
     # sound subtitles
     for s in SOUNDS:
         LANG[f'subtitles.{NS}.{s}'] = subtitle(s)
@@ -1261,6 +1265,9 @@ def check_sounds():
     if os.path.exists(java):
         with open(java) as f:
             registered = set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # A2 Echoer: Soul Golem, Nib and Echoer-device sounds are registered in ModEchoer.java
+        with open(os.path.join(os.path.dirname(java), 'ModEchoer.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
         for ev in sorted(set(SOUNDS) - registered):
@@ -1309,6 +1316,13 @@ SUBTITLES.update({
     'entity.sculk_parasite.death': 'Sculk Parasite dies', 'entity.sculk_parasite.step': 'Something skitters',
     'entity.sculk_parasite.hiss': 'Sculk Parasite coils to strike', 'entity.sculk_parasite.burst': 'Sculk Parasite bursts',
 })
+
+
+# --- A2 Echoer: Soul Golem, Nib and The Echoer device sounds (tools/echoer.py)
+import echoer as _echoer  # noqa: E402
+
+SOUNDS.update(_echoer.SOUNDS)
+SUBTITLES.update(_echoer.SUBTITLES)
 
 
 def gen_parasite():
@@ -1428,6 +1442,8 @@ def generate():
     gen_parasite()
     import plants_h  # H: potted pitchers, soups, the Sift Gate Frame
     plants_h.generate(sys.modules[__name__])
+    import echoer_world  # A2 Echoer: the Echoer's ceremony, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
+    echoer_world.generate(sys.modules[__name__])
 
 
 def finalize():

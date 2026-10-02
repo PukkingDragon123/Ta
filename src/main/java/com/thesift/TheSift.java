@@ -41,6 +41,7 @@ public class TheSift {
         com.thesift.registry.ModSiege.register(modBus); // the Thumper's arena: ancient cannons, cannonballs
         com.thesift.registry.ModCaravans.register(modBus); // C: Caravans, music crystals, prism armour, song hooks
         com.thesift.registry.ModSeaSky.register(modBus); // sea & sky: the Gobbler, ocean/cloud worldgen, Tide Song calming
+        com.thesift.registry.ModEchoer.register(modBus); // A2 Echoer: Soul Golems, Nibs, The Echoer device, the Echoer's Hut
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

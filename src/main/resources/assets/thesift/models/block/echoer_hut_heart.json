@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "thesift:block/echoer_hut_heart_top",
+    "side": "thesift:block/echoer_hut_heart_side",
+    "bottom": "thesift:block/echoer_hut_heart_side"
+  }
+}

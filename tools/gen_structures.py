@@ -789,6 +789,9 @@ STRUCTURES = {
                    'surface_structures', 'beard_thin', -1, 18, 6),
     'thumper_arena': ([thumper_arena, lambda s: thumper_arena(s + 5)], ['sift_plains', 'rocky_dunes', 'wishing_grove', 'forest_mountains'],
                       'surface_structures', 'beard_thin', -7, 34, 12),
+    # A2 Echoer: the Echoer's Hut, a rare pale dome in its musical gardens (tools/echoer_world.py)
+    'echoer_hut': ([lambda s: __import__('echoer_world').echoer_hut(s), lambda s: __import__('echoer_world').echoer_hut(s + 3)],
+                   ['sift_plains', 'wishing_grove', 'forest_mountains'], 'surface_structures', 'beard_thin', -1, 52, 22),
 }
 
 

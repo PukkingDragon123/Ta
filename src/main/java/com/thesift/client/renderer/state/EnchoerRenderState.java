@@ -1,11 +1,16 @@
 package com.thesift.client.renderer.state;
 
+import net.minecraft.world.entity.AnimationState;
 
+/** The Echoer's pose weights (0..1, already smoothed by the entity) and its bow. */
 public class EnchoerRenderState extends SiftRenderState {
-    /** 0 arms at rest, 1 fully into the trading or singing pose. */
-    public float wingSpread;
-    public boolean singing;
-    public boolean blink;
-    /** Per-entity offset so a crowd of Enchoers does not sigh in unison. */
+    public float inspect;
+    public float wait;
+    public float dance;
+    public float sad;
+    public float sleep;
+    public float sing;
+    public final AnimationState bow = new AnimationState();
+    /** Per-entity offset so a herd of Echoers does not sway in unison. */
     public float seed;
 }

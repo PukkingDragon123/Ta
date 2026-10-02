@@ -366,81 +366,8 @@ def sifter() -> Model:
 
 
 # =========================================================================== ENCHOER
-ENCHOER_FACE = {
-    # 12 x 16 texels: sad brows rising to the middle, droopy lashes, a long nose, a little frown
-    'neutral': {2: '...bb..bb...', 3: '.bb......bb.', 5: '.eee....eee.', 6: '..e......e..', 8: '.....nn.....', 9: '.....nn.....',
-                10: '....nnnn....', 13: '....mmmm....', 14: '...m....m...'},
-    'blink': {2: '...bb..bb...', 3: '.bb......bb.', 6: '.eeee..eeee.', 8: '.....nn.....', 9: '.....nn.....', 10: '....nnnn....',
-              13: '....mmmm....', 14: '...m....m...'},
-    'happy': {3: '..bbb..bbb..', 5: '..ee....ee..', 6: '.e..e..e..e.', 8: '.....nn.....', 9: '.....nn.....', 10: '....nnnn....',
-              12: '.....mm.....', 13: '....m..m....', 14: '.....mm.....'},
-    'hurt': {1: '..bb....bb..', 2: '....bbbb....', 5: '.ee......ee.', 6: '...ee..ee...', 8: '.....nn.....', 9: '.....nn.....',
-             10: '....nnnn....', 13: '...m.mm.m...', 14: '..m......m..'},
-    'dead': {4: '.e..e..e..e.', 5: '..ee....ee..', 6: '.e..e..e..e.', 8: '.....nn.....', 9: '.....nn.....', 10: '....nnnn....',
-             13: '...mmmmmm...'},
-}
-
-
-def enchoer() -> Model:
-    """A big, gentle, melancholy wanderer: a pear-shaped mound of mint fur with a pale sad face, broad
-    moose antlers, long arms ending in dark paws and two stumpy dark feet."""
-    pal = {
-        'fur': '#a3dcc5', 'fur_l': '#c3ecd8', 'fur_d': '#7fbcab',
-        'face': '#d5dfd4', 'face_l': '#e9f0e6', 'face_d': '#aebdb2',
-        'brow': '#4d6870', 'lash': '#3a5059', 'nose': '#aebdb4', 'mouth': '#6a807b',
-        'paw': '#34507a', 'paw_l': '#466a9c', 'paw_d': '#243a5c', 'claw': '#e9e2c8',
-        'antler': '#efe2b2', 'antler_l': '#fbf3d2', 'antler_d': '#c9b784',
-    }
-    m = Model('enchoer', (128, 128), pal, {'enchoer': {}}, res=2, expressions=['blink', 'happy', 'hurt', 'dead'])
-    fur = dict(color='fur', pattern='mc', clusters=0.2, streaks=0.45)
-    for side, sx in (('left', 1), ('right', -1)):
-        leg = m.part(f'{side}_leg', pivot=(3.5 * sx, 18, 0.5))
-        leg.cube((-2.5, -1, -2.5), (5, 5, 5), **fur, fringe=2)
-        leg.cube((-3, 4, -3.5), (6, 2, 6), color='paw', pattern='mc', clusters=0.3, rim=False, faces={
-            'north': dict(color='paw', pattern='mc', clusters=0.0, rim=False, map=['......', 'c.c.c.'], keys={'c': 'claw'}),
-            'up': dict(color='paw_l', pattern='mc', clusters=0.3),
-        })
-    body = m.part('body', pivot=(0, 18, 0))
-    # the big furry skirt, a narrower chest above it and a hunched hump behind the head
-    body.cube((-6.5, -13, -5), (13, 14, 10), **fur, fringe=2)
-    body.cube((-5.5, -21, -4.5), (11, 9, 9), **fur, fringe=2, fringe_phase=3)
-    body.cube((-4.5, -23, -2), (9, 3, 7), **fur, rim=False)
-    head = body.part('head', pivot=(0, -19, -4))
-    head.cube((-4.5, -9, -4.5), (9, 10, 8), **fur, fringe=1)
-    # the pale, long, sad face sits inside the fur hood
-    head.cube((-3, -7, -5.5), (6, 8, 1), color='face', pattern='mc', clusters=0.15, rim=False, faces={
-        'north': dict(color='face', pattern='mc', clusters=0.0, rim=False, hd=True, map=hd_rows(ENCHOER_FACE['neutral'], 12, 16),
-                      keys={'b': 'brow', 'e': 'lash', 'n': 'nose', 'm': 'mouth', 'w': 'face_l', 't': 'mouth'},
-                      expr={k: hd_rows(v, 12, 16) for k, v in ENCHOER_FACE.items() if k != 'neutral'}),
-    })
-    head.cube((-1, -3, -6.5), (2, 2, 1), color='face_d', pattern='mc', clusters=0.0, rim=False, faces={
-        'north': dict(color='face', pattern='mc', clusters=0.0, rim=False, map=['..', 'dd'], keys={'d': 'nose'}),
-    })
-    for side, sx in (('left', 1), ('right', -1)):
-        ant = head.part(f'{side}_antler', pivot=(4 * sx, -7.5, -0.5), rot=(0, 0, -0.32 * sx))
-        o = (lambda x0, w: x0 if sx > 0 else -x0 - w)  # mirror an x span for the right antler
-        ant.cube((o(0, 3), -1.5, -1), (3, 2, 2), color='antler', pattern='mc', clusters=0.3, rim=False)
-        # a broad, flat moose palm reaching outwards, short tines along its upper edge
-        ant.cube((o(2, 7), -3.5, -1.5), (7, 3, 3), color='antler', pattern='mc', clusters=0.4, rim=False, faces={
-            'up': dict(color='antler_l', pattern='mc', clusters=0.4),
-            'north': dict(color='antler', pattern='mc', clusters=0.2, rim=False, map=['.......', '.......', 'ddddddd'], keys={'d': 'antler_d'}),
-            'south': dict(color='antler', pattern='mc', clusters=0.2, rim=False, map=['.......', '.......', 'ddddddd'], keys={'d': 'antler_d'}),
-        })
-        for px, ph in ((3, 1), (5, 2), (7, 1), (8, 2)):
-            ant.cube((o(px, 1), -3.5 - ph, -1), (1, ph, 1), color='antler', pattern='mc', clusters=0.0, rim=False,
-                     faces={'up': dict(color='antler_l', pattern='mc', clusters=0.0)})
-        ant.cube((o(9, 1), -2.5, -1), (1, 1, 2), color='antler', pattern='mc', clusters=0.0, rim=False)
-    for side, sx in (('left', 1), ('right', -1)):
-        arm = body.part(f'{side}_arm', pivot=(7 * sx, -18.5, -1), rot=(0, 0, -0.08 * sx))
-        arm.cube((-1.5 if sx > 0 else -2.5, -1, -2.5), (4, 9, 5), **fur, fringe=1)
-        fore = arm.part(f'{side}_forearm', pivot=(0.5 * sx, 8, 0))
-        fore.cube((-2, -1, -2.5), (4, 7, 5), **fur, fringe=2)
-        fore.cube((-2, 5, -2.5), (4, 3, 5), color='paw', pattern='mc', clusters=0.3, faces={
-            'north': dict(color='paw', pattern='mc', clusters=0.0, map=['....', '....', 'c.c.'] if sx > 0 else ['....', '....', '.c.c'],
-                          keys={'c': 'claw'}),
-            'down': dict(color='paw_d', pattern='mc', clusters=0.0, map=['c..c', '....', '....', '....', 'c..c'], keys={'c': 'claw'}),
-        })
-    return m
+# A2 Echoer: the Echoer (still entity id `enchoer`) was redesigned - its model lives in tools/echoer.py
+from echoer import enchoer  # noqa: E402,F401
 
 
 # =========================================================================== RIVETER
@@ -849,3 +776,8 @@ import parasite  # noqa: E402
 
 ALL.update(parasite.ALL)
 ALL.update(__import__('caravans').MODELS)  # C: the Caravan (tools/caravans.py)
+
+# A2 Echoer: Soul Golems and Nibs (tools/echoer.py)
+import echoer  # noqa: E402
+
+ALL.update(echoer.ALL)

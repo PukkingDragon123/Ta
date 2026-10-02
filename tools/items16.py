@@ -1473,21 +1473,18 @@ def spawn_eggs():
         13: '.....TTTUUU.....',
     }, {'e': '#d9f6ff', 'E': '#0c1e5c', 't': '#eaf7ff', 'v': '#17328c', 'T': ('#f2cd98', '#5a3a1a'), 'U': ('#d7a46c', '#5a3a1a'),
         'f': '#0f6a8e'})
-    E['enchoer'] = egg(['#5a9a8a', '#7fbcab', '#a3dcc5', '#c3ecd8'], '#24504a', {
-        0: '.a.a........a.a.',
-        1: '.laaa......aaAa.',
-        2: '..laaa....aaAa..',
-        5: '.....ffffff.....',
-        6: '....ffbffbff....',
-        7: '....fbeffebF....',
-        8: '....fffnnffF....',
-        9: '....fffmmfFF....',
-        10: '.....ffffFF.....',
-        11: '..pP........Pp..',
-        12: '..pp........pp..',
-        14: '.....pp..pp.....',
-    }, {'a': ('#efe2b2', '#5a4a2a'), 'A': ('#c9b784', '#5a4a2a'), 'l': ('#fbf3d2', '#5a4a2a'), 'f': '#e2eadf', 'F': '#c0cdbf',
-        'b': '#4d6870', 'e': '#2a3c44', 'n': '#aebdb4', 'm': '#6a807b', 'p': ('#34507a', '#141e36'), 'P': ('#466a9c', '#141e36')})
+    # A2 Echoer: the redesigned Echoer - a pale egg, two swept horns with glowing tips, glowing eyes, flank runes
+    E['enchoer'] = egg(['#a99fb8', '#c4bccf', '#d9d2e2', '#e9e4ef'], '#3a3050', {
+        0: '....R......R....',
+        1: '....hh....hh....',
+        2: '.....hh..hh.....',
+        5: '.....EE..EE.....',
+        6: '.....EI..IE.....',
+        8: '.......nn.......',
+        10: '....r......r....',
+        11: '...rRr....rRr...',
+        12: '....r......r....',
+    }, {'R': '#7ff7ff', 'h': ('#b9a6e6', '#3a3050'), 'E': '#8ffaff', 'I': '#ffffff', 'n': '#6e6190', 'r': '#3cc9dc'}, no_ol='rR')
     E['riveter'] = egg(['#121b30', '#1d2b47', '#2c4066', '#3d5684'], '#070a14', {
         0: '....3......3....',
         1: '....3t....t3....',
@@ -1705,6 +1702,7 @@ def all_items():
     out.update(siege.items())
     out.update(__import__('caravans').items())  # C: prism gem and armour, Caravan egg
     out.update(__import__('sea_art').items())  # sea & sky: fish meats, sculk bladder, sushi, Gobbler egg
+    out.update(__import__('echoer_world').item_sprites())  # A2 Echoer: Soul Golem Core, Nib Dust, eggs
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

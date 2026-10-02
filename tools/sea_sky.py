@@ -266,8 +266,8 @@ def _biomes(GW):
     _biome(GW, 'sound_garden', fog='#f2eaff', sky='#a8d8ff', water='#bfe8ff', water_fog='#bfe8ff', grass='#c8f0ff', foliage='#d8f4ff',
            temp=0.6, down=0.6, music='music.sound_garden', loop='ambient.sound_garden.loop', additions='ambient.sound_garden.additions',
            mood='ambient.sift.mood',
-           # thesift:nib (agent A3) belongs here too - add ('nib', 6, 2, 4) to creature once the entity exists
-           spawns=_spawns(creature=[('sky_whale', 6, 1, 1), ('harmoner', 8, 2, 3), ('bulb', 4, 1, 3), ('enchoer', 1, 1, 1)]),
+           spawns=_spawns(creature=[('sky_whale', 6, 1, 1), ('harmoner', 8, 2, 3), ('bulb', 4, 1, 3), ('enchoer', 1, 1, 1)],
+                          ambient=[('nib', 12, 2, 4)]),
            parts=[('sift_note', 0.004), ('sift_mist', 0.003), ('star_sparkle', 0.002), ('wishing_star', 0.0004), ('dream_pollen', 0.001)],
            feats=[(2, 'cloud_puff'), (9, 'patch_chime_bell'), (9, 'patch_organ_reed')])
 
