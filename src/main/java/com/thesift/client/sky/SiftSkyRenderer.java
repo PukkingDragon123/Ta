@@ -81,6 +81,7 @@ public class SiftSkyRenderer implements CustomSkyboxRenderer {
         Matrix4f view = new Matrix4f(modelViewMatrix);
         RenderSystem.setShaderFog(skyFog);
         SiftSkyFx.prepare(); // B1 Portal & sky FX: rainbows, aurora, colour clouds, shooting stars
+        SiftSkyFx.collect(view);
         RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
         GpuBuffer indexBuffer = indices.getBuffer(Math.max(FACES * 2 * 6, SiftSkyFx.MAX_INDICES));
         GpuBufferSlice transform = RenderSystem.getDynamicUniforms().writeTransform(view);
@@ -93,7 +94,7 @@ public class SiftSkyRenderer implements CustomSkyboxRenderer {
             pass.setVertexBuffer(0, this.buffer.slice());
             pass.setIndexBuffer(indexBuffer, indices.type());
             pass.drawIndexed(FACES * 2 * 6, 1, 0, 0, 0);
-            SiftSkyFx.render(pass, view);
+            SiftSkyFx.render(pass);
         }
         return true;
     }

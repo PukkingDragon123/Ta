@@ -250,20 +250,35 @@ public final class SiftSkyFx {
 
     // ------------------------------------------------------------------ drawing
 
-    private static void draw(RenderPass pass, @Nullable GpuBuffer mesh, int quads, Identifier texture, Matrix4f transform, float r, float g, float b, float a) {
+    /** One queued sky draw: textures are fetched and uniforms written before the sky pass opens (26.3 forbids both inside it). */
+    private record Draw(GpuBuffer mesh, int quads, AbstractTexture texture, GpuBufferSlice transform) {
+    }
+
+    private static final java.util.List<Draw> QUEUE = new java.util.ArrayList<>();
+
+    private static void draw(@Nullable GpuBuffer mesh, int quads, Identifier texture, Matrix4f transform, float r, float g, float b, float a) {
         if (mesh == null || a <= 0.003F) {
             return;
         }
         AbstractTexture tex = Minecraft.getInstance().getTextureManager().getTexture(texture);
         GpuBufferSlice slice = RenderSystem.getDynamicUniforms().writeTransform(transform, new Vector4f(r, g, b, a));
-        pass.setUniform("DynamicTransforms", slice);
-        pass.setUniform("Sampler0", tex.getTextureView(), tex.getSampler());
-        pass.setVertexBuffer(0, mesh.slice());
-        pass.drawIndexed(quads * 2 * 6, 1, 0, 0, 0);
+        QUEUE.add(new Draw(mesh, quads, tex, slice));
     }
 
-    /** Draws everything above the nebula. The pass already has the sky pipeline and an index buffer of {@link #MAX_INDICES}. */
-    public static void render(RenderPass pass, Matrix4f view) {
+    /** Issues the draws queued by {@link #collect}. The pass already has the sky pipeline and an index buffer of {@link #MAX_INDICES}. */
+    public static void render(RenderPass pass) {
+        for (Draw d : QUEUE) {
+            pass.setUniform("DynamicTransforms", d.transform());
+            pass.setUniform("Sampler0", d.texture().getTextureView(), d.texture().getSampler());
+            pass.setVertexBuffer(0, d.mesh().slice());
+            pass.drawIndexed(d.quads() * 2 * 6, 1, 0, 0, 0);
+        }
+        QUEUE.clear();
+    }
+
+    /** Queues everything drawn above the nebula; call before the sky pass opens, then {@link #render} inside it. */
+    public static void collect(Matrix4f view) {
+        QUEUE.clear();
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         if (level == null) {
@@ -279,15 +294,15 @@ public final class SiftSkyFx {
             float size = 0.2F + 0.035F * ((i * 13) % 4);
             float[] tint = CLOUD_TINTS[i];
             Matrix4f cloud = new Matrix4f(view).rotateY(yaw).rotateX(pitch).rotateZ(0.08F * Mth.sin(i * 1.7F)).scale(100.0F).scale(size * 1.6F, size, 1.0F);
-            draw(pass, CLOUD_QUADS[i % 4], 1, CLOUDS, cloud, tint[0], tint[1], tint[2], 0.5F * (1.0F - rain * 0.7F));
+            draw(CLOUD_QUADS[i % 4], 1, CLOUDS, cloud, tint[0], tint[1], tint[2], 0.5F * (1.0F - rain * 0.7F));
         }
         // the rainbow (and its fainter, reversed twin) over the horizon, a new heading each cycle
         float bow = Mth.lerp(partial, rainbowO, rainbow);
         if (bow > 0.003F) {
             float heading = (level.getGameTime() / (long) CYCLE % 7L) * 0.9F;
             Matrix4f bowAt = new Matrix4f(view).rotateY(heading).rotateX(-0.1F).scale(100.0F);
-            draw(pass, arc, ARC_SEGMENTS, RAINBOW, bowAt, 1.0F, 1.0F, 1.0F, bow * 0.8F);
-            draw(pass, outerArc, ARC_SEGMENTS, RAINBOW_OUTER, bowAt, 1.0F, 1.0F, 1.0F, bow * 0.3F);
+            draw(arc, ARC_SEGMENTS, RAINBOW, bowAt, 1.0F, 1.0F, 1.0F, bow * 0.8F);
+            draw(outerArc, ARC_SEGMENTS, RAINBOW_OUTER, bowAt, 1.0F, 1.0F, 1.0F, bow * 0.3F);
         }
         // aurora ribbons in the blue hour
         float k = Mth.lerp(partial, ribbonsO, ribbons);
@@ -299,7 +314,7 @@ public final class SiftSkyFx {
                 Matrix4f ribbon = new Matrix4f(view).rotateY(sway).scale(100.0F).scale(1.0F, lift, 1.0F);
                 float red = i == 1 ? 1.0F : 0.85F;
                 float blue = i == 2 ? 1.0F : 0.9F;
-                draw(pass, aurora, AURORA_SEGMENTS, AURORA, ribbon, red, 1.0F, blue, k * pulse * (i == 0 ? 0.9F : 0.65F));
+                draw(aurora, AURORA_SEGMENTS, AURORA, ribbon, red, 1.0F, blue, k * pulse * (i == 0 ? 0.9F : 0.65F));
             }
         }
         // shooting stars
@@ -312,7 +327,7 @@ public final class SiftSkyFx {
             float alpha = Mth.sin(age * Mth.PI);
             Matrix4f streak = new Matrix4f(view).rotateY(s.yaw()).rotateX(s.pitch()).rotateZ(s.heading()).scale(100.0F)
                     .translate(age * 0.5F - 0.25F, 0.0F, 0.0F).scale(0.08F, 1.0F, 1.0F);
-            draw(pass, star, 1, STAR, streak, 1.0F, 1.0F, 1.0F, alpha);
+            draw(star, 1, STAR, streak, 1.0F, 1.0F, 1.0F, alpha);
         }
     }
 }

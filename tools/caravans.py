@@ -314,7 +314,7 @@ def gen_crystal(bid):
     write(os.path.join(GA.A, 'blockstates', bid + '.json'), {'variants': variants})
     # the item shows the colour it was mined as (drops keep their colour in a block_state component)
     write(os.path.join(GA.A, 'items', bid + '.json'), {'model': {
-        'type': 'minecraft:select', 'block_state_property': 'color',
+        'type': 'minecraft:select', 'property': 'minecraft:block_state', 'block_state_property': 'color',
         'cases': [{'when': col, 'model': {'type': 'minecraft:model', 'model': f'{NS}:block/{bid}_{col}'}} for col in COLORS],
         'fallback': {'type': 'minecraft:model', 'model': f'{NS}:block/{bid}_rose'}}})
 
