@@ -129,6 +129,13 @@ public final class CodexEntries {
             if (e instanceof com.thesift.entity.Swifter s) s.codexPose(t);
         }));
         l.add(thing(PLACES, "white_forest", ModItems.WHITE_LULLWOOD_SAPLING));
+        // A4 cave creatures: the Jailer slams its cell down on the page; a Sculkling giggles and covers its ears
+        l.add(mob(CREATURES, "jailer", com.thesift.registry.ModCaveCreatures.JAILER, (e, t) -> {
+            if (e instanceof com.thesift.entity.cave.Jailer j && t % 80 == 10) j.slamAnimation.start(j.tickCount);
+        }));
+        l.add(mob(CREATURES, "sculkling", com.thesift.registry.ModCaveCreatures.SCULKLING, (e, t) -> {
+            if (e instanceof com.thesift.entity.cave.Sculkling s && t % 60 == 20) s.giggleAnimation.start(s.tickCount);
+        }));
         l.add(thing(ITEMS, "sushi", ModItems.SUSHI_PLATTER));
         // ---- items
         l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));

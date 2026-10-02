@@ -1,0 +1,20 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#thesift:is_sift",
+  "spawners": [
+    {
+      "type": "thesift:sculkling",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 3,
+        "max_inclusive": 5
+      },
+      "weight": 12
+    },
+    {
+      "type": "thesift:jailer",
+      "count": 1,
+      "weight": 3
+    }
+  ]
+}

@@ -1276,6 +1276,9 @@ def check_sounds():
         # A2 Swifter & White Forest: the Swifter's sounds and the forest's ambience are registered in ModSwifter.java
         with open(os.path.join(os.path.dirname(java), 'ModSwifter.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # A4 cave creatures: Jailer and Sculkling sounds are registered in ModCaveCreatures.java
+        with open(os.path.join(os.path.dirname(java), 'ModCaveCreatures.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
         for ev in sorted(set(SOUNDS) - registered):
@@ -1440,6 +1443,7 @@ def flush_tags():
 def generate():
     __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
     __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
+    __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)
@@ -1460,6 +1464,7 @@ def generate():
     import echoer_world  # A2 Echoer: the Echoer's ceremony, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
     echoer_world.generate(sys.modules[__name__])
     __import__('chrome').assets(sys.modules[__name__])  # A3 Chrome: chime glass recipes/tags, particles, Rainbow Daze post effect
+    __import__('cave_creatures').data(sys.modules[__name__])  # A4 cave creatures: loot, tags, spawns, text
 
 
 def finalize():

@@ -45,6 +45,16 @@ EVENTS = frozenset({
     'entity.wolf.shake', 'block.azalea_leaves.break',
 })
 
+# A4 cave creatures: the Jailer and Sculklings
+EVENTS = EVENTS | frozenset({
+    'block.anvil.destroy', 'block.chain.break', 'block.chain.hit', 'block.chain.place', 'block.chain.step', 'block.iron.hit',
+    'block.iron_door.close', 'block.sculk_sensor.clicking', 'block.sculk_shrieker.shriek', 'block.vault.close_shutter',
+    'entity.allay.ambient_without_item', 'entity.allay.item_taken', 'entity.bat.ambient', 'entity.bat.death', 'entity.bat.hurt',
+    'entity.fox.screech', 'entity.iron_golem.damage', 'entity.vex.ambient', 'entity.vex.death', 'entity.vex.hurt',
+    'entity.warden.dig', 'entity.warden.listening_angry', 'entity.warden.step', 'entity.warden.tendril_clicks',
+    'entity.witch.celebrate', 'entity.zombie.attack_iron_door', 'item.mace.smash_ground_heavy',
+})
+
 # Vanilla sound files (assets/minecraft/sounds/<name>.ogg) used directly.
 FILES = frozenset({
     'ambient/cave/cave11', 'ambient/cave/cave13', 'ambient/cave/cave7', 'ambient/cave/cave9', 'ambient/nether/soulsand_valley/wind1',

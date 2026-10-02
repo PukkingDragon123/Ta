@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:gold_ingot",
+    "minecraft:gold_nugget",
+    "minecraft:raw_gold",
+    "minecraft:iron_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:diamond",
+    "minecraft:emerald",
+    "minecraft:amethyst_shard",
+    "minecraft:lapis_lazuli",
+    "minecraft:quartz",
+    "minecraft:netherite_ingot",
+    "minecraft:echo_shard",
+    "minecraft:golden_apple",
+    "minecraft:clock",
+    "thesift:siftite_ingot",
+    "thesift:siftite_nugget",
+    "thesift:serbim_ingot",
+    "thesift:raw_serbim",
+    "thesift:chrome_pearl",
+    "thesift:skysong_gem",
+    "thesift:star_shard",
+    "thesift:prism_gem"
+  ]
+}
