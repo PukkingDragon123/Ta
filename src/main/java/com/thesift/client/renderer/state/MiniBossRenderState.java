@@ -7,4 +7,8 @@ public class MiniBossRenderState extends SiftRenderState {
     public float stateTime;
     public boolean grounded;
     public boolean enraged;
+    /** The Thumper's growth into its titan form, 0 to 1. */
+    public float titan;
+    /** Is anyone standing on the titan's back? */
+    public boolean ridden;
 }

@@ -1,6 +1,5 @@
 package com.thesift.entity.boss;
 
-import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
 import java.util.HashSet;
@@ -39,7 +38,6 @@ import org.jspecify.annotations.Nullable;
  *   Break it: get out of its sight behind something solid, get far away, or hit it hard enough
  *   and it falters out of the air.</li>
  *   <li>Dive: it climbs, folds its wings and drops on you beak first.</li>
- *   <li>Call: its chicks, the Whistlings, come fluttering in.</li>
  * </ul>
  */
 public class Whistler extends MiniBoss {
@@ -176,10 +174,7 @@ public class Whistler extends MiniBoss {
                 if (this.cooldown > 0) {
                     return;
                 }
-                if (this.summonCooldown <= 0 && this.random.nextInt(3) == 0) {
-                    this.setState(CALL);
-                    this.summonCooldown = 360;
-                } else if (dist < 28 && this.hasLineOfSight(target) && this.random.nextInt(5) < 3) {
+                if (dist < 28 && this.hasLineOfSight(target) && this.random.nextInt(5) < 3) {
                     this.setState(BEAM_CHARGE);
                     this.setBeamTarget(target);
                     this.playSound(ModSounds.WHISTLER_CHARGE.get(), 3.0F, 1.0F);
@@ -243,15 +238,6 @@ public class Whistler extends MiniBoss {
                 }
                 if (t >= 46 || (this.horizontalCollision || this.verticalCollision) && t > 6) {
                     this.endAttack(40);
-                }
-            }
-            case CALL -> {
-                if (t == 18) {
-                    this.summon(level, ModEntities.WHISTLING.get(), 2, 4, 3.0);
-                    this.playSound(ModSounds.WHISTLER_SCREECH.get(), 3.0F, 1.4F);
-                }
-                if (t >= 30) {
-                    this.endAttack(30);
                 }
             }
             case STUNNED -> {

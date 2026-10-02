@@ -20,6 +20,7 @@ public final class ConductorBossBar {
     private static final java.util.Map<String, Identifier> BARS = java.util.Map.of(
             "entity." + TheSift.MODID + ".dictator", TheSift.id("textures/gui/conductor_bar.png"),
             "entity." + TheSift.MODID + ".thumper", TheSift.id("textures/gui/thumper_bar.png"),
+            "entity." + TheSift.MODID + ".thumper.titan", TheSift.id("textures/gui/thumper_titan_bar.png"),
             "entity." + TheSift.MODID + ".whistler", TheSift.id("textures/gui/whistler_bar.png"),
             "entity." + TheSift.MODID + ".strummer", TheSift.id("textures/gui/strummer_bar.png"));
 

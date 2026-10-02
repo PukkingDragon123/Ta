@@ -1498,7 +1498,7 @@ def mini_boss_bars():
                             e.putpixel((x * 2 + dx, y * 2 + dy), (*keys[ch], 255))
         return e
     K = {'b': BONE, 'l': BONE_L, 'd': BONE_D, 'k': (8, 12, 14), 'g': GLOW, 'h': HIDE, 'H': HIDE_L, 'r': (205, 80, 52), 'R': (240, 130, 70),
-         'y': (226, 190, 96), 'v': (196, 108, 255), 'V': (122, 58, 184), 's': (127, 247, 255)}
+         'y': (226, 190, 96), 'v': (196, 108, 255), 'V': (122, 58, 184), 's': (127, 247, 255), 'G': (180, 255, 255)}
     bars = {
         'thumper': ((255, 159, 58), [
             '................', '......rRRr......', '.....rrrrrr.....', '....dbbbbbbd....', '...dlbbbbbbbd...', '..dbkkbbbbkkbd..', '..dbkgbbbbgkbd..',
@@ -1508,6 +1508,10 @@ def mini_boss_bars():
             '................', '.......dd.......', '......dbbd......', '.....dbllbd.....', '....dbbbbbbd....', '....dbkgbbbbyyyy', '....dbkkbbbyyyyy',
             '....dbbbbbbdyy..', '.....dbbbbd.....', '......hddh......', '.....hhsshh.....', '....hHhsshHh....', '...hh.hssh.hh...', '..h...hssh...h..',
             '......hhhh......', '................']),
+        'thumper_titan': ((69, 240, 255), [
+            '...g..g..g..g...', '..ggd.gg.gg.dgg.', '...dbbbbbbbbbd..', '..dbbbbbbbbbbbd.', '..dbkkkbbbkkkbd.', '..dbkGkbbbkGkbd.', '..dbkkkbbbkkkbd.',
+            '..dbbbbddbbbbbd.', '...dbbkddkbbbd..', '...hdbbbbbbbdh..', '..hHgddbbddgHh..', '..hhhhkkkkkhhh..', '...hhkbkbkbhh...', '....hgghhggh....',
+            '.....hhhhhh.....', '................']),
         'strummer': ((196, 108, 255), [
             '..s..........s..', '...s........s...', '....s.dddd.s....', '.....dbbbbd.....', '....dbbbbbbd....', '...dggbbbbggd...', '..dggkgbbgkggd..',
             '..dgggbbbbgggd..', '...dbbbddbbbd...', '....dbkkkkbd....', '.....dbbbbd.....', '...vV.dbbd.Vv...', '..v..V.dd.V..v..', '.v....V..V....v.',
@@ -1528,7 +1532,20 @@ def mini_boss_bars():
             y = rnd.choice((13, 14, 33, 34))
             d.point((x, y), fill=(*GLOW, 255) if rnd.random() < 0.4 else (*HIDE_L, 255))
             d.point((x + 1, y), fill=(*HIDE_L, 255))
-        if name == 'thumper':
+        if name == 'thumper_titan':
+            # the titan's bar: jagged glowing dorsal plates along the top rim, sculk crust below
+            for x in range(16, 404, 18):
+                h = 8 + (x * 7 % 4)
+                d.polygon([(x, 12), (x + 2, 12 - h // 2), (x + 5, 12 - h), (x + 7, 10 - h // 2), (x + 9, 12 - h + 1), (x + 12, 12 - h // 3), (x + 14, 12)],
+                          fill=(*BONE, 255), outline=(*BONE_D, 255))
+                d.line((x + 6, 11, x + 6, 13 - h), fill=(*GLOW, 255), width=2)
+                d.point((x + 6, 12 - h), fill=(180, 255, 255, 255))
+            for x in range(14, 412, 6):
+                d.point((x + rnd.randrange(3), 34 + rnd.randrange(3)), fill=(*GLOW, 255) if rnd.random() < 0.5 else (*HIDE_L, 255))
+            for x0 in (0, 412):
+                for k in range(4):
+                    d.line((x0 + k * 4, 12, x0 + 12 - k * 4, 36), fill=(*GLOW, 255), width=1)
+        elif name == 'thumper':
             # bone scutes along both rims, drum-cord crosses at the ends
             for x in range(18, 410, 22):
                 for y0 in (9, 33):
@@ -1562,8 +1579,8 @@ def mini_boss_bars():
                 for k, y in enumerate((14, 22, 30)):
                     d.line((x0, y, x0 + sgn * 6, y - 4), fill=(*BONE, 255), width=2)
                     d.line((x0 + sgn * 6, y - 4, x0 + sgn * 9, y + 4), fill=(*BONE_D, 255), width=2)
-        # phase ticks (bone) at 66% and 33%
-        for frac in (0.66, 0.33):
+        # phase ticks (bone): the Thumper's at half, where it wakes as the titan
+        for frac in ((0.5,) if name.startswith('thumper') else (0.66, 0.33)):
             x = 32 + int(364 * frac)
             d.rectangle((x - 1, 15, x, 33), fill=(*BONE, 255))
             d.rectangle((x - 1, 15, x, 16), fill=(*BONE_L, 255))

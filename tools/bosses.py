@@ -2,6 +2,8 @@
 ones, and the Conductor's Mask. Same DSL as mobs.py (see modelkit.py); every face is painted at
 texel density (hd=True maps) with generated patterns: shell scutes, feather scallops, chitin
 plates."""
+import math
+
 from modelkit import Model
 from mobs import SCULK, hd_rows
 
@@ -732,7 +734,7 @@ def thumper_sculk() -> Model:
     pal.update(WARDEN)
     pal.update({'drum': '#16222a', 'drum_l': '#24343e', 'drum_d': '#070a0d', 'skin': '#d6cfb0', 'skin_l': '#ece6cc', 'skin_d': '#a89f80',
                 'cord': '#bbc39b', 'cord_d': '#819988'})
-    m = Model('thumper', (256, 160), pal, {'thumper': {}}, res=2, expressions=EXPR)
+    m = Model('thumper', (256, 352), pal, {'thumper': {}, 'thumper_titan': TITAN_SKIN}, res=2, expressions=EXPR)
     body = m.part('body', pivot=(0, 14, 0))
     # the belly: a ribcage with the heart glowing through
     body.cube((-10, 1, -12), (20, 3, 24), color='hide', pattern='mc', clusters=0.2, faces={
@@ -827,7 +829,113 @@ def thumper_sculk() -> Model:
     tail.cube((-1.5, -1, 0), (3, 3, 5), color='hide', pattern='mc', clusters=0.3, faces={'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True,
                                                                                                   map=vertebrae(6, 10), keys=WK)})
     tail.cube((-1, -0.5, 5), (2, 2, 3), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    titan_parts(body, neck, tail)
     return m
+
+
+# The titan's skin: the same shapes, swallowed by the sculk - hide gone teal, bone stained, the
+# glow brighter. ThumperModel's renderer fades it in as the Thumper grows.
+TITAN_SKIN = {'hide': '#0a2a31', 'hide_l': '#0f3a43', 'hide_d': '#051a1f', 'sculk': '#055566', 'sculk_l': '#0a6e80', 'sculk_d': '#043c47',
+              'bone': '#a7b89f', 'bone_l': '#c4d0b6', 'bone_d': '#6f8a7f', 'bone_k': '#3f5550', 'glow': '#45f0ff', 'glow_d': '#16a9b8',
+              'skin': '#c9d6c0', 'skin_l': '#e0e9d6', 'skin_d': '#93a691', 'drum': '#0f3a43', 'drum_l': '#155060', 'drum_d': '#051a1f'}
+
+
+def sculk_crust(w, h, seed, veins=7):
+    """Living sculk, seen from above: a dark teal mat, pitted, with branching veins of light
+    running through it (the deck you walk on, on the titan's back)."""
+    import random
+    rnd = random.Random(seed)
+    grid = [['s' if rnd.random() < 0.7 else ('m' if rnd.random() < 0.6 else 'S') for _ in range(w)] for _ in range(h)]
+    for _ in range(int(w * h / 26)):
+        x, y = rnd.randrange(w), rnd.randrange(h)
+        grid[y][x] = 'v'
+    for _ in range(veins):
+        x, y = rnd.uniform(0, w), rnd.uniform(0, h)
+        a = rnd.uniform(0, 6.283)
+        for step in range(int((w + h) * 0.7)):
+            ix, iy = int(x) % w, int(y) % h
+            grid[iy][ix] = 'G' if step % 7 == 0 else 'g'
+            for (ox, oy) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                jx, jy = (ix + ox) % w, (iy + oy) % h
+                if grid[jy][jx] in 'smv':
+                    grid[jy][jx] = 'S'
+            a += rnd.uniform(-0.55, 0.55)
+            if rnd.random() < 0.05:
+                a += rnd.choice((-1.2, 1.2))
+            x += math.cos(a)
+            y += math.sin(a)
+    return [''.join(r) for r in grid]
+
+
+def plate_rows(d, h, lit):
+    """A dorsal plate side-on (d x h texels): a jagged, Godzilla-like leaf, bone with a channel of
+    sculk up the middle - or, for its lit twin, only that channel, glowing."""
+    rows = []
+    for y in range(h):
+        k = (y + 1) / h
+        half = max(1.0, (d / 2) * (k ** 0.55))
+        if y % 5 in (0, 1) and y > 1:
+            half -= 1.2
+        c = (d - 1) / 2
+        row = ''
+        for x in range(d):
+            dx = abs(x - c)
+            if dx > half:
+                row += '_'
+            elif lit:
+                row += ('G' if y % 4 == 0 else 'g') if dx < max(0.6, half * 0.28) and y > 0 else '_'
+            elif dx > half - 1.0:
+                row += 'd'
+            elif dx < max(0.6, half * 0.28) and y > 0:
+                row += 'm'
+            else:
+                row += 'l' if (x + y) % 6 == 0 else 'b'
+        rows.append(row)
+    return rows
+
+
+def plate(part, name, pivot, rot, d, h):
+    """A dorsal plate and its lit twin (ThumperModel lights them one by one before the breath)."""
+    pk = {'b': 'bone', 'l': 'bone_l', 'd': 'bone_d', 'm': 'sculk_d', 'g': 'glow', 'G': 'glow'}
+    blank = lambda w, hh: ['_' * w] * hh
+    p = part.part(name, pivot=pivot, rot=rot)
+    side = dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True, map=plate_rows(d * 2, h * 2, False), keys=pk)
+    # a thin sheet: only its jagged sides show (its edges are cut away)
+    edges = lambda t: {f: dict(color='bone_d', pattern='mc', clusters=0.0, rim=False, hd=True, map=blank(w, hh), keys=pk)
+                       for f, (w, hh) in (('north', (t, h * 2)), ('south', (t, h * 2)), ('up', (t, d * 2)), ('down', (t, d * 2)))}
+    p.cube((-0.25, -h, -d / 2), (0.5, h, d), color='bone_d', pattern='mc', clusters=0.0, rim=False, faces={
+        'east': side, 'west': dict(side, map=[r[::-1] for r in side['map']]), **edges(1)})
+    lit = p.part(f'{name}_lit', pivot=(0, 0, 0))
+    glow = dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=plate_rows(d * 2, h * 2, True), keys=pk, glow_keys='gG')
+    lit.cube((-0.5, -h, -d / 2), (1.0, h, d), color='glow', pattern='mc', clusters=0.0, rim=False, faces={
+        'east': glow, 'west': dict(glow, map=[r[::-1] for r in glow['map']]), **edges(2)})
+    return p
+
+
+def titan_parts(body, neck, tail):
+    """What the Thumper grows when it wakes as a titan (hidden until then): a crust of living
+    sculk over its shell, flat enough to walk on; rows of jagged, glowing dorsal plates down both
+    edges of it, on its neck and down a long new tail."""
+    crust_keys = {'s': 'sculk', 'S': 'sculk_l', 'm': 'sculk_d', 'v': 'void', 'g': 'glow', 'G': 'glow'}
+    mantle = body.part('mantle', pivot=(0, -8, 0))
+    mantle.cube((-10, -4, -12), (20, 4, 24), color='sculk', pattern='mc', clusters=0.3, faces={
+        'up': dict(color='sculk', pattern='mc', clusters=0.0, hd=True, map=sculk_crust(40, 48, 301), keys=crust_keys, glow_keys='gG'),
+        **{f: dict(color='sculk', pattern='mc', clusters=0.0, hd=True, map=sculk_crust(w, 8, 310 + i, veins=2), keys=crust_keys, glow_keys='gG')
+           for i, (f, w) in enumerate((('north', 40), ('south', 40), ('east', 48), ('west', 48)))},
+    })
+    plates = body.part('plates', pivot=(0, -12, 0))
+    for side, sx in (('left', 1), ('right', -1)):
+        for i, (z, h) in enumerate(((9, 6), (4.5, 8), (0, 9), (-4.5, 8), (-9, 6))):
+            plate(plates, f'{side}_plate_{i}', (9.5 * sx, 0, z), (0, 0, 0.32 * sx), 5, h)
+    for i, (z, h) in enumerate(((-1.5, 5), (-4.5, 4))):
+        plate(neck, f'neck_plate_{i}', (0, -3.5, z), (0, 0, 0), 3, h)
+    ext = tail.part('tail_titan', pivot=(0, 0.5, 7))
+    ext.cube((-1.25, -1.25, 0), (2.5, 2.5, 12), color='hide', pattern='mc', clusters=0.3, faces={
+        'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=vertebrae(5, 24), keys=WK),
+        'east': hide_face(24, 5, 320, 0.7), 'west': hide_face(24, 5, 321, 0.7), 'down': hide_face(5, 24, 322, 0.5)})
+    ext.cube((-0.75, -0.75, 12), (1.5, 1.5, 5), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+    for i, (z, h) in enumerate(((2, 5), (6, 4), (10, 3))):
+        plate(ext, f'tail_plate_{i}', (0, -1.25, z), (0, 0, 0), 3, h)
 
 
 WARDEN_BIRD = {

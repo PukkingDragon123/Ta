@@ -111,6 +111,20 @@ public abstract class MiniBoss extends Monster {
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7));
     }
 
+    /** Run every server tick, target or not, before the attack state machine. */
+    protected void tickAlways(ServerLevel level, int state) {
+    }
+
+    /** States that play out to the end even when it loses its target. */
+    protected boolean holdsState(int state) {
+        return false;
+    }
+
+    /** Renames its boss bar (the bar's look follows the name's translation key). */
+    protected void setBossBarName(Component name) {
+        this.bossEvent.setName(name);
+    }
+
     /** The attack state machine, run every server tick while it has a living target. */
     protected abstract void tickAttacks(ServerLevel level, LivingEntity target, int state);
 
@@ -133,9 +147,10 @@ public abstract class MiniBoss extends Monster {
         super.customServerAiStep(level);
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
         this.stateTicks++;
+        this.tickAlways(level, this.getState());
         LivingEntity target = this.getTarget();
         if (target == null || !target.isAlive()) {
-            if (this.getState() != IDLE && this.stateTicks > 20) {
+            if (this.getState() != IDLE && this.stateTicks > 20 && !this.holdsState(this.getState())) {
                 this.setState(IDLE);
             }
             return;

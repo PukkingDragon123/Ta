@@ -69,6 +69,8 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onPlaySound);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onFogColor);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onRenderFog);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(CameraShake::onClientTick);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(CameraShake::onCameraAngles);
         modBus.addListener(TheSiftClient::registerClientExtensions);
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         if (Boolean.getBoolean("thesift.clientsmoke")) {
@@ -106,7 +108,8 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.SIFT_SNIFFER.get(), SiftSnifferRenderer::new);
         event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
         event.registerEntityRenderer(ModEntities.THUMPER.get(), c -> new MiniBossRenderer<Thumper, ThumperModel>(c, new ThumperModel(c.bakeLayer(ModModelLayers.THUMPER)),
-                "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.DAZED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
+                "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.DAZED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null,
+                "thumper_titan"));
         event.registerEntityRenderer(ModEntities.WHISTLER.get(), c -> new MiniBossRenderer<Whistler, WhistlerModel>(c, new WhistlerModel(c.bakeLayer(ModModelLayers.WHISTLER)),
                 "whistler", Whistler.SCALE, 0.6F, (e, s) -> s.bossState == Whistler.STUNNED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
         event.registerEntityRenderer(ModEntities.STRUMMER.get(), c -> new MiniBossRenderer<Strummer, StrummerModel>(c, new StrummerModel(c.bakeLayer(ModModelLayers.STRUMMER)),
