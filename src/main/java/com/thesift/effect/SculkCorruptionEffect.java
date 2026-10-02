@@ -4,6 +4,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
@@ -12,6 +13,22 @@ import net.minecraft.world.entity.LivingEntity;
  * until the world is a pinhole in the black (the darkening is drawn by the client overlay).
  */
 public class SculkCorruptionEffect extends MobEffect {
+    /** The deepest it can go: Sculk Corruption V. */
+    public static final int MAX_AMPLIFIER = 4;
+
+    /**
+     * Adds corruption on top of whatever is already there: the first dose is the given level
+     * (amplifier), every later dose deepens it by one more level, up to V; the time left never
+     * shortens.
+     */
+    public static void stack(LivingEntity target, int firstAmplifier, int duration, @org.jspecify.annotations.Nullable net.minecraft.world.entity.Entity source) {
+        MobEffectInstance had = target.getEffect(com.thesift.registry.ModEffects.SCULK_CORRUPTION);
+        int amp = had == null ? firstAmplifier : Math.min(MAX_AMPLIFIER, had.getAmplifier() + 1);
+        int time = had == null ? duration : Math.max(duration, had.getDuration()) + 40;
+        target.removeEffect(com.thesift.registry.ModEffects.SCULK_CORRUPTION);
+        target.addEffect(new MobEffectInstance(com.thesift.registry.ModEffects.SCULK_CORRUPTION, time, amp), source);
+    }
+
     public SculkCorruptionEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
