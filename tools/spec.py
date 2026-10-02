@@ -326,7 +326,14 @@ item("prism_gem", props="new Item.Properties().rarity(Rarity.RARE)")
 for _a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"prism_{_a}", cls="Item", props=f"new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.{_a.upper()}).rarity(Rarity.RARE)",
          tab="combat", model="armor")
-item("caravan_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")
+# --- B4 gear: Prism tools (item/PrismGear.java holds the material and the sword's reveal)
+for _t, _s in [("sword", "sword(com.thesift.item.PrismGear.TOOL, 3.0F, -2.4F)"), ("pickaxe", "pickaxe(com.thesift.item.PrismGear.TOOL, 1.0F, -2.8F)"),
+               ("axe", "axe(com.thesift.item.PrismGear.TOOL, 5.0F, -3.0F)"), ("shovel", "shovel(com.thesift.item.PrismGear.TOOL, 1.5F, -3.0F)"),
+               ("hoe", "hoe(com.thesift.item.PrismGear.TOOL, -3.5F, 0.0F)")]:
+    item(f"prism_{_t}", cls="Item", props=f"new Item.Properties().{_s}.rarity(Rarity.RARE)", model="handheld",
+         tab="combat" if _t == "sword" else "tools")
+# --- end B4 gear
+item("caravan_spawn_egg",cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")
 # ---------------------------------------------------------------- sea & sky (F + W): kelp, clouds, the Gobbler's drops, fish meat, sushi
 __import__("sea_spec").declare(block, item)
 # ---------------------------------------------------------------- A2 Echoer: the Echoer's Hut and its household

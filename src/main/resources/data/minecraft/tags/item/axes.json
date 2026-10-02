@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:siftite_axe"
+    "thesift:siftite_axe",
+    "thesift:prism_axe"
   ]
 }

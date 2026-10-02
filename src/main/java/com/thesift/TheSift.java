@@ -60,6 +60,7 @@ public class TheSift {
         NeoForge.EVENT_BUS.addListener(com.thesift.world.TemporaryBlocks::onLevelTick);
         com.thesift.music.SongTracker.init(); // songs (agent D): the song tracker + Lullaby/Whale effects
         com.thesift.item.SiftiteGear.register(); // H: Siftite knockback, swim speed and sound-proof armour
+        com.thesift.item.PrismGear.register(); // B4 gear: the Prism Sword reveals nearby monsters
         com.thesift.entity.CreatureLife.register(modBus); // A1 creatures: creatures hear notes, Stomper riders stomp
 
         if (Boolean.getBoolean("thesift.smoketest")) {

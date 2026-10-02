@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:siftite_pickaxe"
+    "thesift:siftite_pickaxe",
+    "thesift:prism_pickaxe"
   ]
 }

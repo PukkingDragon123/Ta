@@ -198,4 +198,5 @@ def generate():
     jukebox()
     __import__('songs').generate()  # songs & instruments (agent D)
     __import__('caravans').generate()  # C: Caravans, music crystals, prism
+    __import__('gear_art').generate()  # B4 gear: prism tool recipes, tags and lore
     print('data ok')

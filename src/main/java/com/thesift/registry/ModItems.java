@@ -257,6 +257,11 @@ public final class ModItems {
     public static final DeferredItem<Item> PRISM_CHESTPLATE = ITEMS.registerItem("prism_chestplate", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.CHESTPLATE).rarity(Rarity.RARE));
     public static final DeferredItem<Item> PRISM_LEGGINGS = ITEMS.registerItem("prism_leggings", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.LEGGINGS).rarity(Rarity.RARE));
     public static final DeferredItem<Item> PRISM_BOOTS = ITEMS.registerItem("prism_boots", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.BOOTS).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_SWORD = ITEMS.registerItem("prism_sword", Item::new, () -> new Item.Properties().sword(com.thesift.item.PrismGear.TOOL, 3.0F, -2.4F).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_PICKAXE = ITEMS.registerItem("prism_pickaxe", Item::new, () -> new Item.Properties().pickaxe(com.thesift.item.PrismGear.TOOL, 1.0F, -2.8F).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_AXE = ITEMS.registerItem("prism_axe", Item::new, () -> new Item.Properties().axe(com.thesift.item.PrismGear.TOOL, 5.0F, -3.0F).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_SHOVEL = ITEMS.registerItem("prism_shovel", Item::new, () -> new Item.Properties().shovel(com.thesift.item.PrismGear.TOOL, 1.5F, -3.0F).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_HOE = ITEMS.registerItem("prism_hoe", Item::new, () -> new Item.Properties().hoe(com.thesift.item.PrismGear.TOOL, -3.5F, 0.0F).rarity(Rarity.RARE));
     public static final DeferredItem<SpawnEggItem> CARAVAN_SPAWN_EGG = ITEMS.registerItem("caravan_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get()));
     public static final DeferredItem<Item> TUBAFISH = ITEMS.registerItem("tubafish", Item::new, () -> new Item.Properties().food(ModSeaFoods.TUBAFISH));
     public static final DeferredItem<Item> COOKED_TUBAFISH = ITEMS.registerItem("cooked_tubafish", Item::new, () -> new Item.Properties().food(ModSeaFoods.COOKED_TUBAFISH));

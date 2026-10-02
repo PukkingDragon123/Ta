@@ -240,14 +240,9 @@ def _lit(shade, lv):
 
 def music_frames(name):
     m = MUSIC[name]
-    import siftite_art  # H: the tools get their own curved silhouettes (the armour keeps diamond's)
-    if name in siftite_art.CURVED:
-        base, line, notes = siftite_art.curved_tool(name)
-        m = dict(lines=[line], notes=notes)
-    else:
-        base = recolour(vanilla('diamond_' + name), TOOL_MAP, name)
-        if name in ('helmet', 'chestplate', 'leggings', 'boots'):
-            siftite_art.echo_lattice(base, (S_RAMP[2], S_RAMP[3]))
+    import gear_art  # B4 gear: angelic Siftite icons (wing blades, feather crests, halos), glinting along their bright edges
+    base, glows = gear_art.siftite_icon(name)
+    m = dict(glows=glows)
     if m.get('detail'):
         dots(base, m['detail'], GEM)
     tracks = [(p, 'line', k * 3) for k, p in enumerate(m.get('lines', []))]
@@ -302,80 +297,11 @@ def tools():
 
 # ---------------------------------------------------------------------------- worn armour
 
-TREBLE = [  # 5 x 11, for the 8 x 12 front of the worn breastplate
-    '...X.',
-    '..X.X',
-    '..X.X',
-    '..XX.',
-    '.XX..',
-    'X.X..',
-    'X.XX.',
-    'X.X.X',
-    '.XXX.',
-    '..X..',
-    'XX...',
-]
-
-
 def armor_layers():
-    """The worn Siftite armour (static: entity textures cannot animate), engraved to match the
-    icons: staff lines wrapping every plate, inlaid pink crotchets, a treble clef on the chest."""
-    def boxfaces(u, v, w, h, d):
-        return {'up': (u + d, v, w, d), 'down': (u + d + w, v, w, d), 'west': (u, v + d, d, h), 'north': (u + d, v + d, w, h),
-                'east': (u + d + w, v + d, d, h), 'south': (u + 2 * d + w, v + d, w, h)}
-
-    def plate(px, rect, lines=(), notes=()):
-        fx, fy, fw, fh = rect
-        for y in range(fh):
-            for x in range(fw):
-                if y == 0 or x == 0:
-                    c = S_RAMP[4]
-                elif y == fh - 1 or x == fw - 1:
-                    c = S_RAMP[1]
-                elif y in lines:
-                    c = S_RAMP[2]
-                elif (x + y) % 4 == 0 and (x - y) % 4 == 0:
-                    c = '#3ff5e6'  # H: an echo-teal glint where the diamond lattice crosses
-                elif (x + y) % 4 == 0 or (x - y) % 4 == 0:
-                    c = mix(S_RAMP[3], '#22c7c4', 0.3)
-                else:
-                    c = mix(S_RAMP[3], S_RAMP[4], 0.35) if y <= fh // 4 else S_RAMP[3]
-                px[fx + x, fy + y] = rgba(c)
-        for (x, y) in notes:  # a crotchet: two-pixel head, stem rising from its right
-            for (dx, dy), c in (((0, 0), NOTE), ((1, 0), NOTE), ((1, -1), NOTE_LO), ((1, -2), NOTE_LO)):
-                if 0 < x + dx < fw - 1 and 0 < y + dy < fh - 1:
-                    px[fx + x + dx, fy + y + dy] = rgba(c)
-
-    staff = (2, 4, 6, 8, 10)
-    hum = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
-    hp = hum.load()
-    # helmet: a two-line staff circling the head, a note on every side
-    for i, (k, r) in enumerate(boxfaces(0, 0, 8, 8, 8).items()):
-        plate(hp, r, (3, 5), [(1 + (i * 3) % 5, 5 if i % 2 else 3)])
-    for (x, y) in ((9, 10), (10, 10), (13, 10), (14, 10)):
-        hp[x, y] = (0, 0, 0, 0)  # visor eye slits
-    for y in range(12, 16):
-        for x in range(10, 14):
-            hp[x, y] = (0, 0, 0, 0)  # open face
-    # breastplate: a full five-line staff wrapping the body, the clef on the front
-    chest = {'north': [], 'south': [(1, 8), (4, 6)], 'west': [(1, 6)], 'east': [(1, 8)]}
-    for k, r in boxfaces(16, 16, 8, 12, 4).items():
-        plate(hp, r, staff if k in chest else (), chest.get(k, ()))
-    for j, row in enumerate(TREBLE):
-        for i, ch in enumerate(row):
-            if ch == 'X':
-                hp[21 + i, 20 + j] = rgba(NOTE_HI if j < 3 else NOTE)
-    # arms and boots: the staff runs on, a note climbing each face
-    for (u, v) in ((40, 16), (0, 16)):
-        for i, (k, r) in enumerate(boxfaces(u, v, 4, 12, 4).items()):
-            plate(hp, r, () if k in ('up', 'down') else (4, 6, 8), [] if k in ('up', 'down') else [(1, 6 if i % 2 else 8)])
-    leg = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
-    lp = leg.load()
-    for k, r in boxfaces(16, 16, 8, 12, 4).items():
-        plate(lp, r, () if k in ('up', 'down') else (2, 4), [(4, 4)] if k in ('north', 'south') else [])
-    for i, (k, r) in enumerate(boxfaces(0, 16, 4, 12, 4).items()):
-        plate(lp, r, () if k in ('up', 'down') else (4, 6, 8), [] if k in ('up', 'down') else [(1, 8 if i % 2 else 6)])
-    return {'entity/equipment/humanoid/siftite': hum, 'entity/equipment/humanoid_leggings/siftite': leg}
+    """The worn Siftite armour (static: entity textures cannot animate), drawn in gear_art: a
+    feathered helm with a halo circlet, wing-pattern pauldrons, folded wings down the back."""
+    import gear_art  # B4 gear
+    return gear_art.siftite_layers()
 
 
 # ============================================================================ materials
