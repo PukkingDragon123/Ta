@@ -54,12 +54,9 @@ public class EnchoerModel extends EntityModel<EnchoerRenderState> {
         float sw = Mth.sin(pos);
         float cw = Mth.cos(pos);
 
-        // --- breathing, plus a deep sigh every ten seconds or so
-        float breathe = Mth.sin(age * 0.06F);
+        // --- a deep sigh every ten seconds or so
         float sighT = (age + s.seed) % 210.0F / 20.0F;
         float sigh = Anim.envelope(sighT, 0.0F, 0.9F, 0.3F, 1.4F) * (1.0F - walk);
-        this.body.yScale = 1.0F + breathe * 0.012F + sigh * 0.03F;
-        this.body.xScale = 1.0F - breathe * 0.006F;
 
         // --- lumbering waddle: the whole mound rocks from foot to foot
         this.body.zRot = sw * 0.07F * walk;

@@ -52,10 +52,6 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         this.leftFin.zRot += Mth.sin(age * 0.6F) * 0.3F;
         this.rightFin.zRot -= Mth.sin(age * 0.6F) * 0.3F;
         this.crest.yRot = Mth.sin(age * speed) * 0.1F;
-        // the bell breathes and flares
-        float breathe = 1.0F + Mth.sin(age * 0.12F) * 0.04F;
-        this.bell.xScale = breathe;
-        this.bell.yScale = breathe;
         // the glowing bell fins ripple like a flower opening and closing
         for (int i = 0; i < 4; i++) {
             this.bellFins[i].xRot = -0.25F + Mth.sin(age * 0.18F + i * 1.6F) * 0.12F - effort * 0.15F;

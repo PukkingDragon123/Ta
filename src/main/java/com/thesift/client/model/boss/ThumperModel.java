@@ -104,7 +104,6 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
         this.hindLeft.xRot = -c * 0.55F * walk;
         this.body.zRot = Mth.sin(pos) * 0.05F * walk;
         this.body.y -= Math.abs(c) * 0.6F * walk;
-        this.body.yScale = 1.0F + Mth.sin(age * 0.07F) * 0.012F;
         // the head swings and looks around
         this.neck.xRot = Mth.sin(age * 0.05F) * 0.05F + Mth.sin(pos) * 0.06F * walk;
         this.head.yRot = s.yRot * Anim.DEG * 0.7F;

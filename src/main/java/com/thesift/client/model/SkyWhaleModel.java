@@ -77,7 +77,6 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
         this.leftCheek.zRot -= Mth.sin(age * 0.07F) * 0.05F;
         this.rightCheek.zRot += Mth.sin(age * 0.07F) * 0.05F;
         for (int i = 0; i < 3; i++) {
-            this.tufts[i].yScale = 1.0F + Mth.sin(age * 0.08F - i * 0.9F) * 0.08F;
             this.tufts[i].zRot = Mth.sin(age * 0.05F - i) * 0.03F;
         }
         this.noseRing.xRot += Mth.sin(age * 0.1F) * 0.2F;

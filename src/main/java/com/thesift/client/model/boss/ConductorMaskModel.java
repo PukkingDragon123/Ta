@@ -37,7 +37,7 @@ public class ConductorMaskModel extends EntityModel<ConductorMaskRenderState> {
         float flex = Mth.sin(age * 0.05F) * 0.06F + k * 0.25F;
         this.leftHorn.zRot += flex;
         this.rightHorn.zRot -= flex;
-        this.crown.yScale = 1.0F + Mth.sin(age * 0.2F) * 0.05F + k * 0.4F;
+        this.crown.yScale = 1.0F + k * 0.4F;
         this.mask.xRot = Mth.sin(age * 0.04F) * 0.08F;
         float shake = Anim.smooth(k) * 0.08F;
         this.mask.x += Mth.sin(age * 4.1F) * shake * 10.0F;

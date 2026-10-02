@@ -44,7 +44,6 @@ public class WhistlingModel extends EntityModel<MinionRenderState> {
         this.head.yRot = s.yRot * Anim.DEG;
         this.head.xRot = s.xRot * Anim.DEG + Mth.sin(age * 0.2F) * 0.05F;
         this.head.zRot = Mth.sin(age * 0.07F) * 0.15F;
-        this.body.yScale = 1.0F + Mth.sin(age * 0.15F) * 0.03F;
         float t = Anim.seconds(s.attack, age);
         if (t >= 0.0F && t < 1.0F) {
             float puff = Anim.envelope(t, 0.0F, 0.5F, 0.1F, 0.2F);

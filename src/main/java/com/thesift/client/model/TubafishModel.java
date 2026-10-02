@@ -48,10 +48,6 @@ public class TubafishModel extends EntityModel<SiftFishRenderState> {
         this.body.xScale = size * (1.0F + wobble);
         this.body.yScale = size * (1.0F - wobble);
         this.body.zScale = size * (1.0F + wobble * 0.5F);
-        // breathing when calm
-        float breath = Mth.sin(age * 0.1F) * 0.03F * (1.0F - p);
-        this.body.xScale += breath;
-        this.body.zScale += breath;
         this.body.xRot = s.xRot * Anim.DEG * 0.5F;
         this.body.y -= p * 2.0F;
         for (int i = 0; i < this.spikes.length; i++) {

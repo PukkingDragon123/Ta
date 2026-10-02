@@ -61,13 +61,12 @@ public class BulbModel extends EntityModel<BulbRenderState> {
         float walk = Math.min(1.0F, s.walkAnimationSpeed * 1.5F);
         float pos = s.walkAnimationPos;
 
-        // --- squash & stretch plus a slow jelly breath
+        // --- squash & stretch
         float sq = Mth.clamp(s.squash, -0.45F, 0.6F);
         float sleepy = s.sleepy ? 1.0F : 0.0F;
-        float breathe = Mth.sin(age * (s.sleepy ? 0.06F : 0.11F)) * (0.025F + sleepy * 0.02F);
         float hurt = s.hasRedOverlay && s.dying <= 0.0F ? 1.0F : 0.0F;
-        float y = 1.0F + sq + breathe - hurt * 0.3F - sleepy * 0.08F;
-        float wide = 1.0F - (sq + breathe) * 0.55F + hurt * 0.18F + sleepy * 0.05F;
+        float y = 1.0F + sq - hurt * 0.3F - sleepy * 0.08F;
+        float wide = 1.0F - sq * 0.55F + hurt * 0.18F + sleepy * 0.05F;
         this.body.yScale = y;
         this.body.xScale = wide;
         this.body.zScale = wide;

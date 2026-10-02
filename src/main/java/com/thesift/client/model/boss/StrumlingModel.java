@@ -38,7 +38,6 @@ public class StrumlingModel extends EntityModel<MinionRenderState> {
             this.right[i].zRot += lift;
         }
         this.abdomen.xRot = Mth.sin(age * 0.2F) * 0.08F;
-        this.abdomen.yScale = 1.0F + Mth.sin(age * 0.25F) * 0.04F;
         this.body.yRot = s.yRot * Anim.DEG * 0.2F;
         float t = Anim.seconds(s.attack, age);
         if (t >= 0.0F && t < 0.8F) {

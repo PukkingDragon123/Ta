@@ -96,11 +96,7 @@ public class StomperModel extends EntityModel<StomperRenderState> {
         this.tail.yRot = Mth.sin(pos) * 0.3F * walk + Mth.sin(age * 0.07F) * 0.15F;
         this.tail.xRot += Mth.sin(age * 0.05F) * 0.05F;
 
-        // --- breathing, croaking, looking around
-        float breath = Mth.sin(age * 0.06F);
-        this.body.yScale *= 1.0F + breath * 0.015F;
-        this.hump.yScale = 1.0F + breath * 0.04F;
-        this.hump.y -= breath * 0.3F;
+        // --- croaking, looking around
         float croak = Math.max(0.0F, Mth.sin(age * 0.045F)) ;
         croak = croak > 0.85F ? (croak - 0.85F) / 0.15F : 0.0F;
         float sac = croak * 0.4F;
