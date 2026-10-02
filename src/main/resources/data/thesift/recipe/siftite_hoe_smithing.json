@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing_transform",
   "addition": "#thesift:siftite_tool_materials",
-  "base": "minecraft:copper_hoe",
+  "base": "minecraft:netherite_hoe",
   "result": {
     "id": "thesift:siftite_hoe"
   },

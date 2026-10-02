@@ -52,6 +52,7 @@ public class TheSift {
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(com.thesift.world.TemporaryBlocks::onLevelTick);
         com.thesift.music.SongTracker.init(); // songs (agent D): the song tracker + Lullaby/Whale effects
+        com.thesift.item.SiftiteGear.register(); // H: Siftite knockback, swim speed and sound-proof armour
 
         if (Boolean.getBoolean("thesift.smoketest")) {
             SmokeTest.registerIfEnabled(); // CI only

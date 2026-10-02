@@ -36,7 +36,7 @@
               "weight": 2
             },
             {
-              "type": "thesift:sift_sniffer",
+              "type": "minecraft:sniffer",
               "count": 1,
               "weight": 2
             }

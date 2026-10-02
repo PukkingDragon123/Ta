@@ -121,7 +121,7 @@ def chest_loot():
     ])
     table('chest', 'chests/temple_vault', [
         pool([item('siftite_upgrade_smithing_template', 1, (1, 2))]),
-        pool([item('chrome_pearl', 8, (2, 4)), item('siftite_ingot', 6, (1, 3)), item('sift_drum', 4), item('echo_frame', 4, (2, 4)),
+        pool([item('chrome_pearl', 8, (2, 4)), item('siftite_ingot', 6, (1, 3)), item('sift_drum', 4), item('sift_gate_frame', 1),
               item('music_disc_lullaby', 3), item('minecraft:enchanted_book', 4, extra=[ENCHANT]), item('star_shard', 6, (2, 4))], (3, 5)),
         pool([item('warden_core', 1), item('minecraft:empty', 7)]),
         pool([item('minecraft:enchanted_golden_apple', 1), item('minecraft:totem_of_undying', 1), item('minecraft:heart_of_the_sea', 1),
@@ -129,7 +129,7 @@ def chest_loot():
     ])
     table('chest', 'chests/deep_shrine', [
         pool([item('warden_core', 1)], condition=chance(0.35)),
-        pool([item('minecraft:echo_shard', 8, (2, 5)), item('minecraft:sculk_sensor', 6, (1, 3)), item('echo_frame', 5, (2, 6)),
+        pool([item('minecraft:echo_shard', 8, (2, 5)), item('minecraft:sculk_sensor', 6, (1, 3)), item('sift_gate_frame', 1),
               item('siftite_ingot', 4, (1, 2)), item('siftite_upgrade_smithing_template', 2), item('glowbell_vine', 6, (2, 4)),
               item('music_disc_lullaby', 2)], (3, 5)),
     ])
@@ -157,13 +157,13 @@ def chest_loot():
 
 def sniffer_and_modifiers():
     # Sniffers in The Sift dig up the dimension's exclusive seeds.
-    table('gift', 'gameplay/sift_sniffer_digging', [pool([item('choir_pod', 3), item('echo_seed', 3), item('pitcher_bulb', 2)])])
-    GA.write(os.path.join(D, 'loot_modifiers', 'sift_sniffer_digging.json'), {
+    table('gift', 'gameplay/sniffer_digging_sift', [pool([item('choir_pod', 3), item('echo_seed', 3), item('pitcher_bulb', 2)])])
+    GA.write(os.path.join(D, 'loot_modifiers', 'sniffer_digging_sift.json'), {
         'type': 'neoforge:add_table',
         'condition': {'type': 'minecraft:all_of', 'terms': [
             {'type': 'neoforge:loot_table_id', 'loot_table_id': 'minecraft:gameplay/sniffer_digging'},
             {'type': 'minecraft:location_check', 'predicate': {'dimension': f'{NS}:the_sift'}}]},
-        'table': f'{NS}:gameplay/sift_sniffer_digging'})
+        'table': f'{NS}:gameplay/sniffer_digging_sift'})
     # Wardens drop a Warden Core; Ancient City chests sometimes hold one.
     table('entity', 'gameplay/warden_core_drop', [pool([item('warden_core')])])
     GA.write(os.path.join(D, 'loot_modifiers', 'warden_core_from_warden.json'), {
@@ -172,7 +172,7 @@ def sniffer_and_modifiers():
         'table': f'{NS}:gameplay/warden_core_drop'})
     table('chest', 'gameplay/ancient_city_extras', [
         pool([item('warden_core')], condition=chance(0.12)),
-        pool([item('echo_frame', 1, (1, 3)), item('minecraft:empty', 2)])])
+        pool([item('sift_gate_frame', 1), item('minecraft:empty', 9)])])
     GA.write(os.path.join(D, 'loot_modifiers', 'ancient_city_extras.json'), {
         'type': 'neoforge:add_table',
         'condition': {'type': 'neoforge:loot_table_id', 'loot_table_id': 'minecraft:chests/ancient_city'},
@@ -206,7 +206,6 @@ def trades():
         trade('pearls_for_template', 'chrome_pearl', 'siftite_upgrade_smithing_template', wants_count=16, max_uses=2, xp=30),
         trade('pearls_for_disc', 'chrome_pearl', 'music_disc_lullaby', wants_count=10, max_uses=1, xp=20),
         trade('pearls_for_slingshot', 'chrome_pearl', 'slingshot', wants_count=8, max_uses=2, xp=15),
-        trade('pearls_for_echo_frames', 'chrome_pearl', 'echo_frame', wants_count=5, gives_count=4, max_uses=4, xp=15),
         trade('shards_for_warden_core', 'star_shard', 'warden_core', wants_count=24, max_uses=1, xp=40, wants2=('chrome_pearl', 16)),
     ]
     for t in common:

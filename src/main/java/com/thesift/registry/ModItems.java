@@ -137,7 +137,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GLOWBELL_VINE = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWBELL_VINE);
     public static final DeferredItem<BlockItem> SIFT_DRUM = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_DRUM);
     public static final DeferredItem<BlockItem> EUPHORY_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.EUPHORY_ALTAR);
-    public static final DeferredItem<BlockItem> ECHO_FRAME = ITEMS.registerSimpleBlockItem(ModBlocks.ECHO_FRAME);
+    public static final DeferredItem<BlockItem> SIFT_GATE_FRAME = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_GATE_FRAME);
     public static final DeferredItem<BlockItem> CONDUCTORS_PODIUM = ITEMS.registerSimpleBlockItem(ModBlocks.CONDUCTORS_PODIUM);
     public static final DeferredItem<BlockItem> ENCORE_SIGIL = ITEMS.registerSimpleBlockItem(ModBlocks.ENCORE_SIGIL);
     public static final DeferredItem<BlockItem> INSTRUMENT_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.INSTRUMENT_ALTAR);
@@ -151,6 +151,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GLOWING_SLIME_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWING_SLIME_BLOCK);
     public static final DeferredItem<BlockItem> SOUL_CHIME = ITEMS.registerSimpleBlockItem(ModBlocks.SOUL_CHIME);
     public static final DeferredItem<BlockItem> MUSICAL_COBWEB = ITEMS.registerSimpleBlockItem(ModBlocks.MUSICAL_COBWEB);
+    public static final DeferredItem<BlockItem> PITCHER_PLANTER = ITEMS.registerSimpleBlockItem(ModBlocks.PITCHER_PLANTER);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -187,7 +188,6 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> ENCHOER_SPAWN_EGG = ITEMS.registerItem("enchoer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.ENCHOER.get()));
     public static final DeferredItem<SpawnEggItem> RIVETER_SPAWN_EGG = ITEMS.registerItem("riveter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.RIVETER.get()));
     public static final DeferredItem<SpawnEggItem> HARMONER_SPAWN_EGG = ITEMS.registerItem("harmoner_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HARMONER.get()));
-    public static final DeferredItem<SpawnEggItem> SIFT_SNIFFER_SPAWN_EGG = ITEMS.registerItem("sift_sniffer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFT_SNIFFER.get()));
     public static final DeferredItem<SpawnEggItem> DICTATOR_SPAWN_EGG = ITEMS.registerItem("dictator_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.DICTATOR.get()));
     public static final DeferredItem<SpawnEggItem> THUMPER_SPAWN_EGG = ITEMS.registerItem("thumper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPER.get()));
     public static final DeferredItem<SpawnEggItem> WHISTLER_SPAWN_EGG = ITEMS.registerItem("whistler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLER.get()));
@@ -228,6 +228,10 @@ public final class ModItems {
     public static final DeferredItem<Item> TUBA_BUBBLE = ITEMS.registerItem("tuba_bubble", Item::new, () -> new Item.Properties());
     public static final DeferredItem<BubbleGunItem> BUBBLE_GUN = ITEMS.registerItem("bubble_gun", BubbleGunItem::new, () -> new Item.Properties().durability(256));
     public static final DeferredItem<Item> SKYSONG_GEM = ITEMS.registerItem("skysong_gem", Item::new, () -> new Item.Properties().rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> PITCHER_NECTAR = ITEMS.registerItem("pitcher_nectar", Item::new, () -> new Item.Properties().food(ModSoups.PITCHER_NECTAR, ModSoups.PITCHER_NECTAR_CONSUMABLE));
+    public static final DeferredItem<Item> LULLABY_SOUP = ITEMS.registerItem("lullaby_soup", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.LULLABY_SOUP, ModSoups.LULLABY_SOUP_CONSUMABLE).usingConvertsTo(Items.BOWL));
+    public static final DeferredItem<Item> ECHO_CHOWDER = ITEMS.registerItem("echo_chowder", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.ECHO_CHOWDER, ModSoups.ECHO_CHOWDER_CONSUMABLE).usingConvertsTo(Items.BOWL));
+    public static final DeferredItem<Item> CHROME_BISQUE = ITEMS.registerItem("chrome_bisque", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.CHROME_BISQUE, ModSoups.CHROME_BISQUE_CONSUMABLE).usingConvertsTo(Items.BOWL));
 
     private ModItems() {}
 }

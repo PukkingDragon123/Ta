@@ -8,11 +8,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "thesift:echo_frame"
+          "name": "thesift:pitcher_planter"
         }
       ],
       "rolls": 1
     }
   ],
-  "random_sequence": "thesift:blocks/echo_frame"
+  "random_sequence": "thesift:blocks/pitcher_planter"
 }

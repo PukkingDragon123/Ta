@@ -1,42 +1,4 @@
 {
-  "entity.sift_sniffer.happy": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.sniffer.happy",
-        "type": "event",
-        "volume": 1.0,
-        "pitch": 1.0
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.sift_sniffer.happy"
-  },
-  "entity.sift_sniffer.plough": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.sniffer.digging",
-        "type": "event",
-        "volume": 1.0,
-        "pitch": 1.1
-      },
-      {
-        "name": "minecraft:dig/gravel1",
-        "volume": 0.8,
-        "pitch": 0.8
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.sift_sniffer.plough"
-  },
-  "entity.sift_sniffer.sniff": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.sniffer.sniffing",
-        "type": "event",
-        "volume": 1.0,
-        "pitch": 1.0
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.sift_sniffer.sniff"
-  },
   "entity.dictator.ambient": {
     "sounds": [
       {

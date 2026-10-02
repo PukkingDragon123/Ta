@@ -450,10 +450,10 @@ public final class ClientSmokeTest {
             return;
         }
         BoundingBox box = start.getBoundingBox();
-        // look at the Echo Frame gate from the far side of the room
+        // look at the shrine gate from the far side of the room
         long gx = 0, gy = 0, gz = 0, n = 0;
         for (BlockPos p : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
-            if (c.sift().getBlockState(p).is(ModBlocks.ECHO_FRAME.get())) {
+            if (PortalFrames.isFrame(c.sift().getBlockState(p))) {
                 gx += p.getX();
                 gy += p.getY();
                 gz += p.getZ();
@@ -462,7 +462,7 @@ public final class ClientSmokeTest {
         }
         BlockPos centre = box.getCenter();
         if (n == 0) {
-            fail("deep shrine has no echo frame");
+            fail("deep shrine has no gate frame");
             c.camera(centre.getX() + 0.5, box.minY() + 3.5, centre.getZ() + 0.5, centre.getX() + 5, box.minY() + 2, centre.getZ());
             return;
         }
@@ -497,11 +497,8 @@ public final class ClientSmokeTest {
         if (baby instanceof net.minecraft.world.entity.AgeableMob ageable) {
             ageable.setAge(-24000);
         }
-        // a tamed, saddled Sift Sniffer
-        if (c.spawn(ModEntities.SIFT_SNIFFER.get(), -3.5, STAGE_Y, STAGE_Z + 8.5, face, false) instanceof com.thesift.entity.SiftSniffer sniffer) {
-            sniffer.setTame(true);
-            sniffer.setItemSlot(net.minecraft.world.entity.EquipmentSlot.SADDLE, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.SADDLE));
-        }
+        // a vanilla Sniffer, the Sift's seed digger
+        c.spawn(net.minecraft.world.entity.EntityTypes.SNIFFER, -3.5, STAGE_Y, STAGE_Z + 8.5, face, false);
         // the Dictator and his orchestra, at the far end of the stage
         c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
         c.spawn(ModEntities.SCULK_HARMONER.get(), 21.5, STAGE_Y + 2.5, STAGE_Z + 6.0, face, false);
@@ -612,7 +609,7 @@ public final class ClientSmokeTest {
         c.run("gamemode spectator @a");
         int x0 = -32, z = 0;
         floor(c, x0 - 6, z - 6, x0 + 8, z + 6);
-        BlockState frame = ModBlocks.ECHO_FRAME.get().defaultBlockState();
+        BlockState frame = ModBlocks.SIFT_GATE_FRAME.get().defaultBlockState();
         for (int dx = -1; dx <= 3; dx++) {
             for (int dy = 0; dy <= 5; dy++) {
                 boolean edge = dx == -1 || dx == 3 || dy == 0 || dy == 5;

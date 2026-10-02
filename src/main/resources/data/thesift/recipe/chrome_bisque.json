@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bowl",
+    "thesift:pitcher_nectar",
+    "thesift:chrome_reeds",
+    "thesift:glowing_slime_ball"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:chrome_bisque"
+  }
+}

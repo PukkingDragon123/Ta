@@ -22,7 +22,11 @@ import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-/** Works out where a Sift portal leads, building a matching Echo Frame portal on first use. */
+/**
+ * Works out where a Sift portal leads. On first use it builds an arrival gate of reinforced
+ * deepslate - an Ancient City gate in miniature - so the way back can never be mined for its
+ * (very expensive) Sift Gate Frames.
+ */
 public final class SiftTeleporter {
     private SiftTeleporter() {}
 
@@ -36,18 +40,19 @@ public final class SiftTeleporter {
         GlobalPos from = GlobalPos.of(current.dimension(), anchor);
         SiftPortalData data = SiftPortalData.get(current.getServer());
         GlobalPos linked = data.linked(from);
-        BlockPos arrival;
-        if (linked != null && linked.dimension() == targetKey && target.getBlockState(linked.pos()).is(ModBlocks.SIFT_PORTAL.get())) {
-            arrival = linked.pos();
+        // the far gate may have been rebuilt or shrunk so its anchor moved: follow it rather than build another
+        BlockPos arrival = linked != null && linked.dimension() == targetKey ? relink(target, linked.pos()) : null;
+        if (arrival != null) {
+            if (!arrival.equals(linked.pos())) {
+                data.link(from, GlobalPos.of(targetKey, arrival));
+            }
         } else {
             Direction.Axis axis = current.getBlockState(portalPos).getOptionalValue(SiftPortalBlock.AXIS).orElse(Direction.Axis.X);
             BlockPos approx = target.getWorldBorder().clampToBounds(entity.getX(), entity.getY(), entity.getZ());
             arrival = buildArrivalPortal(target, approx, axis);
             data.link(from, GlobalPos.of(targetKey, arrival));
         }
-        BlockState arrivalState = target.getBlockState(arrival);
-        Direction.Axis axis = arrivalState.getOptionalValue(SiftPortalBlock.AXIS).orElse(Direction.Axis.X);
-        Vec3 pos = new Vec3(arrival.getX() + (axis == Direction.Axis.X ? 1.0 : 0.5), arrival.getY(), arrival.getZ() + (axis == Direction.Axis.Z ? 1.0 : 0.5));
+        Vec3 pos = PortalFrames.standingSpot(target, arrival);
         final BlockPos ticketPos = arrival;
         return new TeleportTransition(target, pos, Vec3.ZERO, entity.getYRot(), entity.getXRot(), Set.<Relative>of(), e -> {
             e.placePortalTicket(ticketPos);
@@ -58,7 +63,20 @@ public final class SiftTeleporter {
         });
     }
 
-    /** Builds a 4x5 Echo Frame portal with a small Dreamstone landing and returns its anchor. */
+    /** A portal block close to where a linked gate used to be anchored, or null. */
+    private static @Nullable BlockPos relink(ServerLevel level, BlockPos old) {
+        if (level.getBlockState(old).is(ModBlocks.SIFT_PORTAL.get())) {
+            return old;
+        }
+        for (BlockPos p : BlockPos.betweenClosed(old.offset(-3, -3, -3), old.offset(3, 3, 3))) {
+            if (level.getBlockState(p).is(ModBlocks.SIFT_PORTAL.get())) {
+                return PortalFrames.anchorOf(level, p.immutable());
+            }
+        }
+        return null;
+    }
+
+    /** Builds a 4x5 reinforced deepslate gate with a small Dreamstone landing and returns its anchor. */
     public static BlockPos buildArrivalPortal(ServerLevel level, BlockPos approx, Direction.Axis axis) {
         int x = approx.getX(), z = approx.getZ();
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
@@ -70,18 +88,18 @@ public final class SiftTeleporter {
         Direction across = along.getClockWise();
         BlockPos base = new BlockPos(x, y, z);
         BlockState floor = ModBlocks.POLISHED_DREAMSTONE.get().defaultBlockState();
-        BlockState frame = ModBlocks.ECHO_FRAME.get().defaultBlockState();
+        BlockState frame = net.minecraft.world.level.block.Blocks.REINFORCED_DEEPSLATE.defaultBlockState();
         BlockState air = net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
         // Landing platform and head room.
         for (int a = -2; a <= 3; a++) {
             for (int c = -2; c <= 2; c++) {
                 BlockPos f = base.relative(along, a).relative(across, c).below();
-                if (!level.getBlockState(f).isSolidRender()) {
+                if (!level.getBlockState(f).isSolidRender() || !level.getFluidState(f).isEmpty()) {
                     level.setBlock(f, floor, Block.UPDATE_CLIENTS);
                 }
                 for (int h = 0; h < 6; h++) {
                     BlockPos b = base.relative(along, a).relative(across, c).above(h);
-                    if (!level.getBlockState(b).isAir()) {
+                    if (!level.getBlockState(b).isAir() || !level.getFluidState(b).isEmpty()) {
                         level.setBlock(b, air, Block.UPDATE_CLIENTS);
                     }
                 }

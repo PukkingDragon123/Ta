@@ -240,7 +240,14 @@ def _lit(shade, lv):
 
 def music_frames(name):
     m = MUSIC[name]
-    base = recolour(vanilla('diamond_' + name), TOOL_MAP, name)
+    import siftite_art  # H: the tools get their own curved silhouettes (the armour keeps diamond's)
+    if name in siftite_art.CURVED:
+        base, line, notes = siftite_art.curved_tool(name)
+        m = dict(lines=[line], notes=notes)
+    else:
+        base = recolour(vanilla('diamond_' + name), TOOL_MAP, name)
+        if name in ('helmet', 'chestplate', 'leggings', 'boots'):
+            siftite_art.echo_lattice(base, (S_RAMP[2], S_RAMP[3]))
     if m.get('detail'):
         dots(base, m['detail'], GEM)
     tracks = [(p, 'line', k * 3) for k, p in enumerate(m.get('lines', []))]
@@ -327,6 +334,10 @@ def armor_layers():
                     c = S_RAMP[1]
                 elif y in lines:
                     c = S_RAMP[2]
+                elif (x + y) % 4 == 0 and (x - y) % 4 == 0:
+                    c = '#3ff5e6'  # H: an echo-teal glint where the diamond lattice crosses
+                elif (x + y) % 4 == 0 or (x - y) % 4 == 0:
+                    c = mix(S_RAMP[3], '#22c7c4', 0.3)
                 else:
                     c = mix(S_RAMP[3], S_RAMP[4], 0.35) if y <= fh // 4 else S_RAMP[3]
                 px[fx + x, fy + y] = rgba(c)
@@ -1528,18 +1539,6 @@ def spawn_eggs():
         12: '......ccCC......',
     }, {'y': ('#ffe25a', '#6a2a10'), 'o': ('#ff8a3d', '#6a2a10'), 'E': '#1a1830', 'h': '#ffffff', 'l': '#ffe98a', 'b': '#ffd23f',
         'B': '#c99a1f', 'c': '#ffc4d4', 'C': '#f0a0b8'})
-    E['sift_sniffer'] = egg(['#4a1410', '#6a2018', '#8c2f23', '#b04a34'], '#2a0a08', {
-        1: '......gGGg......',
-        2: '.....gGGGgg.....',
-        3: '....gGgGggdg....',
-        4: '...gggGgggdgd...',
-        5: '...d.g....g.d...',
-        7: '.....E....E.....',
-        9: '......nnnn......',
-        10: '.....nNnnNn.....',
-        11: '......nnnn......',
-    }, {'g': ('#3f9d80', '#143a30'), 'G': ('#6ac8a0', '#143a30'), 'd': ('#2a6a58', '#143a30'), 'E': '#120604', 'n': '#f2b232',
-        'N': '#a86a12'})
     E['dictator'] = egg(['#200912', '#2e0e1a', '#3a1322', '#55203a'], '#0c0408', {
         0: '...l........l...',
         1: '..hh........hh..',
@@ -1771,6 +1770,8 @@ def all_items():
     out['cooked_kazoo_fish'] = kazoo_fish(cooked=True)
     out.update(spawn_eggs())
     out.update(__import__('songs').art())  # songs & instruments (agent D)
+    import plants_h_art  # H: Pitcher Nectar and the three Pitcher soups
+    out.update(plants_h_art.item_sprites())
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

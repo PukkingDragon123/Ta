@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:pitcher_bulb"
+    "thesift:pitcher_bulb",
+    "thesift:pitcher_nectar"
   ]
 }

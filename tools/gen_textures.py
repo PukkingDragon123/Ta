@@ -493,18 +493,6 @@ def functional():
         for x in range(16):
             gem.set(x, y, iridescent(x, y, 0.5, 0.6))
     out('block/euphory_altar_gem', gem)
-    # echo frame
-    ef = bricks(HUSH[1:], HUSH_MORTAR, 111, rows=2, width=8)
-    for i in range(16):
-        ef.set(i, 7, hx('#1ec8c8')); ef.set(i, 15, hx('#0f3945'))
-        if i % 4 == 2:
-            ef.set(i, 3, hx('#5ff5f0'))
-    out('block/echo_frame_side', ef)
-    eft = polished(HUSH, 112)
-    for i in range(3, 13):
-        eft.set(i, 7, hx('#1ec8c8')); eft.set(7, i, hx('#1ec8c8'))
-    eft.set(7, 7, hx('#dffffc'))
-    out('block/echo_frame_top', eft)
     # portal: 16 animated frames of swirling cyan/pink soul energy
     frames = 16
     p = Image.new('RGBA', (16, 16 * frames))
@@ -775,7 +763,7 @@ def items():
         rows[py][px_] = 'g'
         out(f'item/slingshot_pulling_{i}', pal_sprite([''.join(r) for r in rows], dict(base_keys, g=hx('#e8ff9a'))))
     eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
-            'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'), 'sift_sniffer': ('#8c2f23', '#3f9d80'),
+            'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'),
             'dictator': ('#141e2c', '#e6e1d3')}
     # modern-style portrait eggs at 32x: each egg wears its mob's face (and ears, antlers, crests)
     E = {
@@ -794,8 +782,6 @@ def items():
         'harmoner': dict(face=['e........e', 'e........e', '...bbbb...', '...bbbb...', '....BB....'],
                          top=['.t..t..t.', '.c..c..c.', '..c.c.c..', '...ccc...'],
                          keys={'e': '#1a1830', 'b': '#ffd23f', 'B': '#c99a1f', 't': '#ff8a3d', 'c': '#ffd86b'}),
-        'sift_sniffer': dict(face=['..e....e..', '..........', '...nnnn...', '...nNNn...', '...nnnn...'],
-                             top=['.gggggggg.', 'gGggGggGgg', 'gggggggggg'], keys={'e': '#1a1a1a', 'n': '#f2b232', 'N': '#a86a12', 'g': '#3f9d80', 'G': '#2d7a62'}),
         'dictator': dict(face=['.mmmmmmmm.', 'mEEmmmmEEm', 'mEgmmmmgEm', 'mmmmmmmmmm', 'mmmsmmsmmm', 'mmmvvvvmmm', '.mmmmmmmm.'],
                          top=['...g....', 'g..h..g.', 'h..h..h.', 'h.hh.hh.'],
                          keys={'m': '#e6e1d3', 'E': '#04080c', 'g': '#2ef2e2', 's': '#b9b2a0', 'v': '#04080c', 'h': '#141e2c'}),
@@ -1552,45 +1538,6 @@ def codex():
 # ================================================================== sniffer saddle
 
 
-def sniffer_saddle():
-    """Saddle overlay for the vanilla Sniffer model (192x192). Painted onto the outer fur cube's
-    faces: top at (102, 0) 25x40, west side at (62, 40) 40x24, east side at (127, 40) 40x24."""
-    t = Tex(192, 192)
-    leather = [hx('#4a2a12'), hx('#5c3619'), hx('#7b4a26'), hx('#9b6436'), hx('#b97e48')]
-    cloth = [hx('#b8404f'), hx('#e0606c'), hx('#f37d84'), hx('#ffa9aa')]
-    gold, iron = hx('#ffd97a'), hx('#c8c8d0')
-    ux, vy = 102, 0
-    # coral blanket with a gold hem, under the seat
-    for v in range(10, 30):
-        for u in range(3, 22):
-            edge = v in (10, 29) or u in (3, 21)
-            t.set(ux + u, vy + v, gold if edge else cloth[2] if (u + v) % 4 else cloth[1])
-    # the leather seat with a raised rim, stitching and a lit front edge
-    for v in range(13, 27):
-        for u in range(6, 19):
-            rim = v in (13, 26) or u in (6, 18)
-            c = leather[1] if rim else leather[2]
-            if v == 14 and 7 <= u <= 17:
-                c = leather[3]
-            if (u in (8, 16) and 15 <= v <= 24 and v % 2 == 0):
-                c = leather[4]
-            t.set(ux + u, vy + v, c)
-    t.set(ux + 12, vy + 20, iron)
-    # blanket and girth straps down both flanks
-    for fx in (62, 127):
-        for u in range(10, 31):
-            for v in range(40, 44):
-                edge = v == 43 or u in (10, 30)
-                t.set(fx + u, v, gold if edge else cloth[2] if v < 42 else cloth[1])
-        for u in range(19, 22):
-            for v in range(44, 58):
-                t.set(fx + u, v, leather[1] if u == 21 else leather[2])
-        for u in range(18, 23):
-            t.set(fx + u, 51, iron)
-        t.set(fx + 20, 52, iron)
-    out('entity/sift_sniffer/saddle', t)
-
-
 # ================================================================== armor layers
 
 
@@ -2089,7 +2036,6 @@ def main():
     functional()
     items()
     armor_layers()
-    sniffer_saddle()
     dictator_things()
     stage_things()
     codex()
@@ -2101,6 +2047,9 @@ def main():
     corruption_overlays()
     boss_bar()
     mini_boss_bars()
+    import plants_h_art  # H: the Sift Gate Frame and the Pitcher Planter
+    for name, img in plants_h_art.block_textures().items():
+        out(name, img)
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]

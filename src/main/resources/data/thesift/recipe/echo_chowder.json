@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bowl",
+    "thesift:pitcher_nectar",
+    "thesift:echo_orchid",
+    "thesift:glowcap"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:echo_chowder"
+  }
+}

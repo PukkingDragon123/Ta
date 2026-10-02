@@ -261,10 +261,7 @@ public class Stomper extends TamableAnimal {
         if (e instanceof TamableAnimal t && t.isTame()) {
             return true;
         }
-        if (e instanceof OwnableEntity o && o.getOwnerReference() != null) {
-            return true;
-        }
-        return e instanceof SiftSniffer s && s.isTame();
+        return e instanceof OwnableEntity o && o.getOwnerReference() != null;
     }
 
     // ------------------------------------------------------------------ ticking

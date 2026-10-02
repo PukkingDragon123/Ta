@@ -4,7 +4,6 @@ import com.thesift.entity.Bulb;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
 import com.thesift.entity.Sifter;
-import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.Slumbler;
 import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.OrchestraMinion;
@@ -16,9 +15,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
@@ -73,12 +70,7 @@ public final class CodexEntries {
                 h.singAnimation.start(h.tickCount);
             }
         }));
-        l.add(mob(CREATURES, "sift_sniffer", ModEntities.SIFT_SNIFFER, (e, t) -> {
-            if (e instanceof SiftSniffer s && t == 1) {
-                s.setTame(true);
-                s.setItemSlot(EquipmentSlot.SADDLE, new ItemStack(Items.SADDLE));
-            }
-        }));
+        l.add(mob(CREATURES, "sniffer", () -> net.minecraft.world.entity.EntityTypes.SNIFFER, (e, t) -> { }));
         l.add(mob(CREATURES, "enchoer", ModEntities.ENCHOER, (e, t) -> { }));
         l.add(mob(CREATURES, "slumbler", ModEntities.SLUMBLER, (e, t) -> {
             if (e instanceof Slumbler s && t % 120 == 20) s.yawnAnimation.start(s.tickCount);
@@ -137,13 +129,16 @@ public final class CodexEntries {
         l.add(thing(PLACES, "musical_temple", ModItems.HARMONY_STONE));
         l.add(thing(PLACES, "chrome_well", ModItems.CHROME_PEARL));
         l.add(thing(PLACES, "ruins", ModItems.DREAM_JOURNAL_FRAGMENT));
-        l.add(thing(PLACES, "deep_shrine", ModItems.ECHO_FRAME));
+        l.add(thing(PLACES, "deep_shrine", ModItems.SIFT_GATE_FRAME));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
         l.add(thing(MAGIC, "euphory_altar", ModItems.EUPHORY_ALTAR));
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));
         l.add(thing(MAGIC, "flora", () -> ModBlocks.CORAL_BUSH.get().asItem()));
+        // H: where the Sift's seeds grow, and the potted pitchers that make its soups
+        l.add(thing(MAGIC, "sift_gardening", ModItems.ECHO_SEED));
+        l.add(thing(MAGIC, "pitcher_planter", ModItems.PITCHER_PLANTER));
         // ---- the Dictator
         l.add(mob(DICTATOR, "dictator", ModEntities.DICTATOR, (e, t) -> {
             if (e instanceof Dictator d) {

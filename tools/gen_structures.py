@@ -46,7 +46,8 @@ ALTAR = B('euphory_altar')
 SNARE = B('dream_snare', spent='false')
 CRUMBLE = B('crumbling_dreamstone')
 SEAL = B('harmony_seal')
-FRAME = B('echo_frame')
+FRAME = B('minecraft:reinforced_deepslate')  # an ancient gate: the way home can't be mined for frames
+KEYSTONE = B('sift_gate_frame')
 SENSOR = B('minecraft:sculk_sensor', power=0, sculk_sensor_phase='inactive', waterlogged='false')
 SCULK = B('minecraft:sculk')
 FLOWERS = [B('lullaby_bell', resonating='false'), B('dreambloom', resonating='false'), B('soulpetal', resonating='false'),
@@ -442,11 +443,11 @@ def deep_shrine(seed, boss=False):
     b.fill(0, 0, 0, S - 1, H - 1, S - 1, HUSH_BR, hollow=True, pick=b.mix((HUSH_BR, 8), (HUSH_CR, 3), (SCULK, 2)))
     b.fill(1, 0, 1, S - 2, 0, S - 2, HUSH_TILE, pick=b.mix((HUSH_TILE, 8), (SCULK, 2)))
     c = S // 2
-    # an Echo Frame gate on the north wall: the way home
+    # an ancient gate on the north wall, capped with Sift Gate Frame keystones: the way home
     for dx in range(-2, 3):
         for dy in range(1, 7):
             edge = abs(dx) == 2 or dy in (1, 6)
-            b.set(c + dx, dy, 2, FRAME if edge else AIR)
+            b.set(c + dx, dy, 2, (KEYSTONE if dy == 6 and abs(dx) < 2 else FRAME) if edge else AIR)
     b.set(c, 1, 5, DRUM)
     for (x, z) in ((c - 3, 4), (c + 3, 4), (c - 3, 7), (c + 3, 7)):
         b.set(x, 1, z, SENSOR)
@@ -469,7 +470,7 @@ def deep_shrine(seed, boss=False):
     b.set(c + 4, 1, c, spawner('strumling', 3, 6, 10))
     if boss:
         b.set(c, 0, c + 2, sigil(2))
-    b.decay(0.02, min_y=2, protect=('thesift:echo_frame', 'minecraft:chest', 'thesift:sift_drum', 'minecraft:sculk_sensor', 'minecraft:spawner',
+    b.decay(0.02, min_y=2, protect=('minecraft:reinforced_deepslate', 'thesift:sift_gate_frame', 'minecraft:chest', 'thesift:sift_drum', 'minecraft:sculk_sensor', 'minecraft:spawner',
                                      'minecraft:cobweb'))
     return b
 

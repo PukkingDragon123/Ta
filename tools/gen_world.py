@@ -372,11 +372,12 @@ def features():
                               'state': state('cobbled_dreamstone')})
     placed('dream_boulder', 'dream_boulder', [rarity(3)] + ON_SURFACE)
     # ores
-    feature('ore_serbim', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 0.5, 'size': 5, 'targets': [
+    # Serbim (Siftite) ore is extremely rare: small, always buried, and only in one chunk in three
+    feature('ore_serbim', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 1.0, 'size': 3, 'targets': [
         {'state': state('serbim_ore'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('dreamstone')}},
         {'state': state('deep_serbim_ore'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('hushslate')}}]})
-    placed('ore_serbim', 'ore_serbim', [count(6), {'type': 'minecraft:in_square'}, {'type': 'minecraft:height_range', 'height': {
-        'type': 'minecraft:trapezoid', 'max_inclusive': {'absolute': 80}, 'min_inclusive': {'absolute': -64}}}, BIOME])
+    placed('ore_serbim', 'ore_serbim', [rarity(3), {'type': 'minecraft:in_square'}, {'type': 'minecraft:height_range', 'height': {
+        'type': 'minecraft:trapezoid', 'max_inclusive': {'absolute': 16}, 'min_inclusive': {'absolute': -64}}}, BIOME])
     feature('ore_hushslate_blob', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 0.0, 'size': 48, 'targets': [
         {'state': state('hushslate', axis='y'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('dreamstone')}}]})
     placed('ore_hushslate_blob', 'ore_hushslate_blob', [count(2), {'type': 'minecraft:in_square'}, {'type': 'minecraft:height_range', 'height': {
@@ -470,7 +471,7 @@ DREAMY_PARTICLES = [('drifting_soul', 0.0008), ('dream_pollen', 0.0012), ('glow_
 
 def biomes():
     biome('sift_plains', fog='#aef0e2', sky='#5ed6c6', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
-          spawns=mobs(creature=[('bulb', 12, 2, 4), ('sift_sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]
+          spawns=mobs(creature=[('bulb', 12, 2, 4), ('minecraft:sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]
                       + [('stomper', 2, 1, 3), ('sky_whale', 1, 1, 1)],
                       water=[('fanfare_eel', 2, 1, 1), ('tubafish', 2, 1, 1)], water_ambient=[('kazoo_fish', 8, 3, 6)]),
           parts=particles(*DREAMY_PARTICLES),
@@ -478,13 +479,13 @@ def biomes():
                 [(9, 'trees_sift_plains'), (9, 'patch_coral_thicket'), (9, 'patch_coral_bush'), (9, 'patch_sift_flowers'),
                  (9, 'patch_drift_petals'), (9, 'patch_pitcher_bulb_bush'), (9, 'patch_glimmer_sprouts')] + [(9, 'patch_hummingbloom')])
     biome('forest_mountains', fog='#a2e8de', sky='#5ed6c6', water='#7fe8ff', grass='#4fc9b8', foliage='#5fd8d0', temp=0.5, down=0.8,
-          spawns=mobs(creature=[('bulb', 6, 2, 3), ('sift_sniffer', 4, 1, 2), ('enchoer', 2, 1, 1), ('harmoner', 6, 1, 3)]),
+          spawns=mobs(creature=[('bulb', 6, 2, 3), ('minecraft:sniffer', 4, 1, 2), ('enchoer', 2, 1, 1), ('harmoner', 6, 1, 3)]),
           parts=particles(('lullwood_leaf', 0.002), ('drifting_soul', 0.002), ('sift_mist', 0.001), ('glow_dust', 0.002), ('wishing_star', 0.00012)),
           feats=[(2, 'dreamstone_spire'), (2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_forest_mountains'), (9, 'patch_blushgrass'), (9, 'patch_sift_flowers'), (9, 'patch_glowcap_surface'),
                  (9, 'patch_glimmer_sprouts')])
     biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
-          spawns=mobs(creature=[('bulb', 2, 1, 2), ('sift_sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 3)]),
+          spawns=mobs(creature=[('bulb', 2, 1, 2), ('minecraft:sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 3)]),
           parts=particles(('dream_pollen', 0.003), ('glow_dust', 0.0015), ('wishing_star', 0.0002)),
           feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_dune_scrub'), (9, 'patch_pitcher_bulb_bush')])
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,

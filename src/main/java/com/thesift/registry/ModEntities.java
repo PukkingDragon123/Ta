@@ -6,7 +6,6 @@ import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
-import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
@@ -36,8 +35,6 @@ public final class ModEntities {
             MobCategory.MONSTER, b -> b.sized(0.8F, 1.9F).eyeHeight(0.4F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Harmoner>> HARMONER = ENTITIES.registerEntityType("harmoner", Harmoner::new,
             MobCategory.CREATURE, b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
-    public static final DeferredHolder<EntityType<?>, EntityType<SiftSniffer>> SIFT_SNIFFER = ENTITIES.registerEntityType("sift_sniffer",
-            SiftSniffer::new, MobCategory.CREATURE, b -> b.sized(1.9F, 1.75F).eyeHeight(1.05F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,
             MobCategory.MONSTER, b -> b.sized(0.9F, 3.8F).eyeHeight(3.3F).clientTrackingRange(16).fireImmune());
     /** Summoned by the Conductor's Staff: circles its summoner and sings buffs over them. */

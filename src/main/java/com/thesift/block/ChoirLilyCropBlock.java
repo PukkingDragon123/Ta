@@ -28,6 +28,12 @@ public class ChoirLilyCropBlock extends SiftCropBlock {
         }
     }
 
+    /** Choir Lilies sing to the sky: a pod under a roof never sprouts. */
+    @Override
+    protected boolean likesHabitat(net.minecraft.world.level.LevelReader level, BlockPos pos) {
+        return PlantHabitat.openSky(level, pos);
+    }
+
     @Override
     protected ItemStack seed() {
         return new ItemStack(ModItems.CHOIR_POD.get());

@@ -36,7 +36,7 @@
               "weight": 6
             },
             {
-              "type": "thesift:sift_sniffer",
+              "type": "minecraft:sniffer",
               "count": {
                 "type": "minecraft:uniform",
                 "min_inclusive": 1,

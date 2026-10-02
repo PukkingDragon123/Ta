@@ -302,7 +302,7 @@ public final class SmokeTest {
                         TheSift.LOGGER.info("SMOKE: chrome_well after manual placement: polished dreamstone {}", polished);
                     }
                     if (name.equals("deep_shrine")) {
-                        check(mine.getOrDefault("echo_frame", 0) > 0, "natural deep shrine keeps its echo frame gate");
+                        check(mine.getOrDefault("sift_gate_frame", 0) > 0, "natural deep shrine keeps its gate frame keystones");
                     }
                 }
             }
@@ -343,12 +343,12 @@ public final class SmokeTest {
     // ------------------------------------------------------------------ portals
 
     private static void portals(MinecraftServer server, ServerLevel sift) {
-        // an Echo Frame portal built by hand in The Sift, filled via the same code the drum ritual uses
+        // a Sift Gate Frame portal built by hand in The Sift, filled via the same code the drum ritual uses
         BlockPos base = new BlockPos(0, sift.getHeight(Heightmap.Types.WORLD_SURFACE, 0, 0) + 1, 0);
         for (int dx = -1; dx <= 2; dx++) {
             for (int dy = 0; dy <= 4; dy++) {
                 boolean edge = dx == -1 || dx == 2 || dy == 0 || dy == 4;
-                sift.setBlockAndUpdate(base.offset(dx, dy, 0), edge ? ModBlocks.ECHO_FRAME.get().defaultBlockState() : Blocks.AIR.defaultBlockState());
+                sift.setBlockAndUpdate(base.offset(dx, dy, 0), edge ? ModBlocks.SIFT_GATE_FRAME.get().defaultBlockState() : Blocks.AIR.defaultBlockState());
             }
         }
         PortalFrames.Frame frame = PortalFrames.find(sift, base.above(), 12);
@@ -412,7 +412,7 @@ public final class SmokeTest {
 
     private static void spawnMobs(ServerLevel sift) {
         List<EntityType<?>> types = List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModEntities.ENCHOER.get(),
-                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.SIFT_SNIFFER.get(), ModEntities.THUMPER.get(),
+                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.THUMPER.get(),
                 ModEntities.WHISTLER.get(), ModEntities.STRUMMER.get(), ModEntities.SCULK_PARASITE.get(), ModEntities.WHISTLING.get(), ModEntities.STRUMLING.get());
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bowl",
+    "thesift:pitcher_nectar",
+    "thesift:lullaby_bell",
+    "thesift:choir_pod"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:lullaby_soup"
+  }
+}

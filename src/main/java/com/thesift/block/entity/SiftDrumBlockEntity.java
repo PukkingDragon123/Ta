@@ -4,6 +4,7 @@ import com.thesift.block.SiftDrumBlock;
 import com.thesift.portal.GateAwakening;
 import com.thesift.portal.PortalFrames;
 import com.thesift.registry.ModBlockEntities;
+import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
@@ -80,6 +81,8 @@ public class SiftDrumBlockEntity extends BlockEntity {
     private long lastHint = -10000L;
     private final List<BlockPos> sensors = new ArrayList<>();
     private PortalFrames.@Nullable Frame frame;
+    /** Set when loaded from disk mid-opening; the next server tick picks the opening back up. */
+    private boolean resumeOpening;
 
     // The opening. `opening`, `gateCentre` and `gateSpan` are synced to clients for the camera.
     /** Ticks into the opening, or -1. */
@@ -113,6 +116,12 @@ public class SiftDrumBlockEntity extends BlockEntity {
         if (f == null) {
             player.sendOverlayMessage(Component.translatable("message.thesift.drum.no_frame"));
             level.playSound(null, this.worldPosition, SoundEvents.SCULK_CLICKING_STOP, SoundSource.BLOCKS, 1.0F, 0.6F);
+            return false;
+        }
+        if (PortalFrames.isOpen(level, f)) {
+            // the gate already stands open: keep the core for another one
+            player.sendOverlayMessage(Component.translatable("message.thesift.drum.already_open"));
+            level.playSound(null, this.worldPosition, SoundEvents.SCULK_CLICKING_STOP, SoundSource.BLOCKS, 1.0F, 0.9F);
             return false;
         }
         this.sensors.clear();
@@ -274,6 +283,15 @@ public class SiftDrumBlockEntity extends BlockEntity {
     }
 
     private void tick(ServerLevel level) {
+        if (this.resumeOpening) {
+            // the world was saved while the gate was waking (or between the last round and the
+            // opening): carry on instead of leaving a half-closed gate and a spent-looking drum
+            this.resumeOpening = false;
+            if (this.phase == Phase.IDLE && this.round >= ROUNDS && this.getBlockState().getValue(SiftDrumBlock.CORE)) {
+                this.beginOpening(level);
+                return;
+            }
+        }
         if (this.phase == Phase.OPENING) {
             // the core is spent by now; nothing stops the gate
             this.tickOpening(level);
@@ -406,17 +424,17 @@ public class SiftDrumBlockEntity extends BlockEntity {
     // ------------------------------------------------------------------ the gate wakes
 
     private void beginOpening(ServerLevel level) {
-        PortalFrames.Frame f = this.frame;
+        // the frame may have been rebuilt, extended or broken during the rounds: look again
+        PortalFrames.Frame f = PortalFrames.find(level, this.worldPosition, 16);
         if (f == null) {
-            f = PortalFrames.find(level, this.worldPosition, 16);
-            if (f == null) {
-                // no gate any more: the drum keeps its core and waits
-                this.phase = Phase.IDLE;
-                this.setChanged();
-                return;
-            }
-            this.frame = f;
+            // no gate any more: the drum keeps its core (and its won rounds) and waits to be struck again
+            this.phase = Phase.IDLE;
+            this.frame = null;
+            this.message(level, "message.thesift.drum.no_frame", 0);
+            this.setChanged();
+            return;
         }
+        this.frame = f;
         this.prepareGate(f);
         this.phase = Phase.OPENING;
         this.opening = 0;
@@ -693,6 +711,24 @@ public class SiftDrumBlockEntity extends BlockEntity {
 
     /** The gate is whole: A major, a soft boom, rings of light, and the core is spent. */
     private void climax(ServerLevel level, PortalFrames.Frame f, Vec3 c) {
+        BlockPos probe = f.interior().iterator().next();
+        if (!PortalFrames.flood(level, probe, f.axis()).valid()) {
+            // the frame was broken while the gate closed: the membrane tears, the core survives
+            for (BlockPos b : f.interior()) {
+                if (level.getBlockState(b).is(ModBlocks.SIFT_PORTAL.get())) {
+                    level.setBlock(b, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                }
+            }
+            level.playSound(null, c.x, c.y, c.z, ModSounds.RHYTHM_FAIL.get(), SoundSource.BLOCKS, 2.0F, 0.6F);
+            this.message(level, "message.thesift.drum.gate_broken", 0);
+            this.phase = Phase.IDLE;
+            this.opening = -1;
+            this.rimGroups = List.of();
+            this.rings = List.of();
+            this.ringsPlaced = 0;
+            this.sync();
+            return;
+        }
         // whatever happened to the rings, the gate is complete now
         PortalFrames.fill(level, f);
         this.ringsPlaced = this.rings.size();
@@ -819,12 +855,14 @@ public class SiftDrumBlockEntity extends BlockEntity {
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("Round", this.round);
+        output.putBoolean("Waking", this.phase == Phase.OPENING);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.round = input.getIntOr("Round", 0);
+        this.resumeOpening = input.getBooleanOr("Waking", false) || this.round >= ROUNDS;
         // only ever in the update tag sent to clients, never on disk
         this.opening = input.getIntOr("Opening", -1);
         double gx = input.getDoubleOr("GateX", Double.NaN);

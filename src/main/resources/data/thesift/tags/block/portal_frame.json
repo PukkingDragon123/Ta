@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:echo_frame",
+    "thesift:sift_gate_frame",
     "minecraft:reinforced_deepslate"
   ]
 }

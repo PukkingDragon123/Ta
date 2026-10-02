@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing_transform",
   "addition": "#thesift:siftite_tool_materials",
-  "base": "minecraft:copper_spear",
+  "base": "minecraft:netherite_spear",
   "result": {
     "id": "thesift:siftite_spear"
   },

@@ -447,8 +447,6 @@ EGGS = {
                                           top=[(capsule(11, 7, 8, 1.5, 1.2) | capsule(21, 7, 24, 1.5, 1.2), '#1fa39b')])),
     'harmoner': ('#e8577f', '#ffd23f', dict(face=['e........e', 'e........e', '...bbbb...', '...bbbb...', '....BB....'], keys={'e': '#1a1830', 'b': '#ffd23f', 'B': '#c99a1f'},
                                            top=[(capsule(16, 6, 16, 0.8, 1.3) | capsule(13, 6, 11, 1.5, 1.1) | capsule(19, 6, 21, 1.5, 1.1), '#ff8a3d')])),
-    'sift_sniffer': ('#8c2f23', '#3f9d80', dict(face=['..e....e..', '..........', '...nnnn...', '...nNNn...', '...nnnn...'], keys={'e': '#1a1a1a', 'n': '#f2b232', 'N': '#a86a12'},
-                                               top=[(ellipse(16, 8, 9, 4), '#3f9d80')])),
     'dictator': ('#3a1322', '#b89a52', dict(face=['bb......bb', '.ee....ee.', '.eE....Ee.', '..........', '....nn....', 'mmmmmmmmmm', 'mfmmmmmmfm', '.mmmmmmmm.'],
                                            keys={'b': '#170810', 'e': '#04080c', 'E': '#2ef2e2', 'n': '#04080c', 'm': '#04080c', 'f': '#f4f0e5'},
                                            top=[(capsule(10, 8, 5, 3, 1.6) | capsule(5, 3, 7, 0.8, 1.1) | capsule(22, 8, 27, 3, 1.6) | capsule(27, 3, 25, 0.8, 1.1), '#e3ddcc')])),

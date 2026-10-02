@@ -7,7 +7,6 @@ import com.thesift.block.entity.SiftDrumBlockEntity;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
-import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.boss.Dictator;
 import com.thesift.block.entity.ConductorsPodiumBlockEntity;
 import com.thesift.portal.PortalFrames;
@@ -32,7 +31,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -165,17 +163,21 @@ final class MechanicsTest {
         check(found >= 4, "harmoner: fed Harmoners find the structures of their colour (" + found + "/" + Harmoner.VARIANTS + ")");
     }
 
+    /** A vanilla Sniffer digging in The Sift turns up the dimension's own seeds (the loot modifier on sniffer_digging). */
     private void checkSniffer() {
-        SiftSniffer s = ModEntities.SIFT_SNIFFER.get().create(this.sift, EntitySpawnReason.COMMAND);
+        net.minecraft.world.entity.animal.sniffer.Sniffer s = EntityTypes.SNIFFER.create(this.sift, EntitySpawnReason.COMMAND);
         if (s == null) {
             check(false, "sniffer: created");
             return;
         }
-        check(!s.canUseSlot(EquipmentSlot.SADDLE), "sniffer: a wild Sniffer refuses the saddle");
-        s.setTame(true);
-        check(s.canUseSlot(EquipmentSlot.SADDLE), "sniffer: a tamed Sniffer accepts a saddle");
-        s.setItemSlot(EquipmentSlot.SADDLE, new ItemStack(Items.SADDLE));
-        check(s.isSaddled(), "sniffer: saddled");
+        s.snapTo(0.5, 100.0, 0.5, 0.0F, 0.0F);
+        List<ItemStack> dug = new java.util.ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            s.dropFromGiftLootTable(this.sift, net.minecraft.world.level.storage.loot.BuiltInLootTables.SNIFFER_DIGGING, (l, stack) -> dug.add(stack));
+        }
+        boolean siftSeed = dug.stream().anyMatch(st -> st.is(ModItems.CHOIR_POD.get()) || st.is(ModItems.ECHO_SEED.get()) || st.is(ModItems.PITCHER_BULB.get()));
+        TheSift.LOGGER.info("SMOKE: a Sniffer digging in The Sift found {}", dug);
+        check(siftSeed, "sniffer: vanilla Sniffers dig up Sift seeds in The Sift");
         s.discard();
     }
 

@@ -49,9 +49,13 @@ player needs it too.
 6. Pass the third round and the gate wakes: the camera pulls back, the rim lights up note by note,
    souls spiral in and the portal closes from the rim inward. Step in.
 
-Arriving in The Sift builds an Echo Frame portal that leads back to the gate you came from.
-Later you can build your own portals: any vertical frame of **Echo Frame** blocks (or
-reinforced deepslate) opened with the same drum ritual.
+Arriving in The Sift builds a small reinforced deepslate gate that leads back to the gate you came
+from. Later you can build your own portals: any vertical frame of **Sift Gate Frames** (or
+reinforced deepslate) opened with the same drum ritual. A Sift Gate Frame is very expensive:
+4 Siftite Ingots + 4 Echo Shards around a Nether Star make 4 frames, and the smallest gate (a 2x3 opening) needs 10.
+The drum refuses a second core for a gate that is already open, re-reads the frame before it wakes,
+picks a waking gate back up after a world reload, and tears the membrane (keeping its core) if the
+frame is broken mid-opening.
 
 ---
 
@@ -74,9 +78,8 @@ footsteps leave puffs of dream dust.
   Bulbs**. Happy Bulbs plop out **Glowing Slime Balls**.
 * **Slumbler**: a huge, wide-mouthed Chrome salamander that lounges in lakes. Drops **Thick
   Hide** and, rarely, a **Chrome Pearl**.
-* **Sniffer**: lives in The Sift and digs up its exclusive seeds (Choir Pods, Echo Seeds and
-  Pitcher Bulbs). Feed one Pitcher Bulbs or torchflower seeds until it trusts you, **saddle it and
-  ride it**: a ridden Sniffer ploughs through soft ground and sniffs out buried treasure nearby.
+* **Sniffer**: ordinary vanilla Sniffers roam The Sift; wherever one digs here it also turns up the
+  dimension's exclusive seeds (Choir Pods, Echo Seeds and Pitcher Bulbs).
 * **Harmoner**: a colourful songbird. **Feed it seeds and it leads you to a structure**, singing
   all the way. Rose: Abandoned Altar. Azure: Chrome Well. Gold: Dream Statue. Violet: Collapsed
   Tower. Jade: Sift Ruins. Coral: Musical Temple. The rare Night Harmoner: the Sculk Castle.
@@ -130,10 +133,21 @@ A shifting cyan pearl liquid. It **heals** whatever soaks in it, but it is thick
 quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
 
 ### Gear
-* **Serbim**: a rare ore. **Serbim Ingot + Copper Ingot = Siftite Ingot.**
-* **Siftite** armor and tools: upgrade copper gear with Siftite at a smithing table, using the
-  **Siftite Upgrade Smithing Template** found in Sift structures. One template plus serbim and
-  dreamstone duplicates it.
+* **Serbim**: an extremely rare ore, small veins buried deep. **4 Serbim Ingots + 4 Echo Shards
+  around a Netherite Ingot = 2 Siftite Ingots.**
+* **Siftite** armor and tools: upgrade **netherite** gear with Siftite at a smithing table, using the
+  **Siftite Upgrade Smithing Template** found in Sift structures (one template plus serbim and
+  dreamstone duplicates it). Curved, sung-into-shape tools that beat Netherite on durability,
+  speed and damage and hit with heavy knockback. Patterned armour with glowing echo inlays: any
+  piece keeps you from being Deafened, each piece takes an eighth off sonic damage, the helmet
+  breathes under water, leggings and boots swim faster, and the full set halves Sculk Corruption.
+* **Sift gardening**: Choir Pods grow only under open sky, Echo Seeds only in the dark (faster on
+  sculk), Pitcher Bulb bushes only with water or Chrome within 4 blocks.
+* **Pitcher Planter**: pot a Pitcher Bulb in it and it grows anywhere, through four stages, then
+  gives **Pitcher Nectar** again and again. Nectar makes three soups: **Lullaby Soup** (lullaby
+  bell + choir pod: regeneration, absorption), **Echo Chowder** (echo orchid + glowcap: night
+  vision, haste) and **Chrome Bisque** (chrome reeds + glowing slime ball: water breathing,
+  dolphin's grace).
 * **Slingshot**: fires Glowing Slime Balls that burst into a dazzling area of light, outline
   creatures, dazzle monsters and **Deafen Wardens** for a while.
 * **Sift Cake**, **Dream Stew**, **Glowcap Skewers** and other dreamy food.

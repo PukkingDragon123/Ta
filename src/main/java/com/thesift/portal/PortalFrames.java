@@ -14,13 +14,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Finds portal frames of any shape: a vertical, enclosed pocket of air in one plane whose border is
  * solid and mostly made of {@code #thesift:portal_frame} blocks. That recognises the great reinforced
  * deepslate gates at the heart of Ancient Cities (which stand on a deepslate floor) as well as
- * hand-built Echo Frame portals.
+ * hand-built Sift Gate Frame portals.
  */
 public final class PortalFrames {
     public static final int MAX_CELLS = 700;
@@ -189,6 +190,36 @@ public final class PortalFrames {
             }
         }
         return out;
+    }
+
+    /**
+     * Where an arriving traveller should stand: the middle of the portal's bottom row, so they come
+     * out inside the membrane and never half inside the frame (an Ancient City gate's bottom row
+     * can be a single cell wide at its corner, where the anchor sits).
+     */
+    public static Vec3 standingSpot(Level level, BlockPos pos) {
+        List<BlockPos> cells = connectedPortal(level, pos);
+        int minY = Integer.MAX_VALUE;
+        for (BlockPos b : cells) {
+            minY = Math.min(minY, b.getY());
+        }
+        List<BlockPos> bottom = new ArrayList<>();
+        for (BlockPos b : cells) {
+            if (b.getY() == minY) bottom.add(b);
+        }
+        if (bottom.isEmpty()) {
+            return Vec3.atBottomCenterOf(pos);
+        }
+        bottom.sort((a, b) -> a.getX() != b.getX() ? Integer.compare(a.getX(), b.getX()) : Integer.compare(a.getZ(), b.getZ()));
+        return Vec3.atBottomCenterOf(bottom.get(bottom.size() / 2));
+    }
+
+    /** True when every cell of the frame already holds portal: the gate is open. */
+    public static boolean isOpen(Level level, Frame frame) {
+        for (BlockPos b : frame.interior()) {
+            if (!level.getBlockState(b).is(ModBlocks.SIFT_PORTAL.get())) return false;
+        }
+        return true;
     }
 
     /** A stable identifier for a portal: its lowest, then smallest-x/z block. */

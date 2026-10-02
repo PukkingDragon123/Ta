@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "thesift:siftite_ingot",
+    "E": "minecraft:echo_shard",
+    "N": "minecraft:nether_star"
+  },
+  "pattern": [
+    "SES",
+    "ENE",
+    "SES"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thesift:sift_gate_frame"
+  }
+}

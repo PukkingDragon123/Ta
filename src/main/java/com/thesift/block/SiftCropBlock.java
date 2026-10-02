@@ -39,6 +39,16 @@ public abstract class SiftCropBlock extends VegetationBlock implements Bonemeala
 
     protected abstract ItemStack seed();
 
+    /** Whether this spot suits the plant (see {@link PlantHabitat}). Outside it the seedling just waits. */
+    protected boolean likesHabitat(LevelReader level, BlockPos pos) {
+        return level.getRawBrightness(pos, 0) >= 7;
+    }
+
+    /** Chance out of 1 that a random tick grows a seedling in its habitat. */
+    protected float growthChance(LevelReader level, BlockPos pos) {
+        return 0.25F;
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AGE);
@@ -61,7 +71,7 @@ public abstract class SiftCropBlock extends VegetationBlock implements Bonemeala
 
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (level.getRawBrightness(pos, 0) >= 7 && CommonHooks.canCropGrow(level, pos, state, random.nextInt(4) == 0)) {
+        if (this.likesHabitat(level, pos) && CommonHooks.canCropGrow(level, pos, state, random.nextFloat() < this.growthChance(level, pos))) {
             this.grow(level, pos, state);
             CommonHooks.fireCropGrowPost(level, pos, state);
         }
@@ -78,7 +88,8 @@ public abstract class SiftCropBlock extends VegetationBlock implements Bonemeala
 
     @Override
     public void onResonate(ServerLevel level, BlockPos pos, BlockState state, float strength) {
-        if (level.getRandom().nextFloat() < 0.25F * strength) {
+        // music hurries a plant along, but cannot make it grow where it does not belong
+        if (this.likesHabitat(level, pos) && level.getRandom().nextFloat() < 0.25F * strength) {
             this.grow(level, pos, state);
         }
     }
@@ -90,7 +101,7 @@ public abstract class SiftCropBlock extends VegetationBlock implements Bonemeala
 
     @Override
     public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source) {
-        return true;
+        return this.likesHabitat(level, pos);
     }
 
     @Override

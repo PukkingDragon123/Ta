@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "thesift:blush_bricks",
+    "M": "minecraft:mud"
+  },
+  "pattern": [
+    "B B",
+    "BMB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:pitcher_planter"
+  }
+}

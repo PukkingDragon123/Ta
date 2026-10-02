@@ -68,10 +68,11 @@
     "thesift:serbim_block",
     "thesift:siftite_block",
     "thesift:euphory_altar",
-    "thesift:echo_frame",
+    "thesift:sift_gate_frame",
     "thesift:glyph_stone",
     "thesift:crumbling_dreamstone",
     "thesift:bulb_lantern",
-    "thesift:soul_chime"
+    "thesift:soul_chime",
+    "thesift:pitcher_planter"
   ]
 }

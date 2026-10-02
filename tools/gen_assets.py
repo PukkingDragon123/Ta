@@ -306,6 +306,9 @@ def gen_block(b):
         gen_altar(bid)
     elif k == 'chime':
         gen_chime(bid)
+    elif k == 'planter':  # H: the potted pitcher
+        import plants_h
+        plants_h.gen_planter(sys.modules[__name__], bid)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -650,8 +653,9 @@ def gen_recipes():
     shapeless('serbim_ingot_from_block', ['serbim_block'], 'serbim_ingot', 9)
     shaped('raw_serbim_block', ['###', '###', '###'], {'#': 'raw_serbim'}, 'raw_serbim_block')
     shapeless('raw_serbim_from_block', ['raw_serbim_block'], 'raw_serbim', 9)
-    # Serbim + Copper = Siftite
-    shapeless('siftite_ingot', ['serbim_ingot', 'minecraft:copper_ingot'], 'siftite_ingot', 1)
+    # Siftite: 4 Serbim + 4 Echo Shards around a Netherite Ingot = 2 Siftite (H: costlier than Netherite itself)
+    shaped('siftite_ingot', ['SES', 'ENE', 'SES'], {'S': 'serbim_ingot', 'E': 'minecraft:echo_shard', 'N': 'minecraft:netherite_ingot'}, 'siftite_ingot', 2,
+           'misc')
     shaped('siftite_block', ['###', '###', '###'], {'#': 'siftite_ingot'}, 'siftite_block')
     shapeless('siftite_ingot_from_block', ['siftite_block'], 'siftite_ingot', 9)
     shaped('siftite_ingot_from_nuggets', ['###', '###', '###'], {'#': 'siftite_nugget'}, 'siftite_ingot', 1, 'misc')
@@ -660,7 +664,7 @@ def gen_recipes():
            'siftite_upgrade_smithing_template', 2, 'misc')
     for t in ['sword', 'pickaxe', 'axe', 'shovel', 'hoe', 'spear', 'helmet', 'chestplate', 'leggings', 'boots']:
         write(os.path.join(D, 'recipe', f'siftite_{t}_smithing.json'),
-              {'type': 'minecraft:smithing_transform', 'addition': f'#{NS}:siftite_tool_materials', 'base': f'minecraft:copper_{t}',
+              {'type': 'minecraft:smithing_transform', 'addition': f'#{NS}:siftite_tool_materials', 'base': f'minecraft:netherite_{t}',
                'result': {'id': f'{NS}:siftite_{t}'}, 'template': f'{NS}:siftite_upgrade_smithing_template'})
     # gear & food
     shaped('slingshot', ['#S#', ' # ', ' # '], {'#': 'lullwood_planks', 'S': 'thick_hide'}, 'slingshot', 1, 'equipment')
@@ -674,7 +678,6 @@ def gen_recipes():
     shaped('sift_drum_from_overworld', ['LLL', 'PEP', 'PNP'], {'L': 'minecraft:leather', 'P': '#minecraft:planks', 'E': 'minecraft:echo_shard',
                                                              'N': 'minecraft:note_block'}, 'sift_drum', 1, 'redstone')
     shaped('euphory_altar', [' P ', 'SDS', 'DDD'], {'P': 'chrome_pearl', 'S': 'siftite_ingot', 'D': 'polished_dreamstone'}, 'euphory_altar', 1, 'misc')
-    shaped('echo_frame', ['#S#', 'SPS', '#S#'], {'#': 'hushslate_bricks', 'S': 'minecraft:echo_shard', 'P': 'chrome_pearl'}, 'echo_frame', 4, 'misc')
     shaped('soul_chime', [' I ', 'NGN', 'N N'], {'I': 'minecraft:iron_chain', 'N': 'serbim_ingot', 'G': 'soulpetal'}, 'soul_chime', 1, 'decorations')
     shapeless('dream_stew', ['minecraft:bowl', 'glowcap', 'pitcher_bulb', 'lullaby_bell'], 'dream_stew', 1, 'food')
     shaped('glowcap_skewer', ['  G', ' G ', '#  '], {'G': 'glowcap', '#': 'minecraft:stick'}, 'glowcap_skewer', 1, 'food')
@@ -723,8 +726,8 @@ def gen_lang():
         f'codex.{NS}.bulb.body': 'Bulbs hop all over the plains, squashing on every landing and leaving a little trail of tinted slime. Feed them Pitcher Bulbs to breed them; happy Bulbs plop out Glowing Slime Balls. Play music and they dance. Four colours: sky, blossom, dusk and the rare starry.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
         f'codex.{NS}.harmoner.body': 'Feed a Harmoner seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose - Abandoned Altar. Azure - Chrome Well. Gold - Dream Statue. Violet - Collapsed Tower. Jade - Sift Ruins. Coral - Musical Temple. The rare Night - the Sculk Castle.',
-        f'codex.{NS}.sift_sniffer.title': 'Sniffer', f'codex.{NS}.sift_sniffer.tagline': 'Tame it, saddle it, ride it',
-        f'codex.{NS}.sift_sniffer.body': 'Feed a wild Sniffer Pitcher Bulbs or torchflower seeds until it trusts you, then put a saddle on it and climb up. A ridden Sniffer ploughs straight through soft ground in its way and every so often lifts its nose and marks buried treasure nearby with a trail of glowing dust.',
+        f'codex.{NS}.sniffer.title': 'Sniffer', f'codex.{NS}.sniffer.tagline': 'The Sift remembers its seeds',
+        f'codex.{NS}.sniffer.body': 'Ordinary Sniffers wander the Sift\'s plains and forests. Wherever one digs here it turns up the dimension\'s own ancient seeds as well as its usual finds: Choir Pods, Echo Seeds and Pitcher Bulbs. Breed them with torchflower seeds, or bring a Sniffer egg through the gate yourself.',
         f'codex.{NS}.enchoer.title': 'Enchoer', f'codex.{NS}.enchoer.tagline': 'Gentle, sad trader',
         f'codex.{NS}.enchoer.body': 'A big mound of mint fur with moose antlers and a melancholy face. Enchoers trade saplings, seeds, drums, pearls and the occasional Warden Core. Play music near one and it spreads its arms and hums along. It hides its face when hurt.',
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Chrome lake salamander',
@@ -734,7 +737,7 @@ def gen_lang():
         f'codex.{NS}.riveter.title': 'Riveter', f'codex.{NS}.riveter.tagline': 'Hostile - the sculk bat',
         f'codex.{NS}.riveter.body': 'It hangs head-down from cave ceilings in the Deep Sift with its long claws dangling. When it sees you it flings its arms open and screams - and every Warden nearby comes running. Sneak past it, or play music to lull it.',
         f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
-        f'codex.{NS}.siftite.body': 'Smelt Serbim ore into ingots and alloy them with copper to make Siftite. Siftite tools and armour are upgraded from copper gear at a smithing table with the Siftite Upgrade template, found in temples and towers.',
+        f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite gear. Tools beat Netherite and knock foes flying. Armour: no Deafening, softer sonic booms, helmet breathes water, legs and boots swim fast, full set halves Sculk Corruption.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid that heals',
@@ -746,7 +749,7 @@ def gen_lang():
         f'codex.{NS}.baton.title': "Conductor's Baton", f'codex.{NS}.baton.tagline': 'Taken from the Dictator',
         f'codex.{NS}.baton.body': 'Strikes as hard as a sword. Use it to flick a single sonic note down the line you point at, hurting the first creature in its way. It needs a moment to recover between notes.',
         f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
-        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Echo Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes.',
+        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes.',
         f'codex.{NS}.musical_temple.title': 'Musical Temple', f'codex.{NS}.musical_temple.tagline': 'Puzzles of tone',
         f'codex.{NS}.musical_temple.body': 'Old temples of song. Tune each Harmony Stone to the colour of its pedestal to open the vault below.',
         f'codex.{NS}.chrome_well.title': 'Chrome Well', f'codex.{NS}.chrome_well.tagline': 'Pearls in the pool',
@@ -754,7 +757,7 @@ def gen_lang():
         f'codex.{NS}.ruins.title': 'Ruins & Statues', f'codex.{NS}.ruins.tagline': 'Dig, brush, explore',
         f'codex.{NS}.ruins.body': 'Sift Ruins, Collapsed Towers, Abandoned Altars and Dream Statues are scattered across the surface. Brush suspicious dreamsand for relics and read the Dream Journal Fragments you find.',
         f'codex.{NS}.deep_shrine.title': 'Deep Shrine', f'codex.{NS}.deep_shrine.tagline': 'Below the Sift',
-        f'codex.{NS}.deep_shrine.body': 'Hushslate shrines in the caves of the Deep Sift. Each holds an Echo Frame - your way home - and a chest that sometimes keeps a Warden Core. Riveters roost nearby.',
+        f'codex.{NS}.deep_shrine.body': 'Hushslate shrines in the caves of the Deep Sift. Each holds an ancient gate of reinforced deepslate capped with Sift Gate Frame keystones - your way home - and a chest that sometimes keeps a Warden Core. Riveters roost nearby.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage, and its three empty altars.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
@@ -796,9 +799,6 @@ def gen_lang():
         f'entity.{NS}.strumling': 'Sculk Spider', f'entity.{NS}.web_shot': 'Silk', f'entity.{NS}.conductor_mask': "The Conductor's Mask",
         f'message.{NS}.dictator.wakes': 'The Conductor raises his staff. The performance begins...',
         f'message.{NS}.stage.begins': 'The three instruments begin to play together...',
-        f'entity.{NS}.sift_sniffer': 'Sniffer',
-        f'message.{NS}.sniffer.tamed': 'The Sniffer nuzzles you. It trusts you now - give it a saddle and ride it!',
-        f'message.{NS}.sniffer.treasure': 'Your Sniffer smells treasure %s blocks away!',
         f'message.{NS}.harmoner.tamed': 'The Harmoner chirps and settles on your shoulder. It will follow you - and sing along with your flute.',
         f'message.{NS}.harmoner.lost': 'The Harmoner tilts its head. It cannot sense any place of its colour nearby.',
         f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards an Abandoned Altar!',
@@ -829,16 +829,16 @@ def gen_lang():
         f'biome.{NS}.sift_plains': 'Sift Plains', f'biome.{NS}.forest_mountains': 'Forest Mountains', f'biome.{NS}.rocky_dunes': 'Rocky Dunes',
         f'biome.{NS}.chrome_lakes': 'Chrome Lakes', f'biome.{NS}.deep_sift': 'Deep Sift', f'biome.{NS}.wishing_grove': 'Wishing Grove',
         f'fluid_type.{NS}.chrome': 'Chrome',
-        f'item.{NS}.smithing_template.siftite_upgrade.applies_to': 'Copper Equipment',
+        f'item.{NS}.smithing_template.siftite_upgrade.applies_to': 'Netherite Equipment',
         f'item.{NS}.smithing_template.siftite_upgrade.ingredients': 'Siftite Ingot',
-        f'item.{NS}.smithing_template.siftite_upgrade.base_slot_description': 'Add copper armor, weapon, or tool',
+        f'item.{NS}.smithing_template.siftite_upgrade.base_slot_description': 'Add netherite armor, weapon, or tool',
         f'item.{NS}.smithing_template.siftite_upgrade.additions_slot_description': 'Add Siftite Ingot',
         f'upgrade.{NS}.siftite_upgrade': 'Siftite Upgrade',
         f'item.{NS}.music_disc_lullaby.desc': 'Sift - Lullaby of the Deep',
         f'jukebox_song.{NS}.lullaby': 'Sift - Lullaby of the Deep',
         f'message.{NS}.drum.need_sensors': 'The drum needs three Sculk Sensors within 8 blocks to listen (%s found).',
         f'message.{NS}.drum.need_core': 'The gate is listening! Slot a Warden Core into the drum to begin the ritual.',
-        f'message.{NS}.drum.no_frame': 'No portal frame answers the drum. Build one of Echo Frames or find an Ancient City gate.',
+        f'message.{NS}.drum.no_frame': 'No portal frame answers the drum. Build one of Sift Gate Frames or find an Ancient City gate.',
         f'message.{NS}.drum.listen': 'Listen... (round %s of %s)',
         f'message.{NS}.drum.your_turn': 'Your turn! Play the rhythm back on the drum (round %s of %s)',
         f'message.{NS}.drum.too_early': 'Too early! The sculk shrieks.',
@@ -863,9 +863,6 @@ def gen_lang():
 
 # Hand-written subtitles, in the style of vanilla's ("Bulb squeaks", "Chrome splashes").
 SUBTITLES = {
-    'entity.sift_sniffer.happy': 'Sniffer delights',
-    'entity.sift_sniffer.plough': 'Sniffer ploughs through the ground',
-    'entity.sift_sniffer.sniff': 'Sniffer sniffs',
     'entity.dictator.ambient': 'The Dictator breathes',
     'entity.dictator.hurt': 'The Dictator hurts',
     'entity.dictator.death': 'The Dictator falls',
@@ -995,9 +992,6 @@ def subtitle(s):
 
 # event -> list of (vanilla sound, volume, pitch)
 SOUNDS = {
-    'entity.sift_sniffer.happy': [('event:entity.sniffer.happy', 1.0, 1.0)],
-    'entity.sift_sniffer.plough': [('event:entity.sniffer.digging', 1.0, 1.1), ('dig/gravel1', 0.8, 0.8)],
-    'entity.sift_sniffer.sniff': [('event:entity.sniffer.sniffing', 1.0, 1.0)],
     'entity.dictator.ambient': [('event:entity.warden.ambient', 0.8, 1.5), ('event:entity.warden.listening', 0.8, 1.6)],
     'entity.dictator.hurt': [('event:entity.warden.hurt', 1.0, 1.4)],
     'entity.dictator.death': [('event:entity.warden.death', 1.2, 1.3)],
@@ -1347,7 +1341,7 @@ def gen_misc_tags():
     for b in ['hushslate', 'cobbled_hushslate', 'hushslate_bricks', 'minecraft:sculk', 'minecraft:deepslate', 'minecraft:reinforced_deepslate',
               'minecraft:deepslate_bricks', 'minecraft:deepslate_tiles']:
         tag('block', f'{NS}:riveter_roost', rl(b))
-    tag('block', f'{NS}:incorrect_for_siftite_tool', '#minecraft:incorrect_for_diamond_tool')
+    tag('block', f'{NS}:incorrect_for_siftite_tool', '#minecraft:incorrect_for_netherite_tool')
     for f in list(spec.FLOWERS) + ['echo_orchid', 'choir_lily', 'pitcher_bulb_bush', 'glowbell_vine', 'soul_chime']:
         tag('block', f'{NS}:resonant', rl(f))
     tag('block', f'{NS}:sift_stone', rl('hushslate'))
@@ -1393,8 +1387,7 @@ def gen_misc_tags():
     # entity types
     tag('entity_type', f'{NS}:chrome_dwellers', rl('slumbler'))
     # a tamed Sift Sniffer takes a saddle (26.3 checks this tag before equipping one)
-    tag('entity_type', 'minecraft:can_equip_saddle', rl('sift_sniffer'))
-    for e in ['bulb', 'enchoer', 'harmoner', 'sift_sniffer', 'minecraft:allay', 'minecraft:sniffer', 'slumbler']:
+    for e in ['bulb', 'enchoer', 'harmoner', 'minecraft:allay', 'minecraft:sniffer', 'slumbler']:
         tag('entity_type', f'{NS}:music_lovers', rl(e))
     for b in ['sift_plains', 'forest_mountains', 'rocky_dunes', 'chrome_lakes', 'deep_sift', 'wishing_grove']:
         tag('worldgen/biome', f'{NS}:is_sift', rl(b))
@@ -1440,6 +1433,8 @@ def generate():
     gen_transformers()
     gen_wild_creatures()
     gen_parasite()
+    import plants_h  # H: potted pitchers, soups, the Sift Gate Frame
+    plants_h.generate(sys.modules[__name__])
 
 
 def finalize():

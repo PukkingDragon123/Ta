@@ -4,7 +4,6 @@ import com.thesift.entity.Bulb;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.Riveter;
-import com.thesift.entity.SiftSniffer;
 import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
@@ -44,7 +43,6 @@ public final class ModBusEvents {
         event.put(ModEntities.RIVETER.get(), Riveter.createAttributes().build());
         event.put(ModEntities.HARMONER.get(), Harmoner.createAttributes().build());
         event.put(ModEntities.SCULK_HARMONER.get(), com.thesift.entity.SculkHarmoner.createAttributes().build());
-        event.put(ModEntities.SIFT_SNIFFER.get(), SiftSniffer.createAttributes().build());
         event.put(ModEntities.DICTATOR.get(), Dictator.createAttributes().build());
         event.put(ModEntities.THUMPER.get(), Thumper.createAttributes().build());
         event.put(ModEntities.CONDUCTOR_MASK.get(), com.thesift.entity.boss.ConductorMask.createAttributes().build());
@@ -64,7 +62,8 @@ public final class ModBusEvents {
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntities.BULB.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntities.SIFT_SNIFFER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        // vanilla Sniffers roam the Sift and dig up its seeds (the Sift Sniffer was retired)
+        event.register(net.minecraft.world.entity.EntityTypes.SNIFFER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.HARMONER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);

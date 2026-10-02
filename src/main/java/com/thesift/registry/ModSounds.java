@@ -50,9 +50,6 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> HARMONER_SING = reg("entity.harmoner.sing");
     public static final DeferredHolder<SoundEvent, SoundEvent> HARMONER_HURT = reg("entity.harmoner.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> HARMONER_DEATH = reg("entity.harmoner.death");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SNIFFER_HAPPY = reg("entity.sift_sniffer.happy");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SNIFFER_PLOUGH = reg("entity.sift_sniffer.plough");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SNIFFER_SNIFF = reg("entity.sift_sniffer.sniff");
     public static final DeferredHolder<SoundEvent, SoundEvent> DICTATOR_AMBIENT = reg("entity.dictator.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> DICTATOR_HURT = reg("entity.dictator.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> DICTATOR_DEATH = reg("entity.dictator.death");

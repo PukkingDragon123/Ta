@@ -283,8 +283,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).noOcclusion());
     public static final DeferredBlock<EuphoryAltarBlock> EUPHORY_ALTAR = BLOCKS.registerBlock("euphory_altar", EuphoryAltarBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.ENCHANTING_TABLE).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9).noOcclusion());
-    public static final DeferredBlock<EchoFrameBlock> ECHO_FRAME = BLOCKS.registerBlock("echo_frame", EchoFrameBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(6.0F, 1200.0F));
+    public static final DeferredBlock<SiftGateFrameBlock> SIFT_GATE_FRAME = BLOCKS.registerBlock("sift_gate_frame", SiftGateFrameBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(30.0F, 1200.0F).requiresCorrectToolForDrops().lightLevel(s -> 3));
     public static final DeferredBlock<SiftPortalBlock> SIFT_PORTAL = BLOCKS.registerBlock("sift_portal", SiftPortalBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12));
     public static final DeferredBlock<ConductorsPodiumBlock> CONDUCTORS_PODIUM = BLOCKS.registerBlock("conductors_podium", ConductorsPodiumBlock::new,
@@ -317,6 +317,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
     public static final DeferredBlock<ChromeLiquidBlock> CHROME = BLOCKS.registerBlock("chrome", ChromeLiquidBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8));
+    public static final DeferredBlock<PitcherPlanterBlock> PITCHER_PLANTER = BLOCKS.registerBlock("pitcher_planter", PitcherPlanterBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT).mapColor(MapColor.TERRACOTTA_PINK).strength(1.0F).lightLevel(s -> s.getValue(com.thesift.block.PitcherPlanterBlock.STAGE) == 4 ? 6 : 0).noOcclusion());
 
     private ModBlocks() {}
 }

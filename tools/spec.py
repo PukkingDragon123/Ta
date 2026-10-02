@@ -198,8 +198,8 @@ block("sift_drum", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_B
       model="drum", tags=["axe"], tab="functional")
 block("euphory_altar", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.ENCHANTING_TABLE).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9).noOcclusion()",
       cls="EuphoryAltarBlock", model="altar", tags=["pickaxe"], tab="functional")
-block("echo_frame", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(6.0F, 1200.0F)", cls="EchoFrameBlock", model="cube_column",
-      tags=["pickaxe", "needs_diamond", "portal_frame"], tab="functional")
+block("sift_gate_frame", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(30.0F, 1200.0F).requiresCorrectToolForDrops().lightLevel(s -> 3)",
+      cls="SiftGateFrameBlock", model="cube_column", tags=["pickaxe", "needs_diamond", "portal_frame"], tab="functional")
 block("sift_portal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12)", cls="SiftPortalBlock", model="portal",
       item=False, loot="none")
 block("conductors_podium", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 7)",
@@ -257,7 +257,7 @@ for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
 item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
 for a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"siftite_{a}", cls=f"armor:{a}", tab="combat", model="armor")
-for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sift_sniffer", "dictator", "thumper", "whistler", "strummer",
+for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "dictator", "thumper", "whistler", "strummer",
             "whistling", "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
@@ -299,3 +299,12 @@ item("cooked_kazoo_fish", props="new Item.Properties().food(ModFoods.COOKED_KAZO
 item("tuba_bubble")
 item("bubble_gun", cls="BubbleGunItem", props="new Item.Properties().durability(256)", model="handheld", tab="tools")
 item("skysong_gem", props="new Item.Properties().rarity(Rarity.EPIC)")
+
+# ---------------------------------------------------------------- H: potted pitchers and their soups
+block("pitcher_planter", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT).mapColor(MapColor.TERRACOTTA_PINK).strength(1.0F)"
+      ".lightLevel(s -> s.getValue(com.thesift.block.PitcherPlanterBlock.STAGE) == 4 ? 6 : 0).noOcclusion()",
+      cls="PitcherPlanterBlock", model="planter", tags=["pickaxe"], tab="functional")
+item("pitcher_nectar", props="new Item.Properties().food(ModSoups.PITCHER_NECTAR, ModSoups.PITCHER_NECTAR_CONSUMABLE)")
+for soup in ("lullaby_soup", "echo_chowder", "chrome_bisque"):
+    C = soup.upper()
+    item(soup, props=f"new Item.Properties().stacksTo(1).food(ModSoups.{C}, ModSoups.{C}_CONSUMABLE).usingConvertsTo(Items.BOWL)")

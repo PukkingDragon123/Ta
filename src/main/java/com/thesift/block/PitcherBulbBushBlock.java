@@ -30,7 +30,9 @@ import net.neoforged.neoforge.common.CommonHooks;
 
 /**
  * A little pitcher-plant bush that fills its pitchers with sweet, jelly-like Pitcher Bulbs.
- * Bulbs (the creatures) adore them: they are the breeding food.
+ * Bulbs (the creatures) adore them: they are the breeding food. A pitcher plant drinks: the bush
+ * only grows with water or Chrome close by (see {@link PlantHabitat}), and it roots in mud and
+ * clay as happily as in Sift soil.
  */
 public class PitcherBulbBushBlock extends VegetationBlock implements BonemealableBlock, com.thesift.music.Resonant {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
@@ -49,7 +51,7 @@ public class PitcherBulbBushBlock extends VegetationBlock implements Bonemealabl
 
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
-        return SiftPlantBlock.isSiftSoil(state) || state.is(Blocks.FARMLAND);
+        return SiftPlantBlock.isSiftSoil(state) || state.is(Blocks.FARMLAND) || PlantHabitat.dampSoil(state);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class PitcherBulbBushBlock extends VegetationBlock implements Bonemealabl
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int age = state.getValue(AGE);
-        if (age < 3 && CommonHooks.canCropGrow(level, pos, state, random.nextInt(5) == 0)) {
+        if (age < 3 && PlantHabitat.nearWater(level, pos) && CommonHooks.canCropGrow(level, pos, state, random.nextInt(5) == 0)) {
             level.setBlock(pos, state.setValue(AGE, age + 1), Block.UPDATE_CLIENTS);
             CommonHooks.fireCropGrowPost(level, pos, state);
         }
@@ -79,7 +81,7 @@ public class PitcherBulbBushBlock extends VegetationBlock implements Bonemealabl
     @Override
     public void onResonate(ServerLevel level, BlockPos pos, BlockState state, float strength) {
         int age = state.getValue(AGE);
-        if (age < 3 && level.getRandom().nextFloat() < 0.3F * strength) {
+        if (age < 3 && PlantHabitat.nearWater(level, pos) && level.getRandom().nextFloat() < 0.3F * strength) {
             level.setBlock(pos, state.setValue(AGE, age + 1), Block.UPDATE_CLIENTS);
         }
     }
@@ -121,7 +123,7 @@ public class PitcherBulbBushBlock extends VegetationBlock implements Bonemealabl
 
     @Override
     public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source) {
-        return state.getValue(AGE) < 3;
+        return state.getValue(AGE) < 3 && PlantHabitat.nearWater(level, pos);
     }
 
     @Override

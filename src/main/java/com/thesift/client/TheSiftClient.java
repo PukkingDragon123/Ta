@@ -18,7 +18,6 @@ import com.thesift.entity.boss.Whistler;
 import com.thesift.entity.boss.Strummer;
 import com.thesift.client.renderer.boss.DictatorRenderer;
 import com.thesift.client.renderer.boss.MinionRenderer;
-import com.thesift.client.renderer.SiftSnifferRenderer;
 import com.thesift.client.renderer.EnchoerRenderer;
 import com.thesift.client.renderer.EuphoryAltarRenderer;
 import com.thesift.client.renderer.RiveterRenderer;
@@ -111,7 +110,6 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.BULB.get(), BulbRenderer::new);
         event.registerEntityRenderer(ModEntities.HARMONER.get(), HarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.SCULK_HARMONER.get(), com.thesift.client.renderer.SculkHarmonerRenderer::new);
-        event.registerEntityRenderer(ModEntities.SIFT_SNIFFER.get(), SiftSnifferRenderer::new);
         event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
         event.registerEntityRenderer(ModEntities.THUMPER.get(), c -> new MiniBossRenderer<Thumper, ThumperModel>(c, new ThumperModel(c.bakeLayer(ModModelLayers.THUMPER)),
                 "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.DAZED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null,
