@@ -40,6 +40,9 @@ EVENTS = frozenset({
     'entity.warden.emerge', 'entity.warden.heartbeat', 'entity.warden.hurt', 'entity.warden.listening', 'entity.warden.roar',
     'entity.warden.sonic_boom', 'entity.warden.sonic_charge', 'entity.wither.spawn', 'item.crossbow.loading_middle', 'item.crossbow.shoot',
     'item.shield.block',
+    # A1 Bulb & Stomper: flower swap, Sculk Bloom, garden shake
+    'entity.sniffer.eat', 'entity.goat.eat', 'block.sweet_berry_bush.pick_berries', 'entity.mooshroom.shear', 'block.sculk.charge',
+    'entity.wolf.shake', 'block.azalea_leaves.break',
 })
 
 # Vanilla sound files (assets/minecraft/sounds/<name>.ogg) used directly.

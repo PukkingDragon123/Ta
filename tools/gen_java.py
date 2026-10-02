@@ -49,8 +49,8 @@ def block_ctor(b):
     if k == "flower":
         cls = b.get("cls", "FlowerBlock")
         return f"p -> new {cls}({b['effect']}, {b['secs']}, {b.get('light', 0)}, p)"
-    if k == "pot":
-        return f"p -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, {const(b['plant'])}, p)"
+    if k == "pot":  # cls: a FlowerPotBlock subclass (A1: the potted Sculk Bloom)
+        return f"p -> new {b.get('cls', 'FlowerPotBlock')}(() -> (FlowerPotBlock) Blocks.FLOWER_POT, {const(b['plant'])}, p)"
     if k == "falling":
         return f"p -> new ColoredFallingBlock(new ColorRGBA({b['dust']}), p)"
     if k == "carpet":
@@ -69,7 +69,7 @@ def block_type(b):
         "pillar": "RotatedPillarBlock", "log": "RotatedPillarBlock", "wood": "RotatedPillarBlock", "stairs": "StairBlock", "slab": "SlabBlock",
         "wall": "WallBlock", "fence": "FenceBlock", "fence_gate": "FenceGateBlock", "door": "DoorBlock", "trapdoor": "TrapDoorBlock",
         "button": "ButtonBlock", "pressure_plate": "PressurePlateBlock", "leaves": "SiftLeavesBlock", "sapling": "SiftSaplingBlock",
-        "flower": b.get("cls", "FlowerBlock"), "pot": "FlowerPotBlock", "falling": "ColoredFallingBlock", "carpet": "CarpetBlock",
+        "flower": b.get("cls", "FlowerBlock"), "pot": b.get("cls", "FlowerPotBlock"), "falling": "ColoredFallingBlock", "carpet": "CarpetBlock",
         "glass": "TransparentBlock", "custom": b.get("cls"),
     }[k]
 

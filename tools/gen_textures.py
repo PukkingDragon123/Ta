@@ -2014,6 +2014,7 @@ def main():
     hd_items()
     __import__("weaver_art").textures(out)  # the Weaver (E2): sculk string, guitars, musical cobweb
     __import__("caravans").textures(out)  # C: music crystals, prism ore/block, worn prism armour
+    __import__("sculk_bloom").textures(out)  # A1: the Sculk Bloom (flower, pot and item)
     corruption_overlays()
     boss_bar()
     mini_boss_bars()

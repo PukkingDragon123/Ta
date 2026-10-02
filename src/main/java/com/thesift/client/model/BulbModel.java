@@ -6,21 +6,24 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * Bulb: a jelly cube on four stubby feet with two tall ears and a pom-pom tail. Everything hangs
- * off "body", pivoted at the feet, so squash and stretch deforms the whole jelly from the ground
- * up. Each ear is a two-segment spring that lags behind the body.
+ * Bulb: one jelly cube (the body is the head) on four stubby feet, with two tall flat ears. Everything
+ * hangs off "body", pivoted at the feet, so squash and stretch deforms the whole jelly from the
+ * ground up; each ear is a two-segment spring that lags behind the body.
  *
  * <p>The jelly is see-through, so the model is drawn twice, like vanilla's slime: once opaque with
  * only the darker {@code core} showing ({@link Pass#CORE}), then translucent with only the jelly
  * ({@link Pass#JELLY}, see {@code BulbJellyLayer}). The core copies the body's squash so it wobbles
- * along inside.</p>
+ * along inside. The flowers on its back ride on the body too (see {@code BulbFlowerLayer}).</p>
  *
  * <ul>
- *   <li>hop: squats down first (anticipation), stretches tall on take-off with the ears trailing,
- *   splats flat on landing and the ears whip on through (follow-through, from the springs)</li>
+ *   <li>hop: squats down first (anticipation), stretches tall on take-off with the ears and flowers
+ *   trailing, tips its nose up rising and down falling, splats flat on landing and the ears whip
+ *   on through (follow-through, from the springs)</li>
+ *   <li>flower swap: leans in and munches the flower from your hand, squats and flings its head
+ *   back to toss it onto its back, then twists round and plucks one of its own</li>
  *   <li>sniff: leans in, the front of the jelly twitches, ears pricked forward</li>
  *   <li>groom: sits back and pulls one ear down, rubbing it with both front paws</li>
- *   <li>sleep: curled into a low dome, ears laid flat along its back, paws and tail tucked in</li>
+ *   <li>sleep: sinks onto its belly, ears laid flat along its back, paws tucked in</li>
  *   <li>wiggle (fed): a happy shimmy from side to side with a wagging tail</li>
  *   <li>music: every note gives a squash-and-hop, and while the music lasts it sways to the beat</li>
  *   <li>hurt: squishes flat, ears flop; death: the cartoon pop of SiftMobRenderer</li>
@@ -59,6 +62,11 @@ public class BulbModel extends EntityModel<BulbRenderState> {
         this.backRightLeg = this.body.getChild("back_right_leg");
     }
 
+    /** The jelly body (posed even in the core pass, where it is hidden): the back flowers ride on it. */
+    public ModelPart body() {
+        return this.body;
+    }
+
     @Override
     public void setupAnim(BulbRenderState s) {
         super.setupAnim(s);
@@ -70,27 +78,30 @@ public class BulbModel extends EntityModel<BulbRenderState> {
 
         // --- squash & stretch (the springs carry the crouch, the take-off stretch and the landing splat)
         float sq = Mth.clamp(s.squash, -0.45F, 0.6F);
-        float y = 1.0F + sq - hurt * 0.3F - sleep * 0.2F;
-        float wide = 1.0F - sq * 0.55F + hurt * 0.18F + sleep * 0.1F;
+        float y = 1.0F + sq - hurt * 0.3F - sleep * 0.18F;
+        float wide = 1.0F - sq * 0.55F + hurt * 0.18F + sleep * 0.08F;
         this.body.yScale = y;
         this.body.xScale = wide;
         this.body.zScale = wide;
         // a little roll from side to side while hopping along, and it turns a touch towards what it watches
         this.body.zRot = Mth.sin(pos * 0.6F) * 0.06F * walk;
         this.body.yRot = s.yRot * Anim.DEG * 0.25F * (1.0F - sleep);
+        // in the air the nose tips up on the way up and down on the way down
+        if (s.airborne && sleep == 0.0F) {
+            this.body.xRot += Mth.clamp(-s.fallSpeed * 0.9F, -0.22F, 0.2F);
+        }
 
         // --- ears: springy two-segment wobble, perk up near players; now and then one flicks
         float perk = s.earPerk * (1.0F - sleep);
-        float flop = Math.max(hurt, 0.0F);
         float flick = Anim.envelope(Mth.positiveModulo(age + s.variant * 17.0F, 130.0F), 0.0F, 2.0F, 1.0F, 4.0F) * (1.0F - sleep);
         // the ears lag behind the body's roll, then swing past it (follow-through)
         float lag = -Mth.sin(pos * 0.6F - 0.9F) * 0.1F * walk;
-        this.leftEar.xRot = s.earLeft * 1.1F - perk * 0.15F + flop * 0.9F;
-        this.leftEar.zRot = s.earLeft * 0.2F + 0.06F + flop * 0.6F + lag;
-        this.leftEarTip.xRot = s.earLeft * 0.9F + (1.0F - perk) * 0.3F + flop * 0.6F;
-        this.rightEar.xRot = s.earRight * 1.1F - perk * 0.15F + flop * 0.8F;
-        this.rightEar.zRot = -s.earRight * 0.2F - 0.06F - flop * 0.6F + lag;
-        this.rightEarTip.xRot = s.earRight * 0.9F + (1.0F - perk) * 0.3F + flop * 0.6F;
+        this.leftEar.xRot = s.earLeft * 1.1F - perk * 0.12F + hurt * 0.9F;
+        this.leftEar.zRot = s.earLeft * 0.2F + 0.04F + hurt * 0.6F + lag;
+        this.leftEarTip.xRot = s.earLeft * 0.9F + (1.0F - perk) * 0.12F + hurt * 0.6F;
+        this.rightEar.xRot = s.earRight * 1.1F - perk * 0.12F + hurt * 0.8F;
+        this.rightEar.zRot = -s.earRight * 0.2F - 0.04F - hurt * 0.6F + lag;
+        this.rightEarTip.xRot = s.earRight * 0.9F + (1.0F - perk) * 0.12F + hurt * 0.6F;
         this.leftEarTip.zRot = flick * 0.6F;
         this.tail.yRot = Mth.sin(pos * 0.6F) * 0.2F * walk;
 
@@ -144,6 +155,47 @@ public class BulbModel extends EntityModel<BulbRenderState> {
             this.leftEarTip.zRot -= shimmy * 0.3F;
         }
 
+        // --- the flower swap, 1: it leans in and munches the flower out of your hand (0.8 s)
+        float nibbleT = Anim.seconds(s.nibble, age);
+        if (nibbleT >= 0.0F && nibbleT < 0.85F) {
+            float e = Anim.envelope(nibbleT, 0.0F, 0.12F, 0.5F, 0.2F);
+            float munch = Math.max(0.0F, Mth.sin(nibbleT * 24.0F)) * e;
+            this.body.xRot += 0.22F * e;
+            this.body.yScale *= 1.0F - 0.07F * munch;
+            this.body.xScale *= 1.0F + 0.04F * munch;
+            this.leftEar.xRot -= 0.25F * e;
+            this.rightEar.xRot -= 0.25F * e;
+            this.leftEarTip.xRot += munch * 0.25F;
+            this.rightEarTip.xRot += munch * 0.2F;
+        }
+
+        // --- 2: a squat, then it flings its head back and tosses the flower onto its back (0.7 s)
+        float placeT = Anim.seconds(s.place, age);
+        if (placeT >= 0.0F && placeT < 0.75F) {
+            float squat = Anim.envelope(placeT, 0.0F, 0.06F, 0.0F, 0.12F);
+            float toss = Anim.envelope(placeT, 0.08F, 0.1F, 0.12F, 0.35F);
+            this.body.yScale *= 1.0F - 0.15F * squat + 0.1F * toss;
+            this.body.xRot -= 0.3F * toss;
+            this.leftEar.xRot += 0.5F * toss;
+            this.rightEar.xRot += 0.45F * toss;
+            this.leftEarTip.xRot += 0.35F * toss;
+            this.rightEarTip.xRot += 0.3F * toss;
+            this.tail.xRot = -0.5F * toss;
+        }
+
+        // --- 3: a twist round to its back and a shake as it plucks a flower off (0.8 s)
+        float pluckT = Anim.seconds(s.pluck, age);
+        if (pluckT >= 0.0F && pluckT < 0.85F) {
+            float e = Anim.envelope(pluckT, 0.0F, 0.1F, 0.15F, 0.4F);
+            float shake = Mth.sin(pluckT * 30.0F) * Anim.envelope(pluckT, 0.0F, 0.05F, 0.1F, 0.3F);
+            this.body.yRot += 0.35F * e;
+            this.body.xRot -= 0.12F * e;
+            this.body.zRot += shake * 0.12F;
+            this.leftEar.zRot += 0.3F * e;
+            this.rightEar.zRot += 0.3F * e;
+            this.tail.yRot += shake * 0.8F;
+        }
+
         // --- music: sways to the beat while the music lasts, every note a squash-and-hop
         if (s.dancing) {
             float b = Math.min(1.0F, s.beat / 10.0F);
@@ -159,26 +211,28 @@ public class BulbModel extends EntityModel<BulbRenderState> {
             this.frontRightLeg.xRot -= (1.0F - b) * 0.8F;
         }
 
-        // --- asleep: curled into a low dome, ears laid flat back along its body, paws and tail tucked
+        // --- asleep: sunk onto its belly, ears laid flat back along its body, paws tucked
         if (sleep > 0.0F) {
-            float breath = Mth.sin(age * 0.06F);
-            this.body.yScale *= 1.0F + breath * 0.015F;
             this.body.zRot = 0.0F;
             this.leftEar.xRot = -1.35F;
             this.rightEar.xRot = -1.3F;
-            this.leftEar.zRot = 0.25F;
-            this.rightEar.zRot = -0.25F;
-            this.leftEarTip.xRot = -0.25F + breath * 0.04F;
-            this.rightEarTip.xRot = -0.2F - breath * 0.04F;
+            this.leftEar.zRot = 0.2F;
+            this.rightEar.zRot = -0.2F;
+            this.leftEarTip.xRot = -0.25F;
+            this.rightEarTip.xRot = -0.2F;
             this.leftEarTip.zRot = 0.0F;
             this.frontLeftLeg.xRot = -1.2F;
             this.frontRightLeg.xRot = -1.2F;
             this.backLeftLeg.xRot = 1.2F;
             this.backRightLeg.xRot = 1.2F;
-            this.tail.xScale = this.tail.yScale = this.tail.zScale = 0.8F;
-            // the tucked paws no longer hold it up: it sinks onto its belly
-            this.body.y += 2.4F;
+            // the tucked paws no longer hold it up
+            this.body.y += 2.0F;
         }
+
+        // babies: the same little cube with bigger ears
+        float ears = s.isBaby ? 1.25F : 1.0F;
+        this.leftEar.xScale = this.leftEar.yScale = this.leftEar.zScale = ears;
+        this.rightEar.xScale = this.rightEar.yScale = this.rightEar.zScale = ears;
 
         // --- the core inside follows the jelly around
         this.core.xScale = this.body.xScale;

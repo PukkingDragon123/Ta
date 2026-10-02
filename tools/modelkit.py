@@ -422,6 +422,9 @@ class Painter:
         hanging over an edge - over the normal paint of the face. 'glow_bright' puts pixels at least
         that bright on the emissive layer; 'glow' puts all of them there."""
         img = spec['image']
+        if isinstance(img, str):
+            # A1: a palette key, so a variant can swap the picture (the white Stomper's frosted garden)
+            img = self.pal[img]
         band = spec.get('image_rows')
         if band is not None:
             base = {k: v for k, v in spec.items() if k not in ('image', 'image_rows', 'map')}

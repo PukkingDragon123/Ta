@@ -267,6 +267,7 @@ public final class ModItems {
     public static final DeferredItem<Item> NIB_DUST = ITEMS.registerItem("nib_dust", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<SpawnEggItem> SOUL_GOLEM_SPAWN_EGG = ITEMS.registerItem("soul_golem_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEchoer.SOUL_GOLEM.get()));
     public static final DeferredItem<SpawnEggItem> NIB_SPAWN_EGG = ITEMS.registerItem("nib_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEchoer.NIB.get()));
+    public static final DeferredItem<SculkBloomItem> SCULK_BLOOM = ITEMS.registerItem("sculk_bloom", SculkBloomItem::new, () -> new Item.Properties().useBlockDescriptionPrefix().rarity(Rarity.RARE));
 
     private ModItems() {}
 }

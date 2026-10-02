@@ -738,7 +738,7 @@ def gen_lang():
         f'codex.{NS}.chapter.magic': 'Music & Magic',
         f'codex.{NS}.chapter.dictator': 'The Dictator',
         f'codex.{NS}.bulb.title': 'Bulb', f'codex.{NS}.bulb.tagline': 'Squishy jelly bunny',
-        f'codex.{NS}.bulb.body': 'Bulbs hop all over the plains, squatting before every hop and splatting on every landing. They sniff the air, groom their long ears and curl up asleep at night. Feed them Pitcher Bulbs to breed them - they wiggle with joy - and happy Bulbs plop out Glowing Slime Balls. Play any note and they bounce to the beat. Four colours: sky, blossom, dusk and the rare starry.',
+        f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Bulbs make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
         f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose - Abandoned Altar. Azure - Chrome Well. Gold - Dream Statue. Violet - Collapsed Tower. Jade - Sift Ruins. Coral - Musical Temple. The rare Night - the Sculk Castle.',
         f'codex.{NS}.sniffer.title': 'Sniffer', f'codex.{NS}.sniffer.tagline': 'The Sift remembers its seeds',
@@ -1188,6 +1188,7 @@ def gen_wild_creatures():
     tag('item', f'{NS}:slumbler_food', rl('kazoo_fish'))
     tag('block', 'minecraft:bee_attractive', rl('hummingbloom'))
     tag('block', f'{NS}:resonant', rl('hummingbloom'))
+    _sculk_bloom.assets(tag, rl, LANG)  # A1: the Sculk Bloom's item tags and Codex page
     for e in ['stomper', 'sky_whale']:
         tag('entity_type', f'{NS}:music_lovers', rl(e))
     tag('entity_type', 'minecraft:fall_damage_immune', rl('sky_whale'))
@@ -1203,7 +1204,7 @@ def gen_wild_creatures():
         f'message.{NS}.sky_whale.gem': 'The Sky Whale sings back - and spits out a glittering Skysong Gem!',
         f'message.{NS}.sky_whale.no_gem': 'The Sky Whale sings back warmly. It has no gem left to give today.',
         f'codex.{NS}.stomper.title': 'Stomper', f'codex.{NS}.stomper.tagline': 'Mammoth, bullfrog, both',
-        f'codex.{NS}.stomper.body': 'Four eyes, one trunk, no tusks - and a whole garden of moss and coral on its back. Stompers slurp Chrome through their trunks and hose any monster (or you, if you hit one) with it. Drums make them dance, ending in two stomps that send monsters flying. Feed two Hummingblooms for an egg and tame the baby with them: you can ride it straight away (jump to hop, attack to stomp monsters away), and it drums on the little drum on its back for you, which puts a spring in your step.',
+        f'codex.{NS}.stomper.body': 'Four eyes, one trunk, no tusks - and a whole garden on its back that it shakes out now and then like a wet dog. Stompers slurp Chrome and hose any monster (or you, if you hit one) with it. Drums make them dance, ending in two stomps that send monsters flying. Two fed Hummingblooms lay an egg; tame the baby with them and ride it straight away (jump to hop, attack to stomp). White Forest Stompers are snow-white with a frosted garden, and their eggs hatch white too.',
         f'codex.{NS}.sky_whale.title': 'Sky Whale', f'codex.{NS}.sky_whale.tagline': 'Rare - the singer in the clouds',
         f'codex.{NS}.sky_whale.body': "A shaggy whale-bull with cloud-soft fur, a meadow of blooms on its back and glowbell vines trailing below, rowing through the sky on furry flippers. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you and the whale glides down, sings to you and spits out a Skysong Gem - one a day per whale.",
         f'codex.{NS}.fanfare_eel.title': 'Fanfare Eel', f'codex.{NS}.fanfare_eel.tagline': 'Hostile - brass with teeth',
@@ -1323,6 +1324,12 @@ import echoer as _echoer  # noqa: E402
 
 SOUNDS.update(_echoer.SOUNDS)
 SUBTITLES.update(_echoer.SUBTITLES)
+
+# --- A1 Bulb & Stomper: the flower swap, the Sculk Bloom and the Stomper's garden shake (tools/sculk_bloom.py)
+import sculk_bloom as _sculk_bloom  # noqa: E402
+
+SOUNDS.update(_sculk_bloom.SOUNDS)
+SUBTITLES.update(_sculk_bloom.SUBTITLES)
 
 
 def gen_parasite():

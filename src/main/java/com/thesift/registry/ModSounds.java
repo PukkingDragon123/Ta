@@ -23,6 +23,12 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> BULB_HAPPY = reg("entity.bulb.happy");
     public static final DeferredHolder<SoundEvent, SoundEvent> BULB_LAY = reg("entity.bulb.lay");
     public static final DeferredHolder<SoundEvent, SoundEvent> BULB_EAT = reg("entity.bulb.eat");
+    // A1 Bulb & Stomper: the Bulb's flower swap, the Sculk Bloom, the Stomper's garden shake
+    public static final DeferredHolder<SoundEvent, SoundEvent> BULB_NIBBLE = reg("entity.bulb.nibble");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BULB_PLUCK = reg("entity.bulb.pluck");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_BLOOM_PUFF = reg("block.sculk_bloom.puff");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_BLOOM_CALM = reg("block.sculk_bloom.calm");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STOMPER_SHAKE = reg("entity.stomper.shake");
     // ---- Slumbler
     public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_AMBIENT = reg("entity.slumbler.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_HURT = reg("entity.slumbler.hurt");

@@ -40,7 +40,7 @@ public class StomperModel extends EntityModel<StomperRenderState> {
     private final ModelPart[] legs = new ModelPart[4];
     private final ModelPart[] feet = new ModelPart[4];
     /** The garden on its back, shoulders and brow: every plant sways on its own. */
-    private final ModelPart[] plants = new ModelPart[14];
+    private final ModelPart[] plants;
 
     public StomperModel(ModelPart root) {
         super(root);
@@ -67,14 +67,18 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             t = t.getChild("trunk_" + i);
             this.trunk[i] = t;
         }
-        for (int i = 0; i < 8; i++) {
-            this.plants[i] = this.hump.getChild("plant_" + i);
+        // however many plants tools/mobs_wild.py grew on its back, shoulders and brow
+        java.util.List<ModelPart> garden = new java.util.ArrayList<>();
+        for (int i = 0; this.hump.hasChild("plant_" + i); i++) {
+            garden.add(this.hump.getChild("plant_" + i));
         }
-        for (int i = 0; i < 4; i++) {
-            this.plants[8 + i] = this.body.getChild("body_plant_" + i);
+        for (int i = 0; this.body.hasChild("body_plant_" + i); i++) {
+            garden.add(this.body.getChild("body_plant_" + i));
         }
-        this.plants[12] = this.head.getChild("head_plant_0");
-        this.plants[13] = this.head.getChild("head_plant_1");
+        for (int i = 0; this.head.hasChild("head_plant_" + i); i++) {
+            garden.add(this.head.getChild("head_plant_" + i));
+        }
+        this.plants = garden.toArray(new ModelPart[0]);
         String[] names = {"front_left", "front_right", "back_left", "back_right"};
         for (int i = 0; i < 4; i++) {
             this.legs[i] = this.body.getChild(names[i] + "_leg");
@@ -108,7 +112,11 @@ public class StomperModel extends EntityModel<StomperRenderState> {
         this.body.yScale = 1.0F - 0.05F * squash;
         this.body.xScale = 1.0F + 0.03F * squash;
         this.body.zScale = 1.0F + 0.02F * squash;
-        this.head.xRot = Mth.sin(pos * 2.0F) * 0.04F * walk;
+        // the front dips as the forefeet land and the head follows a beat behind (follow-through)
+        this.body.xRot = Mth.sin(pos * 2.0F) * 0.025F * walk;
+        this.head.xRot = Mth.sin(pos * 2.0F - 0.7F) * 0.05F * walk;
+        this.hump.yScale = 1.0F - 0.04F * squash;
+        this.hump.xScale = 1.0F + 0.02F * squash;
         this.tail.yRot = Mth.sin(pos) * 0.3F * walk + Mth.sin(age * 0.07F) * 0.15F;
         this.tail.xRot += Mth.sin(age * 0.05F) * 0.05F;
 
@@ -121,6 +129,9 @@ public class StomperModel extends EntityModel<StomperRenderState> {
         this.leftEar.zRot += Mth.sin(age * 0.11F) * 0.07F + walk * Mth.sin(pos * 2.0F) * 0.12F;
         this.rightEar.zRot -= Mth.sin(age * 0.11F + 0.8F) * 0.07F + walk * Mth.sin(pos * 2.0F) * 0.12F;
         this.leftSmallEye.yRot = Mth.sin(age * 0.03F) * 0.15F;
+        float glance = Mth.clamp(s.yRot * Anim.DEG * 0.2F, -0.15F, 0.15F);
+        this.leftEye.yRot = glance;
+        this.rightEye.yRot = glance;
         this.rightSmallEye.yRot = Mth.sin(age * 0.03F + 1.3F) * 0.15F;
         // the trunk sways and curls on its own, like a curious hand
         for (int i = 0; i < 4; i++) {
@@ -218,6 +229,46 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             this.head.yRot += 0.15F * wind - 0.3F * hit;
         }
 
+        // --- the garden shake (1.2 s): it hunches (anticipation), then shakes itself out like a wet dog,
+        // the roll running from the head back to the rump with every part whipping a beat late
+        float shakeT = Anim.seconds(s.shake, s.ageInTicks);
+        if (shakeT >= 0.0F && shakeT < 1.25F) {
+            float hunch = Anim.envelope(shakeT, 0.0F, 0.12F, 0.05F, 0.15F);
+            float e = Anim.envelope(shakeT, 0.15F, 0.08F, 0.55F, 0.4F);
+            float w = shakeT * 30.0F;
+            this.body.y += 1.2F * hunch;
+            this.head.xRot += 0.2F * hunch;
+            this.body.zRot += Mth.sin(w - 0.6F) * 0.1F * e;
+            this.head.zRot = Mth.sin(w) * 0.22F * e;
+            this.hump.zRot = Mth.sin(w - 1.2F) * 0.08F * e;
+            this.tail.yRot += Mth.sin(w - 1.8F) * 0.9F * e;
+            this.leftEar.zRot += Mth.sin(w + 0.4F) * 0.7F * e;
+            this.rightEar.zRot += Mth.sin(w + 0.4F) * 0.7F * e;
+            for (int i = 0; i < 4; i++) {
+                this.trunk[i].zRot += Mth.sin(w - 0.5F * (i + 1)) * 0.3F * e;
+                this.legs[i].zRot += (i % 2 == 0 ? -0.08F : 0.08F) * e;
+            }
+            this.throat.xScale = 1.0F + 0.1F * e;
+        }
+
+        // --- the snuffle (2.2 s): head down, the trunk reaches to the flowers at its feet and its
+        // tip twitches as it sniffs, ears pricked forward, then a pleased lift of the head
+        float sniffT = Anim.seconds(s.sniff, s.ageInTicks);
+        if (sniffT >= 0.0F && sniffT < 2.3F) {
+            float e = Anim.envelope(sniffT, 0.0F, 0.4F, 1.3F, 0.5F);
+            float twitch = Math.max(0.0F, Mth.sin(sniffT * 26.0F)) * Anim.envelope(sniffT, 0.4F, 0.1F, 1.1F, 0.2F);
+            float lift = Anim.envelope(sniffT, 1.7F, 0.15F, 0.1F, 0.35F);
+            this.head.xRot += 0.4F * e - 0.12F * lift;
+            this.body.xRot += 0.06F * e;
+            this.trunk[0].xRot += 0.45F * e;
+            this.trunk[1].xRot -= 0.25F * e;
+            this.trunk[2].xRot -= 0.2F * e + 0.2F * twitch;
+            this.trunk[3].xRot -= 0.15F * e + 0.35F * twitch;
+            this.trunk[3].xScale = this.trunk[3].zScale = 1.0F + 0.08F * twitch;
+            this.leftEar.zRot -= 0.3F * e;
+            this.rightEar.zRot += 0.3F * e;
+        }
+
         // --- dancing: bob, sway, wave the trunk, flap the ears, croak to the beat
         if (s.dancing) {
             float beat = s.ageInTicks * 0.55F;
@@ -308,10 +359,12 @@ public class StomperModel extends EntityModel<StomperRenderState> {
         // --- the garden: sways with every heavy step, jiggles on stomps, wiggles when it dances
         float jolt = stomp >= 0.0F ? Anim.envelope(stomp, 0.3F, 0.03F, 0.05F, 0.6F) : 0.0F;
         float puffJolt = puffT >= 0.0F ? Anim.envelope(puffT, 0.0F, 0.06F, 0.0F, 0.5F) : 0.0F;
+        float shook = shakeT >= 0.0F && shakeT < 1.25F ? Anim.envelope(shakeT, 0.15F, 0.08F, 0.55F, 0.5F) : 0.0F;
         for (int i = 0; i < this.plants.length; i++) {
             ModelPart p = this.plants[i];
             float ph = i * 1.37F;
-            p.zRot = Mth.sin(age * 0.07F + ph) * 0.07F + Mth.sin(pos * 2.0F + ph) * 0.18F * walk + jolt * Mth.sin(s.ageInTicks * 1.9F + ph) * 0.35F;
+            p.zRot = Mth.sin(age * 0.07F + ph) * 0.07F + Mth.sin(pos * 2.0F + ph) * 0.18F * walk + jolt * Mth.sin(s.ageInTicks * 1.9F + ph) * 0.35F
+                    + shook * Mth.sin(shakeT * 30.0F - 1.5F - ph * 0.2F) * 0.55F;
             p.xRot = Mth.cos(age * 0.06F + ph) * 0.05F - walk * 0.12F + puffJolt * 0.2F * Mth.sin(ph);
             float bounce = 1.0F + Mth.sin(age * 0.11F + ph) * 0.04F - jolt * 0.3F + puffJolt * 0.12F;
             p.yScale = bounce;

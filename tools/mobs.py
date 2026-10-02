@@ -3,65 +3,79 @@ from modelkit import Model
 
 
 # =========================================================================== BULB
-JELLY = 200  # the Bulb's body is see-through jelly: this alpha over an opaque core
+# The Bulb, remade 1:1 from the reference art: one see-through jelly cube (the body IS the head) on
+# four stubby feet, with two tall flat ears. Its front is the reference's 10 x 7 pixel face read off
+# pixel by pixel: periwinkle on top with a soft darker heart, cyan below, two dark-purple sleepy bar
+# eyes and a little purple mouth. Every reference pixel is 2 x 2 texels (res=2), so a blink can
+# close the bars to half height while the art stays exactly the reference's.
+JELLY = 210  # the jelly's alpha, over the darker core (see BulbJellyLayer)
 
-# faces are painted at texel resolution (hd=True): the body's front is 24 x 20 texels.
-# Big glossy eyes with two highlights, little brows and a mouth that change with every mood, and
-# blush on the cheeks. keys: E eye, L lower iris, S shine, B brow, M mouth, t tongue, c blush, g gloss
-def _bulb_eye(expr, mirror):
-    """One 7 x 9 eye in the given mood (mirror for the right eye)."""
-    if expr == 'blink':
-        e = ['.......', '.......', '.......', '.......', '.......', 'B.....B', '.BBBBB.', '.......', '.......']
-    elif expr == 'sleep':
-        e = ['.......', '.......', '.......', '.......', '.......', '.......', 'B.....B', '.BBBBB.', '.......']
-    elif expr == 'happy':
-        e = ['.......', '.......', '.......', '..EEE..', '.EEEEE.', 'EE...EE', 'E.....E', '.......', '.......']
-    elif expr == 'hurt':
-        e = ['.......', '.......', 'EE.....', '..EEE..', '.....EE', '..EEE..', 'EE.....', '.......', '.......']
-    elif expr == 'dead':
-        e = ['.......', '.......', 'E.....E', '.E...E.', '..E.E..', '...E...', '..E.E..', '.E...E.', 'E.....E']
-    else:
-        e = ['..EEE..', '.EEEEE.', 'ESSEEEE', 'ESSEEEE', 'EEEEESE', 'EEEEEEE', 'ELLLLLE', '.LLLLL.', '..LLL..']
-    return [r[::-1] for r in e] if mirror else e
+# reference pixels. a-f: the blue top, from the lit rim to the darker heart; g/h/j: the cyan lower
+# third; Y eyes, M mouth. The sides, back and top carry the same banding without the face.
+BULB_FRONT = ['abccccccba', 'bdeffffedb', 'ceeffffeec', 'ceeeeeeeec', 'gYYeeeeYYg', 'hgjjMMjjgh', 'hhhgggghhh']
+BULB_SIDE = ['bccccccccb', 'cdeeeeeedc', 'ceeffffeec', 'ceeeeeeeec', 'gjeeeeeejg', 'hgjjjjjjgh', 'hhhgggghhh']
+BULB_TOP = ['bccccccccb', 'cdeeeeeedc', 'ceeeeeeeec', 'ceeffffeec', 'ceeffffeec', 'ceeffffeec', 'ceeeffeeec', 'ceeeeeeeec',
+            'cdeeeeeedc', 'bccccccccb']
+# an ear, tip to base (both ears alike, as in the reference): a periwinkle rim, then the darker
+# inner strip (p/q) beside a second strip (r/s/t) that turns cyan towards the base
+BULB_EAR = ['aab', 'bpr', 'cps', 'cqt']
+# the colours as the reference shows them (blue Bulb); the texture is lifted to make up for the
+# shade the game puts on a mob's faces
+BULB_BLUE = {'a': '#93a7bf', 'b': '#82a2bd', 'c': '#799bbe', 'd': '#6c96bf', 'e': '#598fbe', 'f': '#4c8abb', 'g': '#53aabd', 'h': '#67b0bf',
+             'j': '#499cbe', 'p': '#5788c0', 'q': '#588fbd', 'r': '#6d95bf', 's': '#479cbf', 't': '#53abbd', 'L': '#9fd6dd', 'l': '#84c3cf',
+             'Y': '#464275', 'M': '#58538a', 'k': '#3a64a0', 'k_l': '#4876b4', 'k_d': '#2f548a', 'G': '#c9e6ff'}
+# the White Forest's Bulb: a snowy pearl top, pale icy cyan below, white ears with a pale pink strip
+BULB_WHITE = {'a': '#ffffff', 'b': '#f7fbff', 'c': '#eef4fc', 'd': '#e5eef9', 'e': '#dce7f5', 'f': '#cddaee', 'g': '#bfeaf4', 'h': '#d3f4f9',
+              'j': '#b2dfee', 'p': '#f4bcd1', 'q': '#f0b0c7', 'r': '#f8d3e1', 's': '#f5c6d8', 't': '#f7d6e3', 'L': '#effbfd', 'l': '#cfe8ef',
+              'Y': '#4a3d78', 'M': '#7a67a3', 'k': '#c2cfe8', 'k_l': '#d3ddf1', 'k_d': '#aab8d6', 'G': '#ffffff'}
+_BULB_SOLID = ('Y', 'M', 'k', 'k_l', 'k_d')  # eyes, mouth and the core are opaque
+_BULB_LIFT = 1.27
 
 
-# brow stroke and how high it sits, per mood
-_BULB_BROWS = {
-    '': ('.BBB.', 1), 'blink': ('.BBB.', 1), 'happy': ('BBB..', 2), 'hurt': ('..BBB', 1), 'sleep': ('BBBB.', 0), 'dead': ('.....', 1),
-}
-_BULB_MOUTH = {
-    '': ['.M....M.', '..MMMM..'],
-    'blink': ['.M....M.', '..MMMM..'],
-    'happy': ['.MMMMMM.', '.MttttM.', '..MttM..', '...MM...'],
-    'hurt': ['........', '..MMMM..', '.M....M.'],
-    'dead': ['........', '.MMMMMM.'],
-    'sleep': ['........', '...MM...', '...MM...'],
-}
+def _bulb_palette(ref, lift):
+    import colorsys
+    pal = {}
+    for k, c in ref.items():
+        r, g, b = (int(c[i:i + 2], 16) / 255 for i in (1, 3, 5))
+        if lift and k not in ('k', 'k_l', 'k_d', 'G'):
+            h, s, v = colorsys.rgb_to_hsv(r, g, b)
+            r, g, b = colorsys.hsv_to_rgb(h, s, min(1.0, v * _BULB_LIFT))
+        pal[k] = '#%02x%02x%02x' % (round(r * 255), round(g * 255), round(b * 255)) + ('' if k in _BULB_SOLID else '%02x' % JELLY)
+    return pal
+
+
+def _x2(grid):
+    """Reference pixels to texels: every character becomes 2 x 2."""
+    return [''.join(ch * 2 for ch in row) for row in grid for _ in (0, 1)]
+
+
+# the face in each mood, in texels (the left eye; the right one is its mirror). Always the
+# reference's minimal style: flat bars that close to half height for a blink, arch into ^ ^ when
+# happy, squeeze into > < when hurt, cross when dead; the little mouth widens, wobbles or shrinks.
+_BULB_EYES = {'': (8, ['YYYY', 'YYYY']), 'blink': (9, ['YYYY']), 'sleep': (9, ['YYYY']), 'happy': (8, ['.YY.', 'Y..Y']),
+              'hurt': (7, ['YY..', '..YY', 'YY..']), 'dead': (7, ['Y..Y', '.YY.', '.YY.', 'Y..Y'])}
+_BULB_MOUTH = {'': (8, 10, ['MMMM', 'MMMM']), 'blink': (8, 10, ['MMMM', 'MMMM']), 'sleep': (9, 10, ['MM', 'MM']),
+               'happy': (7, 10, ['MMMMMM', '.MMMM.']), 'hurt': (8, 10, ['.MM.', 'M..M']), 'dead': (8, 11, ['MMMM'])}
 
 
 def bulb_face(expr):
-    w, h = 24, 20
-    g = [['.'] * w for _ in range(h)]
+    g = [list(r.replace('Y', 'e').replace('M', 'j')) for r in _x2(BULB_FRONT)]
 
-    def put(x, y, rows):
-        for j, r in enumerate(rows):
-            for i, ch in enumerate(r):
-                if ch != '.' and 0 <= y + j < h and 0 <= x + i < w:
-                    g[y + j][x + i] = ch
-    put(1, 1, ['gg', 'g'])
-    brow, lift = _BULB_BROWS.get(expr, _BULB_BROWS[''])
-    put(4, 4 - lift, [brow])
-    put(15, 4 - lift, [brow[::-1]])
-    put(3, 6, _bulb_eye(expr, False))
-    put(14, 6, _bulb_eye(expr, True))
-    if expr not in ('dead', 'hurt'):
-        put(1, 14, ['cc'])
-        put(21, 14, ['cc'])
-    put(8, 15, _BULB_MOUTH.get(expr, _BULB_MOUTH['']))
+    def put(x0, y0, rows, mirror=False):
+        for j, row in enumerate(rows):
+            for i, ch in enumerate(row[::-1] if mirror else row):
+                if ch != '.':
+                    g[y0 + j][x0 + i] = ch
+    ey, eye = _BULB_EYES[expr]
+    put(2, ey, eye)
+    put(14, ey, eye, mirror=True)
+    mx, my, mouth = _BULB_MOUTH[expr]
+    put(mx, my, mouth)
     return [''.join(r) for r in g]
 
 
-BULB_FACE = {('neutral' if e == '' else e): bulb_face(e) for e in ('', 'blink', 'happy', 'hurt', 'dead', 'sleep')}
+BULB_EXPRS = ['blink', 'happy', 'hurt', 'dead', 'sleep']
+BULB_FACE = {('neutral' if e == '' else e): bulb_face(e) for e in [''] + BULB_EXPRS}
 
 
 def hd_rows(spec, w, h):
@@ -73,73 +87,57 @@ def hd_rows(spec, w, h):
     return rows
 
 
+def _gloss(rows, at):
+    """One-texel highlights on the jelly (G)."""
+    g = [list(r) for r in rows]
+    for x, y in at:
+        g[y][x] = 'G'
+    return [''.join(r) for r in g]
+
+
 def bulb() -> Model:
-    """The Sift bunny: a squishy cube of see-through jelly with a darker heart, two tall springy
-    ears and four stubby feet."""
-    pal = {
-        # top of the body is periwinkle blue, the lower band soft cyan (see the biome reference)
-        'skin': '#78a5e3', 'skin_l': '#9cc3f3', 'skin_d': '#5d86cc',
-        'belly': '#63c6df', 'belly_l': '#86dbee', 'belly_d': '#4aa9c9',
-        'ear': '#78a5e3', 'ear_l': '#9cc3f3', 'ear_d': '#5d86cc', 'ear_in': '#63c6df',
-        'foot': '#8fdcee', 'foot_l': '#b3ecf7', 'foot_d': '#6cc0da',
-        'eye': '#2f2777', 'mouth': '#4a3a9f', 'tongue': '#e98fc6', 'gloss': '#e3f3ff', 'drip': '#a9e6f5',
-        'eye_l': '#5a4fb8', 'shine': '#ffffff', 'brow': '#3a3290', 'blush': '#f59ad0',
-        'core': '#4f6fc4', 'core_l': '#6a8ad8', 'core_d': '#3c56a6',
-    }
-    variants = {
-        'bulb_sky': {},
-        # the all-cyan "this little guy" colouring
-        'bulb_blossom': {'skin': '#3fd0ef', 'skin_l': '#72e3fa', 'skin_d': '#27aed6', 'belly': '#3fd0ef', 'belly_l': '#72e3fa',
-                         'belly_d': '#27aed6', 'ear': '#3fd0ef', 'ear_l': '#72e3fa', 'ear_d': '#27aed6', 'ear_in': '#27aed6',
-                         'foot': '#5fdcf3', 'foot_l': '#8deafa', 'foot_d': '#36bde0', 'eye': '#1b4f6b', 'mouth': '#1b4f6b', 'eye_l': '#2f7f9f', 'brow': '#1b4f6b',
-                         'core': '#1d93c2', 'core_l': '#36aed8', 'core_d': '#137aa6'},
-        'bulb_dusk': {'skin': '#a58fe6', 'skin_l': '#c3b2f6', 'skin_d': '#8770cf', 'belly': '#e59ad0', 'belly_l': '#f4b9e2', 'belly_d': '#c97bb5',
-                      'ear': '#a58fe6', 'ear_l': '#c3b2f6', 'ear_d': '#8770cf', 'ear_in': '#e59ad0',
-                      'foot': '#f0b6de', 'foot_l': '#fbd2ee', 'foot_d': '#d895c4', 'eye': '#3a1f5e', 'mouth': '#5b2f7a', 'eye_l': '#6a3f9e', 'brow': '#3a1f5e', 'blush': '#ff8fc0',
-                      'core': '#7a5cc4', 'core_l': '#9378d8', 'core_d': '#6146a8'},
-        'bulb_starry': {'skin': '#3b4aa0', 'skin_l': '#5566c0', 'skin_d': '#2b377d', 'belly': '#4e7fd0', 'belly_l': '#6a9be3', 'belly_d': '#3a66b3',
-                        'ear': '#3b4aa0', 'ear_l': '#5566c0', 'ear_d': '#2b377d', 'ear_in': '#4e7fd0',
-                        'foot': '#6a9be3', 'foot_l': '#8bb5f0', 'foot_d': '#4e7fd0', 'eye': '#fff1a8', 'mouth': '#fff1a8', 'gloss': '#c9d3ff', 'eye_l': '#e8cf6a', 'brow': '#fff1a8', 'blush': '#8a7fe0',
-                        'core': '#fff1a8', 'core_l': '#fffbe0', 'core_d': '#e8cf6a'},
-    }
-    m = Model('bulb', (64, 64), pal, variants, res=2, expressions=['blink', 'happy', 'hurt', 'dead', 'sleep'])
-    face_keys = {'E': 'eye', 'L': 'eye_l', 'S': 'shine', 'B': 'brow', 'M': 'mouth', 't': 'tongue', 'c': 'blush', 'g': 'gloss'}
-    face = dict(BULB_FACE)
+    """The Sift bunny (see the BULB notes above): 10 x 7 x 10 of jelly with a darker heart, stubby
+    2-pixel feet, two flat 3 x 4 ears on springs and a tiny tail. BulbRenderer draws it at 0.6
+    scale (half the old Bulb); the flowers on its back are block models (BulbFlowerLayer)."""
+    pal = _bulb_palette(BULB_BLUE, True)
+    variants = {'bulb_blue': {}, 'bulb_white': _bulb_palette(BULB_WHITE, False)}
+    m = Model('bulb', (64, 64), pal, variants, res=2, expressions=BULB_EXPRS)
+
+    def face(rows, **kw):
+        return dict(color='e', pattern='mc', clusters=0.0, rim=False, hd=True, map=rows, **kw)
+    side = _x2(BULB_SIDE)
     body = m.part('body', pivot=(0, 24, 0))
-    two_tone = dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.22, opacity=JELLY)
-    body.cube((-6, -13, -6), (12, 10, 12), **two_tone, faces={
-        'north': dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.0, opacity=JELLY, hd=True, map=face['neutral'],
-                      keys=face_keys, expr={k: v for k, v in face.items() if k != 'neutral'}),
-        'up': dict(color='skin', pattern='mc', clusters=0.25, opacity=JELLY, hd=True,
-                   map=hd_rows({1: '.ggg', 2: '.gg', 3: '.g', 20: '..................g', 21: '.................gg'}, 24, 24), keys={'g': 'gloss'}),
-        'down': dict(color='belly_d', pattern='mc', clusters=0.2, opacity=JELLY),
+    body.cube((-5, -9, -5), (10, 7, 10), color='e', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': face(BULB_FACE['neutral'], expr={k: v for k, v in BULB_FACE.items() if k != 'neutral'}),
+        'south': face(side), 'east': face(_gloss(side, [(3, 2)])), 'west': face(_gloss(side, [(16, 2)])),
+        'up': face(_gloss(_x2(BULB_TOP), [(2, 17), (3, 17), (2, 16)])),
+        'down': face(_x2(['gggggggggg'] + ['ggjjjjjjgg'] * 8 + ['gggggggggg'])),
     })
-    for side, sx in (('left', 1), ('right', -1)):
-        # ears sit on the back half of the top, three pixels apart
-        ear = body.part(f'{side}_ear', pivot=(3 * sx, -13, 1.5))
-        ear.cube((-1.5, -4, -1), (3, 4, 2), color='ear', pattern='mc', clusters=0.15, rim=False, opacity=JELLY, faces={
-            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, opacity=JELLY, hd=True,
-                          map=['......', '..ii..', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iiii.', '.iiii.'], keys={'i': 'ear_in'}),
-        })
-        tip = ear.part(f'{side}_ear_tip', pivot=(0, -4, 0))
-        tip.cube((-1.5, -3, -1), (3, 3, 2), color='ear', pattern='mc', clusters=0.15, rim=False, opacity=JELLY, faces={
-            'north': dict(color='ear', pattern='mc', clusters=0.0, rim=False, opacity=JELLY, hd=True,
-                          map=['......', '......', '..ii..', '.iiii.', '.iiii.', '.iiii.'], keys={'i': 'ear_in'}),
-            'up': dict(color='ear_l', pattern='mc', clusters=0.0, opacity=JELLY, hd=True, map=['.g....', '......', '......', '......'],
-                       keys={'g': 'gloss'}),
-        })
+    for name, sx in (('left', 1), ('right', -1)):
+        # the ears stand on the top, two pixels apart and a little back from the face
+        ear = body.part(f'{name}_ear', pivot=(2.5 * sx, -9, -2))
+        ear.cube((-1.5, -2, -0.5), (3, 2, 1), color='b', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': face(_x2(BULB_EAR[2:])), 'south': face(_x2(['bbb', 'ccc'])), 'east': face(_x2(['b', 'c'])),
+            'west': face(_x2(['b', 'c'])), 'up': dict(skip=True), 'down': dict(skip=True)})
+        tip = ear.part(f'{name}_ear_tip', pivot=(0, -2, 0))
+        tip.cube((-1.5, -2, -0.5), (3, 2, 1), color='b', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': face(_x2(BULB_EAR[:2])), 'south': face(_x2(['aaa', 'bbb'])), 'east': face(_x2(['a', 'b'])),
+            'west': face(_x2(['a', 'b'])), 'up': face(_gloss(_x2(['aaa']), [(1, 0)])), 'down': dict(skip=True)})
+    foot = ['LLLL', 'LLLL', 'LLLL', 'llll']
     for name, x, z in (('front_left', 1, -1), ('front_right', -1, -1), ('back_left', 1, 1), ('back_right', -1, 1)):
-        leg = body.part(f'{name}_leg', pivot=(3.5 * x, -3, 3.5 * z))
-        leg.cube((-1.5, 0, -1.5), (3, 3, 3), color='foot', pattern='mc', clusters=0.4, opacity=JELLY, faces={
-            'north': dict(color='foot', pattern='mc', clusters=0.2, opacity=JELLY, hd=True, map=['......'] * 4 + ['.d..d.', '.d..d.'],
-                          keys={'d': 'foot_d'}),
-        })
-    # a round pom-pom tail that wiggles when it is happy
-    tail = body.part('tail', pivot=(0, -6, 6))
-    tail.cube((-1.5, -1.5, 0), (3, 3, 2), color='belly_l', pattern='mc', clusters=0.2, opacity=JELLY)
-    # the jelly's darker heart, seen through the body (drawn first, opaque; see BulbJellyLayer)
+        leg = body.part(f'{name}_leg', pivot=(4 * x, -2, 4 * z))
+        leg.cube((-1, 0, -1), (2, 2, 2), color='L', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': face(foot), 'south': face(foot), 'east': face(foot), 'west': face(foot), 'up': dict(skip=True),
+            'down': face(_x2(['ll', 'll']))})
+    # a tiny cyan tail that wags when it is happy
+    tail = body.part('tail', pivot=(0, -4, 5))
+    tail_side = face(_x2(['hh', 'gg']))
+    tail.cube((-1, -1, 0), (2, 2, 1), color='h', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': tail_side, 'south': face(_gloss(_x2(['hh', 'gg']), [(1, 0)])), 'east': tail_side, 'west': tail_side,
+        'up': face(_x2(['hh'])), 'down': face(_x2(['gg']))})
+    # the jelly's darker heart, seen through the body (drawn first, opaque)
     core = m.part('core', pivot=(0, 24, 0))
-    core.cube((-4, -11, -4), (8, 7, 8), color='core', pattern='mc', clusters=0.35, rim=True)
+    core.cube((-3, -8, -3), (6, 4, 6), color='k', pattern='mc', clusters=0.35, rim=True)
     return m
 
 

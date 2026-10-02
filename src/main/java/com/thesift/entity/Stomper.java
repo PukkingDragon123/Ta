@@ -9,6 +9,7 @@ import com.thesift.registry.ModSounds;
 import java.util.EnumSet;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,6 +34,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -43,7 +46,9 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -67,6 +72,12 @@ import org.jspecify.annotations.Nullable;
 public class Stomper extends TamableAnimal implements net.minecraft.world.entity.PlayerRideableJumping {
     private static final EntityDataAccessor<Float> CHROME = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DANCE = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.INT);
+    /** 0: the Sift's pink and cyan, 1: the White Forest's snowy coat with its frosted garden. */
+    private static final EntityDataAccessor<Integer> COAT = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.INT);
+    public static final int NORMAL = 0;
+    public static final int WHITE = 1;
+    /** The egg remembers its parents' coat (custom data on the Stomper Egg). */
+    public static final String EGG_COAT = "StomperCoat";
     private static final byte EVENT_DRINK = 70;
     private static final byte EVENT_SPRAY = 71;
     private static final byte EVENT_STOMP = 72;
@@ -75,6 +86,9 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
     private static final byte EVENT_LAY = 75;
     /** A baby taps the drum on its back (one event per beat). */
     private static final byte EVENT_DRUM = 76;
+    /** Idle: it shakes its garden out like a wet dog, or lowers its trunk to sniff the flowers. */
+    private static final byte EVENT_SHAKE = 80;
+    private static final byte EVENT_SNIFF = 81;
     /** The baby's drum solo: one note per beat, in note-block semitones. */
     private static final int[] DRUM_PATTERN = {6, 6, 13, 6, 10, 13, 18, 13, 6, 18};
     private static final int DRUM_BEAT = 5;
@@ -93,6 +107,8 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
     public final AnimationState puffAnimation = new AnimationState();
     public final AnimationState slapAnimation = new AnimationState();
     public final AnimationState drumAnimation = new AnimationState();
+    public final AnimationState shakeAnimation = new AnimationState();
+    public final AnimationState sniffAnimation = new AnimationState();
     /** Client: which hand of the beat (alternates the tail's tap). */
     public int drumBeats;
     private int drumLeft = -1;
@@ -105,6 +121,8 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
     private int sprayCooldown;
     private int puffTimer = 60;
     private boolean drinking;
+    /** Server: ticks since it came out of water or Chrome (it shakes itself dry). */
+    private int wet;
 
     public Stomper(EntityType<? extends TamableAnimal> type, Level level) {
         super(type, level);
@@ -133,6 +151,7 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
         this.goalSelector.addGoal(8, new TemptGoal(this, 1.1, s -> s.is(ModItems.HUMMINGBLOOM.get()), false));
         this.goalSelector.addGoal(9, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(10, new WaterAvoidingRandomStrollGoal(this, 0.8));
+        this.goalSelector.addGoal(10, new IdleGoal());
         this.goalSelector.addGoal(11, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(12, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
@@ -145,6 +164,28 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
         super.defineSynchedData(builder);
         builder.define(CHROME, 0.0F);
         builder.define(DANCE, 0);
+        builder.define(COAT, NORMAL);
+    }
+
+    /** {@link #NORMAL} or {@link #WHITE}. */
+    public int getCoat() {
+        return Mth.clamp(this.entityData.get(COAT), NORMAL, WHITE);
+    }
+
+    public void setCoat(int coat) {
+        this.entityData.set(COAT, Mth.clamp(coat, NORMAL, WHITE));
+    }
+
+    public boolean isWhite() {
+        return this.getCoat() == WHITE;
+    }
+
+    /** Born in the White Forest (natural spawns and spawn eggs alike), it grows the snowy coat. */
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+            @Nullable SpawnGroupData data) {
+        this.setCoat(SnowCoat.at(level, this.blockPosition()) ? WHITE : NORMAL);
+        return super.finalizeSpawn(level, difficulty, reason, data);
     }
 
     /** How much Chrome is stored in the trunk and belly, 0..1. */
@@ -176,7 +217,11 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
-        return ModEntities.STOMPER.get().create(level, EntitySpawnReason.BREEDING);
+        Stomper baby = ModEntities.STOMPER.get().create(level, EntitySpawnReason.BREEDING);
+        if (baby != null) {
+            baby.setCoat(partner instanceof Stomper other && this.random.nextBoolean() ? other.getCoat() : this.getCoat());
+        }
+        return baby;
     }
 
     // ------------------------------------------------------------------ drums & dancing
@@ -389,6 +434,11 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
             if (this.sprayCooldown > 0) {
                 this.sprayCooldown--;
             }
+            if (this.isInFluidType()) {
+                this.wet = 100;
+            } else if (this.wet > 0) {
+                this.wet--;
+            }
             if (--this.puffTimer <= 0) {
                 this.puffTimer = 90 + this.random.nextInt(200);
                 server.broadcastEntityEvent(this, EVENT_PUFF);
@@ -412,8 +462,8 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
         }
         boolean moving = this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-3;
         if ((moving && this.random.nextInt(10) == 0) || (this.isDancing() && this.random.nextInt(3) == 0)) {
-            this.level().addParticle(ModParticles.WISHWOOD_LEAF.get(), this.getRandomX(1.0), top, this.getRandomZ(1.0),
-                    (this.random.nextDouble() - 0.5) * 0.05, 0.02, (this.random.nextDouble() - 0.5) * 0.05);
+            this.level().addParticle(this.isWhite() ? ParticleTypes.SNOWFLAKE : ModParticles.WISHWOOD_LEAF.get(), this.getRandomX(1.0), top,
+                    this.getRandomZ(1.0), (this.random.nextDouble() - 0.5) * 0.05, 0.02, (this.random.nextDouble() - 0.5) * 0.05);
         }
         if (this.isDancing() && this.random.nextInt(4) == 0) {
             this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getRandomX(1.2), top + this.random.nextDouble(), this.getRandomZ(1.2), 0.0, 0.0,
@@ -432,6 +482,11 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
                 this.drumAnimation.start(this.tickCount);
                 this.drumBeats++;
             }
+            case EVENT_SHAKE -> {
+                this.shakeAnimation.start(this.tickCount);
+                this.shakeGarden();
+            }
+            case EVENT_SNIFF -> this.sniffAnimation.start(this.tickCount);
             case EVENT_PUFF -> {
                 this.puffAnimation.start(this.tickCount);
                 this.puffSpiracles();
@@ -443,6 +498,22 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
                 }
             }
             default -> super.handleEntityEvent(id);
+        }
+    }
+
+    /** Client: the shake flings petals, leaves and pollen (snow, on a white Stomper) off its back. */
+    private void shakeGarden() {
+        double s = this.getAgeScale();
+        double top = this.getY() + 2.4 * s;
+        for (int i = 0; i < 26; i++) {
+            this.level().addParticle(i % 3 == 0 ? ModParticles.DREAM_POLLEN.get() : (this.isWhite() ? ParticleTypes.SNOWFLAKE : ModParticles.WISHWOOD_LEAF.get()),
+                    this.getRandomX(1.1), top + this.random.nextDouble() * 0.4, this.getRandomZ(1.1), (this.random.nextDouble() - 0.5) * 0.3,
+                    0.08 + this.random.nextDouble() * 0.12, (this.random.nextDouble() - 0.5) * 0.3);
+        }
+        for (int i = 0; i < 10; i++) {
+            this.level().addParticle(this.getChrome() > 0.1F ? ModParticles.CHROME_DROPLET.get() : ParticleTypes.SPLASH, this.getRandomX(1.2),
+                    this.getY() + (0.6 + this.random.nextDouble()) * s, this.getRandomZ(1.2), (this.random.nextDouble() - 0.5) * 0.4, 0.15,
+                    (this.random.nextDouble() - 0.5) * 0.4);
         }
     }
 
@@ -571,6 +642,8 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
         this.finalizeSpawnChildFromBreeding(level, partner, null);
         Vec3 mid = this.position().add(partner.position()).scale(0.5);
         ItemStack egg = new ItemStack(ModItems.STOMPER_EGG.get());
+        int coat = partner instanceof Stomper other && this.random.nextBoolean() ? other.getCoat() : this.getCoat();
+        CustomData.update(DataComponents.CUSTOM_DATA, egg, tag -> tag.putInt(EGG_COAT, coat));
         net.minecraft.world.entity.item.ItemEntity drop = this.spawnAtLocation(level, egg, 1.0F);
         if (drop != null) {
             drop.setPos(mid.x, mid.y + 1.0, mid.z);
@@ -723,6 +796,7 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
         super.addAdditionalSaveData(output);
         output.putInt("Chrome", Math.round(this.getChrome() * 1000.0F));
         output.putInt("DrinkCooldown", this.drinkCooldown);
+        output.putInt("Coat", this.getCoat());
     }
 
     @Override
@@ -730,15 +804,71 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
         super.readAdditionalSaveData(input);
         this.setChrome(input.getIntOr("Chrome", 0) / 1000.0F);
         this.drinkCooldown = input.getIntOr("DrinkCooldown", 200);
+        this.setCoat(input.getIntOr("Coat", NORMAL));
     }
 
     /** A big wet pop: Chrome droplets, fur and hearts. */
     @Override
     public void makePoofParticles() {
-        KillBurst.pop(this, 0xF37D8A, 0x43BCC4, KillBurst.HEART, ModParticles.WISHWOOD_LEAF.get());
+        KillBurst.pop(this, this.isWhite() ? 0xEEF3F9 : 0xF37D8A, this.isWhite() ? 0xA9DEF0 : 0x43BCC4, KillBurst.HEART,
+                this.isWhite() ? ParticleTypes.SNOWFLAKE : ModParticles.WISHWOOD_LEAF.get());
     }
 
     // ------------------------------------------------------------------ goals
+
+    /**
+     * Standing about, it now and then shakes its whole garden out like a wet dog (always, soon after
+     * a swim), or lowers its trunk to snuffle at the flowers by its feet.
+     */
+    private final class IdleGoal extends Goal {
+        private int ticks;
+        private boolean sniffing;
+
+        IdleGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            Stomper s = Stomper.this;
+            boolean dripping = s.wet > 0 && !s.isInFluidType();
+            return s.onGround() && !s.isVehicle() && !s.isDancing() && !s.isDrinking() && !s.isInSittingPose() && s.getTarget() == null
+                    && s.drumLeft < 0 && (dripping || s.getNavigation().isDone()) && s.random.nextInt(dripping ? 15 : 500) == 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.ticks > 0;
+        }
+
+        @Override
+        public void start() {
+            Stomper s = Stomper.this;
+            boolean shake = s.wet > 0 || s.random.nextInt(3) == 0;
+            s.wet = 0;
+            this.ticks = shake ? 24 : 44;
+            this.sniffing = !shake;
+            s.getNavigation().stop();
+            s.level().broadcastEntityEvent(s, shake ? EVENT_SHAKE : EVENT_SNIFF);
+            if (shake) {
+                s.playSound(ModSounds.STOMPER_SHAKE.get(), s.isBaby() ? 0.6F : 1.0F, s.isBaby() ? 1.4F : 0.9F + s.random.nextFloat() * 0.2F);
+            } else {
+                s.playSound(ModSounds.STOMPER_PUFF.get(), 0.5F, 1.4F);
+            }
+        }
+
+        @Override
+        public void tick() {
+            Stomper s = Stomper.this;
+            this.ticks--;
+            s.getNavigation().stop();
+            // the snuffle: little puffs of pollen at the trunk tip
+            if (this.sniffing && this.ticks % 8 == 0 && this.ticks > 6 && this.ticks < 40 && s.level() instanceof ServerLevel server) {
+                Vec3 tip = s.headPos(2.0).add(0.0, -1.0 * s.getAgeScale(), 0.0);
+                server.sendParticles(ModParticles.DREAM_POLLEN.get(), tip.x, tip.y, tip.z, 3, 0.2, 0.05, 0.2, 0.01);
+            }
+        }
+    }
 
     /** Dances on the spot while a drum plays: sways, waves its trunk and stomps at the end. */
     private final class DanceGoal extends Goal {

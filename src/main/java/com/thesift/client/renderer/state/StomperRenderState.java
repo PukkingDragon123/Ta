@@ -20,4 +20,9 @@ public class StomperRenderState extends SiftRenderState {
     public final AnimationState drum = new AnimationState();
     public int drumBeats;
     public boolean ridden;
+    /** Stomper.NORMAL or Stomper.WHITE. */
+    public int coat;
+    /** Idle: shaking the garden out like a wet dog, snuffling at the flowers with the trunk. */
+    public final AnimationState shake = new AnimationState();
+    public final AnimationState sniff = new AnimationState();
 }

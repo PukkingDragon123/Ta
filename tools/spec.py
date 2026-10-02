@@ -343,3 +343,5 @@ item("nib_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(
 for _d in ITEMS:
     if _d["id"] == "enchoer_spawn_egg":
         _d["name"] = "Echoer Spawn Egg"
+# ---------------------------------------------------------------- A1 Bulb & Stomper: the Sculk Bloom (tools/sculk_bloom.py)
+__import__("sculk_bloom").declare(block, item)

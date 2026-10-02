@@ -349,6 +349,10 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4));
     public static final DeferredBlock<EchoerHutHeartBlock> ECHOER_HUT_HEART = BLOCKS.registerBlock("echoer_hut_heart", EchoerHutHeartBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).noLootTable().lightLevel(s -> 9));
+    public static final DeferredBlock<SculkBloomBlock> SCULK_BLOOM = BLOCKS.registerBlock("sculk_bloom", p -> new SculkBloomBlock(MobEffects.DARKNESS, 4.0F, 3, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_CYAN).sound(SoundType.SCULK));
+    public static final DeferredBlock<PottedSculkBloomBlock> POTTED_SCULK_BLOOM = BLOCKS.registerBlock("potted_sculk_bloom", p -> new PottedSculkBloomBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, SCULK_BLOOM, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY).lightLevel(s -> 3));
 
     private ModBlocks() {}
 }

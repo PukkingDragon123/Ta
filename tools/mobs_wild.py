@@ -211,74 +211,213 @@ def stomper_mouth(expr, w=60, h=24):
     return rows
 
 
+def stomper_eye(w, h, expr, mirror=False, side=False):
+    """The Stomper's big frog-dome eye: a glossy iris that darkens towards the bottom, round a golden
+    ring and a wide frog pupil, two catchlights and a crease under the brow. It blinks shut, smiles,
+    glares, winces or crosses out with its moods. keys: r rim, c crease, j/i/I iris (light to dark),
+    o ring, p pupil, h catchlight, l lid, d lash line."""
+    s = -1.0 if mirror else 1.0
+
+    def fn(x, y, u, v):
+        rr = u * u + v * v
+        if rr > 1.0:
+            return '.'
+        uu = u * s
+        if rr > 0.8:
+            return 'r'
+        if expr in ('blink', 'sleep'):
+            return 'd' if abs(v - 0.18 - 0.22 * u * u) < 1.5 / h else 'l'
+        if expr == 'happy':
+            return 'd' if abs(v - (0.45 - 0.8 * (1 - u * u))) < 1.7 / h and v > -0.6 else 'l'
+        if expr == 'hurt':
+            line = abs(v - 0.05) < 1.4 / h and abs(u) < 0.8
+            tick = abs(abs(u) - 0.5) < 1.3 / w and abs(v + 0.25) < 0.3
+            return 'd' if line or tick else 'l'
+        if expr == 'angry':
+            lid = -0.2 + 0.6 * uu
+            if v < lid:
+                return 'l'
+            if v < lid + 2.0 / h:
+                return 'd'
+        if v < -0.55 and rr > 0.5:
+            return 'c'
+        if expr == 'dead':
+            if rr < 0.5 and (abs(u - v) < 1.8 / w or abs(u + v) < 1.8 / w):
+                return 'p'
+            return 'i' if v < 0.3 else 'I'
+        pupil = (u / 0.5) ** 2 + ((v - 0.1) / 0.2) ** 2
+        if pupil < 1.0:
+            return 'p'
+        if not side and ((uu + 0.38) ** 2 + (v + 0.3) ** 2 < 0.045 or (uu - 0.42) ** 2 + (v - 0.42) ** 2 < 0.012):
+            return 'h'
+        if (u / 0.66) ** 2 + ((v - 0.1) / 0.38) ** 2 < 1.0:
+            return 'o'
+        return 'j' if v < -0.2 else ('i' if v < 0.4 else 'I')
+    return rows_of(w, h, fn)
+
+
+def x2(rows):
+    """A map in model units as texels (each character 2 x 2), to lay texel detail over it."""
+    return [''.join(ch * 2 for ch in r) for r in rows for _ in (0, 1)]
+
+
+def warts(w, h, seed, n, top=None):
+    """Raised warts scattered over a face (texels): each a little bump lit on top (w) and shaded
+    below (W), only above row `top` (the pale belly band has none)."""
+    import random
+    rnd = random.Random(seed)
+    g = [['.'] * w for _ in range(h)]
+    for _ in range(n):
+        x, y = rnd.randrange(w - 2), rnd.randrange(max(1, (top or h) - 2))
+        size = rnd.choice((1, 2, 2))
+        for i in range(size):
+            g[y][x + i] = 'w'
+            g[y + 1][x + i] = 'W'
+        if size == 2 and rnd.random() < 0.5:
+            g[y][x + 2] = 'W'
+    return [''.join(r) for r in g]
+
+
+def frost(img, caps=True, seed=0, strength=0.7):
+    """A plant or moss picture under hoarfrost, for the White Forest Stomper's garden: pale ice that
+    keeps the light and shade (and a hint of the plant's own colour), snow on every top edge and a
+    few glints."""
+    import random
+    rnd = random.Random(seed)
+    w, h = img.size
+    src = img.load()
+    out = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    px = out.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = src[x, y]
+            if a < 128:
+                continue
+            lum = (0.3 * r + 0.55 * g + 0.15 * b) / 255.0
+            # plants keep more of their shading; a moss carpet goes almost snow-white
+            k = 0.9 * (0.8 + 0.2 * lum) if caps else 0.96 * (0.9 + 0.1 * lum)
+            c = [int((ch * (1 - strength) + ice * strength) * k) for ch, ice in ((r, 236), (g, 246), (b, 252))]
+            if (caps and (y == 0 or src[x, y - 1][3] < 128)) or rnd.random() < 0.035:
+                c = [255, 255, 255]
+            px[x, y] = (min(255, c[0]), min(255, c[1]), min(255, c[2]), 255)
+    return out
+
+
+def kplant(parent, name, pivot, key, w, h, rot=(0, 0, 0), glow_bright=None):
+    """plant(), with the picture a palette key (so the white coat can frost it)."""
+    p = parent.part(name, pivot=pivot, rot=rot)
+    face = dict(color='plant', image=key, image_mode='stretch')
+    if glow_bright is not None:
+        face['glow_bright'] = glow_bright
+    back = dict(face, image=key + '|m')
+    p.cube((-w / 2, -h, 0), (w, h, 0), color='plant', faces={'north': face, 'south': back})
+    p.cube((0, -h, -w / 2), (0, h, w), color='plant', faces={'east': face, 'west': back})
+    return p
+
+
+# the garden on its back (texture, x, surface y, z, width, height): blooms crowd the mossy mound in
+# the middle round the spiracles, coral and sprouts fill the corners, a white bloom at the rump
+STOMPER_GARDEN = [('dreambloom', 0, -8, -1.5, 9, 11), ('hummingbloom', -5.5, -8, -1, 9, 10), ('hummingbloom', 5.5, -8, 0, 8, 9),
+                  ('lullaby_bell', -3, -8, 4.5, 8, 9), ('nebula_iris', 3.5, -8, 4.5, 8, 9), ('coral_bush', -9.5, -6, -10, 9, 9),
+                  ('coral_bush', 9.5, -6, 10, 9, 9), ('glimmer_sprouts', 9.5, -6, -9.5, 7, 7), ('glimmer_sprouts', -9.5, -6, 9.5, 7, 6),
+                  ('echo_orchid', -10, -6, 0, 7, 8), ('blushgrass', 10, -6, -1, 8, 7), ('soulpetal', 0, -6, 10.5, 7, 8)]
+STOMPER_SHOULDERS = [('coral_fern', -13.5, -15, 8, 8), ('dreambloom', 13.5, -14, 7, 8), ('lullaby_bell', -13.5, 15, 7, 8),
+                     ('glimmer_sprouts', 13.5, 14, 7, 7)]
+STOMPER_BROW = [('hummingbloom', -7, -6, 7, 8), ('glimmer_sprouts', 8, -4, 7, 7)]
+_GLOWING = ('glimmer_sprouts', 'echo_orchid')
+# petals shed by the garden, lying on the moss (texels on the hump's top)
+_PETALS = [(6, 22), (16, 4), (31, 6), (40, 18), (8, 40), (24, 46), (38, 38), (44, 30), (2, 30)]
+
+
 def stomper() -> Model:
     """The Stomper: a huge, shaggy mammoth-bullfrog in the Sift's pink and cyan. A warty coral-pink
     frog body on four cyan-furred pillar legs, a glowing sculk vein or two, and - like a Sniffer - a
-    whole little garden growing on its back: a carpet of lumen moss with coral bushes, glimmer
-    sprouts and blooms that sway as it walks. Four eyes, a long ringed trunk, floppy ears and three
-    spiracles that puff."""
+    whole little garden growing on its back: a carpet of lumen moss strewn with petals, a crown of
+    blooms round the three puffing spiracles and coral and sprouts in the corners, all swaying as it
+    walks. Four eyes (two big glossy frog domes), a long ringed trunk, floppy ears. In the White
+    Forest it is snow-white with a frosted garden (stomper_white)."""
     pal = {
-        'skin': '#f37d8a', 'skin_l': '#ffa0ab', 'skin_d': '#d65866', 'wart': '#c44a5a', 'spot': '#62d6d6',
+        'skin': '#f37d8a', 'skin_l': '#ffa0ab', 'skin_d': '#d65866', 'wart': '#c44a5a', 'wart_l': '#ff9eac', 'spot': '#62d6d6',
         'belly': '#ffd9de', 'belly_l': '#fff0f2', 'belly_d': '#efb3bf',
         'fur': '#43bcc4', 'fur_l': '#7fe3e6', 'fur_d': '#29889a', 'moss': '#50c8bb', 'moss_l': '#69dbca', 'moss_d': '#3cb3ab',
         'sculk': '#12303a', 'sculk_l': '#1f5a66', 'glow': '#3ff5e6', 'glow2': '#c8fffb',
         'mouth': '#3a1a3a', 'lip': '#a8445a', 'tongue': '#ff8fb0', 'teeth': '#fff8ec', 'blush': '#ff6f9a',
-        'eye': '#14182e', 'iris': '#7ff0ff', 'iris_d': '#2fb8d8', 'eye_hi': '#ffffff', 'lid': '#f590a0', 'lid_d': '#a8445a',
-        'eye2': '#c3a9ec', 'eye2_d': '#8770cf',
+        'eye': '#14182e', 'iris': '#5fe6f5', 'iris_d': '#2a9cc8', 'iris_l': '#b6fbff', 'eye_ring': '#ffd36b', 'eye_hi': '#ffffff',
+        'lid': '#f590a0', 'lid_d': '#a8445a', 'eye2': '#c3a9ec', 'eye2_d': '#8770cf',
         'nail': '#e3ddcc', 'nail_d': '#b3ab96', 'stone': '#c9d3e8', 'stone_d': '#93a0bf', 'hole': '#0c1a24', 'chrome': '#a8fbff',
         'trunk': '#f37d8a', 'trunk_l': '#ffa0ab', 'trunk_d': '#d65866', 'ring': '#43bcc4', 'ring_d': '#29889a', 'plant': '#50c8bb',
         'drum': '#b0643c', 'drum_l': '#c98154', 'drum_d': '#8a4a2a', 'drumhead': '#fbeedb', 'drumhead_d': '#e2cfb3',
+        'petal': '#ffb7d5', 'petal_l': '#fff0f6', 'petal_d': '#f07fb0',
     }
-    m = Model('stomper', (256, 256), pal, {'stomper': {}}, res=2, expressions=EXPRS)
+    white = {
+        'skin': '#eef3f9', 'skin_l': '#ffffff', 'skin_d': '#c7d3e3', 'wart': '#b4c3d8', 'wart_l': '#ffffff', 'spot': '#a9def0',
+        'belly': '#ffffff', 'belly_l': '#ffffff', 'belly_d': '#dce6f0',
+        'fur': '#e4f2f8', 'fur_l': '#ffffff', 'fur_d': '#b0cad9', 'moss': '#d6ece8', 'moss_l': '#f0faf8', 'moss_d': '#b5d6cf',
+        'sculk': '#7fb3d4', 'sculk_l': '#a6d0e8', 'glow': '#c4f8ff', 'glow2': '#ffffff',
+        'mouth': '#3d2b48', 'lip': '#c497b0', 'tongue': '#ffb3c9', 'teeth': '#ffffff', 'blush': '#ffc2d6',
+        'eye': '#16203a', 'iris': '#9fe8ff', 'iris_d': '#5aa9d6', 'iris_l': '#d9f8ff', 'eye_ring': '#ffe9a8', 'eye_hi': '#ffffff',
+        'lid': '#e6edf6', 'lid_d': '#9fb0c6', 'eye2': '#d6c9f2', 'eye2_d': '#a597d4',
+        'nail': '#f6f3ea', 'nail_d': '#c8c1ae', 'stone': '#eaf0f8', 'stone_d': '#b6c2d6', 'hole': '#1a2a3a', 'chrome': '#e2fdff',
+        'trunk': '#eef3f9', 'trunk_l': '#ffffff', 'trunk_d': '#c7d3e3', 'ring': '#a9def0', 'ring_d': '#6fb6d2', 'plant': '#d6ece8',
+        'drum': '#d8c7a8', 'drum_l': '#eadcc0', 'drum_d': '#b09a78', 'drumhead': '#ffffff', 'drumhead_d': '#e4e9f0',
+        'petal': '#e6f4ff', 'petal_l': '#ffffff', 'petal_d': '#b9dcf0',
+    }
+    # the pictures (moss, turf, every plant) are palette entries too, so the white coat gets them frosted
+    for i, (key, tex, caps) in enumerate([('img:moss', 'lumen_moss_block', False), ('img:turf', 'sift_grass_block_top', False)]
+                                         + [(f'img:{t}', t, True) for t in sorted({g[0] for g in STOMPER_GARDEN + STOMPER_SHOULDERS + STOMPER_BROW})]):
+        img = block_tex(tex)
+        pal[key], pal[key + '|m'] = img, mirror_img(img)
+        cold = frost(img, caps, seed=i, strength=0.7 if caps else 0.86)
+        white[key], white[key + '|m'] = cold, mirror_img(cold)
+    m = Model('stomper', (256, 256), pal, {'stomper': {}, 'stomper_white': white}, res=2, expressions=EXPRS)
     skin = mc('skin', clusters=0.35, spots=0.18, accent='spot')
     fur = mc('fur', clusters=0.25, streaks=0.55)
-    moss_img = block_tex('lumen_moss_block')
-    turf_img = block_tex('sift_grass_block_top')
 
     body = m.part('body', pivot=(0, 11, 2))
-    vk = {'v': 'sculk', 'V': 'sculk_l', 'g': 'glow'}
+    vk = {'v': 'sculk', 'V': 'sculk_l', 'g': 'glow', 'w': 'wart_l', 'W': 'wart'}
+
+    def flank(w, h, seed):
+        # warts on the pink above the belly band, sculk veins creeping up from below
+        return mc('skin', clusters=0.35, spots=0.18, accent='spot', bands=[(13, 'belly')], hd=True,
+                  map=overlay(warts(w * 2, h * 2, seed, w // 2, top=24), x2(veins(w, h, seed, 10))), keys=vk, glow_keys='g')
     # the warty pink barrel, a pale belly band, sculk veins creeping up from below
     body.cube((-16, -20, -18), (32, 20, 36), **skin, faces={
         'down': mc('belly', clusters=0.3),
-        'up': dict(color='moss', image=moss_img),
-        'west': mc('skin', clusters=0.35, spots=0.18, accent='spot', bands=[(13, 'belly')], map=veins(36, 20, 3, 10), keys=vk, glow_keys='g'),
-        'east': mc('skin', clusters=0.35, spots=0.18, accent='spot', bands=[(13, 'belly')], map=veins(36, 20, 7, 10), keys=vk, glow_keys='g'),
-        'north': mc('belly', clusters=0.3),
-        'south': mc('skin', clusters=0.35, spots=0.18, accent='spot', bands=[(13, 'belly')], map=veins(32, 20, 11, 10), keys=vk, glow_keys='g'),
+        'up': dict(color='moss', image='img:moss'),
+        'west': flank(36, 20, 3), 'east': flank(36, 20, 7), 'north': mc('belly', clusters=0.3), 'south': flank(32, 20, 11),
     })
     # mossy cyan fur hanging round the belly
     body.cube((-17, -7, -19), (34, 9, 38), **fur, fringe=2, faces={'up': dict(skip=True), 'down': dict(skip=True)})
-    # the moss carpet on its back, hanging over the edges, with its garden and three spiracles
+    # the moss carpet on its back, hanging over the edges, strewn with petals, with three spiracles
     hump = body.part('hump', pivot=(0, -20, 0))
     spiracle = ['..rrrr..', '.rHHHHr.', 'rHhhhhHr', 'rHhGGhHr', 'rHhGGhHr', 'rHhhhhHr', '.rHHHHr.', '..rrrr..']
     up_map = ['.' * 48 for _ in range(52)]
     for (cx, cy) in ((12, 10), (28, 10), (20, 26)):
         up_map = put(up_map, cx, cy, spiracle)
-    side_moss = dict(color='fur', pattern='mc', clusters=0.3, streaks=0.5, image=moss_img, image_rows=4)
+    for i, (px, py) in enumerate(_PETALS):
+        up_map = put(up_map, px, py, ['.P.', 'PRQ', '.P.'] if i % 2 else ['QP', 'PR'])
+    side_moss = dict(color='fur', pattern='mc', clusters=0.3, streaks=0.5, image='img:moss', image_rows=4)
     hump.cube((-12, -6, -13), (24, 6, 26), color='moss', faces={
-        'up': dict(color='moss', image=turf_img, hd=True, map=up_map, keys={'r': 'ring', 'H': 'moss_d', 'h': 'hole', 'G': 'glow'}, glow_keys='G'),
+        'up': dict(color='moss', image='img:turf', hd=True, map=up_map,
+                   keys={'r': 'ring', 'H': 'moss_d', 'h': 'hole', 'G': 'glow', 'P': 'petal', 'Q': 'petal_l', 'R': 'petal_d'}, glow_keys='G'),
         'north': side_moss, 'south': side_moss, 'east': side_moss, 'west': side_moss, 'down': dict(skip=True),
     })
     # a lumpy second layer of moss
-    hump.cube((-8, -8, -8), (16, 2, 13), color='moss', faces={
-        'up': dict(color='moss', image=moss_img), 'north': dict(color='moss', image=moss_img), 'south': dict(color='moss', image=moss_img),
-        'east': dict(color='moss', image=moss_img), 'west': dict(color='moss', image=moss_img), 'down': dict(skip=True)})
+    moss = dict(color='moss', image='img:moss')
+    hump.cube((-8, -8, -8), (16, 2, 13), color='moss', faces={'up': moss, 'north': moss, 'south': moss, 'east': moss, 'west': moss,
+                                                              'down': dict(skip=True)})
     for i, (sx, sz) in enumerate(((-6, -5), (6, -5), (0, 3))):
         sp = hump.part(f'spiracle_{i}', pivot=(sx * 0.75, -8, sz))
         sp.cube((-1.5, -1.5, -1.5), (3, 1.5, 3), color='fur_d', pattern='mc', clusters=0.0, rim=False, faces={
             'up': mc('hole', clusters=0.0, rim=False, hd=True, map=['rrrrrr', 'rhhhhr', 'rhGGhr', 'rhGGhr', 'rhhhhr', 'rrrrrr'],
                      keys={'r': 'ring', 'h': 'hole', 'G': 'glow'}, glow_keys='G'),
         })
-    # the garden: coral, sprouts and blooms on cross planes that sway (see StomperModel)
-    garden = [('coral_bush', -8, -6, -9, 11, 11), ('glimmer_sprouts', 8, -6, -9, 8, 8), ('dreambloom', -3, -8, -5, 8, 9),
-              ('lullaby_bell', 4, -8, 1, 8, 9), ('coral_bush', 8, -6, 9, 10, 10), ('glimmer_sprouts', -8, -6, 8, 8, 7),
-              ('echo_orchid', -3, -8, 3, 7, 8), ('blushgrass', 2, -6, 10, 8, 7)]
-    for i, (tex, px, py, pz, w, h) in enumerate(garden):
-        plant(hump, f'plant_{i}', (px, py, pz), tex, w, h, rot=(0, 0.6 * i, 0), glow_bright=235 if tex in ('glimmer_sprouts', 'echo_orchid') else None)
+    # the garden: blooms, coral and sprouts on cross planes that sway (see StomperModel)
+    for i, (tex, px, py, pz, w, h) in enumerate(STOMPER_GARDEN):
+        kplant(hump, f'plant_{i}', (px, py, pz), f'img:{tex}', w, h, rot=(0, 0.6 * i, 0), glow_bright=235 if tex in _GLOWING else None)
     # more growing on its shoulders and rump
-    for i, (tex, px, pz, w, h) in enumerate((('coral_fern', -13, -15, 8, 8), ('dreambloom', 13, -14, 7, 8), ('lullaby_bell', -13, 15, 7, 8),
-                                            ('coral_bush', 13, 14, 8, 8))):
-        plant(body, f'body_plant_{i}', (px, -20, pz), tex, w, h, rot=(0, 0.9 * i + 0.3, 0))
+    for i, (tex, px, pz, w, h) in enumerate(STOMPER_SHOULDERS):
+        kplant(body, f'body_plant_{i}', (px, -20, pz), f'img:{tex}', w, h, rot=(0, 0.9 * i + 0.3, 0), glow_bright=235 if tex in _GLOWING else None)
     # the baby's little drum, strapped on its rump (StomperModel shows it only on babies, who tap it
     # with their tail for their owner)
     drum = body.part('baby_drum', pivot=(0, -20, 14))
@@ -301,19 +440,21 @@ def stomper() -> Model:
 
     # ---- head
     head = body.part('head', pivot=(0, -6, -18))
+    head_side = mc('skin', clusters=0.3, spots=0.15, accent='spot', hd=True, map=warts(28, 24, 21, 9, top=20), keys=vk)
     head.cube((-15, -10, -13), (30, 12, 14), **skin, faces={
         'north': mc('skin', clusters=0.2, spots=0.08, accent='spot', hd=True, map=stomper_mouth(''),
                     keys={'m': 'mouth', 'L': 'lip', 'b': 'blush', 'w': 'skin_d', 'W': 'wart', 't': 'teeth'},
                     expr={e: stomper_mouth(e) for e in EXPRS}),
+        'east': head_side, 'west': dict(head_side, map=warts(28, 24, 22, 9, top=20)),
         'down': mc('belly', clusters=0.2),
-        'up': dict(color='moss', image=moss_img),
+        'up': dict(color='moss', image='img:moss'),
     })
     # a mossy brow, a little bloom and some sprouts growing on it
     head.cube((-12, -13, -11), (24, 4, 12), color='moss', faces={
-        'up': dict(color='moss', image=turf_img), 'north': dict(color='fur', pattern='mc', clusters=0.2, streaks=0.5, image=moss_img, image_rows=2),
-        'east': dict(color='moss', image=moss_img), 'west': dict(color='moss', image=moss_img), 'south': dict(color='moss', image=moss_img)})
-    plant(head, 'head_plant_0', (-7, -13, -6), 'dreambloom', 7, 8, rot=(0, 0.5, 0))
-    plant(head, 'head_plant_1', (8, -13, -4), 'glimmer_sprouts', 7, 7, rot=(0, -0.4, 0), glow_bright=235)
+        'up': dict(color='moss', image='img:turf'), 'north': dict(color='fur', pattern='mc', clusters=0.2, streaks=0.5, image='img:moss', image_rows=2),
+        'east': moss, 'west': moss, 'south': moss})
+    for i, (tex, px, pz, w, h) in enumerate(STOMPER_BROW):
+        kplant(head, f'head_plant_{i}', (px, -13, pz), f'img:{tex}', w, h, rot=(0, 0.5 - 0.9 * i, 0), glow_bright=235 if tex in _GLOWING else None)
     jaw = head.part('jaw', pivot=(0, 2, 0))
     jaw.cube((-15, 0, -13), (30, 5, 14), **mc('belly', clusters=0.3), faces={
         'up': mc('mouth', clusters=0.0, rim=False, hd=True, map=put(blank(60, 28), 18, 6, [
@@ -335,16 +476,18 @@ def stomper() -> Model:
     sac = jaw.part('throat', pivot=(0, 5, -6))
     sac.cube((-9, -1, -5), (18, 5, 10), **mc('belly', clusters=0.15, rim=False), faces={'north': mc('belly', clusters=0.1, rim=False, hd=True,
               map=['.' * 36] * 2 + ['....' + 'd...' * 7 + '....'] + ['.' * 36] * 7, keys={'d': 'belly_d'})})
-    # the four eyes: two big glowing frog domes on top, two small lilac ones low on the cheeks
+    # the four eyes: two big glossy frog domes on top, two small lilac ones low on the cheeks
+    eyekeys = {'r': 'skin_d', 'c': 'lid_d', 'j': 'iris_l', 'i': 'iris', 'I': 'iris_d', 'o': 'eye_ring', 'p': 'eye', 'h': 'eye_hi', 'l': 'lid',
+               'd': 'lid_d'}
     for side, sx in (('left', 1), ('right', -1)):
         mir = sx < 0
         big = head.part(f'{side}_eye', pivot=(8.5 * sx, -12, -7))
-        eyekeys = {'r': 'skin_d', 'i': 'iris', 'I': 'iris_d', 'p': 'eye', 'h': 'eye_hi', 'l': 'lid', 'd': 'lid_d'}
         big.cube((-4, -5, -4), (8, 6, 8), **mc('skin', clusters=0.2), faces={
-            'north': mc('skin', clusters=0.0, hd=True, map=eye(16, 12, '', mir), keys=eyekeys, expr=eye_exprs(16, 12, mir), glow_keys='iI'),
-            ('east' if sx > 0 else 'west'): mc('skin', clusters=0.0, hd=True, map=eye(16, 12, '', not mir, shine=False), keys=eyekeys,
-                                                 expr=eye_exprs(16, 12, not mir, shine=False), glow_keys='iI'),
-            'up': dict(color='moss', image=moss_img),
+            'north': mc('skin', clusters=0.0, hd=True, map=stomper_eye(16, 12, '', mir), keys=eyekeys,
+                        expr={e: stomper_eye(16, 12, e, mir) for e in EXPRS}, glow_keys='jiIo'),
+            ('east' if sx > 0 else 'west'): mc('skin', clusters=0.0, hd=True, map=stomper_eye(16, 12, '', not mir, side=True), keys=eyekeys,
+                                                 expr={e: stomper_eye(16, 12, e, not mir, side=True) for e in EXPRS}, glow_keys='jiIo'),
+            'up': moss,
         })
         lid = big.part(f'{side}_eyelid')
         lid.cube((-4, -5, -4), (8, 3, 8), inflate=0.15, **mc('lid', clusters=0.0, rim=False), faces={
@@ -381,7 +524,7 @@ def stomper() -> Model:
         leg = body.part(f'{name}_leg', pivot=(11 * x, -2, 10 * z))
         leg.cube((-5, 0, -5), (10, 11, 10), **fur, fringe=2, fringe_phase=3 if x > 0 else 0, faces={
             'north': mc('fur', clusters=0.25, streaks=0.55, fringe=2, map=veins(10, 11, 20 + li, 4), keys=vk, glow_keys='g'),
-            'up': dict(color='moss', image=moss_img)})
+            'up': moss})
         foot = leg.part(f'{name}_foot', pivot=(0, 9, 0))
         foot.cube((-5.5, 0, -5.5), (11, 4, 11), **mc('stone', clusters=0.3), faces={
             'north': mc('stone', clusters=0.2, hd=True, map=['......................'] * 3 + ['.NN...NNN...NNN...NN..', 'NNNN.NNNNN.NNNNN.NNNN.',

@@ -62,8 +62,9 @@ public final class CodexEntries {
         List<CodexEntry> l = new ArrayList<>();
         // ---- creatures
         l.add(mob(CREATURES, "bulb", ModEntities.BULB, (e, t) -> {
-            if (e instanceof Bulb b && t % 60 == 0) b.setVariant((t / 60) % Bulb.VARIANTS);
+            if (e instanceof Bulb b && t % 60 == 0) b.codexPose(t / 60);
         }));
+        l.add(thing(ITEMS, "sculk_bloom", ModItems.SCULK_BLOOM)); // A1: the Bulbs' rare back flower
         l.add(mob(CREATURES, "harmoner", ModEntities.HARMONER, (e, t) -> {
             if (e instanceof Harmoner h && t % 45 == 0) {
                 h.setVariant((t / 45) % Harmoner.VARIANTS);

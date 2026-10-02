@@ -1,10 +1,12 @@
 package com.thesift.item;
 
+import com.thesift.entity.SnowCoat;
 import com.thesift.entity.Stomper;
 import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -15,11 +17,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 
 /**
  * A Stomper Egg, laid by two well-fed Stompers. Set it down on the ground and it cracks open in a
- * shower of shell and sparkles: out tumbles a baby Stomper, ready to be tamed with Hummingblooms.
+ * shower of shell and sparkles: out tumbles a baby Stomper, ready to be tamed with Hummingblooms. It
+ * hatches in its parents' coat (the egg remembers it), so White Forest Stompers lay white babies.
  */
 public class StomperEggItem extends Item {
     public StomperEggItem(Item.Properties properties) {
@@ -39,6 +43,10 @@ public class StomperEggItem extends Item {
         Player player = context.getPlayer();
         float yaw = player != null ? player.getYRot() + 180.0F : level.getRandom().nextFloat() * 360.0F;
         baby.setAge(-24000);
+        // it hatches in its parents' coat; an egg nobody laid takes after where it hatches
+        CustomData laid = context.getItemInHand().get(DataComponents.CUSTOM_DATA);
+        baby.setCoat(laid != null && laid.contains(Stomper.EGG_COAT) ? laid.copyTag().getIntOr(Stomper.EGG_COAT, Stomper.NORMAL)
+                : SnowCoat.at(level, pos) ? Stomper.WHITE : Stomper.NORMAL);
         baby.snapTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, yaw, 0.0F);
         baby.setYHeadRot(yaw);
         baby.setYBodyRot(yaw);
