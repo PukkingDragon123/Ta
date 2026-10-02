@@ -213,17 +213,17 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
                 this.jaw.xRot += 0.2F * k;
             }
             case Thumper.CHARGE -> {
-                float g = age * 1.1F;
-                this.frontLeft.xRot = Mth.cos(g) * 1.0F;
-                this.hindRight.xRot = Mth.cos(g) * 1.0F;
-                this.frontRight.xRot = -Mth.cos(g) * 1.0F;
-                this.hindLeft.xRot = -Mth.cos(g) * 1.0F;
-                this.body.y -= Math.abs(Mth.sin(g)) * 1.5F;
+                float gallop = age * 1.1F;
+                this.frontLeft.xRot = Mth.cos(gallop) * 1.0F;
+                this.hindRight.xRot = Mth.cos(gallop) * 1.0F;
+                this.frontRight.xRot = -Mth.cos(gallop) * 1.0F;
+                this.hindLeft.xRot = -Mth.cos(gallop) * 1.0F;
+                this.body.y -= Math.abs(Mth.sin(gallop)) * 1.5F;
                 this.body.xRot = 0.08F;
                 this.neck.xRot = 0.4F;
                 this.neck.z -= 1.5F;
                 this.jaw.xRot = 0.3F;
-                this.tail.yRot = Mth.sin(g * 2.0F) * 0.4F;
+                this.tail.yRot = Mth.sin(gallop * 2.0F) * 0.4F;
             }
             case Thumper.SPIN -> {
                 float tuck = Anim.envelope(t, 0.0F, 8.0F, 66.0F, 10.0F);
