@@ -92,24 +92,22 @@ footsteps leave puffs of dream dust.
 
 ### The Conductor's orchestra
 Three great players wait in the Sift, each woken by a violet **Encore Sigil**:
-* **The Thumper** (percussion) waits in the middle of its **Drum Pit**, a round arena with four
-  towers. It is a giant turtle with a war drum on its shell, and only hits on the drum hurt it.
-  Jump its slam rings. If its charge hits a wall it is dazed.
-  * At half health it wakes the sculk in its shell and grows into a **titan** three times its
-    size, plated down its back like a monster-film kaiju. After that, nothing on the ground can
-    hurt it.
-  * Climb a tower and leap onto its back. The sculk deck there is solid, and every blow struck
-    from it lands.
-  * It shakes itself to throw you off (crouch to hold on). Sculk Parasites crawl out of its shell.
-  * On the ground it stomps (jump the shockwave) and breathes a sweeping beam of sculk song (hide
-    behind a tower).
+* **The Thumper** (percussion) sleeps under its **Drum Pit**, a sunken amphitheatre ringed by four
+  cannon towers. Walk up to its sigil and it claws its way up out of the floor.
+  * Its shell turns every blade and arrow. Only a **cannonball** landing on one of its glowing
+    **sculk vents** hurts it, and the vents open only when it strains: after a stomp, while it
+    breathes its beam, when it bursts out of the ground, and when it rams solid stone.
+  * Each tower has an **Ancient Cannon** on top and chests of cannonballs. Use a cannon with a
+    cannonball to load it, then use it again to fire where you look (look higher to lob further).
+    Redstone fires it too. Cannonballs are crafted from iron, gunpowder and cobbled dreamstone.
+  * At first it stomps (jump the rings), charges and sweeps its tail. Hurt, it breathes a beam of
+    sculk song and throws boulders. Enraged, it burrows and erupts under you.
+  * Its charges and slams smash the arena's crumbling walls, but never anything you built.
   * Drops the **Conga Drum**.
-* **The Whistler** (wind) circles roofed towers. It is a sculk crane whose song-beam locks on until
-  you break its line of sight. Drops the **Crane Beak**, which makes a flute.
 * **The Strummer** (strings) lurks in deep shrines. It is a mantis riding a spider and playing it
   like a guitar. Drops **Magic Strings**, which make a guitar.
 
-Their young haunt ruins everywhere: Whistlings, Strumlings and **Sculk Parasites**. A parasite is a
+Their young haunt ruins everywhere: Strumlings and **Sculk Parasites**. A parasite is a
 small, fragile centipede that bursts when it bites, leaving **Sculk Corruption II** in you. Each
 further bite deepens it.
 
@@ -121,8 +119,12 @@ further bite deepens it.
 Milk washes it away.
 
 On the roof of the **Sculk Castle** stands the Grand Stage. Set the drum, flute and guitar on its
-three altars and the **Conductor** rises from his Mask. He fights in three movements, borrowing
-the shell, the wings and the strings of his players. Beat him for the **Conductor's Staff**.
+three altars. When the music ends only his Mask is left on the floor, and souls, notes and sculk
+rebuild the **Conductor** around it. He fights alone in three movements, each more godlike: a
+duelist on the stage, then floating with note barrages and chord shockwaves, then soaring high,
+raining notes and flooding the stage with sound (stand in a lit circle). Beat him for the
+**Conductor's Staff**. The **Crane Flute** is crafted from a bone, an amethyst shard and an echo
+shard.
 
 ### The Sift Codex
 A field guide in the creative Items tab. Its pages show every creature alive and animated, plus

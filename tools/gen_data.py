@@ -70,12 +70,10 @@ def entity_loot():
                                           pool([item('siftite_ingot', count=(3, 6))]), pool([item('music_disc_lullaby', 1)])])
     table('entity', 'entities/thumper', [pool([item('conga_drum', 1)]), pool([item('minecraft:turtle_scute', count=(2, 5))]),
                                          pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
-    table('entity', 'entities/whistler', [pool([item('crane_beak', 1)]), pool([item('minecraft:feather', count=(6, 12))]),
-                                          pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
     table('entity', 'entities/strummer', [pool([item('weaver_guitar', 1)]), pool([item('sculk_string', count=(6, 12))]),
                                           pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
-    for minion in ('whistling', 'strumling'):
-        extra = {'whistling': 'minecraft:feather', 'strumling': 'sculk_string'}[minion]
+    for minion in ('strumling',):
+        extra = {'strumling': 'sculk_string'}[minion]
         table('entity', f'entities/{minion}', [pool([item(extra, count=(0, 2), extra=[LOOTING])]),
                                               pool([item('minecraft:echo_shard', count=(0, 1), extra=[LOOTING])]),
                                               pool([item('minecraft:bone', count=(0, 2))])])
@@ -111,6 +109,12 @@ def chest_loot():
         pool([item('star_shard', 4), item('serbim_ingot', 6, (1, 3)), item('siftite_nugget', 5, (2, 5)), item('minecraft:empty', 10)], (1, 2)),
         pool([item('minecraft:turtle_scute', 3, (1, 2)), item('minecraft:string', 5, (2, 6)), item('minecraft:feather', 5, (2, 5)),
               item('minecraft:name_tag', 1), item('minecraft:empty', 8)]),
+    ])
+    # the Thumper's arena: what the cannon towers keep
+    table('chest', 'chests/drum_pit_armory', [
+        pool([item('cannonball', 1, (5, 9))]),
+        pool([item('minecraft:gunpowder', 6, (2, 5)), item('minecraft:iron_nugget', 6, (3, 9)), item('cobbled_dreamstone', 4, (4, 12)),
+              item('minecraft:torch', 3, (2, 6)), item('minecraft:empty', 4)], (1, 2)),
     ])
     table('chest', 'chests/tower_top', [
         pool([item('dream_journal_fragment', 10, (1, 2)), item('chrome_pearl', 6, (1, 2)), item('serbim_ingot', 8, (2, 5)), item('siftite_ingot', 3),

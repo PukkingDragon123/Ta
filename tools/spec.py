@@ -215,6 +215,9 @@ block("harmony_seal", "custom", STONE + ".mapColor(MapColor.COLOR_CYAN).strength
 block("glyph_stone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE)", cls="GlyphStoneBlock", model="glyph", tags=["pickaxe"])
 block("dream_snare", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.TRIPWIRE).noCollision()", cls="DreamSnareBlock", model="snare",
       tab="functional", loot="self")
+# the Thumper's arena: its tower cannons (see registry/ModSiege for the block entity and the cannonball)
+block("ancient_cannon", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion()",
+      cls="AncientCannonBlock", model="cannon", tags=["pickaxe"], tab="functional")
 block("crumbling_dreamstone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.8F)", cls="CrumblingDreamstoneBlock",
       model="cube_all", tex="cracked_dreamstone_bricks", tags=["pickaxe"], tab="functional", loot="none")
 block("sift_cake", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).lightLevel(s -> 6)", cls="SiftCakeBlock", model="cake",
@@ -257,8 +260,8 @@ for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
 item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
 for a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"siftite_{a}", cls=f"armor:{a}", tab="combat", model="armor")
-for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "dictator", "thumper", "whistler", "strummer",
-            "whistling", "strumling"]:
+for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "dictator", "thumper", "strummer",
+            "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 item("sculk_parasite_spawn_egg", cls="egg:sculk_parasite", tab="eggs", model="generated")
@@ -268,7 +271,7 @@ item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(
      model="handheld", tab="combat", name="Conductor's Staff")
 # the three instruments taken from the Conductor's great players
 item("conga_drum", cls="CongaDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
-item("crane_beak", props="new Item.Properties().rarity(Rarity.RARE)")
+item("cannonball", props="new Item.Properties().stacksTo(16)", tab="combat")
 item("crane_flute", cls="CraneFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 # --- the Weaver (E2): sculk string from its brood, a plain guitar strung with it, the Weaver's own guitar
 item("sculk_string")

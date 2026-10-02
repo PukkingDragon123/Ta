@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * An Encore Sigil, set into the floor of an old structure: when someone walks up to it, one of
- * the Conductor's three great players (BOSS: 0 the Thumper, 1 the Whistler, 2 the Strummer)
+ * the Conductor's three great players (BOSS: 0 the Thumper, 2 the Strummer; 1 is retired and wakes the Thumper)
  * answers the call and comes out to play. It plays only once; then it goes dark.
  */
 public class EncoreSigilBlock extends BaseEntityBlock {

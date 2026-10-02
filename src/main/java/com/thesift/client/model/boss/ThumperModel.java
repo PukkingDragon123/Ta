@@ -8,28 +8,24 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * The Thumper. Idle, it plods like a tortoise, head swinging, the drumsticks on its back tapping
- * out a lazy rhythm on their own. Every attack is acted out:
+ * The Thumper. Idle, it plods like a tortoise, head swinging, tendrils twitching. Its attacks:
  *
  * <ul>
- *   <li>slam: rears up on its hind legs, front legs pawing the air, then crashes down - the shell
- *   squashes, the jaw flies open</li>
- *   <li>charge wind-up: head down, hind legs pawing, the sticks drum furiously; charge: a full
- *   gallop</li>
- *   <li>spin: head, legs and tail pull into the shell and it whirls</li>
- *   <li>dazed: sprawled, head lolling, jaw hanging</li>
+ *   <li>emerge: buried to the eyes, it claws its way up out of the floor, front first, and roars</li>
+ *   <li>stomp: rears back on its hind legs, forefeet pawing the air, and crashes down</li>
+ *   <li>charge: head low, hind feet scraping, then a thundering gallop</li>
+ *   <li>tail sweep: cocks its tail to one side and whips round in a full circle</li>
+ *   <li>beam: lifts its head, jaws gaping wide, shuddering as the sculk song pours out</li>
+ *   <li>boulders: dips its head, rakes the ground, flings each boulder up with a toss</li>
+ *   <li>burrow / erupt: nose down, digging furiously as it sinks; bursts out rearing up</li>
+ *   <li>exposed: slumped and splayed, head lolling, its vents gaping and glowing</li>
  * </ul>
- *
- * <p>As the titan the same bones carry the new parts it grows: the sculk crust swells up over its
- * shell, the drum sinks into the middle of it, plates push up along its edges, its neck and a long
- * new tail. The plates are dark until it means to breathe - then they light one by one, tail to
- * head, and stay lit and flickering while the beam pours out of its jaws.
+ * Its three vents have bone lids that flip open whenever they are exposed, and the sculk inside
+ * lights up.
  */
 public class ThumperModel extends EntityModel<MiniBossRenderState> {
+    private static final String[] VENTS = {"vent_top", "vent_left", "vent_right"};
     private final ModelPart body;
-    private final ModelPart drum;
-    private final ModelPart leftStick;
-    private final ModelPart rightStick;
     private final ModelPart neck;
     private final ModelPart head;
     private final ModelPart jaw;
@@ -40,21 +36,13 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
     private final ModelPart hindLeft;
     private final ModelPart hindRight;
     private final ModelPart tail;
-
     private final ModelPart[] tendrils = new ModelPart[2];
-    private final ModelPart mantle;
-    private final ModelPart plates;
-    private final ModelPart tailTitan;
-    private final ModelPart[] neckPlates = new ModelPart[2];
-    /** The plates' lit twins, tail tip first: one step of the light's climb per row. */
-    private final ModelPart[][] lit = new ModelPart[10][];
+    private final ModelPart[] lids = new ModelPart[3];
+    private final ModelPart[] lit = new ModelPart[3];
 
     public ThumperModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.drum = this.body.getChild("drum");
-        this.leftStick = this.drum.getChild("left_stick");
-        this.rightStick = this.drum.getChild("right_stick");
         this.neck = this.body.getChild("neck");
         this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
@@ -67,20 +55,10 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
         this.tail = this.body.getChild("tail");
         this.tendrils[0] = this.head.getChild("left_tendril");
         this.tendrils[1] = this.head.getChild("right_tendril");
-        this.mantle = this.body.getChild("mantle");
-        this.plates = this.body.getChild("plates");
-        this.tailTitan = this.tail.getChild("tail_titan");
-        int k = 0;
-        for (int i = 2; i >= 0; i--) {
-            this.lit[k++] = new ModelPart[]{this.tailTitan.getChild("tail_plate_" + i).getChild("tail_plate_" + i + "_lit")};
-        }
-        for (int i = 0; i < 5; i++) {
-            this.lit[k++] = new ModelPart[]{this.plates.getChild("left_plate_" + i).getChild("left_plate_" + i + "_lit"),
-                    this.plates.getChild("right_plate_" + i).getChild("right_plate_" + i + "_lit")};
-        }
-        for (int i = 0; i < 2; i++) {
-            this.neckPlates[i] = this.neck.getChild("neck_plate_" + i);
-            this.lit[k++] = new ModelPart[]{this.neckPlates[i].getChild("neck_plate_" + i + "_lit")};
+        for (int i = 0; i < 3; i++) {
+            ModelPart vent = this.body.getChild(VENTS[i]);
+            this.lids[i] = vent.getChild(VENTS[i] + "_lid");
+            this.lit[i] = vent.getChild(VENTS[i] + "_lit");
         }
     }
 
@@ -88,11 +66,8 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
     public void setupAnim(MiniBossRenderState s) {
         super.setupAnim(s);
         float age = s.ageInTicks;
-        float g = s.titan;
-        float size = 1.0F + (Thumper.TITAN_SCALE - 1.0F) * g;
-        // a titan's stride is longer: slower legs for the same ground covered
-        float walk = Math.min(1.0F, s.walkAnimationSpeed * 1.4F * (1.0F + g));
-        float pos = s.walkAnimationPos * 0.55F / size;
+        float walk = Math.min(1.0F, s.walkAnimationSpeed * 1.4F);
+        float pos = s.walkAnimationPos * 0.55F;
         float t = s.stateTime;
         int st = s.bossState;
 
@@ -104,102 +79,27 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
         this.hindLeft.xRot = -c * 0.55F * walk;
         this.body.zRot = Mth.sin(pos) * 0.05F * walk;
         this.body.y -= Math.abs(c) * 0.6F * walk;
-        // the head swings and looks around
         this.neck.xRot = Mth.sin(age * 0.05F) * 0.05F + Mth.sin(pos) * 0.06F * walk;
         this.head.yRot = s.yRot * Anim.DEG * 0.7F;
         this.head.xRot = s.xRot * Anim.DEG * 0.6F;
         this.tail.yRot = Mth.sin(age * 0.12F + pos) * 0.25F;
         this.jaw.xRot = Math.max(0.0F, Mth.sin(age * 0.04F)) * 0.06F;
-        // the sticks tap a lazy beat on their own
-        float beat = Math.max(0.0F, Mth.sin(age * 0.25F));
-        float beat2 = Math.max(0.0F, Mth.sin(age * 0.25F + Mth.PI));
-        this.leftStick.xRot = 0.5F + beat * 0.35F;
-        this.rightStick.xRot = 0.5F + beat2 * 0.35F;
-        this.drum.yScale = 1.0F - (beat + beat2) * 0.012F;
-        boolean angry = st != Thumper.IDLE && st != Thumper.DAZED;
-        this.leftBrow.zRot = angry ? -0.35F : 0.0F;
-        this.rightBrow.zRot = angry ? 0.35F : 0.0F;
-        this.leftBrow.y += angry ? 0.5F : 0.0F;
-        this.rightBrow.y += angry ? 0.5F : 0.0F;
+        boolean angry = st != Thumper.IDLE && st != Thumper.EXPOSED;
+        this.leftBrow.zRot = angry || s.enraged ? -0.35F : 0.0F;
+        this.rightBrow.zRot = angry || s.enraged ? 0.35F : 0.0F;
 
-        // the Warden's tendrils: a restless twitch, a shiver when it is hurt or attacking
-        float shiver = (s.hurtTicks >= 0.0F ? 1.0F : 0.0F) + (s.bossState != com.thesift.entity.boss.MiniBoss.IDLE ? 0.5F : 0.0F);
+        // --- the Warden's tendrils: a restless twitch, a shiver when it is hurt or attacking
+        float shiver = (s.hurtTicks >= 0.0F ? 1.0F : 0.0F) + (angry ? 0.5F : 0.0F);
         for (int i = 0; i < 2; i++) {
             float sgn = i == 0 ? 1.0F : -1.0F;
-            float tw = Mth.sin(s.ageInTicks * (0.11F + i * 0.02F) + i) * 0.18F + Mth.sin(s.ageInTicks * 1.7F + i) * 0.08F * shiver;
+            float tw = Mth.sin(age * (0.11F + i * 0.02F) + i) * 0.18F + Mth.sin(age * 1.7F + i) * 0.08F * shiver;
             this.tendrils[i].zRot += sgn * tw;
-            this.tendrils[i].xRot += Mth.sin(s.ageInTicks * 0.07F + i * 2.0F) * 0.12F;
+            this.tendrils[i].xRot += Mth.sin(age * 0.07F + i * 2.0F) * 0.12F;
         }
+
         switch (st) {
-            case Thumper.SLAM -> this.slam(Anim.envelope(t, 0.0F, 18.0F, 2.0F, 2.5F), Anim.envelope(t, 20.0F, 1.5F, 2.0F, 10.0F), age, 1.0F);
-            case Thumper.T_STOMP -> {
-                // the slam, slowed to a titan's pace; with riders aboard it only lifts its forefeet
-                float tt = t * 0.8F;
-                this.slam(Anim.envelope(tt, 0.0F, 18.0F, 2.0F, 2.5F), Anim.envelope(tt, 20.0F, 1.5F, 2.0F, 10.0F), age, s.ridden ? 0.15F : 1.0F);
-            }
-            case Thumper.T_BREATH -> {
-                float charge = Anim.smooth(t / Thumper.BREATH_CHARGE);
-                boolean firing = t >= Thumper.BREATH_CHARGE && t < Thumper.BREATH_END;
-                float k = Math.min(charge, t < Thumper.BREATH_END ? 1.0F : 1.0F - Anim.smooth((t - Thumper.BREATH_END) / 12.0F));
-                // neck up, head down at its target, braced on its forelegs, jaws wide
-                this.neck.xRot = Mth.lerp(k, this.neck.xRot, -0.55F);
-                this.head.xRot += 0.35F * k;
-                this.jaw.xRot = Mth.lerp(k, this.jaw.xRot, firing ? 0.85F + Mth.sin(age * 2.9F) * 0.06F : 0.25F * charge);
-                this.frontLeft.xRot = Mth.lerp(k, this.frontLeft.xRot, -0.25F);
-                this.frontRight.xRot = Mth.lerp(k, this.frontRight.xRot, -0.25F);
-                this.body.xRot = -0.08F * k;
-                this.tail.yRot = Mth.sin(age * 0.4F) * 0.25F * k;
-                if (firing) {
-                    this.head.zRot = Mth.sin(age * 1.9F) * 0.03F;
-                    this.body.zRot += Mth.sin(age * 2.3F) * 0.01F;
-                }
-            }
-            case Thumper.T_SHAKE -> {
-                float k = Anim.envelope(t, 0.0F, 8.0F, 52.0F, 10.0F);
-                // shaking itself like a wet dog
-                this.body.zRot += Mth.sin(age * 2.2F) * 0.07F * k;
-                this.body.xRot += Mth.sin(age * 1.7F + 1.0F) * 0.04F * k;
-                this.neck.xRot = Mth.lerp(k, this.neck.xRot, -0.4F);
-                this.head.yRot += Mth.sin(age * 1.3F) * 0.5F * k;
-                this.jaw.xRot = 0.7F * k;
-                this.frontLeft.xRot = Mth.sin(age * 1.1F) * 0.4F * k;
-                this.frontRight.xRot = Mth.sin(age * 1.1F + Mth.PI) * 0.4F * k;
-                this.tail.yRot = Mth.sin(age * 1.5F) * 0.6F * k;
-            }
-            case Thumper.T_BRACE -> this.neck.xRot += 0.12F;
-            case Thumper.T_HOLD -> {
-                // glaring up at the tower top, growling
-                float k = Anim.smooth(t / 10.0F);
-                this.neck.xRot = Mth.lerp(k, this.neck.xRot, -0.35F);
-                this.jaw.xRot = (0.15F + Math.max(0.0F, Mth.sin(age * 0.3F)) * 0.15F) * k;
-                this.tail.yRot = Mth.sin(age * 0.2F) * 0.3F;
-            }
-            case Thumper.AWAKEN -> {
-                if (t < Thumper.GROW_START) {
-                    // it doubles up, shuddering, as the sculk in its shell wakes
-                    float k = Anim.smooth(t / 8.0F);
-                    this.body.zRot += Mth.sin(age * 2.5F) * 0.05F * k;
-                    this.head.zRot = Mth.sin(age * 1.9F) * 0.3F * k;
-                    this.jaw.xRot = 0.5F * k;
-                    this.neck.xRot = 0.4F * k;
-                } else if (t < Thumper.GROW_END) {
-                    // swelling: legs splayed and braced, head thrown back
-                    float k = Anim.smooth((t - Thumper.GROW_START) / 20.0F);
-                    this.neck.xRot = Mth.lerp(k, 0.4F, -0.6F);
-                    this.jaw.xRot = 0.4F + Mth.sin(age * 0.9F) * 0.2F;
-                    this.body.zRot += Mth.sin(age * 3.1F) * 0.02F;
-                    this.frontLeft.zRot = -0.15F * k;
-                    this.hindLeft.zRot = -0.15F * k;
-                    this.frontRight.zRot = 0.15F * k;
-                    this.hindRight.zRot = 0.15F * k;
-                } else {
-                    // and the roar
-                    float k = 1.0F - Anim.smooth((t - Thumper.GROW_END - 20.0F) / 10.0F);
-                    this.neck.xRot = -0.75F * k;
-                    this.head.xRot -= 0.4F * k;
-                    this.jaw.xRot = 1.0F * k;
-                }
-            }
+            case Thumper.EMERGE -> this.emerge(t, age);
+            case Thumper.STOMP -> this.slam(Anim.envelope(t, 0.0F, 18.0F, 2.0F, 2.5F), Anim.envelope(t, 20.0F, 1.5F, 2.0F, 10.0F), age);
             case Thumper.CHARGE_WINDUP -> {
                 float k = Anim.smooth(t / 8.0F);
                 this.neck.xRot += 0.35F * k;
@@ -207,16 +107,15 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
                 this.hindLeft.xRot = Mth.sin(age * 0.9F) * 0.6F * k;
                 this.hindRight.xRot = Mth.sin(age * 0.9F + Mth.PI) * 0.6F * k;
                 this.body.zRot = Mth.sin(age * 1.3F) * 0.03F * k;
-                this.leftStick.xRot = 0.5F + Math.max(0.0F, Mth.sin(age * 1.6F)) * 0.6F;
-                this.rightStick.xRot = 0.5F + Math.max(0.0F, Mth.sin(age * 1.6F + Mth.PI)) * 0.6F;
+                this.body.xRot = 0.06F * k;
                 this.jaw.xRot += 0.2F * k;
             }
             case Thumper.CHARGE -> {
                 float gallop = age * 1.1F;
-                this.frontLeft.xRot = Mth.cos(gallop) * 1.0F;
-                this.hindRight.xRot = Mth.cos(gallop) * 1.0F;
-                this.frontRight.xRot = -Mth.cos(gallop) * 1.0F;
-                this.hindLeft.xRot = -Mth.cos(gallop) * 1.0F;
+                this.frontLeft.xRot = Mth.cos(gallop);
+                this.hindRight.xRot = Mth.cos(gallop);
+                this.frontRight.xRot = -Mth.cos(gallop);
+                this.hindLeft.xRot = -Mth.cos(gallop);
                 this.body.y -= Math.abs(Mth.sin(gallop)) * 1.5F;
                 this.body.xRot = 0.08F;
                 this.neck.xRot = 0.4F;
@@ -224,116 +123,153 @@ public class ThumperModel extends EntityModel<MiniBossRenderState> {
                 this.jaw.xRot = 0.3F;
                 this.tail.yRot = Mth.sin(gallop * 2.0F) * 0.4F;
             }
-            case Thumper.SPIN -> {
-                float tuck = Anim.envelope(t, 0.0F, 8.0F, 66.0F, 10.0F);
-                // spin up over the first ticks, hold, wind down
-                float spin = t < 10.0F ? 0.0F : t < 74.0F ? (t - 10.0F) * 0.9F : 57.6F + (1.0F - (float) Math.pow(1.0F - Math.min(1.0F, (t - 74.0F) / 12.0F), 2)) * 6.0F;
-                this.body.yRot = spin;
-                this.body.y += 3.5F * tuck;
-                float hide = 1.0F - tuck;
-                for (ModelPart leg : new ModelPart[]{this.frontLeft, this.frontRight, this.hindLeft, this.hindRight}) {
-                    leg.yScale = Math.max(0.05F, hide);
-                    leg.y -= 4.0F * tuck;
-                }
-                this.neck.z += 6.0F * tuck;
-                this.neck.yScale = Math.max(0.05F, hide);
-                this.neck.xScale = Math.max(0.05F, hide);
-                this.tail.visible = tuck < 0.6F;
-                this.body.zRot = Mth.sin(age * 0.8F) * 0.05F * tuck;
+            case Thumper.TAIL_SWEEP -> {
+                float coil = Anim.smooth(t / Thumper.SWEEP_START) * (1.0F - Anim.smooth((t - Thumper.SWEEP_END) / 10.0F));
+                boolean whip = t >= Thumper.SWEEP_START && t <= Thumper.SWEEP_END + 2;
+                // cocked to one side, then dragged out straight behind by the spin
+                this.tail.yRot = whip ? -0.9F + Mth.sin(age * 2.0F) * 0.1F : 1.1F * coil;
+                this.tail.xRot = -0.35F * coil;
+                this.body.zRot += (whip ? 0.12F : -0.08F) * coil;
+                this.neck.z += 2.0F * coil;
+                this.neck.xRot += 0.3F * coil;
+                this.frontLeft.zRot = -0.25F * coil;
+                this.frontRight.zRot = 0.25F * coil;
+                this.hindLeft.zRot = -0.25F * coil;
+                this.hindRight.zRot = 0.25F * coil;
             }
-            case Thumper.DAZED -> {
-                float k = Anim.smooth(t / 6.0F) * (1.0F - Anim.smooth((t - 70.0F) / 10.0F));
+            case Thumper.EXPOSED -> {
+                float k = Anim.smooth(t / 6.0F) * (1.0F - Anim.smooth((t - Thumper.EXPOSED_TICKS + 10.0F) / 10.0F));
                 this.body.y += 3.0F * k;
                 this.frontLeft.zRot = -0.6F * k;
                 this.hindLeft.zRot = -0.6F * k;
                 this.frontRight.zRot = 0.6F * k;
                 this.hindRight.zRot = 0.6F * k;
-                this.neck.xRot = 0.55F * k;
+                this.neck.xRot = Mth.lerp(k, this.neck.xRot, 0.55F);
                 this.head.zRot = Mth.sin(age * 0.25F) * 0.3F * k;
-                this.head.yRot = Mth.sin(age * 0.15F) * 0.3F * k;
-                this.jaw.xRot = 0.5F * k;
-                this.drum.zRot = Mth.sin(age * 0.2F) * 0.08F * k;
-                this.leftStick.xRot = 1.4F * k + this.leftStick.xRot * (1 - k);
-                this.rightStick.xRot = 1.5F * k + this.rightStick.xRot * (1 - k);
+                this.head.yRot = Mth.lerp(k, this.head.yRot, Mth.sin(age * 0.15F) * 0.3F);
+                // panting, jaw slack
+                this.jaw.xRot = (0.4F + Math.max(0.0F, Mth.sin(age * 0.5F)) * 0.25F) * k;
+                this.tail.yRot *= 1.0F - 0.8F * k;
+            }
+            case Thumper.BEAM -> {
+                float charge = Anim.smooth(t / Thumper.BEAM_CHARGE);
+                boolean firing = t >= Thumper.BEAM_CHARGE && t < Thumper.BEAM_END;
+                float k = Math.min(charge, t < Thumper.BEAM_END ? 1.0F : 1.0F - Anim.smooth((t - Thumper.BEAM_END) / 12.0F));
+                this.neck.xRot -= 0.3F * k;
+                this.head.xRot -= 0.15F * k;
+                this.jaw.xRot = (firing ? 1.0F : 0.5F * charge) * k;
+                this.frontLeft.xRot = -0.2F * k;
+                this.frontRight.xRot = -0.2F * k;
+                this.hindLeft.xRot = 0.25F * k;
+                this.hindRight.xRot = 0.25F * k;
+                if (firing) {
+                    this.neck.xRot += Mth.sin(age * 2.2F) * 0.03F;
+                    this.body.zRot += Mth.sin(age * 1.9F) * 0.02F;
+                }
+            }
+            case Thumper.BOULDERS -> {
+                float rake = Anim.envelope(t, 0.0F, 4.0F, 30.0F, 8.0F);
+                this.frontLeft.xRot = -0.5F * rake + Math.max(0.0F, Mth.sin(age * 0.9F)) * 0.6F * rake;
+                this.frontRight.xRot = -0.5F * rake + Math.max(0.0F, Mth.sin(age * 0.9F + Mth.PI)) * 0.6F * rake;
+                for (int throwAt = 16; throwAt <= 32; throwAt += 8) {
+                    float dip = Anim.envelope(t, throwAt - 6.0F, 4.0F, 0.5F, 1.5F);
+                    float toss = Anim.envelope(t, throwAt, 1.0F, 1.0F, 4.0F);
+                    this.neck.xRot += 0.7F * dip - 0.6F * toss;
+                    this.jaw.xRot += 0.5F * dip + 0.3F * toss;
+                    this.body.xRot += 0.08F * dip - 0.1F * toss;
+                }
+            }
+            case Thumper.BURROW -> {
+                float k = Anim.smooth(t / Thumper.BURROW_TICKS);
+                this.body.y += 22.0F * k * k;
+                this.body.xRot = 0.35F * Anim.smooth(t / 6.0F);
+                this.frontLeft.xRot = -0.8F + Mth.sin(age * 1.3F) * 0.9F;
+                this.frontRight.xRot = -0.8F + Mth.sin(age * 1.3F + Mth.PI) * 0.9F;
+                this.hindLeft.xRot = 0.4F + Mth.sin(age * 1.1F) * 0.5F;
+                this.hindRight.xRot = 0.4F + Mth.sin(age * 1.1F + Mth.PI) * 0.5F;
+                this.neck.xRot = 0.5F;
+            }
+            case Thumper.ERUPT -> {
+                float out = Anim.backOut(Anim.clamp01(t / Thumper.ERUPT_IMPACT));
+                float rear = 1.0F - Anim.smooth((t - 4.0F) / 12.0F);
+                this.body.y += 22.0F * (1.0F - out);
+                this.body.xRot = -0.55F * rear;
+                this.frontLeft.xRot = Mth.lerp(rear, this.frontLeft.xRot, -1.2F);
+                this.frontRight.xRot = Mth.lerp(rear, this.frontRight.xRot, -1.0F);
+                this.neck.xRot -= 0.5F * rear;
+                this.jaw.xRot = 0.9F * rear;
+            }
+            case Thumper.ROAR -> {
+                float k = Anim.envelope(t, 0.0F, 6.0F, 24.0F, 10.0F);
+                this.body.xRot = -0.18F * k;
+                this.neck.xRot -= 0.55F * k;
+                this.head.xRot -= 0.3F * k;
+                this.jaw.xRot = 1.05F * k;
+                this.head.zRot = Mth.sin(age * 1.6F) * 0.06F * k;
+                this.frontLeft.xRot = -0.3F * k;
+                this.frontRight.xRot = -0.3F * k;
             }
             default -> {
             }
         }
-        this.titan(s, g, age, t, st);
-        if (s.hurtTicks >= 0.0F) {
-            // the drum skin shudders when struck
-            float h = 1.0F - Math.min(1.0F, s.hurtTicks / 10.0F);
-            this.drum.xScale = 1.0F + Mth.sin(s.hurtTicks * 2.5F) * 0.06F * h;
-            this.drum.zScale = this.drum.xScale;
-            this.leftBrow.y -= 0.8F * h;
-            this.rightBrow.y -= 0.8F * h;
-        }
+        this.vents(s, st, t, age);
     }
 
-    /** Rears up (`up`) and crashes down (`hit`); `rear` scales how far it tips back. */
-    private void slam(float up, float hit, float age, float rear) {
-        this.body.xRot = (-0.5F * up + 0.06F * hit) * rear;
-        this.body.y -= 3.0F * up * rear;
+    /** Buried to the eyes, it claws its way up out of the floor and roars. */
+    private void emerge(float t, float age) {
+        float climb = Anim.smooth(t / (Thumper.EMERGE_TICKS - 22.0F));
+        float under = 1.0F - climb;
+        this.body.y += 30.0F * under;
+        // front first: nose up while it hauls itself out
+        this.body.xRot = -0.6F * Mth.sin(climb * Mth.PI);
+        float claw = Mth.sin(climb * Mth.PI) + 0.2F * under;
+        this.frontLeft.xRot = -1.0F * claw + Mth.sin(age * 0.45F) * 0.7F * claw;
+        this.frontRight.xRot = -1.0F * claw + Mth.sin(age * 0.45F + Mth.PI) * 0.7F * claw;
+        this.hindLeft.xRot = 0.5F * claw;
+        this.hindRight.xRot = 0.5F * claw;
+        this.neck.xRot -= 0.25F * claw;
+        this.head.yRot = Mth.sin(age * 0.2F) * 0.3F * under;
+        // the roar, then a last shake of the head to settle
+        float roar = Anim.envelope(t, Thumper.EMERGE_TICKS - 22.0F, 3.0F, 12.0F, 6.0F);
+        this.neck.xRot -= 0.6F * roar;
+        this.head.xRot -= 0.35F * roar;
+        this.jaw.xRot = Math.max(this.jaw.xRot, 1.1F * roar);
+        this.head.zRot = Mth.sin(age * 1.8F) * 0.08F * roar;
+    }
+
+    /** Rears up (`up`) and crashes down (`hit`). */
+    private void slam(float up, float hit, float age) {
+        this.body.xRot = -0.5F * up + 0.06F * hit;
+        this.body.y -= 3.0F * up;
         this.frontLeft.xRot = Mth.lerp(up, this.frontLeft.xRot, -1.1F + Mth.sin(age * 0.6F) * 0.3F);
         this.frontRight.xRot = Mth.lerp(up, this.frontRight.xRot, -1.1F - Mth.sin(age * 0.6F) * 0.3F);
         this.hindLeft.xRot = Mth.lerp(up, this.hindLeft.xRot, 0.5F);
         this.hindRight.xRot = Mth.lerp(up, this.hindRight.xRot, 0.5F);
         this.neck.xRot -= 0.4F * up;
         this.jaw.xRot += 0.35F * up + 0.6F * hit;
-        this.body.yScale *= 1.0F - 0.15F * hit * rear;
+        this.body.yScale *= 1.0F - 0.15F * hit;
         this.body.xScale = 1.0F + 0.08F * hit;
         this.body.zScale = 1.0F + 0.08F * hit;
-        this.leftStick.xRot -= 0.8F * hit;
-        this.rightStick.xRot -= 0.8F * hit;
     }
 
-    /** The parts it grows as the titan, and the light climbing its plates. */
-    private void titan(MiniBossRenderState s, float g, float age, float t, int st) {
-        boolean titan = g > 0.0F;
-        this.mantle.visible = titan;
-        this.plates.visible = titan;
-        this.tailTitan.visible = titan;
-        this.neckPlates[0].visible = titan;
-        this.neckPlates[1].visible = titan;
-        this.leftStick.visible = g < 0.4F;
-        this.rightStick.visible = g < 0.4F;
-        if (!titan) {
-            for (ModelPart[] row : this.lit) {
-                for (ModelPart p : row) {
-                    p.visible = false;
-                }
-            }
-            return;
+    /** The bone lids flip open over the vents and the sculk inside lights up. */
+    private void vents(MiniBossRenderState s, int st, float t, float age) {
+        float open = switch (st) {
+            case Thumper.EXPOSED -> Anim.smooth(t / 6.0F) * (1.0F - Anim.smooth((t - Thumper.EXPOSED_TICKS + 8.0F) / 8.0F));
+            case Thumper.STOMP -> Anim.smooth((t - Thumper.STOMP_IMPACT) / 4.0F);
+            case Thumper.BEAM -> Anim.backOut(Anim.clamp01(t / 10.0F)) * (1.0F - Anim.smooth((t - Thumper.BEAM_END - 4.0F) / 8.0F));
+            case Thumper.ERUPT -> Anim.smooth((t - Thumper.ERUPT_IMPACT) / 4.0F);
+            default -> 0.0F;
+        };
+        // a rattle as it is struck, or as the beam builds in it
+        float rattle = s.hurtTicks >= 0.0F ? Mth.sin(s.hurtTicks * 3.0F) * 0.12F * (1.0F - Math.min(1.0F, s.hurtTicks / 10.0F)) : 0.0F;
+        if (st == Thumper.BEAM && t < Thumper.BEAM_CHARGE) {
+            rattle += Mth.sin(age * 2.5F) * 0.05F;
         }
-        // the crust swells up over the shell; the plates push up out of it, the tail grows out
-        float grow = Math.max(0.02F, g);
-        this.mantle.yScale = grow;
-        this.plates.yScale = grow;
-        this.tailTitan.zScale = grow;
-        this.neckPlates[0].yScale = grow;
-        this.neckPlates[1].yScale = grow;
-        // the drum sinks into the middle of the deck, its skin flush with it
-        this.drum.y += 8.9F * g;
-        if (st == Thumper.IDLE) {
-            // a titan carries its head high
-            this.neck.xRot -= 0.2F * g;
-        }
-        int n = this.lit.length;
-        for (int k = 0; k < n; k++) {
-            boolean on;
-            if (st == Thumper.T_BREATH) {
-                // tail to head, a row at a time, then all of them flickering while it breathes
-                on = t < Thumper.BREATH_CHARGE ? t >= k * (Thumper.BREATH_CHARGE / (float) n) : t < Thumper.BREATH_END || Mth.sin(age * 3.0F + k) > 0.0F;
-            } else if (st == Thumper.AWAKEN) {
-                on = Mth.sin(age * 1.7F + k * 2.1F) > 0.3F;
-            } else {
-                // now and then a ripple of light runs up its spine
-                float wave = (age * 0.12F) % 18.0F;
-                on = Math.abs(wave - k) < 0.8F;
-            }
-            for (ModelPart p : this.lit[k]) {
-                p.visible = on;
-            }
+        for (int i = 0; i < 3; i++) {
+            this.lids[i].xRot = -1.9F * open + rattle * (i == 0 ? 1.0F : -1.0F);
+            boolean glow = open > 0.25F && (open > 0.7F || Mth.sin(age * 2.0F + i) > 0.0F);
+            this.lit[i].visible = glow || (st == Thumper.BEAM && t < Thumper.BEAM_CHARGE && Mth.sin(age * 1.5F + i * 2.0F) > 0.4F);
         }
     }
 }

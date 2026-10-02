@@ -33,8 +33,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 /**
- * A mini-boss of the Sift: one of the three great players the Conductor keeps - the Thumper, the
- * Whistler and the Strummer. Each runs a little state machine of telegraphed attacks (the state is
+ * A mini-boss of the Sift: one of the great players the Conductor keeps - the Thumper and the
+ * Strummer. Each runs a little state machine of telegraphed attacks (the state is
  * synced, so the client can animate every wind-up and every blow from the moment it changed),
  * shows a boss bar, and calls up its young.
  */

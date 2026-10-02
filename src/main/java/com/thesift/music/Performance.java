@@ -13,7 +13,7 @@ public final class Performance {
     public static final int BAR = BEAT * 4;
     /** When the Mask rises from beneath the stage. */
     public static final int MASK_RISES = BAR * 20;
-    /** When the Mask becomes the Conductor; the performance ends and the fight begins. */
+    /** When the performance ends: the fallen Mask is rebuilt into the Conductor and the fight begins. */
     public static final int LENGTH = BAR * 26;
 
     /** Client side: the nearest stage that is performing, refreshed every tick by its block entity. */

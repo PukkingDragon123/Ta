@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 /**
- * One of the young of the Conductor's three great players - a Sculk Parasite, a Whistling or a
+ * One of the young of the Conductor's three great players - a Sculk Parasite or a
  * Strumling - and the rank and file of his orchestra. Every one has a signature attack: it winds up
  * (so you can see it coming), then plays its note. Subclasses say how far it reaches and what the
  * note does.

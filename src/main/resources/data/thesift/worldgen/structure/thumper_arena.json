@@ -9,7 +9,7 @@
   "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false,
   "start_height": {
-    "absolute": -3
+    "absolute": -7
   },
   "project_start_to_heightmap": "WORLD_SURFACE_WG"
 }

@@ -625,6 +625,8 @@ def functional():
     for (x, y) in ((7, 7), (8, 7), (7, 8), (8, 8)):
         gp.set(x, y, hx('#fff7c2'))
     out('block/glow_particle', gp)
+    import siege  # the Thumper's arena: the Ancient Cannon
+    siege.block_textures(out)
     # chrome fluid: calm vanilla-water-like ripples in cyan pearl, with the odd pink glint
     CHROME = [hx('#86d4e0'), hx('#95dbe5'), hx('#a5e2ea'), hx('#bae9ef'), hx('#e2f8fa')]
     GLINT = hx('#ffd3ee')
@@ -1903,10 +1905,9 @@ def boss_bar():
 
 
 def mini_boss_bars():
-    """Health bars for the three great players, in the same layout as the Conductor's (2x texels):
-    a sculk-and-bone frame dressed for each - drum scutes for the Thumper, feather tips and flute
-    holes for the Whistler, strings and webs for the Strummer - a glowing fill in its colour, and
-    a skull emblem."""
+    """Health bars for the great players, in the same layout as the Conductor's (2x texels): a
+    sculk-and-bone frame dressed for each - bone scutes for the Thumper, strings and webs for the
+    Strummer - a glowing fill in its colour, and a skull emblem."""
     import math
     BONE, BONE_L, BONE_D = (222, 214, 192), (246, 240, 224), (150, 140, 118)
     HIDE, HIDE_L, HIDE_D = (12, 38, 44), (24, 66, 72), (5, 18, 22)
@@ -1936,14 +1937,6 @@ def mini_boss_bars():
             '................', '......rRRr......', '.....rrrrrr.....', '....dbbbbbbd....', '...dlbbbbbbbd...', '..dbkkbbbbkkbd..', '..dbkgbbbbgkbd..',
             '..dbkkbbbbkkbd..', '..dbbbbddbbbbd..', '...dbbkddkbbd...', '...hdbbbbbbdh...', '..hHhddbbddhHh..', '..hhhhkkkkhhhh..', '...hhkbkbkbhh...',
             '....hhhhhhhh....', '................']),
-        'whistler': ((159, 248, 255), [
-            '................', '.......dd.......', '......dbbd......', '.....dbllbd.....', '....dbbbbbbd....', '....dbkgbbbbyyyy', '....dbkkbbbyyyyy',
-            '....dbbbbbbdyy..', '.....dbbbbd.....', '......hddh......', '.....hhsshh.....', '....hHhsshHh....', '...hh.hssh.hh...', '..h...hssh...h..',
-            '......hhhh......', '................']),
-        'thumper_titan': ((69, 240, 255), [
-            '...g..g..g..g...', '..ggd.gg.gg.dgg.', '...dbbbbbbbbbd..', '..dbbbbbbbbbbbd.', '..dbkkkbbbkkkbd.', '..dbkGkbbbkGkbd.', '..dbkkkbbbkkkbd.',
-            '..dbbbbddbbbbbd.', '...dbbkddkbbbd..', '...hdbbbbbbbdh..', '..hHgddbbddgHh..', '..hhhhkkkkkhhh..', '...hhkbkbkbhh...', '....hgghhggh....',
-            '.....hhhhhh.....', '................']),
         'strummer': ((196, 108, 255), [
             '..s..........s..', '...s........s...', '....s.dddd.s....', '.....dbbbbd.....', '....dbbbbbbd....', '...dggbbbbggd...', '..dggkgbbgkggd..',
             '..dgggbbbbgggd..', '...dbbbddbbbd...', '....dbkkkkbd....', '.....dbbbbd.....', '...vV.dbbd.Vv...', '..v..V.dd.V..v..', '.v....V..V....v.',
@@ -1964,20 +1957,7 @@ def mini_boss_bars():
             y = rnd.choice((13, 14, 33, 34))
             d.point((x, y), fill=(*GLOW, 255) if rnd.random() < 0.4 else (*HIDE_L, 255))
             d.point((x + 1, y), fill=(*HIDE_L, 255))
-        if name == 'thumper_titan':
-            # the titan's bar: jagged glowing dorsal plates along the top rim, sculk crust below
-            for x in range(16, 404, 18):
-                h = 8 + (x * 7 % 4)
-                d.polygon([(x, 12), (x + 2, 12 - h // 2), (x + 5, 12 - h), (x + 7, 10 - h // 2), (x + 9, 12 - h + 1), (x + 12, 12 - h // 3), (x + 14, 12)],
-                          fill=(*BONE, 255), outline=(*BONE_D, 255))
-                d.line((x + 6, 11, x + 6, 13 - h), fill=(*GLOW, 255), width=2)
-                d.point((x + 6, 12 - h), fill=(180, 255, 255, 255))
-            for x in range(14, 412, 6):
-                d.point((x + rnd.randrange(3), 34 + rnd.randrange(3)), fill=(*GLOW, 255) if rnd.random() < 0.5 else (*HIDE_L, 255))
-            for x0 in (0, 412):
-                for k in range(4):
-                    d.line((x0 + k * 4, 12, x0 + 12 - k * 4, 36), fill=(*GLOW, 255), width=1)
-        elif name == 'thumper':
+        if name == 'thumper':
             # bone scutes along both rims, drum-cord crosses at the ends
             for x in range(18, 410, 22):
                 for y0 in (9, 33):
@@ -1986,18 +1966,6 @@ def mini_boss_bars():
             for x0 in (0, 412):
                 for k in range(4):
                     d.line((x0 + k * 4, 12, x0 + 12 - k * 4, 36), fill=(205, 80, 52, 255), width=2)
-        elif name == 'whistler':
-            # feather tips fanning out of both ends, flute holes along the bottom rim
-            for x0, sgn in ((14, -1), (413, 1)):
-                for k in range(5):
-                    a = (k - 2) * 0.32
-                    x1 = x0 + sgn * int(16 * math.cos(a))
-                    y1 = 24 + int(16 * math.sin(a))
-                    d.line((x0, 24, x1, y1), fill=(*BONE_L, 255), width=3)
-                    d.point((x1, y1), fill=(*GLOW, 255))
-            for x in range(40, 390, 18):
-                d.ellipse((x, 33, x + 4, 37), fill=(4, 10, 12, 255), outline=(*BONE_D, 255))
-                d.point((x + 2, 35), fill=(*GLOW, 255))
         else:
             # four glowing strings over the frame, webs in the corners, spider legs at the ends
             for i, y in enumerate((12, 15, 32, 35)):
@@ -2011,8 +1979,8 @@ def mini_boss_bars():
                 for k, y in enumerate((14, 22, 30)):
                     d.line((x0, y, x0 + sgn * 6, y - 4), fill=(*BONE, 255), width=2)
                     d.line((x0 + sgn * 6, y - 4, x0 + sgn * 9, y + 4), fill=(*BONE_D, 255), width=2)
-        # phase ticks (bone): the Thumper's at half, where it wakes as the titan
-        for frac in ((0.5,) if name.startswith('thumper') else (0.66, 0.33)):
+        # phase ticks (bone) at its movements
+        for frac in (0.66, 0.33):
             x = 32 + int(364 * frac)
             d.rectangle((x - 1, 15, x, 33), fill=(*BONE, 255))
             d.rectangle((x - 1, 15, x, 16), fill=(*BONE_L, 255))

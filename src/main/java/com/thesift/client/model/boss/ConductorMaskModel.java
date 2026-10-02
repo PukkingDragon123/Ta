@@ -38,7 +38,8 @@ public class ConductorMaskModel extends EntityModel<ConductorMaskRenderState> {
         this.leftHorn.zRot += flex;
         this.rightHorn.zRot -= flex;
         this.crown.yScale = 1.0F + k * 0.4F;
-        this.mask.xRot = Mth.sin(age * 0.04F) * 0.08F;
+        // fallen at the end: it tips over and lies face up on the stage
+        this.mask.xRot = Mth.lerp(k, Mth.sin(age * 0.04F) * 0.08F, -Mth.HALF_PI);
         float shake = Anim.smooth(k) * 0.08F;
         this.mask.x += Mth.sin(age * 4.1F) * shake * 10.0F;
         this.mask.y += Mth.cos(age * 3.7F) * shake * 10.0F;

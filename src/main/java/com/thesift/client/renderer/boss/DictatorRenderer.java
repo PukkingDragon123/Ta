@@ -31,13 +31,12 @@ public class DictatorRenderer extends SiftMobRenderer<Dictator, DictatorRenderSt
         return TEXTURES.get(state.expression);
     }
 
-    /** In his first movement he is huge with the Thumper's strength; he shrinks back as he takes wing. */
+    /** He grows with every movement, more godlike each time; the change comes at the height of his transformation. */
     @Override
     protected void scale(DictatorRenderState state, com.mojang.blaze3d.vertex.PoseStack poseStack) {
-        float big = 1.35F;
-        float s = state.phase == 1 ? big : 1.0F;
-        if (state.transform >= 0.0F && state.phase == 2) {
-            s = Mth.lerp(com.thesift.client.model.Anim.smooth((state.transform - 0.45F) / 0.2F), big, 1.0F);
+        float s = 1.0F + (state.phase - 1) * 0.12F;
+        if (state.transform >= 0.0F && state.phase > 1) {
+            s = Mth.lerp(com.thesift.client.model.Anim.smooth((state.transform - 0.45F) / 0.2F), s - 0.12F, s);
         }
         if (state.transform >= 0.0F) {
             // a pulse of power at the moment of change
@@ -65,6 +64,8 @@ public class DictatorRenderer extends SiftMobRenderer<Dictator, DictatorRenderSt
         state.actionTime = entity.actionTime(partialTicks);
         int tt = entity.transformTicks();
         state.transform = tt > 0 ? 1.0F - (tt - partialTicks) / Dictator.TRANSFORM_TICKS : -1.0F;
+        int at = entity.assembleTicks();
+        state.assemble = at > 0 ? Math.min(1.0F, 1.0F - (at - partialTicks) / Dictator.ASSEMBLE_TICKS) : -1.0F;
         state.blink.copyFrom(entity.blinkAnimation);
         state.summon.copyFrom(entity.summonAnimation);
         state.crescendo.copyFrom(entity.crescendoAnimation);

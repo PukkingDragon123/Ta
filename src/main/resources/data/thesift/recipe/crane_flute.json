@@ -1,11 +1,15 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "ingredients": [
-    "thesift:crane_beak",
-    "minecraft:feather",
-    "minecraft:feather",
-    "minecraft:echo_shard"
+  "key": {
+    "E": "minecraft:echo_shard",
+    "A": "minecraft:amethyst_shard",
+    "B": "minecraft:bone"
+  },
+  "pattern": [
+    "  E",
+    " A ",
+    "B  "
   ],
   "result": {
     "count": 1,

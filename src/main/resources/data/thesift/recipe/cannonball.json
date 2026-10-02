@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "N": "minecraft:iron_nugget",
+    "I": "minecraft:iron_ingot",
+    "G": "minecraft:gunpowder",
+    "C": "thesift:cobbled_dreamstone"
+  },
+  "pattern": [
+    "NIN",
+    "GCG",
+    "NIN"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thesift:cannonball"
+  }
+}

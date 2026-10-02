@@ -362,9 +362,9 @@ public final class ClientSmokeTest {
         scene("drums", 40, ClientSmokeTest::drumStage);
         scene("bosses", 60, ClientSmokeTest::bossStage);
         scene("bosses_close", 40, c -> c.camera(-118.5, STAGE_Y + 4.5, -9.0, -120.5, STAGE_Y + 2.0, 0.5));
-        // the Thumper as the titan, with parasites on its back; then the view from the deck
-        scene("titan", 60, ClientSmokeTest::titanStage);
-        scene("titan_back", 40, c -> c.camera(-160.0, STAGE_Y + 8.3 + 1.62, 3.2, -160.0, STAGE_Y + 8.0, -6.0));
+        // the Thumper with its vents open below a cannon tower; then the gunner's view from the tower top
+        scene("turtle_cannon", 60, ClientSmokeTest::turtleCannonStage);
+        scene("turtle_cannon_gunner", 40, c -> c.camera(-166.5, STAGE_Y + 7.0 + 1.62, -5.5, -160.0, STAGE_Y + 1.5, 0.5));
         // Sculk Corruption IV taking your sight (cleared again after a few seconds)
         scene("corruption", 80, c -> {
             c.run("effect give @a thesift:sculk_corruption 7 3");
@@ -503,7 +503,6 @@ public final class ClientSmokeTest {
         c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
         c.spawn(ModEntities.SCULK_HARMONER.get(), 21.5, STAGE_Y + 2.5, STAGE_Z + 6.0, face, false);
         c.spawn(ModEntities.SCULK_PARASITE.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
-        c.spawn(ModEntities.WHISTLING.get(), 22.0, STAGE_Y, STAGE_Z + 4.0, face, false);
         c.spawn(ModEntities.STRUMLING.get(), 24.6, STAGE_Y, STAGE_Z + 5.5, face, false);
         // one Harmoner of every colour, perched in a row
         for (int i = 0; i < com.thesift.entity.Harmoner.VARIANTS; i++) {
@@ -636,17 +635,15 @@ public final class ClientSmokeTest {
         c.camera(x0 + 0.5, STAGE_Y + 2.6, z0 - 3.2, x0 + 0.5, STAGE_Y + 0.4, z0 + 0.5);
     }
 
-    /** The three mini-bosses with their young, the Mask, and the Grand Stage's altars. */
+    /** The mini-bosses with their young, the Mask, and the Grand Stage's altars. */
     private static void bossStage(Ctx c) {
         int x0 = -120, z0 = 0;
         floor(c, x0 - 14, z0 - 8, x0 + 14, z0 + 8);
         float face = 180.0F;
         c.spawn(ModEntities.THUMPER.get(), x0 - 8.5, STAGE_Y, z0 + 2.5, 160.0F, false);
         c.spawn(ModEntities.STRUMMER.get(), x0 + 0.5, STAGE_Y, z0 + 2.5, face, false);
-        c.spawn(ModEntities.WHISTLER.get(), x0 + 8.5, STAGE_Y + 2.5, z0 + 2.5, 200.0F, false);
         c.spawn(ModEntities.SCULK_PARASITE.get(), x0 - 5.5, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.STRUMLING.get(), x0 + 3.0, STAGE_Y, z0 - 1.5, face, false);
-        c.spawn(ModEntities.WHISTLING.get(), x0 + 6.0, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.CONDUCTOR_MASK.get(), x0 + 12.0, STAGE_Y + 1.0, z0 - 3.0, face, false);
         BlockState altar = ModBlocks.INSTRUMENT_ALTAR.get().defaultBlockState();
         for (int i = 0; i < 3; i++) {
@@ -656,16 +653,23 @@ public final class ClientSmokeTest {
         c.camera(x0 + 0.5, STAGE_Y + 6.0, z0 - 14.0, x0 + 0.5, STAGE_Y + 1.5, z0 + 1.0);
     }
 
-    private static void titanStage(Ctx c) {
+    /** The Thumper, spent and gaping, a crumbling arena wall behind it, and a loaded cannon on its tower. */
+    private static void turtleCannonStage(Ctx c) {
         int x0 = -160, z0 = 0;
         floor(c, x0 - 16, z0 - 16, x0 + 16, z0 + 16);
-        c.fill(x0 - 16, STAGE_Y + 7, z0 - 16, x0 + 16, STAGE_Y + 12, z0 + 16, Blocks.AIR.defaultBlockState());
+        c.fill(x0 - 16, STAGE_Y + 1, z0 - 16, x0 + 16, STAGE_Y + 12, z0 + 16, Blocks.AIR.defaultBlockState());
+        // the tower: a hushslate column with the cannon on top, aimed at the turtle
+        c.fill(x0 - 8, STAGE_Y, z0 - 7, x0 - 6, STAGE_Y + 5, z0 - 5, ModBlocks.HUSHSLATE_BRICKS.get().defaultBlockState());
+        c.set(x0 - 7, STAGE_Y + 6, z0 - 6, ModBlocks.ANCIENT_CANNON.get().defaultBlockState()
+                .setValue(com.thesift.block.AncientCannonBlock.FACING, net.minecraft.core.Direction.SOUTH)
+                .setValue(com.thesift.block.AncientCannonBlock.LOADED, true));
+        // a crumbling arena wall it has half smashed through
+        c.fill(x0 + 5, STAGE_Y, z0 - 6, x0 + 6, STAGE_Y + 3, z0 + 6, ModBlocks.CRUMBLING_DREAMSTONE.get().defaultBlockState());
+        c.fill(x0 + 5, STAGE_Y + 1, z0 - 1, x0 + 6, STAGE_Y + 3, z0 + 1, Blocks.AIR.defaultBlockState());
         if (c.spawn(ModEntities.THUMPER.get(), x0, STAGE_Y, z0, 200.0F, false) instanceof com.thesift.entity.boss.Thumper th) {
-            th.codexTitan();
+            th.codexPose(com.thesift.entity.boss.Thumper.EXPOSED);
         }
-        c.spawn(ModEntities.SCULK_PARASITE.get(), x0 + 1.5, STAGE_Y + 8.3, z0 + 1.0, 30.0F, false);
-        c.spawn(ModEntities.SCULK_PARASITE.get(), x0 - 1.2, STAGE_Y + 8.3, z0 - 1.6, 140.0F, false);
-        c.camera(x0 + 15.0, STAGE_Y + 10.0, z0 - 15.0, x0, STAGE_Y + 5.0, z0);
+        c.camera(x0 + 12.0, STAGE_Y + 7.0, z0 - 12.0, x0, STAGE_Y + 1.5, z0);
     }
 
     private static void altarStage(Ctx c) {

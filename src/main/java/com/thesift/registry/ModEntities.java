@@ -11,8 +11,6 @@ import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
 import com.thesift.entity.boss.Thumper;
 import com.thesift.entity.boss.WebShot;
-import com.thesift.entity.boss.Whistler;
-import com.thesift.entity.boss.Whistling;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import net.minecraft.world.entity.EntityType;
@@ -43,13 +41,9 @@ public final class ModEntities {
             b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10).noSummon());
     // the Conductor's three great players, and their young
     public static final DeferredHolder<EntityType<?>, EntityType<Thumper>> THUMPER = ENTITIES.registerEntityType("thumper", Thumper::new,
-            MobCategory.MONSTER, b -> b.sized(3.0F, 3.9F).eyeHeight(2.0F).clientTrackingRange(16));
-    public static final DeferredHolder<EntityType<?>, EntityType<Whistler>> WHISTLER = ENTITIES.registerEntityType("whistler", Whistler::new,
-            MobCategory.MONSTER, b -> b.sized(1.6F, 2.6F).eyeHeight(2.25F).clientTrackingRange(16));
+            MobCategory.MONSTER, b -> b.sized(3.0F, 2.9F).eyeHeight(2.0F).clientTrackingRange(16));
     public static final DeferredHolder<EntityType<?>, EntityType<Strummer>> STRUMMER = ENTITIES.registerEntityType("strummer", Strummer::new,
             MobCategory.MONSTER, b -> b.sized(2.6F, 2.8F).eyeHeight(2.4F).clientTrackingRange(16));
-    public static final DeferredHolder<EntityType<?>, EntityType<Whistling>> WHISTLING = ENTITIES.registerEntityType("whistling", Whistling::new,
-            MobCategory.MONSTER, b -> b.sized(0.5F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Strumling>> STRUMLING = ENTITIES.registerEntityType("strumling", Strumling::new,
             MobCategory.MONSTER, b -> b.sized(1.3F, 0.8F).eyeHeight(0.55F).clientTrackingRange(10)); // Weaver: a full-size Sculk Spider
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.boss.SculkParasite>> SCULK_PARASITE = ENTITIES.registerEntityType(

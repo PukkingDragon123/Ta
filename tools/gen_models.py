@@ -47,8 +47,8 @@ POSES.update({
 WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 9, 'kazoo_fish': 18, 'tubafish': 11}
 
 
-PREVIEW_SCALE = {'enchoer': 7, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'whistler': 4, 'strummer': 4,
-                 'whistling': 12, 'strumling': 12, 'conductor_mask': 10, **WILD_SCALE}
+PREVIEW_SCALE = {'enchoer': 7, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'strummer': 4,
+                 'strumling': 12, 'conductor_mask': 10, **WILD_SCALE}
 # the Sculk Parasite (tools/parasite.py)
 # 'coil' is the wind-up of its lunge, as SculkParasiteModel poses it: reared up, folded into a zigzag, sting raised, jaws open
 POSES['sculk_parasite'] = {'rest': Pose(), 'coil': Pose(

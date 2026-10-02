@@ -301,6 +301,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
     public static final DeferredBlock<DreamSnareBlock> DREAM_SNARE = BLOCKS.registerBlock("dream_snare", DreamSnareBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TRIPWIRE).noCollision());
+    public static final DeferredBlock<AncientCannonBlock> ANCIENT_CANNON = BLOCKS.registerBlock("ancient_cannon", AncientCannonBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion());
     public static final DeferredBlock<CrumblingDreamstoneBlock> CRUMBLING_DREAMSTONE = BLOCKS.registerBlock("crumbling_dreamstone", CrumblingDreamstoneBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.8F));
     public static final DeferredBlock<SiftCakeBlock> SIFT_CAKE = BLOCKS.registerBlock("sift_cake", SiftCakeBlock::new,

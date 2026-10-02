@@ -160,14 +160,13 @@ public final class CodexEntries {
             }
         };
         l.add(mob(DICTATOR, "thumper", ModEntities.THUMPER, perform));
-        l.add(mob(DICTATOR, "whistler", ModEntities.WHISTLER, perform));
         l.add(mob(DICTATOR, "strummer", ModEntities.STRUMMER, perform));
-        l.add(mob(DICTATOR, "whistling", ModEntities.WHISTLING, attack));
         l.add(mob(DICTATOR, "strumling", ModEntities.STRUMLING, attack));
         l.add(mob(DICTATOR, "sculk_parasite", ModEntities.SCULK_PARASITE, attack));
         l.add(thing(DICTATOR, "stage", ModItems.INSTRUMENT_ALTAR));
         l.add(thing(DICTATOR, "sculk_corruption", () -> Items.SCULK_VEIN));
         l.add(thing(DICTATOR, "encore_sigil", ModItems.ENCORE_SIGIL));
+        l.add(thing(DICTATOR, "ancient_cannon", ModItems.ANCIENT_CANNON));
         l.add(thing(DICTATOR, "conga_drum", ModItems.CONGA_DRUM));
         l.add(thing(DICTATOR, "crane_flute", ModItems.CRANE_FLUTE));
         l.add(thing(DICTATOR, "guitar", ModItems.GUITAR));

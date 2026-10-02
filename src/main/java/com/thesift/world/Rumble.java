@@ -3,7 +3,7 @@ package com.thesift.world;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Ground-shaking moments - a titan's footfall, its roar - that the client turns into camera shake.
+ * Ground-shaking moments - a giant's footfall, its roar - that the client turns into camera shake.
  * The server never reads this: entities call {@link #at} from their client-side entity events, and
  * the client's camera fades the shake with distance from the source and with time.
  */

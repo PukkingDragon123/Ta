@@ -742,21 +742,14 @@ def dictator() -> Model:
                 prong.cube((-0.5, 0, -0.5), (1, 5, 1), color='brass_l', pattern='mc', clusters=0.0, rim=False)
                 prong.cube((-0.5 - 0.5 * sx_, 4.5, -0.5), (1, 1, 1), color='brass', pattern='mc', clusters=0.0, rim=False)
             skull.cube((-1.25, 5.5, -1.25), (2.5, 2.5, 2.5), color='glow', pattern='mc', clusters=0.0, rim=False, glow=True)
-        # the mantis's strings, stolen in his last movement: glowing threads hanging from each hand
+        # threads of song hanging from each hand: he plays the air with them once he rises
         strings = hand.part(f'{side}_strings', pivot=(0, 2, 0))
         strings.cube((0, 0, -1.5), (0, 16, 3), color='glow', pattern='mc', clusters=0.0, rim=False, faces={
             f: dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=['g_g_g_' if f == 'east' else '_g_g_g'] * 32, keys={'g': 'glow'}, glow_keys='g')
             for f in ('east', 'west')})
-    # --- what he steals from the three he conducted (each shown only in its own movement)
+    # --- his own sculk magic, worn as he grows godlike: glowing threads in his hands (levitating) and
+    # great wings of soul-feathers (soaring)
     import bosses as BS
-    shell_k = {'d': 'armor_d', 'l': 'armor_l', 'm': 'skin_d', 'r': 'brass_d', 'g': 'glow'}
-    shell = torso.part('turtle_shell', pivot=(0, -15.5, 2.75), rot=(0.05, 0, 0))
-    shell.cube((-6, 0, 0), (12, 14, 4), color='armor', pattern='mc', clusters=0.0, faces={
-        'south': dict(color='armor', pattern='mc', clusters=0.0, hd=True, map=BS.scutes(24, 28, 8, 7, glow_centre=True), keys=shell_k, glow_keys='g'),
-        **{f: dict(color='armor', pattern='mc', clusters=0.0, hd=True, map=BS.marginals(8, 28, 4), keys=shell_k) for f in ('east', 'west')},
-    })
-    for i, y in enumerate((2.5, 7, 11.5)):
-        shell.cube((-1, y, 4), (2, 2, 1.5), color='horn', pattern='mc', clusters=0.0, rim=False, faces={'south': dict(color='glow', pattern='mc', clusters=0.0, glow=True)})
     fk = {'d': 'armor_l', 'l': 'horn_l', 'k': 'void', 'i': 'armor_d', '_': '_'}
     for side, sx in (('left', 1), ('right', -1)):
         wing = torso.part(f'{side}_crane_wing', pivot=(2.5 * sx, -14.5, 3), rot=(0.2, -0.5 * sx, 0))

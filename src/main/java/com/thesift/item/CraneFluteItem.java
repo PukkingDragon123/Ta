@@ -28,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Crane Flute, carved from the crane's beak.
+ * The Crane Flute, carved from a bone with an amethyst reed and an echo shard.
  *
  * <ul>
  *   <li>hold use: a held note that locks onto the creature you look at - a thin warning line

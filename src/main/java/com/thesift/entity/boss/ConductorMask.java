@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -26,15 +27,17 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The Conductor's Mask. It rises out of the Grand Stage while the music falls away, turning slowly
- * in a column of sculk light; the music returns, it spins faster and faster, the light pours into
- * it - and it becomes the Conductor.
+ * in a column of sculk light. As the performance ends it drops, and lies still on the stage floor -
+ * and then the Conductor's body is rebuilt around it (see {@link Dictator#rebuild}).
  */
 public class ConductorMask extends PathfinderMob {
     private static final EntityDataAccessor<Integer> LIFE = SynchedEntityData.defineId(ConductorMask.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(ConductorMask.class, EntityDataSerializers.INT);
     public static final int RISE = 100;
-    /** The last ticks before it becomes the Conductor. */
-    public static final int TRANSFORM = 60;
+    /** The last ticks of its life: it falls to the stage floor and lies there. */
+    public static final int TRANSFORM = 50;
+    /** How long its fall takes. */
+    public static final int FALL = 14;
 
     private @Nullable BlockPos stage;
     private double baseY;
@@ -71,9 +74,9 @@ public class ConductorMask extends PathfinderMob {
         return this.entityData.get(DURATION);
     }
 
-    /** 0..1 through the transformation at the end. */
+    /** 0..1 through its fall to the floor at the end (1 once it lies there). */
     public float transform(float partial) {
-        return Mth.clamp((this.life() + partial - (this.duration() - TRANSFORM)) / TRANSFORM, 0.0F, 1.0F);
+        return Mth.clamp((this.life() + partial - (this.duration() - TRANSFORM)) / FALL, 0.0F, 1.0F);
     }
 
     @Override
@@ -99,22 +102,34 @@ public class ConductorMask extends PathfinderMob {
             double rise = Mth.clamp(life / (double) RISE, 0.0, 1.0);
             double eased = rise * rise * (3 - 2 * rise);
             double y = this.baseY + eased * 6.0 + Math.sin(life * 0.05) * 0.15 * rise;
+            int fallAt = dur - TRANSFORM;
+            if (life >= fallAt) {
+                // the music stops; the Mask drops onto the stage and lies there
+                double from = this.baseY + 6.0 + Math.sin(fallAt * 0.05) * 0.15;
+                y = Mth.lerp(k * k, from, this.stage.getY() + 1.0);
+            } else {
+                this.setYRot(this.getYRot() + 1.0F);
+            }
             this.setPos(this.stage.getX() + 0.5, y, this.stage.getZ() + 0.5);
             this.setDeltaMovement(Vec3.ZERO);
-            float spin = 1.0F + k * 18.0F;
-            this.setYRot(this.getYRot() + spin);
             this.yBodyRot = this.getYRot();
             this.yHeadRot = this.getYRot();
-            if (life == dur - TRANSFORM) {
-                this.playSound(ModSounds.CONDUCTOR_MASK_TRANSFORM.get(), 5.0F, 0.7F);
+            if (life == fallAt) {
+                this.playSound(ModSounds.CONDUCTOR_MASK_TRANSFORM.get(), 3.0F, 0.5F);
+            }
+            if (life == fallAt + FALL) {
+                this.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 3.0F, 0.5F);
+                this.playSound(SoundEvents.SCULK_BLOCK_BREAK, 2.0F, 0.6F);
+                server.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + 0.2, this.getZ(), 20, 0.6, 0.1, 0.6, 0.02);
+                server.sendParticles(ModParticles.RESONANCE_RING.get(), this.getX(), this.getY() + 0.05, this.getZ(), 0, 2.0, 0.0, 0.0, 1.0);
             }
             if (life >= dur) {
                 this.becomeConductor(server);
             }
         } else {
-            // a column of sculk light; at the end the light pours into the mask
+            // a column of sculk light, guttering out once it has fallen
             Level level = this.level();
-            for (int i = 0; i < 2 + (int) (k * 8); i++) {
+            for (int i = 0; i < (k >= 1.0F ? (this.random.nextInt(3) == 0 ? 1 : 0) : 2 + (int) (k * 4)); i++) {
                 double a = this.random.nextDouble() * Math.PI * 2;
                 double r = 0.4 + this.random.nextDouble() * (1.5 + k * 3.0);
                 double px = this.getX() + Math.cos(a) * r;
@@ -149,18 +164,13 @@ public class ConductorMask extends PathfinderMob {
                 d.setTarget(p);
             }
             level.addFreshEntity(d);
-            d.arrive(level);
+            d.rebuild(level);
             if (level.getBlockEntity(this.stage) instanceof ConductorsPodiumBlockEntity podium) {
                 podium.bossRaised(d);
             }
         }
-        level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, this.getX(), this.getY() + 1.0, this.getZ(), 1, 0, 0, 0, 0);
-        level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + 1.0, this.getZ(), 120, 1.5, 2.0, 1.5, 0.15);
-        level.sendParticles(ParticleTypes.SONIC_BOOM, this.getX(), this.getY() + 1.0, this.getZ(), 1, 0, 0, 0, 0);
-        for (int i = 0; i < 4; i++) {
-            level.sendParticles(ModParticles.RESONANCE_RING.get(), this.getX(), this.stage == null ? this.getY() : this.stage.getY() + 1.1, this.getZ(), 0,
-                    3.0 + i * 3.0, 0.0, 0.0, 1.0);
-        }
+        // the Conductor takes up the Mask where it lies: it simply becomes his face
+        level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + 0.3, this.getZ(), 12, 0.3, 0.1, 0.3, 0.02);
         this.discard();
     }
 

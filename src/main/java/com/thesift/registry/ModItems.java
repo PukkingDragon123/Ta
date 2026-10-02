@@ -145,6 +145,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> HARMONY_SEAL = ITEMS.registerSimpleBlockItem(ModBlocks.HARMONY_SEAL);
     public static final DeferredItem<BlockItem> GLYPH_STONE = ITEMS.registerSimpleBlockItem(ModBlocks.GLYPH_STONE);
     public static final DeferredItem<BlockItem> DREAM_SNARE = ITEMS.registerSimpleBlockItem(ModBlocks.DREAM_SNARE);
+    public static final DeferredItem<BlockItem> ANCIENT_CANNON = ITEMS.registerSimpleBlockItem(ModBlocks.ANCIENT_CANNON);
     public static final DeferredItem<BlockItem> CRUMBLING_DREAMSTONE = ITEMS.registerSimpleBlockItem(ModBlocks.CRUMBLING_DREAMSTONE);
     public static final DeferredItem<BlockItem> SIFT_CAKE = ITEMS.registerSimpleBlockItem("sift_cake", ModBlocks.SIFT_CAKE, p -> p.stacksTo(1));
     public static final DeferredItem<BlockItem> BULB_LANTERN = ITEMS.registerSimpleBlockItem(ModBlocks.BULB_LANTERN);
@@ -190,9 +191,7 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> HARMONER_SPAWN_EGG = ITEMS.registerItem("harmoner_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HARMONER.get()));
     public static final DeferredItem<SpawnEggItem> DICTATOR_SPAWN_EGG = ITEMS.registerItem("dictator_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.DICTATOR.get()));
     public static final DeferredItem<SpawnEggItem> THUMPER_SPAWN_EGG = ITEMS.registerItem("thumper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPER.get()));
-    public static final DeferredItem<SpawnEggItem> WHISTLER_SPAWN_EGG = ITEMS.registerItem("whistler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLER.get()));
     public static final DeferredItem<SpawnEggItem> STRUMMER_SPAWN_EGG = ITEMS.registerItem("strummer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMMER.get()));
-    public static final DeferredItem<SpawnEggItem> WHISTLING_SPAWN_EGG = ITEMS.registerItem("whistling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLING.get()));
     public static final DeferredItem<SpawnEggItem> STRUMLING_SPAWN_EGG = ITEMS.registerItem("strumling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMLING.get()));
     public static final DeferredItem<SpawnEggItem> STOMPER_SPAWN_EGG = ITEMS.registerItem("stomper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STOMPER.get()));
     public static final DeferredItem<SpawnEggItem> FANFARE_EEL_SPAWN_EGG = ITEMS.registerItem("fanfare_eel_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.FANFARE_EEL.get()));
@@ -203,7 +202,7 @@ public final class ModItems {
     public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<StaffItem> CONDUCTORS_STAFF = ITEMS.registerItem("conductors_staff", StaffItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<CongaDrumItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", CongaDrumItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
-    public static final DeferredItem<Item> CRANE_BEAK = ITEMS.registerItem("crane_beak", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<Item> CANNONBALL = ITEMS.registerItem("cannonball", Item::new, () -> new Item.Properties().stacksTo(16));
     public static final DeferredItem<CraneFluteItem> CRANE_FLUTE = ITEMS.registerItem("crane_flute", CraneFluteItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<Item> SCULK_STRING = ITEMS.registerItem("sculk_string", Item::new, () -> new Item.Properties());
     public static final DeferredItem<GuitarItem> GUITAR = ITEMS.registerItem("guitar", GuitarItem::new, () -> new Item.Properties().stacksTo(1));

@@ -1120,33 +1120,9 @@ def conga_drum():
     return grid(rows, pal, ol=True)
 
 
-def crane_beak():
-    """A crane's beak, long and pale gold toward the point, already bored with finger holes."""
-    rows = [
-        '................',
-        '..............G.',
-        '.............GM.',
-        '............GgD.',
-        '...........LgD..',
-        '..........LhD...',
-        '.........LMD....',
-        '........LhD.....',
-        '.......LMD......',
-        '......LhDD......',
-        '.....LMDD.......',
-        '....LMMD........',
-        '...LMDD.........',
-        '...MDD..........',
-        '................',
-        '................',
-    ]
-    pal = ramp('LMD', ['#fff4d6', '#ecd29a', '#c49a5a'], '#5a3a22')
-    pal.update({'h': ('#3a1e14', '#5a3a22'), 'G': ('#ffe27a', '#5a3a22'), 'g': ('#e8b440', '#5a3a22')})
-    return grid(rows, pal, ol=True)
-
 
 def crane_flute():
-    """The crane beak carved into a flute: soul-glow in its holes, white feathers tied at the foot."""
+    """A bone carved into a flute: soul-glow in its holes, an amethyst reed, white feathers tied at the foot."""
     rows = [
         '................',
         '.............Mo.',
@@ -1568,53 +1544,6 @@ def spawn_eggs():
     }, {'s': ('#f2e2c0', '#5a3a2a'), 'G': ('#f0c040', '#5a3410'), 'g': ('#b88a2a', '#5a3410'), 'r': ('#d03a3a', '#4a1018'),
         'R': ('#902030', '#4a1018'), 'l': ('#fff4e0', '#4a1018'), 'E': '#0e1a10', 'h': '#ffffff', 'm': '#0e2a16',
         'f': '#4a9a3a', 'c': '#d8d08a'})
-    E['whistler'] = egg(['#8a96b0', '#b8c4d8', '#e2e8f2', '#ffffff'], '#2a3048', {
-        2: '.......rr.......',
-        3: '......rrrr......',
-        4: '....kkkkkkkk....',
-        5: '....kgkkkkgbbbb.',
-        6: '....kkkkkkkBoB..',
-        7: '.....kkkkkk.....',
-        10: '...k........k...',
-        11: '...kk......kk...',
-        12: '....k......k....',
-    }, {'r': '#e03a4a', 'k': '#1a1a26', 'g': '#3ff5e6', 'b': ('#ffd23f', '#5a3410'), 'B': ('#c99a1f', '#5a3410'),
-        'o': ('#3ff5e6', '#5a3410')})
-    E['strummer'] = egg(['#1e1030', '#2e1a48', '#44286a', '#5e3a8a'], '#0c0618', {
-        0: '....a......a....',
-        1: '.....a....a.....',
-        2: '.....mmmmmm.....',
-        3: '....emmmmmme....',
-        4: '....eemmmmee....',
-        5: '.....MmmmmM.....',
-        6: '......MmmM......',
-        7: '.......MM.......',
-        8: '....m......m....',
-        9: '..L.mm.rr.mm.L..',
-        10: '.L...g.gg.g...L.',
-        11: '.L.L.g.gg.g.L.L.',
-        12: '...L.g.gg.g.L...',
-    }, {'a': '#9af07a', 'm': ('#6ac84a', '#143a14'), 'M': ('#3a8a3a', '#143a14'), 'e': ('#e8ff6a', '#143a14'),
-        'r': '#ff4a6a', 'g': '#8ff0ff', 'L': '#3a2058'}, no_ol='a')
-    E['strumling'] = egg(['#3a1a5a', '#5a2a8a', '#7a4ab0', '#a07ad0'], '#1a0a2e', {
-        5: '.....e....e.....',
-        7: '.....EE..EE.....',
-        8: '.....Eh..hE.....',
-        10: '..L...f..f...L..',
-        11: '.L.L........L.L.',
-        12: 'L..L........L..L',
-        13: '..L..........L..',
-        14: '.L............L.',
-    }, {'e': '#ff7ae0', 'E': '#140820', 'h': '#ffffff', 'f': '#f6eefc', 'L': '#2a1048'}, no_ol='L')
-    E['whistling'] = egg(['#a8a8c0', '#cfd2e2', '#eceef6', '#ffffff'], '#3a3e5a', {
-        0: '......4.4.......',
-        1: '......444.......',
-        6: '.....E....E.....',
-        7: '.....E....E.....',
-        8: '....c..bb..c....',
-        9: '..3....BB....3..',
-        10: '..2..........2..',
-    }, {'E': '#1a1a2a', 'b': ('#ffd23f', '#5a3410'), 'B': ('#c99a1f', '#5a3410'), 'c': '#8ff0ff'})
     E['stomper'] = egg(['#3a4a6a', '#566a8c', '#7890b0', '#a0b4cc'], '#1a2238', {
         4: '.....y....y.....',
         5: '..ff........ff..',
@@ -1763,7 +1692,7 @@ def all_items():
         out[f.__name__] = f()
     out['lullwood_door'] = door(('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea'), '#24353e', '#4a6470', '#2a2450')
     out['wishwood_door'] = door(('#c9738f', '#d98aa4', '#e6a0b8', '#f0b6ca'), '#4a1f38', '#8a4a6a', '#4a1f38')
-    for f in (conductors_staff, conga_drum, crane_beak, crane_flute, magic_strings, guitar, stomper_meat, stomper_steak, stomper_egg,
+    for f in (conductors_staff, conga_drum, crane_flute, magic_strings, guitar, stomper_meat, stomper_steak, stomper_egg,
               tuba_bubble, bubble_gun, skysong_gem):
         out[f.__name__] = f()
     out['kazoo_fish'] = kazoo_fish()
@@ -1772,6 +1701,8 @@ def all_items():
     out.update(__import__('songs').art())  # songs & instruments (agent D)
     import plants_h_art  # H: Pitcher Nectar and the three Pitcher soups
     out.update(plants_h_art.item_sprites())
+    import siege  # the Thumper's arena: the cannonball
+    out.update(siege.items())
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

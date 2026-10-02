@@ -15,7 +15,13 @@ import net.minecraft.util.Mth;
  *   <li>move: long, fast, loping strides, arms trailing</li>
  *   <li>attack: a vicious backhand slash with the baton</li>
  *   <li>blink: folds down into himself and vanishes</li>
- *   <li>summon: both arms sweep outward, calling up the orchestra</li>
+ *   <li>rebuilt: only the Mask lies on the floor; it rises as his body forms beneath it - torso,
+ *   arms, legs, coat, and last the crown flaring up</li>
+ *   <li>lunge: baton drawn back, weight low, then a full-length thrust</li>
+ *   <li>levitating: legs hang, toes pointed, threads of song in his hands; flicks the baton at
+ *   each barrage, raises both hands and brings them down for a chord</li>
+ *   <li>soaring: wings of song beating slow, legs trailing; arms high while notes rain down,
+ *   trembling at the height of his finale, slumped and drooping after it</li>
  *   <li>crescendo: arms and baton thrown high, head back</li>
  *   <li>roar (new phase): doubles over then rears up, crown flaring</li>
  *   <li>hurt: head snaps aside, shoulders hunch</li>
@@ -35,7 +41,6 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
     private final ModelPart[] forearms = new ModelPart[2];
     private final ModelPart[] legs = new ModelPart[2];
     private final ModelPart[] shins = new ModelPart[2];
-    private final ModelPart shell;
     private final ModelPart[] wings = new ModelPart[2];
     private final ModelPart[] wingTips = new ModelPart[2];
     private final ModelPart[] strings = new ModelPart[2];
@@ -62,7 +67,6 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
             this.wingTips[i] = this.wings[i].getChild(sides[i] + "_crane_wing_tip");
             this.strings[i] = this.forearms[i].getChild(sides[i] + "_hand").getChild(sides[i] + "_strings");
         }
-        this.shell = this.torso.getChild("turtle_shell");
     }
 
     @Override
@@ -115,7 +119,7 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
         }
 
         float t;
-        // --- slash
+        // --- slash (also each note volley)
         if ((t = Anim.seconds(s.slash, age)) >= 0 && t < 0.5F) {
             float wind = Anim.envelope(t, 0.0F, 0.08F, 0.02F, 0.1F);
             float cut = Anim.envelope(t, 0.1F, 0.08F, 0.05F, 0.25F);
@@ -166,61 +170,95 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
             this.body.yScale *= 0.4F + 0.6F * (1.0F - e);
         }
 
-        // --- what he has stolen: each part only in its movement, growing in as he transforms
+        // --- his sculk magic, worn as he grows godlike: threads of song once he rises, wings to soar
         float grow = s.transform >= 0.0F ? Anim.smooth((s.transform - 0.45F) / 0.2F) : 1.0F;
-        float fade = s.transform >= 0.0F ? 1.0F - Anim.smooth((s.transform - 0.3F) / 0.2F) : 0.0F;
-        this.setTrait(this.shell, s.phase == 1 ? grow : s.phase == 2 ? fade : 0.0F);
         for (int i = 0; i < 2; i++) {
-            this.setTrait(this.wings[i], s.phase == 2 ? grow : s.phase == 3 ? fade : 0.0F);
-            this.setTrait(this.strings[i], s.phase == 3 ? grow : 0.0F);
+            this.setTrait(this.strings[i], s.phase == 2 ? grow : s.phase == 3 ? 1.0F : 0.0F);
+            this.setTrait(this.wings[i], s.phase == 3 ? grow : 0.0F);
         }
+        float at = s.actionTime;
+        int act = s.action;
         if (s.phase == 1) {
-            this.shell.xRot += Mth.sin(age * 0.08F) * 0.02F;
-        }
-        if (s.phase == 2 && this.wings[0].visible) {
-            // the Whistler's wing beat; legs trail behind while he flies
-            boolean lock = s.action == com.thesift.entity.boss.Dictator.BEAM_LOCK;
-            boolean dive = s.action == com.thesift.entity.boss.Dictator.DIVE && s.actionTime > 18.0F;
-            float a = dive ? -1.0F : lock ? 0.5F + Mth.sin(age * 0.12F) * 0.08F : Mth.sin(age * 0.25F) * 0.75F;
-            float lag = dive ? -1.0F : lock ? a : Mth.sin((age - 3.0F) * 0.25F) * 0.75F;
-            this.wings[0].zRot = -a;
-            this.wings[1].zRot = a;
-            this.wings[0].yRot = -0.15F;
-            this.wings[1].yRot = 0.15F;
-            this.wingTips[0].zRot = -(lag - a) * 0.9F;
-            this.wingTips[1].zRot = (lag - a) * 0.9F;
-            this.legs[0].xRot = 0.6F + Mth.sin(age * 0.1F) * 0.05F;
-            this.legs[1].xRot = 0.7F + Mth.sin(age * 0.1F + 1.0F) * 0.05F;
-            this.shins[0].xRot = 0.5F;
-            this.shins[1].xRot = 0.5F;
-            this.body.y += Mth.sin(a) * 1.2F;
-            if (lock) {
-                this.head.xRot += 0.2F;
-                this.arms[1].xRot = -1.5F;
+            if (act == com.thesift.entity.boss.Dictator.LUNGE_WINDUP) {
+                float k = Anim.smooth(at / 8.0F);
+                this.arms[1].xRot = Mth.lerp(k, this.arms[1].xRot, 0.9F);
+                this.arms[1].zRot += 0.5F * k;
+                this.torso.yRot -= 0.5F * k;
+                this.body.y += 2.5F * k;
+                this.legs[0].xRot -= 0.6F * k;
+                this.legs[1].xRot += 0.5F * k;
+                this.shins[0].xRot += 0.6F * k;
+                this.shins[1].xRot += 0.4F * k;
+            } else if (act == com.thesift.entity.boss.Dictator.LUNGE) {
+                float k = 1.0F - Anim.smooth((at - 6.0F) / 6.0F);
+                this.arms[1].xRot = -1.65F * k + this.arms[1].xRot * (1.0F - k);
+                this.forearms[1].xRot *= 1.0F - k;
+                this.torso.xRot += 0.45F * k;
+                this.torso.yRot += 0.35F * k;
+                this.legs[0].xRot = -0.9F * k;
+                this.legs[1].xRot = 0.7F * k;
+                this.coatTail.xRot += 0.6F * k;
             }
-        }
-        if (s.phase == 3) {
+        } else {
+            // off his feet: legs hang, toes pointed, a slow bob
+            float trail = s.phase == 3 && act != com.thesift.entity.boss.Dictator.REST ? 0.35F : 0.0F;
+            this.legs[0].xRot = 0.2F + trail + Mth.sin(age * 0.07F) * 0.06F;
+            this.legs[1].xRot = 0.35F + trail + Mth.sin(age * 0.07F + 1.0F) * 0.06F;
+            this.shins[0].xRot = 0.45F;
+            this.shins[1].xRot = 0.55F;
+            this.coatTail.xRot += 0.15F + Mth.sin(age * 0.11F) * 0.08F + trail;
+            this.body.y += Mth.sin(age * 0.05F) * 0.8F;
             for (int i = 0; i < 2; i++) {
-                this.strings[i].zRot = Mth.sin(age * (3.0F + i * 0.3F)) * 0.04F;
+                this.strings[i].zRot = Mth.sin(age * (0.2F + i * 0.05F)) * 0.08F;
                 this.strings[i].xRot = -this.arms[i].xRot - this.forearms[i].xRot;
             }
-            if (s.action == com.thesift.entity.boss.Dictator.STRUM) {
-                this.arms[0].xRot = -1.0F + Mth.sin(age * 1.4F) * 0.3F;
-                this.arms[1].xRot = -1.0F + Mth.sin(age * 1.4F + Mth.PI) * 0.3F;
-                this.head.zRot = Mth.sin(age * 0.6F) * 0.25F;
-            } else if (s.action == com.thesift.entity.boss.Dictator.SNAP) {
-                float draw = Anim.envelope(s.actionTime, 0.0F, 12.0F, 1.0F, 1.0F);
-                float snap = Anim.envelope(s.actionTime, 13.0F, 1.0F, 2.0F, 8.0F);
-                this.arms[0].xRot += -0.4F * draw - 1.4F * snap;
-                this.torso.yRot += -0.4F * draw + 0.3F * snap;
+            if (act == com.thesift.entity.boss.Dictator.BARRAGE) {
+                float flick = 0.0F;
+                for (int v = 10; v <= 34; v += 12) {
+                    flick += Anim.envelope(at, v - 4.0F, 3.0F, 1.0F, 4.0F);
+                }
+                this.arms[1].xRot = Mth.lerp(Math.min(1.0F, flick), -0.6F, -1.7F);
+                this.arms[1].zRot += 0.3F * flick;
+                this.torso.yRot += 0.2F * flick;
+            } else if (act == com.thesift.entity.boss.Dictator.CHORD) {
+                float raise = Anim.envelope(at, 0.0F, 16.0F, 4.0F, 2.0F);
+                float strike = Anim.envelope(at, 20.0F, 2.0F, 4.0F, 10.0F);
+                this.arms[0].xRot = -2.7F * raise + 0.4F * strike;
+                this.arms[1].xRot = -2.8F * raise + 0.4F * strike;
+                this.arms[0].zRot -= 0.5F * raise + 0.9F * strike;
+                this.arms[1].zRot += 0.5F * raise + 0.9F * strike;
+                this.head.xRot -= 0.4F * raise - 0.3F * strike;
+                this.torso.xRot += 0.35F * strike;
+            } else if (act == com.thesift.entity.boss.Dictator.RAIN || act == com.thesift.entity.boss.Dictator.FINALE) {
+                float k = Anim.smooth(at / 10.0F);
+                float shake = act == com.thesift.entity.boss.Dictator.FINALE ? Mth.sin(age * 2.6F) * 0.04F * Math.min(1.0F, at / 70.0F) : 0.0F;
+                float pulse = act == com.thesift.entity.boss.Dictator.RAIN ? Mth.sin(age * 0.6F) * 0.25F : 0.0F;
+                this.arms[0].xRot = Mth.lerp(k, this.arms[0].xRot, -2.8F + pulse) + shake;
+                this.arms[1].xRot = Mth.lerp(k, this.arms[1].xRot, -2.9F - pulse) - shake;
+                this.arms[0].zRot -= 0.4F * k;
+                this.arms[1].zRot += 0.4F * k;
+                this.head.xRot -= 0.6F * k;
+                this.torso.xRot -= 0.15F * k;
+            } else if (act == com.thesift.entity.boss.Dictator.REST) {
+                float k = Anim.smooth(at / 10.0F) * (1.0F - Anim.smooth((at - 80.0F) / 10.0F));
+                this.torso.xRot += 0.45F * k;
+                this.head.xRot += 0.5F * k;
+                this.arms[0].xRot = Mth.lerp(k, this.arms[0].xRot, 0.15F);
+                this.arms[1].xRot = Mth.lerp(k, this.arms[1].xRot, 0.2F);
             }
-        }
-        if (s.phase == 1 && (s.action == com.thesift.entity.boss.Dictator.CHARGE_WINDUP || s.action == com.thesift.entity.boss.Dictator.CHARGE)) {
-            // head down, horns first, like the turtle he robbed
-            this.torso.xRot += 0.5F;
-            this.head.xRot += 0.4F;
-            this.arms[0].xRot = 0.6F;
-            this.arms[1].xRot = 0.6F;
+            if (s.phase == 3 && this.wings[0].visible) {
+                // great slow beats; drooping while he rests
+                boolean rest = act == com.thesift.entity.boss.Dictator.REST;
+                float a = rest ? -0.6F : Mth.sin(age * 0.16F) * 0.55F + 0.1F;
+                float lag = rest ? -0.6F : Mth.sin((age - 4.0F) * 0.16F) * 0.55F + 0.1F;
+                this.wings[0].zRot = -a;
+                this.wings[1].zRot = a;
+                this.wings[0].yRot = -0.15F;
+                this.wings[1].yRot = 0.15F;
+                this.wingTips[0].zRot = -(lag - a) * 0.9F;
+                this.wingTips[1].zRot = (lag - a) * 0.9F;
+                this.body.y += Mth.sin(a) * 1.2F;
+            }
         }
         if (s.transform >= 0.0F) {
             // arms flung wide, head back, a slow turn in the air
@@ -232,9 +270,21 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
             this.head.xRot -= 0.7F * e;
             this.torso.xRot -= 0.25F * e;
             this.torso.yRot += Mth.sin(age * 0.2F) * 0.2F * e;
-            this.legs[0].xRot += 0.3F * e;
-            this.legs[1].xRot -= 0.2F * e;
             this.coatTail.xRot += 0.6F * e + Mth.sin(age * 0.9F) * 0.15F * e;
+        }
+        if (s.assemble >= 0.0F) {
+            this.assemble(s.assemble, age);
+        } else {
+            this.torso.skipDraw = false;
+            this.neck.skipDraw = false;
+            this.body.skipDraw = false;
+            // the model is shared: undo what a rebuilding Conductor hid
+            for (ModelPart p : new ModelPart[]{this.arms[0], this.arms[1], this.legs[0], this.legs[1], this.coatTail, this.crown}) {
+                p.visible = true;
+            }
+            for (ModelPart ear : this.ears) {
+                ear.visible = true;
+            }
         }
 
         // --- death: knees, slump, crumble
@@ -255,6 +305,37 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
             this.body.zScale = 1.0F - crumble * 0.3F;
             this.body.yScale *= 1.0F - crumble * 0.45F;
         }
+    }
+
+    /**
+     * His body rebuilding around the Mask: at first only the Mask, face up on the floor; it rises
+     * as the rest forms under it - torso, arms, legs, coat - and last the crown flares up.
+     */
+    private void assemble(float a, float age) {
+        float lift = Anim.smooth((a - 0.12F) / 0.55F);
+        this.body.y += 46.0F * (1.0F - lift);
+        this.head.xRot = Mth.lerp(lift, -Mth.HALF_PI, this.head.xRot - 0.5F);
+        this.head.yRot *= lift;
+        this.head.zRot = Mth.sin(age * 0.3F) * 0.05F * lift;
+        this.body.skipDraw = a < 0.25F;
+        this.torso.skipDraw = a < 0.25F;
+        this.neck.skipDraw = a < 0.3F;
+        for (int i = 0; i < 2; i++) {
+            this.setTrait(this.arms[i], Anim.backOut(Anim.clamp01((a - 0.4F) / 0.15F)));
+            this.setTrait(this.legs[i], Anim.backOut(Anim.clamp01((a - 0.52F) / 0.15F)));
+            this.setTrait(this.strings[i], 0.0F);
+            this.setTrait(this.wings[i], 0.0F);
+            // arms flung wide while the song pours in
+            this.arms[i].zRot += (i == 0 ? -1.3F : 1.3F) * (1.0F - Anim.smooth((a - 0.85F) / 0.15F));
+            this.arms[i].xRot = -0.3F;
+        }
+        this.setTrait(this.coatTail, Anim.smooth((a - 0.64F) / 0.14F));
+        float crown = Anim.backOut(Anim.clamp01((a - 0.8F) / 0.14F));
+        this.setTrait(this.crown, crown);
+        for (ModelPart ear : this.ears) {
+            this.setTrait(ear, crown);
+        }
+        this.torso.xRot -= 0.3F * lift * (1.0F - Anim.smooth((a - 0.9F) / 0.1F));
     }
 
     private void setTrait(ModelPart part, float amount) {

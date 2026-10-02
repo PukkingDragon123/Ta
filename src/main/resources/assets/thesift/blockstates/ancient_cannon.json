@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,loaded=false": {
+      "model": "thesift:block/ancient_cannon"
+    },
+    "facing=north,loaded=true": {
+      "model": "thesift:block/ancient_cannon_loaded"
+    },
+    "facing=east,loaded=false": {
+      "model": "thesift:block/ancient_cannon",
+      "y": 90
+    },
+    "facing=east,loaded=true": {
+      "model": "thesift:block/ancient_cannon_loaded",
+      "y": 90
+    },
+    "facing=south,loaded=false": {
+      "model": "thesift:block/ancient_cannon",
+      "y": 180
+    },
+    "facing=south,loaded=true": {
+      "model": "thesift:block/ancient_cannon_loaded",
+      "y": 180
+    },
+    "facing=west,loaded=false": {
+      "model": "thesift:block/ancient_cannon",
+      "y": 270
+    },
+    "facing=west,loaded=true": {
+      "model": "thesift:block/ancient_cannon_loaded",
+      "y": 270
+    }
+  }
+}

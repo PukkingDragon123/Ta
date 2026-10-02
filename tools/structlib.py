@@ -193,7 +193,7 @@ def spawner(mob, count=2, nearby=5, rng=12, delay=(200, 500)):
 
 
 def sigil(boss):
-    """An Encore Sigil: wakes one of the three mini-bosses (0 Thumper, 1 Whistler, 2 Strummer)."""
+    """An Encore Sigil: wakes one of the three mini-bosses (0 Thumper, 2 Strummer; 1 is retired)."""
     return B('encore_sigil', boss=boss, spent='false')
 
 

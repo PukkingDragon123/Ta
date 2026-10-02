@@ -10,11 +10,8 @@ import com.thesift.client.renderer.HarmonerRenderer;
 import com.thesift.client.model.boss.StrumlingModel;
 import com.thesift.client.model.boss.StrummerModel;
 import com.thesift.client.model.boss.ThumperModel;
-import com.thesift.client.model.boss.WhistlerModel;
-import com.thesift.client.model.boss.WhistlingModel;
 import com.thesift.client.renderer.boss.MiniBossRenderer;
 import com.thesift.entity.boss.Thumper;
-import com.thesift.entity.boss.Whistler;
 import com.thesift.entity.boss.Strummer;
 import com.thesift.client.renderer.boss.DictatorRenderer;
 import com.thesift.client.renderer.boss.MinionRenderer;
@@ -88,9 +85,7 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.HARMONER, ModelGeometry::harmoner);
         event.registerLayerDefinition(ModModelLayers.DICTATOR, ModelGeometry::dictator);
         event.registerLayerDefinition(ModModelLayers.THUMPER, ModelGeometry::thumper);
-        event.registerLayerDefinition(ModModelLayers.WHISTLER, ModelGeometry::whistler);
         event.registerLayerDefinition(ModModelLayers.STRUMMER, ModelGeometry::strummer);
-        event.registerLayerDefinition(ModModelLayers.WHISTLING, ModelGeometry::whistling);
         event.registerLayerDefinition(ModModelLayers.STRUMLING, ModelGeometry::strumling);
         event.registerLayerDefinition(ModModelLayers.SCULK_PARASITE, ModelGeometry::sculk_parasite);
         event.registerLayerDefinition(ModModelLayers.CONDUCTOR_MASK, ModelGeometry::conductor_mask);
@@ -112,18 +107,15 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.SCULK_HARMONER.get(), com.thesift.client.renderer.SculkHarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
         event.registerEntityRenderer(ModEntities.THUMPER.get(), c -> new MiniBossRenderer<Thumper, ThumperModel>(c, new ThumperModel(c.bakeLayer(ModModelLayers.THUMPER)),
-                "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.DAZED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null,
-                "thumper_titan"));
-        event.registerEntityRenderer(ModEntities.WHISTLER.get(), c -> new MiniBossRenderer<Whistler, WhistlerModel>(c, new WhistlerModel(c.bakeLayer(ModModelLayers.WHISTLER)),
-                "whistler", Whistler.SCALE, 0.6F, (e, s) -> s.bossState == Whistler.STUNNED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
+                "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.EXPOSED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
         event.registerEntityRenderer(ModEntities.STRUMMER.get(), com.thesift.client.renderer.boss.StrummerRenderer::new); // the Weaver, with its silk thread
-        event.registerEntityRenderer(ModEntities.WHISTLING.get(),
-                c -> new MinionRenderer<>(c, new WhistlingModel(c.bakeLayer(ModModelLayers.WHISTLING)), "whistling", 0.35F));
         event.registerEntityRenderer(ModEntities.STRUMLING.get(), com.thesift.client.renderer.boss.StrumlingRenderer::new); // the Sculk Spider
         event.registerEntityRenderer(ModEntities.SCULK_PARASITE.get(), c -> new MinionRenderer<>(c,
                 new com.thesift.client.model.boss.SculkParasiteModel(c.bakeLayer(ModModelLayers.SCULK_PARASITE)), "sculk_parasite", 0.35F));
         event.registerEntityRenderer(ModEntities.CONDUCTOR_MASK.get(), com.thesift.client.renderer.boss.ConductorMaskRenderer::new);
         event.registerEntityRenderer(ModEntities.WEB_SHOT.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.2F, false));
+        // the Thumper's arena: cannonballs (and the boulders it throws back)
+        event.registerEntityRenderer(com.thesift.registry.ModSiege.CANNONBALL.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.6F, false));
         event.registerEntityRenderer(ModEntities.SLUMBLER.get(), SlumblerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);

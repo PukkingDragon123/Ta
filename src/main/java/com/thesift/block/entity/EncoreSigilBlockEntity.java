@@ -39,12 +39,10 @@ public class EncoreSigilBlockEntity extends BlockEntity {
         }
     }
 
-    public static Mob summon(ServerLevel level, BlockPos pos, int boss, Player player) {
-        EntityType<? extends Mob> type = switch (boss) {
-            case 1 -> ModEntities.WHISTLER.get();
-            case 2 -> ModEntities.STRUMMER.get();
-            default -> ModEntities.THUMPER.get();
-        };
+    public static Mob summon(ServerLevel level, BlockPos pos, int sigil, Player player) {
+        // 0 the Thumper, 2 the Strummer (1 was the Whistler, who is gone: old sigils wake the Thumper)
+        int boss = sigil == 2 ? 2 : 0;
+        EntityType<? extends Mob> type = boss == 2 ? ModEntities.STRUMMER.get() : ModEntities.THUMPER.get();
         Mob m = type.create(level, EntitySpawnReason.TRIGGERED);
         if (m == null) {
             return null;
@@ -54,6 +52,10 @@ public class EncoreSigilBlockEntity extends BlockEntity {
         float yaw = (float) (Math.atan2(player.getZ() - z, player.getX() - x) * (180.0 / Math.PI)) - 90.0F;
         m.snapTo(x, pos.getY() + 1.0, z, yaw, 0.0F);
         m.setTarget(player);
+        if (m instanceof com.thesift.entity.boss.Thumper th) {
+            // it was asleep under the arena: it crawls up out of the floor
+            th.beginEmerge();
+        }
         level.addFreshEntity(m);
         level.sendParticles(ModParticles.RESONANCE_RING.get(), x, pos.getY() + 1.1, z, 0, 4.0, 0.0, 0.0, 1.0);
         level.sendParticles(ParticleTypes.SCULK_SOUL, x, pos.getY() + 1.5, z, 40, 1.0, 1.0, 1.0, 0.05);
