@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 1.2,
+  "ingredient": "thesift:prism_ore",
+  "result": {
+    "id": "thesift:prism_gem"
+  }
+}

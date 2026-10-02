@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:prism_helmet",
+    "thesift:prism_chestplate",
+    "thesift:prism_leggings",
+    "thesift:prism_boots"
+  ]
+}

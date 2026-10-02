@@ -22,6 +22,7 @@ public final class ModModelLayers {
     public static final ModelLayerLocation KAZOO_FISH = layer("kazoo_fish");
     public static final ModelLayerLocation TUBAFISH = layer("tubafish");
     public static final ModelLayerLocation SKY_WHALE = layer("sky_whale");
+    public static final ModelLayerLocation CARAVAN = layer("caravan"); // C: the Caravans
 
     private static ModelLayerLocation layer(String name) {
         return new ModelLayerLocation(TheSift.id(name), "main");

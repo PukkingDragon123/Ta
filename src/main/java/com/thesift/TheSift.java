@@ -39,6 +39,7 @@ public class TheSift {
         ModItems.ITEMS.register(modBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         com.thesift.registry.ModSiege.register(modBus); // the Thumper's arena: ancient cannons, cannonballs
+        com.thesift.registry.ModCaravans.register(modBus); // C: Caravans, music crystals, prism armour, song hooks
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

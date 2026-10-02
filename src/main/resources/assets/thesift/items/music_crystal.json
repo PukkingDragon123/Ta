@@ -1,0 +1,47 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "block_state_property": "color",
+    "cases": [
+      {
+        "when": "amber",
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:block/music_crystal_amber"
+        }
+      },
+      {
+        "when": "rose",
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:block/music_crystal_rose"
+        }
+      },
+      {
+        "when": "teal",
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:block/music_crystal_teal"
+        }
+      },
+      {
+        "when": "violet",
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:block/music_crystal_violet"
+        }
+      },
+      {
+        "when": "gold",
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:block/music_crystal_gold"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "thesift:block/music_crystal_rose"
+    }
+  }
+}

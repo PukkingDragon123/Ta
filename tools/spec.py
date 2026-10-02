@@ -311,3 +311,19 @@ item("pitcher_nectar", props="new Item.Properties().food(ModSoups.PITCHER_NECTAR
 for soup in ("lullaby_soup", "echo_chowder", "chrome_bisque"):
     C = soup.upper()
     item(soup, props=f"new Item.Properties().stacksTo(1).food(ModSoups.{C}, ModSoups.{C}_CONSUMABLE).usingConvertsTo(Items.BOWL)")
+
+# ---------------------------------------------------------------- C: the Caravans Cavern (tools/caravans.py, registry/ModCaravans)
+block("prism_ore", "ore", STONE + ".mapColor(MapColor.COLOR_MAGENTA).strength(3.0F, 3.0F).requiresCorrectToolForDrops()",
+      tags=["pickaxe", "needs_diamond"], loot="ore:prism_gem")
+block("deep_prism_ore", "ore", DEEP + ".mapColor(MapColor.COLOR_MAGENTA).strength(4.5F, 3.0F).requiresCorrectToolForDrops()",
+      tags=["pickaxe", "needs_diamond"], loot="ore:prism_gem")
+block("prism_block", "cube", "BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 4)",
+      tags=["pickaxe", "needs_diamond", "beacon"])
+block("music_crystal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_PURPLE).strength(1.5F)"
+      ".lightLevel(s -> s.getValue(com.thesift.block.MusicCrystalBlock.FROZEN) ? 10 : 7).noOcclusion()",
+      cls="MusicCrystalBlock", model="music_crystal", tags=["pickaxe"], tab="functional", loot="none")
+item("prism_gem", props="new Item.Properties().rarity(Rarity.RARE)")
+for _a in ["helmet", "chestplate", "leggings", "boots"]:
+    item(f"prism_{_a}", cls="Item", props=f"new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.{_a.upper()}).rarity(Rarity.RARE)",
+         tab="combat", model="armor")
+item("caravan_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:siftite_chestplate"
+    "thesift:siftite_chestplate",
+    "thesift:prism_chestplate"
   ]
 }

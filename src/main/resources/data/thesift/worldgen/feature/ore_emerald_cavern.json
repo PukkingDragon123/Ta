@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 0.0,
+  "size": 3,
+  "targets": [
+    {
+      "state": {
+        "id": "minecraft:emerald_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:dreamstone"
+      }
+    },
+    {
+      "state": {
+        "id": "minecraft:deepslate_emerald_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:hushslate"
+      }
+    }
+  ]
+}

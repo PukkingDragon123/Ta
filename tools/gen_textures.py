@@ -2012,6 +2012,7 @@ def main():
     logo()
     hd_items()
     __import__("weaver_art").textures(out)  # the Weaver (E2): sculk string, guitars, musical cobweb
+    __import__("caravans").textures(out)  # C: music crystals, prism ore/block, worn prism armour
     corruption_overlays()
     boss_bar()
     mini_boss_bars()

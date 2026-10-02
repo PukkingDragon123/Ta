@@ -153,6 +153,10 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> SOUL_CHIME = ITEMS.registerSimpleBlockItem(ModBlocks.SOUL_CHIME);
     public static final DeferredItem<BlockItem> MUSICAL_COBWEB = ITEMS.registerSimpleBlockItem(ModBlocks.MUSICAL_COBWEB);
     public static final DeferredItem<BlockItem> PITCHER_PLANTER = ITEMS.registerSimpleBlockItem(ModBlocks.PITCHER_PLANTER);
+    public static final DeferredItem<BlockItem> PRISM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.PRISM_ORE);
+    public static final DeferredItem<BlockItem> DEEP_PRISM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_PRISM_ORE);
+    public static final DeferredItem<BlockItem> PRISM_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PRISM_BLOCK);
+    public static final DeferredItem<BlockItem> MUSIC_CRYSTAL = ITEMS.registerSimpleBlockItem(ModBlocks.MUSIC_CRYSTAL);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -231,6 +235,12 @@ public final class ModItems {
     public static final DeferredItem<Item> LULLABY_SOUP = ITEMS.registerItem("lullaby_soup", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.LULLABY_SOUP, ModSoups.LULLABY_SOUP_CONSUMABLE).usingConvertsTo(Items.BOWL));
     public static final DeferredItem<Item> ECHO_CHOWDER = ITEMS.registerItem("echo_chowder", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.ECHO_CHOWDER, ModSoups.ECHO_CHOWDER_CONSUMABLE).usingConvertsTo(Items.BOWL));
     public static final DeferredItem<Item> CHROME_BISQUE = ITEMS.registerItem("chrome_bisque", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.CHROME_BISQUE, ModSoups.CHROME_BISQUE_CONSUMABLE).usingConvertsTo(Items.BOWL));
+    public static final DeferredItem<Item> PRISM_GEM = ITEMS.registerItem("prism_gem", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_HELMET = ITEMS.registerItem("prism_helmet", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.HELMET).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_CHESTPLATE = ITEMS.registerItem("prism_chestplate", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.CHESTPLATE).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_LEGGINGS = ITEMS.registerItem("prism_leggings", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.LEGGINGS).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PRISM_BOOTS = ITEMS.registerItem("prism_boots", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.BOOTS).rarity(Rarity.RARE));
+    public static final DeferredItem<SpawnEggItem> CARAVAN_SPAWN_EGG = ITEMS.registerItem("caravan_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get()));
 
     private ModItems() {}
 }

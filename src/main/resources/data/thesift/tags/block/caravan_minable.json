@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:coal_ores",
+    "#minecraft:iron_ores",
+    "#minecraft:copper_ores",
+    "#minecraft:gold_ores",
+    "#minecraft:redstone_ores",
+    "#minecraft:lapis_ores",
+    "#minecraft:diamond_ores",
+    "#minecraft:emerald_ores",
+    "thesift:serbim_ore",
+    "thesift:deep_serbim_ore",
+    "thesift:prism_ore",
+    "thesift:deep_prism_ore",
+    "minecraft:nether_quartz_ore",
+    "minecraft:amethyst_cluster"
+  ]
+}

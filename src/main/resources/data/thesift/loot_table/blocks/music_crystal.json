@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "thesift:blocks/music_crystal",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_crystal",
+          "modifier": [
+            {
+              "type": "minecraft:copy_state",
+              "block": "thesift:music_crystal",
+              "properties": [
+                "color"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

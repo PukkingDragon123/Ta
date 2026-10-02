@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 0.0,
+  "size": 8,
+  "targets": [
+    {
+      "state": {
+        "id": "minecraft:gold_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:dreamstone"
+      }
+    },
+    {
+      "state": {
+        "id": "minecraft:deepslate_gold_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:hushslate"
+      }
+    }
+  ]
+}

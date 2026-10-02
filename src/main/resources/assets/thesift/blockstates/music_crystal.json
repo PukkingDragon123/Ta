@@ -1,0 +1,264 @@
+{
+  "variants": {
+    "color=amber,facing=up,frozen=false": {
+      "model": "thesift:block/music_crystal_amber"
+    },
+    "color=amber,facing=down,frozen=false": {
+      "model": "thesift:block/music_crystal_amber",
+      "x": 180
+    },
+    "color=amber,facing=north,frozen=false": {
+      "model": "thesift:block/music_crystal_amber",
+      "x": 90
+    },
+    "color=amber,facing=south,frozen=false": {
+      "model": "thesift:block/music_crystal_amber",
+      "x": 90,
+      "y": 180
+    },
+    "color=amber,facing=west,frozen=false": {
+      "model": "thesift:block/music_crystal_amber",
+      "x": 90,
+      "y": 270
+    },
+    "color=amber,facing=east,frozen=false": {
+      "model": "thesift:block/music_crystal_amber",
+      "x": 90,
+      "y": 90
+    },
+    "color=amber,facing=up,frozen=true": {
+      "model": "thesift:block/music_crystal_amber_frozen"
+    },
+    "color=amber,facing=down,frozen=true": {
+      "model": "thesift:block/music_crystal_amber_frozen",
+      "x": 180
+    },
+    "color=amber,facing=north,frozen=true": {
+      "model": "thesift:block/music_crystal_amber_frozen",
+      "x": 90
+    },
+    "color=amber,facing=south,frozen=true": {
+      "model": "thesift:block/music_crystal_amber_frozen",
+      "x": 90,
+      "y": 180
+    },
+    "color=amber,facing=west,frozen=true": {
+      "model": "thesift:block/music_crystal_amber_frozen",
+      "x": 90,
+      "y": 270
+    },
+    "color=amber,facing=east,frozen=true": {
+      "model": "thesift:block/music_crystal_amber_frozen",
+      "x": 90,
+      "y": 90
+    },
+    "color=rose,facing=up,frozen=false": {
+      "model": "thesift:block/music_crystal_rose"
+    },
+    "color=rose,facing=down,frozen=false": {
+      "model": "thesift:block/music_crystal_rose",
+      "x": 180
+    },
+    "color=rose,facing=north,frozen=false": {
+      "model": "thesift:block/music_crystal_rose",
+      "x": 90
+    },
+    "color=rose,facing=south,frozen=false": {
+      "model": "thesift:block/music_crystal_rose",
+      "x": 90,
+      "y": 180
+    },
+    "color=rose,facing=west,frozen=false": {
+      "model": "thesift:block/music_crystal_rose",
+      "x": 90,
+      "y": 270
+    },
+    "color=rose,facing=east,frozen=false": {
+      "model": "thesift:block/music_crystal_rose",
+      "x": 90,
+      "y": 90
+    },
+    "color=rose,facing=up,frozen=true": {
+      "model": "thesift:block/music_crystal_rose_frozen"
+    },
+    "color=rose,facing=down,frozen=true": {
+      "model": "thesift:block/music_crystal_rose_frozen",
+      "x": 180
+    },
+    "color=rose,facing=north,frozen=true": {
+      "model": "thesift:block/music_crystal_rose_frozen",
+      "x": 90
+    },
+    "color=rose,facing=south,frozen=true": {
+      "model": "thesift:block/music_crystal_rose_frozen",
+      "x": 90,
+      "y": 180
+    },
+    "color=rose,facing=west,frozen=true": {
+      "model": "thesift:block/music_crystal_rose_frozen",
+      "x": 90,
+      "y": 270
+    },
+    "color=rose,facing=east,frozen=true": {
+      "model": "thesift:block/music_crystal_rose_frozen",
+      "x": 90,
+      "y": 90
+    },
+    "color=teal,facing=up,frozen=false": {
+      "model": "thesift:block/music_crystal_teal"
+    },
+    "color=teal,facing=down,frozen=false": {
+      "model": "thesift:block/music_crystal_teal",
+      "x": 180
+    },
+    "color=teal,facing=north,frozen=false": {
+      "model": "thesift:block/music_crystal_teal",
+      "x": 90
+    },
+    "color=teal,facing=south,frozen=false": {
+      "model": "thesift:block/music_crystal_teal",
+      "x": 90,
+      "y": 180
+    },
+    "color=teal,facing=west,frozen=false": {
+      "model": "thesift:block/music_crystal_teal",
+      "x": 90,
+      "y": 270
+    },
+    "color=teal,facing=east,frozen=false": {
+      "model": "thesift:block/music_crystal_teal",
+      "x": 90,
+      "y": 90
+    },
+    "color=teal,facing=up,frozen=true": {
+      "model": "thesift:block/music_crystal_teal_frozen"
+    },
+    "color=teal,facing=down,frozen=true": {
+      "model": "thesift:block/music_crystal_teal_frozen",
+      "x": 180
+    },
+    "color=teal,facing=north,frozen=true": {
+      "model": "thesift:block/music_crystal_teal_frozen",
+      "x": 90
+    },
+    "color=teal,facing=south,frozen=true": {
+      "model": "thesift:block/music_crystal_teal_frozen",
+      "x": 90,
+      "y": 180
+    },
+    "color=teal,facing=west,frozen=true": {
+      "model": "thesift:block/music_crystal_teal_frozen",
+      "x": 90,
+      "y": 270
+    },
+    "color=teal,facing=east,frozen=true": {
+      "model": "thesift:block/music_crystal_teal_frozen",
+      "x": 90,
+      "y": 90
+    },
+    "color=violet,facing=up,frozen=false": {
+      "model": "thesift:block/music_crystal_violet"
+    },
+    "color=violet,facing=down,frozen=false": {
+      "model": "thesift:block/music_crystal_violet",
+      "x": 180
+    },
+    "color=violet,facing=north,frozen=false": {
+      "model": "thesift:block/music_crystal_violet",
+      "x": 90
+    },
+    "color=violet,facing=south,frozen=false": {
+      "model": "thesift:block/music_crystal_violet",
+      "x": 90,
+      "y": 180
+    },
+    "color=violet,facing=west,frozen=false": {
+      "model": "thesift:block/music_crystal_violet",
+      "x": 90,
+      "y": 270
+    },
+    "color=violet,facing=east,frozen=false": {
+      "model": "thesift:block/music_crystal_violet",
+      "x": 90,
+      "y": 90
+    },
+    "color=violet,facing=up,frozen=true": {
+      "model": "thesift:block/music_crystal_violet_frozen"
+    },
+    "color=violet,facing=down,frozen=true": {
+      "model": "thesift:block/music_crystal_violet_frozen",
+      "x": 180
+    },
+    "color=violet,facing=north,frozen=true": {
+      "model": "thesift:block/music_crystal_violet_frozen",
+      "x": 90
+    },
+    "color=violet,facing=south,frozen=true": {
+      "model": "thesift:block/music_crystal_violet_frozen",
+      "x": 90,
+      "y": 180
+    },
+    "color=violet,facing=west,frozen=true": {
+      "model": "thesift:block/music_crystal_violet_frozen",
+      "x": 90,
+      "y": 270
+    },
+    "color=violet,facing=east,frozen=true": {
+      "model": "thesift:block/music_crystal_violet_frozen",
+      "x": 90,
+      "y": 90
+    },
+    "color=gold,facing=up,frozen=false": {
+      "model": "thesift:block/music_crystal_gold"
+    },
+    "color=gold,facing=down,frozen=false": {
+      "model": "thesift:block/music_crystal_gold",
+      "x": 180
+    },
+    "color=gold,facing=north,frozen=false": {
+      "model": "thesift:block/music_crystal_gold",
+      "x": 90
+    },
+    "color=gold,facing=south,frozen=false": {
+      "model": "thesift:block/music_crystal_gold",
+      "x": 90,
+      "y": 180
+    },
+    "color=gold,facing=west,frozen=false": {
+      "model": "thesift:block/music_crystal_gold",
+      "x": 90,
+      "y": 270
+    },
+    "color=gold,facing=east,frozen=false": {
+      "model": "thesift:block/music_crystal_gold",
+      "x": 90,
+      "y": 90
+    },
+    "color=gold,facing=up,frozen=true": {
+      "model": "thesift:block/music_crystal_gold_frozen"
+    },
+    "color=gold,facing=down,frozen=true": {
+      "model": "thesift:block/music_crystal_gold_frozen",
+      "x": 180
+    },
+    "color=gold,facing=north,frozen=true": {
+      "model": "thesift:block/music_crystal_gold_frozen",
+      "x": 90
+    },
+    "color=gold,facing=south,frozen=true": {
+      "model": "thesift:block/music_crystal_gold_frozen",
+      "x": 90,
+      "y": 180
+    },
+    "color=gold,facing=west,frozen=true": {
+      "model": "thesift:block/music_crystal_gold_frozen",
+      "x": 90,
+      "y": 270
+    },
+    "color=gold,facing=east,frozen=true": {
+      "model": "thesift:block/music_crystal_gold_frozen",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

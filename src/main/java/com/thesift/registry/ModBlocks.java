@@ -321,6 +321,14 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8));
     public static final DeferredBlock<PitcherPlanterBlock> PITCHER_PLANTER = BLOCKS.registerBlock("pitcher_planter", PitcherPlanterBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT).mapColor(MapColor.TERRACOTTA_PINK).strength(1.0F).lightLevel(s -> s.getValue(com.thesift.block.PitcherPlanterBlock.STAGE) == 4 ? 6 : 0).noOcclusion());
+    public static final DeferredBlock<DropExperienceBlock> PRISM_ORE = BLOCKS.registerBlock("prism_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<DropExperienceBlock> DEEP_PRISM_ORE = BLOCKS.registerBlock("deep_prism_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_MAGENTA).strength(4.5F, 3.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<Block> PRISM_BLOCK = BLOCKS.registerBlock("prism_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 4));
+    public static final DeferredBlock<MusicCrystalBlock> MUSIC_CRYSTAL = BLOCKS.registerBlock("music_crystal", MusicCrystalBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_PURPLE).strength(1.5F).lightLevel(s -> s.getValue(com.thesift.block.MusicCrystalBlock.FROZEN) ? 10 : 7).noOcclusion());
 
     private ModBlocks() {}
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 1.2,
+  "ingredient": "thesift:prism_ore",
+  "result": {
+    "id": "thesift:prism_gem"
+  }
+}

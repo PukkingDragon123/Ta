@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 1.0,
+  "size": 2,
+  "targets": [
+    {
+      "state": {
+        "id": "thesift:prism_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:dreamstone"
+      }
+    },
+    {
+      "state": {
+        "id": "thesift:deep_prism_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:hushslate"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:multiface_growth",
+  "block": "minecraft:glow_lichen",
+  "can_be_placed_on": [
+    "thesift:dreamstone",
+    "thesift:hushslate",
+    "minecraft:calcite",
+    "minecraft:amethyst_block"
+  ],
+  "can_place_on_ceiling": true,
+  "can_place_on_wall": true,
+  "search_range": 20
+}

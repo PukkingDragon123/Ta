@@ -111,8 +111,13 @@ public final class CodexEntries {
                 f.puff += (target - f.puff) * (target > f.puff ? 0.35F : 0.06F);
             }
         }));
+        // C: the Caravans, tapping out the Crystal Hymn on the page
+        l.add(mob(CREATURES, "caravan", com.thesift.registry.ModCaravans.CARAVAN, (e, t) -> {
+            if (e instanceof com.thesift.entity.caravan.Caravan c && t % 16 == 4) c.tapAnimation.start(c.tickCount);
+        }));
         // ---- items
         l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));
+        l.add(thing(ITEMS, "prism", ModItems.PRISM_GEM)); // C
         l.add(thing(ITEMS, "skysong_gem", ModItems.SKYSONG_GEM));
         l.add(thing(ITEMS, "siftite", ModItems.SIFTITE_PICKAXE));
         l.add(thing(ITEMS, "slingshot", ModItems.SLINGSHOT));
@@ -131,10 +136,12 @@ public final class CodexEntries {
         l.add(thing(PLACES, "ruins", ModItems.DREAM_JOURNAL_FRAGMENT));
         l.add(thing(PLACES, "deep_shrine", ModItems.SIFT_GATE_FRAME));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
+        l.add(thing(PLACES, "caravan_colony", ModItems.PRISM_BLOCK)); // C
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
         l.add(thing(MAGIC, "euphory_altar", ModItems.EUPHORY_ALTAR));
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));
+        l.add(thing(MAGIC, "music_crystal", ModItems.MUSIC_CRYSTAL)); // C
         l.add(thing(MAGIC, "flora", () -> ModBlocks.CORAL_BUSH.get().asItem()));
         // H: where the Sift's seeds grow, and the potted pitchers that make its soups
         l.add(thing(MAGIC, "sift_gardening", ModItems.ECHO_SEED));

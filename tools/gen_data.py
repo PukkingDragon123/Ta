@@ -233,4 +233,5 @@ def generate():
     trades()
     jukebox()
     __import__('songs').generate()  # songs & instruments (agent D)
+    __import__('caravans').generate()  # C: Caravans, music crystals, prism
     print('data ok')

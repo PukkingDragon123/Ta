@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:siftite_helmet"
+    "thesift:siftite_helmet",
+    "thesift:prism_helmet"
   ]
 }

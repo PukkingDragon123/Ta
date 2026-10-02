@@ -1,0 +1,122 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.deep_sift.loop",
+      "additions": {
+        "sound": "thesift:ambient.sift.additions",
+        "tick_chance": 0.0111
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "thesift:music.deep_sift"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [],
+          "monster": [
+            {
+              "type": "thesift:caravan",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 4
+              },
+              "weight": 40
+            }
+          ],
+          "ambient": [],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.008
+        },
+        {
+          "particle": {
+            "type": "thesift:star_sparkle"
+          },
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "thesift:sift_note"
+          },
+          "probability": 0.0008
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#b48cff",
+    "minecraft:visual/sky_color": "#3a2a6a",
+    "minecraft:visual/water_fog_color": "#7fd8ff"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.4,
+  "effects": {
+    "water_color": "#7fd8ff",
+    "grass_color": "#8f7fe0",
+    "foliage_color": "#a08af0"
+  },
+  "features": [
+    [],
+    [],
+    [
+      "thesift:crystal_geode"
+    ],
+    [],
+    [],
+    [],
+    [
+      "thesift:ore_serbim",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep",
+      "thesift:ore_prism_cavern",
+      "thesift:ore_serbim_cavern",
+      "thesift:ore_diamond_cavern",
+      "thesift:ore_emerald_cavern",
+      "thesift:ore_gold_cavern",
+      "thesift:ore_lapis_cavern",
+      "thesift:ore_redstone_cavern"
+    ],
+    [],
+    [
+      "thesift:chrome_spring"
+    ],
+    [
+      "thesift:crystal_patch_floor",
+      "thesift:crystal_patch_ceiling",
+      "thesift:cavern_glow_lichen"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.6
+}

@@ -312,6 +312,8 @@ def gen_block(b):
     elif k == 'cannon':
         import siege  # the Thumper's arena
         siege.gen_cannon(bid)
+    elif k == 'music_crystal':  # C: the Caravans' music crystals
+        __import__('caravans').gen_crystal(bid)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -1415,6 +1417,7 @@ def generate():
     gen_recipes()
     gen_particles()
     gen_equipment()
+    __import__('caravans').sounds(sys.modules[__name__])  # C: Caravans and music crystals
     gen_sounds()
     gen_misc_tags()
     gen_transformers()

@@ -526,6 +526,7 @@ def dimension_json():
         pt('sift_plains', h=[0.35, 1.0], c=land, e=[-0.22, 1.0], wd=[-1.0, 0.2]),
         pt('deep_sift', d=[0.9, 1.1]),
     ]
+    entries += __import__('caravans').biome_entries(pt)  # C: the Caravans Cavern
     w('dimension/the_sift', {'type': f'{NS}:the_sift', 'generator': {
         'type': 'minecraft:noise', 'biome_source': {'type': 'minecraft:multi_noise', 'biomes': entries}, 'settings': f'{NS}:the_sift'}})
 
@@ -547,6 +548,7 @@ def generate():
     dimension()
     noise_settings()
     features()
+    __import__('caravans').world(sys.modules[__name__])  # C: the Caravans Cavern
     biomes()
     dimension_json()
     carver_tags()

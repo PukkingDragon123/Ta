@@ -76,6 +76,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerClientExtensions);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RiderInput::onInteractionKey); // A1: Stomper rider stomp
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
+        CaravansClient.register(modBus); // C: Caravans, music crystals, the cavern's shifting fog
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }

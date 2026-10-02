@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "thesift:siftite_block",
-    "thesift:sift_gate_frame"
+    "thesift:sift_gate_frame",
+    "thesift:prism_ore",
+    "thesift:deep_prism_ore",
+    "thesift:prism_block"
   ]
 }

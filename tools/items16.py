@@ -1703,6 +1703,7 @@ def all_items():
     out.update(plants_h_art.item_sprites())
     import siege  # the Thumper's arena: the cannonball
     out.update(siege.items())
+    out.update(__import__('caravans').items())  # C: prism gem and armour, Caravan egg
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

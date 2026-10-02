@@ -171,6 +171,15 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_SIFT = reg("music.sift");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_DEEP = reg("music.deep_sift");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_DISC_LULLABY = reg("music_disc.lullaby");
+    // ---- C: Caravans and their music crystals
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_AMBIENT = reg("entity.caravan.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_HURT = reg("entity.caravan.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_DEATH = reg("entity.caravan.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_STEP = reg("entity.caravan.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_ALARM = reg("entity.caravan.alarm");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_BUILD = reg("entity.caravan.build");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_CRYSTAL_CHIME = reg("block.music_crystal.chime");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_CRYSTAL_SHATTER = reg("block.music_crystal.shatter");
 
     // ---- sound types
     public static final DeferredSoundType DREAMSTONE = new DeferredSoundType(1.0F, 1.1F,

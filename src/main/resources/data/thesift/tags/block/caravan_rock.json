@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:base_stone_overworld",
+    "#thesift:sift_stone",
+    "minecraft:calcite",
+    "minecraft:amethyst_block",
+    "minecraft:budding_amethyst",
+    "minecraft:smooth_basalt",
+    "minecraft:tuff",
+    "#thesift:caravan_minable"
+  ]
+}

@@ -848,3 +848,4 @@ ALL.update(mobs_wild.ALL)
 import parasite  # noqa: E402
 
 ALL.update(parasite.ALL)
+ALL.update(__import__('caravans').MODELS)  # C: the Caravan (tools/caravans.py)

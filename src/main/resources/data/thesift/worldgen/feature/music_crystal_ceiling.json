@@ -1,0 +1,94 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "amber",
+            "facing": "down",
+            "frozen": "false"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "rose",
+            "facing": "down",
+            "frozen": "false"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "teal",
+            "facing": "down",
+            "frozen": "false"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "violet",
+            "facing": "down",
+            "frozen": "false"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "gold",
+            "facing": "down",
+            "frozen": "false"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "gold",
+            "facing": "down",
+            "frozen": "true"
+          }
+        },
+        "weight": 1
+      },
+      {
+        "data": {
+          "id": "thesift:music_crystal",
+          "properties": {
+            "color": "violet",
+            "facing": "down",
+            "frozen": "true"
+          }
+        },
+        "weight": 1
+      },
+      {
+        "data": {
+          "id": "minecraft:amethyst_cluster",
+          "properties": {
+            "facing": "down"
+          }
+        },
+        "weight": 2
+      }
+    ]
+  }
+}
