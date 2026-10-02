@@ -1522,7 +1522,7 @@ def mini_boss_bars():
         d.rectangle((30, 18, 397, 31), fill=(*BONE_D, 255))
         d.rectangle((31, 19, 396, 30), fill=(4, 10, 12, 255))
         # sculk veins and glowing specks creeping over the frame
-        rnd = random.Random(hash(name) & 0xffff)
+        rnd = random.Random(sum(map(ord, name)))
         for _ in range(26):
             x = rnd.randrange(14, 410)
             y = rnd.choice((13, 14, 33, 34))
