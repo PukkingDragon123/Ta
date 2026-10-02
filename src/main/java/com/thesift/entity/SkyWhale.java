@@ -315,6 +315,18 @@ public class SkyWhale extends PathfinderMob {
             this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getRandomX(2.5), this.getY() + this.random.nextDouble() * 3.0,
                     this.getRandomZ(2.5), 0.0, 0.0, 0.0);
         }
+        // petals and pollen shaken loose from the meadow on its back drift away behind it
+        if (this.random.nextInt(3) == 0) {
+            this.level().addParticle(ModParticles.WISHWOOD_LEAF.get(), this.getRandomX(2.0) + bx * 2.0, this.getY() + 2.6, this.getRandomZ(2.0) + bz * 2.0,
+                    bx * 0.04, -0.01, bz * 0.04);
+        }
+        if (this.random.nextInt(4) == 0) {
+            this.level().addParticle(ModParticles.DREAM_POLLEN.get(), this.getRandomX(2.0), this.getY() + 2.4 + this.random.nextDouble(), this.getRandomZ(2.0),
+                    bx * 0.02, 0.0, bz * 0.02);
+        }
+        if (this.random.nextInt(6) == 0) {
+            this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getRandomX(2.4), this.getY() + 0.2, this.getRandomZ(2.4), 0.0, -0.01, 0.0);
+        }
         if (this.random.nextInt(40) == 0) {
             this.level().addParticle(ModParticles.SIFT_MIST.get(), this.getX() + bx * 4.0, this.getY() + 0.5, this.getZ() + bz * 4.0, 0.0, 0.0, 0.0);
         }
@@ -416,7 +428,7 @@ public class SkyWhale extends PathfinderMob {
     /** A soft cloud-burst of fur, notes and stars. */
     @Override
     public void makePoofParticles() {
-        KillBurst.pop(this, 0x7F9AE0, 0xDDD0F5, KillBurst.NOTE, ParticleTypes.CLOUD);
+        KillBurst.pop(this, 0x78A5E3, 0xFFD0E6, KillBurst.NOTE, ModParticles.WISHWOOD_LEAF.get());
     }
 
     /** Sky Whales hold their place in the sky: the bounding box sweeps a wide area. */

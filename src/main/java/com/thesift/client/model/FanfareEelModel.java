@@ -17,6 +17,7 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart leftFin;
     private final ModelPart rightFin;
     private final ModelPart[] segments = new ModelPart[5];
+    private final ModelPart[] bellFins = new ModelPart[4];
 
     public FanfareEelModel(ModelPart root) {
         super(root);
@@ -26,6 +27,9 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         this.crest = this.head.getChild("crest");
         this.leftFin = this.head.getChild("left_fin");
         this.rightFin = this.head.getChild("right_fin");
+        for (int i = 0; i < 4; i++) {
+            this.bellFins[i] = this.bell.getChild("bell_fin_" + i);
+        }
         ModelPart p = this.head;
         for (int i = 0; i < 5; i++) {
             p = p.getChild("segment_" + i);
@@ -52,6 +56,10 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         float breathe = 1.0F + Mth.sin(age * 0.12F) * 0.04F;
         this.bell.xScale = breathe;
         this.bell.yScale = breathe;
+        // the glowing bell fins ripple like a flower opening and closing
+        for (int i = 0; i < 4; i++) {
+            this.bellFins[i].xRot = -0.25F + Mth.sin(age * 0.18F + i * 1.6F) * 0.12F - effort * 0.15F;
+        }
         float bite = Anim.seconds(s.bite, s.ageInTicks);
         if (bite >= 0.0F && bite < 0.6F) {
             float lunge = Anim.envelope(bite, 0.0F, 0.06F, 0.05F, 0.3F);
@@ -61,6 +69,9 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
             this.bell.xScale += 0.6F * flare;
             this.bell.yScale += 0.6F * flare;
             this.bell.zScale = 1.0F + 0.8F * flare;
+            for (int i = 0; i < 4; i++) {
+                this.bellFins[i].xRot -= 0.9F * flare;
+            }
             for (int i = 0; i < 5; i++) {
                 this.segments[i].yRot *= 1.0F - lunge * 0.6F;
             }

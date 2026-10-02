@@ -1,7 +1,6 @@
 package com.thesift.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.thesift.TheSift;
 import com.thesift.client.Expression;
 import com.thesift.client.model.ModModelLayers;
 import com.thesift.client.model.StomperModel;
@@ -17,12 +16,13 @@ import net.minecraft.world.phys.AABB;
 public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState, StomperModel> {
     private static final ExpressionTextures TEXTURES = ExpressionTextures.single("stomper", Expression.BLINK, Expression.HAPPY, Expression.ANGRY,
             Expression.HURT, Expression.DEAD);
-    private static final Identifier GLOW = TheSift.id("textures/entity/stomper/stomper_glow.png");
+    private static final ExpressionTextures GLOW = new ExpressionTextures("stomper", new String[]{"stomper"}, "_glow", Expression.BLINK,
+            Expression.HAPPY, Expression.ANGRY, Expression.HURT, Expression.DEAD);
 
     public StomperRenderer(EntityRendererProvider.Context context) {
         super(context, new StomperModel(context.bakeLayer(ModModelLayers.STOMPER)), 1.3F);
-        // the spiracles shine with the Chrome it has stored
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW, (s, age) -> s.chrome * (0.65F + 0.35F * Mth.sin(age * 0.12F)), this.model,
+        // glowing eyes, sculk veins and sprouts; the spiracles shine brighter with the Chrome it has stored
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(s.expression), (s, age) -> 0.5F + 0.5F * s.chrome * (0.7F + 0.3F * Mth.sin(age * 0.12F)), this.model,
                 RenderTypes::entityTranslucentEmissive, false));
     }
 

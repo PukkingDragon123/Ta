@@ -121,7 +121,12 @@ public abstract class SiftFish extends PathfinderMob {
             if (this.inLiquid() && this.random.nextInt(20) == 0) {
                 this.level().addParticle(ModParticles.CHROME_BUBBLE.get(), this.getRandomX(0.5), this.getRandomY(), this.getRandomZ(0.5), 0, 0.02, 0);
             }
+            this.clientEffects();
         }
+    }
+
+    /** Client: each fish's own whimsical sparkle (bubbles, notes, glow). */
+    protected void clientEffects() {
     }
 
     private void steer() {

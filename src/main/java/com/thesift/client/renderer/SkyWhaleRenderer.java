@@ -1,7 +1,6 @@
 package com.thesift.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.thesift.TheSift;
 import com.thesift.client.Expression;
 import com.thesift.client.model.ModModelLayers;
 import com.thesift.client.model.SkyWhaleModel;
@@ -18,12 +17,13 @@ public class SkyWhaleRenderer extends SiftMobRenderer<SkyWhale, SkyWhaleRenderSt
     private static final float SIZE = 1.5F;
     private static final ExpressionTextures TEXTURES = ExpressionTextures.single("sky_whale", Expression.BLINK, Expression.HAPPY, Expression.ANGRY,
             Expression.HURT, Expression.DEAD);
-    private static final Identifier GLOW = TheSift.id("textures/entity/sky_whale/sky_whale_glow.png");
+    private static final ExpressionTextures GLOW = new ExpressionTextures("sky_whale", new String[]{"sky_whale"}, "_glow", Expression.BLINK,
+            Expression.HAPPY, Expression.ANGRY, Expression.HURT, Expression.DEAD);
 
     public SkyWhaleRenderer(EntityRendererProvider.Context context) {
         super(context, new SkyWhaleModel(context.bakeLayer(ModModelLayers.SKY_WHALE)), 2.2F);
         // freckles and the nose ring glow softly, pulsing slowly
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW, (s, age) -> 0.55F + 0.35F * Mth.sin(age * 0.05F), this.model,
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(s.expression), (s, age) -> 0.55F + 0.35F * Mth.sin(age * 0.05F), this.model,
                 RenderTypes::entityTranslucentEmissive, false));
     }
 

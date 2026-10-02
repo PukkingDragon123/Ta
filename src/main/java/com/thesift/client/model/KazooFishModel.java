@@ -15,6 +15,8 @@ public class KazooFishModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart rightEye;
     private final ModelPart leftFin;
     private final ModelPart rightFin;
+    private final ModelPart tuft;
+    private final ModelPart sprout;
 
     public KazooFishModel(ModelPart root) {
         super(root);
@@ -26,6 +28,8 @@ public class KazooFishModel extends EntityModel<SiftFishRenderState> {
         this.rightEye = this.body.getChild("right_eye");
         this.leftFin = this.body.getChild("left_fin");
         this.rightFin = this.body.getChild("right_fin");
+        this.tuft = this.body.getChild("tuft");
+        this.sprout = this.tuft.getChild("tuft_sprout");
     }
 
     @Override
@@ -50,6 +54,11 @@ public class KazooFishModel extends EntityModel<SiftFishRenderState> {
         this.kazoo.xScale = 1.0F + Mth.sin(age * 4.0F) * 0.08F * buzz;
         this.kazoo.yScale = this.kazoo.xScale;
         this.kazoo.zScale = 1.0F + 0.15F * buzz;
+        // the moss tuft's sprout trails and wobbles in the current
+        this.sprout.xRot = 0.15F + e * 0.35F + Mth.sin(age * 0.23F) * 0.12F;
+        this.sprout.zRot = Mth.sin(age * 0.31F + 0.7F) * 0.2F;
+        this.tuft.yScale = 1.0F + Mth.sin(age * 0.2F) * 0.08F;
+        this.dorsal.xRot = e * 0.2F + Mth.sin(beat * 0.5F + 1.0F) * 0.08F;
         if (!s.inLiquid) {
             this.body.zRot = (float) Math.PI * 0.5F;
             this.body.y += 1.5F;

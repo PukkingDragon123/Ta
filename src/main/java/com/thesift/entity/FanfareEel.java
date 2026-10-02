@@ -20,12 +20,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Fanfare Eel: a long brass-orange predator of the Chrome lakes. Its mouth is a trumpet bell, and
+ * Fanfare Eel: a long sculk predator of the Chrome lakes, bone-ribbed and glowing. Its mouth is a trumpet bell, and
  * every bite comes with a blast of sound. It hunts swimmers - players and other fish alike -
  * darting in with its body rippling, then circling off to strike again.
  */
 public class FanfareEel extends SiftFish implements Enemy {
-    private static final byte EVENT_BITE = 62;
+    private static final byte EVENT_BITE = 102;
     public final AnimationState biteAnimation = new AnimationState();
     private @Nullable LivingEntity prey;
     private int preyCheck;
@@ -139,6 +139,24 @@ public class FanfareEel extends SiftFish implements Enemy {
         }
     }
 
+    /** Its glowing lateral line sheds motes, and the bell burbles bubbles. */
+    @Override
+    protected void clientEffects() {
+        float yaw = this.yBodyRot * net.minecraft.util.Mth.DEG_TO_RAD;
+        double fx = -net.minecraft.util.Mth.sin(yaw);
+        double fz = net.minecraft.util.Mth.cos(yaw);
+        if (this.random.nextInt(4) == 0) {
+            double back = this.random.nextDouble() * 1.8;
+            this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getX() - fx * back, this.getY() + 0.25, this.getZ() - fz * back, 0.0, 0.005, 0.0);
+        }
+        if (this.inLiquid() && this.random.nextInt(8) == 0) {
+            this.level().addParticle(ModParticles.CHROME_BUBBLE.get(), this.getX() + fx * 0.7, this.getY() + 0.3, this.getZ() + fz * 0.7, 0.0, 0.02, 0.0);
+        }
+        if (this.isAggressive() && this.random.nextInt(25) == 0) {
+            this.level().addParticle(ModParticles.SIFT_NOTE.get(), this.getX() + fx * 0.8, this.getY() + 0.5, this.getZ() + fz * 0.8, 0.6, 0.0, 0.0);
+        }
+    }
+
     @Override
     protected SoundEvent getFlopSound() {
         return ModSounds.FANFARE_EEL_FLOP.get();
@@ -162,6 +180,6 @@ public class FanfareEel extends SiftFish implements Enemy {
     /** A blare of notes and brass sparks. */
     @Override
     public void makePoofParticles() {
-        KillBurst.pop(this, 0xE0882C, 0xFFC94A, KillBurst.NOTE, ModParticles.CHROME_BUBBLE.get());
+        KillBurst.pop(this, 0x3FF5E6, 0xE3DDCC, KillBurst.NOTE, ModParticles.GLOW_DUST.get());
     }
 }

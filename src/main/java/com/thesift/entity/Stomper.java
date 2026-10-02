@@ -229,6 +229,9 @@ public class Stomper extends TamableAnimal {
         level.sendParticles(ParticleTypes.POOF, this.getX(), this.getY() + 0.2, this.getZ(), 30, 1.6, 0.1, 1.6, 0.08);
         level.sendParticles(ParticleTypes.CLOUD, this.getX(), this.getY() + 0.2, this.getZ(), 16, 1.2, 0.1, 1.2, 0.15);
         level.sendParticles(ModParticles.STAR_SPARKLE.get(), this.getX(), this.getY() + 0.5, this.getZ(), 20, 2.5, 0.4, 2.5, 0.05);
+        // its garden shakes: petals and pollen fly off its back
+        level.sendParticles(ModParticles.WISHWOOD_LEAF.get(), this.getX(), this.getY() + 2.6, this.getZ(), 18, 1.0, 0.3, 1.0, 0.06);
+        level.sendParticles(ModParticles.DREAM_POLLEN.get(), this.getX(), this.getY() + 2.6, this.getZ(), 24, 1.2, 0.4, 1.2, 0.04);
         AABB box = this.getBoundingBox().inflate(r, 2.0, r);
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, box, this::isStompable)) {
             double dx = e.getX() - this.getX();
@@ -286,6 +289,30 @@ public class Stomper extends TamableAnimal {
                 server.broadcastEntityEvent(this, EVENT_PUFF);
                 this.playSound(ModSounds.STOMPER_PUFF.get(), 0.6F, 0.8F + this.random.nextFloat() * 0.3F);
             }
+        } else {
+            this.gardenEffects();
+        }
+    }
+
+    /** Client: pollen drifts off the flowers on its back, sprouts twinkle, petals shake loose as it walks. */
+    private void gardenEffects() {
+        double s = this.getAgeScale();
+        double top = this.getY() + 2.5 * s;
+        if (this.random.nextInt(12) == 0) {
+            this.level().addParticle(ModParticles.DREAM_POLLEN.get(), this.getRandomX(0.8), top + this.random.nextDouble() * 0.5, this.getRandomZ(0.8),
+                    0.0, 0.01, 0.0);
+        }
+        if (this.random.nextInt(20) == 0) {
+            this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getRandomX(0.7), top + 0.3, this.getRandomZ(0.7), 0.0, 0.0, 0.0);
+        }
+        boolean moving = this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-3;
+        if ((moving && this.random.nextInt(10) == 0) || (this.isDancing() && this.random.nextInt(3) == 0)) {
+            this.level().addParticle(ModParticles.WISHWOOD_LEAF.get(), this.getRandomX(1.0), top, this.getRandomZ(1.0),
+                    (this.random.nextDouble() - 0.5) * 0.05, 0.02, (this.random.nextDouble() - 0.5) * 0.05);
+        }
+        if (this.isDancing() && this.random.nextInt(4) == 0) {
+            this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getRandomX(1.2), top + this.random.nextDouble(), this.getRandomZ(1.2), 0.0, 0.0,
+                    0.0);
         }
     }
 
@@ -563,7 +590,7 @@ public class Stomper extends TamableAnimal {
     /** A big wet pop: Chrome droplets, fur and hearts. */
     @Override
     public void makePoofParticles() {
-        KillBurst.pop(this, 0x4FA38E, 0xC58BB8, KillBurst.DROP, ModParticles.CHROME_DROPLET.get());
+        KillBurst.pop(this, 0xF37D8A, 0x43BCC4, KillBurst.HEART, ModParticles.WISHWOOD_LEAF.get());
     }
 
     // ------------------------------------------------------------------ goals

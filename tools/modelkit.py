@@ -415,7 +415,47 @@ class Painter:
             return yy < fh // 3 and xx % 2 == 1
         return False
 
+    def paint_image(self, face, fx, fy, fw, fh, spec, rnd):
+        """A face painted from a picture (e.g. a block sprite): 'image' is a PIL image, 'image_mode'
+        'stretch' (fit the face; plants on cross planes) or 'tile' (repeat at one pixel per texel;
+        moss and turf). 'image_rows' (model units) paints only a top band - jagged, like moss
+        hanging over an edge - over the normal paint of the face. 'glow_bright' puts pixels at least
+        that bright on the emissive layer; 'glow' puts all of them there."""
+        img = spec['image']
+        band = spec.get('image_rows')
+        if band is not None:
+            base = {k: v for k, v in spec.items() if k not in ('image', 'image_rows', 'map')}
+            self.paint_mc(face, fx, fy, fw, fh, base, rnd)
+        if spec.get('image_mode', 'tile') == 'stretch':
+            src = img.resize((fw, fh), Image.NEAREST).load()
+            pick = (lambda x, y: src[x, y])
+        else:
+            src = img.load()
+            w, h = img.size
+            ox, oy = spec.get('image_offset', (rnd.randrange(w), rnd.randrange(h)))
+            pick = (lambda x, y: src[(x + ox) % w, (y + oy) % h])
+        thr = spec.get('glow_bright')
+        r = self.r
+        for yy in range(fh):
+            for xx in range(fw):
+                if band is not None:
+                    jag = (0, 1, 2, 1, 0, 2, 1, 1)[((xx // r) + spec.get('fringe_phase', 0)) % 8] * r
+                    if yy >= band * r + jag - (xx % 2 if r > 1 else 0):
+                        continue
+                c = pick(xx, yy)
+                if c[3] < 128:
+                    if band is None and spec.get('image_cut', True):
+                        self.put(fx + xx, fy + yy, (0, 0, 0, 0))
+                    continue
+                c = (c[0], c[1], c[2], 255)
+                lum = (c[0] * 0.3 + c[1] * 0.55 + c[2] * 0.15)
+                self.put(fx + xx, fy + yy, c, spec.get('glow', False) or (thr is not None and lum >= thr))
+        if 'map' in spec:
+            self.draw_map(fx, fy, fw, fh, spec)
+
     def paint_face(self, face, fx, fy, fw, fh, spec, rnd):
+        if 'image' in spec:
+            return self.paint_image(face, fx, fy, fw, fh, spec, rnd)
         if spec.get('pattern') == 'mc':
             return self.paint_mc(face, fx, fy, fw, fh, spec, rnd)
         r = self.r

@@ -25,7 +25,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Tubafish: a huge, round brass pufferfish with a tuba bell on its back. It drifts lazily through
+ * Tubafish: a huge, round periwinkle pufferfish with an anemone-crowned tuba bell on its back. It drifts lazily through
  * Chrome, burbling low notes - but come too close and it blasts a tuba note, swells to twice its
  * size with its spikes out and blows a storm of bubbles. Touching it while it is puffed hurts.
  * Drops Tuba Bubbles.
@@ -134,6 +134,23 @@ public class Tubafish extends SiftFish {
         }
     }
 
+    /** Its glowing freckles twinkle, the tuba burbles bubbles and the anemone sheds glitter. */
+    @Override
+    protected void clientEffects() {
+        double size = 0.5 + 0.4 * this.puff;
+        if (this.random.nextInt(5) == 0) {
+            this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getRandomX(size * 1.6), this.getY() + this.random.nextDouble() * size * 1.6,
+                    this.getRandomZ(size * 1.6), 0.0, 0.0, 0.0);
+        }
+        if (this.random.nextInt(this.isPuffed() ? 2 : 9) == 0) {
+            this.level().addParticle(ModParticles.CHROME_BUBBLE.get(), this.getX() + (this.random.nextDouble() - 0.5) * 0.3, this.getY() + 1.1 + this.puff * 0.5,
+                    this.getZ() + (this.random.nextDouble() - 0.5) * 0.3, 0.0, 0.04, 0.0);
+        }
+        if (this.random.nextInt(14) == 0) {
+            this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getX(), this.getY() + 1.3 + this.puff * 0.5, this.getZ(), 0.0, 0.01, 0.0);
+        }
+    }
+
     @Override
     protected SoundEvent getFlopSound() {
         return ModSounds.TUBAFISH_FLOP.get();
@@ -170,7 +187,7 @@ public class Tubafish extends SiftFish {
     /** It pops like a balloon: a huge spray of bubbles and gold stars. */
     @Override
     public void makePoofParticles() {
-        KillBurst.pop(this, 0xE8B33A, 0xFFF2C8, KillBurst.DROP, ParticleTypes.BUBBLE_POP);
+        KillBurst.pop(this, 0x78A5E3, 0xF37D84, KillBurst.DROP, ParticleTypes.BUBBLE_POP);
         for (int i = 0; i < 30; i++) {
             this.level().addParticle(ModParticles.CHROME_BUBBLE.get(), this.getRandomX(1.2), this.getRandomY(), this.getRandomZ(1.2),
                     (this.random.nextDouble() - 0.5) * 0.2, this.random.nextDouble() * 0.2, (this.random.nextDouble() - 0.5) * 0.2);

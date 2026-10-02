@@ -8,18 +8,25 @@ import com.thesift.entity.SiftFish;
 import com.thesift.entity.Tubafish;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 /** Renders the music fish: their faces, a squishy hit, and an overall size. */
 public class SiftFishRenderer<T extends SiftFish, M extends EntityModel<SiftFishRenderState>> extends SiftMobRenderer<T, SiftFishRenderState, M> {
     private final ExpressionTextures textures;
+    private final ExpressionTextures glow;
     private final float size;
 
     public SiftFishRenderer(EntityRendererProvider.Context context, M model, String name, float shadow, float size, Expression... painted) {
         super(context, model, shadow);
         this.textures = ExpressionTextures.single(name, painted);
+        this.glow = new ExpressionTextures(name, new String[]{name}, "_glow", painted);
         this.size = size;
+        // glowing sculk lines, spots, sprouts and eyes, softly pulsing
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> this.glow.get(s.expression), (s, age) -> 0.7F + 0.3F * Mth.sin(age * 0.1F + s.seed),
+                this.model, RenderTypes::entityTranslucentEmissive, false));
     }
 
     @Override

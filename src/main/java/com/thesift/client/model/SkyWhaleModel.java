@@ -23,6 +23,10 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
     private final ModelPart rightCheek;
     private final ModelPart[] tail = new ModelPart[4];
     private final ModelPart[] tufts = new ModelPart[3];
+    /** The meadow on its back (and the bloom on its brow). */
+    private final ModelPart[] flowers = new ModelPart[7];
+    /** Glowbell vines and lullwood strands trailing from its flanks and flippers. */
+    private final ModelPart[] vines = new ModelPart[8];
 
     public SkyWhaleModel(ModelPart root) {
         super(root);
@@ -43,6 +47,13 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
         for (int i = 0; i < 3; i++) {
             this.tufts[i] = this.body.getChild("back_tuft_" + i);
         }
+        for (int i = 0; i < 6; i++) {
+            this.flowers[i] = this.body.getChild("back_flower_" + i);
+            this.vines[i] = this.body.getChild("vine_" + i);
+        }
+        this.flowers[6] = this.head.getChild("head_flower");
+        this.vines[6] = this.leftFlipper.getChild("left_flipper_vine");
+        this.vines[7] = this.rightFlipper.getChild("right_flipper_vine");
     }
 
     @Override
@@ -98,6 +109,22 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
             this.head.xRot -= 0.15F * heave;
             this.head.z -= 2.0F * heave;
         }
+        // the meadow leans back in the wind and nods; the vines trail behind and swing
+        for (int i = 0; i < this.flowers.length; i++) {
+            float ph = i * 1.9F;
+            this.flowers[i].xRot = 0.18F + Mth.sin(age * 0.09F + ph) * 0.08F;
+            this.flowers[i].zRot = Mth.sin(age * 0.07F + ph) * 0.12F;
+            this.flowers[i].yScale = 1.0F + Mth.sin(age * 0.05F + ph) * 0.05F;
+        }
+        for (int i = 0; i < this.vines.length; i++) {
+            float ph = i * 1.3F;
+            this.vines[i].xRot = 0.3F + Mth.sin(age * 0.06F - ph) * 0.14F;
+            this.vines[i].zRot = Mth.sin(age * 0.045F + ph) * 0.1F;
+        }
+        // the flipper vines stay hanging while the flippers beat
+        this.vines[6].zRot -= flap * 0.4F + 0.3F;
+        this.vines[7].zRot += flap * 0.4F + 0.3F;
+
         if (s.hasRedOverlay) {
             this.head.xRot += 0.15F;
             this.leftFlipper.zRot -= 0.3F;

@@ -100,6 +100,22 @@ public class KazooFish extends SiftFish {
         }
     }
 
+    /** Tiny notes buzz off the kazoo, bubbles trail and the moss sprout twinkles. */
+    @Override
+    protected void clientEffects() {
+        if (this.random.nextInt(70) == 0) {
+            this.level().addParticle(ModParticles.SIFT_NOTE.get(), this.getX(), this.getY() + 0.45, this.getZ(), this.random.nextDouble(), 0.0, 0.0);
+        }
+        if (this.inLiquid() && this.random.nextInt(6) == 0) {
+            double bx = Math.sin(Math.toRadians(this.yBodyRot)) * 0.35;
+            double bz = -Math.cos(Math.toRadians(this.yBodyRot)) * 0.35;
+            this.level().addParticle(ModParticles.CHROME_BUBBLE.get(), this.getX() + bx, this.getY() + 0.2, this.getZ() + bz, 0.0, 0.01, 0.0);
+        }
+        if (this.random.nextInt(30) == 0) {
+            this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getX(), this.getY() + 0.5, this.getZ(), 0.0, 0.01, 0.0);
+        }
+    }
+
     @Override
     protected SoundEvent getFlopSound() {
         return ModSounds.KAZOO_FISH_FLOP.get();
@@ -128,6 +144,6 @@ public class KazooFish extends SiftFish {
     /** A pop of notes and bubbles in teal and orange. */
     @Override
     public void makePoofParticles() {
-        KillBurst.pop(this, 0x2FB7B0, 0xFF9A4A, KillBurst.NOTE, ModParticles.CHROME_BUBBLE.get());
+        KillBurst.pop(this, 0x3FD0C4, 0xF87D8D, KillBurst.NOTE, ModParticles.CHROME_BUBBLE.get());
     }
 }

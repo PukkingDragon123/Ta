@@ -30,6 +30,8 @@ public class StomperModel extends EntityModel<StomperRenderState> {
     private final ModelPart[] trunk = new ModelPart[4];
     private final ModelPart[] legs = new ModelPart[4];
     private final ModelPart[] feet = new ModelPart[4];
+    /** The garden on its back, shoulders and brow: every plant sways on its own. */
+    private final ModelPart[] plants = new ModelPart[14];
 
     public StomperModel(ModelPart root) {
         super(root);
@@ -53,6 +55,14 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             t = t.getChild("trunk_" + i);
             this.trunk[i] = t;
         }
+        for (int i = 0; i < 8; i++) {
+            this.plants[i] = this.hump.getChild("plant_" + i);
+        }
+        for (int i = 0; i < 4; i++) {
+            this.plants[8 + i] = this.body.getChild("body_plant_" + i);
+        }
+        this.plants[12] = this.head.getChild("head_plant_0");
+        this.plants[13] = this.head.getChild("head_plant_1");
         String[] names = {"front_left", "front_right", "back_left", "back_right"};
         for (int i = 0; i < 4; i++) {
             this.legs[i] = this.body.getChild(names[i] + "_leg");
@@ -276,6 +286,24 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             }
             for (int i = 0; i < 4; i++) {
                 this.trunk[i].xRot = Mth.lerp(roll, this.trunk[i].xRot, -0.1F);
+            }
+        }
+
+        // --- the garden: sways with every heavy step, jiggles on stomps, wiggles when it dances
+        float jolt = stomp >= 0.0F ? Anim.envelope(stomp, 0.3F, 0.03F, 0.05F, 0.6F) : 0.0F;
+        float puffJolt = puffT >= 0.0F ? Anim.envelope(puffT, 0.0F, 0.06F, 0.0F, 0.5F) : 0.0F;
+        for (int i = 0; i < this.plants.length; i++) {
+            ModelPart p = this.plants[i];
+            float ph = i * 1.37F;
+            p.zRot = Mth.sin(age * 0.07F + ph) * 0.07F + Mth.sin(pos * 2.0F + ph) * 0.18F * walk + jolt * Mth.sin(s.ageInTicks * 1.9F + ph) * 0.35F;
+            p.xRot = Mth.cos(age * 0.06F + ph) * 0.05F - walk * 0.12F + puffJolt * 0.2F * Mth.sin(ph);
+            float bounce = 1.0F + Mth.sin(age * 0.11F + ph) * 0.04F - jolt * 0.3F + puffJolt * 0.12F;
+            p.yScale = bounce;
+            p.xScale = 1.0F + (1.0F - bounce) * 0.6F;
+            p.zScale = p.xScale;
+            if (s.dancing) {
+                p.zRot += Mth.sin(s.ageInTicks * 0.55F + ph) * 0.3F;
+                p.xRot += Mth.cos(s.ageInTicks * 0.55F + ph) * 0.15F;
             }
         }
 
