@@ -319,6 +319,8 @@ def gen_block(b):
     elif k in ('echoer_device', 'echoer_hut_heart'):
         import echoer_world  # A2 Echoer: The Echoer device and the hut's hearthstone
         echoer_world.gen_block(sys.modules[__name__], bid, k)
+    elif k == 'swifter_den':  # A2 Swifter: the den, a nest of fluff and twigs
+        __import__('swifter').gen_den(sys.modules[__name__], bid)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -1269,6 +1271,9 @@ def check_sounds():
         # A2 Echoer: Soul Golem, Nib and Echoer-device sounds are registered in ModEchoer.java
         with open(os.path.join(os.path.dirname(java), 'ModEchoer.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # A2 Swifter & White Forest: the Swifter's sounds and the forest's ambience are registered in ModSwifter.java
+        with open(os.path.join(os.path.dirname(java), 'ModSwifter.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
         for ev in sorted(set(SOUNDS) - registered):
@@ -1432,6 +1437,7 @@ def flush_tags():
 
 def generate():
     __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
+    __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)

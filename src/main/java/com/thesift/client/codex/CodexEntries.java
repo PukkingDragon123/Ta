@@ -124,6 +124,11 @@ public final class CodexEntries {
             if (e instanceof com.thesift.entity.Gobbler g && t % 70 == 10) g.lungeAnimation.start(g.tickCount);
         }));
         l.add(thing(PLACES, "sea_and_sky", ModItems.ROSE_GLOWKELP));
+        // A2 Swifter & White Forest: the three-tailed cloud fox (acting out its poses), and its pale forest
+        l.add(mob(CREATURES, "swifter", com.thesift.registry.ModSwifter.SWIFTER, (e, t) -> {
+            if (e instanceof com.thesift.entity.Swifter s) s.codexPose(t);
+        }));
+        l.add(thing(PLACES, "white_forest", ModItems.WHITE_LULLWOOD_SAPLING));
         l.add(thing(ITEMS, "sushi", ModItems.SUSHI_PLATTER));
         // ---- items
         l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));

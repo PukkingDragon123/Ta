@@ -2022,6 +2022,7 @@ def main():
     for name, img in plants_h_art.block_textures().items():
         out(name, img)
     __import__('sea_art').block_textures(out)  # sea & sky: glowkelp, anemone, coral sand, cloud, chime bell, organ reed
+    __import__('swifter_art').block_textures(out)  # A2 Swifter & White Forest: white turf/leaves, puffbloom, den, fluff
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]

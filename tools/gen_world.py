@@ -552,5 +552,6 @@ def generate():
     biomes()
     dimension_json()
     __import__('sea_sky').world(sys.modules[__name__])  # sea & sky: kelp forest, deep dark ocean, sound garden
+    __import__('swifter').world(sys.modules[__name__])  # A2: the White Forest, white lullwood, cloud bushes, Swifter dens
     carver_tags()
     print(f'world ok: {len(FEATURES)} features, {len(PLACED)} placed')

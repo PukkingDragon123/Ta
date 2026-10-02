@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "thesift:block/white_turf_top",
+    "side": "thesift:block/white_turf_side",
+    "bottom": "thesift:block/sift_soil"
+  }
+}

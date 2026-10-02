@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:random_selector",
+  "default": {
+    "feature": "thesift:white_lullwood_tree",
+    "placement": [
+      {
+        "type": "minecraft:block_predicate_filter",
+        "predicate": {
+          "type": "minecraft:would_survive",
+          "state": "thesift:white_lullwood_sapling"
+        }
+      }
+    ]
+  },
+  "features": [
+    {
+      "chance": 0.22,
+      "feature": {
+        "feature": "thesift:grand_white_lullwood_tree",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "thesift:white_lullwood_sapling"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

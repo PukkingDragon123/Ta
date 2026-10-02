@@ -1,0 +1,165 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.sift.loop",
+      "additions": {
+        "sound": "thesift:ambient.white_forest.additions",
+        "tick_chance": 0.012
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "thesift:music.sift"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [
+            {
+              "type": "thesift:swifter",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 5
+            },
+            {
+              "type": "thesift:bulb",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 4
+              },
+              "weight": 12
+            },
+            {
+              "type": "thesift:stomper",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 3
+            },
+            {
+              "type": "thesift:harmoner",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 4
+            },
+            {
+              "type": "thesift:enchoer",
+              "count": 1,
+              "weight": 1
+            }
+          ],
+          "monster": [],
+          "ambient": [
+            {
+              "type": "thesift:nib",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 3
+              },
+              "weight": 6
+            }
+          ],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:white_fluff"
+          },
+          "probability": 0.006
+        },
+        {
+          "particle": {
+            "type": "thesift:sift_mist"
+          },
+          "probability": 0.0015
+        },
+        {
+          "particle": {
+            "type": "thesift:drifting_soul"
+          },
+          "probability": 0.0006
+        },
+        {
+          "particle": {
+            "type": "thesift:star_sparkle"
+          },
+          "probability": 0.0006
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#eaf2ff",
+    "minecraft:visual/sky_color": "#c4e2ff",
+    "minecraft:visual/water_fog_color": "#d6efff"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.7,
+  "effects": {
+    "water_color": "#d6efff",
+    "grass_color": "#eef3fb",
+    "foliage_color": "#f6f9ff"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "thesift:cloud_bush"
+    ],
+    [],
+    [
+      "thesift:ore_serbim",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep"
+    ],
+    [],
+    [
+      "thesift:chrome_spring"
+    ],
+    [
+      "thesift:patch_glimmer_sprouts",
+      "thesift:trees_white_forest",
+      "thesift:patch_white_forest_flowers",
+      "thesift:swifter_den",
+      "minecraft:patch_grass_forest"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.35
+}

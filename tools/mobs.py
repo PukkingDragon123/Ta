@@ -779,3 +779,4 @@ ALL.update(__import__('caravans').MODELS)  # C: the Caravan (tools/caravans.py)
 import echoer  # noqa: E402
 
 ALL.update(echoer.ALL)
+ALL.update(__import__('swifter').MODELS)  # A2 Swifter & White Forest: the Swifter and its cubs (tools/swifter.py)

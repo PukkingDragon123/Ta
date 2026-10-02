@@ -6,6 +6,7 @@
     "thesift:sift_soil",
     "thesift:sift_grass_block",
     "thesift:coral_turf",
-    "thesift:coral_sand"
+    "thesift:coral_sand",
+    "thesift:white_turf"
   ]
 }

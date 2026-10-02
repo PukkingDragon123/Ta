@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:block_blob",
+  "state": {
+    "id": "thesift:cloud_block"
+  },
+  "can_place_on": {
+    "type": "minecraft:matching_blocks",
+    "blocks": [
+      "thesift:white_turf",
+      "thesift:sift_grass_block",
+      "thesift:sift_soil"
+    ]
+  }
+}

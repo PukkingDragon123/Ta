@@ -166,6 +166,11 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CHIME_BELL = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_BELL);
     public static final DeferredItem<DoubleHighBlockItem> ORGAN_REED = ITEMS.registerItem("organ_reed", p -> new DoubleHighBlockItem(ModBlocks.ORGAN_REED.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<BlockItem> ECHOER_DEVICE = ITEMS.registerSimpleBlockItem(ModBlocks.ECHOER_DEVICE);
+    public static final DeferredItem<BlockItem> WHITE_TURF = ITEMS.registerSimpleBlockItem(ModBlocks.WHITE_TURF);
+    public static final DeferredItem<BlockItem> WHITE_LULLWOOD_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.WHITE_LULLWOOD_LEAVES);
+    public static final DeferredItem<BlockItem> WHITE_LULLWOOD_SAPLING = ITEMS.registerSimpleBlockItem(ModBlocks.WHITE_LULLWOOD_SAPLING);
+    public static final DeferredItem<BlockItem> PUFFBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.PUFFBLOOM);
+    public static final DeferredItem<BlockItem> SWIFTER_DEN = ITEMS.registerSimpleBlockItem(ModBlocks.SWIFTER_DEN);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -268,6 +273,8 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> SOUL_GOLEM_SPAWN_EGG = ITEMS.registerItem("soul_golem_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEchoer.SOUL_GOLEM.get()));
     public static final DeferredItem<SpawnEggItem> NIB_SPAWN_EGG = ITEMS.registerItem("nib_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEchoer.NIB.get()));
     public static final DeferredItem<SculkBloomItem> SCULK_BLOOM = ITEMS.registerItem("sculk_bloom", SculkBloomItem::new, () -> new Item.Properties().useBlockDescriptionPrefix().rarity(Rarity.RARE));
+    public static final DeferredItem<Item> SWIFTER_FLUFF = ITEMS.registerItem("swifter_fluff", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<SpawnEggItem> SWIFTER_SPAWN_EGG = ITEMS.registerItem("swifter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSwifter.SWIFTER.get()));
 
     private ModItems() {}
 }

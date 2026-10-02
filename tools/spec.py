@@ -345,3 +345,5 @@ for _d in ITEMS:
         _d["name"] = "Echoer Spawn Egg"
 # ---------------------------------------------------------------- A1 Bulb & Stomper: the Sculk Bloom (tools/sculk_bloom.py)
 __import__("sculk_bloom").declare(block, item)
+# ---------------------------------------------------------------- A2 Swifter & White Forest (tools/swifter.py)
+__import__("swifter").declare(block, item)

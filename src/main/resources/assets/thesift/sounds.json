@@ -3012,6 +3012,256 @@
     ],
     "subtitle": "subtitles.thesift.ambient.sound_garden.additions"
   },
+  "entity.swifter.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/idle1",
+        "volume": 0.7,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/fox/idle2",
+        "volume": 0.7,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/fox/idle3",
+        "volume": 0.7,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/sniff1",
+        "volume": 0.6,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.ambient"
+  },
+  "entity.swifter.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/hurt1",
+        "volume": 0.9,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/hurt2",
+        "volume": 0.9,
+        "pitch": 1.25
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.hurt"
+  },
+  "entity.swifter.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/death1",
+        "volume": 1.0,
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:mob/fox/death2",
+        "volume": 1.0,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.death"
+  },
+  "entity.swifter.snarl": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/aggro1",
+        "volume": 1.0,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/fox/aggro2",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/fox/aggro3",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.snarl"
+  },
+  "entity.swifter.dash": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/phantom/swoop1",
+        "volume": 0.9,
+        "pitch": 1.7
+      },
+      {
+        "name": "minecraft:mob/phantom/swoop2",
+        "volume": 0.9,
+        "pitch": 1.8
+      },
+      {
+        "name": "minecraft:fireworks/launch1",
+        "volume": 0.8,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.dash"
+  },
+  "entity.swifter.rocket": {
+    "sounds": [
+      {
+        "name": "minecraft:fireworks/launch1",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/breeze/whirl",
+        "volume": 0.8,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.rocket"
+  },
+  "entity.swifter.grab": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/bite1",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/fox/bite2",
+        "volume": 1.0,
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:mob/fox/bite3",
+        "volume": 1.0,
+        "pitch": 1.05
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.grab"
+  },
+  "entity.swifter.slam": {
+    "sounds": [
+      {
+        "name": "minecraft:item/mace/smash_ground_heavy",
+        "volume": 1.0,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.slam"
+  },
+  "entity.swifter.gust": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst1",
+        "volume": 1.0,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst2",
+        "volume": 1.0,
+        "pitch": 0.95
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.gust"
+  },
+  "entity.swifter.sleep": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/sleep1",
+        "volume": 0.6,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/fox/sleep2",
+        "volume": 0.6,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/fox/sleep3",
+        "volume": 0.6,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.sleep"
+  },
+  "entity.swifter.cry": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/wolf/baby/whine1",
+        "volume": 0.9,
+        "pitch": 1.35
+      },
+      {
+        "name": "minecraft:mob/wolf/baby/whine2",
+        "volume": 0.9,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/fox/screech1",
+        "volume": 0.5,
+        "pitch": 1.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.cry"
+  },
+  "entity.swifter.calm": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/cat/purr1",
+        "volume": 1.0,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/cat/purr2",
+        "volume": 1.0,
+        "pitch": 1.35
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.calm"
+  },
+  "entity.swifter.eat": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/eat1",
+        "volume": 0.9,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/eat2",
+        "volume": 0.9,
+        "pitch": 1.25
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.swifter.eat"
+  },
+  "ambient.white_forest.additions": {
+    "sounds": [
+      {
+        "name": "minecraft:block/cherry_leaves/break1",
+        "volume": 0.22,
+        "pitch": 1.5
+      },
+      {
+        "name": "minecraft:block/cherry_leaves/break2",
+        "volume": 0.22,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:block/cherry_leaves/break3",
+        "volume": 0.2,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/fox/idle4",
+        "volume": 0.12,
+        "pitch": 1.45
+      }
+    ],
+    "subtitle": "subtitles.thesift.ambient.white_forest.additions"
+  },
   "entity.caravan.ambient": {
     "sounds": [
       {

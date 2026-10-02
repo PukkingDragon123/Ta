@@ -417,7 +417,8 @@ public final class SmokeTest {
                 ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.THUMPER.get(),
                 ModEntities.STRUMMER.get(), ModEntities.SCULK_PARASITE.get(), ModEntities.STRUMLING.get(),
                 com.thesift.registry.ModCaravans.CARAVAN.get(), // C: the Caravan
-                com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), com.thesift.registry.ModEchoer.NIB.get()); // A2 Echoer
+                com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), com.thesift.registry.ModEchoer.NIB.get(), // A2 Echoer
+                com.thesift.registry.ModSwifter.SWIFTER.get()); // A2 Swifter
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);
         sift.setChunkForced(1, 0, true);

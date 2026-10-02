@@ -61,6 +61,7 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.thesift.client.gui.ConductorBossBar::onBossBar);
         modBus.addListener(TheSiftClient::registerFluidModels);
         EchoerClient.register(modBus); // A2 Echoer: Soul Golems and Nibs
+        SwifterClient.register(modBus); // A2 Swifter & White Forest: the Swifter, drifting fluff, the forest's white mist
         modBus.addListener(ClientEffects::registerOverlays);
         modBus.addListener(com.thesift.client.music.InstrumentHud::registerOverlays); // songs (agent D)
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onClientTick);

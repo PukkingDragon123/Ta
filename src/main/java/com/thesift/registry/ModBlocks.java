@@ -353,6 +353,20 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_CYAN).sound(SoundType.SCULK));
     public static final DeferredBlock<PottedSculkBloomBlock> POTTED_SCULK_BLOOM = BLOCKS.registerBlock("potted_sculk_bloom", p -> new PottedSculkBloomBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, SCULK_BLOOM, p),
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY).lightLevel(s -> 3));
+    public static final DeferredBlock<SiftGrassBlock> WHITE_TURF = BLOCKS.registerBlock("white_turf", SiftGrassBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.SNOW));
+    public static final DeferredBlock<SiftLeavesBlock> WHITE_LULLWOOD_LEAVES = BLOCKS.registerBlock("white_lullwood_leaves", p -> new SiftLeavesBlock(0.04F, () -> ModSwifter.WHITE_FLUFF.get(), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_OAK_LEAVES).mapColor(MapColor.SNOW));
+    public static final DeferredBlock<SiftSaplingBlock> WHITE_LULLWOOD_SAPLING = BLOCKS.registerBlock("white_lullwood_sapling", p -> new SiftSaplingBlock(ModSwifter.WHITE_LULLWOOD, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
+    public static final DeferredBlock<FlowerPotBlock> POTTED_WHITE_LULLWOOD_SAPLING = BLOCKS.registerBlock("potted_white_lullwood_sapling", p -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, WHITE_LULLWOOD_SAPLING, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING));
+    public static final DeferredBlock<SiftFlowerBlock> PUFFBLOOM = BLOCKS.registerBlock("puffbloom", p -> new SiftFlowerBlock(MobEffects.SLOW_FALLING, 6.0F, 0, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY));
+    public static final DeferredBlock<FlowerPotBlock> POTTED_PUFFBLOOM = BLOCKS.registerBlock("potted_puffbloom", p -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, PUFFBLOOM, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY));
+    public static final DeferredBlock<SwifterDenBlock> SWIFTER_DEN = BLOCKS.registerBlock("swifter_den", SwifterDenBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.HAY_BLOCK).mapColor(MapColor.SNOW).strength(0.8F).sound(SoundType.WOOL).noOcclusion());
 
     private ModBlocks() {}
 }

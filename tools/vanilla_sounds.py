@@ -127,6 +127,13 @@ FILES = frozenset({
     'music/game/comforting_memories', 'music/game/echo_in_the_wind', 'music/game/infinite_amethyst', 'music/game/left_to_bloom',
     'music/game/one_more_day', 'random/bow', 'random/drink', 'random/eat1', 'random/eat2', 'random/explode1', 'random/explode2',
     'random/levelup', 'random/pop',
+    # A2 Swifter & White Forest
+    'block/cherry_leaves/break1', 'block/cherry_leaves/break2', 'block/cherry_leaves/break3', 'entity/wind_charge/wind_burst1',
+    'entity/wind_charge/wind_burst2', 'fireworks/launch1', 'item/mace/smash_ground_heavy', 'mob/breeze/whirl', 'mob/cat/purr1',
+    'mob/cat/purr2', 'mob/fox/aggro1', 'mob/fox/aggro2', 'mob/fox/aggro3', 'mob/fox/bite3', 'mob/fox/death1', 'mob/fox/death2',
+    'mob/fox/eat1', 'mob/fox/eat2', 'mob/fox/hurt1', 'mob/fox/hurt2', 'mob/fox/idle1', 'mob/fox/idle2', 'mob/fox/idle3',
+    'mob/fox/idle4', 'mob/fox/screech1', 'mob/fox/sleep1', 'mob/fox/sleep2', 'mob/fox/sleep3', 'mob/fox/sniff1', 'mob/phantom/swoop1',
+    'mob/phantom/swoop2', 'mob/wolf/baby/whine1', 'mob/wolf/baby/whine2',
 })
 
 

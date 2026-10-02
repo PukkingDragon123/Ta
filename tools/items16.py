@@ -1703,6 +1703,7 @@ def all_items():
     out.update(__import__('caravans').items())  # C: prism gem and armour, Caravan egg
     out.update(__import__('sea_art').items())  # sea & sky: fish meats, sculk bladder, sushi, Gobbler egg
     out.update(__import__('echoer_world').item_sprites())  # A2 Echoer: Soul Golem Core, Nib Dust, eggs
+    out.update(__import__('swifter_art').item_sprites())  # A2 Swifter & White Forest: Swifter Fluff, Swifter egg
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)
