@@ -340,7 +340,7 @@ public final class ModBlocks {
     public static final DeferredBlock<WaterPlantBlock> ABYSS_ANEMONE = BLOCKS.registerBlock("abyss_anemone", WaterPlantBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SEAGRASS).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9).replaceable());
     public static final DeferredBlock<CloudBlock> CLOUD_BLOCK = BLOCKS.registerBlock("cloud_block", CloudBlock::new,
-            () -> BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL).noOcclusion().isRedstoneConductor((s, l, p) -> false).isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p) -> false));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL));
     public static final DeferredBlock<ChimeBellBlock> CHIME_BELL = BLOCKS.registerBlock("chime_bell", ChimeBellBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6));
     public static final DeferredBlock<OrganReedBlock> ORGAN_REED = BLOCKS.registerBlock("organ_reed", OrganReedBlock::new,

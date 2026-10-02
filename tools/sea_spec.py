@@ -20,8 +20,7 @@ def declare(block, item):
               cls="GlowKelpBlock", model="sea_kelp", tab="nature", name=f"{k.capitalize()} Glowkelp")
     block("abyss_anemone", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SEAGRASS).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9)"
           ".replaceable()", cls="WaterPlantBlock", model="sea_anemone", loot="self", tab="nature")
-    block("cloud_block", "custom", "BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL).noOcclusion()"
-          ".isRedstoneConductor((s, l, p) -> false).isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p) -> false)",
+    block("cloud_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL)",
           cls="CloudBlock", model="glass", name="Cloud", tab="nature")
     block("chime_bell", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6)",
           cls="ChimeBellBlock", model="sea_bell", tags=["flowers"], tab="nature")
