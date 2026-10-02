@@ -226,7 +226,7 @@ block("glowing_slime_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blo
 block("soul_chime", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion()",
       cls="SoulChimeBlock", model="chime", tags=["pickaxe"], tab="functional")
 # the Weaver (E2): glowing, tuned silk - barely slows you, bounces you, plays a note when touched
-block("musical_cobweb", "custom", "BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).sound(net.minecraft.world.level.block.SoundType.COBWEB).noCollision().strength(1.0F).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY).lightLevel(s -> s.getValue(com.thesift.block.MusicalCobwebBlock.RINGING) ? 12 : 6)",
+block("musical_cobweb", "custom", "BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).sound(net.minecraft.world.level.block.SoundType.COBWEB).noCollision().strength(1.0F).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED).lightLevel(s -> s.getValue(com.thesift.block.MusicalCobwebBlock.RINGING) ? 12 : 6)",
       cls="MusicalCobwebBlock", model="cross", tags=["sword_efficient"], tab="functional", loot="web:sculk_string")
 block("lingering_glow", "custom", "BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED)",
       cls="LingeringGlowBlock", model="none", item=False, loot="none")
