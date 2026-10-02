@@ -64,6 +64,7 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.thesift.client.gui.ConductorBossBar::onBossBar);
         modBus.addListener(TheSiftClient::registerFluidModels);
         modBus.addListener(ClientEffects::registerOverlays);
+        modBus.addListener(com.thesift.client.music.InstrumentHud::registerOverlays); // songs (agent D)
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onClientTick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onPlaySound);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onFogColor);

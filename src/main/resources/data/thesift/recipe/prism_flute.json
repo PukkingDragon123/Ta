@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:registered",
+      "registry": "minecraft:item",
+      "value": "thesift:prism_gem"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "G": "thesift:prism_gem",
+    "F": "thesift:crane_flute"
+  },
+  "pattern": [
+    " G ",
+    "GFG",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:prism_flute"
+  }
+}

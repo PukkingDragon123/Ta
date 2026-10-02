@@ -105,7 +105,6 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CONDUCTOR_MASK_TRANSFORM = reg("entity.conductor_mask.transform");
     public static final DeferredHolder<SoundEvent, SoundEvent> CONGA_DRUM_BOOM = reg("item.conga_drum.boom");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRANE_FLUTE_PLAY = reg("item.crane_flute.play");
-    public static final DeferredHolder<SoundEvent, SoundEvent> CRANE_FLUTE_SHIELD = reg("item.crane_flute.shield");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUITAR_STRUM = reg("item.guitar.strum");
     public static final DeferredHolder<SoundEvent, SoundEvent> BATON_NOTE = reg("item.conductors_baton.note");
     public static final DeferredHolder<SoundEvent, SoundEvent> RIVETER_AMBIENT = reg("entity.riveter.ambient");

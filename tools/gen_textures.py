@@ -842,51 +842,6 @@ def stage_things():
         for x in range(6, 10):
             side.set(x, y, teal_d if (x + y) % 2 else teal)
     out('block/instrument_altar_side', side)
-    overlays()
-
-
-def overlays():
-    """Full-screen overlays: the Feather Shield (the Sculk Corruption ones are painted by
-    corruption_overlays())."""
-    import math
-    import random
-    rnd = random.Random(77)
-    # the feathers were first laid out after an older vignette had drawn 1416 numbers from this
-    # stream; skip them so the feathers stay exactly as they were
-    for _ in range(1416):
-        rnd.random()
-    # feathers: two 128 x 256 panels of soft white feathers fanned around the edges
-    f = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
-    d = ImageDraw.Draw(f)
-    for panel in range(2):
-        ox = panel * 128
-        layer = Image.new('RGBA', (128, 256), (0, 0, 0, 0))
-        ld = ImageDraw.Draw(layer)
-        for i in range(220 if panel == 0 else 120):
-            a = rnd.uniform(0, math.tau)
-            r = rnd.uniform(0.55, 1.15) ** 0.7
-            cx, cy = 64 + math.cos(a) * 64 * r, 128 + math.sin(a) * 128 * r
-            L = rnd.uniform(34, 64)
-            Wd = L * 0.32
-            ang = a + math.pi + rnd.uniform(-0.4, 0.4)
-            pts = []
-            for t in range(0, 21):
-                u = t / 20
-                w = math.sin(u * math.pi) ** 0.8 * Wd * (1.0 - 0.3 * u)
-                pts.append((u * L, w))
-            pts += [(u, -w) for (u, w) in reversed(pts)]
-            ca, sa = math.cos(ang), math.sin(ang)
-            poly = [(cx + u * ca * 0.5 - w * sa * 0.5, cy + u * sa - w * ca) for (u, w) in pts]
-            shade = rnd.randint(214, 255)
-            ld.polygon(poly, fill=(shade, shade, min(255, shade + 4), 255), outline=(170, 176, 196, 255))
-            # the shaft
-            ld.line([(cx, cy), (cx + L * ca * 0.5, cy + L * sa)], fill=(150, 156, 178, 255), width=1)
-            for b in range(3, int(L) - 4, 4):
-                bx, by = cx + b * ca * 0.5, cy + b * sa
-                for sgn in (1, -1):
-                    ld.line([(bx, by), (bx + (ca * 0.5 * 3 - sgn * sa * 0.5 * Wd * 0.6), by + (sa * 3 + sgn * ca * Wd * 0.6))], fill=(198, 202, 220, 255), width=1)
-        f.alpha_composite(layer, (ox, 0))
-    out('misc/feather_shield', f)
 
 
 # ================================================================== Sculk Corruption overlays

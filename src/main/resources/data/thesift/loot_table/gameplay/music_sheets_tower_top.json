@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/music_sheets_tower_top",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.45
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_whale",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_crystal",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

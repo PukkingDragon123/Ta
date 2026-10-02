@@ -1770,6 +1770,7 @@ def all_items():
     out['kazoo_fish'] = kazoo_fish()
     out['cooked_kazoo_fish'] = kazoo_fish(cooked=True)
     out.update(spawn_eggs())
+    out.update(__import__('songs').art())  # songs & instruments (agent D)
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

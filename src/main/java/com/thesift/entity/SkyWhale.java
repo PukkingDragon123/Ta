@@ -123,7 +123,8 @@ public class SkyWhale extends PathfinderMob {
         return this.answering != null;
     }
 
-    private void answer(ServerLevel level, Player player) {
+    /** Answers a player's song: the whale comes to hover and sing to them (also used by the Whale Song). */
+    public void answer(ServerLevel level, Player player) {
         this.answering = player;
         this.answerTicks = ANSWER_TIMEOUT;
         this.songTicks = -1;

@@ -129,6 +129,9 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "sift_cake", ModItems.SIFT_CAKE));
         l.add(thing(ITEMS, "baton", ModItems.CONDUCTORS_BATON));
         l.add(thing(ITEMS, "staff", ModItems.CONDUCTORS_STAFF));
+        // songs & instruments (agent D)
+        l.add(thing(ITEMS, "songs", ModItems.MUSIC_SHEET_LULLABY));
+        l.add(thing(ITEMS, "prism_instruments", ModItems.PRISM_HARP));
         // ---- places
         l.add(thing(PLACES, "portal", ModItems.SIFT_DRUM));
         l.add(thing(PLACES, "musical_temple", ModItems.HARMONY_STONE));

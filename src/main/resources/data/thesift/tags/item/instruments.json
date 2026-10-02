@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:crane_flute",
+    "thesift:conga_drum",
+    "thesift:guitar",
+    "thesift:prism_flute",
+    "thesift:prism_harp",
+    "thesift:prism_drum",
+    {
+      "id": "thesift:weaver_guitar",
+      "required": false
+    }
+  ]
+}

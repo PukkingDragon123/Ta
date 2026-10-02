@@ -208,6 +208,16 @@ public final class ModItems {
     public static final DeferredItem<GuitarItem> GUITAR = ITEMS.registerItem("guitar", GuitarItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftCodexItem> SIFT_CODEX = ITEMS.registerItem("sift_codex", SiftCodexItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> MUSIC_DISC_LULLABY = ITEMS.registerItem("music_disc_lullaby", Item::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_OFFERING = ITEMS.registerItem("music_sheet_offering", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_NIB = ITEMS.registerItem("music_sheet_nib", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_GOLEM = ITEMS.registerItem("music_sheet_golem", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_CRYSTAL = ITEMS.registerItem("music_sheet_crystal", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_WHALE = ITEMS.registerItem("music_sheet_whale", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_TIDE = ITEMS.registerItem("music_sheet_tide", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_LULLABY = ITEMS.registerItem("music_sheet_lullaby", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<PrismFluteItem> PRISM_FLUTE = ITEMS.registerItem("prism_flute", PrismFluteItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<PrismHarpItem> PRISM_HARP = ITEMS.registerItem("prism_harp", PrismHarpItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<PrismDrumItem> PRISM_DRUM = ITEMS.registerItem("prism_drum", PrismDrumItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<Item> STOMPER_MEAT = ITEMS.registerItem("stomper_meat", Item::new, () -> new Item.Properties().food(ModFoods.STOMPER_MEAT));
     public static final DeferredItem<Item> STOMPER_STEAK = ITEMS.registerItem("stomper_steak", Item::new, () -> new Item.Properties().food(ModFoods.STOMPER_STEAK, ModFoods.STOMPER_STEAK_CONSUMABLE));
     public static final DeferredItem<StomperEggItem> STOMPER_EGG = ITEMS.registerItem("stomper_egg", StomperEggItem::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));

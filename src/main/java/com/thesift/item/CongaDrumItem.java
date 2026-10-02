@@ -21,11 +21,10 @@ import net.minecraft.world.phys.AABB;
 /**
  * The Thumper's Conga Drum. One beat and a massive shockwave rolls out of it: soft blocks around
  * you shatter, and everything nearby is hurt and hurled away. It takes half a minute to ring out.
+ * Sneak and tap it to play single notes instead (pitch from where you look) - songs can be drummed.
  */
 public class CongaDrumItem extends Item {
     public static final int COOLDOWN = 600;
-    private static final double RADIUS = 8.0;
-    private static final int BREAK_RADIUS = 3;
 
     public CongaDrumItem(Item.Properties properties) {
         super(properties);
@@ -34,27 +33,56 @@ public class CongaDrumItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (player.isSecondaryUseActive()) {
+            com.thesift.music.Notes.play(level, player, this.instrument(), com.thesift.music.Notes.lookPitch(player));
+            return InteractionResult.SUCCESS;
+        }
         if (level instanceof ServerLevel server) {
-            boom(server, player);
-            player.getCooldowns().addCooldown(stack, COOLDOWN);
+            this.boom(server, player);
+            player.getCooldowns().addCooldown(stack, this.cooldown());
         }
         return InteractionResult.SUCCESS;
     }
 
-    private static void boom(ServerLevel level, Player player) {
+    // --------------------------------------------------------------- what the prism drum changes
+
+    protected double radius() {
+        return 8.0;
+    }
+
+    protected int breakRadius() {
+        return 3;
+    }
+
+    /** Damage at the very centre of the shockwave (it falls off to 4 at the edge). */
+    protected float maxDamage() {
+        return 12.0F;
+    }
+
+    protected int cooldown() {
+        return COOLDOWN;
+    }
+
+    protected com.thesift.music.Instrument instrument() {
+        return com.thesift.music.Instrument.DRUM;
+    }
+
+    private void boom(ServerLevel level, Player player) {
+        double radius = this.radius();
+        int breakR = this.breakRadius();
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
         level.playSound(null, x, y, z, ModSounds.CONGA_DRUM_BOOM.get(), SoundSource.PLAYERS, 3.0F, 0.9F + level.getRandom().nextFloat() * 0.2F);
         for (int i = 0; i < 5; i++) {
-            level.sendParticles(ModParticles.RESONANCE_RING.get(), x, y + 0.1 + i * 0.3, z, 0, 2.0 + i * 1.6, 0.0, 0.0, 1.0);
+            level.sendParticles(ModParticles.RESONANCE_RING.get(), x, y + 0.1 + i * 0.3, z, 0, (2.0 + i * 1.6) * radius / 8.0, 0.0, 0.0, 1.0);
         }
         level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, x, y + 0.5, z, 1, 0, 0, 0, 0);
         level.sendParticles(ModParticles.SIFT_NOTE.get(), x, y + 1.5, z, 24, 3.0, 1.0, 3.0, 1.0);
         // soft blocks shatter (never what you stand on)
         BlockPos feet = player.blockPosition();
-        for (BlockPos p : BlockPos.betweenClosed(feet.offset(-BREAK_RADIUS, 0, -BREAK_RADIUS), feet.offset(BREAK_RADIUS, 2, BREAK_RADIUS))) {
-            if (p.distSqr(feet) > BREAK_RADIUS * BREAK_RADIUS + 1 || !level.mayInteract(player, p)) {
+        for (BlockPos p : BlockPos.betweenClosed(feet.offset(-breakR, 0, -breakR), feet.offset(breakR, 2, breakR))) {
+            if (p.distSqr(feet) > breakR * breakR + 1 || !level.mayInteract(player, p)) {
                 continue;
             }
             BlockState s = level.getBlockState(p);
@@ -64,20 +92,20 @@ public class CongaDrumItem extends Item {
                 level.destroyBlock(p, true, player);
             }
         }
-        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(feet).inflate(RADIUS, 4.0, RADIUS))) {
-            if (e == player || !e.isAlive() || (e instanceof TamableAnimal t && t.isOwnedBy(player)) || e.distanceTo(player) > RADIUS) {
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(feet).inflate(radius, 4.0, radius))) {
+            if (e == player || !e.isAlive() || (e instanceof TamableAnimal t && t.isOwnedBy(player)) || e.distanceTo(player) > radius) {
                 continue;
             }
             double dx = e.getX() - x;
             double dz = e.getZ() - z;
             double d = Math.max(0.3, Math.sqrt(dx * dx + dz * dz));
-            double k = 1.0 - d / (RADIUS + 1.0);
+            double k = 1.0 - d / (radius + 1.0);
             if (!(e instanceof Player)) {
-                e.hurtServer(level, level.damageSources().playerAttack(player), (float) (4.0 + 8.0 * k));
+                e.hurtServer(level, level.damageSources().playerAttack(player), (float) (4.0 + (this.maxDamage() - 4.0) * k));
             }
             e.push(dx / d * (1.2 + 1.8 * k), 0.5 + 0.5 * k, dz / d * (1.2 + 1.8 * k));
         }
-        com.thesift.music.Resonance.pulse(level, feet, 1.0F, 12);
+        com.thesift.music.Resonance.pulse(level, feet, 1.0F, (int) (radius * 1.5));
         com.thesift.entity.Stomper.hearDrum(level, player.position(), 24.0);
     }
 }

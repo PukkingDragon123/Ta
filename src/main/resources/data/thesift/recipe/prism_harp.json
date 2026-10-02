@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:registered",
+      "registry": "minecraft:item",
+      "value": "thesift:prism_gem"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "G": "thesift:prism_gem",
+    "I": "minecraft:gold_ingot",
+    "S": "minecraft:string"
+  },
+  "pattern": [
+    "GIG",
+    "ISI",
+    "GIG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:prism_harp"
+  }
+}

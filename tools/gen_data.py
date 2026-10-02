@@ -229,4 +229,5 @@ def generate():
     sniffer_and_modifiers()
     trades()
     jukebox()
+    __import__('songs').generate()  # songs & instruments (agent D)
     print('data ok')

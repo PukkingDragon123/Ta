@@ -35,7 +35,6 @@ import org.jspecify.annotations.Nullable;
  *   <li>Sculk Corruption: sculk taking your sight - a crust growing in from the corners of the
  *   screen, glowing veins pulsing in time with a heartbeat you can hear, and tentacles writhing
  *   in from the edges, more of them, longer and closer the deeper it goes</li>
- *   <li>Feather Shield: a whirl of feathers in front of your eyes</li>
  * </ul>
  */
 public final class ClientEffects {
@@ -46,7 +45,6 @@ public final class ClientEffects {
             TheSift.id("textures/misc/sculk_crust_tr.png"), TheSift.id("textures/misc/sculk_crust_tl.png")};
     /** Four 16 x 128 tentacles side by side, tip at the top: drawn as chains of eight 16 x 16 slices. */
     private static final Identifier SCULK_TENTACLE = TheSift.id("textures/misc/sculk_tentacle.png");
-    private static final Identifier FEATHERS = TheSift.id("textures/misc/feather_shield.png");
     private static final RandomSource RANDOM = RandomSource.create();
 
     private static int lastPerformanceTick = -1;
@@ -218,7 +216,6 @@ public final class ClientEffects {
     public static void registerOverlays(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, TheSift.id("stage_darkness"), ClientEffects::drawDarkness);
         event.registerAbove(TheSift.id("stage_darkness"), TheSift.id("sculk_corruption"), ClientEffects::drawCorruption);
-        event.registerAbove(TheSift.id("sculk_corruption"), TheSift.id("feather_shield"), ClientEffects::drawFeathers);
     }
 
     private static void drawDarkness(GuiGraphicsExtractor g, DeltaTracker delta) {
@@ -343,24 +340,5 @@ public final class ClientEffects {
             pose.translate(0.0F, -16.0F);
         }
         pose.popMatrix();
-    }
-
-    private static void drawFeathers(GuiGraphicsExtractor g, DeltaTracker delta) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || !mc.player.hasEffect(ModEffects.FEATHER_SHIELD) || !mc.options.getCameraType().isFirstPerson()) {
-            return;
-        }
-        int w = g.guiWidth();
-        int h = g.guiHeight();
-        float t = mc.player.tickCount + delta.getGameTimeDeltaPartialTick(false);
-        // two layers of feathers turning in opposite directions
-        for (int layer = 0; layer < 2; layer++) {
-            float sway = Mth.sin(t * (0.07F + layer * 0.03F)) * 12.0F;
-            int size = (int) (Math.max(w, h) * (1.25F + layer * 0.2F));
-            int x = (w - size) / 2 + (int) (sway * (layer == 0 ? 1 : -1));
-            int y = (h - size) / 2 + (int) (Mth.cos(t * 0.05F) * 6.0F);
-            int alpha = layer == 0 ? 235 : 150;
-            g.blit(RenderPipelines.GUI_TEXTURED, FEATHERS, x, y, layer * 128.0F, 0.0F, size, size, 128, 256, 256, 256, alpha << 24 | 0xFFFFFF);
-        }
     }
 }

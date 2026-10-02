@@ -271,6 +271,15 @@ item("magic_strings", props="new Item.Properties().rarity(Rarity.RARE)")
 item("guitar", cls="GuitarItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
+# --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments
+SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn",
+               "whale": "Whale Song", "tide": "Tide Song", "lullaby": "Lullaby"}
+for _s, _t in SONG_TITLES.items():
+    item(f"music_sheet_{_s}", cls="MusicSheetItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name=f"Music Sheet: {_t}")
+item("prism_flute", cls="PrismFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+item("prism_harp", cls="PrismHarpItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+item("prism_drum", cls="PrismDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
+# --- end songs & instruments
 
 # ---------------------------------------------------------------- the wild creatures' drops and gear
 item("stomper_meat", props="new Item.Properties().food(ModFoods.STOMPER_MEAT)", name="Raw Stomper Meat")

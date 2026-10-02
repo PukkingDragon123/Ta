@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/music_sheets_sift_ruins",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.35
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_offering",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_nib",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_golem",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:registered",
+      "registry": "minecraft:item",
+      "value": "thesift:prism_gem"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "G": "thesift:prism_gem",
+    "D": "thesift:conga_drum"
+  },
+  "pattern": [
+    " G ",
+    "GDG",
+    " G "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:prism_drum"
+  }
+}
