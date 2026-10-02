@@ -41,7 +41,9 @@ import org.jspecify.annotations.Nullable;
 public final class ClientEffects {
     private static final Identifier SCULK_VIGNETTE = TheSift.id("textures/misc/sculk_vignette.png");
     private static final Identifier SCULK_VEINS = TheSift.id("textures/misc/sculk_veins.png");
-    private static final Identifier SCULK_CRUST = TheSift.id("textures/misc/sculk_crust.png");
+    /** The crust growing in from each corner: bottom-left, bottom-right, top-right, top-left. */
+    private static final Identifier[] SCULK_CRUST = {TheSift.id("textures/misc/sculk_crust.png"), TheSift.id("textures/misc/sculk_crust_br.png"),
+            TheSift.id("textures/misc/sculk_crust_tr.png"), TheSift.id("textures/misc/sculk_crust_tl.png")};
     /** Four 16 x 128 tentacles side by side, tip at the top: drawn as chains of eight 16 x 16 slices. */
     private static final Identifier SCULK_TENTACLE = TheSift.id("textures/misc/sculk_tentacle.png");
     private static final Identifier FEATHERS = TheSift.id("textures/misc/feather_shield.png");
@@ -277,14 +279,12 @@ public final class ClientEffects {
         // and the crust growing over the corners of your sight
         float crust = Math.min(w, h) * (0.32F + 0.5F * k) * (0.6F + 0.4F * appear) * (1.0F + beat * 0.03F);
         int ca = (int) (Mth.clamp(appear * 1.1F, 0.0F, 1.0F) * 255.0F);
+        int cs = (int) crust;
         for (int corner = 0; corner < 4; corner++) {
             boolean right = corner == 1 || corner == 2;
             boolean top = corner >= 2;
-            g.pose().pushMatrix();
-            g.pose().translate(right ? w : 0.0F, top ? 0.0F : h);
-            g.pose().scale((right ? -1.0F : 1.0F) * crust / 256.0F, (top ? -1.0F : 1.0F) * crust / 256.0F);
-            g.blit(RenderPipelines.GUI_TEXTURED, SCULK_CRUST, 0, -256, 0.0F, 0.0F, 256, 256, 256, 256, 256, 256, ca << 24 | 0xFFFFFF);
-            g.pose().popMatrix();
+            g.blit(RenderPipelines.GUI_TEXTURED, SCULK_CRUST[corner], right ? w - cs : 0, top ? 0 : h - cs, 0.0F, 0.0F, cs, cs, 256, 256, 256, 256,
+                    ca << 24 | 0xFFFFFF);
         }
         // the beat itself: a faint teal flush at the edges
         if (beat > 0.05F) {

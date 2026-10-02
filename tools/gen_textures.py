@@ -1430,7 +1430,12 @@ def corruption_overlays():
     for i, kind in enumerate(('barbed', 'suckers', 'veined', 'hook')):
         strip.alpha_composite(_sc_tentacle(kind, 40 + i), (16 * i, 0))
     out('misc/sculk_tentacle', strip)
-    out('misc/sculk_crust', _sc_crust(11))
+    crust = _sc_crust(11)
+    out('misc/sculk_crust', crust)
+    # the other three corners, mirrored here (a mirrored blit could be culled)
+    out('misc/sculk_crust_br', crust.transpose(Image.FLIP_LEFT_RIGHT))
+    out('misc/sculk_crust_tl', crust.transpose(Image.FLIP_TOP_BOTTOM))
+    out('misc/sculk_crust_tr', crust.transpose(Image.ROTATE_180))
     out('misc/sculk_vignette', _sc_vignette(21))
     out('misc/sculk_veins', _sc_veins(31))
 
