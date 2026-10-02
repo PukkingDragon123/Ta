@@ -31,7 +31,7 @@ public class SiftCodexScreen extends Screen {
     private static final int BW = 292;
     private static final int BH = 180;
     private static final int PAGE_W = 128;
-    private static final int FLIP_TICKS = 8;
+    private static final int FLIP_TICKS = 11;
     private static final int SHOWCASE_ID = Integer.MAX_VALUE - 1000;
     private static final int INK = 0xFF2B1D10;
     private static final int INK_SOFT = 0xFF5A4630;
@@ -44,6 +44,8 @@ public class SiftCodexScreen extends Screen {
     private int flipDir = 1;
     private int pageAge;
     private @Nullable LivingEntity showcase;
+    /** B3: the page's themed effects (Sculk, music, Chrome, sky, boss) and creature plates. */
+    private final CodexFx fx = new CodexFx();
 
     public SiftCodexScreen() {
         this(0);
@@ -80,7 +82,7 @@ public class SiftCodexScreen extends Screen {
         this.flipTicks = FLIP_TICKS;
         this.index = target;
         if (this.minecraft.player != null) {
-            this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
+            this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 0.9F + this.minecraft.player.getRandom().nextFloat() * 0.25F);
         }
     }
 
@@ -91,6 +93,7 @@ public class SiftCodexScreen extends Screen {
         this.shownIndex = this.index;
         this.pageAge = 0;
         CodexEntry e = CodexEntries.all().get(this.index);
+        this.fx.reset(CodexFx.theme(e.key()));
         this.showcase = null;
         if (e.entity() != null && this.minecraft.level != null) {
             Entity made = e.entity().get().create(this.minecraft.level, EntitySpawnReason.LOAD);
@@ -108,6 +111,12 @@ public class SiftCodexScreen extends Screen {
         this.prepareShowcase();
         if (this.flipTicks > 0) {
             this.flipTicks--;
+            // the leaf passes upright and falls over with a softer second rustle
+            if (this.flipTicks == FLIP_TICKS / 2 && this.minecraft.player != null) {
+                this.minecraft.player.playSound(SoundEvents.BOOK_PAGE_TURN, 0.45F, 1.35F);
+            }
+        } else {
+            this.fx.tick(this.minecraft.player, BH);
         }
         this.pageAge++;
         if (this.showcase != null) {
@@ -171,9 +180,10 @@ public class SiftCodexScreen extends Screen {
         }
         g.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, l, t, 0, 0, BW, BH, TW, TH);
 
-        float flip = this.flipTicks > 0 ? 1.0F - (this.flipTicks - a) / FLIP_TICKS : 1.0F;
+        float flip = this.flipTicks > 0 ? Mth.clamp(1.0F - (this.flipTicks - a) / FLIP_TICKS, 0.0F, 1.0F) : 1.0F;
         boolean flipping = this.flipTicks > 0 && this.flipFrom >= 0;
         if (!flipping) {
+            this.fx.render(g, l, t, BW, BH, a);
             this.drawLeft(g, l + 16, t + 14, entry, mouseX, mouseY, true);
             this.drawRight(g, l + BW / 2 + 8, t + 14, entry);
         } else {
@@ -184,29 +194,7 @@ public class SiftCodexScreen extends Screen {
             CodexEntry stillRight = forward ? entry : from;
             this.drawLeft(g, l + 16, t + 14, stillLeft, mouseX, mouseY, false);
             this.drawRight(g, l + BW / 2 + 8, t + 14, stillRight);
-            float k = flip < 0.5F ? 1.0F - flip * 2.0F : flip * 2.0F - 1.0F;
-            boolean firstHalf = flip < 0.5F;
-            int spine = l + BW / 2;
-            int px0 = l + 12;
-            int pw = BW / 2 - 14;
-            int w = Math.max(1, Math.round(pw * k));
-            int srcX = forward == firstHalf ? spine - l : 12;
-            int drawX = forward == firstHalf ? spine : spine - w;
-            // paper of the turning leaf, squeezed towards the spine, with a soft shadow at its edge
-            g.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, drawX, t + 11, srcX, 11, w, BH - 22, pw, BH - 22, TW, TH);
-            int shadow = (int) (90 * (1.0F - k));
-            g.fill(drawX, t + 11, drawX + w, t + BH - 11, shadow << 24);
-            g.pose().pushMatrix();
-            g.pose().translate(drawX, 0);
-            g.pose().scale(k, 1.0F);
-            if (forward == firstHalf) {
-                this.drawRight(g, 8, t + 14, firstHalf ? from : entry);
-            } else {
-                this.drawLeft(g, 4, t + 14, firstHalf ? from : entry, mouseX, mouseY, false);
-            }
-            g.pose().popMatrix();
-            int edge = forward == firstHalf ? drawX + w - 1 : drawX;
-            g.verticalLine(edge, t + 11, t + BH - 12, 0x60000000);
+            this.drawCurl(g, l, t, flip, forward, from, entry, mouseX, mouseY);
         }
 
         // page-turn arrows
@@ -216,6 +204,76 @@ public class SiftCodexScreen extends Screen {
         g.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, l + BW - 33, t + BH - 22, 128, hoverNext ? 194 : 184, 18, 10, TW, TH);
         String pageNo = (this.index + 1) + " / " + all.size();
         g.text(this.font, pageNo, l + BW - 40 - this.font.width(pageNo), t + BH - 21, INK_SOFT, false);
+    }
+
+    /**
+     * The turning leaf, drawn as a page curling over the spine: it eases up off the page, narrows as it stands upright and
+     * opens out on the other side. Its face darkens towards the lifting edge, a rolled lip of paper catches the light at that
+     * edge, and the leaf casts a soft shadow over the page beneath that widens as it rises. Works in both directions.
+     */
+    private void drawCurl(GuiGraphicsExtractor g, int l, int t, float flip, boolean forward, CodexEntry from, CodexEntry to, int mouseX, int mouseY) {
+        float e = (1.0F - Mth.cos(flip * Mth.PI)) * 0.5F;
+        float c = Mth.cos(e * Mth.PI);
+        float lift = Mth.sin(e * Mth.PI);
+        boolean firstHalf = c > 0.0F;
+        boolean onRight = forward == firstHalf;
+        float k = Math.max(0.03F, Math.abs(c));
+        int spine = l + BW / 2;
+        int pw = BW / 2 - 14;
+        int w = Math.max(1, Math.round(pw * k));
+        int drawX = onRight ? spine : spine - w;
+        int edge = onRight ? spine + w : spine - w;
+        int top = t + 11;
+        int ph = BH - 22;
+        float sy = 1.0F + 0.035F * lift;
+        float cy = top + ph / 2.0F;
+        int y0 = Math.round(cy - ph * sy / 2.0F);
+        int y1 = Math.round(cy + ph * sy / 2.0F);
+        int lip = Math.round(5.0F * lift);
+        // the shadow it casts on the page beneath
+        int sw = Math.round(3 + 14 * lift);
+        for (int i = 0; i < sw; i++) {
+            int sx = onRight ? edge + lip + i : edge - lip - 1 - i;
+            if (sx < l + 12 || sx >= l + BW - 12) {
+                continue;
+            }
+            int sa = (int) (80.0F * lift * (1.0F - i / (float) sw));
+            g.fill(sx, top + 3, sx + 1, top + ph - 1, sa << 24 | 0x1A1008);
+        }
+        // the leaf itself, above the still pages (text included)
+        g.nextStratum();
+        g.pose().pushMatrix();
+        g.pose().translate(drawX, cy);
+        g.pose().scale(k, sy);
+        g.pose().translate(0.0F, -cy);
+        g.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, top, onRight ? BW / 2 : 12, 11, pw, ph, TW, TH);
+        if (onRight) {
+            this.drawRight(g, 8, t + 14, firstHalf ? from : to);
+        } else {
+            this.drawLeft(g, 4, t + 14, firstHalf ? from : to, mouseX, mouseY, false);
+        }
+        g.nextStratum();
+        for (int i = 0; i < pw; i += 4) {
+            float f = onRight ? i / (float) pw : 1.0F - i / (float) pw;
+            int la = (int) (lift * (18.0F + 80.0F * f * f) * (firstHalf ? 1.0F : 0.7F));
+            g.fill(i, top, Math.min(pw, i + 4), top + ph, la << 24 | 0x2B1D10);
+        }
+        // the gutter shadow where the leaf leaves the spine
+        int gx = onRight ? 0 : pw - 6;
+        g.fillGradient(gx, top, gx + 6, top + ph, 0x40000000, 0x30000000);
+        g.pose().popMatrix();
+        // the rolled lip at the free edge: bright in the middle, shaded at both sides
+        for (int i = 0; i < lip; i++) {
+            int lx = onRight ? edge + i : edge - 1 - i;
+            float m = 1.0F - Math.abs((i + 0.5F) / lip - 0.5F) * 2.0F;
+            int r = (int) Mth.lerp(m, 0xB0, 0xFB);
+            int gg = (int) Mth.lerp(m, 0x9C, 0xF5);
+            int bb = (int) Mth.lerp(m, 0x70, 0xE6);
+            g.fill(lx, y0 + 1, lx + 1, y1 - 1, 0xFF000000 | r << 16 | gg << 8 | bb);
+        }
+        int outer = onRight ? edge + lip : edge - lip - 1;
+        g.fill(outer, y0 + 2, outer + 1, y1 - 2, 0x70000000);
+        g.fill(onRight ? edge - 1 : edge, y0, onRight ? edge : edge + 1, y1, 0x50000000);
     }
 
     /** Left page: name, tagline and the living showcase. */
@@ -229,12 +287,16 @@ public class SiftCodexScreen extends Screen {
         }
         int boxY0 = y + 32;
         int boxY1 = y + 132;
+        boolean plate = CodexFx.hasPlate(e.key());
+        if (plate) {
+            CodexFx.plate(g, e.key(), x + 1, boxY0 + 26, this.pageAge, 0.0F, CodexFx.theme(e.key()));
+        }
         if (live && this.showcase != null && e == CodexEntries.all().get(this.index)) {
             float h = Math.max(this.showcase.getBbHeight(), this.showcase.getBbWidth() * 0.9F);
             int size = Mth.clamp((int) (64.0F / h), 14, 52);
             float turn = Mth.sin(this.pageAge * 0.02F) * 1.1F;
             float lookY = (float) Math.atan(((boxY0 + boxY1) / 2.0F - mouseY) / 60.0F);
-            InventoryScreen.renderEntityInInventoryFollowsAngle(g, x + 4, boxY0, x + PAGE_W - 4, boxY1, size, 0.0625F, turn, lookY, this.showcase);
+            InventoryScreen.renderEntityInInventoryFollowsAngle(g, plate ? x + 46 : x + 4, boxY0, x + PAGE_W - 4, boxY1, size, 0.0625F, turn, lookY, this.showcase);
         } else if (e.item() != null) {
             ItemStack stack = new ItemStack(e.item().get());
             float bob = live ? Mth.sin(this.pageAge * 0.08F) * 2.0F : 0.0F;
