@@ -165,6 +165,15 @@ public class Thumper extends MiniBoss {
         return 1.0F + (TITAN_SCALE - 1.0F) * this.getGrowth();
     }
 
+    /** For the Codex and the tests: the titan, fully grown, without the transformation. */
+    public void codexTitan() {
+        this.setGrowth(1.0F);
+        this.growthO = 1.0F;
+        if (!this.hasCustomName()) {
+            this.setBossBarName(Component.translatable(TITAN_NAME));
+        }
+    }
+
     private void setGrowth(float g) {
         this.entityData.set(GROWTH, Mth.clamp(g, 0.0F, 1.0F));
     }

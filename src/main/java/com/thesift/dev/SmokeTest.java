@@ -222,7 +222,7 @@ public final class SmokeTest {
     // ------------------------------------------------------------------ structures
 
     private static final String[] STRUCTURES = {"collapsed_tower", "musical_temple", "chrome_well", "abandoned_altar", "stone_instrument",
-            "ruined_bridge", "buried_settlement", "dream_statue", "deep_shrine", "sift_ruins", "sculk_castle"};
+            "ruined_bridge", "buried_settlement", "dream_statue", "deep_shrine", "sift_ruins", "sculk_castle", "thumper_arena"};
 
     private static void structures(ServerLevel sift) {
         // every template parses and can be stamped into the world

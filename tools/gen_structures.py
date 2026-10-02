@@ -215,7 +215,6 @@ def temple(seed):
         b.set(x, V - 2, c + 10, glyph(x + seed))
     b.set(c - 2, 1, c + 6, CRUMBLE)
     b.set(c - 3, 1, c + 4, spawner('sculk_parasite', 2, 4, 10))
-    b.set(c, y0, c - 7, sigil(0))
     # trap snares on the stairs up to the dais
     for (x, z) in ((c - 2, c + 12), (c + 2, c + 12), (c + 12, c)):
         b.set(x, y0 + 1, z, SNARE)
@@ -621,6 +620,112 @@ def sculk_castle(seed):
     return b
 
 
+# ================================================================== the drum pit
+
+
+def thumper_arena(seed):
+    """The Drum Pit: the Thumper's arena. A round floor laid out like a drum skin in rings, a low
+    wall of hushslate with drums set into it, and four towers. Each has a ladder inside and a ledge
+    at the top jutting out over the floor - set just above where the titan's back comes, so you can
+    drop onto it (and jump back up). The sigil that wakes it is in the middle."""
+    S = 49
+    y0 = 3
+    H = y0 + 16
+    b = Build(S, H, S, seed)
+    c = S // 2
+    R = 21
+    # clear the bowl, lay the foundation
+    b.cyl(c, c, y0 + 1, H - 1, R + 1.6, AIR)
+    b.cyl(c, c, 0, y0 - 1, R + 1.6, DS_BR)
+    rnd = b.rnd
+
+    def skin(x, y, z):
+        d = math.hypot(x - c, z - c)
+        if d < 2.6:
+            return HUSH_CH
+        ring = int(d) % 6
+        if ring == 0:
+            return HUSH_POL
+        if ring == 3:
+            return DS_POL
+        if d > 6 and rnd.random() < 0.07:
+            return SCULK
+        return DS_CR if rnd.random() < 0.12 else DS_TILE
+    b.cyl(c, c, y0, y0, R + 1.6, DS_TILE, pick=skin)
+    # the drum's tension cords: lines of bone from the rim to the middle
+    for k in range(8):
+        a = k * math.tau / 8 + math.tau / 16
+        for r in range(4, R - 1):
+            b.set(c + math.cos(a) * r, y0, c + math.sin(a) * r, B('minecraft:bone_block', axis='y'))
+    # the rim: a low wall with drums set into it and four gaps to walk in by
+    b.cyl(c, c, y0 + 1, y0 + 3, R + 1.0, HUSH_BR, hollow=True, thickness=1.2,
+          pick=b.mix((HUSH_BR, 8), (HUSH_CR, 3), (HUSH_TILE, 1)))
+    for k in range(24):
+        a = k * math.tau / 24
+        x, z = c + round(math.cos(a) * (R + 1)), c + round(math.sin(a) * (R + 1))
+        if b.get(x, y0 + 2, z) is not None and b.get(x, y0 + 2, z).name != AIR.name:
+            b.set(x, y0 + 2, z, DRUM)
+        if k % 3 == 0:
+            b.set(x, y0 + 4, z, LANTERN)
+    for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        for w in range(-2, 3):
+            for r in range(R - 1, R + 3):
+                x, z = c + dx * r + dz * w, c + dz * r + dx * w
+                for y in range(y0 + 1, y0 + 5):
+                    b.set(x, y, z, AIR)
+                b.set(x, y0, z, DS_POL)
+    # four towers on the diagonals
+    for i, (sx, sz) in enumerate(((1, 1), (-1, 1), (-1, -1), (1, -1))):
+        tx, tz = c + sx * 10, c + sz * 10
+        top = y0 + 9  # the platform: you stand at y0 + 10, just above the titan's back
+        b.cyl(tx, tz, y0 + 1, top - 1, 2.4, HUSH_BR, hollow=True, pick=b.mix((HUSH_BR, 6), (HUSH_CR, 2), (DS_BR, 1)))
+        b.cyl(tx, tz, y0, y0, 2.4, DS_POL)
+        # a doorway facing the floor's middle
+        for y in (y0 + 1, y0 + 2):
+            b.set(tx, y, tz - 2 * sz, AIR)
+        b.set(tx, y0 + 3, tz - 2 * sz, B('chiseled_hushslate'))
+        # the ladder, up the far wall and through a hatch in the platform
+        lx = tx + sx
+        facing = 'west' if sx > 0 else 'east'
+        for y in range(y0 + 1, top + 1):
+            b.set(lx, y, tz, B('minecraft:ladder', facing=facing, waterlogged='false'))
+        b.set(tx - sx, y0 + 1, tz, LANTERN)
+        # the platform with its parapet, open towards the floor
+        b.disc(tx, tz, top, 2.9, DS_POL)
+        b.set(lx, top, tz, B('minecraft:ladder', facing=facing, waterlogged='false'))
+        for x in range(tx - 3, tx + 4):
+            for z in range(tz - 3, tz + 4):
+                d = math.hypot(x - tx, z - tz)
+                toward = (x - tx) * -sx + (z - tz) * -sz
+                if 2.4 < d <= 3.25 and toward < 1.5:
+                    b.set(x, top + 1, z, HUSH_TILE if (x + z) % 2 else HUSH_CR)
+        # the ledge, jutting out over the floor (and a bracket under it)
+        for k in (3, 4):
+            for (ox, oz) in ((0, 0), (0, 1), (1, 0)):
+                x, z = tx - sx * (k - ox), tz - sz * (k - oz)
+                b.set(x, top, z, DS_POL)
+        b.set(tx - sx * 3, top - 1, tz - sz * 3, stairs('polished_dreamstone_stairs', 'south' if sz > 0 else 'north', 'top'))
+        # crown: two bone horns and a drum
+        b.set(tx + sx * 2, top + 1, tz + sz * 2, B('minecraft:bone_block', axis='y'))
+        b.set(tx + sx * 2, top + 2, tz + sz * 2, B('minecraft:bone_block', axis='y'))
+        b.set(tx + sx * 2, top + 3, tz + sz * 2, LANTERN)
+        b.set(tx + sx, top + 1, tz + sz * 2, DRUM)
+        if i == seed % 4:
+            b.set(tx + sx * 2, top + 1, tz, chest('chests/temple_vault', 'north' if sz > 0 else 'south'))
+        # sculk creeping up its feet
+        for k in range(10):
+            a = rnd.random() * math.tau
+            b.set(tx + round(math.cos(a) * 3), y0, tz + round(math.sin(a) * 3), SCULK)
+    # the sigil in the middle of the skin, catalysts round it
+    b.set(c, y0, c, sigil(0))
+    for k in range(4):
+        a = k * math.tau / 4
+        b.set(c + round(math.cos(a) * 5), y0, c + round(math.sin(a) * 5), B('minecraft:sculk_catalyst', bloom='false'))
+    b.decay(0.03, top_bias=0.04, protect=('minecraft:ladder', 'thesift:encore_sigil', 'minecraft:chest', 'thesift:polished_dreamstone',
+                                         'minecraft:sculk_catalyst', 'thesift:hushslate_bricks'), min_y=y0 + 4)
+    return b
+
+
 # ================================================================== registration
 
 STRUCTURES = {
@@ -641,6 +746,8 @@ STRUCTURES = {
     'sculk_castle': ([sculk_castle], ['rocky_dunes', 'forest_mountains', 'sift_plains'], 'surface_structures', 'beard_thin', 0, 40, 16),
     'sift_ruins': ([ruins, lambda s: ruins(s + 11), lambda s: ruins(s + 23)], ['sift_plains', 'forest_mountains', 'wishing_grove', 'rocky_dunes'],
                    'surface_structures', 'beard_thin', -1, 18, 6),
+    'thumper_arena': ([thumper_arena, lambda s: thumper_arena(s + 5)], ['sift_plains', 'rocky_dunes', 'wishing_grove', 'forest_mountains'],
+                      'surface_structures', 'beard_thin', -3, 34, 12),
 }
 
 

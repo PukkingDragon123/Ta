@@ -362,6 +362,19 @@ public final class ClientSmokeTest {
         scene("drums", 40, ClientSmokeTest::drumStage);
         scene("bosses", 60, ClientSmokeTest::bossStage);
         scene("bosses_close", 40, c -> c.camera(-118.5, STAGE_Y + 4.5, -9.0, -120.5, STAGE_Y + 2.0, 0.5));
+        // the Thumper as the titan, with parasites on its back; then the view from the deck
+        scene("titan", 60, ClientSmokeTest::titanStage);
+        scene("titan_back", 40, c -> c.camera(-160.0, STAGE_Y + 8.3 + 1.62, 3.2, -160.0, STAGE_Y + 8.0, -6.0));
+        // Sculk Corruption IV taking your sight (cleared again after a few seconds)
+        scene("corruption", 80, c -> {
+            c.run("effect give @a thesift:sculk_corruption 7 3");
+            c.camera(-148.0, STAGE_Y + 6.0, -14.0, -160.0, STAGE_Y + 4.0, 0.5);
+        });
+        // the Drum Pit template (stamped after the castle by the server test)
+        scene("templates_arena", 80, c -> {
+            c.run("effect clear @a");
+            c.camera(307.5, 178, -186.0, 307.5, 145, -236.5);
+        });
         // the Sift Codex, opened at a few spreads (live, animated creatures on the left pages)
         int[][] codexPages = {{1, 0}, {2, 0}, {24, 0}, {25, 0}, {19, 0}, {20, 0}, {13, 0}};
         String[] codexNames = {"harmoner", "sniffer", "dictator", "thumper", "castle", "drum", "staff"};
@@ -644,6 +657,18 @@ public final class ClientSmokeTest {
         }
         c.set(x0 - 12, STAGE_Y, z0 - 6, ModBlocks.ENCORE_SIGIL.get().defaultBlockState());
         c.camera(x0 + 0.5, STAGE_Y + 6.0, z0 - 14.0, x0 + 0.5, STAGE_Y + 1.5, z0 + 1.0);
+    }
+
+    private static void titanStage(Ctx c) {
+        int x0 = -160, z0 = 0;
+        floor(c, x0 - 16, z0 - 16, x0 + 16, z0 + 16);
+        c.fill(x0 - 16, STAGE_Y + 7, z0 - 16, x0 + 16, STAGE_Y + 12, z0 + 16, Blocks.AIR.defaultBlockState());
+        if (c.spawn(ModEntities.THUMPER.get(), x0, STAGE_Y, z0, 200.0F, false) instanceof com.thesift.entity.boss.Thumper th) {
+            th.codexTitan();
+        }
+        c.spawn(ModEntities.SCULK_PARASITE.get(), x0 + 1.5, STAGE_Y + 8.3, z0 + 1.0, 30.0F, false);
+        c.spawn(ModEntities.SCULK_PARASITE.get(), x0 - 1.2, STAGE_Y + 8.3, z0 - 1.6, 140.0F, false);
+        c.camera(x0 + 15.0, STAGE_Y + 10.0, z0 - 15.0, x0, STAGE_Y + 5.0, z0);
     }
 
     private static void altarStage(Ctx c) {
