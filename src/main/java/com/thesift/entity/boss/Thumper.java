@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -104,6 +105,8 @@ public class Thumper extends MiniBoss {
     private static final byte EVENT_SHAKE = 107;
     private static final byte EVENT_STEP = 108;
     private static final EntityDataAccessor<Float> GROWTH = SynchedEntityData.defineId(Thumper.class, EntityDataSerializers.FLOAT);
+    /** Who its breath is aimed at (so the client can draw the beam itself). */
+    private static final EntityDataAccessor<Integer> BREATH_TARGET = SynchedEntityData.defineId(Thumper.class, EntityDataSerializers.INT);
 
     private Vec3 chargeDir = Vec3.ZERO;
     private final Set<Integer> chargeHits = new HashSet<>();
@@ -113,6 +116,8 @@ public class Thumper extends MiniBoss {
     private @Nullable Vec3 beamAim;
     private @Nullable Vec3 braceAt;
     private float growthO;
+    /** The client's copy of the beam's aim, swept after the target just as the server sweeps it. */
+    private @Nullable Vec3 clientAim;
     /** Set while a blow that ignores invulnerability (/kill) is landing: then it may die early. */
     private boolean mortal;
     private int parasiteCooldown = 40;
@@ -138,6 +143,15 @@ public class Thumper extends MiniBoss {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(GROWTH, 0.0F);
+        builder.define(BREATH_TARGET, -1);
+    }
+
+    @Override
+    protected void setState(int state) {
+        super.setState(state);
+        if (state != T_BREATH) {
+            this.entityData.set(BREATH_TARGET, -1);
+        }
     }
 
     @Override
@@ -914,6 +928,7 @@ public class Thumper extends MiniBoss {
 
     private void beginBreath(LivingEntity target) {
         this.setState(T_BREATH);
+        this.entityData.set(BREATH_TARGET, target.getId());
         this.beamAim = target.getEyePosition();
         this.beamCorrupted.clear();
         this.getMoveControl().setWantedPosition(this.getX(), this.getY(), this.getZ(), 0.0);
@@ -975,18 +990,6 @@ public class Thumper extends MiniBoss {
             return;
         }
         Vec3 u = d.scale(1.0 / len);
-        if (t % 2 == 0) {
-            for (double s = 0.5; s < len; s += 0.8) {
-                Vec3 p = from.add(u.scale(s));
-                level.sendParticles(ModParticles.GLOW_DUST.get(), p.x, p.y, p.z, 1, 0.15, 0.15, 0.15, 0.0);
-            }
-        }
-        if (t % 4 == 0) {
-            for (double s = 1.5; s < len; s += 3.0) {
-                Vec3 p = from.add(u.scale(s));
-                level.sendParticles(ParticleTypes.SONIC_BOOM, p.x, p.y, p.z, 1, 0.0, 0.0, 0.0, 0.0);
-            }
-        }
         level.sendParticles(ParticleTypes.SCULK_SOUL, end.x, end.y, end.z, 2, 0.4, 0.3, 0.4, 0.05);
         level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, end.x, end.y, end.z, 4, 0.5, 0.3, 0.5, 0.05);
         if (t % 6 == 0) {
@@ -1116,6 +1119,7 @@ public class Thumper extends MiniBoss {
                     box.minZ + this.random.nextDouble() * box.getZsize(), 0, 0.04, 0);
         }
         float t = this.stateTime(0.0F);
+        this.clientBeam(level, s, t);
         if (s == T_BREATH && t < BREATH_CHARGE) {
             // light crawls up its spine, tail to head, and gathers in its jaws
             Vec3 f = this.forward();
@@ -1131,6 +1135,64 @@ public class Thumper extends MiniBoss {
                 Vec3 o = new Vec3(this.random.nextDouble() - 0.5, this.random.nextDouble() - 0.5, this.random.nextDouble() - 0.5).scale(4.0);
                 level.addParticle(ParticleTypes.SCULK_CHARGE_POP, m.x + o.x, m.y + o.y, m.z + o.z, -o.x * 0.12, -o.y * 0.12, -o.z * 0.12);
             }
+        }
+    }
+
+    /** The breath, drawn here: a thick cyan beam with a white-hot core, sonic rings running down it. */
+    private void clientBeam(Level level, int s, float t) {
+        Entity target = s == T_BREATH ? level.getEntity(this.entityData.get(BREATH_TARGET)) : null;
+        if (target == null) {
+            this.clientAim = null;
+            return;
+        }
+        Vec3 want = target.getEyePosition().subtract(0.0, 0.4, 0.0);
+        if (t < BREATH_CHARGE || this.clientAim == null) {
+            this.clientAim = target.getEyePosition();
+        } else {
+            this.clientAim = this.clientAim.lerp(want, 0.07);
+        }
+        if (t < BREATH_CHARGE || t >= BREATH_END) {
+            return;
+        }
+        Vec3 from = this.mouth();
+        Vec3 dir = this.clientAim.subtract(from);
+        if (dir.lengthSqr() < 1.0E-4) {
+            return;
+        }
+        Vec3 to = from.add(dir.normalize().scale(42.0));
+        HitResult hit = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        Vec3 end = hit.getType() == HitResult.Type.MISS ? to : hit.getLocation();
+        Vec3 d = end.subtract(from);
+        double len = d.length();
+        if (len < 0.5) {
+            return;
+        }
+        // it swells in for the first few ticks
+        float k = Math.min(1.0F, (t - BREATH_CHARGE) / 6.0F);
+        DustParticleOptions outer = new DustParticleOptions(0x2FD8F0, 1.2F + 1.4F * k);
+        DustParticleOptions core = new DustParticleOptions(0xE8FFFF, 0.6F + 0.6F * k);
+        int n = (int) (len * 2.5);
+        for (int i = 0; i < n; i++) {
+            Vec3 p = from.add(d.scale(this.random.nextDouble()));
+            double j = 0.35 * k;
+            level.addParticle(outer, p.x + (this.random.nextDouble() - 0.5) * j, p.y + (this.random.nextDouble() - 0.5) * j,
+                    p.z + (this.random.nextDouble() - 0.5) * j, 0, 0, 0);
+            if (i % 2 == 0) {
+                Vec3 q = from.add(d.scale(this.random.nextDouble()));
+                level.addParticle(core, q.x, q.y, q.z, 0, 0, 0);
+            }
+        }
+        if (this.tickCount % 3 == 0) {
+            Vec3 p = from.add(d.scale((this.tickCount % 9) / 9.0));
+            level.addParticle(ParticleTypes.SONIC_BOOM, p.x, p.y, p.z, 0, 0, 0);
+        }
+        for (int i = 0; i < 3; i++) {
+            level.addParticle(ParticleTypes.ELECTRIC_SPARK, end.x + (this.random.nextDouble() - 0.5), end.y + this.random.nextDouble() * 0.5,
+                    end.z + (this.random.nextDouble() - 0.5), (this.random.nextDouble() - 0.5) * 0.3, 0.15, (this.random.nextDouble() - 0.5) * 0.3);
+        }
+        if (this.random.nextInt(2) == 0) {
+            Vec3 q = from.add(d.scale(this.random.nextDouble()));
+            level.addParticle(ModParticles.SIFT_NOTE.get(), q.x, q.y, q.z, this.random.nextDouble(), 0, 0);
         }
     }
 
