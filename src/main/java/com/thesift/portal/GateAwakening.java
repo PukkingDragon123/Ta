@@ -17,9 +17,10 @@ import org.jspecify.annotations.Nullable;
  *   <li>the rim lights up, a stretch at a time climbing both sides of the frame, each with a note of
  *   an arpeggio in A minor (Am - F - G - E) over a walking bass;</li>
  *   <li>souls stream in from the sculk sensors and the drum and spiral into a vortex;</li>
- *   <li>the portal comes together ring by ring from the rim inward, a chime per ring climbing to
- *   the leading tone;</li>
- *   <li>the last ring closes on an A major chord - the minor song resolves - and a soft boom.</li>
+ *   <li>cyan light gathers ring by ring from the rim inward, a chime per ring climbing to the
+ *   leading tone, while the world bends towards the gate;</li>
+ *   <li>the last ring closes on an A major chord - the minor song resolves - in a blinding flash,
+ *   and the portal appears all at once with a shockwave.</li>
  * </ol>
  *
  * <p>Pitches are note-block semitones: 0 is F#, 24 two octaves up (for the harp, F#3 to F#5; the
@@ -35,6 +36,15 @@ public final class GateAwakening {
     public static final int RINGS_END = 140;
     /** The final chord: the gate is open. */
     public static final int CLIMAX = 150;
+    // B1 Portal & sky FX: the staged opening seen on the client (see com.thesift.client.gate.GateAwakeningFx):
+    // cyan light swells from the first note, the world starts to bend at WARP_START, everything is drawn
+    // in just before the climax, the flash goes off on the chord and the shockwave rolls out of it.
+    /** The world begins to bend round the gate. */
+    public static final int WARP_START = 56;
+    /** The last breath before the flash: everything is pulled in towards the gate. */
+    public static final int IMPLODE_START = CLIMAX - 12;
+    /** How long the shockwave rolls outwards after the flash. */
+    public static final int SHOCK_TICKS = 16;
     /** A falling sparkle after the chord. */
     public static final int TAIL_START = CLIMAX + 8;
     public static final int TAIL_STEP = 6;

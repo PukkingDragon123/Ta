@@ -81,6 +81,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         CaravansClient.register(modBus); // C: Caravans, music crystals, the cavern's shifting fog
         ChromeClient.register(modBus); // A3 Chrome: rainbow tint, ripples, note bursts, Rainbow Daze
+        com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }

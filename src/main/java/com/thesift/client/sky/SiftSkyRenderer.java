@@ -27,7 +27,8 @@ import org.joml.Vector3f;
  * The Sift's sky: a seamless cube map (baked by tools/gen_textures.py) holding a clean cyan
  * gradient, turquoise overhead and pale mint at the horizon. Faces are laid out 3x2 in one texture;
  * each face maps (s, t) in [-1, 1] to a direction exactly like the generator does, so the edges
- * line up.
+ * line up. Rainbows, aurora ribbons, colour clouds and shooting stars are drawn over it by
+ * {@link SiftSkyFx} in the same pass.
  */
 public class SiftSkyRenderer implements CustomSkyboxRenderer {
     private static final Identifier TEXTURE = TheSift.id("textures/environment/nebula.png");
@@ -79,8 +80,9 @@ public class SiftSkyRenderer implements CustomSkyboxRenderer {
         // the gradient must stay level with the horizon, so the dome never tilts or turns
         Matrix4f view = new Matrix4f(modelViewMatrix);
         RenderSystem.setShaderFog(skyFog);
+        SiftSkyFx.prepare(); // B1 Portal & sky FX: rainbows, aurora, colour clouds, shooting stars
         RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
-        GpuBuffer indexBuffer = indices.getBuffer(FACES * 2 * 6);
+        GpuBuffer indexBuffer = indices.getBuffer(Math.max(FACES * 2 * 6, SiftSkyFx.MAX_INDICES));
         GpuBufferSlice transform = RenderSystem.getDynamicUniforms().writeTransform(view);
         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Sift sky",
                 mc.gameRenderer.mainRenderTarget().getColorTextureView(), Optional.empty(), mc.gameRenderer.mainRenderTarget().getDepthTextureView(), OptionalDouble.empty())) {
@@ -91,6 +93,7 @@ public class SiftSkyRenderer implements CustomSkyboxRenderer {
             pass.setVertexBuffer(0, this.buffer.slice());
             pass.setIndexBuffer(indexBuffer, indices.type());
             pass.drawIndexed(FACES * 2 * 6, 1, 0, 0, 0);
+            SiftSkyFx.render(pass, view);
         }
         return true;
     }

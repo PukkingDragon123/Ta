@@ -160,6 +160,7 @@ public final class CodexEntries {
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "caravan_colony", ModItems.PRISM_BLOCK)); // C
         l.add(thing(PLACES, "echoer_hut", ModItems.SOUL_GOLEM_CORE)); // A2 Echoer
+        l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
         l.add(thing(MAGIC, "euphory_altar", ModItems.EUPHORY_ALTAR));

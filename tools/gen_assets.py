@@ -767,7 +767,7 @@ def gen_lang():
         f'codex.{NS}.baton.title': "Conductor's Baton", f'codex.{NS}.baton.tagline': 'Taken from the Dictator',
         f'codex.{NS}.baton.body': 'Strikes as hard as a sword. Use it to flick a single sonic note down the line you point at, hurting the first creature in its way. It needs a moment to recover between notes.',
         f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
-        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes.',
+        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes: cyan light floods the place, the world bends towards the gate, a blinding flash - and the portal opens with a shockwave. Look into it: it is a window onto the Sift\'s own sky, clouds and stars drifting deep behind the frame.',
         f'codex.{NS}.musical_temple.title': 'Musical Temple', f'codex.{NS}.musical_temple.tagline': 'Puzzles of tone',
         f'codex.{NS}.musical_temple.body': 'Old temples of song. Tune each Harmony Stone to the colour of its pedestal to open the vault below.',
         f'codex.{NS}.chrome_well.title': 'Chrome Well', f'codex.{NS}.chrome_well.tagline': 'Pearls in the pool',
@@ -1465,6 +1465,7 @@ def generate():
     echoer_world.generate(sys.modules[__name__])
     __import__('chrome').assets(sys.modules[__name__])  # A3 Chrome: chime glass recipes/tags, particles, Rainbow Daze post effect
     __import__('cave_creatures').data(sys.modules[__name__])  # A4 cave creatures: loot, tags, spawns, text
+    __import__('gatefx').assets(sys.modules[__name__])  # B1 Portal & sky FX: gate warp/shock post effects, sky Codex page
 
 
 def finalize():

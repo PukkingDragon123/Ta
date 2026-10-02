@@ -686,10 +686,16 @@ public class SiftDrumBlockEntity extends BlockEntity {
         level.sendParticles(ModParticles.PORTAL_SOUL.get(), from.x, from.y, from.z, 0, v.x, v.y + 0.01, v.z, 1.0);
     }
 
-    /** One ring of the portal falls into place, with a chime. */
+    /**
+     * One ring of cyan light gathers inside the frame, with a chime. B1 Portal & sky FX: the cells stay
+     * open air until the flash - the whole portal appears at once on the climax.
+     */
     private void placeRing(ServerLevel level, PortalFrames.Frame f, Vec3 c, int k) {
         List<BlockPos> ring = this.rings.get(k);
-        PortalFrames.fillCells(level, f, ring);
+        for (int j = 0; j < ring.size(); j += 2) {
+            BlockPos cell = ring.get(j);
+            level.sendParticles(ParticleTypes.GLOW, cell.getX() + 0.5, cell.getY() + 0.5, cell.getZ() + 0.5, 1, 0.25, 0.25, 0.25, 0.02);
+        }
         int count = this.rings.size();
         int n = GateAwakening.ringNote(k, count);
         GateAwakening.note(level, c, SoundEvents.NOTE_BLOCK_CHIME, n, 2.0F);
@@ -746,6 +752,11 @@ public class SiftDrumBlockEntity extends BlockEntity {
             level.sendParticles(ModParticles.RESONANCE_RING.get(), c.x, this.gateBottom + i * 1.5, c.z, 0, 4.0 + i, 0, 0, 1.0);
         }
         RandomSource r = level.getRandom();
+        // B1 Portal & sky FX: the flash - a burst of white light out of the new surface and a thunderclap
+        level.playSound(null, c.x, c.y, c.z, SoundEvents.TRIDENT_THUNDER.value(), SoundSource.BLOCKS, 1.6F, 1.4F);
+        level.playSound(null, c.x, c.y, c.z, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.4F, 1.2F);
+        level.sendParticles(ParticleTypes.END_ROD, c.x, c.y, c.z, 80, this.gateSpan * 0.2, this.gateSpan * 0.2, this.gateSpan * 0.2, 0.45);
+        level.sendParticles(ParticleTypes.GLOW, c.x, c.y, c.z, 60, this.gateSpan * 0.3, this.gateSpan * 0.3, this.gateSpan * 0.3, 0.3);
         for (BlockPos b : f.interior()) {
             level.sendParticles(ModParticles.PORTAL_SOUL.get(), b.getX() + 0.5, b.getY() + 0.5, b.getZ() + 0.5, 2, 0.3, 0.3, 0.3, 0.2);
             if (r.nextInt(3) == 0) {

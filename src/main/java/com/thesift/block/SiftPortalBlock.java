@@ -31,8 +31,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-/** The shimmering cyan/pink membrane stretched across an awakened frame. */
-public class SiftPortalBlock extends Block implements Portal {
+/**
+ * The shimmering cyan/pink membrane stretched across an awakened frame. Its block model is only the
+ * far-away fallback: up close each cell is drawn as a window onto the Sift's sky (B1).
+ */
+public class SiftPortalBlock extends Block implements Portal, net.minecraft.world.level.block.EntityBlock {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     private static final VoxelShape X_SHAPE = Block.box(0.0, 0.0, 6.0, 16.0, 16.0, 10.0);
     private static final VoxelShape Z_SHAPE = Block.box(6.0, 0.0, 0.0, 10.0, 16.0, 16.0);
@@ -45,6 +48,12 @@ public class SiftPortalBlock extends Block implements Portal {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
+    }
+
+    /** B1 Portal & sky FX: each cell carries a block entity so the client can draw the sky seen through it. */
+    @Override
+    public net.minecraft.world.level.block.entity.@Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new com.thesift.block.entity.SiftPortalBlockEntity(pos, state);
     }
 
     @Override
