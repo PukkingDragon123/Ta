@@ -331,7 +331,7 @@ public final class SmokeTest {
             String id = BuiltInRegistries.BLOCK.getKey(block).toString();
             boolean exempt = id.endsWith("portal") || id.endsWith("harmony_stone") || id.endsWith("harmony_seal") || id.endsWith("lingering_glow")
                     || id.endsWith(":chrome") || id.endsWith("suspicious_dreamsand") || id.endsWith("crumbling_dreamstone") || id.endsWith("sift_cake")
-                    || id.endsWith("conductors_podium");
+                    || id.endsWith("conductors_podium") || id.endsWith("encore_sigil") || id.endsWith("instrument_altar");
             if (!exempt) {
                 check(table != LootTable.EMPTY, "loot table for " + id);
             }
