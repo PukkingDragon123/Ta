@@ -34,9 +34,7 @@ public class HarmonerRenderer extends SiftMobRenderer<Harmoner, HarmonerRenderSt
     @Override
     protected com.thesift.client.Expression expression(Harmoner entity, HarmonerRenderState state) {
         boolean singing = entity.singAnimation.isStarted() && entity.singAnimation.getTimeInMillis(entity.tickCount) < 2500;
-        boolean idle = entity.onGround() && entity.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4 && !entity.isGuiding();
-        boolean nap = idle && Math.floorMod(entity.tickCount + entity.getId() * 173, 2000) > 1500;
-        return com.thesift.client.Expression.pick(entity, false, singing || entity.isGuiding(), nap);
+        return com.thesift.client.Expression.pick(entity, false, singing || entity.isGuiding(), entity.isRoosting());
     }
 
     @Override
@@ -52,5 +50,8 @@ public class HarmonerRenderer extends SiftMobRenderer<Harmoner, HarmonerRenderSt
         state.guiding = entity.isGuiding();
         state.seed = (entity.getId() * 53) % 97;
         state.sing.copyFrom(entity.singAnimation);
+        state.peck.copyFrom(entity.peckAnimation);
+        state.preen.copyFrom(entity.preenAnimation);
+        state.roosting = entity.isRoosting();
     }
 }

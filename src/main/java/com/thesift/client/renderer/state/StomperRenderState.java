@@ -16,4 +16,8 @@ public class StomperRenderState extends SiftRenderState {
     public final AnimationState stomp = new AnimationState();
     public final AnimationState puff = new AnimationState();
     public final AnimationState slap = new AnimationState();
+    /** A baby's drum beat (one restart per beat) and how many beats it has played (alternates the tap). */
+    public final AnimationState drum = new AnimationState();
+    public int drumBeats;
+    public boolean ridden;
 }

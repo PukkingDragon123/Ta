@@ -18,7 +18,9 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import java.util.EnumSet;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -38,12 +40,29 @@ import org.jspecify.annotations.Nullable;
 /**
  * Bulb: a small, bouncy, jelly bunny of the Sift plains. Bulbs hop everywhere, wobble their long
  * ears, love Pitcher Bulbs (their breeding food) and every so often squeeze out a Glowing Slime
- * Ball. Play music near them and they dance.
+ * Ball. They sniff the air and groom their ears, curl up to sleep at night, wiggle with joy when
+ * fed and bounce in time to every note played nearby.
  */
 public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener {
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Bulb.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DANCE = SynchedEntityData.defineId(Bulb.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Bulb.class, EntityDataSerializers.BOOLEAN);
     public static final int VARIANTS = 4;
+    private static final byte EVENT_CROUCH = 120;
+    private static final byte EVENT_SNIFF = 121;
+    private static final byte EVENT_GROOM = 122;
+    private static final byte EVENT_WIGGLE = 123;
+    private static final byte EVENT_BEAT = 124;
+
+    public final AnimationState sniffAnimation = new AnimationState();
+    public final AnimationState groomAnimation = new AnimationState();
+    public final AnimationState wiggleAnimation = new AnimationState();
+    /** Client: ticks left of the crouch before a hop, and the age of the last music beat. */
+    private int crouchTicks;
+    public int lastBeat = -100;
+    private int beatCooldown;
+    /** Server: while notes keep coming it hops on them, not on its own dance rhythm. */
+    private int noteQuiet;
 
     private int slimeTime;
 
@@ -69,10 +88,12 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.6));
+        this.goalSelector.addGoal(2, new SleepGoal());
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.1, s -> s.is(ModTags.Items.BULB_FOOD), false));
         this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.9));
+        this.goalSelector.addGoal(6, new FidgetGoal());
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
     }
@@ -82,6 +103,15 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
         super.defineSynchedData(builder);
         builder.define(VARIANT, 0);
         builder.define(DANCE, 0);
+        builder.define(SLEEPING, false);
+    }
+
+    public boolean isSleepingBulb() {
+        return this.entityData.get(SLEEPING);
+    }
+
+    private void setSleepingBulb(boolean b) {
+        this.entityData.set(SLEEPING, b);
     }
 
     public int getVariant() {
@@ -132,6 +162,16 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
     }
 
     @Override
+    public int windup() {
+        return 3;
+    }
+
+    @Override
+    public void onWindup() {
+        this.level().broadcastEntityEvent(this, EVENT_CROUCH);
+    }
+
+    @Override
     protected float getJumpPower() {
         return super.getJumpPower() * (this.isDancing() ? 0.8F : 1.0F);
     }
@@ -139,8 +179,56 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
     @Override
     public void hearMusic(BlockPos source, float strength) {
         if (!this.level().isClientSide()) {
+            this.setSleepingBulb(false);
             this.entityData.set(DANCE, 60 + this.random.nextInt(40));
         }
+    }
+
+    /**
+     * A single note was played nearby (see {@link CreatureMusic}): the Bulb wakes, and bounces on the
+     * beat - a crouch, then a little straight-up hop with a note.
+     */
+    public void hearNote(ServerLevel level, int pitch) {
+        this.setSleepingBulb(false);
+        this.entityData.set(DANCE, Math.max(this.entityData.get(DANCE), 40));
+        if (this.beatCooldown > 0 || !this.onGround()) {
+            return;
+        }
+        this.beatCooldown = 3;
+        this.noteQuiet = 20;
+        level.broadcastEntityEvent(this, EVENT_BEAT);
+        this.getJumpControl().jump();
+        this.getNavigation().stop();
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, this.getX(), this.getY() + this.getBbHeight() + 0.4, this.getZ(), 0,
+                pitch / 24.0, 0.0, 0.0, 1.0);
+    }
+
+    @Override
+    public void handleEntityEvent(byte id) {
+        switch (id) {
+            case EVENT_CROUCH -> this.crouchTicks = 3;
+            case EVENT_SNIFF -> this.sniffAnimation.start(this.tickCount);
+            case EVENT_GROOM -> this.groomAnimation.start(this.tickCount);
+            case EVENT_WIGGLE -> {
+                this.wiggleAnimation.start(this.tickCount);
+                this.squash.kick(0.25F);
+                this.earLeft.kick(-0.5F);
+                this.earRight.kick(0.5F);
+            }
+            case EVENT_BEAT -> {
+                this.lastBeat = this.tickCount;
+                this.squash.kick(-0.3F);
+                this.earLeft.kick(0.4F);
+                this.earRight.kick(0.35F);
+            }
+            default -> super.handleEntityEvent(id);
+        }
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        this.setSleepingBulb(false);
+        return super.hurtServer(level, source, damage);
     }
 
     // ------------------------------------------------------------------ ticking
@@ -149,10 +237,19 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
     public void aiStep() {
         super.aiStep();
         if (this.level() instanceof ServerLevel server) {
+            if (this.beatCooldown > 0) {
+                this.beatCooldown--;
+            }
+            if (this.noteQuiet > 0) {
+                this.noteQuiet--;
+            }
+            if (this.isSleepingBulb() && this.tickCount % 50 == 0) {
+                server.sendParticles(ModParticles.SLEEP_SPORE.get(), this.getX(), this.getY() + this.getBbHeight() + 0.2, this.getZ(), 1, 0.1, 0.05, 0.1, 0.0);
+            }
             int dance = this.entityData.get(DANCE);
             if (dance > 0) {
                 this.entityData.set(DANCE, dance - 1);
-                if (this.onGround() && this.tickCount % 8 == 0) {
+                if (this.onGround() && this.tickCount % 8 == 0 && this.noteQuiet <= 0) {
                     this.getJumpControl().jump();
                     this.setYRot(this.getYRot() + 45.0F);
                     this.yBodyRot = this.getYRot();
@@ -197,9 +294,19 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
         }
         this.wasOnGround = onGround;
         this.lastVelY = vy;
+        // anticipation: it squats down for a moment before every hop
+        if (this.crouchTicks > 0) {
+            this.crouchTicks--;
+            this.squash.setTarget(-0.2F);
+            if (this.crouchTicks == 0) {
+                this.squash.setTarget(0.0F);
+            }
+        } else {
+            this.squash.setTarget(this.isSleepingBulb() ? -0.12F : 0.0F);
+        }
         // Ears perk up when a player is close by, droop a little otherwise.
         Player near = this.level().getNearestPlayer(this, 6.0);
-        this.earPerk.setTarget(near != null ? 1.0F : 0.0F);
+        this.earPerk.setTarget(near != null && !this.isSleepingBulb() ? 1.0F : 0.0F);
         if (onGround && this.getDeltaMovement().horizontalDistanceSqr() > 0.0004 && this.random.nextInt(6) == 0) {
             this.slimeTrail(1);
         }
@@ -234,7 +341,8 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
             this.slimeTime = Math.max(20, this.slimeTime / 2);
             server.sendParticles(ParticleTypes.HEART, this.getX(), this.getY() + this.getBbHeight() + 0.3, this.getZ(), 2, 0.2, 0.1, 0.2, 0.0);
             this.playSound(ModSounds.BULB_HAPPY.get(), 0.8F, 1.2F);
-            this.entityData.set(DANCE, 20);
+            this.setSleepingBulb(false);
+            server.broadcastEntityEvent(this, EVENT_WIGGLE);
         }
         return result;
     }
@@ -278,6 +386,81 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
         super.readAdditionalSaveData(input);
         this.setVariant(input.getIntOr("Variant", 0));
         this.slimeTime = input.getIntOr("SlimeTime", 6000);
+    }
+
+    /** Curls up and sleeps through the night; noise, a hit or a note wakes it. */
+    private final class SleepGoal extends Goal {
+        SleepGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            Bulb b = Bulb.this;
+            if (b.isSleepingBulb()) {
+                return true;
+            }
+            return b.level().isDarkOutside() && b.onGround() && !b.isDancing() && !b.isInLove() && b.random.nextInt(160) == 0
+                    && b.level().getNearestPlayer(b, 4.0) == null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            Bulb b = Bulb.this;
+            return b.isSleepingBulb() && b.level().isDarkOutside() && !b.isDancing() && b.hurtTime == 0;
+        }
+
+        @Override
+        public void start() {
+            Bulb.this.setSleepingBulb(true);
+            Bulb.this.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            Bulb.this.getNavigation().stop();
+            Bulb.this.setZza(0.0F);
+        }
+
+        @Override
+        public void stop() {
+            Bulb.this.setSleepingBulb(false);
+        }
+    }
+
+    /** Sitting still it sniffs the air or grooms its long ears. */
+    private final class FidgetGoal extends Goal {
+        private int ticks;
+
+        FidgetGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            Bulb b = Bulb.this;
+            return b.onGround() && !b.isSleepingBulb() && !b.isDancing() && b.getNavigation().isDone() && b.random.nextInt(140) == 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.ticks > 0;
+        }
+
+        @Override
+        public void start() {
+            Bulb b = Bulb.this;
+            boolean groom = b.random.nextInt(3) == 0;
+            this.ticks = groom ? 40 : 30;
+            b.level().broadcastEntityEvent(b, groom ? EVENT_GROOM : EVENT_SNIFF);
+            b.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            this.ticks--;
+            Bulb.this.getNavigation().stop();
+        }
     }
 
     private static final int[][] BURST = {{0x78A5E3, 0x63C6DF}, {0x3FD0EF, 0x9CF0FF}, {0xA58FE6, 0xE59AD0}, {0x3B4AA0, 0xFFF1A8}};

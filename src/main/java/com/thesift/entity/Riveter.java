@@ -46,13 +46,27 @@ import org.jspecify.annotations.Nullable;
  * Riveter: a pale sentinel that hangs from the ceilings of the Deep Sift. It does not fight. When
  * it notices an intruder it screams - and every Warden within earshot comes running. If no Warden
  * is near, its screams wake one from the sculk. Sneak past, or silence it with music.
+ *
+ * <p>By day it roosts asleep, wrapped in its wings, and only wakes if you come right up to it; by
+ * night it is wide awake, chitters with its neighbours and flits out now and then to snap glow
+ * dust out of the air before flapping back up to a ceiling. It bobs along to music.
  */
 public class Riveter extends Monster implements MusicListener {
     private static final EntityDataAccessor<Boolean> HANGING = SynchedEntityData.defineId(Riveter.class, EntityDataSerializers.BOOLEAN);
     private static final byte EVENT_SCREAM = 110;
+    private static final byte EVENT_CHITTER = 111;
+    private static final byte EVENT_SNAP = 112;
+    private static final byte EVENT_BOB = 113;
+    private static final EntityDataAccessor<Boolean> ROOSTING = SynchedEntityData.defineId(Riveter.class, EntityDataSerializers.BOOLEAN);
     public static final int SCREAM_TICKS = 34;
 
     public final AnimationState screamAnimation = new AnimationState();
+    public final AnimationState chitterAnimation = new AnimationState();
+    public final AnimationState snapAnimation = new AnimationState();
+    private int forageTicks;
+    private @Nullable Vec3 forageTarget;
+    private int socialCooldown = 300;
+    private int bobCooldown;
     public final Spring sway = new Spring(0.03F, 0.02F);
     private int screamCooldown = 60;
     private int lulledTicks;
@@ -88,6 +102,12 @@ public class Riveter extends Monster implements MusicListener {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HANGING, true);
+        builder.define(ROOSTING, false);
+    }
+
+    /** Asleep on its roost (by day). */
+    public boolean isRoosting() {
+        return this.entityData.get(ROOSTING);
     }
 
     public boolean isHanging() {
@@ -123,8 +143,19 @@ public class Riveter extends Monster implements MusicListener {
     @Override
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
+        if (this.socialCooldown > 0) {
+            this.socialCooldown--;
+        }
+        if (this.bobCooldown > 0) {
+            this.bobCooldown--;
+        }
+        if (this.forageTicks > 0) {
+            this.forage(level);
+            return;
+        }
         boolean ceiling = this.hasCeiling();
         this.entityData.set(HANGING, ceiling);
+        this.entityData.set(ROOSTING, ceiling && level.isBrightOutside() && this.lulledTicks <= 0);
         if (!ceiling) {
             // Flutter upwards to find a new roost.
             Vec3 v = this.getDeltaMovement();
@@ -141,13 +172,71 @@ public class Riveter extends Monster implements MusicListener {
             this.screamCooldown--;
             return;
         }
-        Player intruder = level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), 14.0, p -> {
+        // a roosting Riveter is a light sleeper, but a sleeper: only someone right beneath it wakes it
+        boolean roosting = this.isRoosting();
+        Player intruder = level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), roosting ? 4.0 : 14.0, p -> {
             if (!(p instanceof Player pl) || pl.isCreative() || pl.isSpectator()) return false;
             double d = p.distanceTo(this);
-            return (!pl.isShiftKeyDown() || d < 4.0) && this.hasLineOfSight(pl);
+            return (!pl.isShiftKeyDown() || d < (roosting ? 2.0 : 4.0)) && this.hasLineOfSight(pl);
         });
         if (intruder instanceof ServerPlayer player) {
+            this.entityData.set(ROOSTING, false);
             this.scream(level, player);
+            return;
+        }
+        if (roosting) {
+            return;
+        }
+        // awake at night: chitter with a neighbour, or flit out to hunt glow dust
+        if (this.socialCooldown <= 0 && this.random.nextInt(200) == 0) {
+            for (Riveter other : level.getEntitiesOfClass(Riveter.class, this.getBoundingBox().inflate(4.0), o -> o != this && o.isHanging() && !o.isRoosting())) {
+                level.broadcastEntityEvent(this, EVENT_CHITTER);
+                level.broadcastEntityEvent(other, EVENT_CHITTER);
+                this.playSound(ModSounds.RIVETER_AMBIENT.get(), 0.6F, 1.6F + this.random.nextFloat() * 0.2F);
+                this.socialCooldown = other.socialCooldown = 400 + this.random.nextInt(400);
+                break;
+            }
+        }
+        if (this.random.nextInt(900) == 0) {
+            this.forageTicks = 160 + this.random.nextInt(120);
+            this.forageTarget = null;
+        }
+    }
+
+    /** A short hunting flight: flits about below its roost snapping glow dust out of the air. */
+    private void forage(ServerLevel level) {
+        this.forageTicks--;
+        this.entityData.set(HANGING, false);
+        this.entityData.set(ROOSTING, false);
+        Vec3 target = this.forageTarget;
+        if (target == null || this.position().distanceToSqr(target) < 1.0 || this.tickCount % 60 == 0) {
+            target = this.position().add((this.random.nextDouble() - 0.5) * 10.0, (this.random.nextDouble() - 0.6) * 3.0, (this.random.nextDouble() - 0.5) * 10.0);
+            if (!level.getBlockState(BlockPos.containing(target)).isAir()) {
+                target = this.position().add(0.0, -0.5, 0.0);
+            }
+            this.forageTarget = target;
+        }
+        Vec3 to = target.subtract(this.position());
+        Vec3 v = this.getDeltaMovement().scale(0.85).add(to.normalize().scale(0.035));
+        this.setDeltaMovement(v);
+        if (v.horizontalDistanceSqr() > 1.0E-4) {
+            this.setYRot((float) Math.toDegrees(Math.atan2(v.z, v.x)) - 90.0F);
+            this.yBodyRot = this.getYRot();
+        }
+        if (this.random.nextInt(40) == 0) {
+            level.broadcastEntityEvent(this, EVENT_SNAP);
+            this.playSound(ModSounds.RIVETER_AMBIENT.get(), 0.4F, 1.9F);
+            Vec3 mouth = this.position().add(this.getLookAngle().scale(0.5));
+            level.sendParticles(ModParticles.GLOW_DUST.get(), mouth.x, mouth.y + 0.4, mouth.z, 4, 0.15, 0.15, 0.15, 0.01);
+        }
+    }
+
+    /** A note was played nearby: it bobs along on its roost and forgets to scream. */
+    public void hearNote(ServerLevel level, int pitch) {
+        this.lulledTicks = Math.max(this.lulledTicks, 80);
+        if (this.bobCooldown <= 0) {
+            this.bobCooldown = 4;
+            level.broadcastEntityEvent(this, EVENT_BOB);
         }
     }
 
@@ -179,6 +268,12 @@ public class Riveter extends Monster implements MusicListener {
         if (id == EVENT_SCREAM) {
             this.screamAnimation.start(this.tickCount);
             this.sway.kick(0.6F);
+        } else if (id == EVENT_CHITTER) {
+            this.chitterAnimation.start(this.tickCount);
+        } else if (id == EVENT_SNAP) {
+            this.snapAnimation.start(this.tickCount);
+        } else if (id == EVENT_BOB) {
+            this.sway.kick(this.random.nextBoolean() ? 0.25F : -0.25F);
         } else {
             super.handleEntityEvent(id);
         }
@@ -208,6 +303,8 @@ public class Riveter extends Monster implements MusicListener {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         this.sway.kick(0.4F);
+        this.forageTicks = 0;
+        this.entityData.set(ROOSTING, false);
         if (source.getEntity() instanceof ServerPlayer player && this.screamCooldown < 100) {
             this.screamCooldown = 0;
             this.lulledTicks = 0;

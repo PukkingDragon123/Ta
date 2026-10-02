@@ -224,6 +224,12 @@ public class SkyWhale extends PathfinderMob {
 
     // ------------------------------------------------------------------ flight
 
+    /** Server: the eased turning speed (degrees per tick), so it swings into and out of turns. */
+    private float turnSpeed;
+    /** Client: how hard it is banking, smoothed (degrees of turn per tick). */
+    public float bank;
+    public float bankO;
+
     @Override
     public void travel(Vec3 input) {
         this.move(MoverType.SELF, this.getDeltaMovement());
@@ -241,6 +247,8 @@ public class SkyWhale extends PathfinderMob {
         } else {
             this.flapO = this.flap;
             this.flap = Mth.sin(this.tickCount * 0.08F + this.getId());
+            this.bankO = this.bank;
+            this.bank += (Mth.clamp(Mth.wrapDegrees(this.yBodyRot - this.yBodyRotO), -4.0F, 4.0F) - this.bank) * 0.08F;
             this.trail();
         }
     }
@@ -286,7 +294,10 @@ public class SkyWhale extends PathfinderMob {
         if (v.horizontalDistanceSqr() > 1.0E-4 && this.songTicks < 0) {
             float yaw = (float) Math.toDegrees(Math.atan2(v.z, v.x)) - 90.0F;
             float cur = this.getYRot();
-            this.setYRot(cur + Mth.clamp(Mth.wrapDegrees(yaw - cur), -1.5F, 1.5F));
+            // ease into the turn and out of it again instead of snapping round at a fixed rate
+            float want = Mth.clamp(Mth.wrapDegrees(yaw - cur) * 0.06F, -1.5F, 1.5F);
+            this.turnSpeed += (want - this.turnSpeed) * 0.08F;
+            this.setYRot(cur + this.turnSpeed);
             this.yBodyRot = this.getYRot();
         } else if (this.answering != null) {
             double dx = this.answering.getX() - this.getX();

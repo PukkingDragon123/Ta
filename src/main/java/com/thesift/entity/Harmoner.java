@@ -56,11 +56,21 @@ import org.jspecify.annotations.Nullable;
  * melodies in their own key. Feed one some seeds and it takes off, singing, and leads you to the
  * structure its colour belongs to - it waits for you when you fall behind and circles above the
  * place once you arrive.
+ *
+ * <p>A flock lives together: they peck about for seeds by day, preen each other, roost asleep with
+ * their heads tucked under a wing at night, and when one starts to sing the others nearby join in
+ * a moment later, in harmony. Play a note and one will sing it back to you.
  */
 public class Harmoner extends Animal implements MusicListener {
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Harmoner.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> GUIDING = SynchedEntityData.defineId(Harmoner.class, EntityDataSerializers.BOOLEAN);
-    private static final byte EVENT_SING = 61;
+    /** Ids 60-67 are vanilla's. */
+    private static final byte EVENT_SING = 113;
+    private static final byte EVENT_PECK = 114;
+    private static final byte EVENT_PREEN = 115;
+    private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Harmoner.class, EntityDataSerializers.BOOLEAN);
+    /** How far a song carries to the rest of the flock. */
+    private static final double CHORUS_RANGE = 12.0;
 
     public static final String[] NAMES = {"rose", "azure", "gold", "violet", "jade", "coral", "night"};
     /** The structure each colour leads to. */
@@ -76,6 +86,15 @@ public class Harmoner extends Animal implements MusicListener {
     private static final int GUIDE_TICKS = 20 * 150;
 
     public final AnimationState singAnimation = new AnimationState();
+    public final AnimationState peckAnimation = new AnimationState();
+    public final AnimationState preenAnimation = new AnimationState();
+    /** The melody being sung (its own, or the leader's when it joins a chorus) and its harmony offset. */
+    private int @Nullable [] song;
+    private int transpose;
+    private int songDelay;
+    private int echoNote = -1;
+    private int echoTimer;
+    private int socialCooldown = 300;
     /** Client: smoothed wing spread (0 folded, 1 beating). */
     public float flap;
     public float flapO;
@@ -110,10 +129,13 @@ public class Harmoner extends Animal implements MusicListener {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4));
         this.goalSelector.addGoal(2, new GuideGoal());
+        this.goalSelector.addGoal(2, new RoostGoal());
         this.goalSelector.addGoal(3, new FollowOwner());
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.1, s -> s.is(ModTags.Items.HARMONER_FOOD), false));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(6, new ForageGoal());
+        this.goalSelector.addGoal(6, new PreenGoal());
         this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1.0));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -125,6 +147,16 @@ public class Harmoner extends Animal implements MusicListener {
         builder.define(VARIANT, 0);
         builder.define(GUIDING, false);
         builder.define(TAME, false);
+        builder.define(SLEEPING, false);
+    }
+
+    /** Roosting asleep for the night, head under its wing. */
+    public boolean isRoosting() {
+        return this.entityData.get(SLEEPING);
+    }
+
+    private void setRoosting(boolean b) {
+        this.entityData.set(SLEEPING, b);
     }
 
     /** Tamed by sneaking and offering it a Hummingbloom: it follows you and sings along with your flute. */
@@ -358,17 +390,53 @@ public class Harmoner extends Animal implements MusicListener {
         return (float) Math.pow(2.0, (semitone - 12) / 12.0);
     }
 
+    /** Starts its own song and calls the flock in: those nearby join a moment later, in harmony. */
     public void startSong() {
+        int[] mine = SONGS[this.getVariant()];
+        this.sing(mine, 0, 0);
+        int voice = 0;
+        for (Harmoner other : this.level().getEntitiesOfClass(Harmoner.class, this.getBoundingBox().inflate(CHORUS_RANGE),
+                h -> h != this && h.isAlive() && h.songNote < 0 && !h.isRoosting())) {
+            // thirds and fifths above and below, so the chorus spreads into chords
+            int[] intervals = {4, 7, -5, 12, -8};
+            other.sing(mine, intervals[voice % intervals.length], 3 + voice * 2);
+            if (++voice >= 5) {
+                break;
+            }
+        }
+    }
+
+    private void sing(int[] melody, int harmony, int delay) {
+        this.setRoosting(false);
+        this.song = melody;
+        this.transpose = harmony;
+        this.songDelay = delay;
         this.songNote = 0;
         this.songTimer = 0;
         this.singCooldown = 260 + this.random.nextInt(400);
-        this.level().broadcastEntityEvent(this, EVENT_SING);
+        if (delay == 0) {
+            this.level().broadcastEntityEvent(this, EVENT_SING);
+        }
+    }
+
+    /** A note was played nearby (see {@link CreatureLife}): it sings the note back, a little higher. */
+    public void hearNote(ServerLevel level, int pitch) {
+        if (this.songNote >= 0 || this.echoTimer > 0) {
+            return;
+        }
+        this.setRoosting(false);
+        this.echoNote = Mth.clamp(pitch + (this.random.nextBoolean() ? 7 : 12), 0, 24);
+        this.echoTimer = 6 + this.random.nextInt(6);
     }
 
     @Override
     public void handleEntityEvent(byte id) {
         if (id == EVENT_SING) {
             this.singAnimation.start(this.tickCount);
+        } else if (id == EVENT_PECK) {
+            this.peckAnimation.start(this.tickCount);
+        } else if (id == EVENT_PREEN) {
+            this.preenAnimation.start(this.tickCount);
         } else {
             super.handleEntityEvent(id);
         }
@@ -388,17 +456,32 @@ public class Harmoner extends Animal implements MusicListener {
             if (this.guideTicks > 0 && --this.guideTicks == 0) {
                 this.stopGuiding();
             }
-            if (this.songNote >= 0 && this.songTimer-- <= 0) {
-                int[] song = SONGS[this.getVariant()];
+            if (this.socialCooldown > 0) {
+                this.socialCooldown--;
+            }
+            if (this.echoTimer > 0 && --this.echoTimer == 0 && this.echoNote >= 0) {
+                server.broadcastEntityEvent(this, EVENT_SING);
+                this.playSound(ModSounds.HARMONER_SING.get(), 1.1F, pitch(this.echoNote));
+                server.sendParticles(ModParticles.SIFT_NOTE.get(), this.getX(), this.getY() + this.getBbHeight() + 0.2, this.getZ(), 0,
+                        this.echoNote / 24.0, 0.0, 0.0, 1.0);
+                this.echoNote = -1;
+                this.echoTimer = 20;
+            }
+            if (this.songNote >= 0 && this.songDelay > 0) {
+                if (--this.songDelay == 0) {
+                    server.broadcastEntityEvent(this, EVENT_SING);
+                }
+            } else if (this.songNote >= 0 && this.songTimer-- <= 0) {
+                int[] song = this.song != null ? this.song : SONGS[this.getVariant()];
                 this.songTimer = NOTE_TICKS;
-                int n = song[this.songNote];
+                int n = Mth.clamp(song[this.songNote] + this.transpose, 0, 24);
                 this.playSound(ModSounds.HARMONER_SING.get(), 1.2F, pitch(n));
                 server.sendParticles(ModParticles.SIFT_NOTE.get(), this.getX(), this.getY() + this.getBbHeight() + 0.2, this.getZ(), 0, n / 24.0, 0.0, 0.0, 1.0);
                 if (++this.songNote >= song.length) {
                     this.songNote = -1;
                 }
             }
-            if (this.songNote < 0 && --this.singCooldown <= 0 && this.random.nextInt(4) == 0) {
+            if (this.songNote < 0 && --this.singCooldown <= 0 && !this.isRoosting() && this.random.nextInt(4) == 0) {
                 this.startSong();
             }
             // a trail of notes in its own colour while leading the way
@@ -468,6 +551,140 @@ public class Harmoner extends Animal implements MusicListener {
         if (this.guideTicks > 0) {
             this.guideTarget = new BlockPos(input.getIntOr("GuideX", 0), input.getIntOr("GuideY", 64), input.getIntOr("GuideZ", 0));
             this.entityData.set(GUIDING, true);
+        }
+    }
+
+    /** At night, perched on the ground, it tucks its head under a wing and sleeps till morning. */
+    private final class RoostGoal extends Goal {
+        RoostGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
+        }
+
+        @Override
+        public boolean canUse() {
+            Harmoner h = Harmoner.this;
+            if (h.isRoosting()) {
+                return true;
+            }
+            return h.level().isDarkOutside() && h.onGround() && !h.isGuiding() && h.songNote < 0 && h.random.nextInt(80) == 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            Harmoner h = Harmoner.this;
+            return h.isRoosting() && h.level().isDarkOutside() && !h.isGuiding() && h.hurtTime == 0;
+        }
+
+        @Override
+        public void start() {
+            Harmoner.this.setRoosting(true);
+            Harmoner.this.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            Harmoner.this.getNavigation().stop();
+        }
+
+        @Override
+        public void stop() {
+            Harmoner.this.setRoosting(false);
+        }
+    }
+
+    /** By day, on the ground, it pecks about for seeds. */
+    private final class ForageGoal extends Goal {
+        private int ticks;
+
+        ForageGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            Harmoner h = Harmoner.this;
+            return h.onGround() && !h.isGuiding() && !h.isRoosting() && h.songNote < 0 && h.random.nextInt(160) == 0;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.ticks > 0;
+        }
+
+        @Override
+        public void start() {
+            this.ticks = 50;
+            Harmoner.this.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            Harmoner h = Harmoner.this;
+            this.ticks--;
+            h.getNavigation().stop();
+            if (this.ticks % 16 == 8 && h.level() instanceof ServerLevel server) {
+                server.broadcastEntityEvent(h, EVENT_PECK);
+                net.minecraft.world.level.block.state.BlockState below = server.getBlockState(h.blockPosition().below());
+                if (!below.isAir()) {
+                    Vec3 beak = h.position().add(Vec3.directionFromRotation(0.0F, h.yBodyRot).scale(0.3));
+                    server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(ParticleTypes.BLOCK, below), beak.x, h.getY() + 0.05, beak.z,
+                            3, 0.05, 0.02, 0.05, 0.05);
+                }
+            }
+        }
+    }
+
+    /** Two flock-mates sit together and preen each other's feathers. */
+    private final class PreenGoal extends Goal {
+        private @Nullable Harmoner mate;
+        private int ticks;
+
+        PreenGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            Harmoner h = Harmoner.this;
+            if (h.socialCooldown > 0 || h.isGuiding() || h.isRoosting() || h.random.nextInt(120) != 0) {
+                return false;
+            }
+            for (Harmoner o : h.level().getEntitiesOfClass(Harmoner.class, h.getBoundingBox().inflate(6.0), o -> o != h && o.isAlive() && !o.isGuiding())) {
+                this.mate = o;
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.mate != null && this.mate.isAlive() && this.ticks > 0;
+        }
+
+        @Override
+        public void start() {
+            this.ticks = 100;
+        }
+
+        @Override
+        public void tick() {
+            Harmoner h = Harmoner.this;
+            Harmoner m = this.mate;
+            if (m == null) {
+                return;
+            }
+            this.ticks--;
+            h.getLookControl().setLookAt(m, 30.0F, 30.0F);
+            if (h.distanceToSqr(m) > 1.5) {
+                h.getNavigation().moveTo(m, 1.0);
+            } else {
+                h.getNavigation().stop();
+                h.level().broadcastEntityEvent(h, EVENT_PREEN);
+                h.level().broadcastEntityEvent(m, EVENT_PREEN);
+                h.playSound(ModSounds.HARMONER_AMBIENT.get(), 0.5F, 1.4F);
+                h.socialCooldown = m.socialCooldown = 900 + h.random.nextInt(900);
+                this.ticks = 0;
+            }
         }
     }
 

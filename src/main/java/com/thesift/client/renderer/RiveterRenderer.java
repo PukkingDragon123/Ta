@@ -32,8 +32,9 @@ public class RiveterRenderer extends SiftMobRenderer<Riveter, RiveterRenderState
 
     @Override
     protected com.thesift.client.Expression expression(Riveter entity, RiveterRenderState state) {
-        // roosting upside down it sleeps; screaming or hunting it glares
-        return com.thesift.client.Expression.pick(entity, entity.isAggressive() || entity.screamAnimation.isStarted(), false, entity.isHanging());
+        // roosting by day it sleeps; screaming or hunting it glares; awake at night it just watches
+        boolean screaming = entity.screamAnimation.isStarted() && entity.screamAnimation.getTimeInMillis(entity.tickCount) < 1800;
+        return com.thesift.client.Expression.pick(entity, entity.isAggressive() || screaming, false, entity.isRoosting());
     }
 
     @Override
@@ -47,5 +48,8 @@ public class RiveterRenderer extends SiftMobRenderer<Riveter, RiveterRenderState
         state.hanging = entity.isHanging();
         state.sway = entity.sway.get(partialTicks);
         state.scream.copyFrom(entity.screamAnimation);
+        state.chitter.copyFrom(entity.chitterAnimation);
+        state.snap.copyFrom(entity.snapAnimation);
+        state.roosting = entity.isRoosting();
     }
 }

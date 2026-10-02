@@ -76,12 +76,9 @@ public class SlumblerModel extends EntityModel<SlumblerRenderState> {
             }
         }
 
-        // --- head look + breathing
-        float breath = Mth.sin(age * (s.sleeping ? 0.05F : 0.09F));
+        // --- head look (no idle "breathing" pulse: only a sleeper's slow breaths, below)
         this.head.yRot = s.yRot * Anim.DEG * 0.5F;
         this.head.xRot = s.xRot * Anim.DEG * 0.4F;
-        this.body.yScale = 1.0F + breath * 0.025F;
-        this.body.xScale = 1.0F + breath * 0.02F;
         this.leftGills.yRot += Mth.sin(age * 0.18F) * 0.18F;
         this.rightGills.yRot -= Mth.sin(age * 0.18F + 0.6F) * 0.18F;
         this.crest.zRot = Mth.sin(age * 0.1F) * 0.05F;
@@ -99,6 +96,59 @@ public class SlumblerModel extends EntityModel<SlumblerRenderState> {
             for (int i = 0; i < 3; i++) {
                 this.tail[i].yRot = 0.35F;
             }
+            float breath = Mth.sin(age * 0.05F);
+            this.body.yScale = 1.0F + breath * 0.02F;
+            if (s.inChrome) {
+                // napping half-submerged in the shallows: legs float out, the tail drifts, chin on the surface
+                this.body.y += 3.0F;
+                this.head.xRot = -0.1F + breath * 0.03F;
+                for (int i = 0; i < 4; i++) {
+                    float sgn = i % 2 == 0 ? 1.0F : -1.0F;
+                    this.legs[i].zRot = -sgn * 0.15F;
+                    this.legs[i].yRot = sgn * (i < 2 ? 0.7F : -0.5F);
+                }
+                for (int i = 0; i < 3; i++) {
+                    this.tail[i].yRot = Mth.sin(age * 0.03F - i * 0.8F) * 0.2F;
+                }
+            }
+        }
+
+        // --- gulping plankton (2.2 s): the head dips into the Chrome, the jaw scoops, a big swallow
+        float gulp = Anim.seconds(s.gulp, age);
+        float gulpOpen = 0.0F;
+        if (gulp >= 0.0F && gulp < 2.3F) {
+            float dip = Anim.envelope(gulp, 0.0F, 0.4F, 0.9F, 0.6F);
+            gulpOpen = Anim.envelope(gulp, 0.3F, 0.2F, 0.3F, 0.15F);
+            float swallow = Anim.envelope(gulp, 1.15F, 0.12F, 0.1F, 0.4F);
+            this.head.xRot += 0.5F * dip;
+            this.body.xRot = 0.08F * dip;
+            this.leftGills.zRot += 0.3F * swallow;
+            this.rightGills.zRot -= 0.3F * swallow;
+            this.body.xScale = 1.0F + 0.05F * swallow;
+        }
+
+        // --- nuzzle: a slow sideways rub of the snout
+        float nuzzle = Anim.seconds(s.nuzzle, age);
+        if (nuzzle >= 0.0F && nuzzle < 2.0F) {
+            float e = Anim.envelope(nuzzle, 0.0F, 0.3F, 1.2F, 0.4F);
+            this.head.yRot += Mth.sin(nuzzle * 4.0F) * 0.3F * e;
+            this.head.zRot = Mth.sin(nuzzle * 4.0F) * 0.15F * e;
+            for (int i = 0; i < 3; i++) {
+                this.tail[i].yRot += Mth.sin(nuzzle * 5.0F - i) * 0.3F * e;
+            }
+        }
+
+        // --- humming along to music: the head sways, the jaw half-opens, the gills fan with the note
+        float hum = Anim.seconds(s.hum, age);
+        float humOpen = 0.0F;
+        if (hum >= 0.0F && hum < 1.6F) {
+            float e = Anim.envelope(hum, 0.0F, 0.2F, 0.8F, 0.5F);
+            humOpen = 0.3F * e + Mth.sin(hum * 12.0F) * 0.04F * e;
+            this.head.zRot += Mth.sin(hum * 3.5F) * 0.12F * e;
+            this.head.xRot -= 0.15F * e;
+            this.leftGills.yRot += 0.35F * e;
+            this.rightGills.yRot -= 0.35F * e;
+            this.crest.zRot += Mth.sin(hum * 7.0F) * 0.1F * e;
         }
 
         // --- yawn: a slow, huge stretch (2.4s)
@@ -107,7 +157,7 @@ public class SlumblerModel extends EntityModel<SlumblerRenderState> {
         // --- bite: a quick snap (0.45s)
         float bite = Anim.seconds(s.bite, age);
         float biteOpen = bite >= 0 ? Anim.envelope(bite, 0.0F, 0.12F, 0.05F, 0.15F) : 0.0F;
-        float open = Math.max(yawnOpen * 0.95F, biteOpen * 0.75F);
+        float open = Math.max(Math.max(yawnOpen * 0.95F, biteOpen * 0.75F), Math.max(gulpOpen * 0.7F, humOpen));
         this.jaw.xRot += open;
         this.head.xRot -= yawnOpen * 0.35F - biteOpen * 0.2F;
         this.leftGills.zRot += yawnOpen * 0.4F;

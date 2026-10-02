@@ -32,17 +32,21 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Sifter: a skittering, antenna-eared hunter with a wide yellow maw. In the Rocky Dunes it lies
- * buried in Dreamsand with only its antennae showing, then bursts out and pounces. Music lulls it:
- * a Sifter that hears a drum forgets what it was chasing for a while.
+ * Sifter: a skittering crab-legged trap under a sandstone-and-bone carapace. In the Rocky Dunes it
+ * digs itself into the Dreamsand until only its lid and glowing lure show, then bursts out and snaps
+ * its lid shut on whatever came close. Music lulls it: a Sifter that hears a drum forgets what it was
+ * chasing for a while.
  */
 public class Sifter extends Monster implements MusicListener {
     private static final EntityDataAccessor<Boolean> BURROWED = SynchedEntityData.defineId(Sifter.class, EntityDataSerializers.BOOLEAN);
     private static final byte EVENT_CHOMP = 110;
-    private static final byte EVENT_EMERGE = 61;
+    /** Ids 60-67 are vanilla's; ours start at 110. */
+    private static final byte EVENT_EMERGE = 111;
+    private static final byte EVENT_BURROW = 112;
 
     public final AnimationState chompAnimation = new AnimationState();
     public final AnimationState emergeAnimation = new AnimationState();
+    public final AnimationState burrowAnimation = new AnimationState();
     public final Spring squash = new Spring(0.3F, 0.25F);
     public final Spring antennaLeft = new Spring(0.2F, 0.12F);
     public final Spring antennaRight = new Spring(0.22F, 0.12F);
@@ -125,7 +129,14 @@ public class Sifter extends Monster implements MusicListener {
             this.chompAnimation.start(this.tickCount);
         } else if (id == EVENT_EMERGE) {
             this.emergeAnimation.start(this.tickCount);
+            this.burrowAnimation.stop();
             this.squash.kick(0.5F);
+            this.antennaLeft.kick(-0.8F);
+            this.antennaRight.kick(-0.7F);
+            this.digParticles(30, 0.35);
+        } else if (id == EVENT_BURROW) {
+            this.burrowAnimation.start(this.tickCount);
+            this.emergeAnimation.stop();
         } else {
             super.handleEntityEvent(id);
         }
@@ -189,6 +200,28 @@ public class Sifter extends Monster implements MusicListener {
             if (this.isBurrowed() && this.random.nextInt(12) == 0) {
                 this.level().addParticle(ModParticles.FOOTSTEP_PUFF.get(), this.getRandomX(0.5), this.getY() + 0.05, this.getRandomZ(0.5), 0, 0.02, 0);
             }
+            // digging in: sand sprays out behind the scrabbling legs for the first second
+            if (this.isBurrowed() && this.burrowAnimation.isStarted() && this.burrowAnimation.getTimeInMillis(this.tickCount) < 1000) {
+                this.digParticles(3, 0.12);
+            }
+            // running, its legs kick up little sprays of sand
+            if (ground && this.isAggressive() && this.getDeltaMovement().horizontalDistanceSqr() > 0.004 && this.random.nextInt(3) == 0) {
+                this.digParticles(1, 0.05);
+            }
+        }
+    }
+
+    /** Client: grains of whatever it stands on, sprayed up and out. */
+    private void digParticles(int count, double speed) {
+        BlockState below = this.level().getBlockState(this.blockPosition().below());
+        if (below.isAir()) {
+            return;
+        }
+        BlockParticleOption grains = new BlockParticleOption(ParticleTypes.BLOCK, below);
+        for (int i = 0; i < count; i++) {
+            double a = this.random.nextDouble() * Math.PI * 2.0;
+            this.level().addParticle(grains, this.getX() + Math.cos(a) * 0.5, this.getY() + 0.1, this.getZ() + Math.sin(a) * 0.5,
+                    Math.cos(a) * speed, 0.15 + this.random.nextDouble() * speed * 2.0, Math.sin(a) * speed);
         }
     }
 
@@ -247,6 +280,8 @@ public class Sifter extends Monster implements MusicListener {
             s.getNavigation().stop();
             if (!s.isBurrowed() && s.level() instanceof ServerLevel server) {
                 s.setBurrowed(true);
+                server.broadcastEntityEvent(s, EVENT_BURROW);
+                s.playSound(ModSounds.SIFTER_STEP.get(), 1.0F, 0.6F);
                 BlockState below = server.getBlockState(s.blockPosition().below());
                 server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, below), s.getX(), s.getY() + 0.1, s.getZ(), 20, 0.3, 0.1, 0.3, 0.05);
             }

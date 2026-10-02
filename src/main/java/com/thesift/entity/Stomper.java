@@ -1,5 +1,6 @@
 package com.thesift.entity;
 
+import com.thesift.music.SongEvents;
 import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModFluids;
 import com.thesift.registry.ModItems;
@@ -63,7 +64,7 @@ import org.jspecify.annotations.Nullable;
  * babies) can be tamed with Hummingblooms; they grow up tame, follow you, sit when told and can
  * be ridden.</p>
  */
-public class Stomper extends TamableAnimal {
+public class Stomper extends TamableAnimal implements net.minecraft.world.entity.PlayerRideableJumping {
     private static final EntityDataAccessor<Float> CHROME = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DANCE = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.INT);
     private static final byte EVENT_DRINK = 70;
@@ -72,6 +73,12 @@ public class Stomper extends TamableAnimal {
     private static final byte EVENT_PUFF = 73;
     private static final byte EVENT_SLAP = 74;
     private static final byte EVENT_LAY = 75;
+    /** A baby taps the drum on its back (one event per beat). */
+    private static final byte EVENT_DRUM = 76;
+    /** The baby's drum solo: one note per beat, in note-block semitones. */
+    private static final int[] DRUM_PATTERN = {6, 6, 13, 6, 10, 13, 18, 13, 6, 18};
+    private static final int DRUM_BEAT = 5;
+    public static final int RIDER_STOMP_COOLDOWN = 30;
     public static final int DANCE_LENGTH = 120;
     /** The dance ends with two stomps, at these many ticks before the end. */
     private static final int STOMP_1 = 34;
@@ -85,6 +92,14 @@ public class Stomper extends TamableAnimal {
     public final AnimationState stompAnimation = new AnimationState();
     public final AnimationState puffAnimation = new AnimationState();
     public final AnimationState slapAnimation = new AnimationState();
+    public final AnimationState drumAnimation = new AnimationState();
+    /** Client: which hand of the beat (alternates the tail's tap). */
+    public int drumBeats;
+    private int drumLeft = -1;
+    private int drumCooldown = 1200;
+    private int riderStompCooldown;
+    private int riderStompDelay = -1;
+    private float playerJumpPending;
 
     private int drinkCooldown = 200;
     private int sprayCooldown;
@@ -246,6 +261,83 @@ public class Stomper extends TamableAnimal {
         }
     }
 
+    /**
+     * The rider pressed attack: rear up and slam down a ring of music that flings hostile creatures
+     * away (a baby's is smaller). Called from the {@link CreatureLife.RiderStomp} packet.
+     */
+    public void riderStomp(Player rider) {
+        if (this.riderStompCooldown > 0 || this.riderStompDelay >= 0 || !(this.level() instanceof ServerLevel server)) {
+            return;
+        }
+        this.riderStompCooldown = RIDER_STOMP_COOLDOWN;
+        this.riderStompDelay = 6;
+        server.broadcastEntityEvent(this, EVENT_STOMP);
+        this.playSound(ModSounds.STOMPER_TRUMPET.get(), this.isBaby() ? 0.8F : 1.2F, this.isBaby() ? 1.6F : 1.0F);
+    }
+
+    private void landRiderStomp(ServerLevel level) {
+        float power = this.isBaby() ? 0.55F : 0.9F;
+        this.stomp(level, power);
+        double r = 6.0 * power;
+        // a ring of rising notes in every colour
+        for (int i = 0; i < 12; i++) {
+            double a = i * Mth.TWO_PI / 12.0;
+            level.sendParticles(ModParticles.SIFT_NOTE.get(), this.getX() + Math.cos(a) * r * 0.8, this.getY() + 0.4, this.getZ() + Math.sin(a) * r * 0.8,
+                    0, i / 12.0, 0.0, 0.0, 1.0);
+            level.sendParticles(ParticleTypes.NOTE, this.getX() + Math.cos(a) * r * 0.5, this.getY() + 0.8, this.getZ() + Math.sin(a) * r * 0.5,
+                    0, (i * 2) / 24.0, 0.0, 0.0, 1.0);
+        }
+        level.playSound(null, this.getX(), this.getY(), this.getZ(), net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASEDRUM.value(),
+                net.minecraft.sounds.SoundSource.NEUTRAL, 2.0F, 0.7F);
+        SongEvents.note(level, null, this.position(), 6);
+    }
+
+    /** A note was played nearby; a tame baby drums along when its owner plays. */
+    public void hearNote(ServerLevel level, @Nullable Player player, int pitch) {
+        if (player != null && this.isBaby() && this.isTame() && this.isOwnedBy(player) && !this.isVehicle() && this.drumLeft < 0
+                && this.drumCooldown < 1000) {
+            this.startDrumming();
+        }
+    }
+
+    /** A tame baby plays the little drum on its back for its owner. */
+    public void startDrumming() {
+        this.drumLeft = DRUM_PATTERN.length * DRUM_BEAT;
+        this.drumCooldown = 1600 + this.random.nextInt(1600);
+        this.getNavigation().stop();
+    }
+
+    public boolean isDrumming() {
+        return this.drumLeft >= 0;
+    }
+
+    private void tickDrum(ServerLevel level) {
+        this.getNavigation().stop();
+        if (this.drumLeft % DRUM_BEAT == 0 && this.drumLeft > 0) {
+            int beat = DRUM_PATTERN.length - this.drumLeft / DRUM_BEAT;
+            int pitch = DRUM_PATTERN[Mth.clamp(beat, 0, DRUM_PATTERN.length - 1)];
+            Vec3 at = this.position().add(0.0, 1.2 * this.getAgeScale() + 0.3, 0.0);
+            float sp = com.thesift.music.Notes.soundPitch(pitch);
+            level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASEDRUM.value(), net.minecraft.sounds.SoundSource.NEUTRAL,
+                    0.9F, sp);
+            level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASS.value(), net.minecraft.sounds.SoundSource.NEUTRAL, 0.5F, sp);
+            level.sendParticles(ModParticles.SIFT_NOTE.get(), at.x, at.y + 0.3, at.z, 0, pitch / 24.0, 0.0, 0.0, 1.0);
+            level.broadcastEntityEvent(this, EVENT_DRUM);
+            // everyone around hears the beat (no player: the song tracker ignores it)
+            SongEvents.note(level, null, at, pitch);
+        }
+        if (this.drumLeft == 0) {
+            LivingEntity owner = this.getOwner();
+            if (owner != null && owner.distanceToSqr(this) < 16.0 * 16.0) {
+                owner.addEffect(new MobEffectInstance(MobEffects.SPEED, 20 * 30, 0), this);
+                owner.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 20 * 30, 0), this);
+                level.sendParticles(ParticleTypes.HEART, owner.getX(), owner.getY() + owner.getBbHeight() + 0.3, owner.getZ(), 4, 0.3, 0.2, 0.3, 0.0);
+            }
+            this.playSound(ModSounds.STOMPER_HAPPY.get(), 0.9F, 1.7F);
+        }
+        this.drumLeft--;
+    }
+
     /** Never the drummer, never other Stompers, never anyone's pet: hostile creatures, mostly. */
     private boolean isStompable(LivingEntity e) {
         if (e == this || !e.isAlive() || e instanceof Player || e instanceof Stomper || isPet(e)) {
@@ -274,6 +366,22 @@ public class Stomper extends TamableAnimal {
             if (dance > 0) {
                 this.tickDance(server, dance);
                 this.entityData.set(DANCE, dance - 1);
+            }
+            if (this.riderStompCooldown > 0) {
+                this.riderStompCooldown--;
+            }
+            if (this.riderStompDelay >= 0 && this.riderStompDelay-- == 0) {
+                this.landRiderStomp(server);
+            }
+            if (this.drumLeft >= 0) {
+                this.tickDrum(server);
+            } else if (this.drumCooldown > 0) {
+                this.drumCooldown--;
+            } else if (this.isBaby() && this.isTame() && !this.isVehicle()) {
+                LivingEntity owner = this.getOwner();
+                if (owner != null && owner.distanceToSqr(this) < 8.0 * 8.0) {
+                    this.startDrumming();
+                }
             }
             if (this.drinkCooldown > 0) {
                 this.drinkCooldown--;
@@ -320,6 +428,10 @@ public class Stomper extends TamableAnimal {
             case EVENT_SPRAY -> this.sprayAnimation.start(this.tickCount);
             case EVENT_STOMP -> this.stompAnimation.start(this.tickCount);
             case EVENT_SLAP -> this.slapAnimation.start(this.tickCount);
+            case EVENT_DRUM -> {
+                this.drumAnimation.start(this.tickCount);
+                this.drumBeats++;
+            }
             case EVENT_PUFF -> {
                 this.puffAnimation.start(this.tickCount);
                 this.puffSpiracles();
@@ -493,7 +605,7 @@ public class Stomper extends TamableAnimal {
             return InteractionResult.SUCCESS;
         }
         if (this.isTame() && this.isOwnedBy(player) && !this.isFood(stack)) {
-            if (player.isSecondaryUseActive() || this.isBaby()) {
+            if (player.isSecondaryUseActive()) {
                 if (!this.level().isClientSide()) {
                     this.setOrderedToSit(!this.isOrderedToSit());
                     this.getNavigation().stop();
@@ -528,7 +640,8 @@ public class Stomper extends TamableAnimal {
 
     @Override
     protected float getRiddenSpeed(Player controller) {
-        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.4F;
+        // a baby trots along briskly under its little rider
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) * (this.isBaby() ? 1.9F : 1.4F);
     }
 
     @Override
@@ -536,6 +649,41 @@ public class Stomper extends TamableAnimal {
         super.tickRidden(controller, riddenInput);
         this.setRot(controller.getYRot(), controller.getXRot() * 0.5F);
         this.yRotO = this.yBodyRot = this.yHeadRot = this.getYRot();
+        if (this.isLocalInstanceAuthoritative() && this.onGround()) {
+            if (this.playerJumpPending > 0.0F) {
+                Vec3 v = this.getDeltaMovement();
+                double up = (this.isBaby() ? 0.55 : 0.45) + 0.25 * this.playerJumpPending;
+                this.setDeltaMovement(v.x, up, v.z);
+                if (riddenInput.z > 0.0) {
+                    float yaw = this.getYRot() * Mth.DEG_TO_RAD;
+                    this.setDeltaMovement(this.getDeltaMovement().add(-0.3F * Mth.sin(yaw) * this.playerJumpPending, 0.0,
+                            0.3F * Mth.cos(yaw) * this.playerJumpPending));
+                }
+                this.needsSync = true;
+            }
+            this.playerJumpPending = 0.0F;
+        }
+    }
+
+    // ---- the rider's jump key (charges like a horse's)
+
+    @Override
+    public void onPlayerJump(int jumpAmount) {
+        this.playerJumpPending = this.getPlayerJumpPendingScale(Math.max(0, jumpAmount));
+    }
+
+    @Override
+    public boolean canJump() {
+        return this.isTame() && this.isVehicle();
+    }
+
+    @Override
+    public void handleStartJump(int jumpScale) {
+        this.playSound(ModSounds.STOMPER_PUFF.get(), 0.6F, this.isBaby() ? 1.6F : 1.1F);
+    }
+
+    @Override
+    public void handleStopJump() {
     }
 
     // ------------------------------------------------------------------ sounds, save, death

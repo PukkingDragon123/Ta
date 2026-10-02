@@ -32,7 +32,8 @@ public class BulbRenderer extends SiftMobRenderer<Bulb, BulbRenderState, BulbMod
 
     @Override
     protected Expression expression(Bulb entity, BulbRenderState state) {
-        return Expression.pick(entity, false, entity.isDancing(), state.sleepy);
+        boolean wiggling = entity.wiggleAnimation.isStarted() && entity.wiggleAnimation.getTimeInMillis(entity.tickCount) < 1400;
+        return Expression.pick(entity, false, entity.isDancing() || wiggling, state.sleepy);
     }
 
     @Override
@@ -44,9 +45,11 @@ public class BulbRenderer extends SiftMobRenderer<Bulb, BulbRenderState, BulbMod
         state.earPerk = entity.earPerk.get(partialTicks);
         state.dancing = entity.isDancing();
         state.airborne = !entity.onGround();
-        // left alone and sitting still, it dozes off now and then for half a minute
-        boolean idle = !state.dancing && entity.onGround() && entity.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4 && state.earPerk < 0.1F;
-        state.sleepy = idle && Math.floorMod(entity.tickCount + entity.getId() * 211, 1800) > 1300;
+        state.sleepy = entity.isSleepingBulb();
+        state.beat = entity.tickCount - entity.lastBeat + partialTicks;
+        state.sniff.copyFrom(entity.sniffAnimation);
+        state.groom.copyFrom(entity.groomAnimation);
+        state.wiggle.copyFrom(entity.wiggleAnimation);
         super.extractRenderState(entity, state, partialTicks);
     }
 }

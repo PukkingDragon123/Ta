@@ -5,18 +5,63 @@ from modelkit import Model
 # =========================================================================== BULB
 JELLY = 200  # the Bulb's body is see-through jelly: this alpha over an opaque core
 
-# faces are painted at texel resolution (hd=True): the body's front is 24 x 20 texels
-BULB_FACE = {
-    'neutral': {2: '..gg', 3: '..g', 12: '....EEEEEE....EEEEEE', 13: '....EEEEEE....EEEEEE', 14: '..........MMMM', 15: '..........MMMM'},
-    'blink': {2: '..gg', 3: '..g', 13: '....EEEEEE....EEEEEE', 14: '..........MMMM', 15: '..........MMMM'},
-    'happy': {2: '..gg', 3: '..g', 11: '.....EEEE......EEEE', 12: '....E....E....E....E', 14: '.........MMMMMM', 15: '..........MttM',
-              16: '...........MM'},
-    'hurt': {2: '..gg', 3: '..g', 11: '....EE............EE', 12: '......EEE......EEE', 13: '....EE............EE', 15: '...........MM',
-             16: '..........M..M'},
-    'dead': {2: '..gg', 3: '..g', 10: '.....E..E......E..E', 11: '......EE........EE', 12: '......EE........EE', 13: '.....E..E......E..E',
-             15: '..........MMMM'},
-    'sleep': {2: '..gg', 3: '..g', 12: '....E....E....E....E', 13: '.....EEEE......EEEE', 15: '...........MM'},
+# faces are painted at texel resolution (hd=True): the body's front is 24 x 20 texels.
+# Big glossy eyes with two highlights, little brows and a mouth that change with every mood, and
+# blush on the cheeks. keys: E eye, L lower iris, S shine, B brow, M mouth, t tongue, c blush, g gloss
+def _bulb_eye(expr, mirror):
+    """One 7 x 9 eye in the given mood (mirror for the right eye)."""
+    if expr == 'blink':
+        e = ['.......', '.......', '.......', '.......', '.......', 'B.....B', '.BBBBB.', '.......', '.......']
+    elif expr == 'sleep':
+        e = ['.......', '.......', '.......', '.......', '.......', '.......', 'B.....B', '.BBBBB.', '.......']
+    elif expr == 'happy':
+        e = ['.......', '.......', '.......', '..EEE..', '.EEEEE.', 'EE...EE', 'E.....E', '.......', '.......']
+    elif expr == 'hurt':
+        e = ['.......', '.......', 'EE.....', '..EEE..', '.....EE', '..EEE..', 'EE.....', '.......', '.......']
+    elif expr == 'dead':
+        e = ['.......', '.......', 'E.....E', '.E...E.', '..E.E..', '...E...', '..E.E..', '.E...E.', 'E.....E']
+    else:
+        e = ['..EEE..', '.EEEEE.', 'ESSEEEE', 'ESSEEEE', 'EEEEESE', 'EEEEEEE', 'ELLLLLE', '.LLLLL.', '..LLL..']
+    return [r[::-1] for r in e] if mirror else e
+
+
+# brow stroke and how high it sits, per mood
+_BULB_BROWS = {
+    '': ('.BBB.', 1), 'blink': ('.BBB.', 1), 'happy': ('BBB..', 2), 'hurt': ('..BBB', 1), 'sleep': ('BBBB.', 0), 'dead': ('.....', 1),
 }
+_BULB_MOUTH = {
+    '': ['.M....M.', '..MMMM..'],
+    'blink': ['.M....M.', '..MMMM..'],
+    'happy': ['.MMMMMM.', '.MttttM.', '..MttM..', '...MM...'],
+    'hurt': ['........', '..MMMM..', '.M....M.'],
+    'dead': ['........', '.MMMMMM.'],
+    'sleep': ['........', '...MM...', '...MM...'],
+}
+
+
+def bulb_face(expr):
+    w, h = 24, 20
+    g = [['.'] * w for _ in range(h)]
+
+    def put(x, y, rows):
+        for j, r in enumerate(rows):
+            for i, ch in enumerate(r):
+                if ch != '.' and 0 <= y + j < h and 0 <= x + i < w:
+                    g[y + j][x + i] = ch
+    put(1, 1, ['gg', 'g'])
+    brow, lift = _BULB_BROWS.get(expr, _BULB_BROWS[''])
+    put(4, 4 - lift, [brow])
+    put(15, 4 - lift, [brow[::-1]])
+    put(3, 6, _bulb_eye(expr, False))
+    put(14, 6, _bulb_eye(expr, True))
+    if expr not in ('dead', 'hurt'):
+        put(1, 14, ['cc'])
+        put(21, 14, ['cc'])
+    put(8, 15, _BULB_MOUTH.get(expr, _BULB_MOUTH['']))
+    return [''.join(r) for r in g]
+
+
+BULB_FACE = {('neutral' if e == '' else e): bulb_face(e) for e in ('', 'blink', 'happy', 'hurt', 'dead', 'sleep')}
 
 
 def hd_rows(spec, w, h):
@@ -38,6 +83,7 @@ def bulb() -> Model:
         'ear': '#78a5e3', 'ear_l': '#9cc3f3', 'ear_d': '#5d86cc', 'ear_in': '#63c6df',
         'foot': '#8fdcee', 'foot_l': '#b3ecf7', 'foot_d': '#6cc0da',
         'eye': '#2f2777', 'mouth': '#4a3a9f', 'tongue': '#e98fc6', 'gloss': '#e3f3ff', 'drip': '#a9e6f5',
+        'eye_l': '#5a4fb8', 'shine': '#ffffff', 'brow': '#3a3290', 'blush': '#f59ad0',
         'core': '#4f6fc4', 'core_l': '#6a8ad8', 'core_d': '#3c56a6',
     }
     variants = {
@@ -45,20 +91,20 @@ def bulb() -> Model:
         # the all-cyan "this little guy" colouring
         'bulb_blossom': {'skin': '#3fd0ef', 'skin_l': '#72e3fa', 'skin_d': '#27aed6', 'belly': '#3fd0ef', 'belly_l': '#72e3fa',
                          'belly_d': '#27aed6', 'ear': '#3fd0ef', 'ear_l': '#72e3fa', 'ear_d': '#27aed6', 'ear_in': '#27aed6',
-                         'foot': '#5fdcf3', 'foot_l': '#8deafa', 'foot_d': '#36bde0', 'eye': '#1b4f6b', 'mouth': '#1b4f6b',
+                         'foot': '#5fdcf3', 'foot_l': '#8deafa', 'foot_d': '#36bde0', 'eye': '#1b4f6b', 'mouth': '#1b4f6b', 'eye_l': '#2f7f9f', 'brow': '#1b4f6b',
                          'core': '#1d93c2', 'core_l': '#36aed8', 'core_d': '#137aa6'},
         'bulb_dusk': {'skin': '#a58fe6', 'skin_l': '#c3b2f6', 'skin_d': '#8770cf', 'belly': '#e59ad0', 'belly_l': '#f4b9e2', 'belly_d': '#c97bb5',
                       'ear': '#a58fe6', 'ear_l': '#c3b2f6', 'ear_d': '#8770cf', 'ear_in': '#e59ad0',
-                      'foot': '#f0b6de', 'foot_l': '#fbd2ee', 'foot_d': '#d895c4', 'eye': '#3a1f5e', 'mouth': '#5b2f7a',
+                      'foot': '#f0b6de', 'foot_l': '#fbd2ee', 'foot_d': '#d895c4', 'eye': '#3a1f5e', 'mouth': '#5b2f7a', 'eye_l': '#6a3f9e', 'brow': '#3a1f5e', 'blush': '#ff8fc0',
                       'core': '#7a5cc4', 'core_l': '#9378d8', 'core_d': '#6146a8'},
         'bulb_starry': {'skin': '#3b4aa0', 'skin_l': '#5566c0', 'skin_d': '#2b377d', 'belly': '#4e7fd0', 'belly_l': '#6a9be3', 'belly_d': '#3a66b3',
                         'ear': '#3b4aa0', 'ear_l': '#5566c0', 'ear_d': '#2b377d', 'ear_in': '#4e7fd0',
-                        'foot': '#6a9be3', 'foot_l': '#8bb5f0', 'foot_d': '#4e7fd0', 'eye': '#fff1a8', 'mouth': '#fff1a8', 'gloss': '#c9d3ff',
+                        'foot': '#6a9be3', 'foot_l': '#8bb5f0', 'foot_d': '#4e7fd0', 'eye': '#fff1a8', 'mouth': '#fff1a8', 'gloss': '#c9d3ff', 'eye_l': '#e8cf6a', 'brow': '#fff1a8', 'blush': '#8a7fe0',
                         'core': '#fff1a8', 'core_l': '#fffbe0', 'core_d': '#e8cf6a'},
     }
     m = Model('bulb', (64, 64), pal, variants, res=2, expressions=['blink', 'happy', 'hurt', 'dead', 'sleep'])
-    face_keys = {'E': 'eye', 'M': 'mouth', 't': 'tongue', 'g': 'gloss'}
-    face = {k: hd_rows(v, 24, 20) for k, v in BULB_FACE.items()}
+    face_keys = {'E': 'eye', 'L': 'eye_l', 'S': 'shine', 'B': 'brow', 'M': 'mouth', 't': 'tongue', 'c': 'blush', 'g': 'gloss'}
+    face = dict(BULB_FACE)
     body = m.part('body', pivot=(0, 24, 0))
     two_tone = dict(color='skin', pattern='mc', bands=[(6, 'belly')], clusters=0.22, opacity=JELLY)
     body.cube((-6, -13, -6), (12, 10, 12), **two_tone, faces={
@@ -88,6 +134,9 @@ def bulb() -> Model:
             'north': dict(color='foot', pattern='mc', clusters=0.2, opacity=JELLY, hd=True, map=['......'] * 4 + ['.d..d.', '.d..d.'],
                           keys={'d': 'foot_d'}),
         })
+    # a round pom-pom tail that wiggles when it is happy
+    tail = body.part('tail', pivot=(0, -6, 6))
+    tail.cube((-1.5, -1.5, 0), (3, 3, 2), color='belly_l', pattern='mc', clusters=0.2, opacity=JELLY)
     # the jelly's darker heart, seen through the body (drawn first, opaque; see BulbJellyLayer)
     core = m.part('core', pivot=(0, 24, 0))
     core.cube((-4, -11, -4), (8, 7, 8), color='core', pattern='mc', clusters=0.35, rim=True)
@@ -222,79 +271,97 @@ def slumbler() -> Model:
 
 
 # =========================================================================== SIFTER
-SIFTER_EYES = {
-    'neutral': {2: '..ee....................ee', 3: '..ee....................ee'},
-    'blink': {3: '..ee....................ee'},
-    'angry': {1: '.ddd...................ddd', 2: '...ee..................ee', 3: '..ee....................ee'},
-    'hurt': {2: '.ee......................ee', 3: '...ee..................ee'},
-    'dead': {1: '..e.e..................e.e', 2: '...e....................e', 3: '..e.e..................e.e'},
-}
-
-
 def sifter() -> Model:
-    """A dune lurker that is mostly mouth: a flat box head whose lid snaps open like a trap,
-    on a stubby two-legged body with little fins and tan toes."""
+    """The Sifter: a dune ambusher that is mostly trap. A chunky, layered carapace of sandstone and
+    sun-bleached bone forms a box head whose lid slams shut like a bear trap over a ring of teeth; a
+    glowing lure dangles from its brow to tempt the curious. It scuttles on four bony crab legs and
+    lies buried in Dreamsand with only the lid and lure showing."""
+    from mobs_wild import eye, mc, put, blank
+    exprs = ['blink', 'angry', 'hurt', 'dead']
     pal = {
         'skin': '#1fa3c1', 'skin_l': '#3ec0d6', 'skin_d': '#157e9f', 'deep': '#0e5a7d',
-        'tan': '#f2cd98', 'tan_l': '#fde3b9', 'tan_d': '#d7a46c',
-        'mouth': '#17328c', 'mouth_l': '#2246ad', 'mouth_d': '#0c1e5c',
-        'tooth': '#eaf7ff', 'tooth_d': '#a9cfe8', 'eye': '#d9f6ff', 'swirl': '#1892b2',
-        'fin': '#0f6a8e', 'fin_l': '#1a86a8', 'fin_d': '#0b4f6d',
+        'sand': '#e6c48c', 'sand_l': '#f6dcac', 'sand_d': '#c49a62', 'grit': '#b0864f',
+        'bone': '#efe6cf', 'bone_l': '#fffaee', 'bone_d': '#c7b996', 'crack': '#9c8a66',
+        'mouth': '#17328c', 'mouth_l': '#2246ad', 'mouth_d': '#0c1e5c', 'gum': '#d9587a',
+        'tooth': '#fbf6ea', 'tooth_d': '#cdbf9e', 'eye': '#0c1430', 'iris': '#ffd36a', 'iris_d': '#e09a2a', 'eye_hi': '#ffffff',
+        'lid': '#c49a62', 'lid_d': '#8e6a3c', 'lure': '#ffe28a', 'lure_l': '#fff6cc', 'lure_d': '#f2b23a', 'stalk': '#157e9f',
+        'swirl': '#1892b2',
     }
-    m = Model('sifter', (64, 64), pal, {'sifter': {}}, res=2, expressions=['blink', 'angry', 'hurt', 'dead'])
+    m = Model('sifter', (128, 128), pal, {'sifter': {}}, res=2, expressions=exprs)
+    sand = mc('sand', clusters=0.6, spots=0.2, accent='grit')
+    bone = mc('bone', clusters=0.4, spots=0.12, accent='crack')
+    skin = mc('skin', clusters=0.6, spots=0.25, accent='swirl')
+    ek = {'r': 'lid_d', 'i': 'iris', 'I': 'iris_d', 'p': 'eye', 'h': 'eye_hi', 'l': 'lid', 'd': 'lid_d'}
+
     body = m.part('body', pivot=(0, 24, 0))
-    # torso column the head rests on
-    body.cube((-3.5, -14, -2.5), (7, 4, 5), color='skin', pattern='mc', clusters=0.8)
+    # a squat soft-bodied abdomen under a sandstone back plate with a bone ridge
+    body.cube((-5, -11, -4), (10, 6, 9), **skin, faces={'down': mc('skin_d', clusters=0.2)})
+    body.cube((-5.5, -12, -3), (11, 2, 9), **sand, faces={'up': mc('sand', clusters=0.8, spots=0.3, accent='grit')})
+    body.cube((-1.5, -13.5, -1), (3, 1.5, 6), **bone)
+    # four bony crab legs splayed out to the sides, tipped with bone claws
+    for name, sx, z in (('front_left', 1, -2), ('front_right', -1, -2), ('back_left', 1, 3), ('back_right', -1, 3)):
+        leg = body.part(f'{name}_leg', pivot=(4.5 * sx, -8, z), rot=(0, 0, -0.35 * sx))
+        leg.cube((0 if sx > 0 else -6, -1.5, -1.5), (6, 3, 3), **sand)
+        shin = leg.part(f'{name}_shin', pivot=(5.5 * sx, 0, 0), rot=(0, 0, 0.05 * sx))
+        shin.cube((-1, 0, -1), (2, 8.5, 2), **bone, faces={
+            'north': mc('bone', clusters=0.3, hd=True, map=['....'] * 7 + ['cccc'] + ['....'] * 9, keys={'c': 'crack'})})
+        shin.cube((-0.5, 8.5, -0.5), (1, 2, 1), **mc('bone_d', clusters=0.0, rim=False))
+
+    # ---- the head: a heavy sandstone tray (lower jaw) with a lid of layered carapace
+    head = body.part('head', pivot=(0, -12, 1))
+    head.cube((-8, -3, -9), (16, 3, 16), **sand, faces={
+        'up': mc('mouth', clusters=0.4, hd=True, map=put(blank(32, 32), 0, 0, ['GG' * 16, 'G' + '.' * 30 + 'G'] + ['G' + '.' * 30 + 'G'] * 28 +
+                                                                            ['G' + '.' * 30 + 'G', 'GG' * 16]), keys={'G': 'gum'}),
+        'down': mc('skin_d', clusters=0.3),
+        'north': mc('sand', clusters=0.4, hd=True, map=['B' * 32, 'b' * 32, '.' * 32, '.' * 32, '.' * 32, 'g.' * 16],
+                    keys={'B': 'bone_l', 'b': 'bone_d', 'g': 'grit'}),
+    })
+    # a bone chin guard
+    head.cube((-6, -1, -9.5), (12, 2, 1), **bone)
+    for i, tx in enumerate((-6.5, -4, -1.5, 1, 3.5, 6)):
+        tooth = head.part(f'lower_tooth_{i}', pivot=(tx, -3, -8.5))
+        tooth.cube((-0.5, -2 if i % 2 else -1.5, -0.5), (1, 2 if i % 2 else 1.5, 1), **mc('tooth', clusters=0.0, rim=False), faces={
+            'north': mc('tooth', clusters=0.0, rim=False, hd=True, map=['..', 'dd', '..', '..'], keys={'d': 'tooth_d'})})
+    for i, tz in enumerate((-5, -1, 3)):
+        for side, sx in (('left', 1), ('right', -1)):
+            st = head.part(f'side_tooth_{side}_{i}', pivot=(7.3 * sx, -3, tz))
+            st.cube((-0.5, -1.5, -0.5), (1, 1.5, 1), **mc('tooth', clusters=0.0, rim=False))
+    # the lid, hinged at the back: three layers - sandstone shell, bone plate, spined ridge
+    lid = head.part('lid', pivot=(0, -3, 7))
+    lid.cube((-8.5, -4, -16.5), (17, 4, 17), **sand, faces={
+        'down': mc('mouth', clusters=0.4, hd=True, map=put(blank(34, 34), 0, 0, ['GG' * 17] + ['G' + '.' * 32 + 'G'] * 32 + ['GG' * 17]),
+                   keys={'G': 'gum'}),
+        'north': mc('sand', clusters=0.3, hd=True, map=['.' * 34] * 4 + ['b' * 34, 'B' * 34, 'g.' * 17, '.' * 34], keys={'B': 'bone_l', 'b': 'bone_d', 'g': 'grit'}),
+        'up': mc('sand', clusters=1.0, spots=0.35, accent='grit'),
+    })
+    lid.cube((-7, -6, -14.5), (14, 2, 13), **bone, faces={
+        'up': mc('bone', clusters=0.6, spots=0.2, accent='crack', hd=True,
+                 map=put(put(blank(28, 26), 4, 6, ['c...', '.c..', '..cc', '....', '..c.']), 18, 14, ['..c', '.c.', 'c..', 'c..']), keys={'c': 'crack'})})
+    lid.cube((-3.5, -7.5, -12), (7, 1.5, 9), **sand)
+    for i, (sx, sz) in enumerate(((0, -10.5), (0, -7), (0, -3.5), (-6, -5), (6, -5), (-6, -11), (6, -11))):
+        spike = lid.part(f'spike_{i}', pivot=(sx, -7.5 if sx == 0 else -6, sz), rot=(-0.25, 0, -0.35 * (1 if sx > 0 else -1 if sx < 0 else 0)))
+        spike.cube((-1, -2.5 if sx == 0 else -2, -1), (2, 2.5 if sx == 0 else 2, 2), **mc('bone', clusters=0.0), faces={
+            'up': mc('bone_l', clusters=0.0, rim=False)})
+    for i, tx in enumerate((-7, -4.5, -2, 0.5, 3, 5.5)):
+        tooth = lid.part(f'upper_tooth_{i}', pivot=(tx + 0.5, 0, -15.5))
+        h = 2.5 if i in (0, 5) else 2 if i % 2 == 0 else 1.5
+        tooth.cube((-0.5, 0, -0.5), (1, h, 1), **mc('tooth', clusters=0.0, rim=False), faces={
+            'north': mc('tooth', clusters=0.0, rim=False, hd=True, map=['..'] * (int(h * 2) - 1) + ['dd'], keys={'d': 'tooth_d'})})
+    # two small amber eyes peeking out from under the brow
     for side, sx in (('left', 1), ('right', -1)):
-        leg = body.part(f'{side}_leg', pivot=(1.75 * sx, -10, 0))
-        leg.cube((-1.75, 0, -2), (3.5, 10, 4), color='skin', pattern='mc', clusters=0.9, faces={
-            'north': dict(color='skin', pattern='mc', clusters=0.7, map=[
-                '...', '...', '...', '...', '...', '...', '...', '...', 't.t', 'TTT'], keys={'t': 'tan', 'T': 'tan_d'}),
-            'east': dict(color='skin', pattern='mc', clusters=0.7, map=['....'] * 8 + ['t..t', 'TTTT'], keys={'t': 'tan', 'T': 'tan_d'}),
-            'west': dict(color='skin', pattern='mc', clusters=0.7, map=['....'] * 8 + ['t..t', 'TTTT'], keys={'t': 'tan', 'T': 'tan_d'}),
-            'south': dict(color='skin', pattern='mc', clusters=0.7, map=['...'] * 9 + ['TTT'], keys={'T': 'tan_d'}),
-            'down': dict(color='tan_d', pattern='mc', clusters=0.0),
-        })
-        fin = body.part(f'{side}_fin', pivot=(3.5 * sx, -13.5, 0), rot=(0, 0, -0.35 * sx))
-        fin.cube((0 if sx > 0 else -1, 0, -1.5), (1, 5, 3), color='fin', pattern='mc', clusters=0.5)
-    head = body.part('head', pivot=(0, -14, 0))
-    # lower jaw: a tan tray with a deep navy floor
-    head.cube((-7, -2, -7.5), (14, 2, 14), color='tan', pattern='mc', clusters=0.4, rim=False, faces={
-        'up': dict(color='mouth', pattern='mc', clusters=0.5, map=[
-            'TTTTTTTTTTTTTT',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'T............T',
-            'TTTTTTTTTTTTTT',
-        ], keys={'T': 'tan_l'}),
-        'down': dict(color='skin_d', pattern='mc', clusters=0.4),
-        'north': dict(color='tan', pattern='mc', clusters=0.3, rim=False, map=['..............', 'TTTTTTTTTTTTTT'], keys={'T': 'tan_d'}),
-    })
-    for i, tx in enumerate((-4.5, -0.5, 3.5)):
-        tooth = head.part(f'lower_tooth_{i}', pivot=(tx, -2, -7))
-        tooth.cube((0, -1, 0), (1, 1, 1), color='tooth', pattern='mc', clusters=0.0, rim=False)
-    # upper jaw: the lid, hinged at the back of the head
-    lid = head.part('lid', pivot=(0, -2, 6.5))
-    lid.cube((-7, -3, -14), (14, 3, 14), color='skin', pattern='mc', clusters=0.8, faces={
-        'up': dict(color='skin', pattern='mc', clusters=1.3, spots=0.35, accent='swirl'),
-        'down': dict(color='mouth', pattern='mc', clusters=0.4),
-        'north': dict(color='skin', pattern='mc', clusters=0.2, hd=True, map=hd_rows(SIFTER_EYES['neutral'], 28, 6), keys={'e': 'eye', 'd': 'deep'},
-                      expr={k: hd_rows(v, 28, 6) for k, v in SIFTER_EYES.items() if k != 'neutral'}),
-    })
-    for i, (tx, h) in enumerate(((-6, 2), (-3.5, 1), (2.5, 1), (5, 2))):
-        tooth = lid.part(f'upper_tooth_{i}', pivot=(tx, 0, -13.5))
-        tooth.cube((0, 0, 0), (1, h, 1), color='tooth', pattern='mc', clusters=0.0, rim=False, faces={
-            'north': dict(color='tooth', pattern='mc', clusters=0.0, rim=False, map=['.', 'd'] if h == 2 else ['.'], keys={'d': 'tooth_d'}),
-        })
+        e = lid.part(f'{side}_eye', pivot=(4.5 * sx, -4, -16.2))
+        e.cube((-2, -2, -1), (4, 4, 1.5), **mc('sand', clusters=0.0, rim=False), faces={
+            'north': mc('sand', clusters=0.0, rim=False, hd=True, map=eye(8, 8, '', sx < 0, pupil='slit', rim=0.72), keys=ek,
+                        expr={x: eye(8, 8, x, sx < 0, pupil='slit', rim=0.72) for x in exprs}, glow_keys='iI')})
+    # the lure: a jointed stalk curling out of the brow with a glowing bulb on the end
+    stalk = lid.part('lure_stalk', pivot=(0, -7.5, -12.5), rot=(0.5, 0, 0))
+    stalk.cube((-0.5, -6, -0.5), (1, 6, 1), **mc('stalk', clusters=0.0, rim=False))
+    tip = stalk.part('lure_tip', pivot=(0, -6, 0), rot=(1.3, 0, 0))
+    tip.cube((-0.5, -5, -0.5), (1, 5, 1), **mc('stalk', clusters=0.0, rim=False))
+    lure = tip.part('lure', pivot=(0, -5, 0))
+    lure.cube((-1.5, -1.5, -1.5), (3, 3, 3), **mc('lure', clusters=0.0, rim=False, glow=True), faces={
+        f: mc('lure', clusters=0.0, rim=False, glow=True, hd=True, map=['ll....', 'l.....', '......', '......', '.....d', '....dd'],
+              keys={'l': 'lure_l', 'd': 'lure_d'}, glow_keys='ld') for f in ('north', 'south', 'east', 'west')})
     return m
 
 

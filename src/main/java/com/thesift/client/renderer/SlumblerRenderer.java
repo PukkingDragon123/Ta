@@ -44,5 +44,9 @@ public class SlumblerRenderer extends SiftMobRenderer<Slumbler, SlumblerRenderSt
         state.sleeping = entity.isSlumbering();
         state.yawn.copyFrom(entity.yawnAnimation);
         state.bite.copyFrom(entity.biteAnimation);
+        state.gulp.copyFrom(entity.gulpAnimation);
+        state.nuzzle.copyFrom(entity.nuzzleAnimation);
+        state.hum.copyFrom(entity.humAnimation);
+        state.inChrome = entity.isInFluidType();
     }
 }

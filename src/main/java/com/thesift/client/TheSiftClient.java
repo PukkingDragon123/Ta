@@ -74,6 +74,7 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onPlayerTurn);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onRenderLayer);
         modBus.addListener(TheSiftClient::registerClientExtensions);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RiderInput::onInteractionKey); // A1: Stomper rider stomp
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play

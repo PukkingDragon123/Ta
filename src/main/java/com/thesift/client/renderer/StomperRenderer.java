@@ -48,7 +48,7 @@ public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState
     protected void scale(StomperRenderState state, PoseStack poseStack) {
         super.scale(state, poseStack);
         if (state.isBaby) {
-            poseStack.scale(0.45F, 0.45F, 0.45F);
+            poseStack.scale(0.5F, 0.5F, 0.5F);
         }
     }
 
@@ -76,5 +76,8 @@ public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState
         state.stomp.copyFrom(entity.stompAnimation);
         state.puff.copyFrom(entity.puffAnimation);
         state.slap.copyFrom(entity.slapAnimation);
+        state.drum.copyFrom(entity.drumAnimation);
+        state.drumBeats = entity.drumBeats;
+        state.ridden = entity.isVehicle();
     }
 }

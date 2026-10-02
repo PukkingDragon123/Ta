@@ -64,7 +64,8 @@ public class RiveterModel extends EntityModel<RiveterRenderState> {
         boolean hang = s.hanging;
         // sgn below is +1 for the left side. Flipping a wing to dangle (xRot = PI) mirrors which zRot
         // swings it away from the body, so hanging flares with +sgn and flight with -sgn.
-        float breathe = Mth.sin(age * 0.07F);
+        float breathe = 0.0F;
+        float roost = s.roosting ? 1.0F : 0.0F;
 
         // --- scream (1.7s): wings fling open, claws fan, the jaw gapes, everything trembles
         float scream = 0.0F;
@@ -110,6 +111,33 @@ public class RiveterModel extends EntityModel<RiveterRenderState> {
                 this.shins[side].xRot = 0.5F;
             }
             fan = Math.max(fan, 0.4F + flap * 0.3F);
+        }
+
+        // --- roosting: wrapped up tight in its wings, head tucked, a slow sleeper's breath
+        if (hang && roost > 0.0F) {
+            breathe = Mth.sin(age * 0.05F);
+            for (int side = 0; side < 2; side++) {
+                float sgn = side == 0 ? 1.0F : -1.0F;
+                this.wings[side].yRot += sgn * 1.25F;
+                this.wings[side].zRot += -sgn * 0.25F;
+            }
+            this.head.xRot += 0.35F;
+            this.head.yRot *= 0.2F;
+        }
+        // --- chitter with a neighbour: head turns to it, jaw clacks, one wing flicks
+        float chitter = Anim.seconds(s.chitter, age);
+        if (chitter >= 0.0F && chitter < 1.4F) {
+            float e = Anim.envelope(chitter, 0.0F, 0.15F, 0.9F, 0.3F);
+            this.head.yRot += Mth.sin(chitter * 3.0F) * 0.5F * e;
+            this.jaw.xRot += Math.max(0.0F, Mth.sin(chitter * 30.0F)) * 0.35F * e;
+            this.wings[0].zRot += Mth.sin(chitter * 9.0F) * 0.2F * e;
+        }
+        // --- snapping glow dust out of the air while it hunts
+        float snapT = Anim.seconds(s.snap, age);
+        if (snapT >= 0.0F && snapT < 0.4F) {
+            float e = Anim.envelope(snapT, 0.0F, 0.06F, 0.05F, 0.25F);
+            this.jaw.xRot += 0.8F * e;
+            this.head.xRot -= 0.3F * e;
         }
 
         // --- claws: each finger twitches on its own phase; scream and flight fan them out

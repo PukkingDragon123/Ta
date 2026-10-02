@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
 public class SkyWhaleRenderer extends SiftMobRenderer<SkyWhale, SkyWhaleRenderState, SkyWhaleModel> {
-    private static final float SIZE = 1.5F;
+    private static final float SIZE = 1.7F;
     private static final ExpressionTextures TEXTURES = ExpressionTextures.single("sky_whale", Expression.BLINK, Expression.HAPPY, Expression.ANGRY,
             Expression.HURT, Expression.DEAD);
     private static final ExpressionTextures GLOW = new ExpressionTextures("sky_whale", new String[]{"sky_whale"}, "_glow", Expression.BLINK,
@@ -66,5 +66,7 @@ public class SkyWhaleRenderer extends SiftMobRenderer<SkyWhale, SkyWhaleRenderSt
         state.seed = (entity.getId() * 41) % 127;
         state.sing.copyFrom(entity.singAnimation);
         state.spit.copyFrom(entity.spitAnimation);
+        state.bank = Mth.lerp(partialTicks, entity.bankO, entity.bank);
+        state.climb = (float) Mth.clamp(entity.getDeltaMovement().y, -0.4, 0.4);
     }
 }

@@ -64,8 +64,6 @@ public class HarmonerModel extends EntityModel<HarmonerRenderState> {
         float walk = Math.min(1.0F, s.walkAnimationSpeed * 2.0F) * ground;
         float pos = s.walkAnimationPos * 1.5F;
 
-        // --- breathing
-        this.body.yScale = 1.0F + Mth.sin(age * 0.2F) * 0.02F;
 
         // --- head: snaps to a new direction every ~1.2 s and settles there, like a real bird
         int n = Mth.floor(age / 24.0F);
@@ -122,6 +120,45 @@ public class HarmonerModel extends EntityModel<HarmonerRenderState> {
         this.plumes[0].zRot -= 0.3F * crestUp;
         this.plumes[2].zRot += 0.3F * crestUp;
         this.plumes[1].xRot = Mth.sin(age * 0.3F) * 0.08F * crestUp;
+
+        // --- pecking for seeds: a quick bob down to the ground and back
+        float peck = Anim.seconds(s.peck, s.ageInTicks);
+        if (peck >= 0.0F && peck < 0.5F) {
+            float e = Anim.envelope(peck, 0.0F, 0.08F, 0.06F, 0.3F);
+            this.body.xRot += 0.55F * e;
+            this.head.xRot += 0.6F * e;
+            this.tail.xRot -= 0.4F * e;
+            this.jaw.xRot += 0.25F * Anim.envelope(peck, 0.1F, 0.04F, 0.03F, 0.1F);
+        }
+        // --- preening a flock-mate: the head turns aside and the beak nibbles
+        float preen = Anim.seconds(s.preen, s.ageInTicks);
+        if (preen >= 0.0F && preen < 2.2F) {
+            float e = Anim.envelope(preen, 0.0F, 0.25F, 1.5F, 0.4F);
+            this.head.yRot += 0.9F * e;
+            this.head.xRot += 0.35F * e;
+            this.jaw.xRot += Math.max(0.0F, Mth.sin(preen * 24.0F)) * 0.25F * e;
+            this.leftWing.zRot -= 0.15F * e;
+            this.crest.xRot -= 0.2F * e;
+        }
+        // --- roosting: fluffed up into a ball, head tucked back under a wing, legs hidden
+        if (s.roosting) {
+            this.body.xScale = this.body.zScale = 1.12F;
+            this.body.yScale = 1.06F + Mth.sin(age * 0.05F) * 0.015F;
+            this.body.y += 1.5F;
+            this.head.yRot = 2.4F;
+            this.head.xRot = 0.45F;
+            this.head.zRot = 0.2F;
+            this.jaw.xRot = 0.0F;
+            this.crest.xRot = -0.5F;
+            this.leftWing.zRot = 0.08F;
+            this.rightWing.zRot = -0.08F;
+            this.tail.xRot -= 0.2F;
+            this.leftLeg.visible = false;
+            this.rightLeg.visible = false;
+        } else {
+            this.leftLeg.visible = true;
+            this.rightLeg.visible = true;
+        }
 
         // --- hurt: crest slicked back, wings jolt open
         if (s.hasRedOverlay) {

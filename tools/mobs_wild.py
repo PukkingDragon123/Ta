@@ -227,6 +227,7 @@ def stomper() -> Model:
         'eye2': '#c3a9ec', 'eye2_d': '#8770cf',
         'nail': '#e3ddcc', 'nail_d': '#b3ab96', 'stone': '#c9d3e8', 'stone_d': '#93a0bf', 'hole': '#0c1a24', 'chrome': '#a8fbff',
         'trunk': '#f37d8a', 'trunk_l': '#ffa0ab', 'trunk_d': '#d65866', 'ring': '#43bcc4', 'ring_d': '#29889a', 'plant': '#50c8bb',
+        'drum': '#b0643c', 'drum_l': '#c98154', 'drum_d': '#8a4a2a', 'drumhead': '#fbeedb', 'drumhead_d': '#e2cfb3',
     }
     m = Model('stomper', (256, 256), pal, {'stomper': {}}, res=2, expressions=EXPRS)
     skin = mc('skin', clusters=0.35, spots=0.18, accent='spot')
@@ -278,6 +279,21 @@ def stomper() -> Model:
     for i, (tex, px, pz, w, h) in enumerate((('coral_fern', -13, -15, 8, 8), ('dreambloom', 13, -14, 7, 8), ('lullaby_bell', -13, 15, 7, 8),
                                             ('coral_bush', 13, 14, 8, 8))):
         plant(body, f'body_plant_{i}', (px, -20, pz), tex, w, h, rot=(0, 0.9 * i + 0.3, 0))
+    # the baby's little drum, strapped on its rump (StomperModel shows it only on babies, who tap it
+    # with their tail for their owner)
+    drum = body.part('baby_drum', pivot=(0, -20, 14))
+    zig = ''.join('Z' if (i % 4) in (0, 1) else '.' for i in range(28))
+    zag = ''.join('Z' if (i % 4) in (2, 3) else '.' for i in range(28))
+    drum_side = mc('drum', clusters=0.2, hd=True, map=['RRRRRRRRRRRRRRRRRRRRRRRRRRRR', 'rrrrrrrrrrrrrrrrrrrrrrrrrrrr', zig, zag, zig, zag, '................................',
+                                                      'rrrrrrrrrrrrrrrrrrrrrrrrrrrr', 'RRRRRRRRRRRRRRRRRRRRRRRRRRRR', '............................'],
+                   keys={'R': 'ring', 'r': 'ring_d', 'Z': 'teeth'})
+    drum.cube((-7, -5, -4), (14, 5, 8), **mc('drum', clusters=0.2), faces={
+        'up': mc('drumhead', clusters=0.0, rim=False, hd=True, map=put(blank(28, 16), 9, 5, ['..dddddd..', '.d......d.', '.d......d.', '..dddddd..']),
+                 keys={'d': 'drumhead_d'}),
+        'north': drum_side, 'south': drum_side,
+        'east': mc('drum', clusters=0.2, hd=True, map=[r[:16] for r in drum_side['map']], keys=drum_side['keys']),
+        'west': mc('drum', clusters=0.2, hd=True, map=[r[:16] for r in drum_side['map']], keys=drum_side['keys']),
+        'down': dict(skip=True)})
     # tail with a mossy tuft
     tail = body.part('tail', pivot=(0, -15, 18), rot=(-0.7, 0, 0))
     tail.cube((-1.5, -1.5, 0), (3, 3, 7), **mc('skin', clusters=0.3))
@@ -390,7 +406,7 @@ def sky_whale() -> Model:
         'tip': '#2ef2e2', 'snout': '#f59ab8', 'snout_l': '#ffc0d6', 'snout_d': '#d06f94', 'nostril': '#5a2f4a',
         'sculk': '#12303a', 'sculk_l': '#1f5a66', 'glow': '#3ff5e6', 'glow2': '#ffd6f5', 'eye': '#1a1830', 'eye_hi': '#ffffff',
         'iris': '#3fd8e8', 'iris_d': '#2a8ac8', 'lid': '#8fb3ec', 'lid_d': '#3f4f8a', 'mouth': '#4a2a5a', 'tongue': '#f59ab8',
-        'fin': '#9cc3f3', 'fin_l': '#c8e0ff', 'fin_d': '#5d86cc', 'ring': '#ffe08a', 'ear_in': '#ffb8d6', 'moss': '#50c8bb', 'plant': '#50c8bb',
+        'fin': '#9cc3f3', 'fin_l': '#c8e0ff', 'fin_d': '#5d86cc', 'ring': '#ffe08a', 'baleen': '#e9dcc0', 'baleen_d': '#b8a684', 'ear_in': '#ffb8d6', 'moss': '#50c8bb', 'plant': '#50c8bb',
     }
     m = Model('sky_whale', (256, 256), pal, {'sky_whale': {}}, res=2, expressions=EXPRS)
     hide = mc('hide', clusters=0.2)
@@ -410,9 +426,14 @@ def sky_whale() -> Model:
         'north': mc('hide', clusters=0.2, bands=[(16, 'belly')], image=moss_img, image_rows=2),
         'south': mc('hide', clusters=0.2, bands=[(16, 'belly')], image=moss_img, image_rows=2),
     })
-    # throat grooves under the chin, like a real whale's
-    body.cube((-13, 12, -20), (26, 2, 30), **mc('belly', clusters=0.0, rim=False), faces={
-        'down': mc('belly', clusters=0.0, rim=False, map=[''.join('d' if i % 4 == 1 else '.' for i in range(26))] * 30, keys={'d': 'belly_d'})})
+    # long belly grooves from the chin to the navel, like a rorqual's: they balloon out when it sings
+    pleats = body.part('throat_pleats', pivot=(0, 12, -6))
+    groove = [''.join('d' if i % 4 == 1 else ('l' if i % 4 == 2 else '.') for i in range(52))] * 64
+    pleats.cube((-13, -1, -15), (26, 3, 32), **mc('belly', clusters=0.0, rim=False), faces={
+        'down': mc('belly', clusters=0.0, rim=False, hd=True, map=groove, keys={'d': 'belly_d', 'l': 'belly_l'}),
+        'east': mc('belly', clusters=0.0, rim=False, hd=True, map=['d.' * 32] * 6, keys={'d': 'belly_d'}),
+        'west': mc('belly', clusters=0.0, rim=False, hd=True, map=['d.' * 32] * 6, keys={'d': 'belly_d'}),
+        'up': dict(skip=True)})
     # big cloud-puffs of fur on its mossy back
     for i, (x, z, w, h, d) in enumerate(((-6, -14, 14, 6, 12), (5, 0, 16, 7, 12), (-4, 13, 12, 6, 10))):
         tuft = body.part(f'back_tuft_{i}', pivot=(x, -14, z))
@@ -422,7 +443,9 @@ def sky_whale() -> Model:
         tuft.cube((1, -h - 1, -2), (w / 2 - 2, 2, d / 2), **fur, fringe=1)
     # a meadow of blooms in the moss
     meadow = [('dreambloom', 10, -14, -15, 9, 10), ('lullaby_bell', -12, -14, -4, 9, 10), ('soulpetal', 11, -14, 10, 8, 9),
-              ('echo_orchid', -11, -14, 9, 8, 9), ('dreambloom', -1, -14, 19, 8, 9), ('glimmer_sprouts', 12, -14, -3, 8, 8)]
+              ('echo_orchid', -11, -14, 9, 8, 9), ('dreambloom', -1, -14, 19, 8, 9), ('glimmer_sprouts', 12, -14, -3, 8, 8),
+              ('lullaby_bell', 3, -14, -19, 8, 9), ('soulpetal', -13, -14, -16, 8, 8), ('glimmer_sprouts', -6, -14, 3, 7, 7),
+              ('dreambloom', 13, -14, 18, 7, 8)]
     for i, (tex, px, py, pz, w, h) in enumerate(meadow):
         plant(body, f'back_flower_{i}', (px, py, pz), tex, w, h, rot=(0, 0.7 * i, 0),
               glow_bright=230 if tex in ('glimmer_sprouts', 'echo_orchid', 'soulpetal') else None)
@@ -458,6 +481,15 @@ def sky_whale() -> Model:
         'north': mc('ring', clusters=0.0, rim=False, glow=True, hd=True, map=rows_of(12, 12, hoop), keys={'R': 'ring'}),
         'south': mc('ring', clusters=0.0, rim=False, glow=True, hd=True, map=rows_of(12, 12, hoop), keys={'R': 'ring'}),
     })
+    baleen_side = ['BbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBb', 'BbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBb',
+                   'B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_', 'B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_B_',
+                   '_B___B___B___B___B___B___B___B___B___B___B___B___B', '__________________________________________________']
+    baleen = head.part('baleen', pivot=(0, 8, -1))
+    baleen.cube((-12.5, 0, -17), (25, 3, 16), **mc('baleen', clusters=0.0, rim=False), faces={
+        'north': mc('baleen', clusters=0.0, rim=False, hd=True, map=baleen_side, keys={'B': 'baleen', 'b': 'baleen_d'}),
+        'east': mc('baleen', clusters=0.0, rim=False, hd=True, map=[r[:32] for r in baleen_side], keys={'B': 'baleen', 'b': 'baleen_d'}),
+        'west': mc('baleen', clusters=0.0, rim=False, hd=True, map=[r[:32] for r in baleen_side], keys={'B': 'baleen', 'b': 'baleen_d'}),
+        'up': dict(skip=True), 'south': dict(skip=True), 'down': dict(skip=True)})
     jaw = head.part('jaw', pivot=(0, 8, 0))
     jaw.cube((-14, 0, -19), (28, 5, 19), **mc('belly', clusters=0.2), faces={
         'up': mc('mouth', clusters=0.0, rim=False, hd=True, map=put(blank(56, 38), 14, 8, [
@@ -503,6 +535,15 @@ def sky_whale() -> Model:
                                                          'east': mc('hide', clusters=0.2, bands=[(13, 'belly')], map=swirls(12, 20, 13), keys=sk,
                                                                     glow_keys='gG')})
     t1.cube((-6, -15, 0), (12, 6, 10), **fur, fringe=2)
+    dorsal = t1.part('dorsal_fin', pivot=(0, -14, 6), rot=(-0.55, 0, 0))
+    dorsal.cube((-1, -9, -3), (2, 9, 9), **mc('fin', clusters=0.2), faces={
+        'east': mc('fin', clusters=0.2, ribs=3, accent='fin_d', alpha='membrane', edge='outer', edge_depth=2, scallop=3),
+        'west': mc('fin', clusters=0.2, ribs=3, accent='fin_d', alpha='membrane', edge='outer', edge_depth=2, scallop=3)})
+    for side, sx in (('left', 1), ('right', -1)):
+        sf = t1.part(f'{side}_tail_fin', pivot=(12 * sx, 6, 6), rot=(0, 0, 0.45 * sx))
+        sf.cube((0 if sx > 0 else -9, -0.5, -3), (9, 1, 7), **mc('fin', clusters=0.2), faces={
+            'up': mc('fin', clusters=0.2, ribs=3, accent='fin_d', alpha='membrane', edge='outer', edge_depth=2, scallop=3),
+            'down': mc('belly', clusters=0.2, alpha='membrane', edge='outer', edge_depth=2, scallop=3)})
     t2 = t1.part('tail2', pivot=(0, 0, 12))
     t2.cube((-8, -7, 0), (16, 14, 10), **hide, faces={'down': mc('belly', clusters=0.25),
                                                        'west': mc('hide', clusters=0.2, bands=[(9, 'belly')]),
@@ -510,9 +551,10 @@ def sky_whale() -> Model:
     t3 = t2.part('tail3', pivot=(0, 0, 10))
     t3.cube((-5, -4, 0), (10, 8, 8), **hide, faces={'down': mc('belly', clusters=0.25)})
     fluke = t3.part('flukes', pivot=(0, 0, 7))
-    fluke.cube((-21, -1.5, -2), (42, 3, 15), **mc('fin', clusters=0.2), faces={
+    fluke.cube((-25, -1.5, -2), (50, 3, 18), **mc('fin', clusters=0.2), faces={
         'up': mc('fin', clusters=0.2, ribs=5, accent='fin_d', alpha='membrane', edge='bottom', edge_depth=3, scallop=7,
-                 map=put(blank(42, 15), 4, 5, ['g.....g.....g.....g.....g.....g', '...g.....g.....g.....g.....g...']), keys=sk, glow_keys='g'),
+                 map=put(blank(50, 18), 6, 6, ['g.....g.....g.....g.....g.....g.....g', '...g.....g.....g.....g.....g.....g...']), keys=sk,
+                 glow_keys='g'),
         'down': mc('belly', clusters=0.2, alpha='membrane', edge='bottom', edge_depth=3, scallop=7),
     })
     fluke.cube((-4, -4, -1), (8, 6, 7), **pink, fringe=1)

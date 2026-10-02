@@ -11,6 +11,12 @@ import net.minecraft.util.Mth;
  * Stomper: a heavy, rolling elephant gait with squash on every footfall, a breathing hump whose
  * spiracles pop when they puff, a throat sac that croaks and swells, and a four-part trunk that
  * sways, sips, rears up to spray, slaps and waves about when it dances.
+ *
+ * <p>Babies get their own proportions - a huge head, big eyes and ears, a short trunk, a round
+ * little body on stubby legs - and carry a drum on their rump that they tap with their tail.
+ *
+ * <p>Every part only ever rotates or scales about its own pivot (only the root body is moved), and
+ * the jaw's swing is capped, so nothing comes loose however many animations stack up.
  */
 public class StomperModel extends EntityModel<StomperRenderState> {
     private static final float PI = (float) Math.PI;
@@ -18,6 +24,9 @@ public class StomperModel extends EntityModel<StomperRenderState> {
     private final ModelPart hump;
     private final ModelPart[] spiracles = new ModelPart[3];
     private final ModelPart tail;
+    private final ModelPart drum;
+    private final ModelPart leftEye;
+    private final ModelPart rightEye;
     private final ModelPart head;
     private final ModelPart jaw;
     private final ModelPart throat;
@@ -41,6 +50,9 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             this.spiracles[i] = this.hump.getChild("spiracle_" + i);
         }
         this.tail = this.body.getChild("tail");
+        this.drum = this.body.getChild("baby_drum");
+        this.leftEye = this.head().getChild("left_eye");
+        this.rightEye = this.head().getChild("right_eye");
         this.head = this.body.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.throat = this.jaw.getChild("throat");
@@ -68,6 +80,10 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             this.legs[i] = this.body.getChild(names[i] + "_leg");
             this.feet[i] = this.legs[i].getChild(names[i] + "_foot");
         }
+    }
+
+    private ModelPart head() {
+        return this.body.getChild("head");
     }
 
     @Override
@@ -229,7 +245,7 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             }
             this.tail.yRot += Mth.sin(beat) * 0.6F * d;
             sac = Math.max(sac, Math.max(0.0F, Mth.sin(beat)) * 0.8F * d);
-            this.jaw.xRot += Math.max(0.0F, Mth.sin(beat * 0.5F)) * 0.25F * d;
+            this.jaw.xRot += Math.max(0.0F, Mth.sin(beat * 0.5F)) * 0.2F * d;
         }
 
         // --- the stomp: rear up on the hind legs, then slam down
@@ -270,6 +286,10 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             this.jaw.xRot += 0.3F;
         }
 
+        // stacked animations (dance + stomp + hurt) used to swing the jaw far past its hinge, so it
+        // looked like it fell off: keep it on the hinge, between shut and a wide gape
+        this.jaw.xRot = Mth.clamp(this.jaw.xRot, 0.0F, 0.7F);
+
         // --- death: keels over onto its side, legs stiff
         float roll = Anim.smooth(s.dying / 14.0F);
         if (roll > 0.0F) {
@@ -303,9 +323,48 @@ public class StomperModel extends EntityModel<StomperRenderState> {
             }
         }
 
-        // babies have big heads
+        // --- babies: a huge head with big eyes and ears, a short trunk, a round body on stubby legs,
+        // a tiny garden and a drum on the rump
+        this.drum.visible = s.isBaby;
         if (s.isBaby) {
-            this.head.xScale = this.head.yScale = this.head.zScale = 1.35F;
+            this.head.xScale = this.head.yScale = this.head.zScale = 1.55F;
+            this.leftEye.xScale = this.leftEye.yScale = this.leftEye.zScale = 1.3F;
+            this.rightEye.xScale = this.rightEye.yScale = this.rightEye.zScale = 1.3F;
+            this.leftEar.xScale = this.leftEar.yScale = this.leftEar.zScale = 1.35F;
+            this.rightEar.xScale = this.rightEar.yScale = this.rightEar.zScale = 1.35F;
+            this.trunk[0].xScale = this.trunk[0].yScale = this.trunk[0].zScale = 0.7F;
+            this.hump.yScale *= 0.6F;
+            this.body.zScale *= 0.85F;
+            this.body.xScale *= 1.05F;
+            for (int i = 0; i < 4; i++) {
+                this.legs[i].yScale = 0.62F;
+            }
+            for (int i = 0; i < this.plants.length; i++) {
+                this.plants[i].xScale *= 0.7F;
+                this.plants[i].yScale *= 0.7F;
+                this.plants[i].zScale *= 0.7F;
+            }
+            // the shorter legs would leave it floating: it sits that much lower
+            if (s.dying <= 0.0F && !s.sitting) {
+                this.body.y += 4.9F;
+            }
+            // the tail swings up over its back and taps the drum on every beat
+            float drumT = Anim.seconds(s.drum, s.ageInTicks);
+            float rest = 0.9F;
+            if (drumT >= 0.0F && drumT < 2.0F) {
+                float hold = Anim.envelope(drumT, 0.0F, 0.05F, 0.3F, 1.2F);
+                float tap = Anim.envelope(drumT, 0.0F, 0.04F, 0.0F, 0.18F);
+                this.tail.xRot = Mth.lerp(hold, this.tail.xRot, 2.1F - 0.25F * tap);
+                this.tail.yRot = Mth.lerp(hold, this.tail.yRot, (s.drumBeats % 2 == 0 ? 0.12F : -0.12F));
+                this.drum.yScale = 1.0F - 0.12F * tap;
+                this.drum.xScale = this.drum.zScale = 1.0F + 0.06F * tap;
+                this.head.zRot += (s.drumBeats % 2 == 0 ? 0.08F : -0.08F) * hold;
+                this.head.xRot -= 0.1F * tap;
+                this.leftEar.zRot += 0.3F * tap;
+                this.rightEar.zRot -= 0.3F * tap;
+                rest = 0.0F;
+            }
+            this.drum.xRot = Mth.sin(s.walkAnimationPos * 0.9F) * 0.06F * walk * rest;
         }
         boolean blink = s.expression == Expression.BLINK || s.expression == Expression.SLEEP;
         this.leftEyelid.visible = blink;

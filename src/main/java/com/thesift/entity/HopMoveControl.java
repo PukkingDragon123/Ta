@@ -14,6 +14,15 @@ public class HopMoveControl<T extends Mob & HopMoveControl.Hopper> extends MoveC
         int hopDelay();
 
         void onHop();
+
+        /** Ticks before a hop at which {@link #onWindup} is called (0 for none). */
+        default int windup() {
+            return 0;
+        }
+
+        /** The hop is about to happen: crouch for it (the anticipation of the jump). */
+        default void onWindup() {
+        }
     }
 
     private int jumpDelay;
@@ -42,6 +51,9 @@ public class HopMoveControl<T extends Mob & HopMoveControl.Hopper> extends MoveC
         this.mob.yBodyRot = this.mob.getYRot();
         float speed = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
         if (this.mob.onGround()) {
+            if (this.jumpDelay > 0 && this.jumpDelay == this.mob.windup()) {
+                this.mob.onWindup();
+            }
             if (this.jumpDelay-- <= 0) {
                 this.jumpDelay = this.mob.hopDelay();
                 this.mob.setSpeed(speed);
