@@ -167,6 +167,7 @@ public final class CodexEntries {
         l.add(mob(DICTATOR, "thumpling", ModEntities.THUMPLING, attack));
         l.add(mob(DICTATOR, "whistling", ModEntities.WHISTLING, attack));
         l.add(mob(DICTATOR, "strumling", ModEntities.STRUMLING, attack));
+        l.add(mob(DICTATOR, "sculk_parasite", ModEntities.SCULK_PARASITE, attack));
         l.add(thing(DICTATOR, "stage", ModItems.INSTRUMENT_ALTAR));
         l.add(thing(DICTATOR, "sculk_corruption", () -> Items.SCULK_VEIN));
         l.add(thing(DICTATOR, "encore_sigil", ModItems.ENCORE_SIGIL));

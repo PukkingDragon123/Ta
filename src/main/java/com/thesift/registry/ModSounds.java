@@ -97,6 +97,13 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> STRUMLING_AMBIENT = reg("entity.strumling.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> STRUMLING_HURT = reg("entity.strumling.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> STRUMLING_DEATH = reg("entity.strumling.death");
+    // ---- the Sculk Parasite
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PARASITE_AMBIENT = reg("entity.sculk_parasite.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PARASITE_HURT = reg("entity.sculk_parasite.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PARASITE_DEATH = reg("entity.sculk_parasite.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PARASITE_STEP = reg("entity.sculk_parasite.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PARASITE_HISS = reg("entity.sculk_parasite.hiss");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PARASITE_BURST = reg("entity.sculk_parasite.burst");
     public static final DeferredHolder<SoundEvent, SoundEvent> CONDUCTOR_MASK_RISE = reg("entity.conductor_mask.rise");
     public static final DeferredHolder<SoundEvent, SoundEvent> CONDUCTOR_MASK_TRANSFORM = reg("entity.conductor_mask.transform");
     public static final DeferredHolder<SoundEvent, SoundEvent> CONGA_DRUM_BOOM = reg("item.conga_drum.boom");

@@ -13,6 +13,7 @@ public final class ModModelLayers {
     public static final ModelLayerLocation THUMPLING = layer("thumpling");
     public static final ModelLayerLocation WHISTLING = layer("whistling");
     public static final ModelLayerLocation STRUMLING = layer("strumling");
+    public static final ModelLayerLocation SCULK_PARASITE = layer("sculk_parasite");
     public static final ModelLayerLocation CONDUCTOR_MASK = layer("conductor_mask");
     public static final ModelLayerLocation SLUMBLER = layer("slumbler");
     public static final ModelLayerLocation SIFTER = layer("sifter");

@@ -49,6 +49,13 @@ WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 9, 'kazoo_fish': 
 
 PREVIEW_SCALE = {'enchoer': 7, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'whistler': 4, 'strummer': 4, 'thumpling': 12,
                  'whistling': 12, 'strumling': 12, 'conductor_mask': 10, **WILD_SCALE}
+# the Sculk Parasite (tools/parasite.py)
+# 'coil' is the wind-up of its lunge, as SculkParasiteModel poses it: reared up, folded into a zigzag, sting raised, jaws open
+POSES['sculk_parasite'] = {'rest': Pose(), 'coil': Pose(
+    head={'rot': (-0.45, 0, 0), 'pos': (0, -3, 1.5)}, segment_0={'rot': (-0.3, 0, 0)}, segment_2={'rot': (0.75, 0.25, 0)},
+    **{f'segment_{i}': {'rot': (0, 0.5 if i % 2 == 0 else -0.5, 0)} for i in range(3, 7)}, **{f'spine_{i}': {'rot': (0.35, 0, 0)} for i in range(7)},
+    left_mandible={'rot': (0, -0.45, 0)}, right_mandible={'rot': (0, 0.45, 0)}, tail={'rot': (0.45, 0, 0)}, stinger={'rot': (0.35, 0, 0)})}
+PREVIEW_SCALE['sculk_parasite'] = 14
 ONLY = [a for a in sys.argv[1:] if not a.startswith('-')]
 
 

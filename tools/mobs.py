@@ -783,3 +783,8 @@ ALL.update(bosses.ALL)
 import mobs_wild  # noqa: E402
 
 ALL.update(mobs_wild.ALL)
+
+# the Sculk Parasite lives in tools/parasite.py
+import parasite  # noqa: E402
+
+ALL.update(parasite.ALL)

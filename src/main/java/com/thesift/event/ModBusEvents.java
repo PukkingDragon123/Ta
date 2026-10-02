@@ -54,6 +54,7 @@ public final class ModBusEvents {
         event.put(ModEntities.THUMPLING.get(), Thumpling.createAttributes().build());
         event.put(ModEntities.WHISTLING.get(), Whistling.createAttributes().build());
         event.put(ModEntities.STRUMLING.get(), Strumling.createAttributes().build());
+        event.put(ModEntities.SCULK_PARASITE.get(), com.thesift.entity.boss.SculkParasite.createAttributes().build());
         // the wild creatures
         event.put(ModEntities.STOMPER.get(), com.thesift.entity.Stomper.createAttributes().build());
         event.put(ModEntities.FANFARE_EEL.get(), com.thesift.entity.FanfareEel.createAttributes().build());

@@ -199,6 +199,7 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> KAZOO_FISH_SPAWN_EGG = ITEMS.registerItem("kazoo_fish_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.KAZOO_FISH.get()));
     public static final DeferredItem<SpawnEggItem> TUBAFISH_SPAWN_EGG = ITEMS.registerItem("tubafish_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.TUBAFISH.get()));
     public static final DeferredItem<SpawnEggItem> SKY_WHALE_SPAWN_EGG = ITEMS.registerItem("sky_whale_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SKY_WHALE.get()));
+    public static final DeferredItem<SpawnEggItem> SCULK_PARASITE_SPAWN_EGG = ITEMS.registerItem("sculk_parasite_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SCULK_PARASITE.get()));
     public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<StaffItem> CONDUCTORS_STAFF = ITEMS.registerItem("conductors_staff", StaffItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<CongaDrumItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", CongaDrumItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());

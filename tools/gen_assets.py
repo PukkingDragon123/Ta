@@ -1250,6 +1250,33 @@ def gen_sounds():
 # --------------------------------------------------------------------------- misc tags & data
 
 
+# --------------------------------------------------------------------------- the Sculk Parasite
+SOUNDS.update({
+    'entity.sculk_parasite.ambient': [('mob/silverfish/say1', 0.6, 0.7), ('mob/silverfish/say3', 0.6, 0.65), ('mob/warden/tendril_clicks_2', 0.5, 1.6),
+                                      ('block/sculk_sensor/sculk_clicking3', 0.5, 1.5)],
+    'entity.sculk_parasite.hurt': [('mob/silverfish/hit1', 0.8, 0.7), ('mob/silverfish/hit2', 0.8, 0.75), ('block/sculk/break2', 0.6, 1.4)],
+    'entity.sculk_parasite.death': [('mob/silverfish/kill', 0.9, 0.6), ('block/sculk/break3', 1.0, 1.2)],
+    'entity.sculk_parasite.step': [('mob/silverfish/step1', 0.25, 1.4), ('mob/silverfish/step3', 0.25, 1.5), ('block/sculk/step2', 0.3, 1.6)],
+    'entity.sculk_parasite.hiss': [('mob/warden/listening_angry_2', 0.6, 1.9), ('block/sculk_sensor/sculk_clicking5', 0.8, 1.7),
+                                   ('mob/warden/tendril_clicks_4', 0.7, 1.8)],
+    'entity.sculk_parasite.burst': [('block/sculk/charge2', 1.0, 1.3), ('block/sculk_catalyst/break3', 1.0, 1.1), ('mob/silverfish/kill', 0.7, 0.5)],
+})
+SUBTITLES.update({
+    'entity.sculk_parasite.ambient': 'Sculk Parasite clicks', 'entity.sculk_parasite.hurt': 'Sculk Parasite hurts',
+    'entity.sculk_parasite.death': 'Sculk Parasite dies', 'entity.sculk_parasite.step': 'Something skitters',
+    'entity.sculk_parasite.hiss': 'Sculk Parasite coils to strike', 'entity.sculk_parasite.burst': 'Sculk Parasite bursts',
+})
+
+
+def gen_parasite():
+    """Name and Codex page of the Sculk Parasite."""
+    LANG.update({
+        f'entity.{NS}.sculk_parasite': 'Sculk Parasite',
+        f'codex.{NS}.sculk_parasite.title': 'Sculk Parasite', f'codex.{NS}.sculk_parasite.tagline': 'One bite, then it pops',
+        f'codex.{NS}.sculk_parasite.body': "A Warden-kin centipede the size of your arm: bone plates, a glowing sting and far too many legs. It skitters up walls, coils and lunges - and the moment it bites, it bursts, leaving Sculk Corruption II in you. Every extra parasite that gets you deepens it a level. Squash them before they reach you: they only take a couple of hits.",
+    })
+
+
 def gen_misc_tags():
     for b in ['sift_grass_block', 'coral_turf', 'sift_soil', 'lumen_moss_block']:
         tag('block', f'{NS}:sift_plantable', rl(b))
@@ -1354,6 +1381,7 @@ def generate():
     gen_misc_tags()
     gen_transformers()
     gen_wild_creatures()
+    gen_parasite()
 
 
 def finalize():

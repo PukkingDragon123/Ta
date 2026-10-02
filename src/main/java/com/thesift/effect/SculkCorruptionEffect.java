@@ -21,7 +21,7 @@ public class SculkCorruptionEffect extends MobEffect {
      * (amplifier), every later dose deepens it by one more level, up to V; the time left never
      * shortens.
      */
-    public static void stack(LivingEntity target, int firstAmplifier, int duration, @org.jspecify.annotations.Nullable net.minecraft.world.entity.Entity source) {
+    public static void stack(LivingEntity target, int firstAmplifier, int duration, net.minecraft.world.entity.@org.jspecify.annotations.Nullable Entity source) {
         MobEffectInstance had = target.getEffect(com.thesift.registry.ModEffects.SCULK_CORRUPTION);
         int amp = had == null ? firstAmplifier : Math.min(MAX_AMPLIFIER, had.getAmplifier() + 1);
         int time = had == null ? duration : Math.max(duration, had.getDuration()) + 40;

@@ -97,6 +97,8 @@ def wild_creature_loot():
                                           pool([item('minecraft:bone_meal')], condition=chance(0.05))])
     table('entity', 'entities/fanfare_eel', [pool([item('minecraft:gold_nugget', count=(1, 3), extra=[LOOTING])]),
                                              pool([item('minecraft:copper_ingot', count=(0, 1), extra=[LOOTING])])])
+    # the Sculk Parasite bursts when it bites: nothing is left of it
+    table('entity', 'entities/sculk_parasite', [])
     table('entity', 'entities/sky_whale', [pool([item('star_shard', count=(2, 4), extra=[LOOTING])]),
                                            pool([item('minecraft:white_wool', count=(2, 5))])])
 

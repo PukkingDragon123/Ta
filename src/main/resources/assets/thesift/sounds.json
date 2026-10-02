@@ -2479,5 +2479,125 @@
       }
     ],
     "subtitle": "subtitles.thesift.entity.sky_whale.flap"
+  },
+  "entity.sculk_parasite.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/say1",
+        "volume": 0.6,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:mob/silverfish/say3",
+        "volume": 0.6,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:mob/warden/tendril_clicks_2",
+        "volume": 0.5,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:block/sculk_sensor/sculk_clicking3",
+        "volume": 0.5,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_parasite.ambient"
+  },
+  "entity.sculk_parasite.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/hit1",
+        "volume": 0.8,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:mob/silverfish/hit2",
+        "volume": 0.8,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:block/sculk/break2",
+        "volume": 0.6,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_parasite.hurt"
+  },
+  "entity.sculk_parasite.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/kill",
+        "volume": 0.9,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:block/sculk/break3",
+        "volume": 1.0,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_parasite.death"
+  },
+  "entity.sculk_parasite.step": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/step1",
+        "volume": 0.25,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:mob/silverfish/step3",
+        "volume": 0.25,
+        "pitch": 1.5
+      },
+      {
+        "name": "minecraft:block/sculk/step2",
+        "volume": 0.3,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_parasite.step"
+  },
+  "entity.sculk_parasite.hiss": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/warden/listening_angry_2",
+        "volume": 0.6,
+        "pitch": 1.9
+      },
+      {
+        "name": "minecraft:block/sculk_sensor/sculk_clicking5",
+        "volume": 0.8,
+        "pitch": 1.7
+      },
+      {
+        "name": "minecraft:mob/warden/tendril_clicks_4",
+        "volume": 0.7,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_parasite.hiss"
+  },
+  "entity.sculk_parasite.burst": {
+    "sounds": [
+      {
+        "name": "minecraft:block/sculk/charge2",
+        "volume": 1.0,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block/sculk_catalyst/break3",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/silverfish/kill",
+        "volume": 0.7,
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_parasite.burst"
   }
 }

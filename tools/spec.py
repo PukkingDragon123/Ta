@@ -258,6 +258,7 @@ for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "sif
             "whistling", "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
+item("sculk_parasite_spawn_egg", cls="egg:sculk_parasite", tab="eggs", model="generated")
 item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Baton")
 item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",

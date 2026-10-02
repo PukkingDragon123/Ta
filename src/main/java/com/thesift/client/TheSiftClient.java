@@ -88,6 +88,7 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.THUMPLING, ModelGeometry::thumpling);
         event.registerLayerDefinition(ModModelLayers.WHISTLING, ModelGeometry::whistling);
         event.registerLayerDefinition(ModModelLayers.STRUMLING, ModelGeometry::strumling);
+        event.registerLayerDefinition(ModModelLayers.SCULK_PARASITE, ModelGeometry::sculk_parasite);
         event.registerLayerDefinition(ModModelLayers.CONDUCTOR_MASK, ModelGeometry::conductor_mask);
         event.registerLayerDefinition(ModModelLayers.SLUMBLER, ModelGeometry::slumbler);
         event.registerLayerDefinition(ModModelLayers.SIFTER, ModelGeometry::sifter);
@@ -120,6 +121,8 @@ public class TheSiftClient {
                 c -> new MinionRenderer<>(c, new WhistlingModel(c.bakeLayer(ModModelLayers.WHISTLING)), "whistling", 0.35F));
         event.registerEntityRenderer(ModEntities.STRUMLING.get(),
                 c -> new MinionRenderer<>(c, new StrumlingModel(c.bakeLayer(ModModelLayers.STRUMLING)), "strumling", 0.4F));
+        event.registerEntityRenderer(ModEntities.SCULK_PARASITE.get(), c -> new MinionRenderer<>(c,
+                new com.thesift.client.model.boss.SculkParasiteModel(c.bakeLayer(ModModelLayers.SCULK_PARASITE)), "sculk_parasite", 0.35F));
         event.registerEntityRenderer(ModEntities.CONDUCTOR_MASK.get(), com.thesift.client.renderer.boss.ConductorMaskRenderer::new);
         event.registerEntityRenderer(ModEntities.WEB_SHOT.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.2F, false));
         event.registerEntityRenderer(ModEntities.SLUMBLER.get(), SlumblerRenderer::new);
