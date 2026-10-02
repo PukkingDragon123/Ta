@@ -1704,6 +1704,7 @@ def all_items():
     import siege  # the Thumper's arena: the cannonball
     out.update(siege.items())
     out.update(__import__('caravans').items())  # C: prism gem and armour, Caravan egg
+    out.update(__import__('sea_art').items())  # sea & sky: fish meats, sculk bladder, sushi, Gobbler egg
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:tubafish",
+    "minecraft:dried_kelp",
+    "#thesift:glowkelp"
+  ],
+  "result": {
+    "count": 2,
+    "id": "thesift:tubafish_sushi"
+  }
+}

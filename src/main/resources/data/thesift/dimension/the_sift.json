@@ -10,14 +10,14 @@
           "parameters": {
             "temperature": [
               -1.0,
-              1.0
+              0.1
             ],
             "humidity": [
               -1.0,
               1.0
             ],
             "continentalness": [
-              -1.2,
+              -0.455,
               -0.19
             ],
             "erosion": [
@@ -246,6 +246,90 @@
             "depth": [
               0.25,
               0.85
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "thesift:magic_kelp_forest",
+          "parameters": {
+            "temperature": [
+              0.1,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.2,
+              -0.19
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": 0.0,
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "thesift:deep_dark_ocean",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              0.1
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.2,
+              -0.455
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": 0.0,
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "thesift:sound_garden",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              -2.0,
+              -0.85
             ],
             "weirdness": [
               -1.0,

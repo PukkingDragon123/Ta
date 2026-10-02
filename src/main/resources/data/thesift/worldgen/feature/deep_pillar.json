@@ -1,0 +1,24 @@
+{
+  "type": "thesift:jagged_pillar",
+  "body": {
+    "id": "thesift:hushslate",
+    "properties": {
+      "axis": "y"
+    }
+  },
+  "accent": {
+    "id": "thesift:cobbled_hushslate"
+  },
+  "coat": {
+    "id": "minecraft:sculk"
+  },
+  "glow": {
+    "id": "minecraft:sculk_catalyst",
+    "properties": {
+      "bloom": "false"
+    }
+  },
+  "min_height": 34,
+  "max_height": 96,
+  "radius": 5.5
+}

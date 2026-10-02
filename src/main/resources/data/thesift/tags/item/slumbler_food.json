@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "thesift:tubafish",
+    "thesift:fanfare_eel",
+    "thesift:gobbler_fillet",
     "thesift:glowcap",
     "minecraft:tropical_fish",
     "minecraft:cod",

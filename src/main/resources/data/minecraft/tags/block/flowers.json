@@ -1,12 +1,14 @@
 {
   "replace": false,
   "values": [
+    "thesift:organ_reed",
     "thesift:lullaby_bell",
     "thesift:dreambloom",
     "thesift:soulpetal",
     "thesift:nebula_iris",
     "thesift:hummingbloom",
     "thesift:choir_lily",
-    "thesift:echo_orchid"
+    "thesift:echo_orchid",
+    "thesift:chime_bell"
   ]
 }

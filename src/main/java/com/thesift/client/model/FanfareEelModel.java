@@ -18,6 +18,11 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart rightFin;
     private final ModelPart[] segments = new ModelPart[5];
     private final ModelPart[] bellFins = new ModelPart[4];
+    private final ModelPart tailFin;
+    private final ModelPart leftGill;
+    private final ModelPart rightGill;
+    private final ModelPart leftWhisker;
+    private final ModelPart rightWhisker;
 
     public FanfareEelModel(ModelPart root) {
         super(root);
@@ -35,6 +40,11 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
             p = p.getChild("segment_" + i);
             this.segments[i] = p;
         }
+        this.tailFin = this.segments[4].getChild("tail_fin");
+        this.leftGill = this.head.getChild("left_gill");
+        this.rightGill = this.head.getChild("right_gill");
+        this.leftWhisker = this.pipe.getChild("left_whisker");
+        this.rightWhisker = this.pipe.getChild("right_whisker");
     }
 
     @Override
@@ -46,9 +56,21 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         float amp = 0.12F + effort * 0.22F;
         this.head.yRot = Mth.sin(age * speed + 0.9F) * amp * 0.35F;
         this.head.xRot = s.xRot * Anim.DEG;
+        // an anguilliform wave: it starts small behind the head and grows down the body, with a
+        // gentle vertical ripple on top so the eel never looks like a stiff zigzag
         for (int i = 0; i < 5; i++) {
-            this.segments[i].yRot = Mth.sin(age * speed - i * 0.85F) * amp * (0.7F + i * 0.18F);
+            this.segments[i].yRot = Mth.sin(age * speed - i * 0.85F) * amp * (0.55F + i * 0.22F);
+            this.segments[i].xRot = Mth.sin(age * speed * 0.5F - i * 0.6F) * 0.04F;
         }
+        this.tailFin.yRot = Mth.sin(age * speed - 5.0F * 0.85F) * amp * 1.2F;
+        float breath = Math.max(0.0F, Mth.sin(age * 0.3F));
+        this.leftGill.yRot = 0.5F + breath * 0.35F;
+        this.rightGill.yRot = -0.5F - breath * 0.35F;
+        // the bone whiskers trail behind and stream back when it speeds up
+        this.leftWhisker.yRot = 0.6F + Mth.sin(age * 0.2F) * 0.15F + effort * 0.4F;
+        this.rightWhisker.yRot = -0.6F - Mth.sin(age * 0.2F + 1.0F) * 0.15F - effort * 0.4F;
+        this.leftWhisker.xRot = 0.5F - effort * 0.3F;
+        this.rightWhisker.xRot = 0.5F - effort * 0.3F;
         this.leftFin.zRot += Mth.sin(age * 0.6F) * 0.3F;
         this.rightFin.zRot -= Mth.sin(age * 0.6F) * 0.3F;
         this.crest.yRot = Mth.sin(age * speed) * 0.1F;

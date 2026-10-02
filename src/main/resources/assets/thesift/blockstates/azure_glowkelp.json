@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "tip=false": {
+      "model": "thesift:block/azure_glowkelp"
+    },
+    "tip=true": {
+      "model": "thesift:block/azure_glowkelp_tip"
+    }
+  }
+}

@@ -314,6 +314,8 @@ def gen_block(b):
         siege.gen_cannon(bid)
     elif k == 'music_crystal':  # C: the Caravans' music crystals
         __import__('caravans').gen_crystal(bid)
+    elif k.startswith('sea_'):  # sea & sky: glowkelp, anemone, chime bell, organ reed
+        __import__('sea_sky').gen_block(sys.modules[__name__], b)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -1408,6 +1410,7 @@ def flush_tags():
 
 
 def generate():
+    __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)

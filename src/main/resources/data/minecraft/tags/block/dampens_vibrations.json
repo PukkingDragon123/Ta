@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "thesift:cloud_block",
     "thesift:lumen_moss_carpet"
   ]
 }

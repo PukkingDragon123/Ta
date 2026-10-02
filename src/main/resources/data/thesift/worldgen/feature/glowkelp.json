@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:simple_random_selector",
+  "features": [
+    {
+      "feature": "thesift:glowkelp_rose",
+      "placement": []
+    },
+    {
+      "feature": "thesift:glowkelp_azure",
+      "placement": []
+    },
+    {
+      "feature": "thesift:glowkelp_amber",
+      "placement": []
+    }
+  ]
+}

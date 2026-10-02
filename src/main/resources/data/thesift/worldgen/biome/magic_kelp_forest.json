@@ -1,0 +1,176 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.magic_kelp_forest.loop",
+      "additions": {
+        "sound": "thesift:ambient.magic_kelp_forest.additions",
+        "tick_chance": 0.0125
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 5000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 15000,
+        "min_delay": 5000,
+        "replace_current_music": true,
+        "sound": "thesift:music.magic_kelp_forest"
+      },
+      "underwater": {
+        "max_delay": 15000,
+        "min_delay": 5000,
+        "replace_current_music": true,
+        "sound": "thesift:music.magic_kelp_forest"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [
+            {
+              "type": "thesift:bulb",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 3
+            },
+            {
+              "type": "thesift:slumbler",
+              "count": 1,
+              "weight": 2
+            }
+          ],
+          "monster": [],
+          "ambient": [],
+          "water_creature": [
+            {
+              "type": "thesift:tubafish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 5
+            },
+            {
+              "type": "thesift:fanfare_eel",
+              "count": 1,
+              "weight": 2
+            },
+            {
+              "type": "minecraft:dolphin",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 1
+            }
+          ],
+          "underground_water_creature": [],
+          "water_ambient": [
+            {
+              "type": "thesift:kazoo_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 4,
+                "max_inclusive": 8
+              },
+              "weight": 16
+            },
+            {
+              "type": "minecraft:tropical_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 4,
+                "max_inclusive": 8
+              },
+              "weight": 10
+            }
+          ],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:chrome_bubble"
+          },
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.003
+        },
+        {
+          "particle": {
+            "type": "thesift:sift_note"
+          },
+          "probability": 0.0008
+        },
+        {
+          "particle": {
+            "type": "thesift:star_sparkle"
+          },
+          "probability": 0.0015
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#c7b8ff",
+    "minecraft:visual/sky_color": "#86d8ff",
+    "minecraft:visual/water_fog_color": "#1fb8c4"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.8,
+  "effects": {
+    "water_color": "#3fe6d6",
+    "grass_color": "#f59ac6",
+    "foliage_color": "#f9b3d4"
+  },
+  "features": [
+    [
+      "thesift:sea_flood"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "thesift:ore_serbim",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep"
+    ],
+    [],
+    [
+      "thesift:chrome_spring"
+    ],
+    [
+      "thesift:glowkelp",
+      "minecraft:sea_pickle",
+      "minecraft:seagrass_warm",
+      "minecraft:warm_ocean_vegetation"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.8
+}

@@ -57,6 +57,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerLayers);
         modBus.addListener(TheSiftClient::registerRenderers);
         modBus.addListener(TheSiftClient::registerParticles);
+        SeaSkyClient.register(modBus); // sea & sky: the Gobbler's model and renderer
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.thesift.client.gui.ConductorBossBar::onBossBar);
         modBus.addListener(TheSiftClient::registerFluidModels);
         modBus.addListener(ClientEffects::registerOverlays);

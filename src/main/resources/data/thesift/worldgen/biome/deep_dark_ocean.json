@@ -1,0 +1,153 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.deep_dark_ocean.loop",
+      "additions": {
+        "sound": "thesift:ambient.deep_dark_ocean.additions",
+        "tick_chance": 0.0125
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.deep_dark_ocean.mood",
+        "tick_delay": 5000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 15000,
+        "min_delay": 5000,
+        "replace_current_music": true,
+        "sound": "thesift:music.deep_dark_ocean"
+      },
+      "underwater": {
+        "max_delay": 15000,
+        "min_delay": 5000,
+        "replace_current_music": true,
+        "sound": "thesift:music.deep_dark_ocean"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [],
+          "monster": [],
+          "ambient": [],
+          "water_creature": [
+            {
+              "type": "thesift:gobbler",
+              "count": 1,
+              "weight": 4
+            },
+            {
+              "type": "thesift:fanfare_eel",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 5
+            }
+          ],
+          "underground_water_creature": [
+            {
+              "type": "minecraft:glow_squid",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 4
+              },
+              "weight": 8
+            }
+          ],
+          "water_ambient": [
+            {
+              "type": "thesift:kazoo_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 4
+              },
+              "weight": 3
+            }
+          ],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:drifting_soul"
+          },
+          "probability": 0.002
+        },
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "minecraft:sculk_soul"
+          },
+          "probability": 0.0004
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#24344a",
+    "minecraft:visual/sky_color": "#2c3e64",
+    "minecraft:visual/water_fog_color": "#03080e",
+    "minecraft:visual/water_fog_end_distance": {
+      "argument": 0.35,
+      "modifier": "multiply"
+    }
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.5,
+  "effects": {
+    "water_color": "#123a52",
+    "grass_color": "#2f8f9e",
+    "foliage_color": "#37a9b5"
+  },
+  "features": [
+    [
+      "thesift:sea_flood"
+    ],
+    [],
+    [],
+    [],
+    [
+      "thesift:deep_pillar"
+    ],
+    [],
+    [
+      "thesift:ore_serbim",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep"
+    ],
+    [
+      "minecraft:sculk_patch_deep_dark",
+      "minecraft:sculk_vein"
+    ],
+    [
+      "thesift:chrome_spring"
+    ],
+    [
+      "thesift:patch_abyss_anemone"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.3
+}

@@ -181,6 +181,28 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_CRYSTAL_CHIME = reg("block.music_crystal.chime");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_CRYSTAL_SHATTER = reg("block.music_crystal.shatter");
 
+    // ---- sea & sky (F + W): the Gobbler, and the music and ambience of the three sea and sky biomes
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_AMBIENT = reg("entity.gobbler.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_HURT = reg("entity.gobbler.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_DEATH = reg("entity.gobbler.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_FLOP = reg("entity.gobbler.flop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_SNIFF = reg("entity.gobbler.sniff");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_LUNGE = reg("entity.gobbler.lunge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_GULP = reg("entity.gobbler.gulp");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_SPIT = reg("entity.gobbler.spit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOBBLER_CALM = reg("entity.gobbler.calm");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_KELP = reg("music.magic_kelp_forest");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_DEEP_OCEAN = reg("music.deep_dark_ocean");
+    public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_SOUND_GARDEN = reg("music.sound_garden");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_KELP_LOOP = reg("ambient.magic_kelp_forest.loop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_KELP_ADDITIONS = reg("ambient.magic_kelp_forest.additions");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_DEEP_OCEAN_LOOP = reg("ambient.deep_dark_ocean.loop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_DEEP_OCEAN_ADDITIONS = reg("ambient.deep_dark_ocean.additions");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_DEEP_OCEAN_MOOD = reg("ambient.deep_dark_ocean.mood");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_GARDEN_LOOP = reg("ambient.sound_garden.loop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> AMBIENT_GARDEN_ADDITIONS = reg("ambient.sound_garden.additions");
+    // ---- end sea & sky
+
     // ---- sound types
     public static final DeferredSoundType DREAMSTONE = new DeferredSoundType(1.0F, 1.1F,
             () -> net.minecraft.sounds.SoundEvents.DEEPSLATE_BRICKS_BREAK, () -> net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_STEP,

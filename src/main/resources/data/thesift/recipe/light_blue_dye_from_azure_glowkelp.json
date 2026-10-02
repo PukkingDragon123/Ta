@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:azure_glowkelp"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:light_blue_dye"
+  },
+  "group": "light_blue_dye"
+}

@@ -625,13 +625,20 @@ def fanfare_eel() -> Model:
         seg.cube((0, -h / 2 - 2.5, 0.5), (0, 2.5, d - 1), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_l', alpha='membrane', edge='bottom',
                                                                 glow=True))
         if i == len(dims) - 1:
-            seg.cube((0, -3.5, d - 0.5), (0, 7, 5), **mc('fin', clusters=0.0, rim=False, ribs=2, accent='fin_l', alpha='membrane', edge='outer',
-                                                         edge_depth=1, scallop=2, glow=True))
+            tf = seg.part('tail_fin', pivot=(0, 0, d - 0.5))
+            tf.cube((0, -3.5, 0), (0, 7, 5), **mc('fin', clusters=0.0, rim=False, ribs=2, accent='fin_l', alpha='membrane', edge='outer',
+                                                  edge_depth=1, scallop=2, glow=True))
         prev = seg
         pivot = (0, 0, d)
     for side, sx in (('left', 1), ('right', -1)):
         pf = head.part(f'{side}_fin', pivot=(2.5 * sx, 1.5, -1), rot=(0, 0.4 * sx, 0.5 * sx))
         pf.cube((0 if sx > 0 else -3, 0, -1), (3, 0, 3), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_l', glow=True))
+        # gill frills: a fan of glowing membrane behind the head that pumps as it breathes
+        gill = head.part(f'{side}_gill', pivot=(2.5 * sx, -0.5, -0.5), rot=(0, 0.5 * sx, 0))
+        gill.cube((0, -2, 0), (0, 4, 3), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_l', alpha='membrane', edge='outer', glow=True))
+        # a bone barbel trailing from each side of the bell
+        wh = pipe.part(f'{side}_whisker', pivot=(1.5 * sx, 1.0, -2.5), rot=(0.5, 0.6 * sx, 0))
+        wh.cube((-0.5, -0.5, 0), (1, 1, 4), **mc('bone', clusters=0.0, rim=False), faces={'south': mc('glow', clusters=0.0, glow=True)})
     return m
 
 
@@ -676,9 +683,20 @@ def kazoo_fish() -> Model:
     dorsal = body.part('dorsal', pivot=(0, -2.5, 1))
     dorsal.cube((0, -3, -0.5), (0, 3, 3), color='pink', faces={'east': dict(color='pink', image=bush, image_mode='stretch'),
                                                                'west': dict(color='pink', image=mirror_img(bush), image_mode='stretch')})
-    tail = body.part('tail', pivot=(0, 0, 3))
-    tail.cube((0, -3, 0), (0, 6, 5), color='pink', faces={'east': dict(color='pink', image=coral, image_mode='stretch'),
-                                                          'west': dict(color='pink', image=mirror_img(coral), image_mode='stretch')})
+    stem = body.part('tail_stem', pivot=(0, 0, 3))
+    stem.cube((-1, -1.5, 0), (2, 3, 2), **mc('teal', clusters=0.2, bands=[(2, 'belly')], spots=0.3, accent='spot'))
+    tail = stem.part('tail', pivot=(0, 0, 2))
+    tail.cube((0, -3, -0.5), (0, 6, 5), color='pink', faces={'east': dict(color='pink', image=coral, image_mode='stretch'),
+                                                             'west': dict(color='pink', image=mirror_img(coral), image_mode='stretch')})
+    anal = body.part('anal_fin', pivot=(0, 2.5, 1.5))
+    anal.cube((0, 0, -0.5), (0, 1.5, 2), color='pink', faces={'east': dict(color='pink', image=bush, image_mode='stretch'),
+                                                             'west': dict(color='pink', image=mirror_img(bush), image_mode='stretch')})
+    for side, sx in (('left', 1), ('right', -1)):
+        gill = body.part(f'{side}_gill', pivot=(1.5 * sx, 0.5, -1.5))
+        gill.cube((0, -1.5, 0), (0, 3, 1.5), **mc('teal_d', clusters=0.0, rim=False, map=['p', 'P', 'p'], keys={'p': 'pink', 'P': 'pink_d'}))
+        pel = body.part(f'{side}_pelvic', pivot=(0.8 * sx, 2.5, 0.5), rot=(0.5, 0, 0.4 * sx))
+        pel.cube((0, 0, 0), (0, 1.5, 1.5), color='pink', faces={'east': dict(color='pink', image=coral, image_mode='stretch'),
+                                                               'west': dict(color='pink', image=coral, image_mode='stretch')})
     for side, sx in (('left', 1), ('right', -1)):
         pf = body.part(f'{side}_fin', pivot=(1.5 * sx, 1.5, -0.5), rot=(0, 0, 0.6 * sx))
         pf.cube((0 if sx > 0 else -2.5, 0, 0), (2.5, 0, 2.5), color='pink', faces={'up': dict(color='pink', image=coral, image_mode='stretch'),
@@ -750,9 +768,20 @@ def tubafish() -> Model:
     for side, sx in (('left', 1), ('right', -1)):
         pf = body.part(f'{side}_fin', pivot=(6 * sx, 0, -1), rot=(0, 0.3 * sx, 0))
         pf.cube((0 if sx > 0 else -3, -2, 0), (3, 4, 0), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_d', alpha='membrane', edge='outer'))
-    tail = body.part('tail', pivot=(0, -0.5, 6))
-    tail.cube((0, -3, 0), (0, 6, 4), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_d', alpha='membrane', edge='outer', edge_depth=1, scallop=2))
+    tail = body.part('tail', pivot=(0, -0.5, 5.5))
+    tail.cube((-1.5, -2, 0), (3, 4, 2), **mc('skin', clusters=0.2, bands=[(2, 'belly')]))
+    tfin = tail.part('tail_fin', pivot=(0, 0, 2))
+    tfin.cube((0, -3.5, -0.5), (0, 7, 5), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_d', alpha='membrane', edge='outer', edge_depth=1,
+                                               scallop=2))
+    dors = body.part('dorsal', pivot=(0, -6, 3.5))
+    dors.cube((0, -2.5, -1), (0, 2.5, 3.5), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_d', alpha='membrane', edge='bottom'))
+    for side, sx in (('left', 1), ('right', -1)):
+        gill = body.part(f'{side}_gill', pivot=(6 * sx, 1.5, -3.5))
+        gill.cube((0, -2, 0), (0, 4, 2), **mc('lip', clusters=0.0, rim=False, map=['dd', 'Dd', 'dD', 'dd'], keys={'d': 'lip_d', 'D': 'lip'}))
+        pel = body.part(f'{side}_pelvic', pivot=(3 * sx, 5, -1), rot=(0.4, 0, 0.5 * sx))
+        pel.cube((0, 0, 0), (0, 2.5, 2.5), **mc('fin', clusters=0.0, rim=False, ribs=1, accent='fin_d', alpha='membrane', edge='outer'))
     return m
 
 
 ALL = {'stomper': stomper, 'sky_whale': sky_whale, 'fanfare_eel': fanfare_eel, 'kazoo_fish': kazoo_fish, 'tubafish': tubafish}
+ALL['gobbler'] = __import__('gobbler').gobbler  # sea & sky (F): the blind deep-sea catfish, tools/gobbler.py

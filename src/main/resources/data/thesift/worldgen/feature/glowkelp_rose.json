@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:block_column",
+  "direction": "up",
+  "prioritize_tip": true,
+  "allowed_placement": {
+    "type": "minecraft:matching_fluids",
+    "fluids": "minecraft:water"
+  },
+  "layers": [
+    {
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 3,
+        "max_inclusive": 17
+      },
+      "provider": {
+        "id": "thesift:rose_glowkelp",
+        "properties": {
+          "tip": "false",
+          "waterlogged": "true"
+        }
+      }
+    },
+    {
+      "height": 1,
+      "provider": {
+        "id": "thesift:rose_glowkelp",
+        "properties": {
+          "tip": "true",
+          "waterlogged": "true"
+        }
+      }
+    }
+  ]
+}

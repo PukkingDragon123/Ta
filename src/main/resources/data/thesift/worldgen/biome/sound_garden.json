@@ -1,0 +1,145 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.sound_garden.loop",
+      "additions": {
+        "sound": "thesift:ambient.sound_garden.additions",
+        "tick_chance": 0.0125
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 5000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 15000,
+        "min_delay": 5000,
+        "replace_current_music": true,
+        "sound": "thesift:music.sound_garden"
+      },
+      "underwater": {
+        "max_delay": 15000,
+        "min_delay": 5000,
+        "replace_current_music": true,
+        "sound": "thesift:music.sound_garden"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [
+            {
+              "type": "thesift:sky_whale",
+              "count": 1,
+              "weight": 6
+            },
+            {
+              "type": "thesift:harmoner",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 3
+              },
+              "weight": 8
+            },
+            {
+              "type": "thesift:bulb",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 4
+            },
+            {
+              "type": "thesift:enchoer",
+              "count": 1,
+              "weight": 1
+            }
+          ],
+          "monster": [],
+          "ambient": [],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:sift_note"
+          },
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "thesift:sift_mist"
+          },
+          "probability": 0.003
+        },
+        {
+          "particle": {
+            "type": "thesift:star_sparkle"
+          },
+          "probability": 0.002
+        },
+        {
+          "particle": {
+            "type": "thesift:wishing_star"
+          },
+          "probability": 0.0004
+        },
+        {
+          "particle": {
+            "type": "thesift:dream_pollen"
+          },
+          "probability": 0.001
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#f2eaff",
+    "minecraft:visual/sky_color": "#a8d8ff",
+    "minecraft:visual/water_fog_color": "#bfe8ff"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.6,
+  "effects": {
+    "water_color": "#bfe8ff",
+    "grass_color": "#c8f0ff",
+    "foliage_color": "#d8f4ff"
+  },
+  "features": [
+    [],
+    [],
+    [
+      "thesift:cloud_puff"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "thesift:patch_chime_bell",
+      "thesift:patch_organ_reed"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.6
+}

@@ -91,9 +91,11 @@ def wild_creature_loot():
                                          pool([item('thick_hide', count=(0, 2), extra=[LOOTING])])])
     table('entity', 'entities/kazoo_fish', [pool([item('kazoo_fish', extra=[SMELT_IF_BURNING])]),
                                             pool([item('minecraft:bone_meal')], condition=chance(0.05))])
-    table('entity', 'entities/tubafish', [pool([item('tuba_bubble', count=(2, 4), extra=[LOOTING])]),
+    table('entity', 'entities/tubafish', [pool([item('tubafish', extra=[SMELT_IF_BURNING])]),
+                                          pool([item('tuba_bubble', count=(2, 4), extra=[LOOTING])]),
                                           pool([item('minecraft:bone_meal')], condition=chance(0.05))])
-    table('entity', 'entities/fanfare_eel', [pool([item('minecraft:gold_nugget', count=(1, 3), extra=[LOOTING])]),
+    table('entity', 'entities/fanfare_eel', [pool([item('fanfare_eel', extra=[SMELT_IF_BURNING, LOOTING])]),
+                                             pool([item('minecraft:gold_nugget', count=(1, 3), extra=[LOOTING])]),
                                              pool([item('minecraft:copper_ingot', count=(0, 1), extra=[LOOTING])])])
     # the Sculk Parasite bursts when it bites: nothing is left of it
     table('entity', 'entities/sculk_parasite', [])

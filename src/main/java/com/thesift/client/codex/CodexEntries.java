@@ -115,6 +115,12 @@ public final class CodexEntries {
         l.add(mob(CREATURES, "caravan", com.thesift.registry.ModCaravans.CARAVAN, (e, t) -> {
             if (e instanceof com.thesift.entity.caravan.Caravan c && t % 16 == 4) c.tapAnimation.start(c.tickCount);
         }));
+        // sea & sky: the blind deep-sea catfish, the two water seas and the cloud garden, sushi
+        l.add(mob(CREATURES, "gobbler", com.thesift.registry.ModSeaSky.GOBBLER, (e, t) -> {
+            if (e instanceof com.thesift.entity.Gobbler g && t % 70 == 10) g.lungeAnimation.start(g.tickCount);
+        }));
+        l.add(thing(PLACES, "sea_and_sky", ModItems.ROSE_GLOWKELP));
+        l.add(thing(ITEMS, "sushi", ModItems.SUSHI_PLATTER));
         // ---- items
         l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));
         l.add(thing(ITEMS, "prism", ModItems.PRISM_GEM)); // C

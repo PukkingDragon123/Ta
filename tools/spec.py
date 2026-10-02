@@ -327,3 +327,5 @@ for _a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"prism_{_a}", cls="Item", props=f"new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.{_a.upper()}).rarity(Rarity.RARE)",
          tab="combat", model="armor")
 item("caravan_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")
+# ---------------------------------------------------------------- sea & sky (F + W): kelp, clouds, the Gobbler's drops, fish meat, sushi
+__import__("sea_spec").declare(block, item)

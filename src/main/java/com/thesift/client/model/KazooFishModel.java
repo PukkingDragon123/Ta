@@ -8,7 +8,13 @@ import net.minecraft.util.Mth;
 /** Kazoo Fish: a quick tail beat, googly eyes that wobble on their own, a buzzing kazoo snout. */
 public class KazooFishModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart body;
+    private final ModelPart tailStem;
     private final ModelPart tail;
+    private final ModelPart analFin;
+    private final ModelPart leftGill;
+    private final ModelPart rightGill;
+    private final ModelPart leftPelvic;
+    private final ModelPart rightPelvic;
     private final ModelPart dorsal;
     private final ModelPart kazoo;
     private final ModelPart leftEye;
@@ -21,7 +27,13 @@ public class KazooFishModel extends EntityModel<SiftFishRenderState> {
     public KazooFishModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.tail = this.body.getChild("tail");
+        this.tailStem = this.body.getChild("tail_stem");
+        this.tail = this.tailStem.getChild("tail");
+        this.analFin = this.body.getChild("anal_fin");
+        this.leftGill = this.body.getChild("left_gill");
+        this.rightGill = this.body.getChild("right_gill");
+        this.leftPelvic = this.body.getChild("left_pelvic");
+        this.rightPelvic = this.body.getChild("right_pelvic");
         this.dorsal = this.body.getChild("dorsal");
         this.kazoo = this.body.getChild("kazoo");
         this.leftEye = this.body.getChild("left_eye");
@@ -38,9 +50,21 @@ public class KazooFishModel extends EntityModel<SiftFishRenderState> {
         float age = s.ageInTicks + s.seed;
         float e = s.effort;
         float beat = age * (0.45F + e * 0.9F);
-        this.tail.yRot = Mth.sin(beat) * (0.35F + e * 0.45F);
-        this.body.yRot = -Mth.sin(beat) * 0.06F * (1.0F + e);
+        float amp = 0.3F + e * 0.4F;
+        // a travelling wave from the snout back: body, tail stem, then the coral tail a beat later
+        this.body.yRot = -Mth.sin(beat) * 0.07F * (1.0F + e);
+        this.tailStem.yRot = Mth.sin(beat - 0.7F) * amp * 0.6F;
+        this.tail.yRot = Mth.sin(beat - 1.4F) * amp;
+        this.analFin.yRot = Mth.sin(beat - 1.0F) * amp * 0.4F;
         this.body.xRot = s.xRot * Anim.DEG;
+        // little bursts of speed bank the body into the stroke
+        this.body.zRot = Mth.sin(beat * 0.5F) * 0.05F * e;
+        // gills pump, pelvic fins flutter for balance
+        float breath = Math.max(0.0F, Mth.sin(age * 0.35F));
+        this.leftGill.yRot = 0.15F + breath * 0.4F;
+        this.rightGill.yRot = -0.15F - breath * 0.4F;
+        this.leftPelvic.zRot += Mth.sin(age * 0.7F) * 0.25F;
+        this.rightPelvic.zRot -= Mth.sin(age * 0.7F + 0.5F) * 0.25F;
         this.dorsal.zRot = Mth.sin(beat * 0.5F) * 0.1F;
         this.leftFin.zRot += Mth.sin(age * 0.5F) * 0.35F;
         this.rightFin.zRot -= Mth.sin(age * 0.5F + 0.4F) * 0.35F;
@@ -62,7 +86,10 @@ public class KazooFishModel extends EntityModel<SiftFishRenderState> {
         if (!s.inLiquid) {
             this.body.zRot = (float) Math.PI * 0.5F;
             this.body.y += 1.5F;
-            this.tail.yRot = Mth.sin(s.ageInTicks * 1.2F) * 0.8F;
+            this.tailStem.yRot = Mth.sin(s.ageInTicks * 1.2F) * 0.5F;
+            this.tail.yRot = Mth.sin(s.ageInTicks * 1.2F - 0.8F) * 0.8F;
+            this.leftGill.yRot = 0.6F;
+            this.rightGill.yRot = -0.6F;
         }
         float die = Anim.smooth(s.dying / 12.0F);
         if (die > 0.0F) {

@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "thesift:chime_bell",
+    "thesift:organ_reed",
     "thesift:lullaby_bell",
     "thesift:dreambloom",
     "thesift:soulpetal",

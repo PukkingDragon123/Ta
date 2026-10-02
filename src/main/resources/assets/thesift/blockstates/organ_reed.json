@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "thesift:block/organ_reed_bottom"
+    },
+    "half=upper": {
+      "model": "thesift:block/organ_reed_top"
+    }
+  }
+}

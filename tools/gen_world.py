@@ -551,5 +551,6 @@ def generate():
     __import__('caravans').world(sys.modules[__name__])  # C: the Caravans Cavern
     biomes()
     dimension_json()
+    __import__('sea_sky').world(sys.modules[__name__])  # sea & sky: kelp forest, deep dark ocean, sound garden
     carver_tags()
     print(f'world ok: {len(FEATURES)} features, {len(PLACED)} placed')

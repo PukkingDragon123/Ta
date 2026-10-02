@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:gobbler_fillet",
+    "thesift:sculk_bladder",
+    "minecraft:dried_kelp",
+    "#thesift:glowkelp"
+  ],
+  "result": {
+    "count": 3,
+    "id": "thesift:gobbler_sushi"
+  }
+}

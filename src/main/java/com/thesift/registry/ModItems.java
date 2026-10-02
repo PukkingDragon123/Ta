@@ -157,6 +157,14 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> DEEP_PRISM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_PRISM_ORE);
     public static final DeferredItem<BlockItem> PRISM_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PRISM_BLOCK);
     public static final DeferredItem<BlockItem> MUSIC_CRYSTAL = ITEMS.registerSimpleBlockItem(ModBlocks.MUSIC_CRYSTAL);
+    public static final DeferredItem<BlockItem> CORAL_SAND = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_SAND);
+    public static final DeferredItem<BlockItem> ROSE_GLOWKELP = ITEMS.registerSimpleBlockItem(ModBlocks.ROSE_GLOWKELP);
+    public static final DeferredItem<BlockItem> AZURE_GLOWKELP = ITEMS.registerSimpleBlockItem(ModBlocks.AZURE_GLOWKELP);
+    public static final DeferredItem<BlockItem> AMBER_GLOWKELP = ITEMS.registerSimpleBlockItem(ModBlocks.AMBER_GLOWKELP);
+    public static final DeferredItem<BlockItem> ABYSS_ANEMONE = ITEMS.registerSimpleBlockItem(ModBlocks.ABYSS_ANEMONE);
+    public static final DeferredItem<BlockItem> CLOUD_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.CLOUD_BLOCK);
+    public static final DeferredItem<BlockItem> CHIME_BELL = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_BELL);
+    public static final DeferredItem<DoubleHighBlockItem> ORGAN_REED = ITEMS.registerItem("organ_reed", p -> new DoubleHighBlockItem(ModBlocks.ORGAN_REED.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -241,6 +249,19 @@ public final class ModItems {
     public static final DeferredItem<Item> PRISM_LEGGINGS = ITEMS.registerItem("prism_leggings", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.LEGGINGS).rarity(Rarity.RARE));
     public static final DeferredItem<Item> PRISM_BOOTS = ITEMS.registerItem("prism_boots", Item::new, () -> new Item.Properties().humanoidArmor(ModCaravans.PRISM_ARMOR, ArmorType.BOOTS).rarity(Rarity.RARE));
     public static final DeferredItem<SpawnEggItem> CARAVAN_SPAWN_EGG = ITEMS.registerItem("caravan_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get()));
+    public static final DeferredItem<Item> TUBAFISH = ITEMS.registerItem("tubafish", Item::new, () -> new Item.Properties().food(ModSeaFoods.TUBAFISH));
+    public static final DeferredItem<Item> COOKED_TUBAFISH = ITEMS.registerItem("cooked_tubafish", Item::new, () -> new Item.Properties().food(ModSeaFoods.COOKED_TUBAFISH));
+    public static final DeferredItem<Item> FANFARE_EEL = ITEMS.registerItem("fanfare_eel", Item::new, () -> new Item.Properties().food(ModSeaFoods.FANFARE_EEL));
+    public static final DeferredItem<Item> COOKED_FANFARE_EEL = ITEMS.registerItem("cooked_fanfare_eel", Item::new, () -> new Item.Properties().food(ModSeaFoods.COOKED_FANFARE_EEL));
+    public static final DeferredItem<Item> GOBBLER_FILLET = ITEMS.registerItem("gobbler_fillet", Item::new, () -> new Item.Properties().food(ModSeaFoods.GOBBLER_FILLET));
+    public static final DeferredItem<Item> COOKED_GOBBLER_FILLET = ITEMS.registerItem("cooked_gobbler_fillet", Item::new, () -> new Item.Properties().food(ModSeaFoods.COOKED_GOBBLER_FILLET));
+    public static final DeferredItem<Item> SCULK_BLADDER = ITEMS.registerItem("sculk_bladder", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> KAZOO_FISH_SUSHI = ITEMS.registerItem("kazoo_fish_sushi", Item::new, () -> new Item.Properties().food(ModSeaFoods.KAZOO_FISH_SUSHI, ModSeaFoods.KAZOO_FISH_SUSHI_CONSUMABLE));
+    public static final DeferredItem<Item> TUBAFISH_SUSHI = ITEMS.registerItem("tubafish_sushi", Item::new, () -> new Item.Properties().food(ModSeaFoods.TUBAFISH_SUSHI, ModSeaFoods.TUBAFISH_SUSHI_CONSUMABLE));
+    public static final DeferredItem<Item> FANFARE_EEL_SUSHI = ITEMS.registerItem("fanfare_eel_sushi", Item::new, () -> new Item.Properties().food(ModSeaFoods.FANFARE_EEL_SUSHI, ModSeaFoods.FANFARE_EEL_SUSHI_CONSUMABLE));
+    public static final DeferredItem<Item> GOBBLER_SUSHI = ITEMS.registerItem("gobbler_sushi", Item::new, () -> new Item.Properties().food(ModSeaFoods.GOBBLER_SUSHI, ModSeaFoods.GOBBLER_SUSHI_CONSUMABLE));
+    public static final DeferredItem<Item> SUSHI_PLATTER = ITEMS.registerItem("sushi_platter", Item::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON).food(ModSeaFoods.SUSHI_PLATTER, ModSeaFoods.SUSHI_PLATTER_CONSUMABLE));
+    public static final DeferredItem<SpawnEggItem> GOBBLER_SPAWN_EGG = ITEMS.registerItem("gobbler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSeaSky.GOBBLER.get()));
 
     private ModItems() {}
 }

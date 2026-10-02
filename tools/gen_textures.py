@@ -2019,6 +2019,7 @@ def main():
     import plants_h_art  # H: the Sift Gate Frame and the Pitcher Planter
     for name, img in plants_h_art.block_textures().items():
         out(name, img)
+    __import__('sea_art').block_textures(out)  # sea & sky: glowkelp, anemone, coral sand, cloud, chime bell, organ reed
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]

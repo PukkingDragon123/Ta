@@ -12,6 +12,125 @@
         "sequence": [
           {
             "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:biome",
+              "biome_is": [
+                "thesift:sound_garden"
+              ]
+            },
+            "then_run": {
+              "type": "minecraft:block",
+              "result_state": {
+                "id": "thesift:cloud_block"
+              }
+            }
+          },
+          {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:biome",
+              "biome_is": [
+                "thesift:magic_kelp_forest"
+              ]
+            },
+            "then_run": {
+              "type": "minecraft:sequence",
+              "sequence": [
+                {
+                  "type": "minecraft:condition",
+                  "if_true": "minecraft:on_floor",
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "id": "thesift:coral_sand"
+                    }
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": "minecraft:under_floor",
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "id": "thesift:coral_sand"
+                    }
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": "minecraft:deep_under_floor",
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "id": "thesift:dreamsandstone"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:biome",
+              "biome_is": [
+                "thesift:deep_dark_ocean"
+              ]
+            },
+            "then_run": {
+              "type": "minecraft:sequence",
+              "sequence": [
+                {
+                  "type": "minecraft:condition",
+                  "if_true": "minecraft:on_floor",
+                  "then_run": {
+                    "type": "minecraft:sequence",
+                    "sequence": [
+                      {
+                        "type": "minecraft:condition",
+                        "if_true": {
+                          "type": "minecraft:noise_threshold",
+                          "max_threshold": 1.0,
+                          "min_threshold": 0.15,
+                          "noise": "minecraft:surface"
+                        },
+                        "then_run": {
+                          "type": "minecraft:block",
+                          "result_state": {
+                            "id": "minecraft:sculk"
+                          }
+                        }
+                      },
+                      {
+                        "type": "minecraft:block",
+                        "result_state": {
+                          "id": "thesift:hushslate",
+                          "properties": {
+                            "axis": "y"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "minecraft:condition",
+                  "if_true": "minecraft:under_floor",
+                  "then_run": {
+                    "type": "minecraft:block",
+                    "result_state": {
+                      "id": "thesift:hushslate",
+                      "properties": {
+                        "axis": "y"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "type": "minecraft:condition",
             "if_true": "minecraft:on_floor",
             "then_run": {
               "type": "minecraft:sequence",

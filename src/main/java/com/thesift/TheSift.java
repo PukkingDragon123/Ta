@@ -40,6 +40,7 @@ public class TheSift {
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         com.thesift.registry.ModSiege.register(modBus); // the Thumper's arena: ancient cannons, cannonballs
         com.thesift.registry.ModCaravans.register(modBus); // C: Caravans, music crystals, prism armour, song hooks
+        com.thesift.registry.ModSeaSky.register(modBus); // sea & sky: the Gobbler, ocean/cloud worldgen, Tide Song calming
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

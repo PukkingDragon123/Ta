@@ -329,6 +329,22 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 4));
     public static final DeferredBlock<MusicCrystalBlock> MUSIC_CRYSTAL = BLOCKS.registerBlock("music_crystal", MusicCrystalBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_PURPLE).strength(1.5F).lightLevel(s -> s.getValue(com.thesift.block.MusicCrystalBlock.FROZEN) ? 10 : 7).noOcclusion());
+    public static final DeferredBlock<ColoredFallingBlock> CORAL_SAND = BLOCKS.registerBlock("coral_sand", p -> new ColoredFallingBlock(new ColorRGBA(0xF58A9C), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<GlowKelpBlock> ROSE_GLOWKELP = BLOCKS.registerBlock("rose_glowkelp", GlowKelpBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.KELP_PLANT).mapColor(MapColor.COLOR_PINK).lightLevel(s -> s.getValue(com.thesift.block.GlowKelpBlock.TIP) ? 12 : 7));
+    public static final DeferredBlock<GlowKelpBlock> AZURE_GLOWKELP = BLOCKS.registerBlock("azure_glowkelp", GlowKelpBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.KELP_PLANT).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> s.getValue(com.thesift.block.GlowKelpBlock.TIP) ? 12 : 7));
+    public static final DeferredBlock<GlowKelpBlock> AMBER_GLOWKELP = BLOCKS.registerBlock("amber_glowkelp", GlowKelpBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.KELP_PLANT).mapColor(MapColor.COLOR_ORANGE).lightLevel(s -> s.getValue(com.thesift.block.GlowKelpBlock.TIP) ? 12 : 7));
+    public static final DeferredBlock<WaterPlantBlock> ABYSS_ANEMONE = BLOCKS.registerBlock("abyss_anemone", WaterPlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SEAGRASS).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9).replaceable());
+    public static final DeferredBlock<CloudBlock> CLOUD_BLOCK = BLOCKS.registerBlock("cloud_block", CloudBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL).noOcclusion().isRedstoneConductor((s, l, p) -> false).isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p) -> false));
+    public static final DeferredBlock<ChimeBellBlock> CHIME_BELL = BLOCKS.registerBlock("chime_bell", ChimeBellBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6));
+    public static final DeferredBlock<OrganReedBlock> ORGAN_REED = BLOCKS.registerBlock("organ_reed", OrganReedBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 4));
 
     private ModBlocks() {}
 }

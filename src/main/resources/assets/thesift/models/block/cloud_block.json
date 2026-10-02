@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": {
+      "sprite": "thesift:block/cloud_block",
+      "force_translucent": true
+    }
+  }
+}
