@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class Sifter extends Monster implements MusicListener {
     private static final EntityDataAccessor<Boolean> BURROWED = SynchedEntityData.defineId(Sifter.class, EntityDataSerializers.BOOLEAN);
-    private static final byte EVENT_CHOMP = 60;
+    private static final byte EVENT_CHOMP = 110;
     private static final byte EVENT_EMERGE = 61;
 
     public final AnimationState chompAnimation = new AnimationState();

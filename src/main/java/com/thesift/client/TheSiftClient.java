@@ -10,7 +10,6 @@ import com.thesift.client.renderer.HarmonerRenderer;
 import com.thesift.client.model.boss.StrumlingModel;
 import com.thesift.client.model.boss.StrummerModel;
 import com.thesift.client.model.boss.ThumperModel;
-import com.thesift.client.model.boss.ThumplingModel;
 import com.thesift.client.model.boss.WhistlerModel;
 import com.thesift.client.model.boss.WhistlingModel;
 import com.thesift.client.renderer.boss.MiniBossRenderer;
@@ -85,7 +84,6 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.THUMPER, ModelGeometry::thumper);
         event.registerLayerDefinition(ModModelLayers.WHISTLER, ModelGeometry::whistler);
         event.registerLayerDefinition(ModModelLayers.STRUMMER, ModelGeometry::strummer);
-        event.registerLayerDefinition(ModModelLayers.THUMPLING, ModelGeometry::thumpling);
         event.registerLayerDefinition(ModModelLayers.WHISTLING, ModelGeometry::whistling);
         event.registerLayerDefinition(ModModelLayers.STRUMLING, ModelGeometry::strumling);
         event.registerLayerDefinition(ModModelLayers.SCULK_PARASITE, ModelGeometry::sculk_parasite);
@@ -115,8 +113,6 @@ public class TheSiftClient {
                 "whistler", Whistler.SCALE, 0.6F, (e, s) -> s.bossState == Whistler.STUNNED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
         event.registerEntityRenderer(ModEntities.STRUMMER.get(), c -> new MiniBossRenderer<Strummer, StrummerModel>(c, new StrummerModel(c.bakeLayer(ModModelLayers.STRUMMER)),
                 "strummer", Strummer.SCALE, 0.9F, (e, s) -> null));
-        event.registerEntityRenderer(ModEntities.THUMPLING.get(),
-                c -> new MinionRenderer<>(c, new ThumplingModel(c.bakeLayer(ModModelLayers.THUMPLING)), "thumpling", 0.4F));
         event.registerEntityRenderer(ModEntities.WHISTLING.get(),
                 c -> new MinionRenderer<>(c, new WhistlingModel(c.bakeLayer(ModModelLayers.WHISTLING)), "whistling", 0.35F));
         event.registerEntityRenderer(ModEntities.STRUMLING.get(),

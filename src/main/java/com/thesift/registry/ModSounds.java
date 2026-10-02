@@ -88,9 +88,6 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> STRUMMER_CHORD = reg("entity.strummer.chord");
     public static final DeferredHolder<SoundEvent, SoundEvent> STRUMMER_DRAW = reg("entity.strummer.draw");
     public static final DeferredHolder<SoundEvent, SoundEvent> STRUMMER_PLUCK = reg("entity.strummer.pluck");
-    public static final DeferredHolder<SoundEvent, SoundEvent> THUMPLING_AMBIENT = reg("entity.thumpling.ambient");
-    public static final DeferredHolder<SoundEvent, SoundEvent> THUMPLING_HURT = reg("entity.thumpling.hurt");
-    public static final DeferredHolder<SoundEvent, SoundEvent> THUMPLING_DEATH = reg("entity.thumpling.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> WHISTLING_AMBIENT = reg("entity.whistling.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> WHISTLING_HURT = reg("entity.whistling.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> WHISTLING_DEATH = reg("entity.whistling.death");

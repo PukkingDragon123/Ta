@@ -49,7 +49,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class Riveter extends Monster implements MusicListener {
     private static final EntityDataAccessor<Boolean> HANGING = SynchedEntityData.defineId(Riveter.class, EntityDataSerializers.BOOLEAN);
-    private static final byte EVENT_SCREAM = 60;
+    private static final byte EVENT_SCREAM = 110;
     public static final int SCREAM_TICKS = 34;
 
     public final AnimationState screamAnimation = new AnimationState();

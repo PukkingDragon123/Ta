@@ -74,8 +74,8 @@ def entity_loot():
                                           pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
     table('entity', 'entities/strummer', [pool([item('magic_strings', 1)]), pool([item('minecraft:string', count=(8, 16))]),
                                           pool([item('minecraft:echo_shard', count=(2, 4))]), pool([item('siftite_ingot', count=(1, 3))])])
-    for minion in ('thumpling', 'whistling', 'strumling'):
-        extra = {'thumpling': 'minecraft:turtle_scute', 'whistling': 'minecraft:feather', 'strumling': 'minecraft:string'}[minion]
+    for minion in ('whistling', 'strumling'):
+        extra = {'whistling': 'minecraft:feather', 'strumling': 'minecraft:string'}[minion]
         table('entity', f'entities/{minion}', [pool([item(extra, count=(0, 2), extra=[LOOTING])]),
                                               pool([item('minecraft:echo_shard', count=(0, 1), extra=[LOOTING])]),
                                               pool([item('minecraft:bone', count=(0, 2))])])

@@ -63,7 +63,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <ol>
  *   <li>Shell (full health to 66%): he swells huge, the Thumper's shell on his back - blows from
- *   behind clank off it. He slams the stage (jump the rings) and charges. Thumplings join him.</li>
+ *   behind clank off it. He slams the stage (jump the rings) and charges. Sculk Parasites swarm in.</li>
  *   <li>Wings (66% to 33%): the Whistler's wings. He takes to the air and plays its song: a beam
  *   that locks on and keeps hurting until you break it (out of sight, out of range, or hit him
  *   hard). He dives. Whistlings join him.</li>
@@ -598,7 +598,7 @@ public class Dictator extends Monster {
     /** Calls up the young of the player whose power he wears. */
     private void summonSection(ServerLevel level, int phase) {
         EntityType<? extends OrchestraMinion> type = switch (phase) {
-            case 1 -> ModEntities.THUMPLING.get();
+            case 1 -> ModEntities.SCULK_PARASITE.get();
             case 2 -> ModEntities.WHISTLING.get();
             default -> ModEntities.STRUMLING.get();
         };

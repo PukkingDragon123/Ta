@@ -191,7 +191,6 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> THUMPER_SPAWN_EGG = ITEMS.registerItem("thumper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPER.get()));
     public static final DeferredItem<SpawnEggItem> WHISTLER_SPAWN_EGG = ITEMS.registerItem("whistler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLER.get()));
     public static final DeferredItem<SpawnEggItem> STRUMMER_SPAWN_EGG = ITEMS.registerItem("strummer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMMER.get()));
-    public static final DeferredItem<SpawnEggItem> THUMPLING_SPAWN_EGG = ITEMS.registerItem("thumpling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPLING.get()));
     public static final DeferredItem<SpawnEggItem> WHISTLING_SPAWN_EGG = ITEMS.registerItem("whistling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.WHISTLING.get()));
     public static final DeferredItem<SpawnEggItem> STRUMLING_SPAWN_EGG = ITEMS.registerItem("strumling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STRUMLING.get()));
     public static final DeferredItem<SpawnEggItem> STOMPER_SPAWN_EGG = ITEMS.registerItem("stomper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.STOMPER.get()));

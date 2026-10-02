@@ -235,52 +235,6 @@ def thumper() -> Model:
     return m
 
 
-THUMPLING_FACE = {
-    'neutral': {3: '.WW....WW', 4: '.WE....EW', 6: '....bb'},
-    'blink': {4: '.dd....dd', 6: '....bb'},
-    'angry': {2: '.W......W', 3: '..WW..WW', 4: '.WE....EW', 6: '....bb'},
-    'hurt': {3: '.W.W..W.W', 4: '..W....W', 6: '....bb'},
-    'dead': {3: '.E.E..E.E', 4: '..E....E', 6: '....bb'},
-}
-
-
-def thumpling() -> Model:
-    """A Thumpling: the Thumper's hatchling, a round little turtle with a toy drum on its back
-    and big shiny eyes."""
-    pal = dict(SCULK)
-    pal.update({'shell': '#5d8c42', 'shell_l': '#83b45c', 'shell_d': '#37592a', 'seam': '#223a18', 'ring': '#4a7536',
-                'skin': '#93b070', 'skin_l': '#b6cf92', 'skin_d': '#6a8350', 'plas': '#ecd99a', 'drum': '#b84a32', 'drum_l': '#d86848',
-                'drum_d': '#7a2a1a', 'hide': '#f2e6c8', 'rope': '#d9b46a', 'eye': '#16130e', 'white': '#ffffff', 'beak': '#4a4a38'})
-    m = Model('thumpling', (64, 64), pal, {'thumpling': {}}, res=2, expressions=EXPR)
-    shell_k = {'d': 'seam', 'l': 'shell_l', 'm': 'shell_d', 'r': 'ring', 'g': 'glow'}
-    body = m.part('body', pivot=(0, 21, 0))
-    body.cube((-3.5, 0, -4), (7, 1.5, 8), color='plas', pattern='mc', clusters=0.2, rim=False)
-    body.cube((-4, -3, -4.5), (8, 3, 9), color='shell', pattern='mc', clusters=0.0, faces={
-        'up': dict(color='shell', pattern='mc', clusters=0.0, hd=True, map=scutes(16, 18, 8, 6), keys=shell_k),
-        **{f: dict(color='shell', pattern='mc', clusters=0.0, hd=True, map=marginals(18 if f in ('east', 'west') else 16, 6, 4), keys=shell_k)
-           for f in ('north', 'south', 'east', 'west')},
-    })
-    drum = body.part('drum', pivot=(0, -3, 0.5))
-    drum.cube((-2, -3, -2), (4, 3, 4), color='drum', pattern='mc', clusters=0.0, faces={
-        f: dict(color='drum', pattern='mc', clusters=0.0, hd=True, map=['dddddddd', 'c..cc..c', '.cc..cc.', 'c..cc..c', '.cc..cc.', 'dddddddd'],
-                keys={'c': 'rope', 'd': 'drum_d'}) for f in ('north', 'south', 'east', 'west')})
-    drum.cube((-2.25, -3.5, -2.25), (4.5, 0.5, 4.5), color='hide', pattern='mc', clusters=0.0, rim=False,
-              faces={'up': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=['.........', '.........', '.........', '....g....', '...ggg...', '....g....'],
-                                keys={'g': 'glow'}, glow_keys='g')})
-    head = body.part('head', pivot=(0, -1, -4.5))
-    head.cube((-2.5, -3, -4), (5, 4, 4), color='skin', pattern='mc', clusters=0.2, faces={
-        'north': dict(color='skin', pattern='mc', clusters=0.0, hd=True, map=hd_rows(THUMPLING_FACE['neutral'], 10, 8),
-                      keys={'W': 'white', 'E': 'eye', 'b': 'beak', 'd': 'skin_d'}, expr={k: hd_rows(v, 10, 8) for k, v in THUMPLING_FACE.items() if k != 'neutral'}),
-    })
-    for name, sx, sz in (('front_left', 1, -1), ('front_right', -1, -1), ('hind_left', 1, 1), ('hind_right', -1, 1)):
-        leg = body.part(f'{name}_leg', pivot=(3 * sx, 0.5, 3 * sz))
-        leg.cube((-1, 0, -1), (2, 2.5, 2), color='skin', pattern='mc', clusters=0.0, rim=False, faces={'down': dict(color='skin_d', pattern='mc', clusters=0.0)})
-    tail = body.part('tail', pivot=(0, -0.5, 4.5))
-    tail.cube((-0.5, -0.5, 0), (1, 1, 2), color='skin_d', pattern='mc', clusters=0.0, rim=False)
-    return m
-
-
-# =========================================================================== THE WHISTLER (crane)
 CRANE_EYE = {
     'neutral': {1: '..rr..', 2: '.rEEr.', 3: '.rEhr.', 4: '..rr..'},
     'blink': {3: '.kkkk.', 4: '..rr..'},
@@ -605,7 +559,7 @@ def conductor_mask() -> Model:
     return m
 
 
-ALL = {'thumper': thumper, 'thumpling': thumpling, 'whistler': whistler, 'whistling': whistling, 'strummer': strummer, 'strumling': strumling,
+ALL = {'thumper': thumper, 'whistler': whistler, 'whistling': whistling, 'strummer': strummer, 'strumling': strumling,
        'conductor_mask': conductor_mask}
 
 
@@ -1187,10 +1141,6 @@ def _resculk(fn, colours):
 
 ALL.update({
     'thumper': thumper_sculk, 'whistler': whistler_sculk, 'strummer': strummer_sculk,
-    'thumpling': _resculk(thumpling, {'shell': '#0d1217', 'shell_l': '#16222a', 'shell_d': '#070a0d', 'seam': '#034150', 'ring': '#074857',
-                                      'skin': '#bbc39b', 'skin_l': '#d1d6b6', 'skin_d': '#819988', 'plas': '#4e5c55', 'drum': '#16222a',
-                                      'drum_l': '#24343e', 'drum_d': '#070a0d', 'hide': '#d6cfb0', 'rope': '#bbc39b', 'eye': '#04070a', 'white': '#29dfeb',
-                                      'beak': '#4e5c55'}),
     'whistling': _resculk(whistling, {'plume': '#16222a', 'plume_l': '#24343e', 'plume_d': '#0d1217', 'ink': '#034150', 'ink_l': '#074857',
                                       'crown': '#29dfeb', 'flute': '#bbc39b', 'flute_l': '#d1d6b6', 'eye': '#04070a', 'white': '#29dfeb', 'leg': '#819988'}),
     'strumling': _resculk(strumling, {'spider': '#0d1217', 'spider_l': '#16222a', 'spider_d': '#070a0d', 'mark': '#29dfeb', 'fang': '#d1d6b6'}),

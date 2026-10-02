@@ -10,7 +10,6 @@ public final class ModModelLayers {
     public static final ModelLayerLocation THUMPER = layer("thumper");
     public static final ModelLayerLocation WHISTLER = layer("whistler");
     public static final ModelLayerLocation STRUMMER = layer("strummer");
-    public static final ModelLayerLocation THUMPLING = layer("thumpling");
     public static final ModelLayerLocation WHISTLING = layer("whistling");
     public static final ModelLayerLocation STRUMLING = layer("strumling");
     public static final ModelLayerLocation SCULK_PARASITE = layer("sculk_parasite");

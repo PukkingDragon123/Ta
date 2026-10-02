@@ -492,7 +492,7 @@ public final class ClientSmokeTest {
         // the Dictator and his orchestra, at the far end of the stage
         c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
         c.spawn(ModEntities.SCULK_HARMONER.get(), 21.5, STAGE_Y + 2.5, STAGE_Z + 6.0, face, false);
-        c.spawn(ModEntities.THUMPLING.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
+        c.spawn(ModEntities.SCULK_PARASITE.get(), 16.2, STAGE_Y, STAGE_Z + 4.0, face, false);
         c.spawn(ModEntities.WHISTLING.get(), 22.0, STAGE_Y, STAGE_Z + 4.0, face, false);
         c.spawn(ModEntities.STRUMLING.get(), 24.6, STAGE_Y, STAGE_Z + 5.5, face, false);
         // one Harmoner of every colour, perched in a row
@@ -634,7 +634,7 @@ public final class ClientSmokeTest {
         c.spawn(ModEntities.THUMPER.get(), x0 - 8.5, STAGE_Y, z0 + 2.5, 160.0F, false);
         c.spawn(ModEntities.STRUMMER.get(), x0 + 0.5, STAGE_Y, z0 + 2.5, face, false);
         c.spawn(ModEntities.WHISTLER.get(), x0 + 8.5, STAGE_Y + 2.5, z0 + 2.5, 200.0F, false);
-        c.spawn(ModEntities.THUMPLING.get(), x0 - 5.5, STAGE_Y, z0 - 1.5, face, false);
+        c.spawn(ModEntities.SCULK_PARASITE.get(), x0 - 5.5, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.STRUMLING.get(), x0 + 3.0, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.WHISTLING.get(), x0 + 6.0, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.CONDUCTOR_MASK.get(), x0 + 12.0, STAGE_Y + 1.0, z0 - 3.0, face, false);

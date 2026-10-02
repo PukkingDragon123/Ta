@@ -35,7 +35,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class Slumbler extends PathfinderMob implements MusicListener {
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(Slumbler.class, EntityDataSerializers.BOOLEAN);
-    private static final byte EVENT_YAWN = 60;
+    private static final byte EVENT_YAWN = 110;
     private static final byte EVENT_BITE = 61;
 
     public final AnimationState yawnAnimation = new AnimationState();

@@ -542,39 +542,6 @@
     ],
     "subtitle": "subtitles.thesift.entity.strummer.pluck"
   },
-  "entity.thumpling.ambient": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.turtle.ambient_land",
-        "type": "event",
-        "volume": 0.8,
-        "pitch": 1.6
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.thumpling.ambient"
-  },
-  "entity.thumpling.hurt": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.turtle.hurt_baby",
-        "type": "event",
-        "volume": 0.8,
-        "pitch": 1.3
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.thumpling.hurt"
-  },
-  "entity.thumpling.death": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.turtle.death_baby",
-        "type": "event",
-        "volume": 0.9,
-        "pitch": 1.2
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.thumpling.death"
-  },
   "entity.whistling.ambient": {
     "sounds": [
       {

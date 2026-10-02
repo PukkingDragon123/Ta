@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 /**
- * One of the young of the Conductor's three great players - a Thumpling, a Whistling or a
+ * One of the young of the Conductor's three great players - a Sculk Parasite, a Whistling or a
  * Strumling - and the rank and file of his orchestra. Every one has a signature attack: it winds up
  * (so you can see it coming), then plays its note. Subclasses say how far it reaches and what the
  * note does.
@@ -31,6 +31,8 @@ public abstract class OrchestraMinion extends Monster {
     public final AnimationState attackAnimation = new AnimationState();
     private int cooldown = 40;
     private int windup = -1;
+    /** The client only hears when a wind-up starts: it counts the wind-up out itself. */
+    private int clientWindupEnd = -1;
 
     protected OrchestraMinion(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -54,7 +56,7 @@ public abstract class OrchestraMinion extends Monster {
     }
 
     public boolean isWindingUp() {
-        return this.windup >= 0;
+        return this.level().isClientSide() ? this.tickCount < this.clientWindupEnd : this.windup >= 0;
     }
 
     @Override
@@ -81,6 +83,7 @@ public abstract class OrchestraMinion extends Monster {
     public void handleEntityEvent(byte id) {
         if (id == EVENT_ATTACK) {
             this.attackAnimation.start(this.tickCount);
+            this.clientWindupEnd = this.tickCount + this.windupTicks();
         } else {
             super.handleEntityEvent(id);
         }

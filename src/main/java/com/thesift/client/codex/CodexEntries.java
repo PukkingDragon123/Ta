@@ -164,7 +164,6 @@ public final class CodexEntries {
         l.add(mob(DICTATOR, "thumper", ModEntities.THUMPER, perform));
         l.add(mob(DICTATOR, "whistler", ModEntities.WHISTLER, perform));
         l.add(mob(DICTATOR, "strummer", ModEntities.STRUMMER, perform));
-        l.add(mob(DICTATOR, "thumpling", ModEntities.THUMPLING, attack));
         l.add(mob(DICTATOR, "whistling", ModEntities.WHISTLING, attack));
         l.add(mob(DICTATOR, "strumling", ModEntities.STRUMLING, attack));
         l.add(mob(DICTATOR, "sculk_parasite", ModEntities.SCULK_PARASITE, attack));

@@ -214,7 +214,7 @@ def temple(seed):
     for x in range(c - 4, c + 5):
         b.set(x, V - 2, c + 10, glyph(x + seed))
     b.set(c - 2, 1, c + 6, CRUMBLE)
-    b.set(c - 3, 1, c + 4, spawner('thumpling', 2, 4, 10))
+    b.set(c - 3, 1, c + 4, spawner('sculk_parasite', 2, 4, 10))
     b.set(c, y0, c - 7, sigil(0))
     # trap snares on the stairs up to the dais
     for (x, z) in ((c - 2, c + 12), (c + 2, c + 12), (c + 12, c)):
@@ -323,7 +323,7 @@ def giant_drum(seed):
         a = k * math.tau / 8
         b.set(c + round(math.cos(a) * 6.4), 6, c + round(math.sin(a) * 6.4), B('lullwood_planks'))
     b.set(c, 1, c, chest('chests/sift_ruins'))
-    b.set(c + 2, 1, c, spawner('thumpling', 2, 4, 10))
+    b.set(c + 2, 1, c, spawner('sculk_parasite', 2, 4, 10))
     b.decay(0.03, min_y=1, protect=('minecraft:chest', 'minecraft:spawner'))
     return b
 
@@ -501,7 +501,7 @@ def ruins(seed):
         b.set(x, 7, S - 4, DS_CH if x == c else DS_BR)
     b.set(c, 1, c, chest('chests/sift_ruins', 'south'))
     if seed % 2 == 0:
-        b.set(c + 2, 1, c - 2, spawner(('thumpling', 'whistling', 'strumling')[seed % 3], 2, 4, 9))
+        b.set(c + 2, 1, c - 2, spawner(('sculk_parasite', 'whistling', 'strumling')[seed % 3], 2, 4, 9))
     for _ in range(6):
         b.set(b.rnd.randrange(3, S - 3), 0, b.rnd.randrange(3, S - 3), suspicious('archaeology/sift_common'))
     b.decay(0.06, top_bias=0.2, min_y=2, protect=('minecraft:chest', 'minecraft:spawner'))

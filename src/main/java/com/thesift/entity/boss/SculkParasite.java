@@ -15,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
@@ -51,6 +52,7 @@ public class SculkParasite extends OrchestraMinion {
     /** It chases a little faster than you walk, but not as fast as you sprint (mob speed goes with the square of the modifier). */
     @Override
     protected void addMovementGoals() {
+        this.goalSelector.addGoal(3, new SkitterGoal());
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0, true));
     }
 
@@ -190,5 +192,61 @@ public class SculkParasite extends OrchestraMinion {
     @Override
     protected int burstColor() {
         return 0x29DFEB;
+    }
+
+    /** Is it riding the titan Thumper's back? */
+    private boolean aboardTitan() {
+        for (Thumper th : this.level().getEntitiesOfClass(Thumper.class, this.getBoundingBox().inflate(1.0, 2.0, 1.0))) {
+            if (th.isOnBack(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * On the titan's back there is no path to follow - its back is not ground the pathfinder knows -
+     * so it just skitters straight at its target.
+     */
+    private final class SkitterGoal extends Goal {
+        SkitterGoal() {
+            this.setFlags(java.util.EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity t = SculkParasite.this.getTarget();
+            return t != null && t.isAlive() && SculkParasite.this.distanceToSqr(t) < 24.0 * 24.0 && SculkParasite.this.aboardTitan();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.canUse();
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void start() {
+            SculkParasite.this.setAggressive(true);
+        }
+
+        @Override
+        public void stop() {
+            SculkParasite.this.setAggressive(false);
+        }
+
+        @Override
+        public void tick() {
+            LivingEntity t = SculkParasite.this.getTarget();
+            if (t == null) {
+                return;
+            }
+            SculkParasite.this.getLookControl().setLookAt(t, 30.0F, 30.0F);
+            SculkParasite.this.getMoveControl().setWantedPosition(t.getX(), t.getY(), t.getZ(), 1.0);
+        }
     }
 }

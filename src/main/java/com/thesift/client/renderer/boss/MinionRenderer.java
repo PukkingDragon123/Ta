@@ -38,7 +38,7 @@ public class MinionRenderer<T extends OrchestraMinion, M extends EntityModel<Min
 
     @Override
     protected Expression expression(T entity, MinionRenderState state) {
-        return Expression.pick(entity, entity.isWindingUp() || entity.getTarget() != null, false, false);
+        return Expression.pick(entity, entity.isWindingUp() || entity.isAggressive(), false, false);
     }
 
     @Override

@@ -11,7 +11,6 @@ import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
 import com.thesift.entity.boss.Thumper;
-import com.thesift.entity.boss.Thumpling;
 import com.thesift.entity.boss.WebShot;
 import com.thesift.entity.boss.Whistler;
 import com.thesift.entity.boss.Whistling;
@@ -52,8 +51,6 @@ public final class ModEntities {
             MobCategory.MONSTER, b -> b.sized(1.6F, 2.6F).eyeHeight(2.25F).clientTrackingRange(16));
     public static final DeferredHolder<EntityType<?>, EntityType<Strummer>> STRUMMER = ENTITIES.registerEntityType("strummer", Strummer::new,
             MobCategory.MONSTER, b -> b.sized(2.6F, 2.8F).eyeHeight(2.4F).clientTrackingRange(16));
-    public static final DeferredHolder<EntityType<?>, EntityType<Thumpling>> THUMPLING = ENTITIES.registerEntityType("thumpling", Thumpling::new,
-            MobCategory.MONSTER, b -> b.sized(0.7F, 0.55F).eyeHeight(0.35F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Whistling>> WHISTLING = ENTITIES.registerEntityType("whistling", Whistling::new,
             MobCategory.MONSTER, b -> b.sized(0.5F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Strumling>> STRUMLING = ENTITIES.registerEntityType("strumling", Strumling::new,

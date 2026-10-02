@@ -9,7 +9,6 @@ import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
 import com.thesift.entity.boss.Thumper;
-import com.thesift.entity.boss.Thumpling;
 import com.thesift.entity.boss.Whistler;
 import com.thesift.entity.boss.Whistling;
 import com.thesift.entity.Sifter;
@@ -51,7 +50,6 @@ public final class ModBusEvents {
         event.put(ModEntities.CONDUCTOR_MASK.get(), com.thesift.entity.boss.ConductorMask.createAttributes().build());
         event.put(ModEntities.WHISTLER.get(), Whistler.createAttributes().build());
         event.put(ModEntities.STRUMMER.get(), Strummer.createAttributes().build());
-        event.put(ModEntities.THUMPLING.get(), Thumpling.createAttributes().build());
         event.put(ModEntities.WHISTLING.get(), Whistling.createAttributes().build());
         event.put(ModEntities.STRUMLING.get(), Strumling.createAttributes().build());
         event.put(ModEntities.SCULK_PARASITE.get(), com.thesift.entity.boss.SculkParasite.createAttributes().build());
