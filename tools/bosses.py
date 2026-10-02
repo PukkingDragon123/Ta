@@ -849,20 +849,48 @@ def plate_rows(d, h, lit):
 
 
 def plate(part, name, pivot, rot, d, h):
-    """A dorsal plate and its lit twin (ThumperModel lights them one by one before the breath)."""
-    pk = {'b': 'bone', 'l': 'bone_l', 'd': 'bone_d', 'm': 'sculk_d', 'g': 'glow', 'G': 'glow'}
-    blank = lambda w, hh: ['_' * w] * hh
+    """A dorsal plate and its lit twin (ThumperModel lights them one by one before the breath): a
+    thick, leaf-shaped plate stepped in three tiers - broad at the root, a narrower middle, a
+    pointed tip - so it reads as solid from any side. Bone, with a channel of sculk up the middle;
+    the twin is a shell just outside it, dark but for that channel and the tip, glowing."""
+    pk = {'b': 'bone', 'l': 'bone_l', 'd': 'bone_d', 'm': 'sculk_d', 's': 'sculk', 'g': 'glow', 'G': 'glow'}
+    half = lambda v: max(0.5, round(v * 2) / 2)
+    tiers = []
+    y = 0.0
+    for frac_h, frac_d, thick in ((0.5, 1.0, 1.5), (0.3, 0.68, 1.2), (0.2, 0.36, 0.9)):
+        th = half(h * frac_h)
+        dd = half(d * frac_d)
+        tiers.append((y, th, dd, thick))
+        y += th
+
+    def channel(w, hh, lit):
+        c = (w - 1) / 2
+        return [''.join(('G' if (yy % 3 == 0) else 'g') if abs(x - c) < 0.8 else ('_' if lit else ('d' if x in (0, w - 1) else ('l' if (x + yy) % 5 == 0 else 'b')))
+                        for x in range(w)) for yy in range(hh)]
+
     p = part.part(name, pivot=pivot, rot=rot)
-    side = dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True, map=plate_rows(d * 2, h * 2, False), keys=pk)
-    # a thin sheet: only its jagged sides show (its edges are cut away)
-    edges = lambda t: {f: dict(color='bone_d', pattern='mc', clusters=0.0, rim=False, hd=True, map=blank(w, hh), keys=pk)
-                       for f, (w, hh) in (('north', (t, h * 2)), ('south', (t, h * 2)), ('up', (t, d * 2)), ('down', (t, d * 2)))}
-    p.cube((-0.25, -h, -d / 2), (0.5, h, d), color='bone_d', pattern='mc', clusters=0.0, rim=False, faces={
-        'east': side, 'west': dict(side, map=[r[::-1] for r in side['map']]), **edges(1)})
     lit = p.part(f'{name}_lit', pivot=(0, 0, 0))
-    glow = dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=plate_rows(d * 2, h * 2, True), keys=pk, glow_keys='gG')
-    lit.cube((-0.5, -h, -d / 2), (1.0, h, d), color='glow', pattern='mc', clusters=0.0, rim=False, faces={
-        'east': glow, 'west': dict(glow, map=[r[::-1] for r in glow['map']]), **edges(2)})
+    for i, (y0, th, dd, thick) in enumerate(tiers):
+        w, hh = int(dd * 2), int(th * 2)
+        tw = max(1, int(thick * 2))
+        tip = i == len(tiers) - 1
+        side = dict(color='bone', pattern='mc', clusters=0.0, rim=False, hd=True,
+                    map=[r.replace('G', 'm').replace('g', 'm') for r in channel(w, hh, False)], keys=pk)
+        p.cube((-thick / 2, -y0 - th, -dd / 2), (thick, th, dd), color='bone', pattern='mc', clusters=0.2, rim=False, faces={
+            'east': side, 'west': side,
+            'north': dict(color='bone_d', pattern='mc', clusters=0.0, rim=False),
+            'south': dict(color='bone_d', pattern='mc', clusters=0.0, rim=False),
+            'up': dict(color='bone_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['l' * tw] * w if not tip else
+                       ['m' * tw] * w, keys=pk),
+        })
+        glow_side = dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=channel(w, hh, True), keys=pk, glow_keys='gG')
+        blank = lambda a, b: dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=['_' * a] * b, keys=pk)
+        lit.cube((-thick / 2, -y0 - th, -dd / 2), (thick, th, dd), inflate=0.12, color='glow', pattern='mc', clusters=0.0, rim=False, faces={
+                     'east': glow_side, 'west': glow_side,
+                     'north': blank(tw, hh), 'south': blank(tw, hh), 'down': blank(tw, w),
+                     'up': dict(color='glow', pattern='mc', clusters=0.0, rim=False, hd=True, map=['G' * tw] * w, keys=pk, glow_keys='gG')
+                     if tip else blank(tw, w),
+                 })
     return p
 
 
