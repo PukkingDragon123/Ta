@@ -164,28 +164,207 @@ TOOL_MAP = {
 }
 GEM = {'p': PINK[2], 'P': PINK[1], 'q': PINK[3], 'w': WHITE, 'h': S_RAMP[5], 'o': PINK[0], 'g': GOLD[3], 'G': GOLD[2]}
 
+# ---------------------------------------------------------------------------- the music motif
+# Siftite gear is engraved like sheet music: staff lines cut into blades and plates, pink notes
+# inlaid along them, a pair of beamed quavers on the breastplate (and a treble clef on the worn
+# armour, which has the room). The textures animate: a pulse of light runs along each staff line
+# and each note glints as the light passes it.
 
-def tool(name, detail=''):
-    img = recolour(vanilla('diamond_' + name), TOOL_MAP, name)
-    return dots(img, detail, GEM) if detail else img
+FRAMES, FRAMETIME = 16, 3
+ENGRAVE = S_RAMP[1]   # the cut line, a step darker than the metal around it
+NOTE, NOTE_HI, NOTE_LO = PINK[2], PINK[3], PINK[1]
+
+# the breastplate's beamed quavers, in the order the light traces them: left head, up its stem,
+# across the beam, down the right stem, right head. Capital letters mark the shaded pixels.
+QUAVERS = [(5, 10, 'p'), (6, 10, 'p'), (5, 11, 'P'), (6, 11, 'P'), (6, 9, 'p'), (6, 8, 'P'), (6, 7, 'p'), (7, 8, 'P'),
+           (7, 7, 'p'), (8, 7, 'P'), (8, 6, 'p'), (9, 7, 'P'), (9, 6, 'p'), (10, 7, 'P'), (10, 6, 'p'), (10, 8, 'p'),
+           (10, 9, 'p'), (9, 10, 'p'), (10, 10, 'p'), (9, 11, 'P'), (10, 11, 'P')]
+_Q = {(x, y) for x, y, _ in QUAVERS}
+
+
+def _row(y, x0, x1, skip=()):
+    return [(x, y) for x in range(x0, x1 + 1) if (x, y) not in skip]
+
+
+def _note(x, y):
+    """A crotchet: a two-pixel head at (x, y) with its stem rising from the right."""
+    return [(x, y, 'p'), (x + 1, y, 'p'), (x + 1, y - 1, 'P'), (x + 1, y - 2, 'P')]
+
+
+# per item: lines = engraved staff lines (the light runs along them in list order), glows = light
+# paths with no engraving (heads too thin to cut), notes = inlaid notes (single pixels, or glyphs
+# of (x, y, shade)), detail = static gem / glint pixels.
+MUSIC = {
+    'sword': dict(lines=[[(7, 8), (8, 7), (9, 6), (10, 5), (11, 4), (12, 3), (13, 2)]],
+                  notes=[(8, 8), (10, 4), (13, 3)], detail='5,9,p 4,9,P 5,8,q 14,1,w'),
+    'pickaxe': dict(glows=[[(6, 3), (7, 3), (8, 3), (9, 3), (10, 3), (11, 4), (12, 5), (13, 6), (13, 7), (13, 8), (13, 9), (13, 10)]],
+                    notes=[(8, 3), (12, 5), (13, 9)]),
+    'axe': dict(glows=[[(10, 2), (9, 2), (8, 3), (7, 4), (7, 5)], [(10, 6), (11, 7), (12, 7)]],
+                notes=[[(8, 5, 'p'), (9, 5, 'p'), (9, 4, 'P'), (9, 3, 'P')]]),
+    'shovel': dict(glows=[[(9, 5), (10, 4), (11, 3), (12, 3), (13, 4), (13, 5), (12, 6), (11, 7)]],
+                   notes=[[(10, 5, 'p'), (11, 5, 'p'), (11, 4, 'P')]]),
+    'hoe': dict(glows=[[(7, 2), (8, 2), (9, 2), (10, 3), (11, 4), (12, 5)]], notes=[(8, 2), (11, 5)]),
+    'spear': dict(lines=[[(10, 6), (11, 5), (12, 4), (13, 3), (14, 2)]], notes=[(10, 4), (12, 2)]),
+    'spear_in_hand': dict(lines=[[(6, 5), (5, 4), (4, 3), (3, 2), (2, 1)]], notes=[(2, 3), (4, 5)]),
+    # two staff lines around the helmet's brow, notes sitting between them
+    'helmet': dict(lines=[_row(4, 5, 10), _row(6, 4, 11)], notes=[(6, 5), (9, 5)]),
+    # three faint staff lines across the breastplate, beamed quavers on them, a note on each shoulder
+    'chestplate': dict(lines=[_row(8, 4, 11, _Q), _row(10, 4, 11, _Q), _row(12, 4, 11, _Q)], quavers=True,
+                       notes=[(3, 4), (12, 4)], engrave=S_RAMP[2]),
+    # a staff around the waist, a crotchet on each leg
+    'leggings': dict(lines=[_row(3, 4, 10), _row(5, 4, 11)],
+                     glows=[[(4, 6), (4, 7), (4, 8), (4, 9), (4, 10), (4, 11)], [(10, 7), (10, 8), (10, 9), (10, 10), (10, 11)]],
+                     notes=[(6, 4), (9, 4), _note(4, 10), _note(10, 10)]),
+    'boots': dict(glows=[[(4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (3, 9), (2, 10)], [(10, 4), (10, 5), (10, 6), (10, 7), (10, 8), (11, 9), (12, 10)]],
+                  notes=[_note(4, 8), _note(10, 8)]),
+}
+
+
+def _pulse(i, length, f, delay):
+    """How brightly the travelling light shines on step i of a path in frame f: 2 core, 1 halo."""
+    t = (f - delay) % FRAMES
+    span = FRAMES * 0.75  # the light crosses in three quarters of the loop, then the metal rests
+    if t > span:
+        return 0
+    s = -1.5 + (length + 3) * t / span
+    d = abs(i - s)
+    return 2 if d < 0.6 else 1 if d < 1.6 else 0
+
+
+def _lit(shade, lv):
+    """A pink inlay pixel at pulse level lv."""
+    if shade == 'P':
+        return (NOTE_LO, NOTE, NOTE_HI)[lv]
+    return (NOTE, NOTE_HI, WHITE)[lv]
+
+
+def music_frames(name):
+    m = MUSIC[name]
+    base = recolour(vanilla('diamond_' + name), TOOL_MAP, name)
+    if m.get('detail'):
+        dots(base, m['detail'], GEM)
+    tracks = [(p, 'line', k * 3) for k, p in enumerate(m.get('lines', []))]
+    tracks += [(p, 'glow', k * 3) for k, p in enumerate(m.get('glows', []))]
+    if m.get('quavers'):
+        tracks.append(([(x, y) for x, y, _ in QUAVERS], 'quavers', 5))
+    shade = {(x, y): s for x, y, s in QUAVERS}
+
+    def nearest(pt):
+        best = None
+        for p, kind, delay in tracks:
+            for i, q in enumerate(p):
+                d = abs(q[0] - pt[0]) + abs(q[1] - pt[1])
+                if best is None or d < best[0]:
+                    best = (d, i, len(p), delay)
+        return best[1:]
+
+    notes = []
+    for n in m.get('notes', []):
+        glyph = n if isinstance(n, list) else [(n[0], n[1], 'p')]
+        notes.append((glyph, nearest(glyph[0][:2])))
+    frames = []
+    for f in range(FRAMES):
+        img = base.copy()
+        px = img.load()
+        for p, kind, delay in tracks:
+            for i, (x, y) in enumerate(p):
+                lv = _pulse(i, len(p), f, delay)
+                if kind == 'line':
+                    c = (m.get('engrave', ENGRAVE), S_RAMP[4], WHITE)[lv]
+                elif kind == 'quavers':
+                    c = _lit(shade[(x, y)], lv)
+                else:
+                    c = (px[x, y], mix(px[x, y], S_RAMP[5], 0.65), S_RAMP[6])[lv]
+                px[x, y] = rgba(c)
+        for glyph, (i, length, delay) in notes:
+            lv = _pulse(i, length, f, delay)
+            for x, y, s in glyph:
+                px[x, y] = rgba(_lit(s, lv))
+        frames.append(img)
+    return frames
+
+
+def item_animations():
+    """{texture name: (frames, frametime)} for every animated item texture."""
+    return {'siftite_' + n: (music_frames(n), FRAMETIME) for n in MUSIC}
 
 
 def tools():
-    return {
-        # a pink gem set where the head (or blade) meets the handle, and a glint of light near the tip
-        'siftite_sword': tool('sword', '5,9,p 4,9,P 5,8,q 14,1,w'),
-        'siftite_pickaxe': tool('pickaxe', '10,4,p 10,3,q 9,4,P 6,3,w'),
-        'siftite_axe': tool('axe', '9,5,p 9,4,q 10,5,P 10,2,w'),
-        'siftite_shovel': tool('shovel', '11,6,p 11,5,q 12,3,w'),
-        'siftite_hoe': tool('hoe', '11,3,p 11,2,q 10,3,P 8,2,w'),
-        'siftite_spear': tool('spear', '8,7,p 9,6,q 13,2,w'),
-        'siftite_spear_in_hand': recolour(vanilla('diamond_spear_in_hand'), TOOL_MAP, 'spear_in_hand'),
-        # a pink gem on the helmet's brow, the breastplate, the belt buckle and the boot cuffs
-        'siftite_helmet': tool('helmet', '7,5,q 8,5,p 7,6,p 8,6,P'),
-        'siftite_chestplate': tool('chestplate', '7,7,q 8,7,p 7,8,p 8,8,P'),
-        'siftite_leggings': tool('leggings', '7,3,q 8,3,p 7,4,p 8,4,P'),
-        'siftite_boots': tool('boots', '4,10,p 12,10,p 4,4,w'),
-    }
+    return {k: v[0][0] for k, v in item_animations().items()}
+
+
+# ---------------------------------------------------------------------------- worn armour
+
+TREBLE = [  # 5 x 11, for the 8 x 12 front of the worn breastplate
+    '...X.',
+    '..X.X',
+    '..X.X',
+    '..XX.',
+    '.XX..',
+    'X.X..',
+    'X.XX.',
+    'X.X.X',
+    '.XXX.',
+    '..X..',
+    'XX...',
+]
+
+
+def armor_layers():
+    """The worn Siftite armour (static: entity textures cannot animate), engraved to match the
+    icons: staff lines wrapping every plate, inlaid pink crotchets, a treble clef on the chest."""
+    def boxfaces(u, v, w, h, d):
+        return {'up': (u + d, v, w, d), 'down': (u + d + w, v, w, d), 'west': (u, v + d, d, h), 'north': (u + d, v + d, w, h),
+                'east': (u + d + w, v + d, d, h), 'south': (u + 2 * d + w, v + d, w, h)}
+
+    def plate(px, rect, lines=(), notes=()):
+        fx, fy, fw, fh = rect
+        for y in range(fh):
+            for x in range(fw):
+                if y == 0 or x == 0:
+                    c = S_RAMP[4]
+                elif y == fh - 1 or x == fw - 1:
+                    c = S_RAMP[1]
+                elif y in lines:
+                    c = S_RAMP[2]
+                else:
+                    c = mix(S_RAMP[3], S_RAMP[4], 0.35) if y <= fh // 4 else S_RAMP[3]
+                px[fx + x, fy + y] = rgba(c)
+        for (x, y) in notes:  # a crotchet: two-pixel head, stem rising from its right
+            for (dx, dy), c in (((0, 0), NOTE), ((1, 0), NOTE), ((1, -1), NOTE_LO), ((1, -2), NOTE_LO)):
+                if 0 < x + dx < fw - 1 and 0 < y + dy < fh - 1:
+                    px[fx + x + dx, fy + y + dy] = rgba(c)
+
+    staff = (2, 4, 6, 8, 10)
+    hum = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    hp = hum.load()
+    # helmet: a two-line staff circling the head, a note on every side
+    for i, (k, r) in enumerate(boxfaces(0, 0, 8, 8, 8).items()):
+        plate(hp, r, (3, 5), [(1 + (i * 3) % 5, 5 if i % 2 else 3)])
+    for (x, y) in ((9, 10), (10, 10), (13, 10), (14, 10)):
+        hp[x, y] = (0, 0, 0, 0)  # visor eye slits
+    for y in range(12, 16):
+        for x in range(10, 14):
+            hp[x, y] = (0, 0, 0, 0)  # open face
+    # breastplate: a full five-line staff wrapping the body, the clef on the front
+    chest = {'north': [], 'south': [(1, 8), (4, 6)], 'west': [(1, 6)], 'east': [(1, 8)]}
+    for k, r in boxfaces(16, 16, 8, 12, 4).items():
+        plate(hp, r, staff if k in chest else (), chest.get(k, ()))
+    for j, row in enumerate(TREBLE):
+        for i, ch in enumerate(row):
+            if ch == 'X':
+                hp[21 + i, 20 + j] = rgba(NOTE_HI if j < 3 else NOTE)
+    # arms and boots: the staff runs on, a note climbing each face
+    for (u, v) in ((40, 16), (0, 16)):
+        for i, (k, r) in enumerate(boxfaces(u, v, 4, 12, 4).items()):
+            plate(hp, r, () if k in ('up', 'down') else (4, 6, 8), [] if k in ('up', 'down') else [(1, 6 if i % 2 else 8)])
+    leg = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    lp = leg.load()
+    for k, r in boxfaces(16, 16, 8, 12, 4).items():
+        plate(lp, r, () if k in ('up', 'down') else (2, 4), [(4, 4)] if k in ('north', 'south') else [])
+    for i, (k, r) in enumerate(boxfaces(0, 16, 4, 12, 4).items()):
+        plate(lp, r, () if k in ('up', 'down') else (4, 6, 8), [] if k in ('up', 'down') else [(1, 8 if i % 2 else 6)])
+    return {'entity/equipment/humanoid/siftite': hum, 'entity/equipment/humanoid_leggings/siftite': leg}
 
 
 # ============================================================================ materials

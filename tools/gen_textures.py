@@ -57,6 +57,15 @@ def out(name, t, meta=None):
             json.dump(meta, f, indent=2)
 
 
+def strip(frames):
+    """Stacks animation frames into the vertical strip an animated texture is stored as."""
+    w, h = frames[0].size
+    img = Image.new('RGBA', (w, h * len(frames)), (0, 0, 0, 0))
+    for i, f in enumerate(frames):
+        img.paste(f, (0, i * h))
+    return img
+
+
 CUTOUT = {'texture': {'mipmap_strategy': 'strict_cutout'}}
 LEAVES_META = {'texture': {'mipmap_strategy': 'dark_cutout'}}
 
@@ -1397,11 +1406,18 @@ def logo():
 
 
 def hd_items():
-    """Every item sprite, hand-drawn at 16x in the vanilla style (tools/items16.py), plus the mob
-    effect icons and flower sprites drawn alongside them."""
+    """Every item sprite, hand-drawn at 16x in the vanilla style (tools/items16.py), with the
+    Siftite gear written as animated strips; plus the worn Siftite armour, the mob effect icons
+    and the flower sprites drawn alongside them."""
     import items16
+    anims = items16.item_animations()
     for name, img in items16.all_items().items():
-        out(f'item/{name}', img)
+        if name not in anims:
+            out(f'item/{name}', img)
+    for name, (frames, frametime) in anims.items():
+        out(f'item/{name}', strip(frames), {'animation': {'frametime': frametime, 'interpolate': False}})
+    for name, img in items16.armor_layers().items():
+        out(name, img)
     for name, img in items16.effect_icons().items():
         out(f'mob_effect/{name}', img)
     for name, img in items16.flower_textures().items():
