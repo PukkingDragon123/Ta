@@ -61,7 +61,7 @@ public final class InstrumentHud {
     private static void drawLadder(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
-        if (p == null || mc.options.hideGui || !holdsInstrument(p)) {
+        if (p == null || !holdsInstrument(p)) {
             return;
         }
         int pitch = Notes.lookPitch(p);
@@ -93,7 +93,7 @@ public final class InstrumentHud {
     private static void drawSheet(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
-        if (p == null || mc.options.hideGui) {
+        if (p == null) {
             return;
         }
         Song song = shownSheet(p);

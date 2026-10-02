@@ -57,7 +57,7 @@ public final class SongEffects {
     private static void lullaby(ServerLevel level, @Nullable Player player, Vec3 at) {
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(LULLABY_RADIUS),
                 m -> m.isAlive() && m instanceof Enemy && m instanceof Mob && m.distanceToSqr(at) <= LULLABY_RADIUS * LULLABY_RADIUS)) {
-            if (e.getType().is(net.neoforged.neoforge.common.Tags.EntityTypes.BOSSES)) {
+            if (e instanceof com.thesift.entity.boss.MiniBoss || e instanceof com.thesift.entity.boss.Dictator || e instanceof net.minecraft.world.entity.boss.wither.WitherBoss || e instanceof net.minecraft.world.entity.boss.enderdragon.EnderDragon || e instanceof net.minecraft.world.entity.monster.warden.Warden) {
                 continue;
             }
             e.addEffect(new MobEffectInstance(ModEffects.ENTRANCED, LULLABY_TICKS, 0, false, true), player);
