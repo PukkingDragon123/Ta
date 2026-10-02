@@ -85,22 +85,39 @@ footsteps leave puffs of dream dust.
 * **Riveter** (hostile): the sculk bat. It hangs head-down from cave ceilings with its long claws
   dangling, and screams to wake nearby Wardens.
 
-### The Dictator
-High in the dunes and mountains stands the **Sculk Castle**. Climb the spiral of steps inside it
-(jump the gaps, mind the crumbling ones, rest at the lantern ledges; slime catches you if you
-fall) to the roof and step up to the **Conductor's Podium**. **The Dictator** rises behind it:
-tall, thin, terribly fast. He blinks behind you, slashes with his baton and calls up his alien
-orchestra:
-* **Enforcer** (percussion): a living drum that beats its own drum head to send a shockwave along
-  the ground. Jump it.
-* **Resonator** (strings): a spidery harp of sculk tendons that snaps a cutting string at you and
-  drags you in.
-* **Howler** (wind): a pipe organ on legs that inhales through its back pipes, then blasts you
-  away.
+### The Conductor's orchestra
+Three great players wait in the Sift, each woken by a violet **Encore Sigil**:
+* **The Thumper** (percussion) waits in the middle of its **Drum Pit**, a round arena with four
+  towers. It is a giant turtle with a war drum on its shell, and only hits on the drum hurt it.
+  Jump its slam rings. If its charge hits a wall it is dazed.
+  * At half health it wakes the sculk in its shell and grows into a **titan** three times its
+    size, plated down its back like a monster-film kaiju. After that, nothing on the ground can
+    hurt it.
+  * Climb a tower and leap onto its back. The sculk deck there is solid, and every blow struck
+    from it lands.
+  * It shakes itself to throw you off (crouch to hold on). Sculk Parasites crawl out of its shell.
+  * On the ground it stomps (jump the shockwave) and breathes a sweeping beam of sculk song (hide
+    behind a tower).
+  * Drops the **Conga Drum**.
+* **The Whistler** (wind) circles roofed towers. It is a sculk crane whose song-beam locks on until
+  you break its line of sight. Drops the **Crane Beak**, which makes a flute.
+* **The Strummer** (strings) lurks in deep shrines. It is a mantis riding a spider and playing it
+  like a guitar. Drops **Magic Strings**, which make a guitar.
 
-At 60% he rolls rings of sound across the arena floor and summons the vocals, a **Warden**.
-Below 25% he gets even faster and drowns the arena in darkness. Beat him for the **Conductor's
-Baton**, a sword that fires sonic notes.
+Their young haunt ruins everywhere: Whistlings, Strumlings and **Sculk Parasites**. A parasite is a
+small, fragile centipede that bursts when it bites, leaving **Sculk Corruption II** in you. Each
+further bite deepens it.
+
+**Sculk Corruption** is a slow wither that takes your sight:
+* sculk crust grows in from the corners of the screen
+* glowing veins pulse with a heartbeat you can hear
+* tentacles writhe in from the edges, more and closer the deeper it goes.
+
+Milk washes it away.
+
+On the roof of the **Sculk Castle** stands the Grand Stage. Set the drum, flute and guitar on its
+three altars and the **Conductor** rises from his Mask. He fights in three movements, borrowing
+the shell, the wings and the strings of his players. Beat him for the **Conductor's Staff**.
 
 ### The Sift Codex
 A field guide in the creative Items tab. Its pages show every creature alive and animated, plus
@@ -131,7 +148,7 @@ table's limit.
 ### Structures
 Collapsed towers, broken musical temples, Chrome wells, abandoned altars, giant stone
 instruments (a harp and a drum), ruined bridges, buried dune settlements, mysterious statues, Sift
-ruins and deep shrines. They are half reclaimed by vegetation and hold harmony-stone puzzles,
+ruins, deep shrines, the Thumper's Drum Pit and the Sculk Castle. They are half reclaimed by vegetation and hold harmony-stone puzzles,
 sealed vaults, snares and crumbling floors, suspicious dreamsand to brush, and lore in the form of
 Dream Journal fragments.
 
