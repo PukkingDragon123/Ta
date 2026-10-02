@@ -248,9 +248,9 @@ public class DictatorModel extends EntityModel<DictatorRenderState> {
             }
             if (s.phase == 3 && this.wings[0].visible) {
                 // great slow beats; drooping while he rests
-                boolean rest = act == com.thesift.entity.boss.Dictator.REST;
-                float a = rest ? -0.6F : Mth.sin(age * 0.16F) * 0.55F + 0.1F;
-                float lag = rest ? -0.6F : Mth.sin((age - 4.0F) * 0.16F) * 0.55F + 0.1F;
+                boolean resting = act == com.thesift.entity.boss.Dictator.REST;
+                float a = resting ? -0.6F : Mth.sin(age * 0.16F) * 0.55F + 0.1F;
+                float lag = resting ? -0.6F : Mth.sin((age - 4.0F) * 0.16F) * 0.55F + 0.1F;
                 this.wings[0].zRot = -a;
                 this.wings[1].zRot = a;
                 this.wings[0].yRot = -0.15F;
