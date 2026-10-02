@@ -785,3 +785,7 @@ def sculk_spider() -> Model:
 
 
 ALL['strumling'] = sculk_spider
+
+# B2 Thumper & cutscenes: the Thumper Titan (layered shell, vents, barnacles, scaled limbs) - see tools/thumper_titan.py
+from thumper_titan import thumper_titan  # noqa: E402
+ALL['thumper'] = thumper_titan

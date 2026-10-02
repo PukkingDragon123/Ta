@@ -879,6 +879,16 @@ def gen_lang():
     })
     import echoer_world  # A2 Echoer: the Echoer, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
     LANG.update(echoer_world.lang())
+    # B2 Thumper & cutscenes: the boss stage cutscene title cards
+    LANG.update({
+        f'cutscene.{NS}.stage': 'Stage %s', f'cutscene.{NS}.defeated': 'Vanquished', f'cutscene.{NS}.skip': 'Sneak to skip',
+        f'cutscene.{NS}.thumper.2': 'The Shell Cracks', f'cutscene.{NS}.thumper.3': 'Wrath of the Deep Shell',
+        f'cutscene.{NS}.thumper.0': 'The Titan Falls Silent',
+        f'cutscene.{NS}.strummer.2': 'The Web Draws Tight', f'cutscene.{NS}.strummer.3': 'The Last Song of the Silk',
+        f'cutscene.{NS}.strummer.0': 'The Weaver Unstrung',
+        f'cutscene.{NS}.dictator.2': 'The Second Movement', f'cutscene.{NS}.dictator.3': 'Finale Furioso',
+        f'cutscene.{NS}.dictator.0': 'The Baton Falls',
+    })
     # sound subtitles
     for s in SOUNDS:
         LANG[f'subtitles.{NS}.{s}'] = subtitle(s)

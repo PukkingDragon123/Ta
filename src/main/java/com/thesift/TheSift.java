@@ -63,6 +63,7 @@ public class TheSift {
         com.thesift.item.SiftiteGear.register(); // H: Siftite knockback, swim speed and sound-proof armour
         com.thesift.item.PrismGear.register(); // B4 gear: the Prism Sword reveals nearby monsters
         com.thesift.entity.CreatureLife.register(modBus); // A1 creatures: creatures hear notes, Stomper riders stomp
+        com.thesift.entity.boss.BossStages.register(modBus); // B2 Thumper & cutscenes: boss stage cutscene payloads, viewers kept safe
 
         if (Boolean.getBoolean("thesift.smoketest")) {
             SmokeTest.registerIfEnabled(); // CI only

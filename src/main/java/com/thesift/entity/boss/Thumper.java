@@ -96,6 +96,10 @@ public class Thumper extends MiniBoss {
     private static final byte EVENT_ROAR = 106;
     private static final byte EVENT_QUAKE = 107;
     private static final byte EVENT_STEP = 108;
+    // B2 Thumper & cutscenes: a cannonball struck vent 0, 1 or 2 (-11, -12, -13); the model staggers
+    private static final byte EVENT_STAGGER = -11;
+    /** How long the death collapse lasts before it is gone (B2). */
+    public static final int DEATH_TICKS = 64;
     private static final EntityDataAccessor<Integer> BEAM_TARGET = SynchedEntityData.defineId(Thumper.class, EntityDataSerializers.INT);
 
     private Vec3 chargeDir = Vec3.ZERO;
@@ -109,6 +113,9 @@ public class Thumper extends MiniBoss {
     private boolean ventHit;
     private boolean ventsHinted;
     private double walked;
+    /** Client: the vent the last cannonball struck (see EVENT_STAGGER), and the tick it landed. */
+    public int staggerVent = -1;
+    public int staggerTick;
 
     public Thumper(EntityType<? extends Monster> type, Level level) {
         super(type, level, BossEvent.BossBarColor.GREEN);
@@ -171,12 +178,13 @@ public class Thumper extends MiniBoss {
         Vec3 f = this.forward();
         Vec3 side = new Vec3(-f.z, 0.0, f.x);
         Vec3 p = this.position();
-        return new Vec3[]{p.add(0.0, 2.75, 0.0).add(f.scale(0.1)), p.add(side.scale(1.6)).add(0.0, 1.45, 0.0), p.add(side.scale(-1.6)).add(0.0, 1.45, 0.0)};
+        // B2: where the Thumper Titan model puts them (tools/thumper_titan.py)
+        return new Vec3[]{p.add(0.0, 2.75, 0.0), p.add(side.scale(1.45)).add(0.0, 1.85, 0.0), p.add(side.scale(-1.45)).add(0.0, 1.85, 0.0)};
     }
 
     /** Where its beam comes from: its jaws. */
     public Vec3 mouth() {
-        return this.position().add(this.forward().scale(3.3)).add(0.0, 1.7, 0.0);
+        return this.position().add(this.forward().scale(3.6)).add(0.0, 1.5, 0.0);
     }
 
     /** A cannonball struck it: on an open vent it hurts; anywhere else it rings off the shell. */
@@ -210,6 +218,12 @@ public class Thumper extends MiniBoss {
             this.ventHit = false;
         }
         if (hurt) {
+            Vec3[] all = this.vents();
+            for (int i = 0; i < all.length; i++) {
+                if (all[i].distanceToSqr(best) < 1.0E-6) {
+                    level.broadcastEntityEvent(this, (byte) (EVENT_STAGGER - i)); // B2: the model staggers from this vent
+                }
+            }
             level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SCULK.defaultBlockState()), best.x, best.y, best.z, 40, 0.5, 0.4, 0.5, 0.3);
             level.sendParticles(ParticleTypes.SCULK_SOUL, best.x, best.y, best.z, 12, 0.4, 0.4, 0.4, 0.08);
             level.sendParticles(ModParticles.RESONANCE_RING.get(), best.x, best.y + 0.2, best.z, 0, 2.0, 0.0, 0.0, 1.0);
@@ -354,6 +368,7 @@ public class Thumper extends MiniBoss {
             this.phase = now;
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(now == 3 ? 0.26 : 0.2);
             this.setState(ROAR);
+            BossStages.cleared(level, this, BossStages.THUMPER, now); // B2: the stage cutscene
             return;
         }
         if (state == EXPOSED && !this.ventsHinted) {
@@ -808,11 +823,69 @@ public class Thumper extends MiniBoss {
                     this.level().addParticle(ParticleTypes.CLOUD, this.getRandomX(r), this.getY() + 0.2, this.getRandomZ(r), 0, 0.02, 0);
                 }
             }
-            case EVENT_STOMP -> Rumble.at(this.position(), 3.5F, 40.0F, 20);
+            case EVENT_STOMP -> {
+                Rumble.at(this.position(), 3.5F, 40.0F, 20);
+                this.shockwave();
+            }
+            case EVENT_STAGGER, EVENT_STAGGER - 1, EVENT_STAGGER - 2 -> {
+                this.staggerVent = EVENT_STAGGER - id;
+                this.staggerTick = this.tickCount;
+                Rumble.at(this.position(), 0.8F, 24.0F, 8);
+            }
             case EVENT_ROAR -> Rumble.at(this.position(), 2.5F, 56.0F, 40);
             case EVENT_QUAKE -> Rumble.at(this.position(), 1.4F, 32.0F, 12);
             case EVENT_STEP -> Rumble.at(this.position(), 0.6F, 20.0F, 6);
             default -> super.handleEntityEvent(id);
+        }
+    }
+
+    /** B2: the stomp's shockwave - a ring of dust and sculk racing out across the floor. */
+    private void shockwave() {
+        Level level = this.level();
+        for (int i = 0; i < 56; i++) {
+            float a = i * Mth.TWO_PI / 56.0F;
+            double c = Mth.cos(a);
+            double sn = Mth.sin(a);
+            level.addParticle(ParticleTypes.CLOUD, this.getX() + c * 1.6, this.getY() + 0.15, this.getZ() + sn * 1.6, c * 0.55, 0.02, sn * 0.55);
+            if (i % 4 == 0) {
+                level.addParticle(ParticleTypes.SCULK_SOUL, this.getX() + c * 2.2, this.getY() + 0.3, this.getZ() + sn * 2.2, c * 0.18, 0.05, sn * 0.18);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------ B2 Thumper & cutscenes: the death collapse
+
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+        if (this.level() instanceof ServerLevel level) {
+            BossStages.cleared(level, this, BossStages.THUMPER, BossStages.DEFEATED);
+        }
+    }
+
+    /** It takes its time dying: rears, buckles, the shell crashes down; then it is gone. */
+    @Override
+    protected void tickDeath() {
+        this.deathTime++;
+        if (!(this.level() instanceof ServerLevel level)) {
+            return;
+        }
+        if (this.deathTime == 2) {
+            this.playSound(ModSounds.THUMPER_DEATH.get(), 5.0F, 0.6F);
+        }
+        if (this.deathTime == 26) {
+            this.playSound(ModSounds.THUMPER_SLAM.get(), 5.0F, 0.5F);
+            level.broadcastEntityEvent(this, EVENT_STOMP);
+            level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SCULK.defaultBlockState()), this.getX(), this.getY() + 0.3, this.getZ(), 60,
+                    1.6, 0.2, 1.6, 0.2);
+        }
+        if (this.deathTime > 30 && this.deathTime % 6 == 0) {
+            level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + 2.2, this.getZ(), 3, 1.0, 0.4, 1.0, 0.02);
+        }
+        if (this.deathTime >= DEATH_TICKS && !this.isRemoved()) {
+            level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + 1.5, this.getZ(), 50, 1.4, 1.0, 1.4, 0.06);
+            level.broadcastEntityEvent(this, (byte) 60);
+            this.remove(Entity.RemovalReason.KILLED);
         }
     }
 

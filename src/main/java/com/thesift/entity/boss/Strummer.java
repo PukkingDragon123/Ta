@@ -185,6 +185,7 @@ public class Strummer extends MiniBoss {
         if (p > this.lastPhase && state != SWING && state != POUNCE) {
             this.lastPhase = p;
             this.setState(AWAKEN);
+            BossStages.cleared(level, this, BossStages.WEAVER, p); // B2 Thumper & cutscenes: the stage cutscene
             return;
         }
         if (state == AWAKEN) {
@@ -754,6 +755,15 @@ public class Strummer extends MiniBoss {
     @Override
     protected SoundEvent getDeathSound() {
         return ModSounds.STRUMMER_DEATH.get();
+    }
+
+    // B2 Thumper & cutscenes: the Weaver's defeat cutscene
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+        if (this.level() instanceof ServerLevel level) {
+            BossStages.cleared(level, this, BossStages.WEAVER, BossStages.DEFEATED);
+        }
     }
 
     @Override

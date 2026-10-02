@@ -306,6 +306,9 @@ public class Dictator extends Monster {
     }
 
     private void enterPhase(ServerLevel level, int phase) {
+        if (phase > this.getPhase()) {
+            BossStages.cleared(level, this, BossStages.CONDUCTOR, phase); // B2 Thumper & cutscenes: the stage cutscene
+        }
         this.entityData.set(PHASE, phase);
         this.entityData.set(TRANSFORM, TRANSFORM_TICKS);
         this.setAction(NONE);
@@ -850,6 +853,7 @@ public class Dictator extends Monster {
     public void die(DamageSource source) {
         super.die(source);
         if (this.level() instanceof ServerLevel level) {
+            BossStages.cleared(level, this, BossStages.CONDUCTOR, BossStages.DEFEATED); // B2 Thumper & cutscenes: the defeat cutscene
             this.spawnAtLocation(level, new ItemStack(ModItems.CONDUCTORS_STAFF.get()));
             if (this.podium != null && level.getBlockEntity(this.podium) instanceof ConductorsPodiumBlockEntity p) {
                 p.setDefeated();

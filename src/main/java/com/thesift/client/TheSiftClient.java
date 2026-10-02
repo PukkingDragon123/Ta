@@ -76,6 +76,7 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onCameraDistance);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onPlayerTurn);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onRenderLayer);
+        BossCinematic.register(modBus); // B2 Thumper & cutscenes: the film played when a boss loses a stage
         modBus.addListener(TheSiftClient::registerClientExtensions);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RiderInput::onInteractionKey); // A1: Stomper rider stomp
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
@@ -113,8 +114,8 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.HARMONER.get(), HarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.SCULK_HARMONER.get(), com.thesift.client.renderer.SculkHarmonerRenderer::new);
         event.registerEntityRenderer(ModEntities.DICTATOR.get(), DictatorRenderer::new);
-        event.registerEntityRenderer(ModEntities.THUMPER.get(), c -> new MiniBossRenderer<Thumper, ThumperModel>(c, new ThumperModel(c.bakeLayer(ModModelLayers.THUMPER)),
-                "thumper", Thumper.SCALE, 0.8F, (e, s) -> s.bossState == Thumper.EXPOSED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
+        // B2 Thumper & cutscenes: the Thumper Titan's renderer (vent-hit stagger, long death collapse)
+        event.registerEntityRenderer(ModEntities.THUMPER.get(), c -> new com.thesift.client.renderer.boss.ThumperRenderer(c, new ThumperModel(c.bakeLayer(ModModelLayers.THUMPER))));
         event.registerEntityRenderer(ModEntities.STRUMMER.get(), com.thesift.client.renderer.boss.StrummerRenderer::new); // the Weaver, with its silk thread
         event.registerEntityRenderer(ModEntities.STRUMLING.get(), com.thesift.client.renderer.boss.StrumlingRenderer::new); // the Sculk Spider
         event.registerEntityRenderer(ModEntities.SCULK_PARASITE.get(), c -> new MinionRenderer<>(c,
