@@ -738,13 +738,13 @@ def gen_lang():
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid that heals',
         f'codex.{NS}.chrome.body': 'A shifting cyan pearl liquid. Soaking in Chrome heals you, but it is thick like quicksand and you sink slowly: hold Shift to rise. Collect it with a bucket.',
         f'codex.{NS}.warden_core.title': 'Warden Core', f'codex.{NS}.warden_core.tagline': 'The heart of the ritual',
-        f'codex.{NS}.warden_core.body': 'Taken from a Warden or found in the deepest shrines. Set into a Sift Drum, it lets the drum lead the rhythm ritual that opens the way to The Sift.',
+        f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the deepest shrines. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
         f'codex.{NS}.sift_cake.title': 'Sift Cake', f'codex.{NS}.sift_cake.tagline': 'A treat from the plains',
         f'codex.{NS}.sift_cake.body': 'Baked from Glowing Slime Balls and Sift produce. Each slice restores a little hunger and leaves you glowing softly for a moment.',
         f'codex.{NS}.baton.title': "Conductor's Baton", f'codex.{NS}.baton.tagline': 'Taken from the Dictator',
         f'codex.{NS}.baton.body': 'Strikes as hard as a sword. Use it to flick a single sonic note down the line you point at, hurting the first creature in its way. It needs a moment to recover between notes.',
         f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
-        f'codex.{NS}.portal.body': 'Find the great frame in an Ancient City. Set a Sift Drum beside it with a Warden Core inside and three Sculk Sensors nearby, then play: the drum calls a rhythm, you answer it on the drum. Three rounds right and the frame fills with portal.',
+        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Echo Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes.',
         f'codex.{NS}.musical_temple.title': 'Musical Temple', f'codex.{NS}.musical_temple.tagline': 'Puzzles of tone',
         f'codex.{NS}.musical_temple.body': 'Old temples of song. Tune each Harmony Stone to the colour of its pedestal to open the vault below.',
         f'codex.{NS}.chrome_well.title': 'Chrome Well', f'codex.{NS}.chrome_well.tagline': 'Pearls in the pool',
@@ -756,7 +756,7 @@ def gen_lang():
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage, and its three empty altars.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
-        f'codex.{NS}.sift_drum.body': 'Left- or right-click the drum to play a beat; hold the button for a drum roll. Sneak and left-click to break it. Its voice comes from the block beneath: stone booms low, wood thumps, anything else taps high. A redstone pulse plays it too, and every beat ripples out to Euphory Altars and Sift creatures nearby.',
+        f'codex.{NS}.sift_drum.body': 'Left- or right-click to play a beat; hold for a drum roll. Sneak and left-click to break it. Stone beneath booms low, wood thumps, anything else taps high. Redstone plays it too. Every beat ripples out to altars and Sift creatures and sets off Sculk Sensors, like a note block.',
         f'codex.{NS}.euphory_altar.title': 'Euphory Altar', f'codex.{NS}.euphory_altar.tagline': 'Enchanting by music',
         f'codex.{NS}.euphory_altar.body': 'Set an item on the altar, surround it with Sift Drums and feed it a Chrome Pearl. The drums play themselves, the rings spin up and the item comes out enchanted beyond what a table can do.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',
@@ -830,16 +830,21 @@ def gen_lang():
         f'upgrade.{NS}.siftite_upgrade': 'Siftite Upgrade',
         f'item.{NS}.music_disc_lullaby.desc': 'Sift - Lullaby of the Deep',
         f'jukebox_song.{NS}.lullaby': 'Sift - Lullaby of the Deep',
-        f'message.{NS}.drum.need_sensors': 'The drum needs at least three Sculk Sensors nearby to listen...',
+        f'message.{NS}.drum.need_sensors': 'The drum needs three Sculk Sensors within 8 blocks to listen (%s found).',
+        f'message.{NS}.drum.need_core': 'The gate is listening! Slot a Warden Core into the drum to begin the ritual.',
         f'message.{NS}.drum.no_frame': 'No portal frame answers the drum. Build one of Echo Frames or find an Ancient City gate.',
-        f'message.{NS}.drum.listen': 'Listen...',
-        f'message.{NS}.drum.your_turn': 'Your turn - play the rhythm back!',
+        f'message.{NS}.drum.listen': 'Listen... (round %s of %s)',
+        f'message.{NS}.drum.your_turn': 'Your turn! Play the rhythm back on the drum (round %s of %s)',
         f'message.{NS}.drum.too_early': 'Too early! The sculk shrieks.',
         f'message.{NS}.drum.too_late': 'Too slow! The sculk shrieks.',
-        f'message.{NS}.drum.round_done': 'The sculk hums in harmony...',
+        f'message.{NS}.drum.round_done': 'The sculk hums in harmony... %s of %s',
         f'message.{NS}.drum.opening': 'The Sift is waking!',
         f'message.{NS}.drum.opened': 'The way to The Sift is open.',
         f'message.{NS}.drum.core_removed': 'The Warden Core slips free.',
+        f'message.{NS}.drum.core_spent': 'The Warden Core is pouring itself into the gate.',
+        f'message.{NS}.drum.waiting': 'The drum falls quiet. Strike it when you are ready to play.',
+        f'title.{NS}.awakening': 'The Sift Awakens',
+        f'title.{NS}.awakening.sub': 'The way is open',
         f'message.{NS}.altar.need_drums': 'The altar needs at least two Sift Drums around it.',
         f'message.{NS}.altar.need_levels': 'You need more experience to perform the ritual.',
     })
@@ -952,6 +957,7 @@ SUBTITLES = {
     'event.rhythm.good': 'Rhythm matches',
     'event.rhythm.fail': 'Sculk shrieks',
     'event.rhythm.round': 'Sculk hums in harmony',
+    'event.gate.swell': 'The gate hums awake',
     'block.chrome.ambient': 'Chrome shimmers',
     'block.chrome.splash': 'Chrome splashes',
     'block.harmony_stone.tone': 'Harmony Stone rings',
@@ -1057,7 +1063,7 @@ SOUNDS = {
     'entity.sifter.hurt': [('mob/silverfish/hit1', 0.8, 0.7), ('mob/squid/hurt1', 0.8, 1.3)],
     'entity.sifter.death': [('mob/silverfish/kill', 0.9, 0.7), ('mob/squid/death1', 0.9, 1.2)],
     'entity.sifter.chomp': [('mob/fox/bite1', 1.0, 0.8), ('mob/fox/bite2', 1.0, 0.8)],
-    'entity.sifter.leap': [('block/sand/break1', 1.0, 0.8), ('block/sand/break2', 1.0, 0.8)],
+    'entity.sifter.leap': [('event:block.sand.break', 1.0, 0.8), ('event:block.sand.break', 1.0, 0.7)],
     'entity.sifter.step': [('mob/silverfish/step1', 0.4, 1.2), ('mob/silverfish/step2', 0.4, 1.2)],
     'entity.enchoer.ambient': [('mob/allay/idle_without_item1', 0.8, 0.6), ('mob/allay/idle_without_item2', 0.8, 0.55), ('block/amethyst/resonate1', 0.8, 0.7)],
     'entity.enchoer.hum': [('block/amethyst/resonate2', 1.0, 0.6), ('block/amethyst/resonate3', 1.0, 0.7), ('mob/allay/item_given1', 0.8, 0.5)],
@@ -1067,7 +1073,7 @@ SOUNDS = {
     'entity.enchoer.hurt': [('mob/allay/hurt1', 1.0, 0.6), ('block/amethyst_cluster/break1', 1.0, 0.8)],
     'entity.enchoer.death': [('mob/allay/death1', 1.0, 0.55), ('block/amethyst_cluster/break2', 1.0, 0.6)],
     'entity.riveter.ambient': [('mob/bat/idle1', 0.5, 0.5), ('mob/bat/idle2', 0.5, 0.5), ('block/sculk/spread1', 0.6, 0.7)],
-    'entity.riveter.scream': [('mob/warden/roar1', 0.8, 1.8), ('block/sculk_shrieker/shriek1', 1.0, 1.1), ('block/sculk_shrieker/shriek2', 1.0, 1.1)],
+    'entity.riveter.scream': [('event:entity.warden.roar', 0.8, 1.8), ('block/sculk_shrieker/shriek1', 1.0, 1.1), ('block/sculk_shrieker/shriek2', 1.0, 1.1)],
     'entity.riveter.hurt': [('mob/bat/hurt1', 0.8, 0.6), ('mob/bat/hurt2', 0.8, 0.6)],
     'entity.riveter.death': [('mob/bat/death', 1.0, 0.5), ('block/sculk/break1', 1.0, 0.8)],
     'block.sift_drum.low': [('block/note_block/basedrum', 1.0, 0.7)],
@@ -1077,25 +1083,27 @@ SOUNDS = {
     'block.euphory_altar.charge': [('block/beacon/activate', 1.0, 1.4), ('block/amethyst/resonate1', 1.0, 1.2)],
     'block.euphory_altar.enchant': [('block/enchantment_table/enchant1', 1.0, 0.8), ('block/beacon/power1', 1.0, 1.5)],
     'block.euphory_altar.hum': [('block/beacon/ambient', 0.8, 1.2), ('block/amethyst/resonate2', 0.6, 1.3)],
-    'block.sift_portal.ambient': [('block/portal/portal', 0.4, 1.6), ('block/amethyst/resonate3', 0.3, 1.4)],
+    'block.sift_portal.ambient': [('event:block.portal.ambient', 0.4, 1.6), ('block/amethyst/resonate3', 0.3, 1.4)],
     'block.sift_portal.activate': [('block/end_portal/endportal', 1.0, 1.2), ('block/beacon/activate', 1.0, 0.8)],
-    'block.sift_portal.travel': [('block/portal/travel', 0.8, 1.5)],
+    'block.sift_portal.travel': [('event:block.portal.travel', 0.8, 1.5)],
     'event.rhythm.call': [('block/sculk_sensor/sculk_clicking1', 1.0, 1.0), ('block/sculk_sensor/sculk_clicking2', 1.0, 1.1)],
     'event.rhythm.good': [('block/note_block/chime', 1.0, 1.2), ('block/amethyst/shimmer', 1.0, 1.0)],
     'event.rhythm.fail': [('block/sculk_shrieker/shriek1', 1.0, 0.8)],
     'event.rhythm.round': [('block/note_block/bell', 1.0, 1.0), ('block/note_block/bell', 1.0, 1.26)],
+    # the rising whoosh under the gate's awakening
+    'event.gate.swell': [('event:block.portal.trigger', 0.7, 1.2)],
     'block.chrome.ambient': [('liquid/water', 0.3, 1.6), ('block/amethyst/resonate1', 0.2, 1.8)],
     'block.chrome.splash': [('liquid/splash', 0.8, 1.4), ('liquid/splash2', 0.8, 1.5)],
     'block.harmony_stone.tone': [('block/note_block/chime', 1.0, 1.0)],
     'block.harmony_seal.unlock': [('block/trial_spawner/ominous_activate', 1.0, 1.4), ('block/beacon/deactivate', 1.0, 1.5)],
     'block.soul_chime.ring': [('block/bell/resonate', 0.7, 1.6), ('block/note_block/chime', 0.8, 1.2), ('block/note_block/chime', 0.8, 1.5)],
     'block.choir_lily.sing': [('block/note_block/flute', 0.8, 1.0), ('block/amethyst/resonate2', 0.6, 1.4)],
-    'block.dream_snare.trigger': [('block/tripwire/click_on', 1.0, 0.6), ('block/sculk_catalyst/bloom1', 1.0, 1.4)],
+    'block.dream_snare.trigger': [('event:block.tripwire.click_on', 1.0, 0.6), ('event:block.sculk_catalyst.bloom', 1.0, 1.4)],
     'block.crumbling_dreamstone.crumble': [('block/pointed_dripstone/drip_lava1', 1.0, 0.6), ('dig/stone1', 1.0, 0.7)],
     'item.slingshot.shoot': [('random/bow', 1.0, 1.4), ('mob/slime/small1', 0.8, 1.6)],
     'item.slingshot.pull': [('item/crossbow/loading_start', 0.8, 1.5)],
-    'entity.glowball.burst': [('block/amethyst/break1', 1.0, 1.3), ('mob/slime/big2', 0.8, 1.5), ('random/firework/twinkle1', 0.6, 1.4)],
-    'item.warden_core.pulse': [('mob/warden/heartbeat1', 0.3, 1.0), ('mob/warden/heartbeat2', 0.3, 1.0)],
+    'entity.glowball.burst': [('block/amethyst/break1', 1.0, 1.3), ('mob/slime/big2', 0.8, 1.5), ('event:entity.firework_rocket.twinkle', 0.6, 1.4)],
+    'item.warden_core.pulse': [('event:entity.warden.heartbeat', 0.6, 1.0)],
     'ambient.sift.loop': [('ambient/cave/cave13', 0.4, 1.4)],
     'ambient.sift.additions': [('block/amethyst/resonate1', 0.4, 1.5), ('block/amethyst/resonate2', 0.4, 1.7), ('mob/allay/idle_without_item3', 0.3, 1.2),
                                ('block/note_block/chime', 0.3, 0.8)],
@@ -1218,18 +1226,72 @@ def gen_wild_creatures():
     })
 
 
+def vanilla_sound_ref(name):
+    """('event', id) or ('file', path) for one vanilla sound in the SOUNDS table."""
+    if name.startswith('event:'):
+        return 'event', name[6:]
+    if name.startswith('block/note_block/'):
+        # note block sounds live under note/<short name>.ogg; gen_sounds refers to the vanilla events instead
+        return 'event', 'block.note_block.' + name.rsplit('/', 1)[1]
+    return 'file', name
+
+
+def used_vanilla_sounds():
+    """(events, files): every vanilla sound event and sound file the SOUNDS table points at."""
+    events, files = set(), set()
+    for lst in SOUNDS.values():
+        for name, _vol, _pitch in lst:
+            kind, ref = vanilla_sound_ref(name)
+            (events if kind == 'event' else files).add(ref)
+    return events, files
+
+
+def check_sounds():
+    """Fail the build rather than ship a silent sound.
+
+    A sounds.json entry naming a vanilla .ogg that does not exist in 26.3, or a misspelled vanilla
+    event, plays as silence without a word in the log. Every vanilla name the table uses must be in
+    the known-good lists of tools/vanilla_sounds.py (checked against the real sounds.json, which is
+    also consulted directly when the vanilla assets are around), and every sound event ModSounds
+    registers needs an entry here (and the other way round)."""
+    import vanilla_sounds
+    problems = []
+    real = None
+    full = os.path.join(VA, 'sounds.json')
+    if os.path.exists(full):
+        real = vanilla_sounds.vanilla_names(full)
+    for ev, lst in SOUNDS.items():
+        for name, _vol, _pitch in lst:
+            kind, ref = vanilla_sound_ref(name)
+            known = vanilla_sounds.EVENTS if kind == 'event' else vanilla_sounds.FILES
+            if ref not in known:
+                problems.append(f'{ev}: vanilla {kind} {ref!r} is not in tools/vanilla_sounds.py')
+            if real is not None and ref not in (real[0] if kind == 'event' else real[1]):
+                problems.append(f'{ev}: vanilla {kind} {ref!r} does not exist in 26.3 (silent!)')
+    java = os.path.join(ROOT, 'src/main/java/com/thesift/registry/ModSounds.java')
+    if os.path.exists(java):
+        with open(java) as f:
+            registered = set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        for ev in sorted(registered - set(SOUNDS)):
+            problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
+        for ev in sorted(set(SOUNDS) - registered):
+            problems.append(f'{ev}: has a sounds.json entry but ModSounds never registers it')
+    if problems:
+        sys.exit('sounds.json check failed:\n  ' + '\n  '.join(problems)
+                 + '\nCheck the names against the vanilla 26.3 sounds.json, then rebuild the lists with tools/vanilla_sounds.py.')
+
+
 def gen_sounds():
+    check_sounds()
     out = {}
     for ev, lst in SOUNDS.items():
         entries = []
         for name, vol, pitch in lst:
-            e = {'name': f'minecraft:{name}', 'volume': vol, 'pitch': pitch}
-            if name.startswith('event:'):
+            kind, ref = vanilla_sound_ref(name)
+            e = {'name': f'minecraft:{ref}', 'volume': vol, 'pitch': pitch}
+            if kind == 'event':
                 # a vanilla sound event, used as-is
-                e = {'name': 'minecraft:' + name[6:], 'type': 'event', 'volume': vol, 'pitch': pitch}
-            elif name.startswith('block/note_block/'):
-                # note block sounds live under note/<short name>.ogg; refer to the vanilla events instead
-                e = {'name': 'minecraft:block.note_block.' + name.rsplit('/', 1)[1], 'type': 'event', 'volume': vol, 'pitch': pitch}
+                e = {'name': f'minecraft:{ref}', 'type': 'event', 'volume': vol, 'pitch': pitch}
             if ev in STREAM:
                 e['stream'] = True
             entries.append(e)

@@ -1082,14 +1082,16 @@
   "entity.sifter.leap": {
     "sounds": [
       {
-        "name": "minecraft:block/sand/break1",
+        "name": "minecraft:block.sand.break",
+        "type": "event",
         "volume": 1.0,
         "pitch": 0.8
       },
       {
-        "name": "minecraft:block/sand/break2",
+        "name": "minecraft:block.sand.break",
+        "type": "event",
         "volume": 1.0,
-        "pitch": 0.8
+        "pitch": 0.7
       }
     ],
     "subtitle": "subtitles.thesift.entity.sifter.leap"
@@ -1242,7 +1244,8 @@
   "entity.riveter.scream": {
     "sounds": [
       {
-        "name": "minecraft:mob/warden/roar1",
+        "name": "minecraft:entity.warden.roar",
+        "type": "event",
         "volume": 0.8,
         "pitch": 1.8
       },
@@ -1392,7 +1395,8 @@
   "block.sift_portal.ambient": {
     "sounds": [
       {
-        "name": "minecraft:block/portal/portal",
+        "name": "minecraft:block.portal.ambient",
+        "type": "event",
         "volume": 0.4,
         "pitch": 1.6
       },
@@ -1422,7 +1426,8 @@
   "block.sift_portal.travel": {
     "sounds": [
       {
-        "name": "minecraft:block/portal/travel",
+        "name": "minecraft:block.portal.travel",
+        "type": "event",
         "volume": 0.8,
         "pitch": 1.5
       }
@@ -1486,6 +1491,17 @@
       }
     ],
     "subtitle": "subtitles.thesift.event.rhythm.round"
+  },
+  "event.gate.swell": {
+    "sounds": [
+      {
+        "name": "minecraft:block.portal.trigger",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.event.gate.swell"
   },
   "block.chrome.ambient": {
     "sounds": [
@@ -1584,12 +1600,14 @@
   "block.dream_snare.trigger": {
     "sounds": [
       {
-        "name": "minecraft:block/tripwire/click_on",
+        "name": "minecraft:block.tripwire.click_on",
+        "type": "event",
         "volume": 1.0,
         "pitch": 0.6
       },
       {
-        "name": "minecraft:block/sculk_catalyst/bloom1",
+        "name": "minecraft:block.sculk_catalyst.bloom",
+        "type": "event",
         "volume": 1.0,
         "pitch": 1.4
       }
@@ -1649,7 +1667,8 @@
         "pitch": 1.5
       },
       {
-        "name": "minecraft:random/firework/twinkle1",
+        "name": "minecraft:entity.firework_rocket.twinkle",
+        "type": "event",
         "volume": 0.6,
         "pitch": 1.4
       }
@@ -1659,13 +1678,9 @@
   "item.warden_core.pulse": {
     "sounds": [
       {
-        "name": "minecraft:mob/warden/heartbeat1",
-        "volume": 0.3,
-        "pitch": 1.0
-      },
-      {
-        "name": "minecraft:mob/warden/heartbeat2",
-        "volume": 0.3,
+        "name": "minecraft:entity.warden.heartbeat",
+        "type": "event",
+        "volume": 0.6,
         "pitch": 1.0
       }
     ],

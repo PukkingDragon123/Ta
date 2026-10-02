@@ -5,6 +5,7 @@ import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModTags;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -154,8 +155,17 @@ public final class PortalFrames {
     }
 
     public static void fill(Level level, Frame frame) {
+        fillCells(level, frame, frame.interior());
+    }
+
+    /**
+     * Fills only some of the frame's cells - the gate's awakening closes it a ring at a time. The
+     * shape updates are skipped on purpose: a half-filled gate would otherwise collapse into the
+     * air that is still inside it.
+     */
+    public static void fillCells(Level level, Frame frame, Collection<BlockPos> cells) {
         BlockState portal = ModBlocks.SIFT_PORTAL.get().defaultBlockState().setValue(SiftPortalBlock.AXIS, frame.axis());
-        for (BlockPos b : frame.interior()) {
+        for (BlockPos b : cells) {
             level.setBlock(b, portal, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
         }
     }

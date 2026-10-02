@@ -41,11 +41,13 @@ player needs it too.
 
 4. Stand at the city's great **reinforced deepslate gate**. Place the drum near it, with **at
    least three Sculk Sensors** within 8 blocks of the drum.
-5. **Use the Warden Core on the drum.** The drum calls out a rhythm and the sensors flash along.
-   **Play it back** by hitting the drum (right-click) in the same rhythm. There are three rounds,
-   each a little longer and stricter. Come in too early or too late and the sculk shrieks, and you
-   try that round again.
-6. Pass the third round and the gate erupts in cyan and pink souls and opens. Step in.
+5. **Use the Warden Core on the drum.** The drum calls out a rhythm, a beat and a rising note at a
+   time, and the sensors light up along. **Play it back** by hitting the drum (left- or
+   right-click) in the same rhythm. There are three rounds, each a little longer and stricter. Come
+   in too early or too late and the sculk shrieks, and you try that round again. (Hit the drum
+   before slotting the core and it tells you what is still missing.)
+6. Pass the third round and the gate wakes: the camera pulls back, the rim lights up note by note,
+   souls spiral in and the portal closes from the rim inward. Step in.
 
 Arriving in The Sift builds an Echo Frame portal that leads back to the gate you came from.
 Later you can build your own portals: any vertical frame of **Echo Frame** blocks (or

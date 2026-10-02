@@ -70,6 +70,12 @@ public class TheSiftClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onRenderFog);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(CameraShake::onClientTick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(CameraShake::onCameraAngles);
+        // the gate's awakening, seen through a cinematic camera
+        modBus.addListener(GateCinematic::registerOverlay);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onClientTick);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onCameraDistance);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onPlayerTurn);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(GateCinematic::onRenderLayer);
         modBus.addListener(TheSiftClient::registerClientExtensions);
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         if (Boolean.getBoolean("thesift.clientsmoke")) {

@@ -127,6 +127,8 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RHYTHM_GOOD = reg("event.rhythm.good");
     public static final DeferredHolder<SoundEvent, SoundEvent> RHYTHM_FAIL = reg("event.rhythm.fail");
     public static final DeferredHolder<SoundEvent, SoundEvent> RHYTHM_ROUND = reg("event.rhythm.round");
+    /** The rising whoosh under a gate's awakening. */
+    public static final DeferredHolder<SoundEvent, SoundEvent> GATE_SWELL = reg("event.gate.swell");
     public static final DeferredHolder<SoundEvent, SoundEvent> CHROME_AMBIENT = reg("block.chrome.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> CHROME_SPLASH = reg("block.chrome.splash");
     public static final DeferredHolder<SoundEvent, SoundEvent> HARMONY_TONE = reg("block.harmony_stone.tone");

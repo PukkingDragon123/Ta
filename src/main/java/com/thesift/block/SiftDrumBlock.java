@@ -15,6 +15,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -37,9 +39,10 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The Sift Drum: a hide-and-lullwood drum. Hitting it (either mouse button, or a redstone pulse)
- * plays a beat whose tone depends on the block beneath, sends a resonance pulse through the world
- * and powers any Euphory Altar nearby. Slotting a Warden Core into a drum next to a portal frame
- * and sculk sensors starts the rhythm ritual that opens the way to The Sift.
+ * plays a beat whose tone depends on the block beneath, sends a resonance pulse through the world,
+ * sets off sculk sensors like a note block does and powers any Euphory Altar nearby. Slotting a
+ * Warden Core into a drum next to a portal frame and sculk sensors starts the rhythm ritual that
+ * opens the way to The Sift.
  *
  * <p>Left-clicking plays the drum instead of breaking it (sneak to break it), in survival and
  * creative alike - see {@link com.thesift.event.GameBusEvents#onLeftClickBlock}. Every beat
@@ -79,7 +82,20 @@ public class SiftDrumBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.SIFT_DRUM.get(), SiftDrumBlockEntity::serverTick);
+        // the client follows a waking gate so the camera can watch it (see GateAwakening)
+        return level.isClientSide()
+                ? createTickerHelper(type, ModBlockEntities.SIFT_DRUM.get(), SiftDrumBlockEntity::clientTick)
+                : createTickerHelper(type, ModBlockEntities.SIFT_DRUM.get(), SiftDrumBlockEntity::serverTick);
+    }
+
+    /**
+     * Only a sneaking player breaks the drum; anyone else is drumming on it. With no progress to
+     * build up, a held button can't crack the drum on the client or break it when Shift is pressed
+     * half way through a drum roll.
+     */
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        return player.isShiftKeyDown() ? super.getDestroyProgress(state, player, level, pos) : 0.0F;
     }
 
     /** 0 = low (stone), 1 = mid (wood), 2 = high (anything else). */
@@ -103,17 +119,27 @@ public class SiftDrumBlock extends BaseEntityBlock {
         };
     }
 
-    /** Plays one beat of the drum: sound, bounce animation, particles and a resonance pulse. */
+    /** Plays one beat of the drum with nobody behind it (redstone, an altar, the ritual's own call). */
     public static void beat(ServerLevel level, BlockPos pos, float strength) {
+        beat(level, pos, strength, null);
+    }
+
+    /**
+     * Plays one beat of the drum: sound, bounce animation, particles, a resonance pulse and a
+     * vibration that sculk sensors (and shriekers, and Wardens) really hear, like a note block's.
+     * {@code source} is who the sculk hears it from.
+     */
+    public static void beat(ServerLevel level, BlockPos pos, float strength, @Nullable Entity source) {
         BlockState state = level.getBlockState(pos);
         if (!(state.getBlock() instanceof SiftDrumBlock drum)) {
             return;
         }
         int tone = toneFor(level, pos);
         float pitch = 0.9F + level.getRandom().nextFloat() * 0.2F;
-        level.playSound(null, pos, soundFor(tone), SoundSource.RECORDS, 1.4F, pitch);
+        level.playSound(null, pos, soundFor(tone), SoundSource.RECORDS, 1.8F, pitch);
         level.setBlock(pos, state.setValue(HIT, 1), Block.UPDATE_CLIENTS);
         level.scheduleTick(pos, drum, 2);
+        level.gameEvent(source, GameEvent.NOTE_BLOCK_PLAY, pos);
         level.sendParticles(ModParticles.SIFT_NOTE.get(), pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5, 0, tone / 3.0 + 0.1, 0.0, 0.0, 1.0);
         level.sendParticles(ModParticles.RESONANCE_RING.get(), pos.getX() + 0.5, pos.getY() + 0.9, pos.getZ() + 0.5, 0, 0.9, 0.0, 0.0, 1.0);
         level.sendParticles(ModParticles.DREAM_POLLEN.get(), pos.getX() + 0.5, pos.getY() + 0.95, pos.getZ() + 0.5, 4, 0.25, 0.02, 0.25, 0.02);
@@ -136,7 +162,10 @@ public class SiftDrumBlock extends BaseEntityBlock {
     /** A player (or redstone, with no player) plays the drum. */
     public static void strike(Level level, BlockPos pos, @Nullable Player player) {
         if (level instanceof ServerLevel server) {
-            beat(server, pos, 0.8F);
+            BlockState state = server.getBlockState(pos);
+            // with a Warden Core inside, the drum speaks for you: sensors hear the beat, shriekers can't tell who played it
+            Entity source = state.getBlock() instanceof SiftDrumBlock && state.getValue(CORE) ? null : player;
+            beat(server, pos, 0.8F, source);
             if (server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
                 drum.onPlayerBeat(player);
             }
@@ -170,8 +199,8 @@ public class SiftDrumBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player.isShiftKeyDown() && state.getValue(CORE)) {
             if (level instanceof ServerLevel server && server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
-                drum.ejectCore(server);
-                player.sendOverlayMessage(Component.translatable("message.thesift.drum.core_removed"));
+                boolean removed = drum.ejectCore(server);
+                player.sendOverlayMessage(Component.translatable(removed ? "message.thesift.drum.core_removed" : "message.thesift.drum.core_spent"));
             }
             return InteractionResult.SUCCESS;
         }
