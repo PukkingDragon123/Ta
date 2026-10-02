@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "condition": {
+                "type": "minecraft:any_of",
+                "terms": [
+                  "minecraft:tool/can_shear",
+                  "minecraft:tool/can_silk_touch"
+                ]
+              },
+              "name": "thesift:musical_cobweb"
+            },
+            {
+              "type": "minecraft:item",
+              "condition": {
+                "type": "minecraft:survives_explosion"
+              },
+              "name": "thesift:sculk_string"
+            }
+          ]
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "thesift:blocks/musical_cobweb"
+}

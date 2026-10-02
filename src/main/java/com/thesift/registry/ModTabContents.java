@@ -15,11 +15,11 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> functional() {
-        return List.of(ModItems.SIFT_DRUM, ModItems.EUPHORY_ALTAR, ModItems.ECHO_FRAME, ModItems.CONDUCTORS_PODIUM, ModItems.ENCORE_SIGIL, ModItems.INSTRUMENT_ALTAR, ModItems.HARMONY_STONE, ModItems.HARMONY_SEAL, ModItems.DREAM_SNARE, ModItems.CRUMBLING_DREAMSTONE, ModItems.BULB_LANTERN, ModItems.GLOWING_SLIME_BLOCK, ModItems.SOUL_CHIME);
+        return List.of(ModItems.SIFT_DRUM, ModItems.EUPHORY_ALTAR, ModItems.ECHO_FRAME, ModItems.CONDUCTORS_PODIUM, ModItems.ENCORE_SIGIL, ModItems.INSTRUMENT_ALTAR, ModItems.HARMONY_STONE, ModItems.HARMONY_SEAL, ModItems.DREAM_SNARE, ModItems.CRUMBLING_DREAMSTONE, ModItems.BULB_LANTERN, ModItems.GLOWING_SLIME_BLOCK, ModItems.SOUL_CHIME, ModItems.MUSICAL_COBWEB);
     }
 
     public static List<Supplier<? extends Item>> items() {
-        return List.of(ModItems.SIFT_CAKE, ModItems.GLOWING_SLIME_BALL, ModItems.PITCHER_BULB, ModItems.THICK_HIDE, ModItems.CHROME_PEARL, ModItems.RAW_SERBIM, ModItems.SERBIM_INGOT, ModItems.SIFTITE_INGOT, ModItems.SIFTITE_NUGGET, ModItems.WARDEN_CORE, ModItems.CHOIR_POD, ModItems.ECHO_SEED, ModItems.DREAM_STEW, ModItems.GLOWCAP_SKEWER, ModItems.CHROME_BUCKET, ModItems.SLINGSHOT, ModItems.SIFTITE_UPGRADE_SMITHING_TEMPLATE, ModItems.STAR_SHARD, ModItems.DREAM_JOURNAL_FRAGMENT, ModItems.CRANE_BEAK, ModItems.MAGIC_STRINGS, ModItems.SIFT_CODEX, ModItems.MUSIC_DISC_LULLABY, ModItems.MUSIC_SHEET_OFFERING, ModItems.MUSIC_SHEET_NIB, ModItems.MUSIC_SHEET_GOLEM, ModItems.MUSIC_SHEET_CRYSTAL, ModItems.MUSIC_SHEET_WHALE, ModItems.MUSIC_SHEET_TIDE, ModItems.MUSIC_SHEET_LULLABY, ModItems.STOMPER_MEAT, ModItems.STOMPER_STEAK, ModItems.STOMPER_EGG, ModItems.KAZOO_FISH, ModItems.COOKED_KAZOO_FISH, ModItems.TUBA_BUBBLE, ModItems.SKYSONG_GEM);
+        return List.of(ModItems.SIFT_CAKE, ModItems.GLOWING_SLIME_BALL, ModItems.PITCHER_BULB, ModItems.THICK_HIDE, ModItems.CHROME_PEARL, ModItems.RAW_SERBIM, ModItems.SERBIM_INGOT, ModItems.SIFTITE_INGOT, ModItems.SIFTITE_NUGGET, ModItems.WARDEN_CORE, ModItems.CHOIR_POD, ModItems.ECHO_SEED, ModItems.DREAM_STEW, ModItems.GLOWCAP_SKEWER, ModItems.CHROME_BUCKET, ModItems.SLINGSHOT, ModItems.SIFTITE_UPGRADE_SMITHING_TEMPLATE, ModItems.STAR_SHARD, ModItems.DREAM_JOURNAL_FRAGMENT, ModItems.CRANE_BEAK, ModItems.SCULK_STRING, ModItems.SIFT_CODEX, ModItems.MUSIC_DISC_LULLABY, ModItems.MUSIC_SHEET_OFFERING, ModItems.MUSIC_SHEET_NIB, ModItems.MUSIC_SHEET_GOLEM, ModItems.MUSIC_SHEET_CRYSTAL, ModItems.MUSIC_SHEET_WHALE, ModItems.MUSIC_SHEET_TIDE, ModItems.MUSIC_SHEET_LULLABY, ModItems.STOMPER_MEAT, ModItems.STOMPER_STEAK, ModItems.STOMPER_EGG, ModItems.KAZOO_FISH, ModItems.COOKED_KAZOO_FISH, ModItems.TUBA_BUBBLE, ModItems.SKYSONG_GEM);
     }
 
     public static List<Supplier<? extends Item>> tools() {
@@ -27,7 +27,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> combat() {
-        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON, ModItems.CONDUCTORS_STAFF, ModItems.CONGA_DRUM, ModItems.CRANE_FLUTE, ModItems.GUITAR, ModItems.PRISM_FLUTE, ModItems.PRISM_HARP, ModItems.PRISM_DRUM);
+        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON, ModItems.CONDUCTORS_STAFF, ModItems.CONGA_DRUM, ModItems.CRANE_FLUTE, ModItems.GUITAR, ModItems.WEAVER_GUITAR, ModItems.PRISM_FLUTE, ModItems.PRISM_HARP, ModItems.PRISM_DRUM);
     }
 
     public static List<Supplier<? extends Item>> eggs() {

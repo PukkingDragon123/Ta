@@ -54,7 +54,7 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Whistling>> WHISTLING = ENTITIES.registerEntityType("whistling", Whistling::new,
             MobCategory.MONSTER, b -> b.sized(0.5F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Strumling>> STRUMLING = ENTITIES.registerEntityType("strumling", Strumling::new,
-            MobCategory.MONSTER, b -> b.sized(0.8F, 0.5F).eyeHeight(0.3F).clientTrackingRange(10));
+            MobCategory.MONSTER, b -> b.sized(1.3F, 0.8F).eyeHeight(0.55F).clientTrackingRange(10)); // Weaver: a full-size Sculk Spider
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.boss.SculkParasite>> SCULK_PARASITE = ENTITIES.registerEntityType(
             "sculk_parasite", com.thesift.entity.boss.SculkParasite::new, MobCategory.MONSTER,
             b -> b.sized(0.9F, 0.4F).eyeHeight(0.3F).clientTrackingRange(10));

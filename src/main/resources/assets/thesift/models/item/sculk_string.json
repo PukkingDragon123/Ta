@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "thesift:item/magic_strings"
+    "layer0": "thesift:item/sculk_string"
   }
 }

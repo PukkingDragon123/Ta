@@ -586,8 +586,14 @@
       {
         "name": "minecraft:entity.spider.ambient",
         "type": "event",
-        "volume": 0.5,
-        "pitch": 1.8
+        "volume": 0.7,
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:entity.warden.ambient",
+        "type": "event",
+        "volume": 0.25,
+        "pitch": 1.9
       }
     ],
     "subtitle": "subtitles.thesift.entity.strumling.ambient"
@@ -597,8 +603,8 @@
       {
         "name": "minecraft:entity.spider.hurt",
         "type": "event",
-        "volume": 0.6,
-        "pitch": 1.8
+        "volume": 0.8,
+        "pitch": 1.1
       }
     ],
     "subtitle": "subtitles.thesift.entity.strumling.hurt"
@@ -608,8 +614,13 @@
       {
         "name": "minecraft:entity.spider.death",
         "type": "event",
-        "volume": 0.7,
-        "pitch": 1.8
+        "volume": 0.9,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:block/sculk/break1",
+        "volume": 0.6,
+        "pitch": 0.8
       }
     ],
     "subtitle": "subtitles.thesift.entity.strumling.death"

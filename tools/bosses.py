@@ -494,23 +494,8 @@ def SPIDER_EYES_ROWS(k):
 
 
 def strumling() -> Model:
-    """A Strumling: a spiderling with a glowing string-pattern on its back and a lot of eyes."""
-    pal = dict(SCULK)
-    pal.update({'spider': '#4a2c5a', 'spider_l': '#653f78', 'spider_d': '#2a1636', 'mark': '#c46cff', 'string': '#7ff7ff', 'fang': '#e8e0d0'})
-    m = Model('strumling', (64, 64), pal, {'strumling': {}}, res=2, expressions=EXPR)
-    body = m.part('body', pivot=(0, 20, 0))
-    body.cube((-2.5, -2, -3), (5, 4, 5), color='spider', pattern='mc', clusters=0.3, streaks=0.4, faces={
-        'north': dict(color='spider', pattern='mc', clusters=0.0, hd=True, map=hd_rows(STRUM_EYES['neutral'], 10, 8), keys={'g': 'mark', 'G': 'glow', 'f': 'fang', 'd': 'spider_d'},
-                      glow_keys='gG', expr={k: hd_rows(v, 10, 8) for k, v in STRUM_EYES.items() if k != 'neutral'})})
-    abd = body.part('abdomen', pivot=(0, -0.5, 2))
-    abd.cube((-3, -3, 0), (6, 5, 6), color='spider', pattern='mc', clusters=0.3, streaks=0.4, faces={
-        'up': dict(color='spider_l', pattern='mc', clusters=0.0, hd=True, map=gen(12, 12, lambda x, y: 's' if x in (4, 7) else ('r' if (x - 5.5) ** 2 + (y - 5.5) ** 2 < 6 else '.')),
-                   keys={'s': 'string', 'r': 'mark'}, glow_keys='sr')})
-    for i, z in enumerate((-2, -0.7, 0.6, 1.9)):
-        for side, sx in (('left', 1), ('right', -1)):
-            leg = body.part(f'{side}_leg_{i}', pivot=(2.5 * sx, 0, z), rot=(0, (0.5, 0.18, -0.18, -0.5)[i] * sx, 0.55 * sx))
-            leg.cube((0 if sx > 0 else -6, -0.5, -0.5), (6, 1, 1), color='spider_d', pattern='mc', clusters=0.0, rim=False)
-    return m
+    """The Weaver's brood grew up into full Sculk Spiders: see sculk_spider() at the bottom."""
+    return sculk_spider()
 
 
 STRUM_EYES = {
@@ -1171,5 +1156,121 @@ ALL.update({
     'thumper': thumper_sculk, 'whistler': whistler_sculk, 'strummer': strummer_sculk,
     'whistling': _resculk(whistling, {'plume': '#16222a', 'plume_l': '#24343e', 'plume_d': '#0d1217', 'ink': '#034150', 'ink_l': '#074857',
                                       'crown': '#29dfeb', 'flute': '#bbc39b', 'flute_l': '#d1d6b6', 'eye': '#04070a', 'white': '#29dfeb', 'leg': '#819988'}),
-    'strumling': _resculk(strumling, {'spider': '#0d1217', 'spider_l': '#16222a', 'spider_d': '#070a0d', 'mark': '#29dfeb', 'fang': '#d1d6b6'}),
 })
+
+
+# =========================================================================== THE SCULK SPIDER (entity id strumling)
+# The Weaver's brood, grown into full Warden-kin spiders. Model units: the body hangs 8 above the
+# ground and every leg is a raised femur, a long tibia and a needle tarsus that it walks on tiptoe.
+SCULK_SPIDER_EYES = {
+    # 12 x 10 texels on the front of the head: two great eyes, a row of four, a scatter of small
+    # ones - eight in all, ringed in bone - over the roots of the fangs
+    'neutral': {0: '.dd..dd..dd.', 1: 'dGGd.dd.dGGd', 2: 'dGgd.gg.dgGd', 3: '.dd.dGGd.dd.', 4: 'g...dggd...g', 5: '.g..d..d..g.',
+                6: '...bbbbbb...', 7: '..wb.vv.bw..', 8: '..w..vv..w..'},
+    'blink': {0: '.dd..dd..dd.', 1: 'dddd.dd.dddd', 2: 'dddd.dd.dddd', 3: '.dd.dddd.dd.', 4: 'd...dddd...d', 6: '...bbbbbb...',
+              7: '..wb.vv.bw..', 8: '..w..vv..w..'},
+    'angry': {0: 'll........ll', 1: 'dGll.dd.llGd', 2: 'dGGd.GG.dGGd', 3: '.dd.dGGd.dd.', 4: 'G...dGGd...G', 5: '.G..d..d..G.',
+              6: '..wbbbbbbw..', 7: '..wwvvvvww..', 8: '..w.vvvv.w..'},
+    'hurt': {1: 'd..d.dd.d..d', 2: '.dd..gg..dd.', 3: 'd..ddGGdd..d', 4: 'g...dggd...g', 6: '...bbbbbb...', 7: '...b.vv.b...'},
+    'dead': {1: 'd..d.dd.d..d', 2: '.dd..dd..dd.', 3: 'd..ddddd...d', 6: '...bbbbbb...', 7: '...b....b...'},
+}
+SPIDER_LEG_Z = (-2.6, -0.9, 0.9, 2.6)
+SPIDER_LEG_YAW = (0.62, 0.22, -0.22, -0.62)
+
+
+def bone_plate(w, h, seed):
+    """A curved plate of bone over the abdomen: a ridge down the middle, worn darker edges, growth
+    lines across it and specks of sculk in the cracks."""
+    import random
+    rnd = random.Random(seed)
+    cx = (w - 1) / 2
+
+    def fn(x, y):
+        dx = abs(x - cx)
+        if dx < 0.6:
+            return 'l'
+        if dx > w / 2 - 1.2 or y == h - 1:
+            return 'd' if rnd.random() < 0.7 else 's'
+        if y % 3 == 0:
+            return 'd'
+        return 'S' if rnd.random() < 0.05 else 'b'
+    return gen(w, h, fn)
+
+
+def sculk_spider() -> Model:
+    """A Sculk Spider: the Weaver's brood, grown. A black cephalothorax crusted with sculk and
+    ridged with bone; a bone-faced head with eight glowing eyes in sockets and two long hooked
+    fangs between a pair of feeling palps; a swollen abdomen armoured in three overlapping bone
+    plates, with glowing sculk sacs bulging between them, glowing spinnerets and two Warden
+    tendrils; and eight long legs, each a crusted femur raised high, a bone tibia and a needle
+    tarsus with a claw - so it stands tall and walks on tiptoe."""
+    pal = dict(SCULK)
+    pal.update(WARDEN)
+    pal.update({'sac': '#2fe8f0', 'sac_d': '#0f8c99'})
+    m = Model('strumling', (128, 128), pal, {'strumling': {}}, res=2, expressions=EXPR)
+    body = m.part('body', pivot=(0, 16, 0))
+    ridge = [''.join('l' if x in (6, 7) else c for x, c in enumerate(row)) for row in sculk_patches(14, 14, 301, 0.8, 0.3)]
+    body.cube((-3.5, -2.5, -3.5), (7, 5, 7), color='hide', pattern='mc', clusters=0.3, faces={
+        'up': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=ridge, keys=WK, glow_keys=WGLOW),
+        'east': hide_face(14, 10, 302), 'west': hide_face(14, 10, 303),
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=ribcage(14, 14, heart=False), keys=WK)})
+    head = body.part('head', pivot=(0, -0.3, -3.5))
+    head.cube((-3, -2.5, -5), (6, 5, 5), color='bone', pattern='mc', clusters=0.2, faces={
+        'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=hd_rows(SCULK_SPIDER_EYES['neutral'], 12, 10), keys=EK_SPIDER,
+                      glow_keys=WGLOW, expr={k: hd_rows(v, 12, 10) for k, v in SCULK_SPIDER_EYES.items() if k != 'neutral'}),
+        'up': hide_face(12, 10, 304, 0.6), 'east': hide_face(10, 10, 305, 0.5), 'west': hide_face(10, 10, 306, 0.5)})
+    # a brow ridge of bone over the eyes
+    head.cube((-3.2, -3.0, -5.2), (6.4, 1, 2), color='bone_l', pattern='mc', clusters=0.0, rim=False,
+              faces={'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=vertebrae(13, 4), keys=WK)})
+    for side, sx in (('left', 1), ('right', -1)):
+        fang = head.part(f'{side}_fang', pivot=(1.2 * sx, 1.6, -4.6), rot=(-0.25, 0, 0))
+        fang.cube((-0.8, 0, -0.8), (1.6, 2.4, 1.6), color='hide', pattern='mc', clusters=0.0, rim=False,
+                  faces={'north': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=['ss.', 'Sg.', '.s.', '...', '...'], keys=WK, glow_keys=WGLOW)})
+        fang.cube((-0.5, 2.2, -0.9), (1, 2.2, 1), color='tooth', pattern='mc', clusters=0.0, rim=False,
+                  faces={'down': dict(color='bone_d', pattern='mc', clusters=0.0)})
+        fang.cube((-0.35, 4.2, -1.6), (0.7, 0.7, 1.2), color='bone_l', pattern='mc', clusters=0.0, rim=False)
+        palp = head.part(f'{side}_palp', pivot=(2.4 * sx, 1.2, -4.4), rot=(0.5, 0.25 * sx, 0))
+        palp.cube((-0.45, -0.45, -3.2), (0.9, 0.9, 3.2), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+        palp.cube((-0.55, -0.55, -3.9), (1.1, 1.1, 0.9), color='hide_l', pattern='mc', clusters=0.0, rim=False)
+    # the abdomen: crusted hide under three overlapping plates of bone, glowing sacs between them
+    abd = body.part('abdomen', pivot=(0, -0.8, 3.2), rot=(-0.28, 0, 0))
+    abd.cube((-5, -5, 0), (10, 8, 11), color='hide', pattern='mc', clusters=0.3, faces={
+        'up': hide_face(20, 22, 307, 0.9, 0.35), 'east': hide_face(22, 16, 308, 0.8, 0.3), 'west': hide_face(22, 16, 309, 0.8, 0.3),
+        'south': hide_face(20, 16, 310, 0.9, 0.3),
+        'down': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=fangs(20, 22, 4), keys=WK)})
+    for i, (z, w) in enumerate(((0.6, 9.0), (4.0, 8.4), (7.4, 7.2))):
+        abd.cube((-w / 2, -5.9, z), (w, 1.4, 3.4), color='bone', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=bone_plate(int(w * 2 + 0.99), 7, 311 + i), keys=WK),
+            'south': dict(color='bone_d', pattern='mc', clusters=0.0, hd=True, map=['d' * 18, 'k' * 18, 'd' * 18], keys=WK)})
+    for z in (2.6, 6.0):
+        for sx in (1, -1):
+            # glowing sacs bulging out between the plates
+            abd.cube((3.2 * sx - 0.9, -6.1, z + 0.6), (1.8, 1.4, 1.8), color='sac', pattern='mc', clusters=0.0, rim=False, faces={
+                f: dict(color='sac', pattern='mc', clusters=0.0, rim=False, glow=True) for f in ('up', 'north', 'south', 'east', 'west')})
+    for sx in (1, -1):
+        for i, z in enumerate((2.0, 6.5)):
+            abd.cube((5 * sx - (0 if sx > 0 else 1.4), -3.4 + i * 0.6, z), (1.4, 2.2, 2.4), color='sac', pattern='mc', clusters=0.0, rim=False, faces={
+                f: dict(color='sac', pattern='mc', clusters=0.0, rim=False, glow=True) for f in ('up', 'north', 'south', 'east', 'west', 'down')})
+    abd.cube((-1.2, -1.6, 10.6), (2.4, 2, 1.4), color='bone_d', pattern='mc', clusters=0.0, rim=False, faces={
+        'south': dict(color='glow', pattern='mc', clusters=0.0, glow=True)})
+    for side, sx in (('left', 1), ('right', -1)):
+        tendril(abd, f'{side}_tendril', (2.2 * sx, -6, 9), (-0.6, 0, 0.5 * sx), 4)
+    # eight long legs: a raised femur, a long tibia, a needle tarsus
+    for i, z in enumerate(SPIDER_LEG_Z):
+        for side, sx in (('left', 1), ('right', -1)):
+            leg = body.part(f'{side}_leg_{i}', pivot=(3.2 * sx, 0, z), rot=(0, SPIDER_LEG_YAW[i] * sx, -0.8 * sx))
+            leg.cube((0 if sx > 0 else -9, -0.7, -0.7), (9, 1.4, 1.4), color='hide', pattern='mc', clusters=0.0, rim=False, faces={
+                'up': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=['s.g.Ss..sg.S.s.s.s', '.S..s..S...s..S...', 'k' * 18], keys=WK, glow_keys=WGLOW),
+                'north': dict(color='hide_l', pattern='mc', clusters=0.0, hd=True, map=['b...b...b...b...b.', '..................', 'k' * 18], keys=WK)})
+            leg.cube((9 * sx - 0.8, -0.9, -0.9), (1.6, 1.8, 1.8), color='bone_l', pattern='mc', clusters=0.0, rim=False)
+            tib = leg.part(f'{side}_tibia_{i}', pivot=(9 * sx, 0, 0), rot=(0, 0, 1.7 * sx))
+            tib.cube((0 if sx > 0 else -12, -0.55, -0.55), (12, 1.1, 1.1), color='bone', pattern='mc', clusters=0.0, rim=False, faces={
+                'up': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=['ld' * 12, 'bk' * 12], keys=WK),
+                'north': dict(color='bone', pattern='mc', clusters=0.0, hd=True, map=['l.' * 12, 'dd' * 12], keys=WK)})
+            tar = tib.part(f'{side}_tarsus_{i}', pivot=(12 * sx, 0, 0), rot=(0, 0, 0.5 * sx))
+            tar.cube((0 if sx > 0 else -5, -0.4, -0.4), (5, 0.8, 0.8), color='bone_d', pattern='mc', clusters=0.0, rim=False)
+            tar.cube((5 * sx - (0 if sx > 0 else 0.9), -0.3, -0.3), (0.9, 0.6, 0.6), color='tooth', pattern='mc', clusters=0.0, rim=False)
+    return m
+
+
+ALL['strumling'] = sculk_spider

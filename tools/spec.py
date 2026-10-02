@@ -225,6 +225,9 @@ block("glowing_slime_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blo
       cls="GlowingSlimeBlock", model="slime", tab="functional")
 block("soul_chime", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion()",
       cls="SoulChimeBlock", model="chime", tags=["pickaxe"], tab="functional")
+# the Weaver (E2): glowing, tuned silk - barely slows you, bounces you, plays a note when touched
+block("musical_cobweb", "custom", "BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).sound(net.minecraft.world.level.block.SoundType.COBWEB).noCollision().strength(1.0F).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY).lightLevel(s -> s.getValue(com.thesift.block.MusicalCobwebBlock.RINGING) ? 12 : 6)",
+      cls="MusicalCobwebBlock", model="cross", tags=["sword_efficient"], tab="functional", loot="web:sculk_string")
 block("lingering_glow", "custom", "BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED)",
       cls="LingeringGlowBlock", model="none", item=False, loot="none")
 block("chrome", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8)",
@@ -267,8 +270,14 @@ item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(
 item("conga_drum", cls="CongaDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
 item("crane_beak", props="new Item.Properties().rarity(Rarity.RARE)")
 item("crane_flute", cls="CraneFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
-item("magic_strings", props="new Item.Properties().rarity(Rarity.RARE)")
-item("guitar", cls="GuitarItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+# --- the Weaver (E2): sculk string from its brood, a plain guitar strung with it, the Weaver's own guitar
+item("sculk_string")
+item("guitar", cls="GuitarItem", props="new Item.Properties().stacksTo(1)", model="handheld", tab="combat")
+item("weaver_guitar", cls="WeaverGuitarItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld",
+     tab="combat", name="Weaver's Guitar")
+for _d in ITEMS:
+    if _d["id"] in ("strummer_spawn_egg", "strumling_spawn_egg"):
+        _d["name"] = {"strummer_spawn_egg": "Weaver Spawn Egg", "strumling_spawn_egg": "Sculk Spider Spawn Egg"}[_d["id"]]
 item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
 # --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments

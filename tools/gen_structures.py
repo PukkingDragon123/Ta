@@ -305,7 +305,7 @@ def giant_harp(seed):
     # the harp's strings are home to a Strumling brood, and their webs
     b.set(12, 2, z - 2, spawner('strumling', 3, 6, 10))
     for (x, y) in ((6, 6), (8, 9), (11, 7), (13, 4), (7, 3)):
-        b.set(x, y, z, B('minecraft:cobweb'))
+        b.set(x, y, z, B('thesift:musical_cobweb'))  # the Weaver's tuned silk
     b.decay(0.02, top_bias=0.05, min_y=3, protect=('minecraft:iron_chain', 'minecraft:spawner', 'minecraft:cobweb'))
     b.drape(HANG, 0.02, 3)
     return b
@@ -461,11 +461,11 @@ def deep_shrine(seed, boss=False):
     b.set(c + 4, 1, S - 4, B('minecraft:sculk_catalyst', bloom='false'))
     for i in range(5):
         b.set(c - 2 + i, H - 1, c, glyph(seed + i))
-    # the Strummer's lair: webs in the corners, a brood spawner, and in some shrines its sigil
+    # the Weaver's lair: musical webs in the corners, a brood spawner, and in some shrines its sigil
     for x in (3, S - 4):
         for z in (3, S - 4):
             for (dx, dy, dz) in ((0, H - 2, 0), (1, H - 2, 0), (0, H - 2, 1), (0, H - 3, 0)):
-                b.set(x + dx * (1 if x < c else -1), dy, z + dz * (1 if z < c else -1), B('minecraft:cobweb'))
+                b.set(x + dx * (1 if x < c else -1), dy, z + dz * (1 if z < c else -1), B('thesift:musical_cobweb'))
     b.set(c + 4, 1, c, spawner('strumling', 3, 6, 10))
     if boss:
         b.set(c, 0, c + 2, sigil(2))

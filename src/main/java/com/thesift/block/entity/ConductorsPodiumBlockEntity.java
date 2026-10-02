@@ -85,7 +85,7 @@ public class ConductorsPodiumBlockEntity extends BlockEntity {
             ItemStack s = a.getItem();
             drum |= s.is(ModItems.CONGA_DRUM.get());
             flute |= s.is(ModItems.CRANE_FLUTE.get());
-            guitar |= s.is(ModItems.GUITAR.get());
+            guitar |= s.is(ModItems.WEAVER_GUITAR.get());
         }
         return drum && flute && guitar;
     }

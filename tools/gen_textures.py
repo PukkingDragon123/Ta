@@ -2097,6 +2097,7 @@ def main():
     nebula()
     logo()
     hd_items()
+    __import__("weaver_art").textures(out)  # the Weaver (E2): sculk string, guitars, musical cobweb
     corruption_overlays()
     boss_bar()
     mini_boss_bars()

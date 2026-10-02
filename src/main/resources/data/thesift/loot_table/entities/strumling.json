@@ -5,7 +5,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:string",
+          "name": "thesift:sculk_string",
           "weight": 1,
           "modifier": [
             {

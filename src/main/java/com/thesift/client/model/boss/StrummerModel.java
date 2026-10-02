@@ -8,7 +8,9 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * The Strummer. The spider scuttles on a proper eight-legged gait (alternating fours) with its
+ * The Weaver (entity id strummer). It crawls out of the ground nose first and roars; it rears and
+ * roars again between movements, hangs from its thread as it swings, and combs out silk in a blur
+ * as it weaves. The spider scuttles on a proper eight-legged gait (alternating fours) with its
  * guitar-body abdomen bobbing behind; on its back the mantis sways, cocks its head, waves its
  * antennae and never stops playing - its right hand strums the strings, its left frets them.
  * Every attack is acted out: scythes raised and brought down for the slash, abdomen raised to
@@ -216,8 +218,103 @@ public class StrummerModel extends EntityModel<MiniBossRenderState> {
                 this.mantis.yRot = -0.3F * draw + 0.2F * snap;
                 this.rightStrings.zRot = Mth.sin(age * 8.0F) * 0.2F * snap;
             }
+            case Strummer.EMERGE -> {
+                // clawing up out of the ground nose first, shaking the earth off, then a roar
+                float sink = 1.0F - Anim.smooth((t - 6.0F) / 56.0F);
+                this.spider.y += 34.0F * sink;
+                this.spider.xRot -= 0.5F * sink;
+                this.spider.x += Mth.sin(age * 2.1F) * 0.5F * sink;
+                this.spider.zRot += Mth.sin(age * 1.7F) * 0.07F * sink;
+                for (int i = 0; i < 2; i++) {
+                    float claw = Mth.sin(t * 0.45F + i * Mth.PI);
+                    float reach = (0.5F + 0.45F * claw) * Math.min(1.0F, sink * 2.0F);
+                    this.leftLegs[i].zRot -= reach;
+                    this.rightLegs[i].zRot += reach;
+                    this.leftShins[i].zRot -= 0.6F * reach;
+                    this.rightShins[i].zRot += 0.6F * reach;
+                }
+                this.mantis.xRot += 0.5F * sink;
+                float roar = Anim.envelope(t, 58.0F, 5.0F, 10.0F, 8.0F);
+                this.spider.xRot -= 0.35F * roar;
+                this.spiderHead.xRot -= 0.4F * roar;
+                this.leftFang.zRot -= 0.6F * roar;
+                this.rightFang.zRot += 0.6F * roar;
+                this.leftArm.xRot -= 1.0F * roar;
+                this.rightArm.xRot -= 1.0F * roar;
+                this.mantisHead.xRot -= 0.5F * roar;
+                for (int i = 0; i < 2; i++) {
+                    this.leftLegs[i].zRot -= 0.7F * roar;
+                    this.rightLegs[i].zRot += 0.7F * roar;
+                }
+            }
+            case Strummer.AWAKEN -> {
+                // rearing up between movements, front legs high, and the roar
+                float rear = Anim.envelope(t, 0.0F, 14.0F, 14.0F, 10.0F);
+                float roar = Anim.envelope(t, 18.0F, 3.0F, 12.0F, 8.0F);
+                this.spider.xRot -= 0.45F * rear;
+                this.spider.x += Mth.sin(age * 3.0F) * 0.3F * roar;
+                for (int i = 0; i < 2; i++) {
+                    this.leftLegs[i].zRot -= 0.9F * rear;
+                    this.rightLegs[i].zRot += 0.9F * rear;
+                    this.leftShins[i].zRot -= 0.5F * rear;
+                    this.rightShins[i].zRot += 0.5F * rear;
+                }
+                this.spiderHead.xRot -= 0.5F * roar;
+                this.leftFang.zRot -= 0.7F * roar;
+                this.rightFang.zRot += 0.7F * roar;
+                this.leftArm.xRot -= 1.2F * rear;
+                this.rightArm.xRot -= 1.2F * rear;
+                this.mantisHead.xRot -= 0.6F * roar;
+                this.abdomen.xRot -= 0.3F * rear;
+            }
+            case Strummer.SWING -> {
+                // rear and fire the thread up; then hang from it, legs drawn in, the mantis gripping it
+                float aim = Anim.envelope(t, 0.0F, 5.0F, 6.0F, 3.0F);
+                float hang = Anim.smooth((t - Strummer.SWING_AIM + 2.0F) / 4.0F);
+                this.spider.xRot -= 0.5F * aim;
+                this.abdomen.xRot -= 0.6F * aim + 0.4F * hang;
+                for (int i = 0; i < 4; i++) {
+                    float fwd = i < 2 ? 0.45F : -0.3F;
+                    this.leftLegs[i].yRot += fwd * hang;
+                    this.rightLegs[i].yRot -= fwd * hang;
+                    this.leftLegs[i].zRot -= 0.45F * hang;
+                    this.rightLegs[i].zRot += 0.45F * hang;
+                    this.leftShins[i].zRot -= 0.7F * hang;
+                    this.rightShins[i].zRot += 0.7F * hang;
+                }
+                this.spider.xRot += Mth.sin(age * 0.3F) * 0.12F * hang;
+                this.leftArm.xRot -= 1.5F * hang;
+                this.rightArm.xRot -= 1.5F * hang;
+                this.leftFemur.xRot += 0.6F * hang;
+                this.rightFemur.xRot += 0.6F * hang;
+            }
+            case Strummer.WEAVE -> {
+                // spinnerets up, the back legs combing silk out in a blur, the mantis playing fast
+                float k = Anim.envelope(t, 0.0F, 8.0F, 26.0F, 6.0F);
+                this.abdomen.xRot -= 0.7F * k;
+                this.abdomen.zRot = Mth.sin(age * 2.5F) * 0.1F * k;
+                this.spider.y += 1.5F * k;
+                for (int i = 2; i < 4; i++) {
+                    float comb = Mth.sin(age * 2.2F + i * Mth.PI);
+                    this.leftLegs[i].yRot += comb * 0.5F * k;
+                    this.rightLegs[i].yRot -= comb * 0.5F * k;
+                    this.leftLegs[i].zRot -= 0.4F * k;
+                    this.rightLegs[i].zRot += 0.4F * k;
+                }
+                this.rightFemur.xRot += Mth.sin(age * 2.0F) * 0.4F * k;
+                this.leftHand.xRot += Mth.sin(age * 1.3F) * 0.3F * k;
+                this.leftStrings.zRot = Mth.sin(age * 7.0F) * 0.12F * k;
+                this.rightStrings.zRot = Mth.sin(age * 7.5F) * 0.12F * k;
+            }
             default -> {
             }
+        }
+        // on a wall: the spider turns its face up it (the mantis holds on)
+        if (s instanceof com.thesift.client.renderer.boss.StrummerRenderer.WeaverState w && w.climbing && st != Strummer.SWING) {
+            this.spider.xRot -= 1.2F;
+            this.spider.z += 5.0F;
+            this.spider.y -= 3.0F;
+            this.mantis.xRot += 0.6F;
         }
         if (s.hurtTicks >= 0.0F) {
             float h = 1.0F - Math.min(1.0F, s.hurtTicks / 10.0F);

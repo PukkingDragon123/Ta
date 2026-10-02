@@ -5,7 +5,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "thesift:magic_strings",
+          "name": "thesift:weaver_guitar",
           "weight": 1
         }
       ],
@@ -15,14 +15,14 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:string",
+          "name": "thesift:sculk_string",
           "weight": 1,
           "modifier": {
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
-              "min": 8,
-              "max": 16
+              "min": 6,
+              "max": 12
             }
           }
         }

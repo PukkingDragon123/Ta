@@ -418,6 +418,8 @@ def gen_loot(b):
         loot(bid, 'potted_cherry_sapling', {'cherry_sapling': lk[4:]})
     elif lk in ('grass', 'shears'):
         loot(bid, 'vine', {'vine': bid})
+    elif lk.startswith('web:'):  # the Weaver (E2): shears or silk touch for the web, else its string
+        loot(bid, 'cobweb', {'cobweb': bid, 'string': lk[4:]})
     elif lk == 'double_grass':
         loot(bid, 'tall_grass', {'tall_grass': bid, 'short_grass': bid, 'wheat_seeds': 'blushgrass'})
     elif lk == 'petals':
@@ -644,7 +646,7 @@ def gen_recipes():
     shaped('serbim_block', ['###', '###', '###'], {'#': 'serbim_ingot'}, 'serbim_block')
     # the instruments of the Conductor's three great players
     shapeless('crane_flute', ['crane_beak', 'minecraft:feather', 'minecraft:feather', 'minecraft:echo_shard'], 'crane_flute', category='equipment')
-    shaped('guitar', ['  S', 'PS ', 'PP '], {'S': 'magic_strings', 'P': '#minecraft:planks'}, 'guitar', category='equipment')
+    shaped('guitar', ['  S', 'PS ', 'PP '], {'S': 'sculk_string', 'P': '#minecraft:planks'}, 'guitar', category='equipment')
     shapeless('serbim_ingot_from_block', ['serbim_block'], 'serbim_ingot', 9)
     shaped('raw_serbim_block', ['###', '###', '###'], {'#': 'raw_serbim'}, 'raw_serbim_block')
     shapeless('raw_serbim_from_block', ['raw_serbim_block'], 'raw_serbim', 9)
@@ -769,25 +771,29 @@ def gen_lang():
         f'codex.{NS}.thumper.body': 'A giant turtle with a war drum on its shell: only hits on the DRUM hurt it. Jump its slam rings; a charge into a wall leaves it dazed. At half health it grows into a TITAN, and then only blows struck from its back count. Climb a tower of its Drum Pit and leap on. Crouch when it shakes; hide from its beam. Drops its Conga Drum.',
         f'codex.{NS}.whistler.title': 'The Whistler', f'codex.{NS}.whistler.tagline': 'Wind - a crane with a flute for a beak',
         f'codex.{NS}.whistler.body': 'A giant sculk crane that wheels overhead trailing souls. When a thin line of light finds you, its song is about to lock on: a beam that ignores armour and keeps hurting you, slowly, as long as it holds. Break the lock - duck behind something solid, run, or hit it hard and it falls out of the sky. Drops its Crane Beak.',
-        f'codex.{NS}.strummer.title': 'The Strummer', f'codex.{NS}.strummer.tagline': 'Strings - a mantis riding a spider',
-        f'codex.{NS}.strummer.body': 'A giant mantis riding a giant spider, playing it like a guitar by the glowing strings in its hands. The spider spits webs, pounces and lays Strumlings; the mantis slashes, plucks a string to drag you in, and strums chords that make the whole brood faster and stronger. Below half health it plays twice as fast. Drops its Magic Strings.',
+        f'codex.{NS}.strummer.title': 'The Weaver', f'codex.{NS}.strummer.tagline': 'Strings - a sculk spider and its bone musician',
+        f'codex.{NS}.strummer.body': "A great sculk spider that crawls up out of the ground when woken, a bone mantis on its back playing the glowing strings of its silk. It fights in three movements. First it slashes, spits silk, pounces, snaps a string to drag you in, lays Sculk Spiders and strums them stronger. Two thirds down it roars and rings itself in webs: now it runs up the walls, fires a thread to the ceiling and swings across the arena to drop on you, and weaves an orb of Musical Cobwebs around you in a blink - watch for the ring of light. At one third it roars again: faster, and every strum makes its webs sing and hurt. Drops the Weaver's Guitar.",
         f'codex.{NS}.whistling.title': 'Whistling', f'codex.{NS}.whistling.tagline': "The Whistler's chicks",
         f'codex.{NS}.whistling.body': 'Fluffy crane chicks with flute beaks. From a few blocks away they pipe a shrill note that stings through armour.',
-        f'codex.{NS}.strumling.title': 'Strumling', f'codex.{NS}.strumling.tagline': "The Strummer's brood",
-        f'codex.{NS}.strumling.body': 'Twitchy spiderlings that climb walls, ignore webs and pounce from a distance. Where there is one, there are eight.',
+        f'codex.{NS}.strumling.title': 'Sculk Spider', f'codex.{NS}.strumling.tagline': "The Weaver's brood",
+        f'codex.{NS}.strumling.body': 'Long-legged spiders of bone and sculk, eight eyes glowing over hooked fangs and glowing sacs bulging between the plates of their backs. They skitter up walls, walk through webs and, when they sink down and rear their front legs, pounce. They drop Sculk String.',
         f'codex.{NS}.conga_drum.title': 'Conga Drum', f'codex.{NS}.conga_drum.tagline': "The Thumper's drum",
         f'codex.{NS}.conga_drum.body': 'Use it to beat a massive shockwave: soft blocks around you shatter and everything nearby is hurled away. It takes half a minute to ring out before you can play it again. Sneak and tap it to drum single notes instead - look up for higher ones. Stompers love it.',
         f'codex.{NS}.crane_flute.title': 'Crane Flute', f'codex.{NS}.crane_flute.tagline': 'Carved from the Crane Beak',
         f'codex.{NS}.crane_flute.body': 'Hold use on a creature: a thin red line marks it, and a moment later the flute locks on - a sonic beam that hurts and slows it for as long as you keep playing and keep it in sight, up to 24 blocks away. Sneak and use it to play single notes: look up for higher notes, down for lower. Carry a Music Sheet and play its notes in order to perform the song.',
-        f'codex.{NS}.guitar.title': 'Guitar', f'codex.{NS}.guitar.tagline': 'Strung with Magic Strings',
-        f'codex.{NS}.guitar.body': "Strum a chord: the song hurts every hostile creature around you, and your tamed pets - wolves, cats, sniffers - are filled with it: stronger, faster and healing.",
+        f'codex.{NS}.guitar.title': 'Guitar', f'codex.{NS}.guitar.tagline': 'Strung with Sculk String',
+        f'codex.{NS}.guitar.body': "Planks and Sculk String from the Sculk Spiders. Every strum plays one note, and where you look picks it: look up for the high notes, down for the low ones - two octaves, like a note block. Learn a Music Sheet and you can play its song.",
+        f'codex.{NS}.weaver_guitar.title': "Weaver's Guitar", f'codex.{NS}.weaver_guitar.tagline': "The Weaver's own instrument",
+        f'codex.{NS}.weaver_guitar.body': "It plays like any guitar, one note a strum. Sneak and strum to weave: a ring of Musical Cobwebs springs up around you and every hostile creature nearby is snared in silk where it stands - bounced, bound and slowed. Then the strings need a few seconds to settle. Only the Weaver drops it, and only it will sound on the Grand Stage.",
+        f'codex.{NS}.musical_cobweb.title': 'Musical Cobweb', f'codex.{NS}.musical_cobweb.tagline': 'Tuned silk',
+        f'codex.{NS}.musical_cobweb.body': "The Weaver's glowing webs. They barely hold you - a little drag and a springy bounce - but every strand is tuned and plays its note when touched, so a web plays runs as you push through it. Shears or Silk Touch keep the web; otherwise it leaves Sculk String.",
         f'codex.{NS}.stage.title': 'The Grand Stage', f'codex.{NS}.stage.tagline': 'Three altars, three instruments',
-        f'codex.{NS}.stage.body': "On the roof of the Sculk Castle stands a stage with three empty altars. Place the Conga Drum, the Crane Flute and the Guitar on them and they begin to play together. The sky darkens. The world falls silent. And from beneath the stage, a mask rises...",
+        f'codex.{NS}.stage.body': "On the roof of the Sculk Castle stands a stage with three empty altars. Place the Conga Drum, the Crane Flute and the Weaver's Guitar on them and they begin to play together. The sky darkens. The world falls silent. And from beneath the stage, a mask rises...",
         f'codex.{NS}.vocals.title': 'The Vocals', f'codex.{NS}.vocals.tagline': 'A Warden answers',
         f'codex.{NS}.vocals.body': 'When the Dictator reaches his crescendo, a Warden claws up through the floor to sing for him. A Glowing Slime Ball from a slingshot leaves it Deafened.',
         f'entity.{NS}.dictator': 'The Conductor', f'entity.{NS}.thumper': 'The Thumper', f'entity.{NS}.whistler': 'The Whistler',
-        f'entity.{NS}.strummer': 'The Strummer', f'entity.{NS}.whistling': 'Whistling',
-        f'entity.{NS}.strumling': 'Strumling', f'entity.{NS}.web_shot': 'Web', f'entity.{NS}.conductor_mask': "The Conductor's Mask",
+        f'entity.{NS}.strummer': 'The Weaver', f'entity.{NS}.whistling': 'Whistling',
+        f'entity.{NS}.strumling': 'Sculk Spider', f'entity.{NS}.web_shot': 'Silk', f'entity.{NS}.conductor_mask': "The Conductor's Mask",
         f'message.{NS}.dictator.wakes': 'The Conductor raises his staff. The performance begins...',
         f'message.{NS}.stage.begins': 'The three instruments begin to play together...',
         f'entity.{NS}.sift_sniffer': 'Sniffer',
@@ -811,7 +817,7 @@ def gen_lang():
         f'message.{NS}.titan.leap': 'It is right below you - leap onto its back!',
         f'message.{NS}.titan.parasites': 'Sculk Parasites are crawling out of its shell! (Crouch to hold on when it shakes.)',
         f'message.{NS}.encore.1': 'A flute sings from the sky... the Whistler answers the call!',
-        f'message.{NS}.encore.2': 'Strings twang in the dark... the Strummer answers the call!',
+        f'message.{NS}.encore.2': 'Silk trembles in the dark... the Weaver claws its way up!',
         f'effect.{NS}.sculk_corruption': 'Sculk Corruption',
         f'codex.{NS}.sculk_corruption.title': 'Sculk Corruption', f'codex.{NS}.sculk_corruption.tagline': "The Conductor's curse",
         f'codex.{NS}.sculk_corruption.body': 'A slow wither: one heart of harm every few seconds - but the longer it lasts, the more the dark closes in from the edges of your sight, until the world is a pinhole. Every blow from the Conductor adds to it. Milk washes it away.',
@@ -885,22 +891,22 @@ SUBTITLES = {
     'entity.whistler.break': 'Song breaks',
     'entity.whistler.screech': 'Whistler screeches',
     'entity.whistler.dive': 'Whistler dives',
-    'entity.strummer.ambient': 'Strummer clicks',
-    'entity.strummer.hurt': 'Strummer hurts',
-    'entity.strummer.death': 'Strummer dies',
+    'entity.strummer.ambient': 'Weaver clicks',
+    'entity.strummer.hurt': 'Weaver hurts',
+    'entity.strummer.death': 'Weaver dies',
     'entity.strummer.slash': 'Scythes slash',
-    'entity.strummer.spit': 'Spider spits web',
+    'entity.strummer.spit': 'Weaver spits silk',
     'entity.strummer.hiss': 'Spider hisses',
     'entity.strummer.land': 'Spider lands',
-    'entity.strummer.chord': 'Strummer strums a chord',
-    'entity.strummer.draw': 'String tightens',
-    'entity.strummer.pluck': 'String snaps',
+    'entity.strummer.chord': 'Weaver strums a chord',
+    'entity.strummer.draw': 'Silk tightens',
+    'entity.strummer.pluck': 'Silk snaps',
     'entity.whistling.ambient': 'Whistling peeps',
     'entity.whistling.hurt': 'Whistling hurts',
     'entity.whistling.death': 'Whistling dies',
-    'entity.strumling.ambient': 'Strumling skitters',
-    'entity.strumling.hurt': 'Strumling hurts',
-    'entity.strumling.death': 'Strumling dies',
+    'entity.strumling.ambient': 'Sculk Spider skitters',
+    'entity.strumling.hurt': 'Sculk Spider hurts',
+    'entity.strumling.death': 'Sculk Spider dies',
     'entity.conductor_mask.rise': 'The Mask rises',
     'entity.conductor_mask.transform': 'The Mask transforms',
     'item.conga_drum.boom': 'Conga Drum booms',
@@ -1030,9 +1036,9 @@ SOUNDS = {
     'entity.whistling.ambient': [('event:entity.chicken.ambient', 0.7, 1.6), ('block/note_block/flute', 0.4, 1.8)],
     'entity.whistling.hurt': [('event:entity.chicken.hurt', 0.8, 1.6)],
     'entity.whistling.death': [('event:entity.chicken.death', 0.9, 1.5)],
-    'entity.strumling.ambient': [('event:entity.spider.ambient', 0.5, 1.8)],
-    'entity.strumling.hurt': [('event:entity.spider.hurt', 0.6, 1.8)],
-    'entity.strumling.death': [('event:entity.spider.death', 0.7, 1.8)],
+    'entity.strumling.ambient': [('event:entity.spider.ambient', 0.7, 1.15), ('event:entity.warden.ambient', 0.25, 1.9)],
+    'entity.strumling.hurt': [('event:entity.spider.hurt', 0.8, 1.1)],
+    'entity.strumling.death': [('event:entity.spider.death', 0.9, 1.0), ('block/sculk/break1', 0.6, 0.8)],
     'entity.conductor_mask.rise': [('event:block.beacon.activate', 1.0, 0.5), ('event:entity.warden.emerge', 0.8, 1.4)],
     'entity.conductor_mask.transform': [('event:entity.warden.sonic_boom', 1.0, 0.6), ('event:entity.wither.spawn', 0.6, 1.6)],
     'item.conga_drum.boom': [('block/note_block/basedrum', 1.0, 0.5), ('event:entity.generic.explode', 0.7, 0.8)],

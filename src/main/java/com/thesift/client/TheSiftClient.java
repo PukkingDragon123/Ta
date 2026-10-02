@@ -118,12 +118,10 @@ public class TheSiftClient {
                 "thumper_titan"));
         event.registerEntityRenderer(ModEntities.WHISTLER.get(), c -> new MiniBossRenderer<Whistler, WhistlerModel>(c, new WhistlerModel(c.bakeLayer(ModModelLayers.WHISTLER)),
                 "whistler", Whistler.SCALE, 0.6F, (e, s) -> s.bossState == Whistler.STUNNED && e.deathTime == 0 ? com.thesift.client.Expression.HURT : null));
-        event.registerEntityRenderer(ModEntities.STRUMMER.get(), c -> new MiniBossRenderer<Strummer, StrummerModel>(c, new StrummerModel(c.bakeLayer(ModModelLayers.STRUMMER)),
-                "strummer", Strummer.SCALE, 0.9F, (e, s) -> null));
+        event.registerEntityRenderer(ModEntities.STRUMMER.get(), com.thesift.client.renderer.boss.StrummerRenderer::new); // the Weaver, with its silk thread
         event.registerEntityRenderer(ModEntities.WHISTLING.get(),
                 c -> new MinionRenderer<>(c, new WhistlingModel(c.bakeLayer(ModModelLayers.WHISTLING)), "whistling", 0.35F));
-        event.registerEntityRenderer(ModEntities.STRUMLING.get(),
-                c -> new MinionRenderer<>(c, new StrumlingModel(c.bakeLayer(ModModelLayers.STRUMLING)), "strumling", 0.4F));
+        event.registerEntityRenderer(ModEntities.STRUMLING.get(), com.thesift.client.renderer.boss.StrumlingRenderer::new); // the Sculk Spider
         event.registerEntityRenderer(ModEntities.SCULK_PARASITE.get(), c -> new MinionRenderer<>(c,
                 new com.thesift.client.model.boss.SculkParasiteModel(c.bakeLayer(ModModelLayers.SCULK_PARASITE)), "sculk_parasite", 0.35F));
         event.registerEntityRenderer(ModEntities.CONDUCTOR_MASK.get(), com.thesift.client.renderer.boss.ConductorMaskRenderer::new);

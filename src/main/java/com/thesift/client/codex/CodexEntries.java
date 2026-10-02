@@ -176,6 +176,9 @@ public final class CodexEntries {
         l.add(thing(DICTATOR, "conga_drum", ModItems.CONGA_DRUM));
         l.add(thing(DICTATOR, "crane_flute", ModItems.CRANE_FLUTE));
         l.add(thing(DICTATOR, "guitar", ModItems.GUITAR));
+        // the Weaver (E2)
+        l.add(thing(DICTATOR, "weaver_guitar", ModItems.WEAVER_GUITAR));
+        l.add(thing(DICTATOR, "musical_cobweb", ModItems.MUSICAL_COBWEB));
         l.add(thing(DICTATOR, "vocals", () -> Items.SCULK_SHRIEKER));
         return l;
     }

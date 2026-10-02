@@ -28,7 +28,7 @@ public class InstrumentAltarBlockEntity extends BlockEntity {
     }
 
     public static boolean isInstrument(ItemStack stack) {
-        return stack.is(ModItems.CONGA_DRUM.get()) || stack.is(ModItems.CRANE_FLUTE.get()) || stack.is(ModItems.GUITAR.get());
+        return stack.is(ModItems.CONGA_DRUM.get()) || stack.is(ModItems.CRANE_FLUTE.get()) || stack.is(ModItems.WEAVER_GUITAR.get()); // only the Weaver's own guitar sounds on the Grand Stage
     }
 
     public ItemStack getItem() {

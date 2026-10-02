@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "S": "thesift:magic_strings",
+    "S": "thesift:sculk_string",
     "P": "#minecraft:planks"
   },
   "pattern": [

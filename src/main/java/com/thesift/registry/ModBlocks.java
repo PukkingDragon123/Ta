@@ -311,6 +311,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SLIME_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 12));
     public static final DeferredBlock<SoulChimeBlock> SOUL_CHIME = BLOCKS.registerBlock("soul_chime", SoulChimeBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_CHAIN).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6).noOcclusion());
+    public static final DeferredBlock<MusicalCobwebBlock> MUSICAL_COBWEB = BLOCKS.registerBlock("musical_cobweb", MusicalCobwebBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).sound(net.minecraft.world.level.block.SoundType.COBWEB).noCollision().strength(1.0F).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY).lightLevel(s -> s.getValue(com.thesift.block.MusicalCobwebBlock.RINGING) ? 12 : 6));
     public static final DeferredBlock<LingeringGlowBlock> LINGERING_GLOW = BLOCKS.registerBlock("lingering_glow", LingeringGlowBlock::new,
             () -> BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
     public static final DeferredBlock<ChromeLiquidBlock> CHROME = BLOCKS.registerBlock("chrome", ChromeLiquidBlock::new,

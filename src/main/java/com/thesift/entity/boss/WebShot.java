@@ -15,25 +15,24 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-/** A ball of web spat by the Strummer's spider: it bursts into a patch of cobwebs that melt away. */
+/** A ball of silk spat by the Weaver: it bursts into a patch of musical cobwebs that melt away. */
 public class WebShot extends ThrowableItemProjectile {
     public WebShot(EntityType<? extends WebShot> type, Level level) {
         super(type, level);
     }
 
     public WebShot(ServerLevel level, LivingEntity owner) {
-        super(ModEntities.WEB_SHOT.get(), owner, level, new ItemStack(Items.COBWEB));
+        super(ModEntities.WEB_SHOT.get(), owner, level, new ItemStack(com.thesift.registry.ModItems.MUSICAL_COBWEB.get()));
     }
 
     @Override
     protected Item getDefaultItem() {
-        return Items.COBWEB;
+        return com.thesift.registry.ModItems.MUSICAL_COBWEB.get();
     }
 
     @Override
@@ -65,8 +64,8 @@ public class WebShot extends ThrowableItemProjectile {
             Vec3 at = result.getLocation();
             BlockPos c = BlockPos.containing(at);
             TemporaryBlocks.webs(server, c, 1, 0.45F, 160);
-            TemporaryBlocks.place(server, c, net.minecraft.world.level.block.Blocks.COBWEB.defaultBlockState(), 160);
-            server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, net.minecraft.world.level.block.Blocks.COBWEB.defaultBlockState()), at.x, at.y, at.z, 16, 0.4, 0.4, 0.4, 0.1);
+            TemporaryBlocks.web(server, c, 160);
+            server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, com.thesift.registry.ModBlocks.MUSICAL_COBWEB.get().defaultBlockState()), at.x, at.y, at.z, 16, 0.4, 0.4, 0.4, 0.1);
             server.playSound(null, at.x, at.y, at.z, SoundEvents.SLIME_SQUISH, SoundSource.HOSTILE, 1.0F, 0.6F);
             this.discard();
         }
