@@ -846,36 +846,15 @@ def stage_things():
 
 
 def overlays():
-    """Full-screen overlays: the Sculk Corruption vignette and the Feather Shield."""
+    """Full-screen overlays: the Feather Shield (the Sculk Corruption ones are painted by
+    corruption_overlays())."""
     import math
     import random
     rnd = random.Random(77)
-    # the vignette: clear in the middle, closing in to a deep sculk black, veined with tendrils
-    N = 256
-    v = Image.new('RGBA', (N, N), (0, 0, 0, 0))
-    px = v.load()
-    veins = [(rnd.uniform(0, math.tau), rnd.uniform(0.5, 1.6)) for _ in range(26)]
-    for y in range(N):
-        for x in range(N):
-            dx, dy = (x + 0.5) / N * 2 - 1, (y + 0.5) / N * 2 - 1
-            r = math.hypot(dx * 1.05, dy)
-            a = math.atan2(dy, dx)
-            k = max(0.0, min(1.0, (r - 0.42) / 0.5))
-            k = k * k * (3 - 2 * k)
-            vein = 0.0
-            for (va, wob) in veins:
-                d = math.atan2(math.sin(a - va - math.sin(r * 7 * wob) * 0.12), math.cos(a - va - math.sin(r * 7 * wob) * 0.12))
-                reach = 0.3 + 0.25 * wob / 1.6
-                if abs(d) < 0.035 * (1.2 - r) + 0.01 and r > reach:
-                    vein = max(vein, 1.0 - abs(d) / (0.035 * (1.2 - r) + 0.01))
-            alpha = max(k, vein * 0.95 * min(1.0, (r - 0.25) * 2))
-            if alpha <= 0.01:
-                continue
-            col = (2, 10, 14) if vein < 0.5 else (8, 60, 66)
-            if vein > 0.85 and rnd.random() < 0.02:
-                col = (46, 242, 226)
-            px[x, y] = (*col, int(alpha * 255))
-    out('misc/sculk_vignette', v)
+    # the feathers were first laid out after an older vignette had drawn 1416 numbers from this
+    # stream; skip them so the feathers stay exactly as they were
+    for _ in range(1416):
+        rnd.random()
     # feathers: two 128 x 256 panels of soft white feathers fanned around the edges
     f = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
     d = ImageDraw.Draw(f)
@@ -908,6 +887,552 @@ def overlays():
                     ld.line([(bx, by), (bx + (ca * 0.5 * 3 - sgn * sa * 0.5 * Wd * 0.6), by + (sa * 3 + sgn * ca * Wd * 0.6))], fill=(198, 202, 220, 255), width=1)
         f.alpha_composite(layer, (ox, 0))
     out('misc/feather_shield', f)
+
+
+# ================================================================== Sculk Corruption overlays
+# Painted for client/ClientEffects: tentacles that creep in over your sight, sculk crusting the
+# corners of the screen, a closing vignette and veins that pulse with the heartbeat. All in the
+# Warden's own palette, from fixed seeds so every build paints them the same.
+
+_SC_HIDE = [hx(h)[:3] for h in ('#06090c', '#0d1217', '#111b21', '#16222a', '#1c2d36')]
+_SC_SHEEN = hx('#27434e')[:3]
+_SC_TEAL = [hx(h)[:3] for h in ('#052a32', '#034150', '#074857', '#05625d', '#086e68')]
+_SC_GLOW = [hx(h)[:3] for h in ('#0f8c99', '#009295', '#29dfeb', '#a8fff8', '#ffffff')]
+_SC_BONE = [hx(h)[:3] for h in ('#40576c', '#819988', '#a2af86', '#bbc39b', '#d1d6b6', '#eef0e0')]
+
+
+def _sc_noise(w, h, cell, rng):
+    """Smooth value noise (0..1) on a w x h grid, one random value per cell corner."""
+    gw, gh = int(w / cell) + 2, int(h / cell) + 2
+    g = rng.random((gh, gw))
+    ys, xs = np.mgrid[0:h, 0:w].astype(float)
+    xs, ys = (xs + 0.5) / cell, (ys + 0.5) / cell
+    x0, y0 = xs.astype(int), ys.astype(int)
+    tx, ty = xs - x0, ys - y0
+    tx, ty = tx * tx * (3 - 2 * tx), ty * ty * (3 - 2 * ty)
+    a = g[y0, x0] * (1 - tx) + g[y0, x0 + 1] * tx
+    b = g[y0 + 1, x0] * (1 - tx) + g[y0 + 1, x0 + 1] * tx
+    return a * (1 - ty) + b * ty
+
+
+def _sc_fbm(n, rng, cells, weights):
+    return sum(_sc_noise(n, n, c, rng) * w for c, w in zip(cells, weights)) / sum(weights)
+
+
+def _sc_worley(n, cell, rng):
+    """Cellular noise on an n x n grid: distance to the nearest and second-nearest feature point,
+    and a random value belonging to the nearest one."""
+    g = int(n / cell) + 3
+    pts = (np.mgrid[0:g, 0:g].transpose(1, 2, 0)[..., ::-1] + rng.random((g, g, 2))) * cell - cell
+    ids = rng.random((g, g))
+    Y, X = np.mgrid[0:n, 0:n] + 0.5
+    cx, cy = ((X + cell) / cell).astype(int), ((Y + cell) / cell).astype(int)
+    ds, iv = [], []
+    for oy in (-1, 0, 1):
+        for ox in (-1, 0, 1):
+            gx, gy = np.clip(cx + ox, 0, g - 1), np.clip(cy + oy, 0, g - 1)
+            p = pts[gy, gx]
+            ds.append(np.hypot(X - p[..., 0], Y - p[..., 1]))
+            iv.append(ids[gy, gx])
+    ds, iv = np.array(ds), np.array(iv)
+    order = np.argsort(ds, axis=0)
+    return (np.take_along_axis(ds, order[:1], 0)[0], np.take_along_axis(ds, order[1:2], 0)[0],
+            np.take_along_axis(iv, order[:1], 0)[0])
+
+
+def _sc_ring(mask):
+    """The pixels touching a mask edge-on."""
+    out = np.zeros_like(mask)
+    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        out |= np.roll(np.roll(mask, dy, 0), dx, 1)
+    return out & ~mask
+
+
+def _sc_image(rgb, alpha):
+    return Image.fromarray(np.clip(np.dstack([rgb, alpha * 255]) + 0.5, 0, 255).astype(np.uint8), 'RGBA')
+
+
+# ---------------------------------------------------------------- the tentacles
+
+_SC_R_ROOT, _SC_R_16, _SC_R_TIP = 7.85, 2.05, 0.6
+# how each one curls in its top slice: (straight on for, then curling over, to curvature)
+_SC_CURLS = {'barbed': (7, 8, 0.6), 'suckers': (7, 8, -0.7), 'veined': (7, 8, -0.6), 'hook': (6, 14, 1.15)}
+
+
+def _sc_radius(y):
+    """A tentacle's radius on the straight: full width at the root, tapering to 2 at y = 16."""
+    u = max(0.0, (y - 16.0) / 112.0)
+    return _SC_R_16 + (_SC_R_ROOT - _SC_R_16) * u ** 0.85
+
+
+def _sc_centreline(ls, lc, kmax):
+    """Dense samples (x, y, tangent x, tangent y, arc length, radius) up the middle of the strip
+    from the root at (8, 128) to (8, 16), then on straight for ls and curling over lc."""
+    pts = [(8.0, y, 0.0, -1.0, 128.0 - y, _sc_radius(y)) for y in np.arange(128.0, 16.0, -0.25)]
+    x, y, th = 8.0, 16.0, -math.pi / 2
+    ds, total = 0.2, ls + lc
+    for i in range(int(total / ds) + 1):
+        s = i * ds
+        pts.append((x, y, math.cos(th), math.sin(th), 112.0 + s, _SC_R_16 + (_SC_R_TIP - _SC_R_16) * (s / total) ** 0.9))
+        th += (0.0 if s < ls else kmax * (s - ls) / lc) * ds
+        x += math.cos(th) * ds
+        y += math.sin(th) * ds
+    return np.array(pts)
+
+
+def _sc_nearest(px, py, cl):
+    """For each point, the distance outside the swept body (negative inside) and the nearest sample."""
+    e, idx = np.empty(px.size), np.empty(px.size, int)
+    for a in range(0, px.size, 2048):
+        d = np.hypot(px[a:a + 2048, None] - cl[None, :, 0], py[a:a + 2048, None] - cl[None, :, 1]) - cl[None, :, 5]
+        i = d.argmin(1)
+        e[a:a + 2048], idx[a:a + 2048] = d[np.arange(i.size), i], i
+    return e, idx
+
+
+def _sc_tentacle(kind, seed):
+    """One 16 x 128 tentacle, root at the bottom. Its body is a dark cylinder of Warden hide lit from
+    the strip's left; every slice boundary (y = 16k) is kept clear of detail and the profile is
+    continuous, so the slices chain together however they are bent."""
+    W, H, SS = 16, 128, 6
+    HIDE, TEAL, GLOW, BONE = _SC_HIDE, _SC_TEAL, _SC_GLOW, _SC_BONE
+    rng = np.random.default_rng(seed)
+    rnd = random.Random(seed)
+    cl = _sc_centreline(*_SC_CURLS[kind])
+    s_end = cl[-1, 4]
+    sy, sx = np.mgrid[0:H * SS, 0:W * SS].astype(float)
+    e_ss, _ = _sc_nearest(((sx + 0.5) / SS).ravel(), ((sy + 0.5) / SS).ravel(), cl)
+    cov = (e_ss < 0).reshape(H, SS, W, SS).mean(axis=(1, 3))   # anti-aliased coverage
+    py, px = np.mgrid[0:H, 0:W].astype(float) + 0.5
+    e, idx = _sc_nearest(px.ravel(), py.ravel(), cl)
+    e, idx = e.reshape(H, W), idx.reshape(H, W)
+    P = cl[idx]
+    r, s = P[..., 5], P[..., 4]
+    v = np.clip((P[..., 2] * (py - P[..., 1]) - P[..., 3] * (px - P[..., 0])) / r, -1, 1)  # -1 left .. 1 right
+    # the hide, with soft rings bowing toward the tip (faded out at every joint), a wet sheen on
+    # the lit side and a teal rim of reflected glow on the shadowed one
+    tone = np.select([v < -0.86, v < -0.30, v < 0.12, v < 0.50, v < 0.84], [2, 4, 3, 2, 1], 0)
+    phase = py / np.clip(0.6 * r, 2.4, 4.4) + 0.4 * (1 - np.sqrt(np.clip(1 - v * v, 0, 1)))
+    joint = np.minimum(py % 16, 16 - py % 16)
+    rings = (np.mod(phase, 1.0) < 0.22) & (joint > 1.6) & (s < 111)
+    tone = np.where(rings, np.maximum(tone - 1, 0), tone)
+    img = np.array(HIDE, float)[tone]
+    sheen = (v > -0.68) & (v < -0.46) & (_sc_noise(W, H, 2.5, rng) > 0.42) & (r > 2.2) & ~rings
+    img[sheen] = _SC_SHEEN
+    rim = v >= 0.84
+    img[rim] = np.array(TEAL, float)[np.where(v[rim] > 0.94, 2, 1)]
+
+    def put(x, y, c):
+        xi, yi = int(math.floor(x)), int(math.floor(y))
+        if 0 <= xi < W and 0 <= yi < H and cov[yi, xi] > 0.3:
+            img[yi, xi] = c
+
+    def inside(xi, yi, margin):
+        return 0 <= xi < W and 0 <= yi < H and e[yi, xi] < -margin
+
+    def spot(xc, yc, rho, glow):
+        """A Warden spot: a teal patch foreshortened round the body, some with a glowing heart."""
+        vc = (xc - 8) / _sc_radius(yc)
+        rx, ry = rho * max(0.5, math.sqrt(max(0.0, 1 - vc * vc))), rho * 1.2
+        for yi in range(int(yc - ry) - 1, int(yc + ry) + 2):
+            for xi in range(int(xc - rx) - 1, int(xc + rx) + 2):
+                if not inside(xi, yi, 0.3):
+                    continue
+                dx, dy = xi + 0.5 - xc, yi + 0.5 - yc
+                d = math.hypot(dx / rx, dy / ry)
+                if d < 1:
+                    vv = v[yi, xi]
+                    c = TEAL[2] if vv < -0.25 else TEAL[0] if vv > 0.5 else TEAL[1]
+                    if d > 0.55:
+                        c = TEAL[3] if dx + dy < 0 and vv < 0.35 else TEAL[0] if dx + dy > 0 else c
+                    img[yi, xi] = c
+        if glow:
+            put(xc, yc, GLOW[3] if rho > 2.0 else GLOW[2])
+            if rho > 2.0:
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    put(xc + dx, yc + dy, GLOW[1])
+
+    def sucker(xc, yc, rho):
+        """A raised lip round a dark cup with a glowing heart."""
+        vc = (xc - 8) / _sc_radius(yc)
+        rx, ry = rho * max(0.6, math.sqrt(max(0.0, 1 - vc * vc))), rho
+        if rho < 1.05:
+            put(xc, yc, GLOW[2])
+            return
+        for yi in range(int(yc - ry) - 1, int(yc + ry) + 2):
+            for xi in range(int(xc - rx) - 1, int(xc + rx) + 2):
+                if not inside(xi, yi, 0.2):
+                    continue
+                dx, dy = xi + 0.5 - xc, yi + 0.5 - yc
+                d = math.hypot(dx / rx, dy / ry)
+                if d < 0.34:
+                    img[yi, xi] = GLOW[3] if rho > 2.4 and d < 0.17 else GLOW[2]
+                elif d < 0.62:
+                    img[yi, xi] = GLOW[0] if rho > 2.4 and d < 0.48 else HIDE[0]
+                elif d < 1.02:
+                    img[yi, xi] = TEAL[4] if dx + dy * 1.2 < 0 else TEAL[1]
+
+    for k in range(7):  # spots stay inside their slice, clear of the joints
+        for j in range({'barbed': 2, 'suckers': 1, 'veined': 1, 'hook': 3}[kind]):
+            y = 128 - 16 * k - rnd.uniform(3.5, 12.5)
+            rr = _sc_radius(y)
+            spot(8 + rnd.uniform(-0.55, 0.45) * rr, y, max(1.0, rnd.uniform(0.24, 0.36) * rr), rnd.random() < 0.6)
+    for k in range(7):  # sculk specks: single glowing pixels, as on the sculk block
+        for j in range(3):
+            y = 128 - 16 * k - rnd.uniform(2.0, 14.0)
+            put(8 + rnd.uniform(-0.75, 0.7) * _sc_radius(y), y, GLOW[1] if rnd.random() < 0.7 else GLOW[2])
+    if kind == 'suckers':  # two rows of suckers, big ones down the underside
+        for k in range(7):
+            for off, vv, size in ((4.5, 0.42, 0.42), (11.5, 0.42, 0.42), (8.0, -0.4, 0.27)):
+                y = 128 - 16 * k - off
+                rr = _sc_radius(y)
+                sucker(8 + vv * rr, y, max(0.8, size * rr))
+        for y in (13.0, 10.0):
+            put(8.6, y, GLOW[2])
+    if kind == 'veined':  # a glowing vein meandering up the middle, branching out to the edges
+        y = 127.5
+        while y > 9:
+            rr = _sc_radius(y) if y > 16 else _SC_R_16
+            x = 8 + rr * 0.2 * math.sin(y / 7.3 + 1.0)
+            put(x, y, GLOW[2] if rr > 2.6 or int(y) % 2 else GLOW[1])
+            if rr > 4.2:
+                for side in (-1, 1):
+                    if inside(int(x) + side, int(y), 0.8):
+                        img[int(y), int(x) + side] = TEAL[3] if side < 0 else TEAL[1]
+            if int(y) % 16 == 8 and int(y) > 20:
+                side = 1 if (int(y) // 16) % 2 else -1
+                bx, by = x, y
+                for t in range(12):
+                    bx += side * 0.72
+                    by -= 0.9
+                    if abs(bx - 8) > _sc_radius(by) - 1.1:
+                        put(bx - side * 0.7, by + 0.9, GLOW[3])
+                        break
+                    put(bx, by, GLOW[2] if t < 3 else GLOW[1])
+            y -= 1.0
+    if kind == 'barbed':  # bone thorns along both edges, hooked toward the tip
+        thorns = [(side, 128 - 16 * k - off) for k in range(2, 7) for side, off in ((-1, 5.0), (1, 11.0))]
+        thorns.append((1, 21.5))
+        big = [(0, 1, 0), (0, 0, 2), (1, 0, 2), (0, -1, 2), (1, -1, 3), (1, -2, 3), (2, -2, 4), (2, -3, 4), (3, -4, 5)]
+        small = [(0, 1, 0), (0, 0, 2), (0, -1, 2), (1, -1, 3), (1, -2, 4), (2, -3, 5)]
+        tiny = [(0, 1, 0), (0, 0, 2), (0, -1, 4), (1, -2, 5)]
+        for side, yb in thorns:
+            room = 8 - _sc_radius(yb)
+            xe = int(math.floor(8 + side * (_sc_radius(yb) - 0.55)))
+            for dx, dy, t in (big if room >= 3.5 else small if room >= 2.4 else tiny):
+                x, y = xe + dx * side, int(yb) + dy
+                if 0 <= x < W and 0 <= y < H:
+                    img[y, x] = HIDE[0] if t == 0 else BONE[t]
+                    if t:
+                        cov[y, x] = 1.0
+        for k in range(1, 6):  # and little bone spines down the lit face
+            y = 128 - 16 * k - 8
+            x = int(8 - 0.25 * _sc_radius(y))
+            img[y, x], img[y - 1, x], img[y + 1, x] = BONE[3], BONE[5], HIDE[0]
+    if kind == 'hook':  # the hook ends in a bone claw behind a band of glow
+        claw = s > s_end - 4.6
+        img[claw] = np.array(BONE, float)[np.clip(np.where(v[claw] < 0.1, 4, 2) + (s[claw] > s_end - 1.6), 1, 5)]
+        img[(s > s_end - 6.6) & ~claw] = GLOW[2]
+        glow_from = s_end - 6.6
+    else:  # the others glow brighter to the very tip
+        tip = s > s_end - 3.4
+        img[tip] = np.array(GLOW, float)[np.clip(((s[tip] - (s_end - 3.4)) / 3.4 * 3).astype(int) + 1, 1, 3)]
+        glow_from = s_end - 3.4
+    # the body over a soft halo of glow round its tip
+    halo = np.where((e > 0) & (e < 1.9) & (s > glow_from - 1.5), (1 - e / 1.9) * 0.5, 0.0)
+    alpha = cov + halo * (1 - cov)
+    rgb = img * cov[..., None] + np.array(GLOW[2], float) * (halo * (1 - cov))[..., None]
+    return _sc_image(np.where(alpha[..., None] > 0, rgb / np.maximum(alpha[..., None], 1e-6), 0), alpha)
+
+
+# ---------------------------------------------------------------- the crust
+
+def _sc_crust(seed):
+    """256 x 256: sculk crusted over the bottom-left corner - lumpy cells, half-buried ribs, a
+    catalyst's fangs, a shrieker's mouth, glowing veins and sensor sprouts - its ragged edge
+    fraying into a lace of sculk vein that fades to nothing toward the top right."""
+    N = 256
+    HIDE, TEAL, GLOW, BONE = _SC_HIDE, _SC_TEAL, _SC_GLOW, _SC_BONE
+    rng = np.random.default_rng(seed)
+    rnd = random.Random(seed)
+    Y, X = np.mgrid[0:N, 0:N] + 0.5
+    qx, qy = X / N, (N - Y) / N
+    rho, phi = np.hypot(qx, qy), np.arctan2(qy, qx)
+    # where it has grown: thickest in the corner, furthest along the two walls, a few lobes reaching out
+    lo = _sc_fbm(N, rng, (64, 32), (0.6, 0.4))
+    hi = _sc_fbm(N, rng, (10, 5, 2.5), (0.5, 0.3, 0.2))
+    R = 0.40 + 0.03 * np.sin(5 * phi + 0.7) + 0.18 * (lo - 0.5)
+    R += 0.16 * (np.exp(-(phi / 0.22) ** 2) + np.exp(-((math.pi / 2 - phi) / 0.22) ** 2))
+    for k in range(4):
+        pk = rnd.uniform(0.3, 1.27)
+        R += rnd.uniform(0.07, 0.12) * np.exp(-((phi - pk) / rnd.uniform(0.06, 0.1)) ** 2)
+    F = R - rho + 0.05 * (hi - 0.5)     # > 0 inside the crust
+    depth = np.clip(F / 0.14, 0, 1)     # 0 at the edge .. 1 deep in the corner
+    spores = (F > -0.03) & (F <= 0) & (hi > 0.67)
+    alpha = np.maximum(np.clip(F / 0.008, 0, 1), spores.astype(float))
+    body = alpha > 0.5
+    # lumpy sculk cells, big and small, lit from the top left
+    f1b, _, idb = _sc_worley(N, 24, rng)
+    f1s, f2s, ids = _sc_worley(N, 8, rng)
+    h = 0.55 * (1 - np.clip(f1b / 20, 0, 1)) ** 1.5 + 0.35 * (1 - np.clip(f1s / 7, 0, 1)) + 0.1 * hi + 0.25 * depth
+    gy, gx = np.gradient(h)
+    shade = np.select([(gx + gy) * 6.5 < -0.16, (gx + gy) * 6.5 < 0.08, (gx + gy) * 6.5 < 0.3], [0, 1, 2], 3)
+    teal = ((idb < 0.36) | ((ids < 0.22) & (idb < 0.62))) & (depth > 0.08)
+    img = np.array(HIDE, float)[shade + 1]
+    img[teal] = np.array(TEAL, float)[shade[teal]]
+    crev = (f2s - f1s) < 1.1
+    img[crev] = HIDE[0]
+    thin = (depth < 0.12) & ~crev   # the thin edge of the growth, only just spreading
+    img[thin] = np.where(teal[thin, None], np.array(TEAL[0], float), np.array(HIDE[1], float))
+    img[spores] = TEAL[1]
+    # past the edge, a lace of sculk vein over a faint dark stain, fading out
+    fringe = (F <= 0) & (F > -0.11) & ~spores
+    fade = np.clip(1 + F / 0.11, 0, 1) ** 1.4
+    lace = fringe & ((f2s - f1s) < 1.25) & (lo > 0.3)
+    img[lace] = np.where((hi[lace] > 0.55)[:, None], np.array(TEAL[2], float), np.array(TEAL[1], float))
+    alpha[lace] = 0.9 * fade[lace]
+    stain = fringe & ~lace
+    img[stain] = HIDE[1]
+    alpha[stain] = 0.25 * fade[stain]
+    # bones half buried in it: broken ribs, clusters of fangs, chips, and a shrieker's mouth
+    bone = np.zeros((N, N), int)
+    throat = np.zeros((N, N), bool)
+
+    def rib(cx, cy, r0, a0, a1, thick, cut_seed):
+        cuts = [random.Random(cut_seed).uniform(a0, a1) for _ in range(3)]
+        n = int(abs(a1 - a0) * r0 * 1.6)
+        for i in range(n):
+            a = a0 + (a1 - a0) * i / n
+            if any(abs(a - c) < 0.035 for c in cuts):
+                continue  # sunk under the crust here
+            th = thick * (0.75 + 0.25 * math.sin(math.pi * i / n))
+            for t in np.linspace(-th / 2, th / 2, int(th * 2) + 1):
+                xi, yi = int(cx + math.cos(a) * (r0 + t)), int(cy - math.sin(a) * (r0 + t))
+                if 0 <= xi < N and 0 <= yi < N and depth[yi, xi] > 0.3:
+                    bone[yi, xi] = 5 if t > th * 0.28 else 4 if t > -th * 0.05 else 3 if t > -th * 0.32 else 2
+    rib(-18, N + 26, 78, 0.42, 1.08, 3.6, 1)
+    rib(30, N + 40, 70, 0.55, 1.25, 3.0, 2)
+    rib(-40, N + 10, 96, 0.2, 0.62, 3.2, 3)
+    clusters = []
+    while len(clusters) < 4:  # a catalyst's fangs breaking the surface
+        bx, by = rnd.randint(20, 170), rnd.randint(110, 246)
+        if 0.3 < depth[by, bx] < 0.75 and depth[by, bx + 12] > 0.3 and all(abs(bx - c[0]) + abs(by - c[1]) > 40 for c in clusters):
+            clusters.append((bx, by, rnd.randint(3, 4)))
+    for (bx, by, n) in clusters:
+        for j in range(n):
+            fx, fy, fh = bx + j * 4 + rnd.randint(-1, 1), by + rnd.randint(-1, 1), rnd.randint(4, 7)
+            for dy in range(fh):
+                w = max(0, int((fh - dy) * 0.45))
+                for dx in range(-w, w + 1):
+                    bone[fy - dy, fx + dx] = 5 if dx < 0 and dy > 1 else 4 if dx <= 0 else 2
+            bone[fy + 1, fx - 1:fx + 2] = 1
+    for _ in range(9):  # chips
+        xi, yi = int(rnd.uniform(6, 150)), int(N - rnd.uniform(6, 150))
+        if depth[yi, xi] > 0.3:
+            bone[yi, xi], bone[yi, xi + 1], bone[yi + 1, xi] = 5, 3, 2
+    for _ in range(400):  # the shrieker: a ring of bone teeth round a dark throat, a glow deep inside
+        sx, sy = rnd.randint(30, 120), rnd.randint(150, 230)
+        if depth[sy, sx] > 0.55 and all(abs(sx - c[0]) + abs(sy - c[1]) > 26 for c in clusters):
+            for yi in range(sy - 13, sy + 14):
+                for xi in range(sx - 13, sx + 14):
+                    d = math.hypot(xi + 0.5 - sx, (yi + 0.5 - sy) * 1.3)
+                    ang = math.atan2(sy - yi - 0.5, xi + 0.5 - sx)
+                    teeth = abs(math.sin(3.5 * ang + 0.4)) ** 3 * (0.8 + 0.4 * math.sin(7 * ang))
+                    if d < 4.6 - 1.4 * teeth:
+                        img[yi, xi] = (GLOW[2] if d < 1.3 and yi >= sy else GLOW[1] if d < 2.3 and yi >= sy
+                                       else GLOW[0] if d < 3.0 else HIDE[0])
+                        throat[yi, xi] = True
+                    elif d < 6.4 + 3.6 * teeth:
+                        lit = math.cos(ang - 2.4)
+                        bone[yi, xi] = 1 if d < 5.2 - 1.4 * teeth else 5 if lit > 0.55 else 4 if lit > 0 else 3 if lit > -0.5 else 2
+            break
+    bm = bone > 0
+    img[bm] = np.array(BONE, float)[bone[bm]]
+    img[_sc_ring(bm) & body & ~throat] = HIDE[0]   # a dark rim sinks every bone into the crust
+    # glowing veins winding out from the walls and the corner, forking, thinning past the edge
+    core = np.zeros((N, N))
+    knots = []
+
+    def vein(x, y, a, width, life, forks):
+        w = 0.0
+        while life > 0:
+            w = max(-0.045, min(0.045, w + rnd.uniform(-0.02, 0.02)))
+            a += w + (math.atan2(N - y, x) - a) * 0.03
+            x += math.cos(a) * 0.8
+            y -= math.sin(a) * 0.8
+            if not (1 <= x < N - 2 and 1 <= y < N - 1):
+                return
+            xi, yi = int(x), int(y)
+            core[yi, xi] = max(core[yi, xi], width)
+            if width >= 1.5:
+                core[yi, xi + 1] = max(core[yi, xi + 1], 1.2)
+            life -= 1 if F[yi, xi] > 0 else 2.2
+            if life < 120:
+                width = max(1.0, width - 0.01)
+            if forks > 0 and rnd.random() < 0.014:
+                forks -= 1
+                knots.append((xi, yi))
+                vein(x, y, a + rnd.choice((-1, 1)) * rnd.uniform(0.45, 0.9), max(1.0, width - 0.7), life * 0.55, forks - 1)
+    starts = [(rnd.uniform(1, 4), N - rnd.uniform(20, 90), rnd.uniform(0.3, 0.9)) for _ in range(2)]
+    starts += [(rnd.uniform(20, 90), N - rnd.uniform(1, 4), rnd.uniform(0.7, 1.3)) for _ in range(2)]
+    starts += [(rnd.uniform(2, 8), N - rnd.uniform(2, 8), rnd.uniform(0.6, 0.95))]
+    for (x0, y0, a0) in starts:
+        vein(x0, y0, a0, 2.0, rnd.uniform(150, 210), 3)
+    lit = (core > 0) & body & ~bm & ~throat
+    img[lit] = np.where((core[lit] >= 1.5)[:, None], np.array(GLOW[2], float), np.array(GLOW[1], float))
+    ring = _sc_ring((core >= 1.5)) & body & ~bm & ~throat
+    img[ring] = np.where((hi[ring] > 0.45)[:, None], np.array(GLOW[0], float), np.array(TEAL[3], float))
+    for (xi, yi) in knots:  # glowing knots where they fork
+        if body[yi, xi]:
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                img[yi + dy, xi + dx] = GLOW[2]
+            img[yi, xi] = GLOW[3]
+    past = (core > 0) & ~body
+    alpha[past] = np.maximum(alpha[past], 0.95 * np.clip(1 + F[past] / 0.2, 0, 1))
+    img[past] = TEAL[2]
+    # sculk-sensor sprouts along the growing edge: curling stalks with glowing tips
+    halo = np.zeros((N, N))
+    sprouts = tries = 0
+    while sprouts < 14 and tries < 5000:
+        tries += 1
+        x, y = rnd.uniform(4, 210), N - rnd.uniform(4, 210)
+        if not (0.015 < F[int(y), int(x)] < 0.045) or bm[int(y), int(x)]:
+            continue
+        sprouts += 1
+        a = math.atan2(N - y, x) * 0.5 + math.pi / 4 + rnd.uniform(-0.3, 0.3)
+        bend = rnd.uniform(-0.06, 0.06)
+        steps = int(rnd.uniform(9, 20) * 1.5)
+        xi, yi = int(x), int(y)
+        for i in range(steps):
+            t = i / steps
+            a += bend
+            x += math.cos(a) * 0.67
+            y -= math.sin(a) * 0.67
+            if not (0 <= int(x) < N - 1 and 0 <= int(y) < N):
+                break
+            xi, yi = int(x), int(y)
+            img[yi, xi] = GLOW[3] if t > 0.92 else GLOW[2] if t > 0.76 else TEAL[4] if i % 3 else GLOW[1]
+            alpha[yi, xi] = 1.0
+            if t < 0.5:  # thicker at the base, its shadow side darker
+                img[yi, xi + 1] = TEAL[1]
+                alpha[yi, xi + 1] = 1.0
+        for dy in range(-4, 5):
+            for dx in range(-4, 5):
+                d = math.hypot(dx, dy)
+                if 0 < d < 4.0 and 0 <= yi + dy < N and 0 <= xi + dx < N:
+                    halo[yi + dy, xi + dx] = max(halo[yi + dy, xi + dx], (1 - d / 4.0) ** 1.5 * 0.7)
+    # specks: single glowing pixels, thickest at the growing edge
+    sp = rng.random((N, N))
+    speck = body & (sp < 0.004 + 0.016 * (1 - depth)) & ~crev & ~bm & ~throat
+    img[speck] = np.where((sp[speck] < 0.003)[:, None], np.array(GLOW[3], float), np.array(GLOW[2], float))
+    # all of it over the soft glow round the sprout tips
+    ha = halo * (1 - alpha)
+    A = np.clip(alpha + ha, 0, 1)
+    rgb = (img * alpha[..., None] + np.array(GLOW[2], float) * ha[..., None]) / np.maximum(A, 1e-6)[..., None]
+    return _sc_image(np.where(A[..., None] > 0, rgb, 0), A)
+
+
+# ---------------------------------------------------------------- the vignette and the veins
+
+def _sc_grow_veins(rnd, n, count, inner, branch=0.03, wobble=0.03, pull=0.03):
+    """Veins growing in from the border of an n x n square toward its middle, each forking a few
+    times into thinner veins. Returns per-pixel strength (about 1 for a trunk, less for each fork)
+    and the fork points. inner: the range of radius (0 middle .. 1 border) at which a trunk gives out."""
+    core = np.zeros((n, n))
+    thick = np.zeros((n, n), bool)
+    forks = []
+
+    def walk(x, y, a, strength, stop, depth, budget):
+        w = 0.0
+        while True:
+            dx, dy = x / n * 2 - 1, y / n * 2 - 1
+            r = math.hypot(dx, dy)
+            if r < stop:
+                return
+            w = max(-wobble, min(wobble, w + rnd.uniform(-wobble / 3, wobble / 3)))
+            to_mid = math.atan2(-dy, -dx)
+            a += w + math.atan2(math.sin(to_mid - a), math.cos(to_mid - a)) * pull
+            x += math.cos(a) * 0.8
+            y += math.sin(a) * 0.8
+            if not (0 <= x < n and 0 <= y < n):
+                return
+            xi, yi = int(x), int(y)
+            core[yi, xi] = max(core[yi, xi], strength)
+            if depth == 0 and r > 0.78:
+                thick[yi, xi] = True
+            if budget > 0 and rnd.random() < branch:
+                budget -= 1
+                forks.append((xi, yi, strength))
+                walk(x, y, a + rnd.choice((-1, 1)) * rnd.uniform(0.45, 0.85), strength * 0.72,
+                     min(1.0, stop + rnd.uniform(0.05, 0.16)), depth + 1, 1 if depth == 0 else 0)
+
+    for i in range(count):
+        side = i % 4
+        t = (i // 4 + rnd.uniform(0.15, 0.85)) / math.ceil(count / 4) * n
+        x, y = [(t, 0.0), (n - 0.01, t), (n - t, n - 0.01), (0.0, n - t)][side]
+        a = [math.pi / 2, math.pi, -math.pi / 2, 0.0][side] + rnd.uniform(-0.45, 0.45)
+        walk(x, y, a, rnd.uniform(0.8, 1.0), rnd.uniform(*inner), 0, 4)
+    widen = (np.roll(thick, 1, 1) | np.roll(thick, 1, 0)) & (core == 0)   # trunks two pixels wide at the border
+    return np.maximum(core, np.where(widen, 0.85, 0)), forks
+
+
+def _sc_vignette(seed):
+    """256 x 256: clear in the middle, closing in to a deep sculk black, faint veins in the dark."""
+    N = 256
+    rnd = random.Random(seed)
+    Y, X = np.mgrid[0:N, 0:N] + 0.5
+    r = np.hypot(X / N * 2 - 1, Y / N * 2 - 1)
+    k = np.clip((r - 0.5) / 0.68, 0, 1)
+    alpha = (k * k * (3 - 2 * k)) ** 1.15 * 0.94
+    near, far = np.array(hx('#04161c')[:3], float), np.array(hx('#010507')[:3], float)
+    rgb = near + (far - near) * np.clip((r - 0.55) / 0.6, 0, 1)[..., None]
+    core, forks = _sc_grow_veins(rnd, N, 20, (0.6, 0.82), branch=0.02)
+    soft = np.asarray(Image.fromarray(((core > 0) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.0)), float) / 255
+    m = np.clip(soft * 1.5, 0, 1) * np.clip((r - 0.55) / 0.3, 0, 1)
+    rgb += (np.array(hx('#0a3a44')[:3], float) - rgb) * (m * 0.8)[..., None]
+    alpha = np.maximum(alpha, m * 0.55)
+    for (xi, yi, s) in forks:  # the odd glint of cyan where they fork
+        if math.hypot(xi / N * 2 - 1, yi / N * 2 - 1) > 0.66 and rnd.random() < 0.6:
+            rgb[yi, xi] += (np.array(_SC_GLOW[1], float) - rgb[yi, xi]) * 0.6
+    return _sc_image(rgb, alpha)
+
+
+def _sc_veins(seed):
+    """256 x 256: thin glowing veins branching in from every edge, densest at the border and
+    giving out before the middle; the overlay pulses them with the heartbeat."""
+    N = 256
+    GLOW = _SC_GLOW
+    rnd = random.Random(seed)
+    core, forks = _sc_grow_veins(rnd, N, 24, (0.3, 0.56))
+    Y, X = np.mgrid[0:N, 0:N] + 0.5
+    edge = np.clip((np.hypot(X / N * 2 - 1, Y / N * 2 - 1) - 0.28) / 0.42, 0, 1) ** 0.9
+    for (xi, yi, s) in forks:  # little knots where they fork
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            if 0 <= xi + dx < N and 0 <= yi + dy < N:
+                core[yi + dy, xi + dx] = max(core[yi + dy, xi + dx], s * 0.85)
+    v = core > 0
+    soft = np.asarray(Image.fromarray((np.clip(core, 0, 1) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.4)), float) / 255
+    alpha = np.clip(soft * 1.4, 0, 1) * 0.45 * edge   # a soft glow round every vein
+    rgb = np.zeros((N, N, 3))
+    rgb[:] = GLOW[1]
+    rgb[v] = np.where((core[v] > 0.9)[:, None], np.array(GLOW[3], float), np.array(GLOW[2], float))
+    alpha[v] = np.maximum(alpha[v], (0.5 + 0.5 * core[v]) * edge[v])
+    for (xi, yi, s) in forks:
+        rgb[yi, xi] = GLOW[3]
+    return _sc_image(rgb, alpha)
+
+
+def corruption_overlays():
+    """The Sculk Corruption overlays (textures/misc): four tentacles in one 64 x 128 strip (each
+    16 x 128, root at the bottom, eight 16 x 16 slices that chain and bend), the corner crust,
+    the vignette and the pulsing veins."""
+    strip = Image.new('RGBA', (64, 128), (0, 0, 0, 0))
+    for i, kind in enumerate(('barbed', 'suckers', 'veined', 'hook')):
+        strip.alpha_composite(_sc_tentacle(kind, 40 + i), (16 * i, 0))
+    out('misc/sculk_tentacle', strip)
+    out('misc/sculk_crust', _sc_crust(11))
+    out('misc/sculk_vignette', _sc_vignette(21))
+    out('misc/sculk_veins', _sc_veins(31))
 
 
 # ================================================================== the Dictator's things
@@ -1612,6 +2137,7 @@ def main():
     nebula()
     logo()
     hd_items()
+    corruption_overlays()
     boss_bar()
     mini_boss_bars()
     need = os.path.join(ROOT, 'build/textures_needed.txt')

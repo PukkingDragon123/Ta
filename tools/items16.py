@@ -1688,35 +1688,54 @@ def spawn_eggs():
         11: '.......mm.......',
     }, {'h': ('#fff4d6', '#5a4a2a'), 'H': ('#d8c89a', '#5a4a2a'), 'f': '#eef6ff', 'E': '#14204a', 'p': '#f2a6d8', 'm': '#14204a'},
         ring='cloud')
+    # a black-and-teal centipede curled round a glowing sculk egg, its bone mandibles over the top
+    E['sculk_parasite'] = egg(['#034150', '#05625d', '#0b7c78', '#1a9a94'], '#020a10', {
+        0: '..........m..m..',
+        1: '..........mhhm..',
+        2: '...........ehe..',
+        3: '............KK..',
+        4: '......c...c.kkl.',
+        5: '....k.......KK..',
+        6: '..lKK....c..kkl.',
+        7: '..kk........KK..',
+        8: '.lKK........kkl.',
+        9: '..kk..c.....KK..',
+        10: '.lKK....c...kkl.',
+        11: '...kk......KK...',
+        12: '....KK....kk....',
+        13: '...l..kkKK..l...',
+        14: '......l..l......',
+    }, {'m': '#d1d6b6', 'e': '#29dfeb', 'h': '#0d1217', 'K': '#2aa8ae', 'k': '#0d1217', 'l': '#0d1217', 'c': '#3ff5e6'})
     return {f'{k}_spawn_egg': v for k, v in E.items()}
 
 
 # ============================================================================ mob effect + block sprites
 
 def sculk_corruption_icon():
-    """18x18 like every mob effect icon: a sculk eye, its lids creeping out into curling tendrils."""
+    """18x18 like every mob effect icon: a glowing sculk eye held in the curl of two tentacles,
+    their tips hooked over it and glowing suckers down their insides."""
     rows = [
         '..................',
-        '..tt..........tt..',
-        '...t..........t...',
-        '....tt......tt....',
-        '.....t.ssss.t.....',
-        '.....ssSSSSss.....',
-        '...ssSkkkkkkSss...',
-        '..sSkkkgGGgkkkSs..',
-        '.sSkkkgWKKGgkkkSs.',
-        '.sSkkkgGKKGgkkkSs.',
-        '..sSkkkgGGgkkkSs..',
-        '...ssSkkkkkkSss...',
-        '.....ssSSSSss.....',
-        '.....t.ssss.t.....',
-        '....tt......tt....',
-        '...t..........t...',
-        '..tt..........tt..',
+        '....tTT....TTt....',
+        '...tT..T..T..Tt...',
+        '..tT...t..t...Tt..',
+        '..tT..........Tt..',
+        '.tT...kkkkkk...Tt.',
+        '.tT..kgGGGGgk..Tt.',
+        '.ts.kgGWKKGGgk.st.',
+        '.tT.kgGGKKGGgk.Tt.',
+        '.tT..kgGGGGgk..Tt.',
+        '.ts...kkkkkk...st.',
+        '.tT............Tt.',
+        '..tT..........Tt..',
+        '..ts..........st..',
+        '...tT........Tt...',
+        '....tT......Tt....',
+        '.....tt....tt.....',
         '..................',
     ]
     o = '#020a10'
-    pal = {'t': ('#1b5462', o), 's': ('#123a48', o), 'S': ('#27707c', o), 'k': ('#06141c', o), 'g': ('#22c7c4', o),
+    pal = {'t': ('#16222a', o), 'T': ('#05625d', o), 's': ('#29dfeb', o), 'k': ('#06141c', o), 'g': ('#0f8c99', o),
            'G': ('#3ff5e6', o), 'K': ('#041016', o), 'W': ('#e8fffc', o)}
     return grid(rows, pal, ol=True, size=(18, 18))
 
