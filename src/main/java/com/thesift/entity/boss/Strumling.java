@@ -140,4 +140,14 @@ public class Strumling extends OrchestraMinion {
     protected int burstColor() {
         return 0x29DFEB;
     }
+
+    /** Sculk crawlers are at home on sculk and in the Sculk Swamp's mud whatever the light (the Sift is never dark). */
+    @Override
+    public float getWalkTargetValue(BlockPos pos, net.minecraft.world.level.LevelReader level) {
+        BlockState below = level.getBlockState(pos.below());
+        if (below.is(com.thesift.registry.ModBlocks.SCULK_MUD.get()) || below.is(Blocks.SCULK)) {
+            return 0.5F;
+        }
+        return super.getWalkTargetValue(pos, level);
+    }
 }

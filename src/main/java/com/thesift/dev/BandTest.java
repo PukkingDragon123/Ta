@@ -85,8 +85,11 @@ final class BandTest {
 
     private void perform(FakePlayer p, Instrument instrument, Song song) {
         SongTracker.forget(p);
-        for (int n : song.notes()) {
-            Notes.play(this.sift, p, instrument, n);
+        // in the song's own rhythm (drum songs are judged on it), else half a second apart, as the play screens do
+        double clock = 1000.0;
+        for (int i = 0; i < song.length(); i++) {
+            Notes.play(this.sift, p, instrument, song.note(i), Math.max(-1, song.colour(i)), clock, 0);
+            clock += song.rhythmic() ? song.gap(i) : 10.0;
         }
     }
 
