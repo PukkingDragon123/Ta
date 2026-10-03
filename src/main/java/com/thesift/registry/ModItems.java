@@ -221,9 +221,9 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> SCULK_PARASITE_SPAWN_EGG = ITEMS.registerItem("sculk_parasite_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SCULK_PARASITE.get()));
     public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<StaffItem> CONDUCTORS_STAFF = ITEMS.registerItem("conductors_staff", StaffItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
-    public static final DeferredItem<InstrumentItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", p -> new InstrumentItem(com.thesift.music.Instrument.DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<SiftInstrumentItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", p -> new SiftInstrumentItem(com.thesift.music.Instrument.DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> CANNONBALL = ITEMS.registerItem("cannonball", Item::new, () -> new Item.Properties().stacksTo(16));
-    public static final DeferredItem<InstrumentItem> CRANE_FLUTE = ITEMS.registerItem("crane_flute", p -> new InstrumentItem(com.thesift.music.Instrument.FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<SiftInstrumentItem> CRANE_FLUTE = ITEMS.registerItem("crane_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> SCULK_STRING = ITEMS.registerItem("sculk_string", Item::new, () -> new Item.Properties());
     public static final DeferredItem<GuitarItem> GUITAR = ITEMS.registerItem("guitar", GuitarItem::new, () -> new Item.Properties().stacksTo(1));
     public static final DeferredItem<WeaverGuitarItem> WEAVER_GUITAR = ITEMS.registerItem("weaver_guitar", WeaverGuitarItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
@@ -237,10 +237,10 @@ public final class ModItems {
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_WHALE = ITEMS.registerItem("music_sheet_whale", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_TIDE = ITEMS.registerItem("music_sheet_tide", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_LULLABY = ITEMS.registerItem("music_sheet_lullaby", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
-    public static final DeferredItem<InstrumentItem> PRISM_FLUTE = ITEMS.registerItem("prism_flute", p -> new InstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
-    public static final DeferredItem<InstrumentItem> PRISM_HARP = ITEMS.registerItem("prism_harp", p -> new InstrumentItem(com.thesift.music.Instrument.HARP, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
-    public static final DeferredItem<InstrumentItem> PRISM_DRUM = ITEMS.registerItem("prism_drum", p -> new InstrumentItem(com.thesift.music.Instrument.PRISM_DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
-    public static final DeferredItem<InstrumentItem> WIND_CHIMES = ITEMS.registerItem("wind_chimes", p -> new InstrumentItem(com.thesift.music.Instrument.WIND_CHIMES, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<SiftInstrumentItem> PRISM_FLUTE = ITEMS.registerItem("prism_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<SiftInstrumentItem> PRISM_HARP = ITEMS.registerItem("prism_harp", p -> new SiftInstrumentItem(com.thesift.music.Instrument.HARP, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<SiftInstrumentItem> PRISM_DRUM = ITEMS.registerItem("prism_drum", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<SiftInstrumentItem> WIND_CHIMES = ITEMS.registerItem("wind_chimes", p -> new SiftInstrumentItem(com.thesift.music.Instrument.WIND_CHIMES, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> STOMPER_MEAT = ITEMS.registerItem("stomper_meat", Item::new, () -> new Item.Properties().food(ModFoods.STOMPER_MEAT));
     public static final DeferredItem<Item> STOMPER_STEAK = ITEMS.registerItem("stomper_steak", Item::new, () -> new Item.Properties().food(ModFoods.STOMPER_STEAK, ModFoods.STOMPER_STEAK_CONSUMABLE));
     public static final DeferredItem<StomperEggItem> STOMPER_EGG = ITEMS.registerItem("stomper_egg", StomperEggItem::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
@@ -289,11 +289,11 @@ public final class ModItems {
     public static final DeferredItem<ChromeFishBucketItem> CHROME_FANFARE_EEL_BUCKET = ITEMS.registerItem("chrome_fanfare_eel_bucket", p -> new ChromeFishBucketItem(ModEntities.FANFARE_EEL.get(), p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY).component(net.minecraft.core.component.DataComponents.FOOD, ModSeaFoods.FANFARE_EEL));
     public static final DeferredItem<SpawnEggItem> JAILER_SPAWN_EGG = ITEMS.registerItem("jailer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveCreatures.JAILER.get()));
     public static final DeferredItem<SpawnEggItem> SCULKLING_SPAWN_EGG = ITEMS.registerItem("sculkling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveCreatures.SCULKLING.get()));
-    public static final DeferredItem<InstrumentItem> STAR_LUTE = ITEMS.registerItem("star_lute", p -> new InstrumentItem(com.thesift.music.Instrument.LUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
-    public static final DeferredItem<InstrumentItem> SERBIM_FLUTE = ITEMS.registerItem("serbim_flute", p -> new InstrumentItem(com.thesift.music.Instrument.SERBIM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
-    public static final DeferredItem<InstrumentItem> THUNDER_DRUMS = ITEMS.registerItem("thunder_drums", p -> new InstrumentItem(com.thesift.music.Instrument.THUNDER_DRUMS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
-    public static final DeferredItem<InstrumentItem> GLASS_BELLS = ITEMS.registerItem("glass_bells", p -> new InstrumentItem(com.thesift.music.Instrument.GLASS_BELLS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
-    public static final DeferredItem<InstrumentItem> PRISM_CHIMES = ITEMS.registerItem("prism_chimes", p -> new InstrumentItem(com.thesift.music.Instrument.PRISM_CHIMES, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<SiftInstrumentItem> STAR_LUTE = ITEMS.registerItem("star_lute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.LUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<SiftInstrumentItem> SERBIM_FLUTE = ITEMS.registerItem("serbim_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.SERBIM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<SiftInstrumentItem> THUNDER_DRUMS = ITEMS.registerItem("thunder_drums", p -> new SiftInstrumentItem(com.thesift.music.Instrument.THUNDER_DRUMS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<SiftInstrumentItem> GLASS_BELLS = ITEMS.registerItem("glass_bells", p -> new SiftInstrumentItem(com.thesift.music.Instrument.GLASS_BELLS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<SiftInstrumentItem> PRISM_CHIMES = ITEMS.registerItem("prism_chimes", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_CHIMES, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
     private ModItems() {}
 }

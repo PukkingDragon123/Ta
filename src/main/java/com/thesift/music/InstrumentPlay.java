@@ -1,7 +1,7 @@
 package com.thesift.music;
 
 import com.thesift.TheSift;
-import com.thesift.item.InstrumentItem;
+import com.thesift.item.SiftInstrumentItem;
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 /**
  * M1 instrument play: how a note gets from a play screen to the world.
  *
- * <p>Using an {@link InstrumentItem} opens its play screen on the client ({@link #clientOpen}, set
+ * <p>Using an {@link SiftInstrumentItem} opens its play screen on the client ({@link #clientOpen}, set
  * by the client at start-up). Every note played there sounds at once for the player and is sent
  * here as {@link PlayNote}; {@link #serverPlay} checks the player really holds that instrument and
  * that it can sound that note, and plays it through {@link Notes#play} - for everyone else, for the
@@ -61,7 +61,7 @@ public final class InstrumentPlay {
             return false;
         }
         ItemStack stack = player.getItemInHand(hand);
-        if (!(stack.getItem() instanceof InstrumentItem item)) {
+        if (!(stack.getItem() instanceof SiftInstrumentItem item)) {
             return false;
         }
         Instrument instrument = item.instrument();

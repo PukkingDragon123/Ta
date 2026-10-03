@@ -10,9 +10,9 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * A Guitar, strung with Sculk String: four strings and five frets, picked on its play screen
- * (M1 instrument play - see {@link InstrumentItem}). The Weaver's Guitar is one too.
+ * (M1 instrument play - see {@link SiftInstrumentItem}). The Weaver's Guitar is one too.
  */
-public class GuitarItem extends InstrumentItem {
+public class GuitarItem extends SiftInstrumentItem {
     public GuitarItem(Item.Properties properties) {
         this(Instrument.GUITAR, properties);
     }

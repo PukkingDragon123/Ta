@@ -23,10 +23,10 @@ import net.minecraft.world.level.Level;
  * Normal instruments have no powers of their own - better versions play more notes, or play in a
  * new way, and the Prism versions play every note in a colour of light.
  */
-public class InstrumentItem extends Item {
+public class SiftInstrumentItem extends Item {
     private final Instrument instrument;
 
-    public InstrumentItem(Instrument instrument, Item.Properties properties) {
+    public SiftInstrumentItem(Instrument instrument, Item.Properties properties) {
         super(properties);
         this.instrument = instrument;
     }

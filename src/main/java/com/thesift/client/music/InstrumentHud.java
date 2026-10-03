@@ -1,7 +1,7 @@
 package com.thesift.client.music;
 
 import com.thesift.TheSift;
-import com.thesift.item.InstrumentItem;
+import com.thesift.item.SiftInstrumentItem;
 import com.thesift.item.MusicSheetItem;
 import com.thesift.music.Instrument;
 import com.thesift.music.InstrumentPlay;
@@ -48,7 +48,7 @@ public final class InstrumentHud {
     /** The instrument in hand (main hand first), or null. */
     private static @Nullable Instrument heldInstrument(LocalPlayer p) {
         for (ItemStack s : new ItemStack[]{p.getMainHandItem(), p.getOffhandItem()}) {
-            if (s.getItem() instanceof InstrumentItem item) {
+            if (s.getItem() instanceof SiftInstrumentItem item) {
                 return item.instrument();
             }
         }
@@ -105,7 +105,7 @@ public final class InstrumentHud {
     private static void drawSheet(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
-        if (p == null || mc.screen instanceof InstrumentScreen) {
+        if (p == null || mc.gui.screen() instanceof InstrumentScreen) {
             return;
         }
         Instrument held = heldInstrument(p);

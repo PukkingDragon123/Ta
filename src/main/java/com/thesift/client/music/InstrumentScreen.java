@@ -1,7 +1,7 @@
 package com.thesift.client.music;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.thesift.item.InstrumentItem;
+import com.thesift.item.SiftInstrumentItem;
 import com.thesift.item.MusicSheetItem;
 import com.thesift.music.Instrument;
 import com.thesift.music.InstrumentPlay;
@@ -85,7 +85,7 @@ public abstract class InstrumentScreen extends Screen {
             return;
         }
         ItemStack stack = p.getItemInHand(hand);
-        if (!(stack.getItem() instanceof InstrumentItem instrumentItem)) {
+        if (!(stack.getItem() instanceof SiftInstrumentItem instrumentItem)) {
             return;
         }
         Instrument ins = instrumentItem.instrument();
@@ -95,7 +95,7 @@ public abstract class InstrumentScreen extends Screen {
             case CHIMES -> new ChimesScreen(ins, hand, stack);
             case FLUTE -> new FluteScreen(ins, hand, stack);
         };
-        mc.setScreen(screen);
+        mc.gui.setScreen(screen);
     }
 
     /** The player's own music clock, in ticks with fractions (rhythm is judged on it, never on the network's delay). */

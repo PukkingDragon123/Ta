@@ -2,7 +2,7 @@ package com.thesift.dev;
 
 import com.thesift.TheSift;
 import com.thesift.entity.Enchoer;
-import com.thesift.item.InstrumentItem;
+import com.thesift.item.SiftInstrumentItem;
 import com.thesift.item.MusicSheetItem;
 import com.thesift.music.Instrument;
 import com.thesift.music.InstrumentPlay;
@@ -85,7 +85,7 @@ final class SongTest {
     /** The item that plays an instrument version, or null (blocks' and creatures' voices have none). */
     static @Nullable Item itemFor(Instrument instrument) {
         for (Item item : BuiltInRegistries.ITEM) {
-            if (item instanceof InstrumentItem ii && ii.instrument() == instrument) {
+            if (item instanceof SiftInstrumentItem ii && ii.instrument() == instrument) {
                 return item;
             }
         }

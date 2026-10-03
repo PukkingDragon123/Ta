@@ -30,7 +30,7 @@ NEW = {
 }
 
 # the existing instruments, now plain InstrumentItems (spec.py uses these factories)
-FACTORY = 'p -> new InstrumentItem(com.thesift.music.Instrument.{}, p)'
+FACTORY = 'p -> new SiftInstrumentItem(com.thesift.music.Instrument.{}, p)'
 
 # every version, for the #thesift:instruments tag
 ALL = ['guitar', 'star_lute', 'prism_harp', 'crane_flute', 'serbim_flute', 'prism_flute', 'conga_drum', 'thunder_drums', 'prism_drum',
@@ -70,7 +70,7 @@ LOOT = {
 def declare(block, item):
     """spec.py: the new versions (the older ones keep their own lines there)."""
     for iid, (const, name, rarity, model) in NEW.items():
-        item(iid, cls='InstrumentItem', factory=FACTORY.format(const), props=f'new Item.Properties().stacksTo(1).rarity(Rarity.{rarity})',
+        item(iid, cls='SiftInstrumentItem', factory=FACTORY.format(const), props=f'new Item.Properties().stacksTo(1).rarity(Rarity.{rarity})',
              model=model, tab='combat', name=name)
 
 
