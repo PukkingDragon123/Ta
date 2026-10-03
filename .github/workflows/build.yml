@@ -144,6 +144,8 @@ jobs:
       - name: Check smoke test results
         if: always()
         run: |
+          grep -a -E "SMOKE FAIL|SMOKE TEST" smoke.log 2>/dev/null | sed 's/.*SMOKE/SMOKE/' | cut -c1-300 | head -40 || true
+          grep -a -E "CLIENTSMOKE.*(FAIL|fail)|Exception in|Reported exception" client.log 2>/dev/null | cut -c1-300 | head -20 || true
           echo "server smoke: ${{ steps.smoke.outcome }}, client smoke: ${{ steps.client.outcome }}, vulkan (informational): ${{ steps.client_vk.outcome }}"
           test "${{ steps.smoke.outcome }}" = "success"
           test "${{ steps.client.outcome }}" = "success"
