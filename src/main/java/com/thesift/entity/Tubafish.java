@@ -58,7 +58,8 @@ public class Tubafish extends SiftFish {
 
     @Override
     protected double cruiseSpeed() {
-        return 0.035;
+        // slow and stately, but always visibly on the move (at 0.035 it drifted under half a block a second)
+        return 0.05;
     }
 
     @Override
