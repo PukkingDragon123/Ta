@@ -127,7 +127,12 @@ def terrain_density():
                          right=9.0))
     shape = _df('add', left=_df('add', left=_df('mul', left=crest, right=0.075), right=_df('mul', left=ripples, right=0.0015)),
                 right=_df('mul', left=mesa, right=0.11))
-    w('worldgen/density_function/sift/offset', _df('cache', input=_df('add', left='minecraft:overworld/offset', right=_df('mul', left=dunes_mask, right=shape))))
+    offset = _df('add', left='minecraft:overworld/offset', right=_df('mul', left=dunes_mask, right=shape))
+    # W1 World & terrain: the Sculk Swamp's soggy flats and the Sculk Ocean's trenches and ridges (tools/sculk_world.py)
+    for term in __import__('sculk_world').offset_terms(_df, _ramp, _clamp01, temperature, humidity, continents, 'minecraft:overworld/erosion',
+                                                       'minecraft:overworld/offset'):
+        offset = _df('add', left=offset, right=term)
+    w('worldgen/density_function/sift/offset', _df('cache', input=offset))
     chain = [('offset', 'depth'), ('depth', 'sloped_cheese'), ('sloped_cheese', 'final_density'), ('offset', 'preliminary_surface_level'),
              ('preliminary_surface_level', 'chunk_surface_level')]
     for ref, name in chain:
@@ -305,15 +310,15 @@ def features():
     feature('sift_flowers', {'type': 'minecraft:simple_block', 'to_place': weighted([
         (state('lullaby_bell'), 3), (state('dreambloom'), 3), (state('soulpetal'), 2), (state('nebula_iris'), 2)])})
     feature('grove_flowers', {'type': 'minecraft:simple_block', 'to_place': weighted([
-        (state('dreambloom'), 3), (state('nebula_iris'), 3), (state('choir_lily'), 1)])})
+        (state('dreambloom'), 3), (state('nebula_iris'), 3), (state('soulpetal'), 1)])})
     petal_entries = []
     for f in ('north', 'east', 'south', 'west'):
         for a in (1, 2, 3, 4):
             petal_entries.append((state('drift_petals', facing=f, flower_amount=a), 1))
     feature('drift_petals', {'type': 'minecraft:simple_block', 'to_place': weighted(petal_entries)})
     feature('glimmer_sprouts', {'type': 'minecraft:simple_block', 'to_place': state('glimmer_sprouts')})
-    feature('pitcher_bulb_bush', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('pitcher_bulb_bush', age=3), 2),
-                                                                                          (state('pitcher_bulb_bush', age=2), 1)])})
+    # wild vanilla Pitcher Plants (W1: they replace the old Pitcher Bulb bush; their pods go in the Pitcher Planter)
+    feature('pitcher_plant', {'type': 'minecraft:simple_block', 'to_place': state('minecraft:pitcher_plant', half='lower')})
     feature('glowcap', {'type': 'minecraft:simple_block', 'to_place': state('glowcap')})
     feature('echo_orchid', {'type': 'minecraft:simple_block', 'to_place': weighted([(state('echo_orchid'), 1)])})
     feature('chrome_reeds', {'type': 'minecraft:block_column', 'allowed_placement': {'type': 'minecraft:matching_block_tag', 'tag': 'minecraft:air'},
@@ -340,7 +345,7 @@ def features():
     patch('patch_grove_flowers', 'grove_flowers', 24, 3, survive_block='dreambloom')
     patch('patch_drift_petals', 'drift_petals', 32, 1, survive_block='drift_petals')
     patch('patch_glimmer_sprouts', 'glimmer_sprouts', 16, 1, survive_block='glimmer_sprouts')
-    patch('patch_pitcher_bulb_bush', 'pitcher_bulb_bush', 8, rarity(6), survive_block='pitcher_bulb_bush')
+    patch('patch_pitcher_plant', 'pitcher_plant', 10, rarity(5), survive_block='minecraft:pitcher_plant')
     patch('patch_chrome_reeds', 'chrome_reeds', 20, 4, survive_block='chrome_reeds')
     patch('patch_glowcap_surface', 'glowcap', 12, rarity(4), survive_block='glowcap')
     # the Stomper's favourite flower, in lavender clumps on the plains
@@ -479,7 +484,7 @@ def biomes():
           parts=particles(*DREAMY_PARTICLES),
           feats=[(1, 'chrome_pool_surface'), (2, 'floating_island'), (2, 'floating_islet'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_sift_plains'), (9, 'patch_coral_thicket'), (9, 'patch_coral_bush'), (9, 'patch_sift_flowers'),
-                 (9, 'patch_drift_petals'), (9, 'patch_pitcher_bulb_bush'), (9, 'patch_glimmer_sprouts')] + [(9, 'patch_hummingbloom')])
+                 (9, 'patch_drift_petals'), (9, 'patch_pitcher_plant'), (9, 'patch_glimmer_sprouts')] + [(9, 'patch_hummingbloom')])
     biome('forest_mountains', fog='#a2e8de', sky='#5ed6c6', water='#7fe8ff', grass='#4fc9b8', foliage='#5fd8d0', temp=0.5, down=0.8,
           spawns=mobs(creature=[('bulb', 6, 2, 3), ('minecraft:sniffer', 4, 1, 2), ('enchoer', 2, 1, 1), ('harmoner', 6, 1, 3)]),
           parts=particles(('lullwood_leaf', 0.002), ('drifting_soul', 0.002), ('sift_mist', 0.001), ('glow_dust', 0.002), ('wishing_star', 0.00012)),
@@ -489,7 +494,7 @@ def biomes():
     biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
           spawns=mobs(creature=[('bulb', 2, 1, 2), ('minecraft:sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 2)], costs={'sifter': (1.0, 0.12)}),
           parts=particles(('dream_pollen', 0.003), ('glow_dust', 0.0015), ('wishing_star', 0.0002)),
-          feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_dune_scrub'), (9, 'patch_pitcher_bulb_bush')])
+          feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_dune_scrub')])
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
           spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)],
                       water=[('fanfare_eel', 5, 1, 2), ('tubafish', 4, 1, 1)], water_ambient=[('kazoo_fish', 12, 3, 7)]),
@@ -501,7 +506,7 @@ def biomes():
                       + [('sky_whale', 1, 1, 1)]),
           parts=particles(('wishwood_leaf', 0.003), ('star_sparkle', 0.002), ('drifting_soul', 0.003), ('wishing_star', 0.0003)),
           feats=[(2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
-                [(9, 'trees_wishing_grove'), (9, 'patch_grove_flowers'), (9, 'patch_drift_petals'), (9, 'patch_blushgrass'), (9, 'patch_pitcher_bulb_bush')])
+                [(9, 'trees_wishing_grove'), (9, 'patch_grove_flowers'), (9, 'patch_drift_petals'), (9, 'patch_blushgrass'), (9, 'patch_pitcher_plant')])
     biome('deep_sift', fog='#1a2f3f', sky='#223a5a', water='#3fc8d8', grass='#2f8f9e', foliage='#37a9b5', temp=0.5, down=0.4,
           spawns=mobs(monster=[('sifter', 5, 1, 1)]),
           parts=particles(('glow_dust', 0.006), ('drifting_soul', 0.0015)),
@@ -555,5 +560,6 @@ def generate():
     dimension_json()
     __import__('sea_sky').world(sys.modules[__name__])  # sea & sky: kelp forest, deep dark ocean, sound garden
     __import__('swifter').world(sys.modules[__name__])  # A2: the White Forest, white lullwood, cloud bushes, Swifter dens
+    __import__('sculk_world').world(sys.modules[__name__])  # W1: Sculk Swamp, Sculk Ocean, soft biome edges, relic caches
     carver_tags()
     print(f'world ok: {len(FEATURES)} features, {len(PLACED)} placed')

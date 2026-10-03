@@ -126,10 +126,13 @@
     "foliage_color": "#86e9e2"
   },
   "features": [
-    [],
+    [
+      "thesift:biome_blend"
+    ],
     [],
     [
-      "thesift:floating_islet"
+      "thesift:floating_islet",
+      "thesift:relic_cache"
     ],
     [],
     [],

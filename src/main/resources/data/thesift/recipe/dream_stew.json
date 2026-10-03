@@ -4,7 +4,7 @@
   "ingredients": [
     "minecraft:bowl",
     "thesift:glowcap",
-    "thesift:pitcher_bulb",
+    "minecraft:pitcher_pod",
     "thesift:lullaby_bell"
   ],
   "result": {

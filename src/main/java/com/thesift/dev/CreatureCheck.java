@@ -173,6 +173,7 @@ final class CreatureCheck {
             case "deep_dark_ocean" -> new Habitat(hush, hush, true, false);
             case "deep_sift" -> new Habitat(ModBlocks.LUMEN_MOSS_BLOCK.get(), hush, false, true);
             case "caravans_cavern" -> new Habitat(Blocks.CALCITE, Blocks.CALCITE, false, true);
+            case "sculk_swamp" -> new Habitat(ModBlocks.SCULK_MUD.get(), hush, false, false);
             // forest_mountains, chrome_lakes, wishing_grove (and any biome added later)
             default -> new Habitat(ModBlocks.SIFT_GRASS_BLOCK.get(), hush, false, false);
         };

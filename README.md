@@ -69,20 +69,25 @@ frame is broken mid-opening.
 * **Rocky Dunes**: rolling dreamsand, sandstone spires and boulders, with Sifters lurking below.
 * **Chrome Lakes**: wide, calm lakes of Chrome.
 * **Deep Sift**: hushslate caves full of sculk and glowing plants, watched over by Wardens.
+* **Sculk Swamp**: low, sculk-rotted coastland of Sculk Mud and glowing teal **Sculk Water** (it slowly
+  corrupts whatever wades in it), gnarled Blightwood trees and Sculk Parasites crawling out of the mud.
+* **Sculk Ocean**: cold, dark teal sea over trenches, ridges and pale pillars, with Sculk Coral reefs.
+
+Biome edges blend: ground covers fray into each other and woods thin out across a border.
 
 A clean cyan sky over mint haze, the odd drifting soul, pollen mote and falling leaf, and your
 footsteps leave puffs of dream dust.
 
 ### Creatures
 * **Bulb**: a bouncy, squishy jelly bunny that leaves a slime trail. Breed them with **Pitcher
-  Bulbs**. Happy Bulbs plop out **Glowing Slime Balls**.
+  Pods**. Happy Bulbs plop out **Glowing Slime Balls**.
 * **Slumbler**: a huge, wide-mouthed Chrome salamander that lounges in lakes. Drops **Thick
   Hide** and, rarely, a **Chrome Pearl**.
 * **Sniffer**: ordinary vanilla Sniffers roam The Sift; wherever one digs here it also turns up the
-  dimension's exclusive seeds (Choir Pods, Echo Seeds and Pitcher Bulbs).
+  dimension's Echo Seeds, Pitcher Pods and Torchflower Seeds.
 * **Harmoner**: a colourful songbird. **Feed it seeds and it leads you to a structure**, singing
-  all the way. Rose: Abandoned Altar. Azure: Chrome Well. Gold: Dream Statue. Violet: Collapsed
-  Tower. Jade: Sift Ruins. Coral: Musical Temple. The rare Night Harmoner: the Sculk Castle.
+  all the way. Rose, Gold and Coral: the Drum Pit. Azure and Jade: a Caravan colony. Violet and
+  the rare Night Harmoner: the Sculk Castle.
 * **Sifter** (hostile): a box-headed dune lurker whose lid snaps open like a trap. It burrows
   in the sand and bursts out when you come near.
 * **Enchoer**: a big, sad, furry trader with moose antlers. Trades Sift goods for Chrome
@@ -102,10 +107,10 @@ Three great players wait in the Sift, each woken by a violet **Encore Sigil**:
     sculk song and throws boulders. Enraged, it burrows and erupts under you.
   * Its charges and slams smash the arena's crumbling walls, but never anything you built.
   * Drops the **Conga Drum**.
-* **The Strummer** (strings) lurks in deep shrines. It is a mantis riding a spider and playing it
+* **The Weaver** (strings) waits under a ring of humming webs in a hollow of the Sculk Swamp. It is a mantis riding a spider and playing it
   like a guitar. Drops **Magic Strings**, which make a guitar.
 
-Their young haunt ruins everywhere: Strumlings and **Sculk Parasites**. A parasite is a
+Their young haunt the Sculk Swamp: Sculk Spiders and **Sculk Parasites**. A parasite is a
 small, fragile centipede that bursts when it bites, leaving **Sculk Corruption II** in you. Each
 further bite deepens it.
 
@@ -129,7 +134,7 @@ A field guide in the creative Items tab. Its pages show every creature alive and
 the items, places, music and the boss fight, with the page flipping as you turn it.
 
 ### Chrome
-A shifting cyan pearl liquid. It **heals** whatever soaks in it, but it is thick like
+A shifting, translucent cyan pearl liquid. It **heals** whatever soaks in it, but it is thick like
 quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
 
 ### Gear
@@ -141,11 +146,11 @@ quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
   speed and damage and hit with heavy knockback. Patterned armour with glowing echo inlays: any
   piece keeps you from being Deafened, each piece takes an eighth off sonic damage, the helmet
   breathes under water, leggings and boots swim faster, and the full set halves Sculk Corruption.
-* **Sift gardening**: Choir Pods grow only under open sky, Echo Seeds only in the dark (faster on
-  sculk), Pitcher Bulb bushes only with water or Chrome within 4 blocks.
-* **Pitcher Planter**: pot a Pitcher Bulb in it and it grows anywhere, through four stages, then
-  gives **Pitcher Nectar** again and again. Nectar makes three soups: **Lullaby Soup** (lullaby
-  bell + choir pod: regeneration, absorption), **Echo Chowder** (echo orchid + glowcap: night
+* **Sift gardening**: Echo Seeds grow only in the dark (faster on sculk). Vanilla Pitcher Plants grow
+  wild in the plains and groves.
+* **Pitcher Planter**: pot a Pitcher Pod in it and it grows anywhere, through four stages, then
+  gives **Pitcher Plants** again and again. They make three soups: **Lullaby Soup** (lullaby
+  bell + soulpetal: regeneration, absorption), **Echo Chowder** (echo orchid + glowcap: night
   vision, haste) and **Chrome Bisque** (chrome reeds + glowing slime ball: water breathing,
   dolphin's grace).
 * **Slingshot**: fires Glowing Slime Balls that burst into a dazzling area of light, outline
@@ -162,11 +167,10 @@ or a book on it, ring it with **two or more Sift Drums** (up to 4 blocks away), 
 table's limit.
 
 ### Structures
-Collapsed towers, broken musical temples, Chrome wells, abandoned altars, giant stone
-instruments (a harp and a drum), ruined bridges, buried dune settlements, mysterious statues, Sift
-ruins, deep shrines, the Thumper's Drum Pit and the Sculk Castle. They are half reclaimed by vegetation and hold harmony-stone puzzles,
-sealed vaults, snares and crumbling floors, suspicious dreamsand to brush, and lore in the form of
-Dream Journal fragments.
+The Thumper's Drum Pit, the Sculk Castle and the Caravan colonies. The Sift's older towers, temples
+and settlements have crumbled into the ground: their relics lie buried as suspicious dreamsand in
+the dunes, plains, lake shores and seas (templates, music sheets, Dream Journal fragments), and here
+and there an Echoer still keeps its hearth.
 
 ---
 

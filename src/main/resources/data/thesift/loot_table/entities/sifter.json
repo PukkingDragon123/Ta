@@ -52,6 +52,38 @@
         }
       ],
       "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_offering",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_nib",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
+          "weight": 1
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.07
+          }
+        ]
+      }
     }
   ],
   "random_sequence": "thesift:entities/sifter"

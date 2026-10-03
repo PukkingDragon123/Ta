@@ -27,6 +27,19 @@
     "thesift:wishwood_trapdoor",
     "thesift:wishwood_button",
     "thesift:wishwood_pressure_plate",
+    "thesift:blightwood_log",
+    "thesift:blightwood_wood",
+    "thesift:stripped_blightwood_log",
+    "thesift:stripped_blightwood_wood",
+    "thesift:blightwood_planks",
+    "thesift:blightwood_stairs",
+    "thesift:blightwood_slab",
+    "thesift:blightwood_fence",
+    "thesift:blightwood_fence_gate",
+    "thesift:blightwood_door",
+    "thesift:blightwood_trapdoor",
+    "thesift:blightwood_button",
+    "thesift:blightwood_pressure_plate",
     "thesift:sift_drum"
   ]
 }

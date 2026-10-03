@@ -5,18 +5,18 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "thesift:choir_pod",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
           "name": "thesift:echo_seed",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:pitcher_bulb",
+          "name": "minecraft:pitcher_pod",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:torchflower_seeds",
+          "weight": 1
         }
       ],
       "rolls": 1

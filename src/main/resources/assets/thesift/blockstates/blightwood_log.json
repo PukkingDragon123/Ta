@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "thesift:block/blightwood_log_x"
+    },
+    "axis=y": {
+      "model": "thesift:block/blightwood_log_y"
+    },
+    "axis=z": {
+      "model": "thesift:block/blightwood_log_z"
+    }
+  }
+}

@@ -50,7 +50,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Bulb: a little bouncy jelly bunny of the Sift plains - one see-through cube that is all head, on
- * four stubby feet, with two tall ears. Bulbs hop everywhere, love Pitcher Bulbs (their breeding
+ * four stubby feet, with two tall ears. Bulbs hop everywhere, love Pitcher Pods (their breeding
  * food) and every so often squeeze out a Glowing Slime Ball. They sniff the air and groom their
  * ears, curl up asleep at night, wiggle with joy when fed and bounce in time to every note.
  *

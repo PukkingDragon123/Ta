@@ -3,9 +3,9 @@
   "category": "misc",
   "ingredients": [
     "minecraft:bowl",
-    "thesift:pitcher_nectar",
+    "minecraft:pitcher_plant",
     "thesift:lullaby_bell",
-    "thesift:choir_pod"
+    "thesift:soulpetal"
   ],
   "result": {
     "count": 1,

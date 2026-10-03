@@ -149,12 +149,12 @@ def assets(GA):
     # --- text
     LANG.update({
         f'entity.{NS}.gobbler': 'Gobbler',
-        f'biome.{NS}.magic_kelp_forest': 'Magic Kelp Forest', f'biome.{NS}.deep_dark_ocean': 'Deep Dark Ocean',
+        f'biome.{NS}.magic_kelp_forest': 'Magic Kelp Forest', f'biome.{NS}.deep_dark_ocean': 'Sculk Ocean',  # W1: renamed, id kept
         f'biome.{NS}.sound_garden': 'Sound Garden',
         f'codex.{NS}.gobbler.title': 'Gobbler', f'codex.{NS}.gobbler.tagline': 'Hostile - blind, and very hungry',
-        f'codex.{NS}.gobbler.body': 'A Warden-kin catfish of the Deep Dark Ocean: sculk skin threaded with glowing veins, a fanged mouth wider than you, soul-lantern lures on its whiskers and a ribcage of glowing souls. It has no eyes. It feels you - fast swimming, thrashing and music carry to it through the water, so swim slowly or sneak past. If it finds you it lunges, gulps you down and spits you out. Sneak to wriggle free. The Tide Song lulls it for two minutes. Drops fillets and a glowing sculk bladder.',
+        f'codex.{NS}.gobbler.body': 'A Warden-kin catfish of the Sculk Ocean: sculk skin threaded with glowing veins, a fanged mouth wider than you, soul-lantern lures on its whiskers and a ribcage of glowing souls. It has no eyes. It feels you - fast swimming, thrashing and music carry to it through the water, so swim slowly or sneak past. If it finds you it lunges, gulps you down and spits you out. Sneak to wriggle free. The Tide Song lulls it for two minutes. Drops fillets and a glowing sculk bladder.',
         f'codex.{NS}.sea_and_sky.title': 'Seas and Skies', f'codex.{NS}.sea_and_sky.tagline': 'Real water, and clouds you can walk on',
-        f'codex.{NS}.sea_and_sky.body': 'Only two seas in the Sift hold real water. The warm Magic Kelp Forest glows with rose, azure and amber glowkelp over coral-pink sand, full of Kazoo Fish and coral. The cold Deep Dark Ocean is black water among huge sculk-crusted rock pillars - mind the Gobblers. Far above the land is the Sound Garden: cloud islands where Chime Bells ring and Organ Reeds hum as you walk through them, and Sky Whales sing.',
+        f'codex.{NS}.sea_and_sky.body': 'Only two seas in the Sift hold real water. The warm Magic Kelp Forest glows with rose, azure and amber glowkelp over coral-pink sand, full of Kazoo Fish and coral. The cold Sculk Ocean is dark teal water over trenches, ridges and glowing Sculk Coral reefs - mind the Gobblers. Far above the land is the Sound Garden: cloud islands where Chime Bells ring and Organ Reeds hum as you walk through them, and Sky Whales sing.',
         f'codex.{NS}.sushi.title': 'Sushi', f'codex.{NS}.sushi.tagline': 'Raw fish, dried kelp, a strand of glowkelp',
         f'codex.{NS}.sushi.body': 'Every Sift fish has raw and cooked meat (fish killed by fire drop it cooked). Roll a raw fish with dried kelp and any glowkelp. Kazoo Fish Sushi: water breathing. Tubafish Sushi: night vision and resistance. Fanfare Eel Sushi: dolphin\'s grace. Gobbler Sushi (add the sculk bladder) cures Sculk Corruption. Set all four on a wooden slab for a Sushi Platter: a long, safe dive.',
     })
@@ -254,15 +254,7 @@ def _biomes(GW):
            parts=[('chrome_bubble', 0.004), ('glow_dust', 0.003), ('sift_note', 0.0008), ('star_sparkle', 0.0015)],
            feats=[(0, 'sea_flood')] + common + [(9, 'glowkelp'), (9, 'minecraft:warm_ocean_vegetation'), (9, 'minecraft:seagrass_warm'),
                                                  (9, 'minecraft:sea_pickle')])
-    _biome(GW, 'deep_dark_ocean', fog='#24344a', sky='#2c3e64', water='#123a52', water_fog='#03080e', grass='#2f8f9e', foliage='#37a9b5',
-           temp=0.3, down=0.5, music='music.deep_dark_ocean', loop='ambient.deep_dark_ocean.loop', additions='ambient.deep_dark_ocean.additions',
-           mood='ambient.deep_dark_ocean.mood',
-           spawns=_spawns(water_creature=[('gobbler', 4, 1, 1), ('fanfare_eel', 5, 1, 2)], water_ambient=[('kazoo_fish', 3, 2, 4)],
-                          underground_water_creature=[('minecraft:glow_squid', 8, 2, 4)]),
-           parts=[('drifting_soul', 0.002), ('glow_dust', 0.004), ('minecraft:sculk_soul', 0.0004)],
-           extra={'minecraft:visual/water_fog_end_distance': {'argument': 0.35, 'modifier': 'multiply'}},
-           feats=[(0, 'sea_flood'), (4, 'deep_pillar')] + common + [(7, 'minecraft:sculk_vein'), (7, 'minecraft:sculk_patch_deep_dark'),
-                                                                    (9, 'patch_abyss_anemone')])
+    # W1: the Sculk Ocean (biome id kept: deep_dark_ocean) is built in tools/sculk_world.py (_ocean_biome)
     _biome(GW, 'sound_garden', fog='#f2eaff', sky='#a8d8ff', water='#bfe8ff', water_fog='#bfe8ff', grass='#c8f0ff', foliage='#d8f4ff',
            temp=0.6, down=0.6, music='music.sound_garden', loop='ambient.sound_garden.loop', additions='ambient.sound_garden.additions',
            mood='ambient.sift.mood',
@@ -294,7 +286,7 @@ def _placement(dim):
 
 
 def _surface(GW, rule):
-    """Coral-pink sand under the kelp, sculk-scabbed hushslate in the deep, cloud through and through in the sky."""
+    """Coral-pink sand under the kelp, cloud through and through in the sky."""
     def biome_is(b):
         return {'type': 'minecraft:biome', 'biome_is': [rl(b)]}
 
@@ -306,14 +298,11 @@ def _surface(GW, rule):
 
     def seq(*r):
         return {'type': 'minecraft:sequence', 'sequence': list(r)}
-    sculk_patch = {'type': 'minecraft:noise_threshold', 'max_threshold': 1.0, 'min_threshold': 0.15, 'noise': 'minecraft:surface'}
     mine = [
         cond(biome_is('sound_garden'), block('cloud_block')),
         cond(biome_is('magic_kelp_forest'), seq(cond('minecraft:on_floor', block('coral_sand')), cond('minecraft:under_floor', block('coral_sand')),
                                                 cond('minecraft:deep_under_floor', block('dreamsandstone')))),
-        cond(biome_is('deep_dark_ocean'), seq(cond('minecraft:on_floor', seq(cond(sculk_patch, block('minecraft:sculk')),
-                                                                             block('hushslate', axis='y'))),
-                                              cond('minecraft:under_floor', block('hushslate', axis='y')))),
+        # W1: the Sculk Ocean's floor rules live in tools/sculk_world.py (_surface)
     ]
     for r in rule['sequence']:
         if isinstance(r, dict) and r.get('type') == 'minecraft:condition' and r.get('if_true', {}).get('type') == 'minecraft:above_preliminary_surface':
@@ -333,4 +322,6 @@ def world(GW):
         GD.pool([GD.item('sculk_bladder', extra=[GD.LOOTING])], condition=GD.chance(0.65)),
         GD.pool([GD.item('minecraft:bone', count=(0, 2), extra=[GD.LOOTING])]),
         GD.pool([GD.item('minecraft:echo_shard')], condition={'type': 'minecraft:all_of', 'terms': [GD.PLAYER_KILL, GD.chance(0.12)]}),
+        # W1: swallowed with some drowned traveller - the Tide Song's sheet
+        GD.pool([GD.item('music_sheet_tide')], condition={'type': 'minecraft:all_of', 'terms': [GD.PLAYER_KILL, GD.chance(0.15)]}),
     ])

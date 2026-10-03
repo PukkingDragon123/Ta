@@ -19,9 +19,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The hearthstone in the floor of an Echoer's Hut. The first time a player comes near, the hut's
- * household appears around it - the Echoer and two wild Soul Golems - and from then on it is just
- * a softly glowing stone.
+ * The hearthstone at the heart of an Echoer's hearth (worldgen feature thesift:echoer_hearth; W1: the hut is gone).
+ * The first time a player comes near, the household appears around it - the Echoer and two wild
+ * Soul Golems - and from then on it is just a softly glowing stone.
  */
 public class EchoerHutHeartBlock extends BaseEntityBlock {
     public static final BooleanProperty SPENT = BooleanProperty.create("spent");

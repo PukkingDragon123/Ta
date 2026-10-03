@@ -158,13 +158,12 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "prism_chimes", ModItems.PRISM_CHIMES));
         // ---- places
         l.add(thing(PLACES, "portal", ModItems.SIFT_DRUM));
-        l.add(thing(PLACES, "musical_temple", ModItems.HARMONY_STONE));
-        l.add(thing(PLACES, "chrome_well", ModItems.CHROME_PEARL));
-        l.add(thing(PLACES, "ruins", ModItems.DREAM_JOURNAL_FRAGMENT));
-        l.add(thing(PLACES, "deep_shrine", ModItems.SIFT_GATE_FRAME));
+        // W1 World & terrain: the Sculk Swamp and the Sculk Ocean; the old ruins live on as buried relics
+        l.add(thing(PLACES, "sculk_swamp", ModItems.BLIGHTWOOD_SAPLING));
+        l.add(thing(PLACES, "sculk_ocean", ModItems.SCULK_CORAL_FAN));
+        l.add(thing(PLACES, "relics", ModItems.DREAM_JOURNAL_FRAGMENT));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "caravan_colony", ModItems.PRISM_BLOCK)); // C
-        l.add(thing(PLACES, "echoer_hut", ModItems.SOUL_GOLEM_CORE)); // A2 Echoer
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));

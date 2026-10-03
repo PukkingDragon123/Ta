@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:overlay",
+  "features": [
+    {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "to_place": {
+          "id": "thesift:sculk_coral_block"
+        }
+      },
+      "placement": []
+    },
+    {
+      "feature": "thesift:sculk_coral/decoration",
+      "placement": []
+    }
+  ]
+}

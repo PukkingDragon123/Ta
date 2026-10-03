@@ -121,7 +121,9 @@
     "foliage_color": "#5fd8d0"
   },
   "features": [
-    [],
+    [
+      "thesift:biome_blend"
+    ],
     [],
     [
       "thesift:floating_island",
@@ -142,6 +144,7 @@
       "thesift:chrome_spring"
     ],
     [
+      "thesift:echoer_hearth",
       "thesift:trees_forest_mountains",
       "thesift:patch_blushgrass",
       "thesift:patch_sift_flowers",

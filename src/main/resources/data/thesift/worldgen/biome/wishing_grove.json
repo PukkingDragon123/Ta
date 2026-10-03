@@ -124,7 +124,9 @@
     "foliage_color": "#f9b3d4"
   },
   "features": [
-    [],
+    [
+      "thesift:biome_blend"
+    ],
     [],
     [
       "thesift:floating_island"
@@ -144,11 +146,12 @@
       "thesift:chrome_spring"
     ],
     [
+      "thesift:echoer_hearth",
       "thesift:trees_wishing_grove",
       "thesift:patch_blushgrass",
       "thesift:patch_grove_flowers",
       "thesift:patch_drift_petals",
-      "thesift:patch_pitcher_bulb_bush"
+      "thesift:patch_pitcher_plant"
     ],
     []
   ],

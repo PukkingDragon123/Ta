@@ -176,7 +176,7 @@ def gen_tabs():
             continue
         tab = b.get("tab", "blocks")
         if tab == "blocks" and (b["kind"] in nature_kinds or b.get("cls") in (
-                "BlushgrassBlock", "SiftDoublePlantBlock", "SiftPlantBlock", "DriftPetalsBlock", "ChoirLilyBlock", "EchoOrchidBlock",
+                "BlushgrassBlock", "SiftDoublePlantBlock", "SiftPlantBlock", "DriftPetalsBlock", "EchoOrchidBlock",  # W1: ChoirLilyBlock removed
                 "ChromeReedsBlock", "GlowcapBlock", "GlowbellVineBlock", "HangingLullwoodLeavesBlock", "SiftGrassBlock", "LumenMossBlock")
                 or b["id"] in ("sift_soil", "dreamsand", "serbim_ore", "deep_serbim_ore", "hushslate", "dreamstone", "lumen_moss_carpet")):
             tab = "nature"

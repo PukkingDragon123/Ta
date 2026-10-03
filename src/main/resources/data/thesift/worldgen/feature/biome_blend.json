@@ -1,0 +1,84 @@
+{
+  "type": "thesift:biome_blend",
+  "radius": 12,
+  "palettes": [
+    {
+      "biomes": [
+        "thesift:sift_plains"
+      ],
+      "top": {
+        "id": "thesift:coral_turf",
+        "properties": {
+          "snowy": "false"
+        }
+      },
+      "under": {
+        "id": "thesift:sift_soil"
+      }
+    },
+    {
+      "biomes": [
+        "thesift:white_forest"
+      ],
+      "top": {
+        "id": "thesift:white_turf",
+        "properties": {
+          "snowy": "false"
+        }
+      },
+      "under": {
+        "id": "thesift:sift_soil"
+      }
+    },
+    {
+      "biomes": [
+        "thesift:forest_mountains",
+        "thesift:wishing_grove",
+        "thesift:chrome_lakes"
+      ],
+      "top": {
+        "id": "thesift:sift_grass_block",
+        "properties": {
+          "snowy": "false"
+        }
+      },
+      "under": {
+        "id": "thesift:sift_soil"
+      }
+    },
+    {
+      "biomes": [
+        "thesift:rocky_dunes"
+      ],
+      "top": {
+        "id": "thesift:dreamsand"
+      },
+      "under": {
+        "id": "thesift:dreamsand"
+      }
+    },
+    {
+      "biomes": [
+        "thesift:sculk_swamp",
+        "thesift:deep_dark_ocean"
+      ],
+      "top": {
+        "id": "thesift:sculk_mud"
+      },
+      "under": {
+        "id": "thesift:sculk_mud"
+      }
+    },
+    {
+      "biomes": [
+        "thesift:magic_kelp_forest"
+      ],
+      "top": {
+        "id": "thesift:coral_sand"
+      },
+      "under": {
+        "id": "thesift:coral_sand"
+      }
+    }
+  ]
+}

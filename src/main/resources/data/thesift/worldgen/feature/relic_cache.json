@@ -1,0 +1,26 @@
+{
+  "type": "thesift:relic_cache",
+  "relic": {
+    "id": "thesift:suspicious_dreamsand"
+  },
+  "rare_chance": 0.15,
+  "hosts": [
+    {
+      "id": "thesift:dreamsand"
+    },
+    {
+      "id": "thesift:sculk_mud"
+    },
+    {
+      "id": "thesift:sift_soil"
+    },
+    {
+      "id": "thesift:coral_sand"
+    }
+  ],
+  "common": "thesift:archaeology/sift_common",
+  "rare": "thesift:archaeology/sift_rare",
+  "marker": {
+    "id": "thesift:cracked_dreamstone_bricks"
+  }
+}

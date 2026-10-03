@@ -24,8 +24,9 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 TEX = os.path.join(ROOT, 'src/main/resources/assets/thesift/textures')
 
 # ------------------------------------------------------------------ palettes
-DREAM = ramp('#4e5a99', '#6572b3', '#7d8bcb', '#97a5de', '#b3c0ee', '#cfd8f7')
-DREAM_MORTAR = hx('#3d4580')
+# W1: Dreamstone is pale, bone-white End-Stone-like rock (tools/vanilla_remap.py clones it from End Stone)
+DREAM = ramp('#9c9682', '#b1ab96', '#c5c0aa', '#d7d3bf', '#e6e3d2', '#f3f1e5')
+DREAM_MORTAR = hx('#857f6c')
 HUSH = ramp('#152331', '#1c2e3f', '#243a4d', '#2e485c', '#3a586c', '#4b6c7e')
 HUSH_MORTAR = hx('#0e1822')
 SAND = ramp('#cf7fa4', '#dd95b6', '#e8a9c6', '#f1bdd4', '#f8d0e1', '#fde3ee')
@@ -398,8 +399,7 @@ def flora():
     for name, data in (('lullaby_bell', S.LULLABY_BELL), ('dreambloom', S.DREAMBLOOM), ('soulpetal', S.SOULPETAL), ('nebula_iris', S.NEBULA_IRIS),
                        ('echo_orchid', S.ECHO_ORCHID), ('glowcap', S.GLOWCAP), ('blushgrass', S.BLUSHGRASS), ('coral_fern', S.CORAL_FERN),
                        ('glimmer_sprouts', S.GLIMMER_SPROUTS), ('tall_blushgrass_top', S.TALL_BLUSHGRASS_TOP),
-                       ('tall_blushgrass_bottom', S.TALL_BLUSHGRASS_BOTTOM), ('choir_lily_top', S.CHOIR_LILY_TOP),
-                       ('choir_lily_bottom', S.CHOIR_LILY_BOTTOM), ('chrome_reeds', S.CHROME_REEDS), ('drift_petals', S.DRIFT_PETALS),
+                       ('tall_blushgrass_bottom', S.TALL_BLUSHGRASS_BOTTOM), ('chrome_reeds', S.CHROME_REEDS), ('drift_petals', S.DRIFT_PETALS),
                        ('drift_petals_stem', S.DRIFT_PETALS_STEM), ('dream_snare', S.DREAM_SNARE), ('coral_bush', S.CORAL_BUSH),
                        ('coral_thicket_top', S.CORAL_THICKET_TOP), ('coral_thicket_bottom', S.CORAL_THICKET_BOTTOM)):
         out(f'block/{name}', sprite(data), CUTOUT)
@@ -422,19 +422,6 @@ def flora():
     out('item/glowbell_vine', lit)
     # crops
     stem, leaf, leafl = hx('#3f9d80'), hx('#4fb58f'), hx('#78d4a8')
-    for i in range(4):
-        t = Tex()
-        h = 3 + i * 3
-        for y in range(16 - h, 16):
-            t.set(7, y, stem)
-            if (y % 3 == 0):
-                t.set(6, y, leaf); t.set(8, y - 1, leafl)
-        if i >= 2:
-            for dx, dy in ((0, 0), (-1, 1), (1, 1), (0, 1)):
-                t.set(7 + dx, 16 - h - 1 + dy, hx('#f3c4ff') if i == 2 else hx('#b760d8'))
-        if i == 3:
-            t.set(7, 16 - h - 2, hx('#ffd66b'))
-        out(f'block/choir_lily_crop_stage{i}', t, CUTOUT)
     for i in range(3):
         t = Tex()
         h = 3 + i * 3
@@ -445,22 +432,6 @@ def flora():
         if i == 2:
             t.set(7, 16 - h - 1, hx('#79b7ff')); t.set(6, 16 - h, hx('#3b7fe0')); t.set(8, 16 - h, hx('#3b7fe0'))
         out(f'block/echo_orchid_crop_stage{i}', t, CUTOUT)
-    # pitcher bulb bush: a sweet-berry-style bush; bulbs swell from the third stage
-    bush = {'d': hx('#2f7a64'), 'm': hx('#3f9d80'), 'l': hx('#5bbf95'), 'b': hx('#4fb9c4'), 'B': hx('#7fe3e6'), 'W': hx('#d8fbf6'),
-            's': hx('#2b6650')}
-    stages = [
-        ['................'] * 11 + ['.......l........', '......lm.l......', '.....mmlmm......', '......s.s.......', '.......s........'],
-        ['................'] * 7 + ['......l..l......', '.....lml.ml.....', '....mmlmmlmm....', '.....dmmmmd.....', '....lmdmmdml....',
-                                  '.....dmssmd.....', '......s..s......', '.......ss.......', '.......s........'],
-        ['................'] * 4 + ['.....l....l.....', '....lml..lml....', '...mmlmmmmlmm...', '..lmdmBbmmdml...', '...mmdbbmdmm....',
-                                  '..lmmdmmmBbml...', '...dmmdmmbbm....', '....dmmssmmd....', '.....dms.smd....', '......s..s......',
-                                  '.......ss.......', '.......s........'],
-        ['................'] * 2 + ['....l.....l.....', '...lml...lml....', '..mmlmmmmmlmm...', '.lmBbdmmmdmBbl..', '..mbbmWBmmmbbm..',
-                                  '.lmmdmbBbmdmml..', '..dmmBbbbmmmd...', '.lmmdmbbmmBbml..', '..dmmmmmdmbbm...', '...dmmdssmmd....',
-                                  '....dms..smd....', '.....s....s.....', '......s..s......', '.......ss.......'],
-    ]
-    for i, rows in enumerate(stages):
-        out(f'block/pitcher_bulb_bush_stage{i}', pal_sprite(rows, bush), CUTOUT)
 
 
 # ================================================================== functional blocks
@@ -658,8 +629,6 @@ def items():
                 pearl.set(x, y, lerp(c, iridescent(x, y), 0.35))
     out('item/chrome_pearl', pearl)
     out('item/glowing_slime_ball', pal_sprite(S.SLIME_BALL, {'d': hx('#3fb88f'), 'm': hx('#8ff7c8'), 'l': hx('#e8ff9a'), 'W': hx('#ffffff')}))
-    out('item/pitcher_bulb', pal_sprite(S.PITCHER_BULB, {'g': hx('#3f9d80'), 'd': hx('#2f86a0'), 'm': hx('#4fb9c4'), 'l': hx('#7fe3e6'),
-                                                        'W': hx('#e9fffb')}))
     out('item/thick_hide', pal_sprite(S.HIDE, {'d': hx('#33485e'), 'm': hx('#5b7f99'), 'l': hx('#86abc2'), 's': hx('#6a90a8')}))
     out('item/star_shard', pal_sprite(S.STAR_SHARD, {'W': hx('#fffbe0'), 'l': hx('#ffe89a'), 'm': hx('#f2c65a'),
                                                        'd': hx('#c48a2c'), 'o': hx('#6e4a16')}))
@@ -668,7 +637,6 @@ def items():
                                               'B': hx('#6a4028')}))
     out('item/glowcap_skewer', pal_sprite(S.SKEWER, {'c': hx('#37c9d6'), 'C': hx('#8ff3f0'), 'W': hx('#e8fffb'), 'd': hx('#1f8f9e'),
                                                     's': hx('#b8864f')}))
-    out('item/choir_pod', pal_sprite(S.POD, {'s': hx('#3f9d80'), 'g': hx('#8a4fb0'), 'G': hx('#b77fe0'), 'l': hx('#f3c4ff')}))
     out('item/echo_seed', pal_sprite(S.SEED, {'l': hx('#3b7fe0'), 'L': hx('#b8fbff')}))
     out('item/warden_core', pal_sprite(S.WARDEN_CORE, {'d': hx('#062028'), 's': hx('#0f3945'), 'S': hx('#1a5a66'), 'g': hx('#1ec8c8'),
                                                       'G': hx('#5ff5f0'), 'W': hx('#e8fffe')}))
@@ -1983,6 +1951,7 @@ def main():
     __import__('gatefx').textures(out)  # B1 Portal & sky FX: portal sky window, rainbows, aurora, colour clouds, shooting stars
     __import__('ui_art').textures(out)  # B3 Boss bars & Codex: themed boss bars, codex specimen plates, page effects
     __import__('conductor').textures(out)  # C3 Conductor: texture of the 3D Conductor's Staff
+    __import__('sculk_world').textures(out)  # W1 World & terrain: Blightwood, Sculk Mud/Water/Coral (+ their vanilla references)
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):

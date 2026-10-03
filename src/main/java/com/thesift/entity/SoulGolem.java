@@ -50,7 +50,7 @@ import org.jspecify.annotations.Nullable;
  * fire. It waddles and hops about on stubby legs.
  *
  * <ul>
- *   <li>Wild golems (around the Echoer's Hut) potter about looking for valuables: they pick up
+ *   <li>Wild golems (around an Echoer's hearth) potter about looking for valuables: they pick up
  *   dropped items (use one to be shown its find) and stop to peer at suspicious blocks.</li>
  *   <li>A Soul Golem Core used on soul soil builds one that is yours. It follows you and every now
  *   and then sifts through the ground near you, sometimes finding gems

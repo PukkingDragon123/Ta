@@ -137,6 +137,28 @@
           }
         ]
       }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_tide",
+          "weight": 1
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:killed_by_player"
+          },
+          {
+            "type": "minecraft:random_chance",
+            "chance": 0.15
+          }
+        ]
+      }
     }
   ],
   "random_sequence": "thesift:entities/gobbler"

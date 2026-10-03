@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:blightwood_log",
+    "thesift:blightwood_wood",
+    "thesift:stripped_blightwood_log",
+    "thesift:stripped_blightwood_wood"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:block_blob",
+  "state": {
+    "id": "thesift:dreamstone"
+  },
+  "can_place_on": {
+    "type": "minecraft:matching_blocks",
+    "blocks": [
+      "thesift:sculk_mud",
+      "minecraft:sculk"
+    ]
+  }
+}

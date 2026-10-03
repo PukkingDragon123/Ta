@@ -9,18 +9,15 @@ import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 
 /**
- * Pitcher Nectar from a potted Pitcher Planter, and the three soups cooked from it. Each soup pairs
- * the nectar with plants from one corner of the Sift and does something quite different:
+ * The three soups cooked from a Pitcher Plant (grown in a Pitcher Planter, or picked wild). Each soup
+ * pairs the pitcher with plants from one corner of the Sift and does something quite different:
  * <ul>
- *   <li>Lullaby Soup (lullaby bell, choir pod): mends you and wraps you in golden hearts.</li>
+ *   <li>Lullaby Soup (lullaby bell, soulpetal): mends you and wraps you in golden hearts.</li>
  *   <li>Echo Chowder (echo orchid, glowcap): for the deep - you see in the dark and dig quicker.</li>
  *   <li>Chrome Bisque (chrome reeds, glowing slime): you breathe and glide through water.</li>
  * </ul>
  */
 public final class ModSoups {
-    public static final FoodProperties PITCHER_NECTAR = new FoodProperties.Builder().nutrition(2).saturationModifier(0.4F).alwaysEdible().build();
-    public static final Consumable PITCHER_NECTAR_CONSUMABLE = Consumables.defaultDrink().consumeSeconds(0.8F).build();
-
     public static final FoodProperties LULLABY_SOUP = new FoodProperties.Builder().nutrition(7).saturationModifier(0.8F).build();
     public static final Consumable LULLABY_SOUP_CONSUMABLE = Consumables.defaultFood()
             .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(

@@ -156,13 +156,16 @@
     "foliage_color": "#6fe2dc"
   },
   "features": [
-    [],
+    [
+      "thesift:biome_blend"
+    ],
     [
       "thesift:chrome_pool_surface"
     ],
     [
       "thesift:floating_island",
-      "thesift:floating_islet"
+      "thesift:floating_islet",
+      "thesift:relic_cache"
     ],
     [],
     [
@@ -179,13 +182,14 @@
       "thesift:chrome_spring"
     ],
     [
+      "thesift:echoer_hearth",
       "thesift:trees_sift_plains",
       "thesift:patch_coral_bush",
       "thesift:patch_coral_thicket",
       "thesift:patch_sift_flowers",
       "thesift:patch_drift_petals",
       "thesift:patch_glimmer_sprouts",
-      "thesift:patch_pitcher_bulb_bush",
+      "thesift:patch_pitcher_plant",
       "thesift:patch_hummingbloom"
     ],
     []

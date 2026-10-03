@@ -25,8 +25,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * A2 Echoer: everything around the Echoer's Hut - the Soul Golems who live there, the Nibs of the
- * flower meadows, The Echoer (a mining-beam device), the hut's heart, their sounds, tags and loot.
+ * A2 Echoer: everything around the Echoer's hearth - the Soul Golems who live there, the Nibs of the
+ * flower meadows, The Echoer (a mining-beam device), the hearthstone, their sounds, tags and loot.
  * The Echoer itself keeps its old registration ({@code thesift:enchoer} in {@link ModEntities}).
  */
 public final class ModEchoer {

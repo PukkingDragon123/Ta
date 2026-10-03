@@ -1,10 +1,9 @@
 """A2 Echoer: the data, assets and art around the Echoer - its ceremony rewards, Soul Golems and
-their cores, Nibs and Nib Dust, The Echoer (mining-beam device), the Echoer's Hut structure and
-its musical gardens, codex pages and lang.
+their cores, Nibs and Nib Dust, The Echoer (mining-beam device), codex pages and lang. (W1: the
+Echoer's Hut structure is gone; its Hearthstone now sits in the 'echoer_hearth' feature, tools/sculk_world.py.)
 
 Hooked from: gen_assets.gen_block (models 'echoer_device', 'echoer_hut_heart'), gen_assets.generate
-(generate), gen_assets.gen_lang (lang), gen_textures (block_textures), items16 (item_sprites),
-gen_structures (echoer_hut)."""
+(generate), gen_assets.gen_lang (lang), gen_textures (block_textures), items16 (item_sprites)."""
 import math
 import os
 import random
@@ -285,15 +284,6 @@ def generate(GA):
         D.item('nib_dust', 60, count=(1, 2)), D.item('minecraft:gold_nugget', 12, count=(2, 4)), D.item('minecraft:gold_ingot', 5),
         D.item('minecraft:emerald', 6), D.item('minecraft:amethyst_shard', 8, count=(1, 2)), D.item('minecraft:echo_shard', 3),
         D.item('minecraft:diamond', 1)])])
-    # --- the hut's chest: always the Offering's sheet, so a visitor can learn the ceremony
-    D.table('chest', 'chests/echoer_hut', [
-        D.pool([D.item('music_sheet_offering')]),
-        D.pool([D.item('nib_dust', 4, count=(1, 3)), D.item('chrome_pearl', 4, count=(1, 3)), D.item('star_shard', 3),
-                D.item('siftite_nugget', 3, count=(1, 4)), D.item('glowcap', 3, count=(2, 4)), D.item('minecraft:amethyst_shard', 3, count=(2, 4)),
-                D.item('minecraft:book', 2, extra=[D.ENCHANT]), D.item('serbim_ingot', 1)], rolls=(3, 5)),
-        D.pool([D.item('music_sheet_golem'), D.item('music_sheet_nib')], condition=D.chance(0.35)),
-        D.pool([D.item('soul_golem_core')], condition=D.chance(0.08)),
-    ])
     # --- creature drops
     D.table('entity', 'entities/soul_golem', [D.pool([D.item('minecraft:soul_soil', count=(0, 1))]),
                                               D.pool([D.item('soul_golem_core')], condition={'type': 'minecraft:all_of', 'terms': [
@@ -316,149 +306,13 @@ def lang():
         f'message.{NS}.soul_golem_core.needs_soil': 'The core needs a body: use it on a block of soul soil.',
         f'message.{NS}.echoer_device.range': 'The Echoer will reach %s blocks',
         f'codex.{NS}.enchoer.title': 'Echoer', f'codex.{NS}.enchoer.tagline': 'The chime-crowned god-deer',  # C4 Echoer
-        f'codex.{NS}.enchoer.body': 'A furry god-deer with a great lilac mane, gentle glowing eyes, runes in its flanks and huge antlers hung with wind chimes that clink as it walks, a soft halo behind them. It lives in a dome hut among singing gardens and accepts offerings, not trades. Drop a Siftite or Serbim ingot (or a Prism Gem) near it: it sniffs the gift, tucks it away and rings the first notes of The Offering. Carry that sheet and play the whole song on Wind Chimes and it dances, rings the song back and gives you something precious - sheets, gems, books, rarely a Soul Golem Core. No song, and it hands the gift back.',
+        f'codex.{NS}.enchoer.body': 'A furry god-deer with a great lilac mane, gentle glowing eyes, runes in its flanks and huge antlers hung with wind chimes that clink as it walks, a soft halo behind them. It wanders the meadows and forests of the Sift, some keeping a hearth of pale stone with two Soul Golems, and accepts offerings, not trades. Drop a Siftite or Serbim ingot (or a Prism Gem) near it: it sniffs the gift, tucks it away and rings the first notes of The Offering. Carry that sheet and play the whole song on Wind Chimes and it dances, rings the song back and gives you something precious - sheets, gems, books, rarely a Soul Golem Core. No song, and it hands the gift back.',
         f'codex.{NS}.soul_golem.title': 'Soul Golem', f'codex.{NS}.soul_golem.tagline': 'A little digger of the old days',
-        f'codex.{NS}.soul_golem.body': 'Round soulstone constructs with lamp-lit eyes that waddle around the Echoer\'s Hut, picking up anything shiny and peering at suspicious blocks. Use one empty-handed to be shown its find. Set a Soul Golem Core into soul soil to build your own: it follows you and sifts the ground nearby, now and then turning up a gem. It runs on soul energy, which drains as it works; at zero it slumps. Any music recharges it a little - the Golem Hymn completely.',
+        f'codex.{NS}.soul_golem.body': 'Round soulstone constructs with lamp-lit eyes that keep house for Echoers at their pale hearths in the meadows, picking up anything shiny and peering at suspicious blocks. Use one empty-handed to be shown its find. Set a Soul Golem Core into soul soil to build your own: it follows you and sifts the ground nearby, now and then turning up a gem. It runs on soul energy, which drains as it works; at zero it slumps. Any music recharges it a little - the Golem Hymn completely.',
         f'codex.{NS}.nib.title': 'Nibs', f'codex.{NS}.nib.tagline': 'Wisps of the flower meadows',
         f'codex.{NS}.nib.body': 'Tiny glowing butterfly-wisps that flutter in loose flocks over the Sift\'s meadows, trailing sparkles and resting on flowers. Play the Song of the Nibs and every Nib within twelve blocks swirls up around you and turns into treasure: mostly Nib Dust, sometimes gold, emeralds, amethyst or echo shards, and once in a long while a diamond.',
         f'codex.{NS}.echoer_device.title': 'The Echoer', f'codex.{NS}.echoer_device.tagline': 'A horn that mines with sound',
         f'codex.{NS}.echoer_device.body': 'An ancient soulstone horn, given only by Echoers. Power it with redstone and it charges, then fires an echo beam out of its face that shatters the first block in its path - as far as the signal strength in blocks. Use it to fire at its dial range; sneak-use turns the dial (4, 8 or 16). Drops go into a container touching it, or pop out of its top. It will not break unbreakable blocks, or chests and anything else that holds things.',
-        f'codex.{NS}.echoer_hut.title': 'Echoer\'s Hut', f'codex.{NS}.echoer_hut.tagline': 'A pale dome among singing gardens',
-        f'codex.{NS}.echoer_hut.body': 'A rare igloo of pale stone with glowing windows, home to an Echoer and its Soul Golems. Around it grow musical gardens: Choir Lilies and Echo Orchids, chime arches, a still pond. Inside are its bed, shelves, a soul chime and a chest that always holds the sheet of The Offering.',
         f'block.{NS}.echoer_hut_heart': 'Echoer\'s Hearthstone',
     })
     return L
-
-
-# ============================================================================ the Echoer's Hut
-
-
-def echoer_hut(seed):
-    """A pale dome (an igloo of calcite and quartz) with glowing froglight windows and a short
-    entrance tunnel, inside a garden ring: Choir Lily and Echo Orchid beds, chime arches, a pond
-    with lily pads and chrome reeds, stepping stones and lanterns. Inside: bed, shelves, a soul
-    chime, a chest and the hearthstone that wakes the household."""
-    from structlib import AIR, B, Build, chest
-    S = 35
-    c = S // 2
-    b = Build(S, 13, S, seed)
-    rnd = b.rnd
-    GRASS = B('sift_grass_block', snowy='false')
-    SOIL = B('sift_soil')
-    POL = B('polished_dreamstone')
-    CALCITE = B('minecraft:calcite')
-    QUARTZ = B('minecraft:smooth_quartz')
-    WINDOW = B('minecraft:pearlescent_froglight', axis='y')
-    LOG = B('lullwood_log', axis='y')
-    PLANK = B('lullwood_planks')
-    CHIME = B('soul_chime', powered='false')
-    LANTERN = B('bulb_lantern', hanging='false', waterlogged='false')
-    LANTERN_H = B('bulb_lantern', hanging='true', waterlogged='false')
-    FLOWERS = [B('lullaby_bell', resonating='false'), B('soulpetal', resonating='false'), B('echo_orchid'), B('glimmer_sprouts'),
-               B('dreambloom', resonating='false')]
-
-    # ground: soil below, grass on top, a round garden plot
-    b.cyl(c, c, 0, 0, c - 0.5, SOIL)
-    b.cyl(c, c, 1, 1, c - 0.5, GRASS)
-
-    # the dome: a hollow half-sphere, radius 7, floor at y=2
-    R = 7.0
-    shell = b.mix((CALCITE, 7), (QUARTZ, 2), (B('minecraft:polished_diorite'), 1))
-    for x in range(c - 8, c + 9):
-        for z in range(c - 8, c + 9):
-            for y in range(1, 11):
-                d = math.sqrt((x - c) ** 2 + (z - c) ** 2 + ((y - 1) * 1.05) ** 2)
-                if d <= R + 0.35:
-                    b.set(x, y, z, shell(x, y, z) if d > R - 0.85 or y == 1 else AIR)
-    # the floor inside
-    b.cyl(c, c, 1, 1, R - 0.6, POL)
-    b.cyl(c, c, 1, 1, 2.2, B('chiseled_dreamstone'))
-    b.set(c, 1, c, B('echoer_hut_heart', spent='false'))
-    # glowing windows round the dome and a skylight
-    for k in range(8):
-        a = k * math.pi / 4
-        if k == 2:
-            continue  # the door side (south, +z)
-        x, z = c + round(math.cos(a) * 6.6), c + round(math.sin(a) * 6.6)
-        for y in (4, 5):
-            b.set(x, y, z, WINDOW)
-    b.set(c, 8, c, WINDOW)
-    # the entrance tunnel (south) and its doorway
-    for z in range(c + 5, c + 10):
-        for x in range(c - 2, c + 3):
-            for y in range(1, 6):
-                edge = x in (c - 2, c + 2) or y == 5
-                b.set(x, y, z, shell(x, y, z) if edge else (POL if y == 1 else AIR))
-    for x in (c - 1, c, c + 1):
-        b.set(x, 5, c + 9, CALCITE)
-    b.set(c, 4, c + 9, LANTERN_H)
-
-    # inside: bed (north-west), shelves along the north wall, chest, a chime from the ceiling, lights
-    b.set(c - 4, 2, c - 2, B('minecraft:white_bed', part='foot', facing='north', occupied='false'))
-    b.set(c - 4, 2, c - 3, B('minecraft:white_bed', part='head', facing='north', occupied='false'))
-    for x in range(c - 2, c + 3):
-        b.set(x, 2, c - 5, B('minecraft:bookshelf'))
-        b.set(x, 3, c - 5, B('minecraft:bookshelf') if x % 2 else B('minecraft:chiseled_bookshelf', facing='south', **{
-            f'slot_{i}_occupied': 'false' for i in range(6)}))
-    b.set(c + 4, 2, c - 2, chest('chests/echoer_hut', 'west'))
-    b.set(c + 4, 2, c + 1, B('sift_drum', hit='0', core='false', powered='false'))
-    b.set(c, 7, c - 2, B('minecraft:iron_chain', axis='y'))
-    b.set(c, 6, c - 2, CHIME)
-    b.set(c - 3, 7, c + 2, LANTERN_H)
-    b.set(c + 3, 7, c + 2, LANTERN_H)
-    for (x, z) in ((c - 3, c), (c + 3, c - 3), (c - 1, c + 3)):
-        b.set(x, 2, z, B('lumen_moss_carpet'))
-
-    # --- the musical gardens
-    def ground_ok(x, z):
-        g = b.get(x, 1, z)
-        return g is not None and g.name.endswith('sift_grass_block') and (b.get(x, 2, z) is None or b.get(x, 2, z).name == AIR.name)
-
-    # a still pond to the east, with lily pads and reeds
-    pc, pz = c + 11, c + 3
-    for x in range(pc - 4, pc + 5):
-        for z in range(pz - 4, pz + 5):
-            d = math.hypot((x - pc) / 3.6, (z - pz) / 3.0)
-            if d < 1.0:
-                b.set(x, 1, z, B('minecraft:water', level=0))
-                b.set(x, 0, z, B('minecraft:water', level=0) if d < 0.6 else SOIL)
-                if rnd.random() < 0.15:
-                    b.set(x, 2, z, B('minecraft:lily_pad'))
-            elif d < 1.3 and ground_ok(x, z) and rnd.random() < 0.4:
-                b.set(x, 2, z, B('chrome_reeds') if rnd.random() < 0.5 else B('coral_fern'))
-    # stepping stones south from the door
-    for i, z in enumerate(range(c + 10, S - 1, 2)):
-        for dx in (-1, 0) if i % 2 else (0, 1):
-            b.set(c + dx, 1, z, POL)
-    # chime arches: two log posts, a plank beam, soul chimes hanging under it
-    for (ax, az, along_x) in ((c - 11, c - 4, False), (c + 4, c - 12, True), (c - 9, c + 9, True)):
-        p1 = (ax, az)
-        p2 = (ax + 4, az) if along_x else (ax, az + 4)
-        for (x, z) in (p1, p2):
-            for y in range(2, 6):
-                b.set(x, y, z, LOG)
-        for t in range(5):
-            x, z = (ax + t, az) if along_x else (ax, az + t)
-            b.set(x, 6, z, PLANK)
-            if 0 < t < 4:
-                b.set(x, 5, z, CHIME)
-    # singing flower beds: choir lilies, echo orchids, bells; lanterns on short posts
-    for k in range(14):
-        a = rnd.random() * math.tau
-        r = 9.5 + rnd.random() * 6.0
-        x, z = round(c + math.cos(a) * r), round(c + math.sin(a) * r)
-        if not ground_ok(x, z):
-            continue
-        if k % 3 == 0 and ground_ok(x, z):
-            b.set(x, 2, z, B('choir_lily', half='lower'))
-            b.set(x, 3, z, B('choir_lily', half='upper'))
-        for _ in range(5):
-            fx, fz = x + rnd.randrange(-2, 3), z + rnd.randrange(-2, 3)
-            if ground_ok(fx, fz):
-                b.set(fx, 2, fz, rnd.choice(FLOWERS))
-    for (x, z) in ((c - 4, c + 11), (c + 4, c + 11), (c - 13, c + 2), (c + 6, c - 9)):
-        if ground_ok(x, z):
-            b.set(x, 2, z, B('lullwood_fence', north='false', south='false', east='false', west='false', waterlogged='false'))
-            b.set(x, 3, z, LANTERN)
-    b.overgrow(['sift_grass_block'], [B('blushgrass'), B('blushgrass'), B('glimmer_sprouts'), B('coral_fern')], 0.18)
-    return b

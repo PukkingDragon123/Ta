@@ -1,0 +1,13 @@
+{
+  "type": "thesift:sea_flood",
+  "biomes": [
+    "thesift:sculk_swamp"
+  ],
+  "sea_level": 63,
+  "fluid": {
+    "id": "thesift:sculk_water",
+    "properties": {
+      "level": "0"
+    }
+  }
+}

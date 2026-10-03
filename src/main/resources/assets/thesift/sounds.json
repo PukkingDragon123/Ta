@@ -1275,22 +1275,6 @@
     ],
     "subtitle": "subtitles.thesift.block.soul_chime.ring"
   },
-  "block.choir_lily.sing": {
-    "sounds": [
-      {
-        "name": "minecraft:block.note_block.flute",
-        "type": "event",
-        "volume": 0.8,
-        "pitch": 1.0
-      },
-      {
-        "name": "minecraft:block/amethyst/resonate2",
-        "volume": 0.6,
-        "pitch": 1.4
-      }
-    ],
-    "subtitle": "subtitles.thesift.block.choir_lily.sing"
-  },
   "block.dream_snare.trigger": {
     "sounds": [
       {
@@ -3599,6 +3583,135 @@
       }
     ],
     "subtitle": "subtitles.thesift.entity.sculkling.twitch"
+  },
+  "music.sculk_swamp": {
+    "sounds": [
+      {
+        "name": "minecraft:music/game/swamp/aerie",
+        "volume": 0.55,
+        "pitch": 0.9,
+        "stream": true
+      },
+      {
+        "name": "minecraft:music/game/swamp/firebugs",
+        "volume": 0.55,
+        "pitch": 0.88,
+        "stream": true
+      },
+      {
+        "name": "minecraft:music/game/swamp/labyrinthine",
+        "volume": 0.55,
+        "pitch": 0.85,
+        "stream": true
+      },
+      {
+        "name": "minecraft:music/game/deeper",
+        "volume": 0.5,
+        "pitch": 0.95,
+        "stream": true
+      }
+    ]
+  },
+  "ambient.sculk_swamp.loop": {
+    "sounds": [
+      {
+        "name": "minecraft:ambient/nether/soulsand_valley/ambience",
+        "volume": 0.35,
+        "pitch": 0.62,
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.thesift.ambient.sculk_swamp.loop"
+  },
+  "ambient.sculk_swamp.additions": {
+    "sounds": [
+      {
+        "name": "minecraft:block/sculk_sensor/sculk_clicking2",
+        "volume": 0.45,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:block/sculk/spread1",
+        "volume": 0.35,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:block/bubble_column/bubble1",
+        "volume": 0.4,
+        "pitch": 0.55
+      },
+      {
+        "name": "minecraft:block/bubble_column/bubble3",
+        "volume": 0.4,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:block/pointed_dripstone/drip_water1",
+        "volume": 0.5,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:block/pointed_dripstone/drip_water3",
+        "volume": 0.5,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:mob/frog/idle2",
+        "volume": 0.3,
+        "pitch": 0.55
+      },
+      {
+        "name": "minecraft:mob/frog/idle6",
+        "volume": 0.25,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:ambient/underwater/additions/dark1",
+        "volume": 0.3,
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.ambient.sculk_swamp.additions"
+  },
+  "ambient.sculk_swamp.mood": {
+    "sounds": [
+      {
+        "name": "minecraft:ambient/cave/cave13",
+        "volume": 0.7,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:mob/warden/heartbeat_1",
+        "volume": 0.45,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:ambient/nether/soulsand_valley/mood1",
+        "volume": 0.6,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:ambient/nether/soulsand_valley/whisper2",
+        "volume": 0.4,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.ambient.sculk_swamp.mood"
+  },
+  "block.sculk_water.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block/bubble_column/bubble2",
+        "volume": 0.35,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:block/sculk/charge2",
+        "volume": 0.25,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.sculk_water.ambient"
   },
   "entity.caravan.ambient": {
     "sounds": [

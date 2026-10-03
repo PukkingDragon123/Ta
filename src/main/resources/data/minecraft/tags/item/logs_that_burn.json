@@ -8,6 +8,10 @@
     "thesift:wishwood_log",
     "thesift:wishwood_wood",
     "thesift:stripped_wishwood_log",
-    "thesift:stripped_wishwood_wood"
+    "thesift:stripped_wishwood_wood",
+    "thesift:blightwood_log",
+    "thesift:blightwood_wood",
+    "thesift:stripped_blightwood_log",
+    "thesift:stripped_blightwood_wood"
   ]
 }

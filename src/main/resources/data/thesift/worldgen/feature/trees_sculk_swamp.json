@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:random_selector",
+  "default": {
+    "feature": "thesift:blightwood_tree",
+    "placement": [
+      {
+        "type": "minecraft:block_predicate_filter",
+        "predicate": {
+          "type": "minecraft:would_survive",
+          "state": "thesift:blightwood_sapling"
+        }
+      }
+    ]
+  },
+  "features": [
+    {
+      "chance": 0.3,
+      "feature": {
+        "feature": "thesift:gnarled_blightwood_tree",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "thesift:blightwood_sapling"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

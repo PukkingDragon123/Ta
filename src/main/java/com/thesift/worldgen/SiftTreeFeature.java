@@ -14,8 +14,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HangingMossBlock;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -27,7 +29,9 @@ import net.minecraft.world.level.levelgen.feature.Feature;
  * fluffy look of the Sift's forests.
  *
  * <p>Styles: {@code puff} (Lullwood), {@code grand} (2x2 giant Lullwood), {@code wish} (drooping
- * Wishwood) and {@code tall_wish} (spire-like Wishwood).
+ * Wishwood), {@code tall_wish} (spire-like Wishwood) and {@code blight} (W1: the Sculk Swamp's
+ * corrupted Blightwood - gnarled, leaning, on flared roots, with crooked half-bare branches, torn
+ * tufts of leaves, sculk veins crawling up the bark and sculk spreading round its feet).
  */
 public record SiftTreeFeature(BlockState trunk, BlockState leaves, Optional<BlockState> hanging, String style, int minHeight, int maxHeight)
         implements Feature {
@@ -63,12 +67,16 @@ public record SiftTreeFeature(BlockState trunk, BlockState leaves, Optional<Bloc
             case "grand" -> this.grand(b, origin, height);
             case "wish" -> this.wish(b, origin, height, false);
             case "tall_wish" -> this.wish(b, origin, height, true);
+            case "blight" -> this.blight(b, origin, height);
             default -> this.puff(b, origin, height);
         }
         if (b.logs.isEmpty()) {
             return false;
         }
         b.finish(this.leaves);
+        if (this.style.equals("blight")) {
+            this.sculkify(b, origin);
+        }
         if (this.hanging.isPresent()) {
             b.hangCurtains(this.hanging.get(), wide ? 0.4F : 0.32F, wide ? 5 : 4);
         }
@@ -166,6 +174,86 @@ public record SiftTreeFeature(BlockState trunk, BlockState leaves, Optional<Bloc
         }
     }
 
+    /** W1 Blightwood: a gnarled trunk that wanders as it climbs, flared roots, crooked branches with torn tufts. */
+    private void blight(Builder b, BlockPos origin, int height) {
+        RandomSource r = b.random;
+        // flared roots, some of them dipping back into the mud
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            if (r.nextFloat() < 0.8F) {
+                BlockPos root = origin.relative(d);
+                b.root(root, d.getAxis());
+                if (r.nextFloat() < 0.6F) {
+                    b.root(root.relative(d).below(), d.getAxis());
+                }
+                if (r.nextFloat() < 0.45F) {
+                    b.log(root.above(), Direction.Axis.Y);
+                }
+            }
+        }
+        // the trunk: one or two kinks as it climbs, so no two trees stand alike
+        BlockPos.MutableBlockPos p = origin.mutable();
+        Direction lean = Direction.Plane.HORIZONTAL.getRandomDirection(r);
+        int kinks = 0;
+        for (int y = 0; y < height; y++) {
+            b.log(p.immutable(), Direction.Axis.Y);
+            if (y > 2 && y < height - 2 && kinks < 2 && r.nextFloat() < 0.24F) {
+                p.move(lean);
+                b.log(p.immutable(), lean.getAxis());
+                kinks++;
+                if (r.nextBoolean()) {
+                    lean = lean.getClockWise();
+                }
+            }
+            p.move(Direction.UP);
+        }
+        BlockPos top = p.below().immutable();
+        // crooked branches: most end in a torn tuft of leaves, some are dead and bare
+        int branches = 3 + r.nextInt(3);
+        for (int i = 0; i < branches; i++) {
+            double a = Math.PI * 2 * i / branches + r.nextDouble() * 0.9;
+            BlockPos start = top.below(1 + r.nextInt(Math.max(1, height / 2)));
+            int len = 3 + r.nextInt(3);
+            BlockPos end = start.offset((int) Math.round(Math.cos(a) * len), r.nextInt(3) - 1, (int) Math.round(Math.sin(a) * len));
+            this.branch(b, start, end);
+            if (r.nextFloat() < 0.75F) {
+                // the branch crooks up at its end into a flat, torn tuft
+                BlockPos tip = end.offset(r.nextInt(3) - 1, 1, r.nextInt(3) - 1);
+                this.branch(b, end, tip);
+                float rad = 1.6F + r.nextFloat() * 1.3F;
+                b.tuft(tip, rad, rad * 0.55F, rad);
+            }
+        }
+        float crown = 1.6F + r.nextFloat() * 0.8F;
+        b.tuft(top.above(1), crown, 1.1F, crown);
+    }
+
+    /** Sculk creeps over a Blightwood: veins up the bark, sculk in the ground round its roots. */
+    private void sculkify(Builder b, BlockPos origin) {
+        WorldGenLevel level = b.level;
+        RandomSource r = b.random;
+        BlockState vein = Blocks.SCULK_VEIN.defaultBlockState();
+        for (BlockPos log : b.logs) {
+            for (Direction d : Direction.values()) {
+                if (d == Direction.UP || r.nextFloat() > 0.14F) {
+                    continue;
+                }
+                BlockPos at = log.relative(d);
+                if (level.getBlockState(at).isAir()) {
+                    level.setBlock(at, vein.setValue(MultifaceBlock.getFaceProperty(d.getOpposite()), true), 2);
+                }
+            }
+        }
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                BlockPos ground = origin.offset(dx, -1, dz);
+                if (dx * dx + dz * dz <= 5 && r.nextFloat() < 0.5F && level.getBlockState(ground).is(BlockTags.DIRT)
+                        && level.getBlockState(ground.above()).isAir()) {
+                    level.setBlock(ground, Blocks.SCULK.defaultBlockState(), 2);
+                }
+            }
+        }
+    }
+
     /** A trunk that may drift sideways near the top. Returns the top log position. */
     private BlockPos trunkColumn(Builder b, BlockPos base, int height, float leanChance) {
         BlockPos.MutableBlockPos p = base.mutable();
@@ -231,6 +319,37 @@ public record SiftTreeFeature(BlockState trunk, BlockState leaves, Optional<Bloc
         void leaf(BlockPos pos) {
             if (!this.logs.contains(pos) && canReplace(this.level, pos)) {
                 this.leafSet.add(pos);
+            }
+        }
+
+        /** A root log: like a log, but it may also push into soil. */
+        void root(BlockPos pos, Direction.Axis axis) {
+            if (this.level.getBlockState(pos).is(BlockTags.DIRT)) {
+                BlockState s = SiftTreeFeature.this.trunk;
+                if (s.hasProperty(RotatedPillarBlock.AXIS)) {
+                    s = s.setValue(RotatedPillarBlock.AXIS, axis);
+                }
+                this.level.setBlock(pos, s, 19);
+                this.logs.add(pos);
+            } else {
+                this.log(pos, axis);
+            }
+        }
+
+        /** A torn, sparse tuft of leaves (Blightwood): a squashed sphere with holes bitten out of it. */
+        void tuft(BlockPos c, float rx, float ry, float rz) {
+            int ix = (int) Math.ceil(rx);
+            int iy = (int) Math.ceil(ry);
+            int iz = (int) Math.ceil(rz);
+            for (int dx = -ix; dx <= ix; dx++) {
+                for (int dy = -iy; dy <= iy; dy++) {
+                    for (int dz = -iz; dz <= iz; dz++) {
+                        double d = (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) + (dz * dz) / (rz * rz);
+                        if (d <= 1.0 && this.random.nextFloat() < (d < 0.45 ? 0.85F : 0.5F)) {
+                            this.leaf(c.offset(dx, dy, dz));
+                        }
+                    }
+                }
             }
         }
 

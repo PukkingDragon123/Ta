@@ -146,6 +146,13 @@ FILES = frozenset({
     'mob/phantom/swoop2', 'mob/wolf/baby/whine1', 'mob/wolf/baby/whine2',
 })
 
+# W1 World & terrain: the Sculk Swamp's music and ambience
+FILES = FILES | frozenset({
+    'ambient/nether/soulsand_valley/ambience', 'ambient/nether/soulsand_valley/mood1', 'ambient/nether/soulsand_valley/whisper2',
+    'block/pointed_dripstone/drip_water1', 'block/pointed_dripstone/drip_water3', 'music/game/swamp/aerie', 'music/game/swamp/firebugs',
+    'music/game/swamp/labyrinthine',
+})
+
 
 def vanilla_names(sounds_json):
     """(events, files) defined by a vanilla sounds.json."""

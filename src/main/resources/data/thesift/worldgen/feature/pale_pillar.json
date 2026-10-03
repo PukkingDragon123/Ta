@@ -1,0 +1,18 @@
+{
+  "type": "thesift:jagged_pillar",
+  "body": {
+    "id": "thesift:dreamstone"
+  },
+  "accent": {
+    "id": "thesift:cobbled_dreamstone"
+  },
+  "coat": {
+    "id": "minecraft:sculk"
+  },
+  "glow": {
+    "id": "thesift:sculk_coral_block"
+  },
+  "min_height": 16,
+  "max_height": 44,
+  "radius": 3.4
+}

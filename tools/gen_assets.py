@@ -323,6 +323,8 @@ def gen_block(b):
         __import__('swifter').gen_den(sys.modules[__name__], bid)
     elif k == 'chime_pane':  # A3 Chrome: the Chime Glass Pane
         __import__('chrome').gen_block(sys.modules[__name__], b)
+    elif k.startswith('w1_'):  # W1 World & terrain: Sculk Water, the Sculk Coral fans
+        __import__('sculk_world').gen_block(sys.modules[__name__], b)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -687,7 +689,7 @@ def gen_recipes():
                'result': {'id': f'{NS}:siftite_{t}'}, 'template': f'{NS}:siftite_upgrade_smithing_template'})
     # gear & food
     shaped('slingshot', ['#S#', ' # ', ' # '], {'#': 'lullwood_planks', 'S': 'thick_hide'}, 'slingshot', 1, 'equipment')
-    shaped('sift_cake', ['GGG', 'BEB', 'PPP'], {'G': 'glowing_slime_ball', 'B': 'pitcher_bulb', 'E': '#minecraft:eggs', 'P': 'dreambloom'}, 'sift_cake', 1, 'food')
+    shaped('sift_cake', ['GGG', 'BEB', 'PPP'], {'G': 'glowing_slime_ball', 'B': 'minecraft:pitcher_pod', 'E': '#minecraft:eggs', 'P': 'dreambloom'}, 'sift_cake', 1, 'food')
     shaped('bulb_lantern', ['###', '#G#', '###'], {'#': 'minecraft:iron_nugget', 'G': 'glowing_slime_ball'}, 'bulb_lantern', 1, 'decorations')
     shaped('glowing_slime_block', ['###', '###', '###'], {'#': 'glowing_slime_ball'}, 'glowing_slime_block', 1, 'redstone')
     shapeless('glowing_slime_ball_from_block', ['glowing_slime_block'], 'glowing_slime_ball', 9)
@@ -698,15 +700,13 @@ def gen_recipes():
                                                              'N': 'minecraft:note_block'}, 'sift_drum', 1, 'redstone')
     shaped('euphory_altar', [' P ', 'SDS', 'DDD'], {'P': 'chrome_pearl', 'S': 'siftite_ingot', 'D': 'polished_dreamstone'}, 'euphory_altar', 1, 'misc')
     shaped('soul_chime', [' I ', 'NGN', 'N N'], {'I': 'minecraft:iron_chain', 'N': 'serbim_ingot', 'G': 'soulpetal'}, 'soul_chime', 1, 'decorations')
-    shapeless('dream_stew', ['minecraft:bowl', 'glowcap', 'pitcher_bulb', 'lullaby_bell'], 'dream_stew', 1, 'food')
+    shapeless('dream_stew', ['minecraft:bowl', 'glowcap', 'minecraft:pitcher_pod', 'lullaby_bell'], 'dream_stew', 1, 'food')
     shaped('glowcap_skewer', ['  G', ' G ', '#  '], {'G': 'glowcap', '#': 'minecraft:stick'}, 'glowcap_skewer', 1, 'food')
     shaped('dream_snare', ['S S', ' P ', 'S S'], {'S': 'minecraft:string', 'P': 'glimmer_sprouts'}, 'dream_snare', 2, 'redstone')
     for f in spec.FLOWERS:
         shapeless(f'{f}_dye', [f], {'lullaby_bell': 'minecraft:cyan_dye', 'dreambloom': 'minecraft:pink_dye', 'soulpetal': 'minecraft:white_dye',
                                     'nebula_iris': 'minecraft:purple_dye'}[f], 1, 'misc', 'dye')
     shapeless('echo_orchid_dye', ['echo_orchid'], 'minecraft:light_blue_dye', 2, 'misc', 'dye')
-    shapeless('choir_lily_dye', ['choir_lily'], 'minecraft:magenta_dye', 2, 'misc', 'dye')
-    smelt('glowing_slime_ball_cooked', 'pitcher_bulb', 'glowing_slime_ball', 0.2, 200, ('smelting', 'smoking'))
 
 
 # --------------------------------------------------------------------------- misc assets
@@ -742,11 +742,11 @@ def gen_lang():
         f'codex.{NS}.chapter.magic': 'Music & Magic',
         f'codex.{NS}.chapter.dictator': 'The Dictator',
         f'codex.{NS}.bulb.title': 'Bulb', f'codex.{NS}.bulb.tagline': 'Squishy jelly bunny',
-        f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Bulbs make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
+        f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Pods make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
-        f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose - Abandoned Altar. Azure - Chrome Well. Gold - Dream Statue. Violet - Collapsed Tower. Jade - Sift Ruins. Coral - Musical Temple. The rare Night - the Sculk Castle.',
+        f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose, Gold and Coral - the Drum Pit, where the Thumper sleeps. Azure and Jade - a Caravan colony deep below. Violet and the rare Night - the Sculk Castle.',
         f'codex.{NS}.sniffer.title': 'Sniffer', f'codex.{NS}.sniffer.tagline': 'The Sift remembers its seeds',
-        f'codex.{NS}.sniffer.body': 'Ordinary Sniffers wander the Sift\'s plains and forests. Wherever one digs here it turns up the dimension\'s own ancient seeds as well as its usual finds: Choir Pods, Echo Seeds and Pitcher Bulbs. Breed them with torchflower seeds, or bring a Sniffer egg through the gate yourself.',
+        f'codex.{NS}.sniffer.body': 'Ordinary Sniffers wander the Sift\'s plains and forests. Wherever one digs here it turns up the dimension\'s own ancient seeds as well as its usual finds: Echo Seeds, Pitcher Pods and Torchflower seeds. Breed them with torchflower seeds, or bring a Sniffer egg through the gate yourself.',
         # A2 Echoer: the Echoer's codex page is in tools/echoer_world.py
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Chrome lake salamander',
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
@@ -759,21 +759,13 @@ def gen_lang():
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
         f'codex.{NS}.chrome.body': 'A thick, shimmering liquid rainbow. Waves of colour roll across every lake, rings spread behind anything that swims or wades, and the surface bursts into colour when music plays nearby. It no longer heals: a soak leaves you Rainbow Dazed, the world swaying and turning through the colours until it wears off. It is thick like quicksand - hold Shift to rise. Where Chrome meets flowing water it settles into Chime Sand, which tinkles underfoot and smelts into Chime Glass: every block rings its own note, so a wall of it plays like a xylophone. Scoop Kazoo Fish, Tubafish and Fanfare Eels up in a Chrome Bucket to carry them home.',
         f'codex.{NS}.warden_core.title': 'Warden Core', f'codex.{NS}.warden_core.tagline': 'The heart of the ritual',
-        f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the deepest shrines. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
+        f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the Sculk Castle. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
         f'codex.{NS}.sift_cake.title': 'Sift Cake', f'codex.{NS}.sift_cake.tagline': 'A treat from the plains',
         f'codex.{NS}.sift_cake.body': 'Baked from Glowing Slime Balls and Sift produce. Each slice restores a little hunger and leaves you glowing softly for a moment.',
         f'codex.{NS}.baton.title': "Conductor's Baton", f'codex.{NS}.baton.tagline': 'Taken from the Dictator',
         f'codex.{NS}.baton.body': 'Strikes as hard as a sword. Use it to flick a single sonic note down the line you point at, hurting the first creature in its way. It needs a moment to recover between notes.',
         f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
         f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes: cyan light floods the place, the world bends towards the gate, a blinding flash - and the portal opens with a shockwave. Look into it: it is a window onto the Sift\'s own sky, clouds and stars drifting deep behind the frame.',
-        f'codex.{NS}.musical_temple.title': 'Musical Temple', f'codex.{NS}.musical_temple.tagline': 'Puzzles of tone',
-        f'codex.{NS}.musical_temple.body': 'Old temples of song. Tune each Harmony Stone to the colour of its pedestal to open the vault below.',
-        f'codex.{NS}.chrome_well.title': 'Chrome Well', f'codex.{NS}.chrome_well.tagline': 'Pearls in the pool',
-        f'codex.{NS}.chrome_well.body': 'Little wells of Chrome in the plains and dunes, often with a chest of Chrome Pearls and buckets hidden nearby.',
-        f'codex.{NS}.ruins.title': 'Ruins & Statues', f'codex.{NS}.ruins.tagline': 'Dig, brush, explore',
-        f'codex.{NS}.ruins.body': 'Sift Ruins, Collapsed Towers, Abandoned Altars and Dream Statues are scattered across the surface. Brush suspicious dreamsand for relics and read the Dream Journal Fragments you find.',
-        f'codex.{NS}.deep_shrine.title': 'Deep Shrine', f'codex.{NS}.deep_shrine.tagline': 'Below the Sift',
-        f'codex.{NS}.deep_shrine.body': 'Hushslate shrines in the caves of the Deep Sift. Each holds an ancient gate of reinforced deepslate capped with Sift Gate Frame keystones - your way home - and a chest that sometimes keeps a Warden Core. Sculklings and Jailers prowl the dark around them.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage, and its three empty altars.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
@@ -813,12 +805,12 @@ def gen_lang():
         f'message.{NS}.stage.begins': 'The three instruments begin to play together...',
         f'message.{NS}.harmoner.tamed': 'The Harmoner chirps and settles on your shoulder. It will follow you - and sing along with your flute.',
         f'message.{NS}.harmoner.lost': 'The Harmoner tilts its head. It cannot sense any place of its colour nearby.',
-        f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards an Abandoned Altar!',
-        f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and takes off towards a Chrome Well!',
-        f'message.{NS}.harmoner.guide.gold': 'The Gold Harmoner sings and takes off towards a Dream Statue!',
-        f'message.{NS}.harmoner.guide.violet': 'The Violet Harmoner sings and takes off towards a Collapsed Tower!',
-        f'message.{NS}.harmoner.guide.jade': 'The Jade Harmoner sings and takes off towards the Sift Ruins!',
-        f'message.{NS}.harmoner.guide.coral': 'The Coral Harmoner sings and takes off towards a Musical Temple!',
+        f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards the Drum Pit!',
+        f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and dives towards a Caravan colony far below!',
+        f'message.{NS}.harmoner.guide.gold': 'The Gold Harmoner sings and takes off towards the Drum Pit!',
+        f'message.{NS}.harmoner.guide.violet': 'The Violet Harmoner sings a wary tune and takes off towards the Sculk Castle!',
+        f'message.{NS}.harmoner.guide.jade': 'The Jade Harmoner sings and dives towards a Caravan colony far below!',
+        f'message.{NS}.harmoner.guide.coral': 'The Coral Harmoner sings and takes off towards the Drum Pit!',
         f'message.{NS}.harmoner.guide.night': 'The Night Harmoner sings a dark little tune and takes off towards the Sculk Castle...',
         f'effect.{NS}.deafened': 'Deafened', f'effect.{NS}.euphoria': 'Euphoria', f'effect.{NS}.entranced': 'Entranced',
         f'message.{NS}.encore.0': 'The ground shakes to a war drum... something is digging its way up!',
@@ -843,7 +835,7 @@ def gen_lang():
         f'codex.{NS}.sculk_corruption.title': 'Sculk Corruption', f'codex.{NS}.sculk_corruption.tagline': "The Conductor's curse",
         f'codex.{NS}.sculk_corruption.body': 'A slow wither: one heart of harm every few seconds - but the longer it lasts, the more the dark closes in from the edges of your sight, until the world is a pinhole. Every blow from the Conductor adds to it. Milk washes it away.',
         f'codex.{NS}.encore_sigil.title': 'Encore Sigils', f'codex.{NS}.encore_sigil.tagline': 'Where the great players wait',
-        f'codex.{NS}.encore_sigil.body': 'Violet sigils in old floors. The Thumper sleeps under its Drum Pit - a sunken arena ringed by cannon towers - and the Strummer in some Deep Shrines. Walk up to one and its player comes out, once.',
+        f'codex.{NS}.encore_sigil.body': 'Violet sigils in old floors. The Thumper sleeps under its Drum Pit - a sunken arena ringed by cannon towers - and the Weaver under a ring of humming webs in a hollow of the Sculk Swamp. Walk up to one and its player comes out, once.',
         f'message.{NS}.staff.summon': 'The orchestra answers - a Sculk Harmoner sings for you!',
         f'codex.{NS}.staff.title': "Conductor's Staff", f'codex.{NS}.staff.tagline': 'The Dictator conducts no more',
         f'codex.{NS}.staff.body': 'His tuning-fork staff, taken from his hand. Use it to cast a beam of song: every creature it touches is Entranced for three seconds - it stops, forgets its target and just sings. Sneak and use it to call the orchestra: a Sculk Harmoner appears and circles you for twenty seconds, its song keeping you strong, fast, healing and hard to hurt.',
@@ -875,7 +867,7 @@ def gen_lang():
         f'message.{NS}.altar.need_drums': 'The altar needs at least two Sift Drums around it.',
         f'message.{NS}.altar.need_levels': 'You need more experience to perform the ritual.',
     })
-    import echoer_world  # A2 Echoer: the Echoer, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
+    import echoer_world  # A2 Echoer: the Echoer, Soul Golems, Nibs, The Echoer device, the Echoer's hearth
     LANG.update(echoer_world.lang())
     # B2 Thumper & cutscenes: the boss stage cutscene title cards
     LANG.update({
@@ -981,7 +973,6 @@ SUBTITLES = {
     'block.harmony_stone.tone': 'Harmony Stone rings',
     'block.harmony_seal.unlock': 'Harmony Seal unlocks',
     'block.soul_chime.ring': 'Soul Chime rings',
-    'block.choir_lily.sing': 'Choir Lily sings',
     'block.dream_snare.trigger': 'Dream Snare springs',
     'block.crumbling_dreamstone.crumble': 'Dreamstone crumbles',
     'item.slingshot.shoot': 'Slingshot fires',
@@ -1094,7 +1085,6 @@ SOUNDS = {
     'block.harmony_stone.tone': [('block/note_block/chime', 1.0, 1.0)],
     'block.harmony_seal.unlock': [('block/trial_spawner/ominous_activate', 1.0, 1.4), ('block/beacon/deactivate', 1.0, 1.5)],
     'block.soul_chime.ring': [('block/bell/resonate', 0.7, 1.6), ('block/note_block/chime', 0.8, 1.2), ('block/note_block/chime', 0.8, 1.5)],
-    'block.choir_lily.sing': [('block/note_block/flute', 0.8, 1.0), ('block/amethyst/resonate2', 0.6, 1.4)],
     'block.dream_snare.trigger': [('event:block.tripwire.click_on', 1.0, 0.6), ('event:block.sculk_catalyst.bloom', 1.0, 1.4)],
     'block.crumbling_dreamstone.crumble': [('block/pointed_dripstone/drip_lava1', 1.0, 0.6), ('dig/stone1', 1.0, 0.7)],
     'item.slingshot.shoot': [('random/bow', 1.0, 1.4), ('mob/slime/small1', 0.8, 1.6)],
@@ -1279,6 +1269,9 @@ def check_sounds():
         # A4 cave creatures: Jailer and Sculkling sounds are registered in ModCaveCreatures.java
         with open(os.path.join(os.path.dirname(java), 'ModCaveCreatures.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # W1 World & terrain: the Sculk Swamp's music, ambience and Sculk Water are registered in ModSculkSwamp.java
+        with open(os.path.join(os.path.dirname(java), 'ModSculkSwamp.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
         for ev in sorted(set(SOUNDS) - registered):
@@ -1361,7 +1354,7 @@ def gen_misc_tags():
     for b in ['hushslate', 'cobbled_hushslate', 'minecraft:sculk', 'minecraft:deepslate', 'lumen_moss_block']:
         tag('block', f'{NS}:deep_sift_ground', rl(b))
     tag('block', f'{NS}:incorrect_for_siftite_tool', '#minecraft:incorrect_for_netherite_tool')
-    for f in list(spec.FLOWERS) + ['echo_orchid', 'choir_lily', 'pitcher_bulb_bush', 'glowbell_vine', 'soul_chime']:
+    for f in list(spec.FLOWERS) + ['echo_orchid', 'glowbell_vine', 'soul_chime']:
         tag('block', f'{NS}:resonant', rl(f))
     tag('block', f'{NS}:sift_stone', rl('hushslate'))
     tag('block', 'minecraft:base_stone_overworld', rl('dreamstone'))
@@ -1379,8 +1372,8 @@ def gen_misc_tags():
     tag('block', 'minecraft:dampens_vibrations', rl('lumen_moss_carpet'))
     tag('block', 'minecraft:inside_step_sound_blocks', rl('drift_petals'))
     # items
-    tag('item', f'{NS}:bulb_food', rl('pitcher_bulb'))
-    for seed in ('echo_seed', 'choir_pod', 'minecraft:wheat_seeds', 'minecraft:melon_seeds', 'minecraft:pumpkin_seeds', 'minecraft:beetroot_seeds',
+    tag('item', f'{NS}:bulb_food', 'minecraft:pitcher_pod')
+    for seed in ('echo_seed', 'minecraft:wheat_seeds', 'minecraft:melon_seeds', 'minecraft:pumpkin_seeds', 'minecraft:beetroot_seeds',
                  'minecraft:torchflower_seeds', 'minecraft:pitcher_pod'):
         tag('item', f'{NS}:harmoner_food', rl(seed))
     for i in ['glowcap', 'minecraft:tropical_fish', 'minecraft:cod', 'glowcap_skewer']:
@@ -1394,7 +1387,6 @@ def gen_misc_tags():
     for a, vt in [('helmet', 'head_armor'), ('chestplate', 'chest_armor'), ('leggings', 'leg_armor'), ('boots', 'foot_armor')]:
         tag('item', f'minecraft:{vt}', rl(f'siftite_{a}'))
         tag('item', 'minecraft:trimmable_armor', rl(f'siftite_{a}'))
-    tag('item', 'minecraft:sniffer_food', rl('pitcher_bulb'))
     for b in ['#minecraft:dirt', '#minecraft:sand', 'minecraft:gravel', 'minecraft:clay', 'minecraft:mud', 'minecraft:moss_block', 'minecraft:snow_block',
               'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'dreamsand', 'suspicious_dreamsand', 'sift_soil', 'sift_grass_block',
               'coral_turf', 'lumen_moss_block']:
@@ -1441,6 +1433,7 @@ def generate():
     __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
     __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
     __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
+    __import__('sculk_world').assets(sys.modules[__name__])  # W1 World & terrain: swamp sounds, recipes, loot, tags, text (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)
@@ -1458,7 +1451,7 @@ def generate():
     gen_parasite()
     import plants_h  # H: potted pitchers, soups, the Sift Gate Frame
     plants_h.generate(sys.modules[__name__])
-    import echoer_world  # A2 Echoer: the Echoer's ceremony, Soul Golems, Nibs, The Echoer device, the Echoer's Hut
+    import echoer_world  # A2 Echoer: the Echoer's ceremony, Soul Golems, Nibs, The Echoer device, the Echoer's hearth
     echoer_world.generate(sys.modules[__name__])
     __import__('chrome').assets(sys.modules[__name__])  # A3 Chrome: chime glass recipes/tags, particles, Rainbow Daze post effect
     __import__('cave_creatures').data(sys.modules[__name__])  # A4 cave creatures: loot, tags, spawns, text

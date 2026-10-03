@@ -18,6 +18,28 @@
     },
     {
       "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:offset",
+      "x": {
+        "type": "minecraft:uniform",
+        "min_inclusive": -5,
+        "max_inclusive": 5
+      },
+      "y": 0,
+      "z": {
+        "type": "minecraft:uniform",
+        "min_inclusive": -5,
+        "max_inclusive": 5
+      }
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "OCEAN_FLOOR"
+    },
+    {
+      "type": "minecraft:surface_water_depth_filter",
+      "max_water_depth": 0
     }
   ]
 }

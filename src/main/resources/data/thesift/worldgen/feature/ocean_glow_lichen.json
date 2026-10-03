@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:multiface_growth",
+  "block": "minecraft:glow_lichen",
+  "can_be_placed_on": [
+    "thesift:hushslate",
+    "thesift:dreamstone",
+    "thesift:cobbled_hushslate",
+    "thesift:cobbled_dreamstone",
+    "minecraft:sculk",
+    "thesift:sculk_mud"
+  ],
+  "can_place_on_ceiling": true,
+  "can_place_on_floor": false,
+  "can_place_on_wall": true,
+  "chance_of_spreading": 0.5,
+  "search_range": 12
+}

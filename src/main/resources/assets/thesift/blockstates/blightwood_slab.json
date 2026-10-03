@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/blightwood_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/blightwood_planks"
+    },
+    "type=top": {
+      "model": "thesift:block/blightwood_slab_top"
+    }
+  }
+}

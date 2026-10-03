@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_right",
+  "textures": {
+    "bottom": "thesift:block/blightwood_door_bottom",
+    "top": "thesift:block/blightwood_door_top"
+  }
+}

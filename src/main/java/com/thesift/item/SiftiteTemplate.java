@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.SmithingTemplateItem;
 
-/** Smithing template that upgrades Netherite gear into Siftite gear. Found in Sift ruins. */
+/** Smithing template that upgrades Netherite gear into Siftite gear. Found in buried relics (archaeology) and Sift structures. */
 public class SiftiteTemplate extends SmithingTemplateItem {
     private static final ChatFormatting DESC = ChatFormatting.BLUE;
 

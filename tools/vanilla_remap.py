@@ -453,10 +453,11 @@ def F(fn, *args):
 
 
 MAP = {
-    # --- Dreamstone (stone family)
-    'dreamstone': C('stone'),
+    # --- Dreamstone (stone family): pale, bone-white End Stone (W1; the cracked and mossy bricks are rebuilt on the End Stone
+    #     Bricks layout by tools/sculk_world.py, which replaces those two entries at build time)
+    'dreamstone': C('end_stone'),
     'cobbled_dreamstone': C('cobblestone'),
-    'dreamstone_bricks': C('stone_bricks'),
+    'dreamstone_bricks': C('end_stone_bricks'),
     'cracked_dreamstone_bricks': C('cracked_stone_bricks'),
     'mossy_dreamstone_bricks': C('mossy_stone_bricks', seg=2, match='g'),
     'chiseled_dreamstone': C('chiseled_stone_bricks'),
@@ -533,9 +534,6 @@ MAP = {
     'dreambloom': C('poppy', seg='plant'),
     'echo_orchid': C('blue_orchid', seg='plant'),
     **{f'echo_orchid_crop_stage{i}': C(f'potatoes_stage{i}') for i in range(3)},
-    'choir_lily_top': C('lilac_top', seg='plant'),
-    'choir_lily_bottom': C('lilac_bottom', seg='plant'),
-    **{f'choir_lily_crop_stage{i}': C(f'carrots_stage{i}', seg='plant') for i in range(4)},
     'glimmer_sprouts': C('warped_roots'),
     'glowcap': C('warped_fungus', seg='plant'),
     'hummingbloom': C('red_tulip', seg='plant'),
@@ -551,7 +549,6 @@ MAP = {
     'dream_snare': C('cobweb'),
     'dream_snare_spent': C('cobweb'),
     'musical_cobweb': C('cobweb'),
-    **{f'pitcher_bulb_bush_stage{i}': C(f'sweet_berry_bush_stage{i}', seg='plant') for i in range(4)},
     'glowbell_vine': C('cave_vines', seg='plant'),
     'glowbell_vine_lit': C('cave_vines_lit', seg='plant'),
     'glowbell_vine_plant': C('cave_vines_plant', seg='plant'),

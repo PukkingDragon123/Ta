@@ -1,4 +1,4 @@
-"""Agent H's art: the three Pitcher soups, Pitcher Nectar, the Sift Gate Frame and the Pitcher
+"""Agent H's art: the three Pitcher soups, the Sift Gate Frame and the Pitcher
 Planter. Item sprites are hand-placed 16x16 rows in the items16.py style; the two blocks are drawn
 pixel by pixel. Light comes from the top left, like everything else.
 
@@ -18,9 +18,9 @@ _EMPTY = '................'
 _BOWL_BOTTOM = ['..dgfeeeeeefca..', '...bggggggfca...', '....aafggfaa....', '......aaaa......', _EMPTY, _EMPTY, _EMPTY]
 
 SOUPS = {
-    # pale gold broth with cyan lullaby-bell petals (P, p) and pink choir-pod beads (k)
+    # pale gold broth with cyan lullaby-bell petals (P, p) and white soulpetal flecks (k)
     'lullaby_soup': (['.....dddddd.....', '...ddhpPiihdd...', '..dijjkjjipPha..', '..dhiPpijkiiha..'],
-                     {'h': '#c99a3a', 'i': '#e9c35c', 'j': '#fbe39a', 'p': '#3fb8d6', 'P': '#8ee8f6', 'k': '#ff8ac0'}),
+                     {'h': '#c99a3a', 'i': '#e9c35c', 'j': '#fbe39a', 'p': '#3fb8d6', 'P': '#8ee8f6', 'k': '#f6f2ff'}),
     # dark teal chowder with glowing echo bits (u) and a pale glowcap slice (M, m)
     'echo_chowder': (['.....dddddd.....', '...ddhhuihhdd...', '..dhiiMmmiuiha..', '..dhuihMiiihua..'],
                      {'h': '#0f3a48', 'i': '#1b5a66', 'j': '#2a7a80', 'u': '#5ff5e6', 'M': '#b8f0ff', 'm': '#3fc0d8'}),
@@ -29,26 +29,6 @@ SOUPS = {
                       {'h': '#6a5ac8', 'i': '#9a8ee8', 'j': '#c8c2ff', 'w': '#ffffff', 'r': '#5cba58'}),
 }
 
-NECTAR = [
-    '................',
-    '................',
-    '.......ww.......',
-    '.....wjjjjw.....',
-    '....rjjiijjr....',
-    '....rmiiiimr....',
-    '....3rrrrrr2....',
-    '....45w55441....',
-    '....4w555431....',
-    '.....455431.....',
-    '.....445431.....',
-    '......4431......',
-    '.......31.......',
-    '......sll.......',
-    '.....s..l.......',
-    '................',
-]
-
-
 def item_sprites():
     out = {}
     for name, (top, colours) in SOUPS.items():
@@ -56,11 +36,6 @@ def item_sprites():
         pal = dict(BOWL)
         pal.update(colours)
         out[name] = I.grid(rows, pal)
-    # Pitcher Nectar: a little pitcher-leaf cup brimming with glowing pink jelly
-    pal = I.ramp('12345w', ['#245a8f', '#2f7fb0', '#3fa2cc', '#55c8de', '#8ee4ef', '#e2fbff'], '#132a5a')
-    pal.update({'r': ('#b5f0f7', '#132a5a'), 'm': ('#ff9fd6', '#6e2a66'), 'i': ('#ffc4ea', '#6e2a66'), 'j': ('#ffe6f6', '#6e2a66')})
-    pal.update(I.ramp('sl', ['#3a8a4a', '#5cba58'], '#143424'))
-    out['pitcher_nectar'] = I.grid(NECTAR, pal, ol=True, no_ol='w')
     return out
 
 

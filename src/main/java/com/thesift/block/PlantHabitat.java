@@ -10,12 +10,11 @@ import net.minecraft.world.level.material.FluidState;
 
 /**
  * Where each of the Sift's ancient plants is happy. Every seed a Sniffer digs up wants a place of
- * its own, so a garden of all three needs some planning:
+ * its own, so a garden needs some planning:
  * <ul>
- *   <li>Choir Lilies sing to the sky: a Choir Pod only grows with open sky above it.</li>
  *   <li>Echo Orchids remember the Deep Dark: an Echo Seed only grows in the dark (light 7 or less),
  *       and twice as fast rooted in sculk.</li>
- *   <li>Pitcher Bulbs drink: the bush only fills its pitchers with water or Chrome within 4 blocks.</li>
+ *   <li>Pitcher Pods (vanilla) grow anywhere in a Pitcher Planter, which keeps them watered.</li>
  * </ul>
  */
 public final class PlantHabitat {

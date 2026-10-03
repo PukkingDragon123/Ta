@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:sculk_parasite",
+    "thesift:strumling",
+    "thesift:gobbler",
+    "thesift:jailer",
+    "thesift:sculkling",
+    "minecraft:warden"
+  ]
+}

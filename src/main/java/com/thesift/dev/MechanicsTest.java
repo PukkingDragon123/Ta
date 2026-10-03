@@ -180,7 +180,8 @@ final class MechanicsTest {
         for (int i = 0; i < 24; i++) {
             s.dropFromGiftLootTable(this.sift, net.minecraft.world.level.storage.loot.BuiltInLootTables.SNIFFER_DIGGING, (l, stack) -> dug.add(stack));
         }
-        boolean siftSeed = dug.stream().anyMatch(st -> st.is(ModItems.CHOIR_POD.get()) || st.is(ModItems.ECHO_SEED.get()) || st.is(ModItems.PITCHER_BULB.get()));
+        boolean siftSeed = dug.stream().anyMatch(st -> st.is(ModItems.ECHO_SEED.get()) || st.is(net.minecraft.world.item.Items.PITCHER_POD)
+                || st.is(net.minecraft.world.item.Items.TORCHFLOWER_SEEDS));
         TheSift.LOGGER.info("SMOKE: a Sniffer digging in The Sift found {}", dug);
         check(siftSeed, "sniffer: vanilla Sniffers dig up Sift seeds in The Sift");
         s.discard();

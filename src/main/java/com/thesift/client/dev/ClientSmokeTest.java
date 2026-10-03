@@ -325,16 +325,16 @@ public final class ClientSmokeTest {
             int h = c.surface(0, 40);
             c.camera(0.5, h + 85, -50.5, 0.5, h, 50.5);
         });
-        for (String s : new String[] {"chrome_well", "sift_ruins", "abandoned_altar", "collapsed_tower", "dream_statue"}) {
+        for (String s : new String[] {"thumper_arena", "sculk_castle"}) {
             scene("natural_" + s, 100, c -> structureShot(c, s));
         }
-        scene("deep_shrine", 80, ClientSmokeTest::deepShrineShot);
-        scene("templates_towers", 80, c -> c.camera(-200.5, 172, -212.5, -175, 150, -252));
-        scene("templates_instruments", 80, c -> c.camera(-45.5, 168, -224.5, -40, 146, -255));
-        scene("templates_statues", 80, c -> c.camera(140.5, 168, -226.5, 150, 146, -255));
-        // the Sculk Castle template (stamped at x=252, y=140, z=-260 by the server test; 27 wide, 72 tall)
-        scene("templates_castle", 100, c -> c.camera(265.5 + 46, 196, -246.5 + 40, 265.5, 168, -246.5));
-        scene("templates_castle_arena", 80, c -> c.camera(265.5 + 15, 214, -246.5 + 15, 265.5, 200, -246.5));
+        // W1 World & terrain: the new swamp, the remade sculk sea (from above and from its floor)
+        scene("sculk_swamp", 120, c -> biomeShot(c, com.thesift.registry.ModSculkSwamp.SCULK_SWAMP, false));
+        scene("sculk_ocean", 100, c -> biomeShot(c, com.thesift.registry.ModSculkSwamp.SCULK_OCEAN, false));
+        scene("sculk_ocean_floor", 100, c -> biomeShot(c, com.thesift.registry.ModSculkSwamp.SCULK_OCEAN, true));
+        // the Sculk Castle template (stamped first, at x=-240, y=140, z=-260 by the server test; 27 wide, 72 tall)
+        scene("templates_castle", 100, c -> c.camera(-226.5 + 46, 196, -246.5 + 40, -226.5, 168, -246.5));
+        scene("templates_castle_arena", 80, c -> c.camera(-226.5 + 15, 214, -246.5 + 15, -226.5, 200, -246.5));
         scene("mob_lineup", 60, ClientSmokeTest::mobStage);
         // the stage runs east (+x) to west; looking south, east is on the left of the picture
         scene("mob_closeup_bulb", 40, c -> c.camera(-8.5, STAGE_Y + 1.6, STAGE_Z + 2.5, -8.5, STAGE_Y + 0.5, STAGE_Z + 6.0));
@@ -433,45 +433,24 @@ public final class ClientSmokeTest {
                 (box.minY() + box.maxY()) / 2.0, centre.getZ());
     }
 
-    private static void deepShrineShot(Ctx c) {
-        Registry<Structure> registry = c.sift().registryAccess().lookupOrThrow(Registries.STRUCTURE);
-        Optional<Holder.Reference<Structure>> holder = registry.get(ResourceKey.create(Registries.STRUCTURE, TheSift.id("deep_shrine")));
-        Pair<BlockPos, Holder<Structure>> found = holder.isEmpty() ? null : c.sift().getChunkSource().getGenerator()
-                .findNearestMapStructure(c.sift(), HolderSet.direct(holder.get()), BlockPos.ZERO, 24, false);
+    /** W1 World & terrain: a look over (or under) the nearest stretch of a biome. */
+    private static void biomeShot(Ctx c, ResourceKey<net.minecraft.world.level.biome.Biome> biome, boolean underwater) {
+        Pair<BlockPos, Holder<net.minecraft.world.level.biome.Biome>> found = c.sift().findClosestBiome3d(b -> b.is(biome), new BlockPos(0, 64, 0),
+                1600, 64, 64);
         if (found == null) {
-            fail("no deep shrine nearby");
+            fail("no " + biome.identifier() + " within reach");
             return;
         }
         BlockPos at = found.getFirst();
-        StructureStart start = c.sift().getChunk(at.getX() >> 4, at.getZ() >> 4).getStartForStructure(holder.get().value());
-        if (start == null || !start.isValid()) {
-            fail("no deep shrine start");
-            return;
-        }
-        BoundingBox box = start.getBoundingBox();
-        // look at the shrine gate from the far side of the room
-        long gx = 0, gy = 0, gz = 0, n = 0;
-        for (BlockPos p : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ())) {
-            if (PortalFrames.isFrame(c.sift().getBlockState(p))) {
-                gx += p.getX();
-                gy += p.getY();
-                gz += p.getZ();
-                n++;
-            }
-        }
-        BlockPos centre = box.getCenter();
-        if (n == 0) {
-            fail("deep shrine has no gate frame");
-            c.camera(centre.getX() + 0.5, box.minY() + 3.5, centre.getZ() + 0.5, centre.getX() + 5, box.minY() + 2, centre.getZ());
-            return;
-        }
-        double tx = gx / (double) n + 0.5, ty = gy / (double) n + 0.5, tz = gz / (double) n + 0.5;
-        double dx = centre.getX() + 0.5 - tx, dz = centre.getZ() + 0.5 - tz;
-        double len = Math.max(0.001, Math.hypot(dx, dz));
-        double reach = Math.min(6.5, Math.max(box.getXSpan(), box.getZSpan()) / 2.0 - 1.5);
-        TheSift.LOGGER.info("CLIENTSMOKE: deep shrine box {} gate {} {} {}", box, tx, ty, tz);
+        int h = c.surface(at.getX(), at.getZ());
+        TheSift.LOGGER.info("CLIENTSMOKE: {} at {} surface {}", biome.identifier(), at, h);
         c.run("gamemode spectator @a");
-        c.camera(tx + dx / len * reach * 1.6, ty + 0.5, tz + dz / len * reach * 1.6, tx, ty, tz);
+        if (underwater) {
+            int floor = c.sift().getHeight(Heightmap.Types.OCEAN_FLOOR, at.getX(), at.getZ());
+            c.camera(at.getX() + 12.5, Math.min(floor + 11, 58), at.getZ() + 9.5, at.getX() + 0.5, floor + 1, at.getZ() + 0.5);
+        } else {
+            c.camera(at.getX() + 30.5, h + 22, at.getZ() + 24.5, at.getX() + 0.5, h + 2, at.getZ() + 0.5);
+        }
     }
 
     private static void floor(Ctx c, int x0, int z0, int x1, int z1) {

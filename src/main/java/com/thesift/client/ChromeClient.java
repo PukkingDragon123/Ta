@@ -155,7 +155,7 @@ public final class ChromeClient {
     public static void fogColor(Camera camera, ClientLevel level, float partialTick, Vector4f color) {
         Vec3 cam = camera.position();
         float hue = tintHue(cam.x, cam.y, cam.z) + ((level.getGameTime() % 24000L) + partialTick) / HUE_LOOP;
-        int rgb = hsv(hue, 0.42F, 0.92F);
+        int rgb = hsv(hue, 0.3F, 0.98F); // W1: a lighter, paler haze
         color.set(((rgb >> 16) & 255) / 255.0F, ((rgb >> 8) & 255) / 255.0F, (rgb & 255) / 255.0F, 1.0F);
     }
 

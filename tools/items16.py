@@ -496,58 +496,6 @@ def echo_seed():
     return grid(rows, pal, ol=True)
 
 
-def choir_pod():
-    """A plump violet pod on a stem, seamed down one side."""
-    rows = [
-        '................',
-        '..........LL....',
-        '.......s.LLLl...',
-        '.......sLLll....',
-        '......4s43......',
-        '.....45w243.....',
-        '....45ww2432....',
-        '....4w552322....',
-        '....45542322....',
-        '....44432221....',
-        '....34331211....',
-        '.....332111.....',
-        '......2211......',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = ramp('12345w', ['#3e2378', '#5c3a9a', '#7d52c4', '#a46ee8', '#c79cf5', '#efe0ff'], '#20104a')
-    pal.update(ramp('slL', ['#3a8a4a', '#3a8f4a', '#5cba58'], '#143424'))
-    return grid(rows, pal, ol=True)
-
-
-def pitcher_bulb():
-    """A round blue pitcher-plant bulb with its mouth open on top."""
-    rows = [
-        '................',
-        '..........LL....',
-        '........sLLLl...',
-        '........s.ll....',
-        '......rrrr......',
-        '.....rmmmmr.....',
-        '....4rrrrrr3....',
-        '...45w5555443...',
-        '...4w55554433...',
-        '...4555544332...',
-        '...4455443322...',
-        '....44433221....',
-        '.....333221.....',
-        '......2211......',
-        '................',
-        '................',
-    ]
-    pal = ramp('12345w', ['#245a8f', '#2f7fb0', '#3fa2cc', '#55c8de', '#8ee4ef', '#e2fbff'], '#132a5a')
-    pal.update({'r': ('#b5f0f7', '#132a5a'), 'm': ('#1a3a5a', '#132a5a')})
-    pal.update(ramp('sL', ['#3a8a4a', '#5cba58'], '#143424'))
-    pal['l'] = ('#3a8f4a', '#143424')
-    return grid(rows, pal, ol=True)
-
-
 def warden_core():
     """A glowing sculk heart."""
     rows = [
@@ -1570,7 +1518,7 @@ def all_items():
     out = {}
     out.update(tools())
     for f in (siftite_ingot, serbim_ingot, siftite_nugget, raw_serbim, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
-              choir_pod, pitcher_bulb, warden_core, thick_hide):
+              warden_core, thick_hide):
         out[f.__name__] = f()
     for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, dream_journal_fragment, sift_codex,
               music_disc_lullaby, soul_chime, drift_petals, glowbell_vine, siftite_upgrade_smithing_template, conductors_baton):
@@ -1584,7 +1532,7 @@ def all_items():
     out['cooked_kazoo_fish'] = kazoo_fish(cooked=True)
     out.update(spawn_eggs())
     out.update(__import__('songs').art())  # songs & instruments (agent D)
-    import plants_h_art  # H: Pitcher Nectar and the three Pitcher soups
+    import plants_h_art  # H: the three Pitcher soups (W1: Pitcher Nectar removed)
     out.update(plants_h_art.item_sprites())
     import siege  # the Thumper's arena: the cannonball
     out.update(siege.items())

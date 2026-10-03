@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:sculk_patch",
+  "amount_per_charge": 24,
+  "charge_count": 6,
+  "growth_rounds": 0,
+  "spread_attempts": 40,
+  "spread_rounds": 1
+}

@@ -62,7 +62,10 @@ def entity_loot():
             'type': 'minecraft:random_chance_with_enchanted_bonus', 'enchanted_chance': {'type': 'minecraft:linear', 'base': 0.2, 'per_level_above_first': 0.05},
             'enchantment': 'minecraft:looting', 'unenchanted_chance': 0.15}]})])
     table('entity', 'entities/sifter', [pool([item('dreamsand', count=(0, 2)), item('star_shard', 1)], condition=None),
-                                        pool([item('glowing_slime_ball', count=(0, 1), extra=[LOOTING])])])
+                                        pool([item('glowing_slime_ball', count=(0, 1), extra=[LOOTING])]),
+                                        # W1: what it swallowed in the dunes - now and then a lost Music Sheet
+                                        pool([item('music_sheet_offering', 2), item('music_sheet_nib', 2), item('music_sheet_lullaby', 1)],
+                                             condition={'type': 'minecraft:all_of', 'terms': [PLAYER_KILL, chance(0.07)]})])
     table('entity', 'entities/enchoer', [pool([item('chrome_pearl', count=(1, 2)), item('star_shard', count=(1, 2))])])
     table('entity', 'entities/dictator', [pool([item('warden_core', 1)]), pool([item('minecraft:echo_shard', count=(6, 12))]),
                                           pool([item('siftite_ingot', count=(3, 6))]), pool([item('music_disc_lullaby', 1)])])
@@ -102,40 +105,11 @@ def wild_creature_loot():
 
 
 def chest_loot():
-    table('chest', 'chests/sift_ruins', [
-        pool([item('glowing_slime_ball', 10, (2, 6)), item('pitcher_bulb', 10, (1, 3)), item('dream_journal_fragment', 8), item('chrome_pearl', 3),
-              item('raw_serbim', 8, (1, 4)), item('lullwood_sapling', 6, (1, 2)), item('wishwood_sapling', 4, (1, 2)), item('choir_pod', 3),
-              item('echo_seed', 3), item('minecraft:book', 5, extra=[ENCHANT])], (3, 6)),
-        pool([item('star_shard', 4), item('serbim_ingot', 6, (1, 3)), item('siftite_nugget', 5, (2, 5)), item('minecraft:empty', 10)], (1, 2)),
-        pool([item('minecraft:turtle_scute', 3, (1, 2)), item('minecraft:string', 5, (2, 6)), item('minecraft:feather', 5, (2, 5)),
-              item('minecraft:name_tag', 1), item('minecraft:empty', 8)]),
-    ])
     # the Thumper's arena: what the cannon towers keep
     table('chest', 'chests/drum_pit_armory', [
         pool([item('cannonball', 1, (5, 9))]),
         pool([item('minecraft:gunpowder', 6, (2, 5)), item('minecraft:iron_nugget', 6, (3, 9)), item('cobbled_dreamstone', 4, (4, 12)),
               item('minecraft:torch', 3, (2, 6)), item('minecraft:empty', 4)], (1, 2)),
-    ])
-    table('chest', 'chests/tower_top', [
-        pool([item('dream_journal_fragment', 10, (1, 2)), item('chrome_pearl', 6, (1, 2)), item('serbim_ingot', 8, (2, 5)), item('siftite_ingot', 3),
-              item('music_disc_lullaby', 2), item('slingshot', 3), item('minecraft:book', 8, extra=[ENCHANT]), item('star_shard', 5, (1, 3))], (3, 5)),
-        pool([item('siftite_upgrade_smithing_template', 1), item('minecraft:empty', 3)]),
-        pool([item('minecraft:feather', 4, (3, 8)), item('minecraft:phantom_membrane', 2, (1, 3)), item('minecraft:golden_apple', 2),
-              item('minecraft:empty', 4)]),
-    ])
-    table('chest', 'chests/temple_vault', [
-        pool([item('siftite_upgrade_smithing_template', 1, (1, 2))]),
-        pool([item('chrome_pearl', 8, (2, 4)), item('siftite_ingot', 6, (1, 3)), item('sift_drum', 4), item('sift_gate_frame', 1),
-              item('music_disc_lullaby', 3), item('minecraft:enchanted_book', 4, extra=[ENCHANT]), item('star_shard', 6, (2, 4))], (3, 5)),
-        pool([item('warden_core', 1), item('minecraft:empty', 7)]),
-        pool([item('minecraft:enchanted_golden_apple', 1), item('minecraft:totem_of_undying', 1), item('minecraft:heart_of_the_sea', 1),
-              item('minecraft:empty', 9)]),
-    ])
-    table('chest', 'chests/deep_shrine', [
-        pool([item('warden_core', 1)], condition=chance(0.35)),
-        pool([item('minecraft:echo_shard', 8, (2, 5)), item('minecraft:sculk_sensor', 6, (1, 3)), item('sift_gate_frame', 1),
-              item('siftite_ingot', 4, (1, 2)), item('siftite_upgrade_smithing_template', 2), item('glowbell_vine', 6, (2, 4)),
-              item('music_disc_lullaby', 2)], (3, 5)),
     ])
     table('chest', 'chests/sculk_castle', [
         pool([item('minecraft:echo_shard', 8, (3, 8)), item('siftite_ingot', 6, (2, 4)), item('chrome_pearl', 6, (2, 4)),
@@ -147,21 +121,22 @@ def chest_loot():
         pool([item('minecraft:golden_apple', 3), item('minecraft:cooked_beef', 8, (2, 5)), item('glowing_slime_ball', 8, (2, 6)),
               item('minecraft:arrow', 6, (4, 12)), item('chrome_pearl', 2), item('minecraft:empty', 4)], (2, 4)),
     ])
-    table('chest', 'chests/chrome_well', [
-        pool([item('chrome_bucket', 3), item('chrome_pearl', 5, (1, 2)), item('glowing_slime_ball', 10, (2, 5)), item('chrome_reeds', 8, (2, 6)),
-              item('star_shard', 3)], (2, 4)),
-    ])
+    # W1: the old ruins crumbled into the ground; their relics are brushed out of buried Suspicious Dreamsand
+    # (worldgen/RelicCacheFeature in the dunes, plains, lake shores, kelp forest, swamp and sculk sea) - lost Music Sheets too
     table('archaeology', 'archaeology/sift_common', [pool([
-        item('glowing_slime_ball', 3), item('dream_journal_fragment', 3), item('raw_serbim', 2), item('pitcher_bulb', 2), item('choir_pod', 2),
-        item('echo_seed', 2), item('minecraft:pink_dye', 1), item('minecraft:light_blue_dye', 1), item('blush_bricks', 2), item('minecraft:brick', 1)])])
+        item('glowing_slime_ball', 3), item('dream_journal_fragment', 4), item('raw_serbim', 2), item('minecraft:pitcher_pod', 2),
+        item('echo_seed', 2), item('minecraft:pink_dye', 1), item('minecraft:light_blue_dye', 1), item('blush_bricks', 2), item('minecraft:brick', 1),
+        item('glyph_stone', 1), item('chrome_pearl', 1), item('music_sheet_offering', 2), item('music_sheet_nib', 1), item('music_sheet_lullaby', 1)])])
     table('archaeology', 'archaeology/sift_rare', [pool([
-        item('chrome_pearl', 3), item('star_shard', 3), item('music_disc_lullaby', 1), item('siftite_upgrade_smithing_template', 1),
-        item('siftite_nugget', 3)])])
+        item('chrome_pearl', 3), item('star_shard', 3), item('music_disc_lullaby', 1), item('siftite_upgrade_smithing_template', 2),
+        item('siftite_nugget', 3), item('music_sheet_offering', 1), item('music_sheet_golem', 1), item('music_sheet_crystal', 1),
+        item('music_sheet_whale', 1), item('music_sheet_tide', 1), item('music_sheet_lullaby', 1), item('sift_gate_frame', 1)])])
 
 
 def sniffer_and_modifiers():
     # Sniffers in The Sift dig up the dimension's exclusive seeds.
-    table('gift', 'gameplay/sniffer_digging_sift', [pool([item('choir_pod', 3), item('echo_seed', 3), item('pitcher_bulb', 2)])])
+    table('gift', 'gameplay/sniffer_digging_sift', [pool([item('echo_seed', 3), item('minecraft:pitcher_pod', 2),
+                                                           item('minecraft:torchflower_seeds', 1)])])
     GA.write(os.path.join(D, 'loot_modifiers', 'sniffer_digging_sift.json'), {
         'type': 'neoforge:add_table',
         'condition': {'type': 'minecraft:all_of', 'terms': [

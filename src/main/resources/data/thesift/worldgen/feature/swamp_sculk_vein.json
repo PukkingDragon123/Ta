@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:multiface_growth",
+  "block": "minecraft:sculk_vein",
+  "can_be_placed_on": [
+    "thesift:blightwood_log",
+    "thesift:blightwood_wood",
+    "thesift:sculk_mud",
+    "minecraft:sculk",
+    "thesift:dreamstone"
+  ],
+  "can_place_on_ceiling": false,
+  "can_place_on_floor": true,
+  "can_place_on_wall": true,
+  "chance_of_spreading": 0.6,
+  "search_range": 6
+}

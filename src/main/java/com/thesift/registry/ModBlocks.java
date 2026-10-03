@@ -16,57 +16,57 @@ public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(TheSift.MODID);
 
     public static final DeferredBlock<Block> DREAMSTONE = BLOCKS.registerBlock("dreamstone", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<StairBlock> DREAMSTONE_STAIRS = BLOCKS.registerBlock("dreamstone_stairs", p -> new StairBlock(DREAMSTONE.get().defaultBlockState(), p),
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<SlabBlock> DREAMSTONE_SLAB = BLOCKS.registerBlock("dreamstone_slab", SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> COBBLED_DREAMSTONE = BLOCKS.registerBlock("cobbled_dreamstone", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<StairBlock> COBBLED_DREAMSTONE_STAIRS = BLOCKS.registerBlock("cobbled_dreamstone_stairs", p -> new StairBlock(COBBLED_DREAMSTONE.get().defaultBlockState(), p),
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<SlabBlock> COBBLED_DREAMSTONE_SLAB = BLOCKS.registerBlock("cobbled_dreamstone_slab", SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<WallBlock> COBBLED_DREAMSTONE_WALL = BLOCKS.registerBlock("cobbled_dreamstone_wall", WallBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> POLISHED_DREAMSTONE = BLOCKS.registerBlock("polished_dreamstone", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<StairBlock> POLISHED_DREAMSTONE_STAIRS = BLOCKS.registerBlock("polished_dreamstone_stairs", p -> new StairBlock(POLISHED_DREAMSTONE.get().defaultBlockState(), p),
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<SlabBlock> POLISHED_DREAMSTONE_SLAB = BLOCKS.registerBlock("polished_dreamstone_slab", SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<WallBlock> POLISHED_DREAMSTONE_WALL = BLOCKS.registerBlock("polished_dreamstone_wall", WallBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> DREAMSTONE_BRICKS = BLOCKS.registerBlock("dreamstone_bricks", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<StairBlock> DREAMSTONE_BRICK_STAIRS = BLOCKS.registerBlock("dreamstone_brick_stairs", p -> new StairBlock(DREAMSTONE_BRICKS.get().defaultBlockState(), p),
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<SlabBlock> DREAMSTONE_BRICK_SLAB = BLOCKS.registerBlock("dreamstone_brick_slab", SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<WallBlock> DREAMSTONE_BRICK_WALL = BLOCKS.registerBlock("dreamstone_brick_wall", WallBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> CRACKED_DREAMSTONE_BRICKS = BLOCKS.registerBlock("cracked_dreamstone_bricks", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> MOSSY_DREAMSTONE_BRICKS = BLOCKS.registerBlock("mossy_dreamstone_bricks", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<StairBlock> MOSSY_DREAMSTONE_BRICK_STAIRS = BLOCKS.registerBlock("mossy_dreamstone_brick_stairs", p -> new StairBlock(MOSSY_DREAMSTONE_BRICKS.get().defaultBlockState(), p),
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<SlabBlock> MOSSY_DREAMSTONE_BRICK_SLAB = BLOCKS.registerBlock("mossy_dreamstone_brick_slab", SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<WallBlock> MOSSY_DREAMSTONE_BRICK_WALL = BLOCKS.registerBlock("mossy_dreamstone_brick_wall", WallBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> DREAMSTONE_TILES = BLOCKS.registerBlock("dreamstone_tiles", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<StairBlock> DREAMSTONE_TILE_STAIRS = BLOCKS.registerBlock("dreamstone_tile_stairs", p -> new StairBlock(DREAMSTONE_TILES.get().defaultBlockState(), p),
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<SlabBlock> DREAMSTONE_TILE_SLAB = BLOCKS.registerBlock("dreamstone_tile_slab", SlabBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<WallBlock> DREAMSTONE_TILE_WALL = BLOCKS.registerBlock("dreamstone_tile_wall", WallBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<Block> CHISELED_DREAMSTONE = BLOCKS.registerBlock("chiseled_dreamstone", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<RotatedPillarBlock> DREAMSTONE_PILLAR = BLOCKS.registerBlock("dreamstone_pillar", RotatedPillarBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<RotatedPillarBlock> HUSHSLATE = BLOCKS.registerBlock("hushslate", RotatedPillarBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_CYAN));
     public static final DeferredBlock<Block> COBBLED_HUSHSLATE = BLOCKS.registerBlock("cobbled_hushslate", Block::new,
@@ -227,6 +227,38 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
     public static final DeferredBlock<FlowerPotBlock> POTTED_WISHWOOD_SAPLING = BLOCKS.registerBlock("potted_wishwood_sapling", p -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, WISHWOOD_SAPLING, p),
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING));
+    public static final DeferredBlock<RotatedPillarBlock> BLIGHTWOOD_LOG = BLOCKS.registerBlock("blightwood_log", RotatedPillarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<RotatedPillarBlock> BLIGHTWOOD_WOOD = BLOCKS.registerBlock("blightwood_wood", RotatedPillarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_BLIGHTWOOD_LOG = BLOCKS.registerBlock("stripped_blightwood_log", RotatedPillarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_BLIGHTWOOD_WOOD = BLOCKS.registerBlock("stripped_blightwood_wood", RotatedPillarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<Block> BLIGHTWOOD_PLANKS = BLOCKS.registerBlock("blightwood_planks", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<StairBlock> BLIGHTWOOD_STAIRS = BLOCKS.registerBlock("blightwood_stairs", p -> new StairBlock(BLIGHTWOOD_PLANKS.get().defaultBlockState(), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<SlabBlock> BLIGHTWOOD_SLAB = BLOCKS.registerBlock("blightwood_slab", SlabBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<FenceBlock> BLIGHTWOOD_FENCE = BLOCKS.registerBlock("blightwood_fence", FenceBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<FenceGateBlock> BLIGHTWOOD_FENCE_GATE = BLOCKS.registerBlock("blightwood_fence_gate", p -> new FenceGateBlock(ModWoodTypes.BLIGHTWOOD, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<DoorBlock> BLIGHTWOOD_DOOR = BLOCKS.registerBlock("blightwood_door", p -> new DoorBlock(ModWoodTypes.BLIGHTWOOD_SET, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN).noOcclusion());
+    public static final DeferredBlock<TrapDoorBlock> BLIGHTWOOD_TRAPDOOR = BLOCKS.registerBlock("blightwood_trapdoor", p -> new TrapDoorBlock(ModWoodTypes.BLIGHTWOOD_SET, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor(MapColor.COLOR_CYAN).noOcclusion());
+    public static final DeferredBlock<ButtonBlock> BLIGHTWOOD_BUTTON = BLOCKS.registerBlock("blightwood_button", p -> new ButtonBlock(ModWoodTypes.BLIGHTWOOD_SET, 30, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON));
+    public static final DeferredBlock<PressurePlateBlock> BLIGHTWOOD_PRESSURE_PLATE = BLOCKS.registerBlock("blightwood_pressure_plate", p -> new PressurePlateBlock(ModWoodTypes.BLIGHTWOOD_SET, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE));
+    public static final DeferredBlock<SiftLeavesBlock> BLIGHTWOOD_LEAVES = BLOCKS.registerBlock("blightwood_leaves", p -> new SiftLeavesBlock(0.025F, () -> ModParticles.GLOW_DUST.get(), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DARK_OAK_LEAVES).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<SiftSaplingBlock> BLIGHTWOOD_SAPLING = BLOCKS.registerBlock("blightwood_sapling", p -> new SiftSaplingBlock(ModTreeGrowers.BLIGHTWOOD, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
+    public static final DeferredBlock<FlowerPotBlock> POTTED_BLIGHTWOOD_SAPLING = BLOCKS.registerBlock("potted_blightwood_sapling", p -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, BLIGHTWOOD_SAPLING, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING));
     public static final DeferredBlock<HangingLullwoodLeavesBlock> HANGING_LULLWOOD_LEAVES = BLOCKS.registerBlock("hanging_lullwood_leaves", HangingLullwoodLeavesBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_HANGING_MOSS).mapColor(MapColor.SNOW));
     public static final DeferredBlock<BlushgrassBlock> BLUSHGRASS = BLOCKS.registerBlock("blushgrass", BlushgrassBlock::new,
@@ -261,16 +293,10 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY));
     public static final DeferredBlock<DriftPetalsBlock> DRIFT_PETALS = BLOCKS.registerBlock("drift_petals", DriftPetalsBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PINK_PETALS));
-    public static final DeferredBlock<ChoirLilyBlock> CHOIR_LILY = BLOCKS.registerBlock("choir_lily", ChoirLilyBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).lightLevel(s -> 4));
-    public static final DeferredBlock<ChoirLilyCropBlock> CHOIR_LILY_CROP = BLOCKS.registerBlock("choir_lily_crop", ChoirLilyCropBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PITCHER_CROP));
     public static final DeferredBlock<EchoOrchidBlock> ECHO_ORCHID = BLOCKS.registerBlock("echo_orchid", EchoOrchidBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).lightLevel(s -> 9));
     public static final DeferredBlock<EchoOrchidCropBlock> ECHO_ORCHID_CROP = BLOCKS.registerBlock("echo_orchid_crop", EchoOrchidCropBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TORCHFLOWER_CROP));
-    public static final DeferredBlock<PitcherBulbBushBlock> PITCHER_BULB_BUSH = BLOCKS.registerBlock("pitcher_bulb_bush", PitcherBulbBushBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SWEET_BERRY_BUSH).mapColor(MapColor.COLOR_LIGHT_BLUE));
     public static final DeferredBlock<ChromeReedsBlock> CHROME_REEDS = BLOCKS.registerBlock("chrome_reeds", ChromeReedsBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SUGAR_CANE).mapColor(MapColor.COLOR_LIGHT_BLUE));
     public static final DeferredBlock<GlowcapBlock> GLOWCAP = BLOCKS.registerBlock("glowcap", GlowcapBlock::new,
@@ -294,17 +320,17 @@ public final class ModBlocks {
     public static final DeferredBlock<InstrumentAltarBlock> INSTRUMENT_ALTAR = BLOCKS.registerBlock("instrument_altar", InstrumentAltarBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion());
     public static final DeferredBlock<HarmonyStoneBlock> HARMONY_STONE = BLOCKS.registerBlock("harmony_stone", HarmonyStoneBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0F, 3600000.0F));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND).strength(-1.0F, 3600000.0F));
     public static final DeferredBlock<HarmonySealBlock> HARMONY_SEAL = BLOCKS.registerBlock("harmony_seal", HarmonySealBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 5));
     public static final DeferredBlock<GlyphStoneBlock> GLYPH_STONE = BLOCKS.registerBlock("glyph_stone", GlyphStoneBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
     public static final DeferredBlock<DreamSnareBlock> DREAM_SNARE = BLOCKS.registerBlock("dream_snare", DreamSnareBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TRIPWIRE).noCollision());
     public static final DeferredBlock<AncientCannonBlock> ANCIENT_CANNON = BLOCKS.registerBlock("ancient_cannon", AncientCannonBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion());
     public static final DeferredBlock<CrumblingDreamstoneBlock> CRUMBLING_DREAMSTONE = BLOCKS.registerBlock("crumbling_dreamstone", CrumblingDreamstoneBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.8F));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND).strength(0.8F));
     public static final DeferredBlock<SiftCakeBlock> SIFT_CAKE = BLOCKS.registerBlock("sift_cake", SiftCakeBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).lightLevel(s -> 6));
     public static final DeferredBlock<BulbLanternBlock> BULB_LANTERN = BLOCKS.registerBlock("bulb_lantern", BulbLanternBlock::new,
@@ -373,6 +399,18 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).sound(com.thesift.block.ChimeGlassBlock.SOUND));
     public static final DeferredBlock<ChimeGlassPaneBlock> CHIME_GLASS_PANE = BLOCKS.registerBlock("chime_glass_pane", ChimeGlassPaneBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS_PANE).sound(com.thesift.block.ChimeGlassBlock.SOUND));
+    public static final DeferredBlock<SculkMudBlock> SCULK_MUD = BLOCKS.registerBlock("sculk_mud", SculkMudBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.MUD).mapColor(MapColor.COLOR_CYAN).speedFactor(0.65F));
+    public static final DeferredBlock<SculkWaterBlock> SCULK_WATER = BLOCKS.registerBlock("sculk_water", SculkWaterBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 2));
+    public static final DeferredBlock<Block> SCULK_CORAL_BLOCK = BLOCKS.registerBlock("sculk_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 3));
+    public static final DeferredBlock<BaseCoralPlantBlock> SCULK_CORAL = BLOCKS.registerBlock("sculk_coral", BaseCoralPlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4));
+    public static final DeferredBlock<BaseCoralFanBlock> SCULK_CORAL_FAN = BLOCKS.registerBlock("sculk_coral_fan", BaseCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4));
+    public static final DeferredBlock<BaseCoralWallFanBlock> SCULK_CORAL_WALL_FAN = BLOCKS.registerBlock("sculk_coral_wall_fan", BaseCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4));
 
     private ModBlocks() {}
 }

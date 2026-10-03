@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "thesift:pitcher_bulb",
-    "thesift:pitcher_nectar"
+    "minecraft:pitcher_pod"
   ]
 }

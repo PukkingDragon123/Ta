@@ -1,6 +1,5 @@
 package com.thesift.block;
 
-import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -11,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -29,13 +29,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.CommonHooks;
 
 /**
- * Pitcher Planter: a blush-brick planter of wet mud that a Pitcher Bulb can be potted in. Potted, the
- * bush always has water and grows through four stages wherever the planter stands; at the last its
- * pitchers brim with glowing nectar. Pick it (use it with an empty hand) for Pitcher Nectar - the
- * base of the three Pitcher soups - and the plant drops back a stage to fill up again.
+ * Pitcher Planter: a blush-brick planter of wet mud that a vanilla Pitcher Pod can be potted in.
+ * Potted, the pitcher always has water and grows through four stages wherever the planter stands;
+ * at the last it is a full Pitcher Plant in bloom. Pick it (use it with an empty hand) for the
+ * Pitcher Plant - the base of the three Pitcher soups - now and then with a pod, and it drops back
+ * to a young pitcher to grow again.
  */
 public class PitcherPlanterBlock extends Block implements BonemealableBlock, com.thesift.music.Resonant {
-    /** 0 = just mud, 1-3 = growing, 4 = pitchers full of nectar. */
+    /** 0 = just mud, 1-3 = growing, 4 = a Pitcher Plant in bloom. */
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 4);
     public static final int FULL = 4;
     private static final VoxelShape SHAPE = Shapes.or(Block.column(14.0, 0.0, 10.0), Block.column(10.0, 10.0, 15.0));
@@ -91,7 +92,7 @@ public class PitcherPlanterBlock extends Block implements BonemealableBlock, com
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
-        if (state.getValue(STAGE) == 0 && stack.is(ModItems.PITCHER_BULB.get())) {
+        if (state.getValue(STAGE) == 0 && stack.is(Items.PITCHER_POD)) {
             if (level instanceof ServerLevel server) {
                 BlockState planted = state.setValue(STAGE, 1);
                 server.setBlock(pos, planted, Block.UPDATE_ALL);
@@ -111,7 +112,10 @@ public class PitcherPlanterBlock extends Block implements BonemealableBlock, com
         }
         if (level instanceof ServerLevel server) {
             RandomSource r = server.getRandom();
-            Block.popResource(server, pos.above(), new ItemStack(ModItems.PITCHER_NECTAR.get(), 2 + (r.nextInt(3) == 0 ? 1 : 0)));
+            Block.popResource(server, pos.above(), new ItemStack(Items.PITCHER_PLANT));
+            if (r.nextInt(3) == 0) {
+                Block.popResource(server, pos.above(), new ItemStack(Items.PITCHER_POD));
+            }
             server.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 1.2F + r.nextFloat() * 0.3F);
             server.playSound(null, pos, SoundEvents.HONEY_BLOCK_SLIDE, SoundSource.BLOCKS, 0.6F, 1.5F);
             server.sendParticles(ModParticles.CHROME_DROPLET.get(), pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5, 8, 0.3, 0.2, 0.3, 0.02);

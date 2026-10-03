@@ -118,7 +118,6 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> HARMONY_TONE = reg("block.harmony_stone.tone");
     public static final DeferredHolder<SoundEvent, SoundEvent> HARMONY_UNLOCK = reg("block.harmony_seal.unlock");
     public static final DeferredHolder<SoundEvent, SoundEvent> CHIME_RING = reg("block.soul_chime.ring");
-    public static final DeferredHolder<SoundEvent, SoundEvent> CHOIR_LILY_SING = reg("block.choir_lily.sing");
     public static final DeferredHolder<SoundEvent, SoundEvent> SNARE_TRIGGER = reg("block.dream_snare.trigger");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRUMBLE = reg("block.crumbling_dreamstone.crumble");
     public static final DeferredHolder<SoundEvent, SoundEvent> SLINGSHOT_SHOOT = reg("item.slingshot.shoot");

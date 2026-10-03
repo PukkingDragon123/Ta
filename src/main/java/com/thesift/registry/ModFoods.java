@@ -17,8 +17,6 @@ public final class ModFoods {
                     new MobEffectInstance(MobEffects.REGENERATION, 60, 0))))
             .build();
 
-    public static final FoodProperties PITCHER_BULB = new FoodProperties.Builder().nutrition(3).saturationModifier(0.4F).build();
-
     public static final FoodProperties DREAM_STEW = new FoodProperties.Builder().nutrition(8).saturationModifier(0.7F).build();
     public static final Consumable DREAM_STEW_CONSUMABLE = Consumables.defaultFood()
             .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(

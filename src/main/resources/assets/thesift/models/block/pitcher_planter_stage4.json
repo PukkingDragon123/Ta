@@ -8,7 +8,8 @@
     "top": "thesift:block/pitcher_planter_top",
     "bottom": "thesift:block/pitcher_planter_bottom",
     "rim": "thesift:block/pitcher_planter_rim",
-    "plant": "thesift:block/pitcher_bulb_bush_stage3"
+    "plant": "minecraft:block/pitcher_crop_bottom_stage_4",
+    "bloom": "minecraft:block/pitcher_crop_top_stage_4"
   },
   "elements": [
     {
@@ -311,20 +312,20 @@
     },
     {
       "from": [
-        0.8,
+        2.825,
         9,
         8
       ],
       "to": [
-        15.2,
-        25,
+        13.175,
+        20.5,
         8
       ],
       "shade": false,
       "rotation": {
         "origin": [
           8,
-          17,
+          14.75,
           8
         ],
         "axis": "y",
@@ -354,20 +355,20 @@
     },
     {
       "from": [
-        0.8,
+        2.825,
         9,
         8
       ],
       "to": [
-        15.2,
-        25,
+        13.175,
+        20.5,
         8
       ],
       "shade": false,
       "rotation": {
         "origin": [
           8,
-          17,
+          14.75,
           8
         ],
         "axis": "y",
@@ -392,6 +393,92 @@
             16
           ],
           "texture": "#plant"
+        }
+      }
+    },
+    {
+      "from": [
+        2.825,
+        20.5,
+        8
+      ],
+      "to": [
+        13.175,
+        32,
+        8
+      ],
+      "shade": false,
+      "rotation": {
+        "origin": [
+          8,
+          26.25,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bloom"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bloom"
+        }
+      }
+    },
+    {
+      "from": [
+        2.825,
+        20.5,
+        8
+      ],
+      "to": [
+        13.175,
+        32,
+        8
+      ],
+      "shade": false,
+      "rotation": {
+        "origin": [
+          8,
+          26.25,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": true
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bloom"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#bloom"
         }
       }
     }

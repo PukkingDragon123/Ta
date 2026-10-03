@@ -40,12 +40,10 @@ SONG_DESC = {
 
 # Where the sheets are found: chest table -> [(song, weight)], plus how often a sheet turns up at all.
 SHEET_LOOT = {
-    'chests/sift_ruins': ([('offering', 3), ('nib', 3), ('lullaby', 2), ('golem', 1)], 0.35),
-    'chests/tower_top': ([('whale', 3), ('crystal', 2), ('lullaby', 1)], 0.45),
-    'chests/temple_vault': ([('golem', 2), ('lullaby', 2), ('crystal', 2), ('offering', 1)], 0.5),
-    'chests/deep_shrine': ([('tide', 3), ('golem', 2), ('lullaby', 1)], 0.4),
     'chests/sculk_castle': ([('lullaby', 2), ('whale', 2), ('tide', 1), ('aurora', 1)], 0.5),
-    'chests/chrome_well': ([('tide', 3), ('nib', 1), ('aurora', 1)], 0.3),
+    # W1: the old ruins are gone; their sheets are brushed out of buried relics (gen_data's archaeology tables), the
+    # Sifter swallows some, the Gobbler some, and the Thumper's cannon towers keep a few
+    'chests/drum_pit_armory': ([('whale', 2), ('golem', 2), ('tide', 1), ('crystal', 1)], 0.3),
     'gameplay/frozen_crystal': ([('aurora', 1)], 0.25),  # M1: the Caravans' frozen treasure keeps the Aurora
 }
 
@@ -113,7 +111,7 @@ def lang():
         f'music.{NS}.guide.done': 'Played!',
         f'item.{NS}.wind_chimes.desc': 'Use to play: strike the chimes as they swing past the mark.',
         f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Eight songs, eight sheets',
-        f'codex.{NS}.songs.body': 'Sheets hide in ruins, towers, temples and shrines. Carry one and play its notes in order on the right instrument. A semitone off or one slip is forgiven. Chimes: Offering, Crystal Hymn. Strings: Nibs, Lullaby. Flute: Whale. Drum, in rhythm: Tide. Prism, in its lights: Aurora. Golem Hymn: anything.',
+        f'codex.{NS}.songs.body': 'Sheets lie in buried relics, the Sculk Castle and the Drum Pit armoury, and some creatures carry them. Carry one and play its notes in order on the right instrument. A semitone off or one slip is forgiven. Chimes: Offering, Crystal Hymn. Strings: Nibs, Lullaby. Flute: Whale. Drum, in rhythm: Tide. Prism, in its lights: Aurora. Golem Hymn: anything.',
         f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Notes of light',
         f'codex.{NS}.prism_instruments.body': 'Ring an upgraded instrument with prism gems: Star Lute to Prism Harp (a string for every note), Serbim Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - keys 1-4 or the mouse wheel - and lights the air. Prism songs such as the Aurora ask for the lights too.',
     })

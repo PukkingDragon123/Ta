@@ -209,24 +209,6 @@ def echo_seed():
     return s.render()
 
 
-def choir_pod():
-    s = Sprite()
-    s.add(capsule(16, 3, 17, 8, 1.2), '#3a8a4a', 'dome')
-    s.add(ellipse(16, 18, 8, 11), '#a46ee8', 'dome')
-    s.add(capsule(16, 9, 16, 27, 0.6), '#5c3a9a', 'flat', gloss=0, outline=False)
-    s.add(ellipse(21, 6, 4, 2, -25), LEAF, 'dome')
-    return s.render()
-
-
-def pitcher_bulb():
-    s = Sprite()
-    s.add(ellipse(16, 18, 10, 9.5), '#55c8de', 'dome')
-    s.add(ellipse(16, 12, 4, 1.6), '#2f8aa8', 'flat', gloss=0, outline=False)
-    s.add(capsule(16, 4, 17.5, 10, 1.4), '#3a8a4a', 'dome')
-    s.add(ellipse(21.5, 6.5, 4.2, 2.1, -20), LEAF, 'dome')
-    return s.render()
-
-
 def warden_core():
     s = Sprite()
     h = ellipse(10.5, 12, 6.5, 6.5) | ellipse(21.5, 12, 6.5, 6.5) | poly([(4.5, 14), (27.5, 14), (16, 28.5)])
@@ -464,8 +446,8 @@ def all_items():
         'siftite_spear': spear(), 'siftite_spear_in_hand': spear(),
         'siftite_helmet': helmet(), 'siftite_chestplate': chestplate(), 'siftite_leggings': leggings(), 'siftite_boots': boots(),
         'siftite_ingot': ingot(SIFTITE, SIFT_PINK), 'serbim_ingot': ingot(SERBIM), 'siftite_nugget': nugget(), 'raw_serbim': raw_serbim(),
-        'chrome_pearl': pearl(), 'glowing_slime_ball': slime_ball(), 'star_shard': star_shard(), 'echo_seed': echo_seed(), 'choir_pod': choir_pod(),
-        'pitcher_bulb': pitcher_bulb(), 'warden_core': warden_core(), 'thick_hide': hide(), 'sift_cake': cake(), 'dream_stew': stew(),
+        'chrome_pearl': pearl(), 'glowing_slime_ball': slime_ball(), 'star_shard': star_shard(), 'echo_seed': echo_seed(),
+        'warden_core': warden_core(), 'thick_hide': hide(), 'sift_cake': cake(), 'dream_stew': stew(),
         'glowcap_skewer': skewer(), 'bulb_lantern': lantern(), 'chrome_bucket': bucket(CHROME), 'dream_journal_fragment': journal(),
         'sift_codex': codex(), 'music_disc_lullaby': disc(), 'soul_chime': chime(), 'drift_petals': petals(), 'glowbell_vine': glowbell(),
         'lullwood_door': door('#b1a9d4', '#8f86c0'), 'wishwood_door': door('#e6a0b8', '#c9738f'), 'siftite_upgrade_smithing_template': template(),

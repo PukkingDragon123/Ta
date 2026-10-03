@@ -73,8 +73,8 @@ public class Harmoner extends Animal implements MusicListener {
     private static final double CHORUS_RANGE = 12.0;
 
     public static final String[] NAMES = {"rose", "azure", "gold", "violet", "jade", "coral", "night"};
-    /** The structure each colour leads to. */
-    public static final String[] STRUCTURES = {"abandoned_altar", "chrome_well", "dream_statue", "collapsed_tower", "sift_ruins", "musical_temple",
+    /** The structure each colour leads to (W1: the old ruins are gone - the Drum Pit, a Caravan colony or the Sculk Castle). */
+    public static final String[] STRUCTURES = {"thumper_arena", "caravan_colony", "thumper_arena", "sculk_castle", "caravan_colony", "thumper_arena",
             "sculk_castle"};
     public static final int[] COLORS = {0xE8577F, 0x3F8FE8, 0xF2B632, 0x8C5AE0, 0x35C28F, 0xFF7A4A, 0x2EF2E2};
     public static final int VARIANTS = NAMES.length;

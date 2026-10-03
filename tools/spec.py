@@ -61,7 +61,7 @@ def stone_set(base, props, tex=None, stairs=True, slab=True, wall=True, mapcolor
     return b
 
 
-DREAM_COLOR = "MapColor.COLOR_LIGHT_BLUE"
+DREAM_COLOR = "MapColor.SAND"  # W1: pale, bone-white End-Stone-like rock
 stone_set("dreamstone", STONE, mapcolor=DREAM_COLOR, wall=False, loot="drop:cobbled_dreamstone", tags=("pickaxe", "sift_stone"))
 stone_set("cobbled_dreamstone", STONE, mapcolor=DREAM_COLOR)
 stone_set("polished_dreamstone", STONE, mapcolor=DREAM_COLOR)
@@ -124,6 +124,10 @@ WOODS = {
                      leaf_chance="0.03F", sapling_on="sift"),
     "wishwood": dict(bark="MapColor.COLOR_PINK", plank="MapColor.COLOR_PINK", leaves_particle="ModParticles.WISHWOOD_LEAF",
                      leaf_chance="0.02F", sapling_on="sift"),
+    # W1 World & terrain: the Sculk Swamp's corrupted trees - sculk-veined bark, torn dark crowns shedding glowing spores
+    "blightwood": dict(bark="MapColor.COLOR_BLACK", plank="MapColor.COLOR_CYAN", leaves_particle="ModParticles.GLOW_DUST",
+                       leaf_chance="0.025F", sapling_on="sift",
+                       leaves_props="BlockBehaviour.Properties.ofFullCopy(Blocks.DARK_OAK_LEAVES).mapColor(MapColor.COLOR_CYAN)"),
 }
 for w, c in WOODS.items():
     LOG = f"BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor({c['bark']})"
@@ -142,8 +146,8 @@ for w, c in WOODS.items():
     block(f"{w}_button", "button", "BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON)", tex=f"{w}_planks", tags=["axe", "wooden_buttons"], wood=w)
     block(f"{w}_pressure_plate", "pressure_plate", "BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE)", tex=f"{w}_planks",
           tags=["axe", "wooden_pressure_plates"], wood=w)
-    block(f"{w}_leaves", "leaves", "BlockBehaviour.Properties.ofFullCopy(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_LIGHT_BLUE)" if w == "wishwood"
-          else "BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_OAK_LEAVES).mapColor(MapColor.SNOW)",
+    block(f"{w}_leaves", "leaves", c.get("leaves_props") or ("BlockBehaviour.Properties.ofFullCopy(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_LIGHT_BLUE)"
+          if w == "wishwood" else "BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_OAK_LEAVES).mapColor(MapColor.SNOW)"),
           tags=["hoe", "leaves"], loot=f"leaves:{w}_sapling", particle=c["leaves_particle"], chance=c["leaf_chance"], wood=w)
     block(f"{w}_sapling", "sapling", "BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)", tags=["saplings"], grower=f"ModTreeGrowers.{w.upper()}", wood=w)
     block(f"potted_{w}_sapling", "pot", "BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING)", plant=f"{w}_sapling", item=False,
@@ -175,15 +179,9 @@ for f, (eff, secs, col) in FLOWERS.items():
 # the Stomper's favourite flower (taming and breeding food)
 block("hummingbloom", "flower", FLOWER, effect="MobEffects.SPEED", secs="5.0F", light=0, tags=["flowers", "small_flowers"], cls="SiftFlowerBlock")
 block("drift_petals", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PINK_PETALS)", cls="DriftPetalsBlock", model="flowerbed", tags=["hoe"], loot="petals")
-block("choir_lily", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).lightLevel(s -> 4)", cls="ChoirLilyBlock", model="double_cross",
-      tags=["flowers"], loot="double_flower", item_kind="double")
-block("choir_lily_crop", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PITCHER_CROP)", cls="ChoirLilyCropBlock", model="crop4", item=False,
-      loot="crop:choir_pod")
 block("echo_orchid", "custom", FLOWER + ".lightLevel(s -> 9)", cls="EchoOrchidBlock", model="cross", tags=["flowers", "small_flowers"])
 block("echo_orchid_crop", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.TORCHFLOWER_CROP)", cls="EchoOrchidCropBlock", model="crop3", item=False,
       loot="crop:echo_seed")
-block("pitcher_bulb_bush", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SWEET_BERRY_BUSH).mapColor(MapColor.COLOR_LIGHT_BLUE)",
-      cls="PitcherBulbBushBlock", model="bush4", item=False, loot="bush:pitcher_bulb")
 block("chrome_reeds", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SUGAR_CANE).mapColor(MapColor.COLOR_LIGHT_BLUE)", cls="ChromeReedsBlock",
       model="cross", loot="self")
 block("glowcap", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.BROWN_MUSHROOM).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 10)",
@@ -208,17 +206,17 @@ block("encore_sigil", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_PURPLE).s
       cls="EncoreSigilBlock", model="cube_column", tab="functional", loot="none", name="Encore Sigil")
 block("instrument_altar", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion()",
       cls="InstrumentAltarBlock", model="cube_column", tab="functional", loot="none", name="Instrument Altar")
-block("harmony_stone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0F, 3600000.0F)", cls="HarmonyStoneBlock", model="harmony",
+block("harmony_stone", "custom", STONE + f".mapColor({DREAM_COLOR}).strength(-1.0F, 3600000.0F)", cls="HarmonyStoneBlock", model="harmony",
       tab="functional", loot="none")
 block("harmony_seal", "custom", STONE + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 5)", cls="HarmonySealBlock",
       model="cube_all", tab="functional", loot="none")
-block("glyph_stone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE)", cls="GlyphStoneBlock", model="glyph", tags=["pickaxe"])
+block("glyph_stone", "custom", STONE + f".mapColor({DREAM_COLOR})", cls="GlyphStoneBlock", model="glyph", tags=["pickaxe"])
 block("dream_snare", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.TRIPWIRE).noCollision()", cls="DreamSnareBlock", model="snare",
       tab="functional", loot="self")
 # the Thumper's arena: its tower cannons (see registry/ModSiege for the block entity and the cannonball)
 block("ancient_cannon", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion()",
       cls="AncientCannonBlock", model="cannon", tags=["pickaxe"], tab="functional")
-block("crumbling_dreamstone", "custom", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.8F)", cls="CrumblingDreamstoneBlock",
+block("crumbling_dreamstone", "custom", STONE + f".mapColor({DREAM_COLOR}).strength(0.8F)", cls="CrumblingDreamstoneBlock",
       model="cube_all", tex="cracked_dreamstone_bricks", tags=["pickaxe"], tab="functional", loot="none")
 block("sift_cake", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).lightLevel(s -> 6)", cls="SiftCakeBlock", model="cake",
       loot="none", tab="items", item_kind="stack1")
@@ -238,7 +236,6 @@ block("chrome", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).ma
 
 # ---------------------------------------------------------------- items
 item("glowing_slime_ball", cls="GlowingSlimeBallItem", props="new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE)")
-item("pitcher_bulb", cls="BlockItem:pitcher_bulb_bush", props="new Item.Properties().food(ModFoods.PITCHER_BULB).useItemDescriptionPrefix()")
 item("thick_hide")
 item("chrome_pearl", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
 item("raw_serbim")
@@ -246,7 +243,6 @@ item("serbim_ingot")
 item("siftite_ingot", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
 item("siftite_nugget")
 item("warden_core", cls="WardenCoreItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()")
-item("choir_pod", cls="BlockItem:choir_lily_crop", props="new Item.Properties().useItemDescriptionPrefix()")
 item("echo_seed", cls="BlockItem:echo_orchid_crop", props="new Item.Properties().useItemDescriptionPrefix()")
 item("dream_stew", props="new Item.Properties().stacksTo(1).food(ModFoods.DREAM_STEW, ModFoods.DREAM_STEW_CONSUMABLE).usingConvertsTo(Items.BOWL)")
 item("glowcap_skewer", props="new Item.Properties().food(ModFoods.GLOWCAP_SKEWER)")
@@ -309,7 +305,6 @@ item("skysong_gem", props="new Item.Properties().rarity(Rarity.EPIC)")
 block("pitcher_planter", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT).mapColor(MapColor.TERRACOTTA_PINK).strength(1.0F)"
       ".lightLevel(s -> s.getValue(com.thesift.block.PitcherPlanterBlock.STAGE) == 4 ? 6 : 0).noOcclusion()",
       cls="PitcherPlanterBlock", model="planter", tags=["pickaxe"], tab="functional")
-item("pitcher_nectar", props="new Item.Properties().food(ModSoups.PITCHER_NECTAR, ModSoups.PITCHER_NECTAR_CONSUMABLE)")
 for soup in ("lullaby_soup", "echo_chowder", "chrome_bisque"):
     C = soup.upper()
     item(soup, props=f"new Item.Properties().stacksTo(1).food(ModSoups.{C}, ModSoups.{C}_CONSUMABLE).usingConvertsTo(Items.BOWL)")
@@ -338,7 +333,7 @@ for _t, _s in [("sword", "sword(com.thesift.item.PrismGear.TOOL, 3.0F, -2.4F)"),
 item("caravan_spawn_egg",cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")
 # ---------------------------------------------------------------- sea & sky (F + W): kelp, clouds, the Gobbler's drops, fish meat, sushi
 __import__("sea_spec").declare(block, item)
-# ---------------------------------------------------------------- A2 Echoer: the Echoer's Hut and its household
+# ---------------------------------------------------------------- A2 Echoer: the Echoer's hearth and its household
 # The Echoer device (a mining-beam horn), the hut's hearthstone, the Soul Golem's core, Nib Dust (Nibs' treasure)
 block("echoer_device", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops()"
       ".lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4)",
@@ -362,3 +357,5 @@ __import__("chrome").declare(block, item)
 __import__("cave_creatures").declare(block, item)
 # ---------------------------------------------------------------- M1 instrument play: the upgraded versions (tools/instruments.py)
 __import__("instruments").declare(block, item)
+# ---------------------------------------------------------------- W1 World & terrain: Sculk Mud, Sculk Water, Sculk Coral (tools/sculk_world.py)
+__import__("sculk_world").declare(block, item)

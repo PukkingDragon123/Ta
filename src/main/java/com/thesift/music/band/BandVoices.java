@@ -43,7 +43,7 @@ import net.minecraft.world.entity.player.Player;
  *   fanfare horn, deep bass</td><td>drum; crystal; any; strings; flute; Tide Song</td><td>hostile: never join</td></tr>
  * </table>
  *
- * (The Riveter is being retired and the bosses and their summons play in the Conductor's orchestra,
+ * (The bosses and their summons play in the Conductor's orchestra,
  * not in yours.)
  */
 final class BandVoices {

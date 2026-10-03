@@ -31,7 +31,7 @@ final class CodexFx {
     private static final Map<String, Theme> THEMES = new java.util.HashMap<>();
 
     static {
-        for (String k : new String[]{"jailer", "sculkling", "sculk_parasite", "strumling", "warden_core", "sculk_corruption", "deep_shrine",
+        for (String k : new String[]{"jailer", "sculkling", "sculk_parasite", "strumling", "warden_core", "sculk_corruption", "sculk_swamp", "sculk_ocean",
                 "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb"}) {
             THEMES.put(k, Theme.SCULK);
         }
@@ -39,11 +39,11 @@ final class CodexFx {
             THEMES.put(k, Theme.MUSIC); // M1 instrument play
         }
         for (String k : new String[]{"harmoner", "enchoer", "songs", "prism_instruments", "music", "music_crystal", "conga_drum", "crane_flute",
-                "guitar", "weaver_guitar", "vocals", "baton", "staff", "musical_temple", "euphory_altar", "echoer_device", "echoer_hut",
+                "guitar", "weaver_guitar", "vocals", "baton", "staff", "euphory_altar", "echoer_device",
                 "kazoo_fish", "fanfare_eel", "tubafish", "nib", "soul_golem"}) {
             THEMES.put(k, Theme.MUSIC);
         }
-        for (String k : new String[]{"chrome", "chrome_well", "prism", "skysong_gem", "caravan", "caravan_colony", "slumbler", "siftite"}) {
+        for (String k : new String[]{"chrome", "prism", "skysong_gem", "caravan", "caravan_colony", "slumbler", "siftite"}) {
             THEMES.put(k, Theme.CHROME);
         }
         for (String k : new String[]{"sky_whale", "sea_and_sky", "portal", "white_forest", "swifter", "bulb", "stomper"}) {

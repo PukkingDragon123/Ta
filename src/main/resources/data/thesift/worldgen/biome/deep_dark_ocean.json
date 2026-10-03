@@ -38,7 +38,7 @@
             {
               "type": "thesift:gobbler",
               "count": 1,
-              "weight": 4
+              "weight": 3
             },
             {
               "type": "thesift:fanfare_eel",
@@ -48,6 +48,15 @@
                 "max_inclusive": 2
               },
               "weight": 5
+            },
+            {
+              "type": "thesift:tubafish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 4
             }
           ],
           "underground_water_creature": [
@@ -58,7 +67,7 @@
                 "min_inclusive": 2,
                 "max_inclusive": 4
               },
-              "weight": 8
+              "weight": 10
             }
           ],
           "water_ambient": [
@@ -66,10 +75,10 @@
               "type": "thesift:kazoo_fish",
               "count": {
                 "type": "minecraft:uniform",
-                "min_inclusive": 2,
-                "max_inclusive": 4
+                "min_inclusive": 3,
+                "max_inclusive": 6
               },
-              "weight": 3
+              "weight": 8
             }
           ],
           "axolotls": [],
@@ -84,7 +93,7 @@
           "particle": {
             "type": "thesift:drifting_soul"
           },
-          "probability": 0.002
+          "probability": 0.0015
         },
         {
           "particle": {
@@ -96,16 +105,28 @@
           "particle": {
             "type": "minecraft:sculk_soul"
           },
-          "probability": 0.0004
+          "probability": 0.0005
+        },
+        {
+          "particle": {
+            "type": "minecraft:glow"
+          },
+          "probability": 0.0012
+        },
+        {
+          "particle": {
+            "type": "minecraft:underwater"
+          },
+          "probability": 0.003
         }
       ],
       "modifier": "append"
     },
-    "minecraft:visual/fog_color": "#24344a",
-    "minecraft:visual/sky_color": "#2c3e64",
-    "minecraft:visual/water_fog_color": "#03080e",
+    "minecraft:visual/fog_color": "#24434a",
+    "minecraft:visual/sky_color": "#2f5a66",
+    "minecraft:visual/water_fog_color": "#041a1d",
     "minecraft:visual/water_fog_end_distance": {
-      "argument": 0.35,
+      "argument": 0.5,
       "modifier": "multiply"
     }
   },
@@ -116,19 +137,23 @@
   ],
   "downfall": 0.5,
   "effects": {
-    "water_color": "#123a52",
+    "water_color": "#0d5a63",
     "grass_color": "#2f8f9e",
     "foliage_color": "#37a9b5"
   },
   "features": [
     [
-      "thesift:sea_flood"
+      "thesift:sea_flood",
+      "thesift:biome_blend"
     ],
     [],
-    [],
+    [
+      "thesift:relic_cache"
+    ],
     [],
     [
-      "thesift:deep_pillar"
+      "thesift:deep_pillar",
+      "thesift:pale_pillar"
     ],
     [],
     [
@@ -144,7 +169,10 @@
       "thesift:chrome_spring"
     ],
     [
-      "thesift:patch_abyss_anemone"
+      "thesift:patch_abyss_anemone",
+      "thesift:sculk_reef",
+      "thesift:sculk_coral_scatter",
+      "thesift:ocean_glow_lichen"
     ],
     []
   ],

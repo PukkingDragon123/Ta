@@ -82,6 +82,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerEnvironmentRenderers);
         CaravansClient.register(modBus); // C: Caravans, music crystals, the cavern's shifting fog
         ChromeClient.register(modBus); // A3 Chrome: rainbow tint, ripples, note bursts, Rainbow Daze
+        SculkSwampClient.register(modBus); // W1 World & terrain: Sculk Water's look and the Sculk Swamp's mist
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
@@ -194,8 +195,9 @@ public class TheSiftClient {
 
             @Override
             public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, FogData fogData) {
+                // W1: thinner than it was - you can see a good way through the colour
                 fogData.environmentalStart = 0.0F;
-                fogData.environmentalEnd = 12.0F;
+                fogData.environmentalEnd = 30.0F;
             }
         }, ModFluids.CHROME_TYPE.get());
     }

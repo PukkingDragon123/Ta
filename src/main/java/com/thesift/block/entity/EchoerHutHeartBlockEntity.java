@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Brings an Echoer's Hut to life once: the Echoer and two wild Soul Golems (see {@link EchoerHutHeartBlock}). */
+/** Brings an Echoer's hearth to life once: the Echoer and two wild Soul Golems (see {@link EchoerHutHeartBlock}). */
 public class EchoerHutHeartBlockEntity extends BlockEntity {
     private static final double WAKE_RANGE = 40.0;
 

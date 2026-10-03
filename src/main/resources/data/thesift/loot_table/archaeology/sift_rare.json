@@ -21,12 +21,47 @@
         {
           "type": "minecraft:item",
           "name": "thesift:siftite_upgrade_smithing_template",
-          "weight": 1
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "thesift:siftite_nugget",
           "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_offering",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_golem",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_crystal",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_whale",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_tide",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:sift_gate_frame",
+          "weight": 1
         }
       ],
       "rolls": 1

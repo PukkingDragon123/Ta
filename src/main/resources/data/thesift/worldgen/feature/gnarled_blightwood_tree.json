@@ -1,0 +1,20 @@
+{
+  "type": "thesift:sift_tree",
+  "trunk": {
+    "id": "thesift:blightwood_log",
+    "properties": {
+      "axis": "y"
+    }
+  },
+  "leaves": {
+    "id": "thesift:blightwood_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "style": "blight",
+  "min_height": 11,
+  "max_height": 15
+}

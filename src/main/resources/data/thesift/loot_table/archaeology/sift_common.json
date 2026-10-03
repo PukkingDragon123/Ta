@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "name": "thesift:dream_journal_fragment",
-          "weight": 3
+          "weight": 4
         },
         {
           "type": "minecraft:item",
@@ -20,12 +20,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:pitcher_bulb",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "thesift:choir_pod",
+          "name": "minecraft:pitcher_pod",
           "weight": 2
         },
         {
@@ -51,6 +46,31 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:brick",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:glyph_stone",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:chrome_pearl",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_offering",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_nib",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
           "weight": 1
         }
       ],

@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * Puzzle stone found in musical temples. Each stone rings one of four tones and has a hidden KEY.
+ * Puzzle stone of the old musical temples (W1: those are gone; no worldgen places it now). Each stone rings one of four tones and has a hidden KEY.
  * Nearby Glyph Stones show which tone each stone must ring. When every Harmony Stone around a
  * Harmony Seal rings its key, the seal dissolves and the vault opens.
  */

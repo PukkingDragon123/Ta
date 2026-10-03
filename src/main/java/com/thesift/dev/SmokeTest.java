@@ -227,10 +227,10 @@ public final class SmokeTest {
 
     // ------------------------------------------------------------------ structures
 
-    private static final String[] STRUCTURES = {"collapsed_tower", "musical_temple", "chrome_well", "abandoned_altar", "stone_instrument",
-            "ruined_bridge", "buried_settlement", "dream_statue", "deep_shrine", "sift_ruins", "sculk_castle", "thumper_arena",
-            "caravan_colony", // C: the Caravan colony
-            "echoer_hut"}; // A2 Echoer: the Echoer's Hut
+    // W1 World & terrain: the towers, temples, wells, altars, stone instruments, bridges, settlements, statues, shrines,
+    // ruins and the Echoer's Hut are gone (their relics are buried in relic caches now)
+    private static final String[] STRUCTURES = {"sculk_castle", "thumper_arena",
+            "caravan_colony"}; // C: the Caravan colony
 
     private static void structures(ServerLevel sift) {
         // every template parses and can be stamped into the world
@@ -289,29 +289,6 @@ public final class SmokeTest {
                         }
                     }
                     TheSift.LOGGER.info("SMOKE: built {} box {} pieces {} blocks {}", name, box, start.getPieces().size(), mine);
-                    if (name.equals("chrome_well")) {
-                        // experiment: is the piece placeable at all? place it by hand over its whole box and recount
-                        var piece = start.getPieces().get(0);
-                        var chunk = sift.getChunk(at.getX() >> 4, at.getZ() >> 4);
-                        TheSift.LOGGER.info("SMOKE: chrome_well piece {} box {} chunk status {} refs {}", piece.getClass().getSimpleName(),
-                                piece.getBoundingBox(), chunk.getPersistedStatus(), chunk.getReferencesForStructure(holder.get().value()));
-                        BoundingBox pb = piece.getBoundingBox();
-                        for (int cx = pb.minX() >> 4; cx <= pb.maxX() >> 4; cx++) {
-                            for (int cz = pb.minZ() >> 4; cz <= pb.maxZ() >> 4; cz++) {
-                                BoundingBox cb = new BoundingBox(cx << 4, sift.getMinY(), cz << 4, (cx << 4) + 15, sift.getMaxY(), (cz << 4) + 15);
-                                start.placeInChunk(sift, sift.structureManager(), sift.getChunkSource().getGenerator(), sift.getRandom(), cb,
-                                        new net.minecraft.world.level.ChunkPos(cx, cz));
-                            }
-                        }
-                        int polished = 0;
-                        for (BlockPos p : BlockPos.betweenClosed(pb.minX(), pb.minY(), pb.minZ(), pb.maxX(), pb.maxY(), pb.maxZ())) {
-                            if (sift.getBlockState(p).is(ModBlocks.POLISHED_DREAMSTONE.get())) polished++;
-                        }
-                        TheSift.LOGGER.info("SMOKE: chrome_well after manual placement: polished dreamstone {}", polished);
-                    }
-                    if (name.equals("deep_shrine")) {
-                        check(mine.getOrDefault("sift_gate_frame", 0) > 0, "natural deep shrine keeps its gate frame keystones");
-                    }
                 }
             }
         }
@@ -338,7 +315,7 @@ public final class SmokeTest {
             LootTable table = server.reloadableRegistries().getLootTable(block.getLootTable().get());
             String id = BuiltInRegistries.BLOCK.getKey(block).toString();
             boolean exempt = id.endsWith("portal") || id.endsWith("harmony_stone") || id.endsWith("harmony_seal") || id.endsWith("lingering_glow")
-                    || id.endsWith(":chrome") || id.endsWith("suspicious_dreamsand") || id.endsWith("crumbling_dreamstone") || id.endsWith("sift_cake")
+                    || id.endsWith(":chrome") || id.endsWith(":sculk_water") || id.endsWith("suspicious_dreamsand") || id.endsWith("crumbling_dreamstone") || id.endsWith("sift_cake")
                     || id.endsWith("conductors_podium") || id.endsWith("encore_sigil") || id.endsWith("instrument_altar");
             if (!exempt) {
                 check(table != LootTable.EMPTY, "loot table for " + id);

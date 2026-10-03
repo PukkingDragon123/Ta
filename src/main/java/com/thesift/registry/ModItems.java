@@ -117,6 +117,21 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> WISHWOOD_PRESSURE_PLATE = ITEMS.registerSimpleBlockItem(ModBlocks.WISHWOOD_PRESSURE_PLATE);
     public static final DeferredItem<BlockItem> WISHWOOD_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.WISHWOOD_LEAVES);
     public static final DeferredItem<BlockItem> WISHWOOD_SAPLING = ITEMS.registerSimpleBlockItem(ModBlocks.WISHWOOD_SAPLING);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_LOG = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_LOG);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_WOOD = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_WOOD);
+    public static final DeferredItem<BlockItem> STRIPPED_BLIGHTWOOD_LOG = ITEMS.registerSimpleBlockItem(ModBlocks.STRIPPED_BLIGHTWOOD_LOG);
+    public static final DeferredItem<BlockItem> STRIPPED_BLIGHTWOOD_WOOD = ITEMS.registerSimpleBlockItem(ModBlocks.STRIPPED_BLIGHTWOOD_WOOD);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_PLANKS = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_PLANKS);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_STAIRS = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_STAIRS);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_SLAB = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_SLAB);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_FENCE = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_FENCE);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_FENCE_GATE = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_FENCE_GATE);
+    public static final DeferredItem<DoubleHighBlockItem> BLIGHTWOOD_DOOR = ITEMS.registerItem("blightwood_door", p -> new DoubleHighBlockItem(ModBlocks.BLIGHTWOOD_DOOR.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_TRAPDOOR = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_TRAPDOOR);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_BUTTON = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_BUTTON);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_PRESSURE_PLATE = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_PRESSURE_PLATE);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_LEAVES);
+    public static final DeferredItem<BlockItem> BLIGHTWOOD_SAPLING = ITEMS.registerSimpleBlockItem(ModBlocks.BLIGHTWOOD_SAPLING);
     public static final DeferredItem<BlockItem> HANGING_LULLWOOD_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.HANGING_LULLWOOD_LEAVES);
     public static final DeferredItem<BlockItem> BLUSHGRASS = ITEMS.registerSimpleBlockItem(ModBlocks.BLUSHGRASS);
     public static final DeferredItem<DoubleHighBlockItem> TALL_BLUSHGRASS = ITEMS.registerItem("tall_blushgrass", p -> new DoubleHighBlockItem(ModBlocks.TALL_BLUSHGRASS.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
@@ -130,7 +145,6 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> NEBULA_IRIS = ITEMS.registerSimpleBlockItem(ModBlocks.NEBULA_IRIS);
     public static final DeferredItem<BlockItem> HUMMINGBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.HUMMINGBLOOM);
     public static final DeferredItem<BlockItem> DRIFT_PETALS = ITEMS.registerSimpleBlockItem(ModBlocks.DRIFT_PETALS);
-    public static final DeferredItem<DoubleHighBlockItem> CHOIR_LILY = ITEMS.registerItem("choir_lily", p -> new DoubleHighBlockItem(ModBlocks.CHOIR_LILY.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<BlockItem> ECHO_ORCHID = ITEMS.registerSimpleBlockItem(ModBlocks.ECHO_ORCHID);
     public static final DeferredItem<BlockItem> CHROME_REEDS = ITEMS.registerSimpleBlockItem(ModBlocks.CHROME_REEDS);
     public static final DeferredItem<BlockItem> GLOWCAP = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWCAP);
@@ -174,10 +188,12 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CHIME_SAND = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_SAND);
     public static final DeferredItem<BlockItem> CHIME_GLASS = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_GLASS);
     public static final DeferredItem<BlockItem> CHIME_GLASS_PANE = ITEMS.registerSimpleBlockItem(ModBlocks.CHIME_GLASS_PANE);
+    public static final DeferredItem<BlockItem> SCULK_MUD = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_MUD);
+    public static final DeferredItem<BlockItem> SCULK_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> SCULK_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_CORAL);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
-    public static final DeferredItem<BlockItem> PITCHER_BULB = ITEMS.registerItem("pitcher_bulb", p -> new BlockItem(ModBlocks.PITCHER_BULB_BUSH.get(), p), () -> new Item.Properties().food(ModFoods.PITCHER_BULB).useItemDescriptionPrefix());
     public static final DeferredItem<Item> THICK_HIDE = ITEMS.registerItem("thick_hide", Item::new, () -> new Item.Properties());
     public static final DeferredItem<Item> CHROME_PEARL = ITEMS.registerItem("chrome_pearl", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> RAW_SERBIM = ITEMS.registerItem("raw_serbim", Item::new, () -> new Item.Properties());
@@ -185,7 +201,6 @@ public final class ModItems {
     public static final DeferredItem<Item> SIFTITE_INGOT = ITEMS.registerItem("siftite_ingot", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> SIFTITE_NUGGET = ITEMS.registerItem("siftite_nugget", Item::new, () -> new Item.Properties());
     public static final DeferredItem<WardenCoreItem> WARDEN_CORE = ITEMS.registerItem("warden_core", WardenCoreItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
-    public static final DeferredItem<BlockItem> CHOIR_POD = ITEMS.registerItem("choir_pod", p -> new BlockItem(ModBlocks.CHOIR_LILY_CROP.get(), p), () -> new Item.Properties().useItemDescriptionPrefix());
     public static final DeferredItem<BlockItem> ECHO_SEED = ITEMS.registerItem("echo_seed", p -> new BlockItem(ModBlocks.ECHO_ORCHID_CROP.get(), p), () -> new Item.Properties().useItemDescriptionPrefix());
     public static final DeferredItem<Item> DREAM_STEW = ITEMS.registerItem("dream_stew", Item::new, () -> new Item.Properties().stacksTo(1).food(ModFoods.DREAM_STEW, ModFoods.DREAM_STEW_CONSUMABLE).usingConvertsTo(Items.BOWL));
     public static final DeferredItem<Item> GLOWCAP_SKEWER = ITEMS.registerItem("glowcap_skewer", Item::new, () -> new Item.Properties().food(ModFoods.GLOWCAP_SKEWER));
@@ -249,7 +264,6 @@ public final class ModItems {
     public static final DeferredItem<Item> TUBA_BUBBLE = ITEMS.registerItem("tuba_bubble", Item::new, () -> new Item.Properties());
     public static final DeferredItem<BubbleGunItem> BUBBLE_GUN = ITEMS.registerItem("bubble_gun", BubbleGunItem::new, () -> new Item.Properties().durability(256));
     public static final DeferredItem<Item> SKYSONG_GEM = ITEMS.registerItem("skysong_gem", Item::new, () -> new Item.Properties().rarity(Rarity.EPIC));
-    public static final DeferredItem<Item> PITCHER_NECTAR = ITEMS.registerItem("pitcher_nectar", Item::new, () -> new Item.Properties().food(ModSoups.PITCHER_NECTAR, ModSoups.PITCHER_NECTAR_CONSUMABLE));
     public static final DeferredItem<Item> LULLABY_SOUP = ITEMS.registerItem("lullaby_soup", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.LULLABY_SOUP, ModSoups.LULLABY_SOUP_CONSUMABLE).usingConvertsTo(Items.BOWL));
     public static final DeferredItem<Item> ECHO_CHOWDER = ITEMS.registerItem("echo_chowder", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.ECHO_CHOWDER, ModSoups.ECHO_CHOWDER_CONSUMABLE).usingConvertsTo(Items.BOWL));
     public static final DeferredItem<Item> CHROME_BISQUE = ITEMS.registerItem("chrome_bisque", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.CHROME_BISQUE, ModSoups.CHROME_BISQUE_CONSUMABLE).usingConvertsTo(Items.BOWL));
@@ -294,6 +308,8 @@ public final class ModItems {
     public static final DeferredItem<SiftInstrumentItem> THUNDER_DRUMS = ITEMS.registerItem("thunder_drums", p -> new SiftInstrumentItem(com.thesift.music.Instrument.THUNDER_DRUMS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<SiftInstrumentItem> GLASS_BELLS = ITEMS.registerItem("glass_bells", p -> new SiftInstrumentItem(com.thesift.music.Instrument.GLASS_BELLS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<SiftInstrumentItem> PRISM_CHIMES = ITEMS.registerItem("prism_chimes", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_CHIMES, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<BucketItem> SCULK_WATER_BUCKET = ITEMS.registerItem("sculk_water_bucket", p -> new BucketItem(com.thesift.registry.ModSculkSwamp.SCULK_WATER.get(), p), () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
+    public static final DeferredItem<StandingAndWallBlockItem> SCULK_CORAL_FAN = ITEMS.registerItem("sculk_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.SCULK_CORAL_FAN.get(), ModBlocks.SCULK_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
 
     private ModItems() {}
 }

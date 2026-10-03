@@ -92,6 +92,16 @@
         },
         {
           "type": "minecraft:item",
+          "name": "thesift:music_sheet_golem",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:music_disc_otherside",
           "weight": 1
         },

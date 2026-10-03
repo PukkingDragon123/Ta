@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:sculk_coral_fan"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:cyan_dye"
+  },
+  "group": "cyan_dye"
+}

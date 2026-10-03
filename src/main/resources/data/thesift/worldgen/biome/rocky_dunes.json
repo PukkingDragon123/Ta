@@ -106,11 +106,14 @@
     "foliage_color": "#e0b0c8"
   },
   "features": [
-    [],
+    [
+      "thesift:biome_blend"
+    ],
     [],
     [
       "thesift:floating_islet",
-      "thesift:dune_hoodoo"
+      "thesift:dune_hoodoo",
+      "thesift:relic_cache_dunes"
     ],
     [],
     [],
@@ -125,8 +128,7 @@
       "thesift:chrome_spring"
     ],
     [
-      "thesift:patch_dune_scrub",
-      "thesift:patch_pitcher_bulb_bush"
+      "thesift:patch_dune_scrub"
     ],
     []
   ],

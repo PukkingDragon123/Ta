@@ -8,7 +8,7 @@
     "top": "thesift:block/pitcher_planter_top",
     "bottom": "thesift:block/pitcher_planter_bottom",
     "rim": "thesift:block/pitcher_planter_rim",
-    "plant": "thesift:block/pitcher_bulb_bush_stage1"
+    "plant": "minecraft:block/pitcher_crop_bottom_stage_2"
   },
   "elements": [
     {
@@ -311,7 +311,7 @@
     },
     {
       "from": [
-        0.8,
+        0.7999999999999998,
         9,
         8
       ],
@@ -324,7 +324,7 @@
       "rotation": {
         "origin": [
           8,
-          17,
+          17.0,
           8
         ],
         "axis": "y",
@@ -354,7 +354,7 @@
     },
     {
       "from": [
-        0.8,
+        0.7999999999999998,
         9,
         8
       ],
@@ -367,7 +367,7 @@
       "rotation": {
         "origin": [
           8,
-          17,
+          17.0,
           8
         ],
         "axis": "y",

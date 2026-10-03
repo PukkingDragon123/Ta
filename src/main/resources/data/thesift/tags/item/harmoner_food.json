@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "thesift:echo_seed",
-    "thesift:choir_pod",
     "minecraft:wheat_seeds",
     "minecraft:melon_seeds",
     "minecraft:pumpkin_seeds",

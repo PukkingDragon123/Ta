@@ -147,10 +147,13 @@
   },
   "features": [
     [
-      "thesift:sea_flood"
+      "thesift:sea_flood",
+      "thesift:biome_blend"
     ],
     [],
-    [],
+    [
+      "thesift:relic_cache"
+    ],
     [],
     [],
     [],

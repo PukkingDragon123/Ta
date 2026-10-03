@@ -134,7 +134,9 @@
     "foliage_color": "#f6f9ff"
   },
   "features": [
-    [],
+    [
+      "thesift:biome_blend"
+    ],
     [],
     [],
     [],

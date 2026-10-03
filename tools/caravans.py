@@ -356,6 +356,7 @@ def generate():
         GD.item('prism_gem', 3), GD.item('minecraft:diamond', 6), GD.item('minecraft:emerald', 6), GD.item('minecraft:gold_ingot', 8, (1, 3)),
         GD.item('minecraft:lapis_lazuli', 6, (2, 6)), GD.item('minecraft:amethyst_shard', 8, (2, 5)), GD.item('raw_serbim', 4, (1, 2)),
         GD.item('serbim_ingot', 2), GD.item('star_shard', 3), GD.item('skysong_gem', 1), GD.item('music_sheet_crystal', 2),
+        GD.item('music_sheet_golem', 1), GD.item('music_sheet_lullaby', 1),  # W1: songs once kept in the ruins' vaults
         GD.item('minecraft:music_disc_otherside', 1), GD.item('minecraft:echo_shard', 2)])])
     GD.table('entity', 'entities/caravan', [
         GD.pool([GD.item('minecraft:amethyst_shard', count=(0, 2), extra=[GD.LOOTING])]),
