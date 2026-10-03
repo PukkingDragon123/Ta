@@ -13,16 +13,20 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
-/** The Echoer, a furry god-deer: its runes, eyes, antler tips, glass chime and halo glow, brighter while it hums or dances. */
+/**
+ * CR1 Echoer, the speaker-bat: its eyes, cone rims, dust caps and the groove up its drill glow, and
+ * flare with every pump of its speakers while it sings or dances.
+ */
 public class EnchoerRenderer extends SiftMobRenderer<Enchoer, EnchoerRenderState, EnchoerModel> {
     private static final Expression[] PAINTED = {Expression.BLINK, Expression.HAPPY, Expression.SLEEP, Expression.HURT, Expression.DEAD};
     private static final ExpressionTextures TEXTURES = ExpressionTextures.single("enchoer", PAINTED);
     private static final ExpressionTextures GLOW = new ExpressionTextures("enchoer", new String[]{"enchoer"}, "_glow", PAINTED);
 
     public EnchoerRenderer(EntityRendererProvider.Context context) {
-        super(context, new EnchoerModel(context.bakeLayer(ModModelLayers.ENCHOER)), 0.7F);
+        super(context, new EnchoerModel(context.bakeLayer(ModModelLayers.ENCHOER)), 0.5F);
         this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(s.expression),
-                (s, age) -> Math.min(1.0F, 0.55F + 0.2F * Mth.sin(age * 0.06F + s.seed) + 0.35F * Math.max(s.sing, s.dance)),
+                (s, age) -> Mth.clamp(0.5F + 0.15F * Mth.sin(age * 0.06F + s.seed) + 0.3F * Math.max(s.sing, s.dance) + 0.4F * s.pump, 0.0F, 1.0F)
+                        * (1.0F - 0.6F * s.sleep),
                 this.model, RenderTypes::entityTranslucentEmissive, false));
     }
 
@@ -41,19 +45,19 @@ public class EnchoerRenderer extends SiftMobRenderer<Enchoer, EnchoerRenderState
 
     @Override
     protected float bounciness() {
-        return 0.5F;
+        return 0.6F;
     }
 
     @Override
     protected void scale(EnchoerRenderState state, PoseStack poseStack) {
         super.scale(state, poseStack);
-        poseStack.scale(0.92F, 0.92F, 0.92F);
+        poseStack.scale(0.8F, 0.8F, 0.8F);
     }
 
-    /** The antlers, their chimes and the halo rise far above the hitbox, the muzzle reaches past it. */
+    /** Its wings reach well past the hitbox. */
     @Override
     protected AABB getBoundingBoxForCulling(Enchoer entity, float partialTicks) {
-        return super.getBoundingBoxForCulling(entity, partialTicks).inflate(1.5, 1.2, 1.5);
+        return super.getBoundingBoxForCulling(entity, partialTicks).inflate(1.4, 0.6, 1.4);
     }
 
     @Override
@@ -72,5 +76,10 @@ public class EnchoerRenderer extends SiftMobRenderer<Enchoer, EnchoerRenderState
         state.sing = Mth.lerp(partialTicks, entity.singO, entity.sing);
         state.bow.copyFrom(entity.bowAnimation);
         state.seed = (entity.getId() * 37) % 210;
+        state.flap = Mth.lerp(partialTicks, entity.flapO, entity.flap);
+        state.beat = Mth.lerp(partialTicks, entity.beatO, entity.beat);
+        state.drill = Mth.lerp(partialTicks, entity.drillO, entity.drill);
+        state.pump = entity.pump.get(partialTicks);
+        state.speed = entity.flySpeed;
     }
 }

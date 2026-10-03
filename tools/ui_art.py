@@ -479,15 +479,26 @@ def _creature(name):
         _px(img, [(34, 25), (35, 25)], (20, 10, 10, 255))
         _px(img, [(14, 17), (20, 15), (27, 16)], (240, 100, 140, 255))
     elif name == 'enchoer':
-        s.add(E(20, 32, 12, 7), '#e8e4f0')
-        s.add(C(28, 28, 34, 10, 3.2), '#e8e4f0')
-        s.add(E(36, 9, 5, 3.5, 20), '#f4f2fa')
-        for x in (12, 16, 24, 28):
-            s.add(C(x, 36, x, 43, 1.6), '#c8c4d8')
+        # CR1: the speaker-bat - wings spread, a woofer in its chest, tweeter ears and a brass drill snout
+        for sx in (-1, 1):
+            m = (lambda x: 24 + (x - 24) * sx)
+            s.add(P([(m(21), 22), (m(9), 13), (m(3), 16), (m(2), 27), (m(7), 25), (m(10), 31), (m(14), 28), (m(19), 32)]), '#a993d6',
+                  'bevel', depth=1)
+            s.add(C(m(21), 22, m(9), 13, 0.9) | C(m(9), 13, m(3), 16, 0.7), '#e6dcef', 'flat')
+            s.add(P([(m(21), 12), (m(17), 3), (m(25), 9)]), '#e6dcef', 'bevel', depth=1)
+        s.add(RR(17, 18, 31, 39, 3), '#e6dcef')
+        s.add(RR(19, 24, 29, 37, 1), '#2b2240', 'flat')
+        s.add(E(24, 30, 4.2, 4.2), '#3a3050', 'dome')
+        s.add(E(24, 14, 6, 5), '#e6dcef')
+        s.add(P([(22, 18), (26, 18), (24, 25)]), GOLD, 'bevel', depth=1)                       # the drill
         img = s.render()
-        _px(img, [(37, 8), (38, 8)], (60, 50, 90, 255))
-        for i, (x, y) in enumerate(((14, 30), (18, 29), (22, 30), (26, 29), (31, 22), (32, 17))):
-            ex.append((x, y, (46, 242, 226, 255), False))
+        _px(img, [(23, 20), (25, 21), (24, 23)], (110, 76, 30, 255))
+        d = ImageDraw.Draw(img)
+        d.ellipse((20, 26, 28, 34), outline=(143, 246, 255, 255))
+        for (x, y) in ((24, 30),):
+            ex.append((x - 1, y - 1, (143, 246, 255, 255), True))
+        for x in (21, 26):
+            ex.append((x, 13, (191, 252, 255, 255), False))
     elif name == 'soul_golem':
         s.add(C(16, 38, 16, 43, 2.6) | C(32, 38, 32, 43, 2.6), '#4a3e34')
         s.add(E(24, 27, 13, 13), '#6a5a4a')
@@ -522,28 +533,44 @@ def _creature(name):
         d.text((36, 4), 'z', fill=(255, 255, 255, 255))
         _px(img, [(31, 14), (32, 14), (33, 14), (32, 15), (31, 16), (32, 16), (33, 16)], (255, 255, 255, 255))
     elif name == 'sifter':
-        for (x0, y0, x1, y1) in ((14, 32, 6, 42), (20, 34, 16, 43), (28, 34, 32, 43), (34, 32, 42, 42)):
-            s.add(C(x0, y0, x1, y1, 1.6), '#d8cfb4')
-        s.add(E(24, 30, 14, 7), '#c8a868')
-        s.add(E(24, 23, 15, 6), '#e0c890', 'bevel', depth=2)                 # the lid
-        s.add(C(24, 18, 24, 10, 0.9), '#8a6a3a', 'flat')
+        # CR1: the living bell - bronze, verdigris, eyes on its shoulder, a clapper and four stubby legs
+        for x in (14, 20, 28, 34):
+            s.add(C(x, 38, x, 43, 1.8), '#22a6c2')
+        s.add(E(24, 40, 2.2, 2.2), '#5c5a66')
+        s.add(P([(16, 37), (32, 37), (31, 18), (28, 12), (20, 12), (17, 18)]), '#c08646', 'bevel', depth=2)
+        s.add(RR(12, 34, 36, 39, 2), '#d9a65e')
+        s.add(C(21, 9, 27, 9, 1.1) | C(21, 9, 21, 12, 0.9) | C(27, 9, 27, 12, 0.9), '#86552a', 'flat')
         img = s.render()
-        ex.append((23, 8, (255, 230, 120, 255), True))
         d = ImageDraw.Draw(img)
-        d.line((12, 30, 36, 30), fill=(60, 40, 20, 255))
-        for x in range(13, 36, 3):
-            d.point((x, 31), fill=(240, 236, 220, 255))
+        for x in (20, 26):
+            _px(img, [(x, 17), (x + 1, 17), (x, 18), (x + 1, 18)], (255, 207, 94, 255))
+            _px(img, [(x + 1, 18)], (16, 24, 48, 255))
+        d.line((17, 24, 31, 24), fill=(92, 58, 28, 255))
+        d.line((17, 28, 31, 28), fill=(92, 58, 28, 255))
+        for i, x in enumerate(range(19, 30, 3)):
+            ex.append((x, 26, (255, 213, 108, 255), False))
+        for (x, y0, y1) in ((18, 14, 22), (29, 15, 25), (23, 13, 16)):
+            d.line((x, y0, x, y1), fill=(95, 174, 150, 255))
+        d.line((13, 38, 35, 38), fill=(232, 200, 144, 255))
     elif name == 'stomper':
-        s.add(E(22, 30, 15, 10), '#7a8a9a')
-        s.add(C(34, 30, 40, 40, 2.6) | C(40, 40, 43, 38, 1.8), '#8a9aaa')      # trunk
+        # CR1: the mint-green mammoth-bullfrog with its two violet frog-dome eyes and the pink grass garden on its back
         for x in (12, 18, 26, 31):
-            s.add(C(x, 36, x, 43, 2.6), '#5a6a7a')
-        s.add(E(22, 19, 13, 5), '#5a9a48')
+            s.add(C(x, 36, x, 43, 2.8), '#e9779b')
+        s.add(E(22, 30, 15, 10), '#4cc4b4')
+        s.add(E(22, 37, 12, 3), '#dcf7ee', outline=False)
+        s.add(C(35, 30, 40, 40, 2.6) | C(40, 40, 43, 38, 1.8), '#4cc4b4')                      # trunk
+        s.add(E(22, 20, 13, 5), '#ff8595')
+        s.add(E(31, 22, 3, 2.6) | E(37, 23, 3, 2.6), '#4cc4b4')                                  # the two eye domes
         img = s.render()
-        for (x, y) in ((31, 26), (35, 26), (32, 29), (36, 29)):
-            _px(img, [(x, y), (x + 1, y)], (20, 24, 34, 255))
-        _px(img, [(12, 15), (18, 13), (26, 14), (31, 16)], (240, 120, 160, 255))
+        for x in (31, 37):
+            _px(img, [(x - 1, 22), (x, 22), (x - 1, 23), (x, 23)], (181, 140, 240, 255))
+            _px(img, [(x, 23)], (26, 20, 48, 255))
+            _px(img, [(x - 1, 22)], (255, 255, 255, 255))
+        for y in (33, 36, 39):
+            _px(img, [(38, y), (39, y), (40, y)], (255, 133, 149, 255))
+        _px(img, [(12, 15), (18, 13), (26, 14), (31, 16)], (214, 109, 154, 255))
         _px(img, [(15, 14), (23, 13), (29, 15)], (250, 220, 80, 255))
+        _px(img, [(36, 28), (34, 27)], (255, 111, 154, 255))
     elif name == 'sky_whale':
         s.add(P([(4, 18), (10, 22), (4, 28)]), '#5a8ac8', 'bevel', depth=1)
         s.add(E(25, 24, 18, 10), '#7ab0e0')

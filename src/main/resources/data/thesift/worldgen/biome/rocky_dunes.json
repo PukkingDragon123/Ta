@@ -23,12 +23,7 @@
     },
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
-        "spawn_costs": {
-          "thesift:sifter": {
-            "charge": 1.0,
-            "energy_budget": 0.12
-          }
-        },
+        "spawn_costs": {},
         "spawns_by_category": {
           "creature": [
             {
@@ -44,19 +39,18 @@
               "type": "minecraft:sniffer",
               "count": 1,
               "weight": 2
-            }
-          ],
-          "monster": [
+            },
             {
               "type": "thesift:sifter",
               "count": {
                 "type": "minecraft:uniform",
                 "min_inclusive": 1,
-                "max_inclusive": 2
+                "max_inclusive": 3
               },
-              "weight": 60
+              "weight": 10
             }
           ],
+          "monster": [],
           "ambient": [],
           "water_creature": [],
           "underground_water_creature": [],

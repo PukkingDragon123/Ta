@@ -18,10 +18,18 @@ POSES = {
                                                  left_ear_tip={'rot': (0.5, 0, 0)}, right_ear_tip={'rot': (0.4, 0, 0)}),
              'land': Pose(body={'scale': (1.25, 0.7, 1.25)}, left_ear={'rot': (-0.5, 0, 0.3)}, right_ear={'rot': (-0.5, 0, -0.3)})},
     'slumbler': {'rest': Pose(), 'yawn': Pose(head={'rot': (-0.35, 0, 0)}, jaw={'rot': (0.9, 0, 0)})},
-    'sifter': {'rest': Pose(), 'chomp': Pose(lid={'rot': (-0.9, 0, 0)}), 'walk': Pose(left_leg={'rot': (0.5, 0, 0)}, right_leg={'rot': (-0.5, 0, 0)})},
-    # C4 Echoer (god-deer): 'bow' (head lowered, antlers and chimes forward) and 'sleep' (legs folded, head on the flank)
-    'enchoer': {'rest': Pose(), 'bow': Pose(neck={'rot': (1.2, 0, 0)}, head={'rot': (0.2, 0, 0)}, front_left_leg={'rot': (-0.4, 0, 0)}),
-                'sleep': Pose(body={'pos': (0, 7, 0)}, neck={'rot': (0.1, 0.9, 0)}, head={'rot': (0.0, 0.5, 0.3)})},
+    # CR1 Sifter (a living bell): 'swing' (rocked to its left, the clapper striking the lip) and 'bonk' (thrown forward)
+    'sifter': {'rest': Pose(), 'swing': Pose(bell={'rot': (0, 0, 0.18)}, clapper={'rot': (0, 0, -0.36)}),
+               'bonk': Pose(bell={'rot': (0.45, 0, 0)}, clapper={'rot': (-0.36, 0, 0)}, body={'pos': (0, 0, -3)})},
+    # CR1 Echoer (speaker-bat): wings at the top and bottom of a beat, and folded round it asleep
+    'enchoer': {'rest': Pose(),
+                'down': Pose(left_wing={'rot': (0, 0.2, 0.75)}, right_wing={'rot': (0, -0.2, -0.75)},
+                             left_wing_tip={'rot': (0, 0, 0.35)}, right_wing_tip={'rot': (0, 0, -0.35)}),
+                'up': Pose(left_wing={'rot': (0, -0.2, -0.7)}, right_wing={'rot': (0, 0.2, 0.7)},
+                           left_wing_tip={'rot': (0, 0, -0.5)}, right_wing_tip={'rot': (0, 0, 0.5)}),
+                'fold': Pose(left_wing={'rot': (0.2, -1.1, 1.45)}, right_wing={'rot': (0.2, 1.1, -1.45)},
+                             left_wing_tip={'rot': (0, 2.6, -0.75)}, right_wing_tip={'rot': (0, -2.6, 0.75)},
+                             left_ear={'rot': (0.3, 0, 0.5)}, right_ear={'rot': (0.3, 0, -0.5)}, head={'rot': (0.35, 0, 0)})},
     'soul_golem': {'rest': Pose(), 'slump': Pose(body={'rot': (0.5, 0, 0), 'pos': (0, 1, 0)}, stalk={'rot': (0.9, 0, 0)})},
     'harmoner': {'rest': Pose(), 'fly': Pose(left_wing={'rot': (0, 0, -1.3)}, right_wing={'rot': (0, 0, 1.3)}, left_leg={'rot': (0.9, 0, 0)},
                                               right_leg={'rot': (0.9, 0, 0)}),
@@ -43,7 +51,7 @@ POSES.update({
 WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 9, 'kazoo_fish': 18, 'tubafish': 11}
 
 
-PREVIEW_SCALE = {'enchoer': 6, 'soul_golem': 16, 'nib': 30, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'strummer': 4,
+PREVIEW_SCALE = {'enchoer': 5, 'soul_golem': 16, 'nib': 30, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'strummer': 4,
                  'strumling': 12, 'conductor_mask': 10, **WILD_SCALE}
 # the Sculk Parasite (tools/parasite.py)
 # 'coil' is the wind-up of its lunge, as SculkParasiteModel poses it: reared up, folded into a zigzag, sting raised, jaws open

@@ -28,12 +28,12 @@ import org.jspecify.annotations.Nullable;
 /**
  * M2 band: CI checks for the band. Songs go through the real instrument path ({@link Notes#play})
  * and the real song tracker beside a Bulb (strings and chimes), a wild Stomper and a tamed baby
- * Stomper (drums) and a Sifter (a monster that knows the drum):
+ * Stomper (drums) and a Sifter (a bell, called by chimes only):
  * <ul>
  *   <li>an incompatible song (the Whale Song on the flute) leaves the Bulb where it is, and a
  *   compatible one (the Lullaby on the guitar) recruits it;</li>
  *   <li>a drum song brings the tamed Stomper at once, the wild (shy) one only the second time, and
- *   the Sifter never;</li>
+ *   the Sifter (CR1: a living bell) does not answer a drum song;</li>
  *   <li>the band plays along with the player's next note, and makes their songs stronger;</li>
  *   <li>a few seconds later the members are still in the band, and they leave once the player walks
  *   far away ({@link #tick}).</li>
@@ -134,13 +134,13 @@ final class BandTest {
         this.perform(p, Instrument.GUITAR, Song.LULLABY);
         this.check.accept(Bands.isMember(p, b), "band: a compatible song (the Lullaby on the guitar) recruits a nearby Bulb");
 
-        // drums: the tamed Stomper comes at once, the wild one only the second time, the Sifter never
+        // drums: the tamed Stomper comes at once, the wild one only the second time, the Sifter (a bell) not at all
         this.perform(p, Instrument.DRUM, Song.TIDE);
         this.check.accept(Bands.isMember(p, baby), "band: a tamed Stomper joins its owner's band at the first drum song");
         this.check.accept(!Bands.isMember(p, w), "band: a wild (shy) Stomper only listens to the first drum song");
         this.perform(p, Instrument.DRUM, Song.TIDE);
         this.check.accept(Bands.isMember(p, w), "band: the wild Stomper joins at the second drum song");
-        this.check.accept(!Bands.isMember(p, sifter), "band: a hostile Sifter never joins");
+        this.check.accept(!Bands.isMember(p, sifter), "band: a Sifter (a bell, called by chimes) does not join a drum song");
 
         // the band plays along, and makes songs stronger
         int before = Bands.notesPlayed(p);

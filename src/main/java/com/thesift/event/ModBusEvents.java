@@ -14,7 +14,6 @@ import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -100,19 +99,16 @@ public final class ModBusEvents {
     }
 
     /**
-     * S1 spawning, the Sifter's light rule: on sand it lies in wait under the open sky (the Sift has no night) but
-     * never by torchlight; anywhere else it needs the dark like any Overworld monster.
+     * CR1 spawning: the Sifter is a neutral creature of the dunes - it settles on open sand by day or by
+     * night (it fears no light), and in pitch dark it may sit on bare rock (the Deep Sift, the caves under
+     * the dunes). Elsewhere it only comes from a spawner.
      */
     private static <T extends Mob> boolean checkSifter(EntityType<T> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
             RandomSource random) {
-        if (level.getDifficulty() == Difficulty.PEACEFUL) {
-            return false;
-        }
-        if (com.thesift.entity.Sifter.isSand(level.getBlockState(pos.below()))) {
-            return (EntitySpawnReason.isSpawner(reason) || level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, pos) == 0)
-                    && Mob.checkMobSpawnRules(type, level, reason, pos, random);
-        }
-        return net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(type, level, reason, pos, random);
+        boolean dark = level.getBrightness(net.minecraft.world.level.LightLayer.SKY, pos) == 0
+                && level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, pos) == 0;
+        boolean home = com.thesift.entity.Sifter.isSand(level.getBlockState(pos.below())) || dark;
+        return (home || EntitySpawnReason.isSpawner(reason)) && Mob.checkMobSpawnRules(type, level, reason, pos, random);
     }
 
     /** The music fish spawn inside Chrome (or water) that is at least two blocks deep. */

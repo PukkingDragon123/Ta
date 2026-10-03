@@ -192,9 +192,12 @@ def stomper_mouth(expr, w=60, h=24):
             return 'm'
         if abs(v - lip_y + 2.0 / h) < 0.8 / h and abs(u) < 0.9:
             return 'L'
-        # cheeks
-        if ((abs(u) - 0.78) ** 2 * 6 + (v - 0.35) ** 2 * 3) < 0.06 and expr in ('happy', '', 'blink'):
-            return 'b'
+        # cheeks: a blush with a dusting of freckles (CR1)
+        cheek = (abs(u) - 0.78) ** 2 * 6 + (v - 0.35) ** 2 * 3
+        if cheek < 0.085 and expr in ('happy', '', 'blink'):
+            return 'f' if (x * 3 + y * 5) % 11 == 0 else 'b'
+        if cheek < 0.12 and (x * 7 + y * 3) % 13 == 0:
+            return 'f'
         # wrinkles round the trunk base
         if abs(u) < 0.18 and abs(v + 0.15) < 0.5 and (y % 4 == 0) and abs(u) > 0.06:
             return 'w'
@@ -245,12 +248,12 @@ def stomper_eye(w, h, expr, mirror=False, side=False):
             if rr < 0.5 and (abs(u - v) < 1.8 / w or abs(u + v) < 1.8 / w):
                 return 'p'
             return 'i' if v < 0.3 else 'I'
-        pupil = (u / 0.5) ** 2 + ((v - 0.1) / 0.2) ** 2
+        if not side and ((uu + 0.34) ** 2 + (v + 0.3) ** 2 < 0.05 or (uu - 0.36) ** 2 + (v - 0.36) ** 2 < 0.014):
+            return 'h'
+        pupil = (u / 0.36) ** 2 + ((v - 0.06) / 0.34) ** 2
         if pupil < 1.0:
             return 'p'
-        if not side and ((uu + 0.38) ** 2 + (v + 0.3) ** 2 < 0.045 or (uu - 0.42) ** 2 + (v - 0.42) ** 2 < 0.012):
-            return 'h'
-        if (u / 0.66) ** 2 + ((v - 0.1) / 0.38) ** 2 < 1.0:
+        if (u / 0.47) ** 2 + ((v - 0.06) / 0.45) ** 2 < 1.0:
             return 'o'
         return 'j' if v < -0.2 else ('i' if v < 0.4 else 'I')
     return rows_of(w, h, fn)
@@ -303,6 +306,23 @@ def frost(img, caps=True, seed=0, strength=0.7):
     return out
 
 
+def rosy(img, hue=0.965, sat=0.62):
+    """A teal moss picture turned the rose-pink of the Sift's pink grass (CR1): every pixel keeps its
+    light and shade (and its white sparkles), only the hue and saturation change."""
+    import colorsys
+    out = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    src, px = img.load(), out.load()
+    for y in range(img.size[1]):
+        for x in range(img.size[0]):
+            r, g, b, a = src[x, y]
+            hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+            if ss > 0.15:
+                r2, g2, b2 = colorsys.hsv_to_rgb(hue, min(1.0, ss * sat + 0.1), min(1.0, vv * 1.15 + 0.05))
+                r, g, b = int(r2 * 255), int(g2 * 255), int(b2 * 255)
+            px[x, y] = (r, g, b, a)
+    return out
+
+
 def kplant(parent, name, pivot, key, w, h, rot=(0, 0, 0), glow_bright=None):
     """plant(), with the picture a palette key (so the white coat can frost it)."""
     p = parent.part(name, pivot=pivot, rot=rot)
@@ -320,7 +340,10 @@ def kplant(parent, name, pivot, key, w, h, rot=(0, 0, 0), glow_bright=None):
 STOMPER_GARDEN = [('dreambloom', 0, -8, -1.5, 9, 11), ('hummingbloom', -5.5, -8, -1, 9, 10), ('hummingbloom', 5.5, -8, 0, 8, 9),
                   ('lullaby_bell', -3, -8, 4.5, 8, 9), ('nebula_iris', 3.5, -8, 4.5, 8, 9), ('coral_bush', -9.5, -6, -10, 9, 9),
                   ('coral_bush', 9.5, -6, 10, 9, 9), ('glimmer_sprouts', 9.5, -6, -9.5, 7, 7), ('glimmer_sprouts', -9.5, -6, 9.5, 7, 6),
-                  ('echo_orchid', -10, -6, 0, 7, 8), ('blushgrass', 10, -6, -1, 8, 7), ('soulpetal', 0, -6, 10.5, 7, 8)]
+                  ('echo_orchid', -10, -6, 0, 7, 8), ('blushgrass', 10, -6, -1, 8, 7), ('soulpetal', 0, -6, 10.5, 7, 8),
+                  # CR1: tufts of the Sift's pink blushgrass all over its back
+                  ('blushgrass', -3.5, -8, -6.5, 7, 7), ('blushgrass', 6.5, -6, 6.5, 7, 6), ('blushgrass', -6.5, -6, 10.5, 6, 6),
+                  ('blushgrass', 2.5, -6, -11, 6, 5)]
 STOMPER_SHOULDERS = [('coral_fern', -13.5, -15, 8, 8), ('dreambloom', 13.5, -14, 7, 8), ('lullaby_bell', -13.5, 15, 7, 8),
                      ('glimmer_sprouts', 13.5, 14, 7, 7)]
 STOMPER_BROW = [('hummingbloom', -7, -6, 7, 8), ('glimmer_sprouts', 8, -4, 7, 7)]
@@ -330,44 +353,50 @@ _PETALS = [(6, 22), (16, 4), (31, 6), (40, 18), (8, 40), (24, 46), (38, 38), (44
 
 
 def stomper() -> Model:
-    """The Stomper: a huge, shaggy mammoth-bullfrog in the Sift's pink and cyan. A warty coral-pink
-    frog body on four cyan-furred pillar legs, a glowing sculk vein or two, and - like a Sniffer - a
-    whole little garden growing on its back: a carpet of lumen moss strewn with petals, a crown of
-    blooms round the three puffing spiracles and coral and sprouts in the corners, all swaying as it
-    walks. Four eyes (two big glossy frog domes), a long ringed trunk, floppy ears. In the White
-    Forest it is snow-white with a frosted garden (stomper_white)."""
+    """The Stomper: a huge, shaggy mammoth-bullfrog in the Sift's green and pink. A warty mint-green
+    frog body on four pink-furred pillar legs, a glowing sculk vein or two, and - like a Sniffer - a
+    whole little garden growing on its back: a carpet of the Sift's pink Coral Turf strewn with petals
+    and blushgrass tufts, a crown of blooms round the three puffing spiracles and coral and sprouts in
+    the corners, all swaying as it walks. Two big glossy violet frog-dome eyes, a long ringed trunk,
+    floppy ears. In the White Forest it is frosted mint with a snowy pink garden (stomper_white)."""
+    # CR1: its body wears the green of the Sift's grass and its back grows the Sift's pink grass (coral turf and
+    # blushgrass) - the old pink body and teal garden swapped round. Violet eyes with a golden ring stand out on the mint.
     pal = {
-        'skin': '#f37d8a', 'skin_l': '#ffa0ab', 'skin_d': '#d65866', 'wart': '#c44a5a', 'wart_l': '#ff9eac', 'spot': '#62d6d6',
-        'belly': '#ffd9de', 'belly_l': '#fff0f2', 'belly_d': '#efb3bf',
-        'fur': '#43bcc4', 'fur_l': '#7fe3e6', 'fur_d': '#29889a', 'moss': '#50c8bb', 'moss_l': '#69dbca', 'moss_d': '#3cb3ab',
+        'skin': '#4cc4b4', 'skin_l': '#7fe3d2', 'skin_d': '#2f9a92', 'wart': '#257f78', 'wart_l': '#9df0e0', 'spot': '#ff8ea4',
+        'belly': '#dcf7ee', 'belly_l': '#f2fffa', 'belly_d': '#a9dccf',
+        'fur': '#e9779b', 'fur_l': '#ff9fbd', 'fur_d': '#b84e74', 'moss': '#f07a92', 'moss_l': '#ff9aac', 'moss_d': '#c8566e',
         'sculk': '#12303a', 'sculk_l': '#1f5a66', 'glow': '#3ff5e6', 'glow2': '#c8fffb',
-        'mouth': '#3a1a3a', 'lip': '#a8445a', 'tongue': '#ff8fb0', 'teeth': '#fff8ec', 'blush': '#ff6f9a',
-        'eye': '#14182e', 'iris': '#5fe6f5', 'iris_d': '#2a9cc8', 'iris_l': '#b6fbff', 'eye_ring': '#ffd36b', 'eye_hi': '#ffffff',
-        'lid': '#f590a0', 'lid_d': '#a8445a', 'eye2': '#c3a9ec', 'eye2_d': '#8770cf',
+        'mouth': '#2a1a34', 'lip': '#22706b', 'tongue': '#ff8fb0', 'teeth': '#fff8ec', 'blush': '#ff6f9a',
+        'eye': '#1a1430', 'iris': '#b58cf0', 'iris_d': '#7b55c9', 'iris_l': '#e2d0ff', 'eye_ring': '#ffd36b', 'eye_hi': '#ffffff',
+        'lid': '#5fd0c2', 'lid_d': '#22706b', 'freckle': '#e0587e',
         'nail': '#e3ddcc', 'nail_d': '#b3ab96', 'stone': '#c9d3e8', 'stone_d': '#93a0bf', 'hole': '#0c1a24', 'chrome': '#a8fbff',
-        'trunk': '#f37d8a', 'trunk_l': '#ffa0ab', 'trunk_d': '#d65866', 'ring': '#43bcc4', 'ring_d': '#29889a', 'plant': '#50c8bb',
+        'trunk': '#4cc4b4', 'trunk_l': '#7fe3d2', 'trunk_d': '#2f9a92', 'ring': '#ff8595', 'ring_d': '#d85c74', 'plant': '#f07a92',
         'drum': '#b0643c', 'drum_l': '#c98154', 'drum_d': '#8a4a2a', 'drumhead': '#fbeedb', 'drumhead_d': '#e2cfb3',
-        'petal': '#ffb7d5', 'petal_l': '#fff0f6', 'petal_d': '#f07fb0',
+        'petal': '#fff3c4', 'petal_l': '#ffffff', 'petal_d': '#f2c766',
     }
+    # the White Forest coat: a frosted-mint body under a snowy pink garden
     white = {
-        'skin': '#eef3f9', 'skin_l': '#ffffff', 'skin_d': '#c7d3e3', 'wart': '#b4c3d8', 'wart_l': '#ffffff', 'spot': '#a9def0',
-        'belly': '#ffffff', 'belly_l': '#ffffff', 'belly_d': '#dce6f0',
-        'fur': '#e4f2f8', 'fur_l': '#ffffff', 'fur_d': '#b0cad9', 'moss': '#d6ece8', 'moss_l': '#f0faf8', 'moss_d': '#b5d6cf',
+        'skin': '#e2f4ef', 'skin_l': '#ffffff', 'skin_d': '#b8d8d0', 'wart': '#a8cfc6', 'wart_l': '#ffffff', 'spot': '#ffd0dc',
+        'belly': '#f6fffc', 'belly_l': '#ffffff', 'belly_d': '#d4ece6',
+        'fur': '#f8dbe5', 'fur_l': '#ffffff', 'fur_d': '#ddb3c3', 'moss': '#f6d6e0', 'moss_l': '#fff0f5', 'moss_d': '#e0b2c2',
         'sculk': '#7fb3d4', 'sculk_l': '#a6d0e8', 'glow': '#c4f8ff', 'glow2': '#ffffff',
-        'mouth': '#3d2b48', 'lip': '#c497b0', 'tongue': '#ffb3c9', 'teeth': '#ffffff', 'blush': '#ffc2d6',
-        'eye': '#16203a', 'iris': '#9fe8ff', 'iris_d': '#5aa9d6', 'iris_l': '#d9f8ff', 'eye_ring': '#ffe9a8', 'eye_hi': '#ffffff',
-        'lid': '#e6edf6', 'lid_d': '#9fb0c6', 'eye2': '#d6c9f2', 'eye2_d': '#a597d4',
+        'mouth': '#3d2b48', 'lip': '#8fb2ab', 'tongue': '#ffb3c9', 'teeth': '#ffffff', 'blush': '#ffc2d6',
+        'eye': '#1c1838', 'iris': '#c3a9ec', 'iris_d': '#8f72d0', 'iris_l': '#e9ddff', 'eye_ring': '#ffe9a8', 'eye_hi': '#ffffff',
+        'lid': '#e8f6f2', 'lid_d': '#9fbab5', 'freckle': '#e8a9c2',
         'nail': '#f6f3ea', 'nail_d': '#c8c1ae', 'stone': '#eaf0f8', 'stone_d': '#b6c2d6', 'hole': '#1a2a3a', 'chrome': '#e2fdff',
-        'trunk': '#eef3f9', 'trunk_l': '#ffffff', 'trunk_d': '#c7d3e3', 'ring': '#a9def0', 'ring_d': '#6fb6d2', 'plant': '#d6ece8',
+        'trunk': '#e2f4ef', 'trunk_l': '#ffffff', 'trunk_d': '#b8d8d0', 'ring': '#f7c3d0', 'ring_d': '#e19ab0', 'plant': '#f6d6e0',
         'drum': '#d8c7a8', 'drum_l': '#eadcc0', 'drum_d': '#b09a78', 'drumhead': '#ffffff', 'drumhead_d': '#e4e9f0',
         'petal': '#e6f4ff', 'petal_l': '#ffffff', 'petal_d': '#b9dcf0',
     }
     # the pictures (moss, turf, every plant) are palette entries too, so the white coat gets them frosted
-    for i, (key, tex, caps) in enumerate([('img:moss', 'lumen_moss_block', False), ('img:turf', 'sift_grass_block_top', False)]
+    # CR1: the turf on its back is the Sift's pink Coral Turf, the moss under it lumen moss gone rose-pink
+    for i, (key, tex, caps) in enumerate([('img:moss', 'lumen_moss_block', False), ('img:turf', 'coral_turf_top', False)]
                                          + [(f'img:{t}', t, True) for t in sorted({g[0] for g in STOMPER_GARDEN + STOMPER_SHOULDERS + STOMPER_BROW})]):
         img = block_tex(tex)
+        if key == 'img:moss':
+            img = rosy(img)
         pal[key], pal[key + '|m'] = img, mirror_img(img)
-        cold = frost(img, caps, seed=i, strength=0.7 if caps else 0.86)
+        cold = frost(img, caps, seed=i, strength=0.7 if caps else 0.55)
         white[key], white[key + '|m'] = cold, mirror_img(cold)
     m = Model('stomper', (256, 256), pal, {'stomper': {}, 'stomper_white': white}, res=2, expressions=EXPRS)
     skin = mc('skin', clusters=0.35, spots=0.18, accent='spot')
@@ -443,7 +472,7 @@ def stomper() -> Model:
     head_side = mc('skin', clusters=0.3, spots=0.15, accent='spot', hd=True, map=warts(28, 24, 21, 9, top=20), keys=vk)
     head.cube((-15, -10, -13), (30, 12, 14), **skin, faces={
         'north': mc('skin', clusters=0.2, spots=0.08, accent='spot', hd=True, map=stomper_mouth(''),
-                    keys={'m': 'mouth', 'L': 'lip', 'b': 'blush', 'w': 'skin_d', 'W': 'wart', 't': 'teeth'},
+                    keys={'m': 'mouth', 'L': 'lip', 'b': 'blush', 'f': 'freckle', 'w': 'skin_d', 'W': 'wart', 't': 'teeth'},
                     expr={e: stomper_mouth(e) for e in EXPRS}),
         'east': head_side, 'west': dict(head_side, map=warts(28, 24, 22, 9, top=20)),
         'down': mc('belly', clusters=0.2),
@@ -476,12 +505,12 @@ def stomper() -> Model:
     sac = jaw.part('throat', pivot=(0, 5, -6))
     sac.cube((-9, -1, -5), (18, 5, 10), **mc('belly', clusters=0.15, rim=False), faces={'north': mc('belly', clusters=0.1, rim=False, hd=True,
               map=['.' * 36] * 2 + ['....' + 'd...' * 7 + '....'] + ['.' * 36] * 7, keys={'d': 'belly_d'})})
-    # the four eyes: two big glossy frog domes on top, two small lilac ones low on the cheeks
+    # CR1: its two eyes - big glossy frog domes at the front corners of its brow
     eyekeys = {'r': 'skin_d', 'c': 'lid_d', 'j': 'iris_l', 'i': 'iris', 'I': 'iris_d', 'o': 'eye_ring', 'p': 'eye', 'h': 'eye_hi', 'l': 'lid',
                'd': 'lid_d'}
     for side, sx in (('left', 1), ('right', -1)):
         mir = sx < 0
-        big = head.part(f'{side}_eye', pivot=(8.5 * sx, -12, -7))
+        big = head.part(f'{side}_eye', pivot=(8.5 * sx, -11.5, -8.5))
         big.cube((-4, -5, -4), (8, 6, 8), **mc('skin', clusters=0.2), faces={
             'north': mc('skin', clusters=0.0, hd=True, map=stomper_eye(16, 12, '', mir), keys=eyekeys,
                         expr={e: stomper_eye(16, 12, e, mir) for e in EXPRS}, glow_keys='jiIo'),
@@ -492,12 +521,6 @@ def stomper() -> Model:
         lid = big.part(f'{side}_eyelid')
         lid.cube((-4, -5, -4), (8, 3, 8), inflate=0.15, **mc('lid', clusters=0.0, rim=False), faces={
             'north': mc('lid', clusters=0.0, rim=False, hd=True, map=['.' * 16] * 5 + ['d' * 16], keys={'d': 'lid_d'})})
-        small = head.part(f'{side}_small_eye', pivot=(12.5 * sx, -5.5, -13))
-        small.cube((-2, -2, -1.5), (4, 4, 2), **mc('skin', clusters=0.0), faces={
-            'north': mc('skin', clusters=0.0, hd=True, map=eye(8, 8, '', mir, pupil='dot', rim=0.7),
-                        keys={'r': 'skin_d', 'i': 'eye2', 'I': 'eye2_d', 'p': 'eye', 'h': 'eye_hi', 'l': 'lid', 'd': 'lid_d'},
-                        expr=eye_exprs(8, 8, mir, pupil='dot', rim=0.7)),
-        })
         ear = head.part(f'{side}_ear', pivot=(15 * sx, -8, -4), rot=(0, -0.3 * sx, 0.35 * sx))
         ear.cube((0 if sx > 0 else -2, -1, -4), (2, 10, 8), **fur, fringe=2, faces={
             ('west' if sx > 0 else 'east'): mc('blush', clusters=0.2),

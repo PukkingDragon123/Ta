@@ -55,6 +55,12 @@ EVENTS = EVENTS | frozenset({
     'entity.witch.celebrate', 'entity.zombie.attack_iron_door', 'item.mace.smash_ground_heavy',
 })
 
+# CR1: the Sifter's bell, the Echoer's wings, drill and pings
+EVENTS = EVENTS | frozenset({
+    'block.amethyst_block.chime', 'block.amethyst_block.resonate', 'block.bell.resonate', 'block.bell.use', 'block.copper.step',
+    'block.grindstone.use', 'entity.bat.takeoff', 'entity.breeze.whirl', 'entity.phantom.flap',
+})
+
 # Vanilla sound files (assets/minecraft/sounds/<name>.ogg) used directly.
 FILES = frozenset({
     'ambient/cave/cave11', 'ambient/cave/cave13', 'ambient/cave/cave7', 'ambient/cave/cave9', 'ambient/nether/soulsand_valley/wind1',

@@ -43,6 +43,9 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_CHOMP = reg("entity.sifter.chomp");
     public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_LEAP = reg("entity.sifter.leap");
     public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_STEP = reg("entity.sifter.step");
+    // CR1: the living bell - its clapper's tink on the lip, and a full ring when it is struck hard
+    public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_TINK = reg("entity.sifter.tink");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_RING = reg("entity.sifter.ring");
     // ---- Enchoer
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_AMBIENT = reg("entity.enchoer.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_HURT = reg("entity.enchoer.hurt");

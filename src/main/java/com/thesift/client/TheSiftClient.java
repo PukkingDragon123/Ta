@@ -84,6 +84,7 @@ public class TheSiftClient {
         ChromeClient.register(modBus); // A3 Chrome: rainbow tint, ripples, note bursts, Rainbow Daze
         SculkSwampClient.register(modBus); // W1 World & terrain: Sculk Water's look and the Sculk Swamp's mist
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
+        com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }

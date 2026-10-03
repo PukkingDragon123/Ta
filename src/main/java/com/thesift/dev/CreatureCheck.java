@@ -334,10 +334,10 @@ final class CreatureCheck {
 
     /** Every wild creature, one per chunk-sized pen; the flyers sit in the middle row so their neighbours tick too. */
     private static List<EntityType<?>> penned() {
-        return List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModEntities.ENCHOER.get(),
+        return List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModCaravans.CARAVAN.get(),
                 ModEntities.STOMPER.get(), ModSwifter.SWIFTER.get(),
                 ModEchoer.SOUL_GOLEM.get(), ModEntities.HARMONER.get(), ModEntities.SKY_WHALE.get(), ModEchoer.NIB.get(),
-                ModCaravans.CARAVAN.get(), ModCaveCreatures.JAILER.get(),
+                ModEntities.ENCHOER.get(), ModCaveCreatures.JAILER.get(), // CR1: the Echoer flies now, so it pens in the middle row
                 ModCaveCreatures.SCULKLING.get(), ModEntities.FANFARE_EEL.get(), ModEntities.KAZOO_FISH.get(), ModEntities.TUBAFISH.get(),
                 ModSeaSky.GOBBLER.get());
     }

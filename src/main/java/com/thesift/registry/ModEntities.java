@@ -24,10 +24,10 @@ public final class ModEntities {
             b -> b.sized(0.4F, 0.42F).eyeHeight(0.18F).clientTrackingRange(8)); // A1: the little 1:1 Bulb
     public static final DeferredHolder<EntityType<?>, EntityType<Slumbler>> SLUMBLER = ENTITIES.registerEntityType("slumbler", Slumbler::new,
             MobCategory.CREATURE, b -> b.sized(1.7F, 0.95F).eyeHeight(0.7F).clientTrackingRange(10));
-    public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.MONSTER,
-            b -> b.sized(0.9F, 1.2F).eyeHeight(0.95F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.CREATURE,
+            b -> b.sized(0.9F, 1.25F).eyeHeight(1.0F).clientTrackingRange(8)); // CR1: a neutral living bell (eyes on its shoulder)
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
-            MobCategory.CREATURE, b -> b.sized(1.0F, 2.5F).eyeHeight(1.8F).clientTrackingRange(10));
+            MobCategory.CREATURE, b -> b.sized(0.9F, 1.3F).eyeHeight(0.95F).clientTrackingRange(10)); // CR1: a speaker-bat (eyes at its drill)
     public static final DeferredHolder<EntityType<?>, EntityType<Harmoner>> HARMONER = ENTITIES.registerEntityType("harmoner", Harmoner::new,
             MobCategory.CREATURE, b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,

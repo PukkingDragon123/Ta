@@ -750,8 +750,7 @@ def gen_lang():
         # A2 Echoer: the Echoer's codex page is in tools/echoer_world.py
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Chrome lake salamander',
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
-        f'codex.{NS}.sifter.title': 'Sifter', f'codex.{NS}.sifter.tagline': 'Hostile - dune lurker',
-        f'codex.{NS}.sifter.body': 'A sandstone-and-bone trap on crab legs. Sifters dig into the dunes until only the lid and a glowing lure show, then burst out and slam the lid shut on whatever came to look. A glow on the sand is never just a glow. Music makes one forget its prey.',
+        # CR1: the Sifter's Codex page comes from tools/sifter.py
         f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
         f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite gear. Tools beat Netherite and knock foes flying. Armour: no Deafening, softer sonic booms, helmet breathes water, legs and boots swim fast, full set halves Sculk Corruption.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
@@ -940,12 +939,6 @@ SUBTITLES = {
     'entity.slumbler.yawn': 'Slumbler yawns',
     'entity.slumbler.bite': 'Slumbler snaps',
     'entity.slumbler.step': 'Footsteps',
-    'entity.sifter.ambient': 'Sifter chitters',
-    'entity.sifter.hurt': 'Sifter hurts',
-    'entity.sifter.death': 'Sifter dies',
-    'entity.sifter.chomp': 'Sifter chomps',
-    'entity.sifter.leap': 'Sifter bursts from the sand',
-    'entity.sifter.step': 'Footsteps',
     'entity.enchoer.ambient': 'Enchoer chimes',
     'entity.enchoer.hum': 'Enchoer hums',
     'entity.enchoer.trade': 'Enchoer trades',
@@ -1051,12 +1044,6 @@ SOUNDS = {
     'entity.slumbler.yawn': [('mob/sniffer/happy1', 1.0, 0.7), ('mob/sniffer/happy2', 1.0, 0.65)],
     'entity.slumbler.bite': [('mob/frog/tongue1', 1.0, 0.5), ('mob/frog/tongue2', 1.0, 0.5)],
     'entity.slumbler.step': [('mob/sniffer/step1', 0.8, 1.0), ('mob/sniffer/step2', 0.8, 1.0)],
-    'entity.sifter.ambient': [('mob/silverfish/say1', 0.7, 0.7), ('mob/silverfish/say2', 0.7, 0.75), ('mob/squid/ambient1', 0.6, 1.4)],
-    'entity.sifter.hurt': [('mob/silverfish/hit1', 0.8, 0.7), ('mob/squid/hurt1', 0.8, 1.3)],
-    'entity.sifter.death': [('mob/silverfish/kill', 0.9, 0.7), ('mob/squid/death1', 0.9, 1.2)],
-    'entity.sifter.chomp': [('mob/fox/bite1', 1.0, 0.8), ('mob/fox/bite2', 1.0, 0.8)],
-    'entity.sifter.leap': [('event:block.sand.break', 1.0, 0.8), ('event:block.sand.break', 1.0, 0.7)],
-    'entity.sifter.step': [('mob/silverfish/step1', 0.4, 1.2), ('mob/silverfish/step2', 0.4, 1.2)],
     'entity.enchoer.ambient': [('mob/allay/idle_without_item1', 0.8, 0.6), ('mob/allay/idle_without_item2', 0.8, 0.55), ('block/amethyst/resonate1', 0.8, 0.7)],
     'entity.enchoer.hum': [('block/amethyst/resonate2', 1.0, 0.6), ('block/amethyst/resonate3', 1.0, 0.7), ('mob/allay/item_given1', 0.8, 0.5)],
     'entity.enchoer.trade': [('mob/allay/idle_with_item1', 0.8, 0.6), ('mob/allay/idle_with_item2', 0.8, 0.6)],
@@ -1198,7 +1185,7 @@ def gen_wild_creatures():
         f'message.{NS}.sky_whale.gem': 'The Sky Whale sings back - and spits out a glittering Skysong Gem!',
         f'message.{NS}.sky_whale.no_gem': 'The Sky Whale sings back warmly. It has no gem left to give today.',
         f'codex.{NS}.stomper.title': 'Stomper', f'codex.{NS}.stomper.tagline': 'Mammoth, bullfrog, both',
-        f'codex.{NS}.stomper.body': 'Four eyes, one trunk, no tusks - and a whole garden on its back that it shakes out now and then like a wet dog. Stompers slurp Chrome and hose any monster (or you, if you hit one) with it. Drums make them dance, ending in two stomps that send monsters flying. Two fed Hummingblooms lay an egg; tame the baby with them and ride it straight away (jump to hop, attack to stomp). White Forest Stompers are snow-white with a frosted garden, and their eggs hatch white too.',
+        f'codex.{NS}.stomper.body': "A mint-green giant with two frog-dome eyes, a trunk and the Sift's pink grass growing on its back. It slurps Chrome and hoses monsters (or you) with it. Drums make it dance and stomp. Two fed Hummingblooms lay an egg: tame the baby with them and ride it (jump to hop, attack to stomp). White Forest Stompers are frosted pale.",
         f'codex.{NS}.sky_whale.title': 'Sky Whale', f'codex.{NS}.sky_whale.tagline': 'Rare - the singer in the clouds',
         f'codex.{NS}.sky_whale.body': "A shaggy whale-bull with cloud-soft fur, a meadow of blooms on its back and glowbell vines trailing below, rowing through the sky on furry flippers. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you and the whale glides down, sings to you and spits out a Skysong Gem - one a day per whale.",
         f'codex.{NS}.fanfare_eel.title': 'Fanfare Eel', f'codex.{NS}.fanfare_eel.tagline': 'Hostile - brass with teeth',
@@ -1327,6 +1314,12 @@ import echoer as _echoer  # noqa: E402
 
 SOUNDS.update(_echoer.SOUNDS)
 SUBTITLES.update(_echoer.SUBTITLES)
+
+# --- CR1 Sifter: the living bell's tinks, rings and clangs (tools/sifter.py)
+import sifter as _sifter  # noqa: E402
+
+SOUNDS.update(_sifter.SOUNDS)
+SUBTITLES.update(_sifter.SUBTITLES)
 
 # --- A1 Bulb & Stomper: the flower swap, the Sculk Bloom and the Stomper's garden shake (tools/sculk_bloom.py)
 import sculk_bloom as _sculk_bloom  # noqa: E402
@@ -1458,6 +1451,7 @@ def generate():
     __import__('gatefx').assets(sys.modules[__name__])  # B1 Portal & sky FX: gate warp/shock post effects, sky Codex page
     __import__('conductor').assets(sys.modules[__name__])  # C3 Conductor: the 3D Conductor's Staff (flat sprite kept in the GUI)
     __import__('band').assets(sys.modules[__name__])  # M2 band: band panel text, creature instrument names, Codex page
+    __import__('sifter').assets(sys.modules[__name__])  # CR1: bell and echo ring particles, the living bell's Codex page
 
 
 def finalize():

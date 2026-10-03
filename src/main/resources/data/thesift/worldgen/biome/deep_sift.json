@@ -25,14 +25,14 @@
       "argument": {
         "spawn_costs": {},
         "spawns_by_category": {
-          "creature": [],
-          "monster": [
+          "creature": [
             {
               "type": "thesift:sifter",
               "count": 1,
               "weight": 5
             }
           ],
+          "monster": [],
           "ambient": [],
           "water_creature": [],
           "underground_water_creature": [],

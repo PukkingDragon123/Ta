@@ -58,8 +58,11 @@ public final class ModEchoer {
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_CHARGE = reg("block.echoer_device.charge");
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_FIRE = reg("block.echoer_device.fire");
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_FIZZLE = reg("block.echoer_device.fizzle");
-    /** C4 Echoer: the wind chimes in its antlers clink as it moves. */
+    /** CR1 Echoer: its echolocation pings (a sonar click or a chime blip from its speakers). */
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_CHIMES = reg("entity.enchoer.chimes");
+    /** CR1 Echoer: its bat wings, and the brass drill of its snout whirring up when it sings. */
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_FLAP = reg("entity.enchoer.flap");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_DRILL = reg("entity.enchoer.drill");
 
     /** What the Echoer accepts as an offering (siftite and serbim ingots, prism gems). */
     public static final TagKey<Item> ECHOER_OFFERINGS = TagKey.create(Registries.ITEM, TheSift.id("echoer_offerings"));

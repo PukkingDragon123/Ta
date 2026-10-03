@@ -34,8 +34,6 @@ public class StomperModel extends EntityModel<StomperRenderState> {
     private final ModelPart rightEyelid;
     private final ModelPart leftEar;
     private final ModelPart rightEar;
-    private final ModelPart leftSmallEye;
-    private final ModelPart rightSmallEye;
     private final ModelPart[] trunk = new ModelPart[4];
     private final ModelPart[] legs = new ModelPart[4];
     private final ModelPart[] feet = new ModelPart[4];
@@ -60,8 +58,6 @@ public class StomperModel extends EntityModel<StomperRenderState> {
         this.rightEyelid = this.head.getChild("right_eye").getChild("right_eyelid");
         this.leftEar = this.head.getChild("left_ear");
         this.rightEar = this.head.getChild("right_ear");
-        this.leftSmallEye = this.head.getChild("left_small_eye");
-        this.rightSmallEye = this.head.getChild("right_small_eye");
         ModelPart t = this.head;
         for (int i = 0; i < 4; i++) {
             t = t.getChild("trunk_" + i);
@@ -128,11 +124,10 @@ public class StomperModel extends EntityModel<StomperRenderState> {
         this.head.xRot += s.xRot * Anim.DEG * 0.3F;
         this.leftEar.zRot += Mth.sin(age * 0.11F) * 0.07F + walk * Mth.sin(pos * 2.0F) * 0.12F;
         this.rightEar.zRot -= Mth.sin(age * 0.11F + 0.8F) * 0.07F + walk * Mth.sin(pos * 2.0F) * 0.12F;
-        this.leftSmallEye.yRot = Mth.sin(age * 0.03F) * 0.15F;
-        float glance = Mth.clamp(s.yRot * Anim.DEG * 0.2F, -0.15F, 0.15F);
+        // CR1: its two big eyes glance where it looks, and roll about lazily on their own
+        float glance = Mth.clamp(s.yRot * Anim.DEG * 0.2F, -0.15F, 0.15F) + Mth.sin(age * 0.03F) * 0.05F;
         this.leftEye.yRot = glance;
         this.rightEye.yRot = glance;
-        this.rightSmallEye.yRot = Mth.sin(age * 0.03F + 1.3F) * 0.15F;
         // the trunk sways and curls on its own, like a curious hand
         for (int i = 0; i < 4; i++) {
             this.trunk[i].xRot += Mth.sin(age * 0.05F - i * 0.6F) * 0.07F * (i + 1) * 0.6F + walk * Mth.sin(pos - i * 0.7F) * 0.08F;

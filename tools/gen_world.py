@@ -492,7 +492,7 @@ def biomes():
                 [(9, 'trees_forest_mountains'), (9, 'patch_blushgrass'), (9, 'patch_sift_flowers'), (9, 'patch_glowcap_surface'),
                  (9, 'patch_glimmer_sprouts')])
     biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
-          spawns=mobs(creature=[('bulb', 2, 1, 2), ('minecraft:sniffer', 2, 1, 1)], monster=[('sifter', 60, 1, 2)], costs={'sifter': (1.0, 0.12)}),
+          spawns=mobs(creature=[('bulb', 2, 1, 2), ('minecraft:sniffer', 2, 1, 1), ('sifter', 10, 1, 3)]),  # CR1: the Sifter is a neutral creature
           parts=particles(('dream_pollen', 0.003), ('glow_dust', 0.0015), ('wishing_star', 0.0002)),
           feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND + [(9, 'patch_dune_scrub')])
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
@@ -508,7 +508,7 @@ def biomes():
           feats=[(2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_wishing_grove'), (9, 'patch_grove_flowers'), (9, 'patch_drift_petals'), (9, 'patch_blushgrass'), (9, 'patch_pitcher_plant')])
     biome('deep_sift', fog='#1a2f3f', sky='#223a5a', water='#3fc8d8', grass='#2f8f9e', foliage='#37a9b5', temp=0.5, down=0.4,
-          spawns=mobs(monster=[('sifter', 5, 1, 1)]),
+          spawns=mobs(creature=[('sifter', 5, 1, 1)]),  # CR1: a few lost bells in the dark
           parts=particles(('glow_dust', 0.006), ('drifting_soul', 0.0015)),
           music=f'{NS}:music.deep_sift', ambient_loop=f'{NS}:ambient.deep_sift.loop',
           feats=COMMON_UNDERGROUND + [(2, 'minecraft:amethyst_geode'), (7, 'minecraft:sculk_vein'), (7, 'minecraft:sculk_patch_deep_dark'),

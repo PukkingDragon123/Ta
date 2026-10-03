@@ -71,7 +71,17 @@ public final class CodexEntries {
             }
         }));
         l.add(mob(CREATURES, "sniffer", () -> net.minecraft.world.entity.EntityTypes.SNIFFER, (e, t) -> { }));
-        l.add(mob(CREATURES, "enchoer", ModEntities.ENCHOER, (e, t) -> { }));
+        l.add(mob(CREATURES, "enchoer", ModEntities.ENCHOER, (e, t) -> {
+            if (e instanceof com.thesift.entity.Enchoer en) {
+                // CR1: the speaker-bat beats its wings on the page, and every few seconds its drill whirrs round
+                en.flapO = en.flap;
+                en.flap += 0.55F;
+                en.beatO = 1.0F;
+                en.beat = 1.0F;
+                en.drillO = en.drill;
+                en.drill += t % 120 < 50 ? 0.8F : 0.0F;
+            }
+        }));
         // A2 Echoer: its household and the meadow wisps
         l.add(mob(CREATURES, "soul_golem", com.thesift.registry.ModEchoer.SOUL_GOLEM, (e, t) -> { }));
         l.add(mob(CREATURES, "nib", com.thesift.registry.ModEchoer.NIB, (e, t) -> { }));
@@ -79,7 +89,7 @@ public final class CodexEntries {
             if (e instanceof Slumbler s && t % 120 == 20) s.yawnAnimation.start(s.tickCount);
         }));
         l.add(mob(CREATURES, "sifter", ModEntities.SIFTER, (e, t) -> {
-            if (e instanceof Sifter s && t % 50 == 10) s.chompAnimation.start(s.tickCount);
+            if (e instanceof Sifter s && t % 50 == 10) s.bonkAnimation.start(s.tickCount); // CR1: the bell rears and swings
         }));
         // ---- the wild creatures
         l.add(mob(CREATURES, "stomper", ModEntities.STOMPER, (e, t) -> {

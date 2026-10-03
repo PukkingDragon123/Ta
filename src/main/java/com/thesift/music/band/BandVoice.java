@@ -199,6 +199,10 @@ public final class BandVoice {
         }
         level.sendParticles(ParticleTypes.NOTE, x + (mob.getRandom().nextDouble() - 0.5) * mob.getBbWidth() * 0.6,
                 mob.getY() + mob.getBbHeight() + 0.35, z + (mob.getRandom().nextDouble() - 0.5) * mob.getBbWidth() * 0.6, 0, p / 24.0, 0.0, 0.0, 1.0);
+        // CR1: the creature's own show for the note (a bell's clapper strikes, a speaker pumps)
+        if (mob instanceof BandPlayer player) {
+            player.playedBandNote(p, loudness);
+        }
     }
 
     /** Vanilla ownership: a tamed {@link TamableAnimal}, or any {@link OwnableEntity} with an owner. */

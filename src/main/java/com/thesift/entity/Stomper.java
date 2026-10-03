@@ -58,7 +58,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Stomper: a huge, shaggy mammoth-bullfrog of the Sift Plains with four eyes and a long trunk.
+ * Stomper: a huge, shaggy mammoth-bullfrog of the Sift Plains with two big frog-dome eyes and a long trunk.
  * Gentle and slow, but almost impossible to bring down. Every so often it plods to the nearest
  * Chrome (or water) and drinks its fill through the trunk; when something hostile comes close - or
  * someone hits it - it rears up, raises its trunk and hoses them with a stream of Chrome that
@@ -72,7 +72,7 @@ import org.jspecify.annotations.Nullable;
 public class Stomper extends TamableAnimal implements net.minecraft.world.entity.PlayerRideableJumping {
     private static final EntityDataAccessor<Float> CHROME = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DANCE = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.INT);
-    /** 0: the Sift's pink and cyan, 1: the White Forest's snowy coat with its frosted garden. */
+    /** 0: the Sift's mint green with a pink-grass garden, 1: the White Forest's frosted coat with its snowy pink garden. */
     private static final EntityDataAccessor<Integer> COAT = SynchedEntityData.defineId(Stomper.class, EntityDataSerializers.INT);
     public static final int NORMAL = 0;
     public static final int WHITE = 1;

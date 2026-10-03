@@ -4,6 +4,7 @@ import com.thesift.entity.Bulb;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.Nib;
+import com.thesift.entity.Sifter;
 import com.thesift.entity.SkyWhale;
 import com.thesift.entity.Slumbler;
 import com.thesift.entity.SoulGolem;
@@ -34,13 +35,14 @@ import net.minecraft.world.entity.player.Player;
  *   <tr><td>Kazoo Fish</td><td>kazoo (bit)</td><td>flute; Tide Song</td><td>eager, swims</td></tr>
  *   <tr><td>Stomper</td><td>thunder drums (bass drum + bass, low)</td><td>drum; Golem Hymn</td><td>shy</td></tr>
  *   <tr><td>Slumbler</td><td>snore drone (didgeridoo, low, every second note)</td><td>strings; Lullaby</td><td>shy</td></tr>
- *   <tr><td>Echoer</td><td>wind chimes a fifth above, amethyst shimmer</td><td>chimes; Golem Hymn</td><td>shy</td></tr>
+ *   <tr><td>Echoer</td><td>wind chimes a fifth above through its speakers, amethyst shimmer</td><td>chimes; Golem Hymn</td><td>shy, flies</td></tr>
+ *   <tr><td>Sifter</td><td>dune bell (its own clapper on the lip)</td><td>chimes</td><td>shy</td></tr>
  *   <tr><td>Swifter</td><td>banjo yips</td><td>strings, drum</td><td>shy</td></tr>
  *   <tr><td>Tubafish</td><td>tuba (trumpet, low)</td><td>drum, flute; Tide Song</td><td>shy, swims</td></tr>
  *   <tr><td>Sky Whale</td><td>whale song (low flute + ghastly coo, every second note)</td><td>flute; Whale Song</td><td>shy, flies</td></tr>
  *   <tr><td>Soul Golem</td><td>soul vibraphone (iron xylophone)</td><td>drum; Golem Hymn</td><td>loyal (owned golems only)</td></tr>
- *   <tr><td>Sifter, Caravan, Jailer, Sculkling, Fanfare Eel, Gobbler</td><td>snare shell, crystal xylophone, jailer's bell, sculk clicks,
- *   fanfare horn, deep bass</td><td>drum; crystal; any; strings; flute; Tide Song</td><td>hostile: never join</td></tr>
+ *   <tr><td>Caravan, Jailer, Sculkling, Fanfare Eel, Gobbler</td><td>crystal xylophone, jailer's bell, sculk clicks,
+ *   fanfare horn, deep bass</td><td>crystal; any; strings; flute; Tide Song</td><td>hostile: never join</td></tr>
  * </table>
  *
  * (The bosses and their summons play in the Conductor's orchestra,
@@ -78,11 +80,17 @@ final class BandVoices {
                 .families(Family.STRINGS).songs(Song.LULLABY)
                 .temper(BandVoice.Temper.SHY).instrument("snore_drone").colour(0x9CC7A0)
                 .when(m -> !((Slumbler) m).isSlumbering()).register();
+        // CR1: the speaker-bat sings through its speakers (its cones pump and its drill whirrs on every note) and flies
         BandRegistry.voice(ModEntities.ENCHOER, SoundEvents.NOTE_BLOCK_CHIME).transpose(7).volume(0.9F)
                 .layer(SoundEvents.AMETHYST_BLOCK_CHIME, 0.35F)
                 .families(Family.CHIMES).songs(Song.GOLEM)
-                .temper(BandVoice.Temper.SHY).instrument("echo_chimes").colour(0xBFF6FF)
+                .temper(BandVoice.Temper.SHY).movement(BandVoice.Movement.FLY).instrument("echo_chimes").colour(0xBFF6FF)
                 .when(m -> ((Enchoer) m).getState() == Enchoer.IDLE).register();
+        // CR1: the Sifter is a living bell - its clapper strikes on every note it plays (see Sifter.playedBandNote)
+        BandRegistry.voice(ModEntities.SIFTER, SoundEvents.NOTE_BLOCK_BELL).volume(0.85F)
+                .families(Family.CHIMES)
+                .temper(BandVoice.Temper.SHY).instrument("dune_bell").colour(0xE0B060)
+                .when(m -> !((Sifter) m).isBurrowed()).register();
         BandRegistry.voice(ModSwifter.SWIFTER, SoundEvents.NOTE_BLOCK_BANJO).volume(0.9F)
                 .families(Family.STRINGS, Family.DRUM)
                 .temper(BandVoice.Temper.SHY).instrument("banjo").colour(0xF2F2F2)
@@ -105,8 +113,6 @@ final class BandVoices {
                 .bond((m, p) -> ((SoulGolem) m).isOwned() ? BandVoice.Bond.OWN : BandVoice.Bond.WILD).register();
 
         // ---- hostile: a voice, never a seat
-        BandRegistry.voice(ModEntities.SIFTER, SoundEvents.NOTE_BLOCK_SNARE)
-                .families(Family.DRUM).temper(BandVoice.Temper.HOSTILE).instrument("snare_shell").colour(0xD9B98A).register();
         BandRegistry.voice(ModCaravans.CARAVAN, SoundEvents.NOTE_BLOCK_XYLOPHONE).volume(0.8F)
                 .songs(Song.CRYSTAL).temper(BandVoice.Temper.HOSTILE).instrument("crystal_xylophone").colour(0xE07AF0).register();
         BandRegistry.voice(ModCaveCreatures.JAILER, SoundEvents.NOTE_BLOCK_COW_BELL).transpose(-12)

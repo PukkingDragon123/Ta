@@ -19,214 +19,259 @@ def mc(color, **kw):
 
 
 # =========================================================================== THE ECHOER
-# C4 Echoer: a furry god-deer. The skull's front is 14 x 11 texels (7 x 5.5 units at res 2), the eyes above the snout; E a soft
-# glowing iris, I its bright core, l a lid line, R the glowing rune on its brow.
-_BROW = {0: '.....RR.....'}
-ECHOER_FACE = {
-    'neutral': {**_BROW, 1: '..ll....ll..', 2: '.EEI....IEE.', 3: '..EE....EE..'},
-    'blink': {**_BROW, 2: '.lll....lll.'},
-    'happy': {**_BROW, 2: '..EE....EE..', 3: '.E..E..E..E.'},
-    'sleep': {**_BROW, 3: '.lll....lll.'},
-    'hurt': {**_BROW, 1: '.E..l..l..E.', 2: '..EE....EE..', 3: '.E........E.'},
-    'dead': {**_BROW, 1: '.l.l....l.l.', 2: '..l......l..', 3: '.l.l....l.l.'},
+# CR1 Echoer: a speaker-bat. Its furry body is a loudspeaker - a plum baffle with a big pulsing woofer
+# in its chest - and it flies on bat wings with a little speaker cone in each membrane. Its ears are
+# tweeters, its snout a spiralling brass drill that whirrs round when it sings, and its tail is a
+# coiled cable ending in a jack plug. Glowing cyan eyes, cone rims and a groove up the drill.
+ECHOER_PAL = {
+    'fur': '#e6dcef', 'fur_l': '#faf6ff', 'fur_d': '#b8a8cf',
+    'ruff': '#d2c0ea', 'ruff_l': '#efe5fb', 'ruff_d': '#a48ec8',
+    'cabinet': '#4b3b66', 'cabinet_l': '#6c5a8c', 'cabinet_d': '#2e2443',
+    'grille': '#2b2240', 'grille_l': '#43375c', 'grille_d': '#1c1630',
+    'cone': '#3a3050', 'cone_l': '#5e507c', 'cone_d': '#241c34',
+    'surround': '#1d1829', 'surround_l': '#3a3150',
+    'glow': '#8ff6ff', 'glow_d': '#3fc4dc', 'glow_l': '#e4ffff',
+    'brass': '#e0b25a', 'brass_l': '#fff0b4', 'brass_d': '#a5742c', 'groove': '#6e4c1e',
+    'wing': '#b7a2e0', 'wing_l': '#d2c3f2', 'wing_d': '#8e78bf', 'vein': '#7d68ac', 'bone': '#e6dcef', 'bone_d': '#c8b8e0',
+    'ear_in': '#f0bfd4', 'ear_in_d': '#cf90ad',
+    'eye': '#bffcff', 'eye_core': '#ffffff', 'pupil': '#1b2846', 'lid': '#7b6a9e', 'lid_d': '#4e4170',
+    'mouth': '#3a2848', 'fang': '#ffffff', 'claw': '#43385a', 'cable': '#2f2840', 'cable_l': '#4d4466',
 }
-# the glowing runes in the fur of each flank (centred on the 20 x 9 unit side face)
-RUNES = {
-    3: '...RRR.....R.R......RRR.......',
-    4: '..R...R....RRR.....R...R..r...',
-    5: '..R.R.R.....R......R.R.R.rrr..',
-    6: '..R...R...RRRRR....R...R..r...',
-    7: '...RRR......R.......RRR.......',
-    8: '.....r......R.........r.......',
-    9: '....rrr....R.R.......rrr......',
-    10: '.....r.....................R..',
-    11: '..........................RRR.',
-}
-
-# The antlers, left side (x mirrored for the right): (part, parent, pivot, rot, cube origin, size, tip glows)
-ANTLER = [
-    ('antler', None, (2.2, -5.5, 0.5), (-0.3, 0.0, 0.6), (-1, -7, -1), (2, 7, 2), False),
-    ('antler_brow', 'antler', (0, -1.5, 0), (1.1, 0.0, -0.45), (-0.5, -3.5, -0.5), (1, 3.5, 1), True),
-    ('antler_mid', 'antler', (0, -7, 0), (-0.15, 0.0, -0.45), (-0.75, -6, -0.75), (1.5, 6, 1.5), False),
-    ('antler_fork', 'antler_mid', (0, -2, 0), (0.25, 0.0, 1.0), (-0.5, -5, -0.5), (1, 5, 1), True),
-    ('antler_back', 'antler_mid', (0, -3.5, 0), (-0.9, 0.0, 0.2), (-0.5, -4, -0.5), (1, 4, 1), True),
-    ('antler_top', 'antler_mid', (0, -6, 0), (0.3, 0.0, -0.4), (-0.5, -5, -0.5), (1, 5, 1), True),
-]
-# The wind chimes hung in the antlers: (antler part, point on it, cord length, tube length, tube colour)
-CHIMES = [
-    ('antler', (0, -5, 0), 1.5, 4.0, 'chime_a'),
-    ('antler_fork', (0, -4, 0), 1.0, 5.5, 'chime_b'),
-    ('antler_top', (0, -3.5, 0), 2.0, 3.5, 'chime_c'),
-    ('antler_back', (0, -3, 0), 1.5, 4.5, 'chime_a'),
-]
+ECHOER_MATERIALS = {'fur': 'fur', 'ruff': 'fur', 'cabinet': 'wood', 'grille': 'cloth', 'cone': 'cloth', 'surround': 'flat', 'brass': 'metal',
+                    'wing': 'membrane', 'claw': 'chitin', 'cable': 'skin', 'bone': 'bone'}
+ECHOER_EXPRS = ['blink', 'happy', 'sleep', 'hurt', 'dead']
 
 
-def _rot(v, r):
-    """A point turned the way ModelPart turns its children (X, then Y, then Z)."""
-    import math
-    x, y, z = v
-    rx, ry, rz = r
-    y, z = y * math.cos(rx) - z * math.sin(rx), y * math.sin(rx) + z * math.cos(rx)
-    x, z = x * math.cos(ry) + z * math.sin(ry), -x * math.sin(ry) + z * math.cos(ry)
-    x, y = x * math.cos(rz) - y * math.sin(rz), x * math.sin(rz) + y * math.cos(rz)
-    return x, y, z
-
-
-def _mirror(sx, pivot, rot):
-    return (pivot[0] * sx, pivot[1], pivot[2]), (rot[0], rot[1] * sx, rot[2] * sx)
-
-
-def _head_point(name, point, sx):
-    """Where a point on one antler segment sits in the head's space."""
-    by_name = {a[0]: a for a in ANTLER}
-    p = point
-    seg = by_name[name]
-    while seg is not None:
-        pivot, rot = _mirror(sx, seg[2], seg[3])
-        q = _rot(p, rot)
-        p = (q[0] + pivot[0], q[1] + pivot[1], q[2] + pivot[2])
-        seg = by_name[seg[1]] if seg[1] else None
-    return p
-
-
-def _halo_map(n=28):
-    """A soft ring of light: '_' is cut away, H the bright band, h its gentle rim, s a few motes inside."""
+def _disc(n, keys='scC', cap=0.0, rim_glow=True):
+    """A round speaker cone on an n x n face, seen head on: '_' outside it (cut away), a dark rubber
+    surround (s), a glowing rim line (g), the paper cone in rings (c, C) and a dust cap (k) in the middle."""
     import math
     rows = []
     c = (n - 1) / 2.0
+    R = n / 2.0
     for y in range(n):
         row = ''
         for x in range(n):
-            d = math.hypot(x - c, y - c)
-            if n / 2 - 3.4 <= d <= n / 2 - 0.4:
-                row += 'H' if n / 2 - 2.6 <= d <= n / 2 - 1.3 else 'h'
-            elif n / 2 - 6.0 < d < n / 2 - 4.6 and round(math.degrees(math.atan2(y - c, x - c))) % 30 == 0:
-                row += 's'
-            else:
+            d = math.hypot(x - c, y - c) / R
+            if d > 1.0:
                 row += '_'
+            elif d > 0.82:
+                row += 's'
+            elif d > 0.72 and rim_glow:
+                row += 'g'
+            elif cap and d < cap:
+                row += 'k' if d < cap * 0.6 else 'K'
+            else:
+                ring = int(d * n * 0.5) % 3
+                row += 'C' if ring == 0 else 'c'
+        rows.append(row)
+    return rows
+
+
+def _ear(w, h):
+    """A bat ear's front, w x h texels: pointed tip ('_' cut away round it), fur rim (f), pink inside (p, P)."""
+    rows = []
+    for y in range(h):
+        row = ''
+        t = y / (h - 1)                  # 0 at the tip, 1 at the base
+        half = (w / 2.0) * min(1.0, 0.25 + t * 1.15)
+        for x in range(w):
+            u = abs(x + 0.5 - w / 2.0)
+            if u > half:
+                row += '_'
+            elif u > half - 1.2 or y == 0:
+                row += 'f'
+            else:
+                row += 'P' if (x + y) % 5 == 0 else 'p'
+        rows.append(row)
+    return rows
+
+
+def _membrane(w, h, seed, fingers, scallop=3, taper=0.0):
+    """A bat-wing membrane (w x h texels, row 0 the trailing edge): veins (v) fanning back from the
+    leading edge, bone struts (b) along the fingers, the trailing edge cut into scallops between them."""
+    import math
+    import random
+    rnd = random.Random(seed)
+    g = [['.'] * w for _ in range(h)]
+    # fingers: straight struts from the joint (front, x=0) out to points on the trailing edge
+    tips = [int(w * f) for f in fingers]
+    for tx in tips:
+        for y in range(h):
+            t = 1.0 - y / (h - 1)            # 0 at the front edge, 1 at the trailing edge
+            x = int(round(tx * t))
+            if 0 <= x < w:
+                g[y][x] = 'b'
+    # veins: thin wandering lines from the front edge backwards
+    for _ in range(max(2, w // 5)):
+        x = rnd.randrange(w)
+        for y in range(h - 1, 0, -1):
+            if rnd.random() < 0.35:
+                x += rnd.choice((-1, 1))
+            if 0 <= x < w and g[y][x] == '.':
+                g[y][x] = 'v'
+    # a hand's membrane narrows towards the wing tip
+    if taper:
+        for x in range(w):
+            cut = int(taper * h * (x / (w - 1)) ** 1.4)
+            for y in range(min(cut, h - 2)):
+                g[y][x] = '_'
+    # scallops along the trailing edge, between the finger tips
+    edges = [0] + tips + [w - 1]
+    for a, b in zip(edges, edges[1:]):
+        span = max(1, b - a)
+        for x in range(a, b + 1):
+            k = math.sin((x - a) / span * math.pi)
+            depth = int(round(k * scallop))
+            top = next((y for y in range(h) if g[y][x] != '_'), h)
+            for y in range(top, min(h - 2, top + depth)):
+                if 0 <= x < w and g[y][x] != 'b':
+                    g[y][x] = '_'
+    return [''.join(r) for r in g]
+
+
+def _spiral(w, h, phase):
+    """A drill segment's side: diagonal brass flutes with a glowing groove (g) between them."""
+    rows = []
+    for y in range(h):
+        row = ''
+        for x in range(w):
+            k = (x + y + phase) % 6
+            row += 'g' if k == 0 else 'd' if k == 1 else 'l' if k == 4 else '.'
         rows.append(row)
     return rows
 
 
 def enchoer() -> Model:
-    """C4 Echoer: a majestic furry god-deer. A deep-chested body in thick ivory fur with glowing
-    runes in its flanks, a great lilac-white mane round the shoulders and a ruff under the chest, a
-    short strong neck, a gentle deer face with soft glowing eyes, leaf ears and a fluffy cheek
-    ruff - and huge branching moon-bone antlers hung with swaying wind-chime tubes, a soft halo of
-    light behind them. Shaggy fetlocks over dark hooves, an up-flicked fluffy tail."""
-    pal = {
-        'fur': '#efe6d8', 'fur_l': '#fbf6ec', 'fur_d': '#cdbfae',
-        'belly': '#e2d6c4', 'belly_l': '#efe6d6', 'belly_d': '#bfae98',
-        'mane': '#f4eefc', 'mane_l': '#ffffff', 'mane_d': '#cbbfe2',
-        'snout': '#e8dece', 'snout_l': '#f6efe2', 'snout_d': '#c4b6a2', 'nose': '#8a6a86', 'nose_l': '#a888a2', 'nose_d': '#6a4e68', 'nostril': '#4a3a52',
-        'ear_in': '#f2c8d6', 'ear_in_d': '#d49ab0',
-        'hoof': '#5a4a66', 'hoof_l': '#6e5e7c', 'hoof_d': '#3e3248',
-        'antler': '#eadfbc', 'antler_l': '#fff7de', 'antler_d': '#b9a77c',
-        'rune': '#8ff6ff', 'rune_d': '#46c8dc', 'eye': '#bffcff', 'eye_core': '#ffffff', 'lid': '#7a6a8e',
-        'halo': '#fff1b8', 'halo_l': '#ffffff', 'halo_d': '#f2c86a',
-        'chime_a': '#e6eeff', 'chime_a_l': '#ffffff', 'chime_a_d': '#9aa8c4',
-        'chime_b': '#ffe08a', 'chime_b_l': '#fff3c4', 'chime_b_d': '#c99a3a',
-        'chime_c': '#9ff4ff', 'chime_c_l': '#dcffff', 'chime_c_d': '#4cc4dc',
-        'cord': '#cbbf9e', 'cord_l': '#e2d8bc', 'cord_d': '#9c9070',
-    }
-    m = Model('enchoer', (128, 128), pal, {'enchoer': {}}, res=2, expressions=['blink', 'happy', 'sleep', 'hurt', 'dead'])
-    rk = {'R': 'rune', 'r': 'rune_d'}
-    fur = dict(color='fur', pattern='mc', clusters=0.12, streaks=0.9)
-    mane = dict(color='mane', pattern='mc', clusters=0.1, streaks=1.2)
-    rune_side = hd_rows(RUNES, 30, 16)
+    """CR1 Echoer: the speaker-bat (see the notes above). Model space: it hovers with its body over
+    y = 14; folded up on the ground (asleep) its feet touch y = 24."""
+    from mobs_wild import eye
+    m = Model('enchoer', (128, 128), dict(ECHOER_PAL), {'enchoer': {}}, res=2, expressions=ECHOER_EXPRS, materials=ECHOER_MATERIALS)
+    fur = dict(color='fur', pattern='mc', clusters=0.15, streaks=0.8)
+    cone_keys = {'s': 'surround', 'g': 'glow', 'c': 'cone', 'C': 'cone_l', 'k': 'glow_l', 'K': 'glow'}
 
-    # --- four strong deer legs: a furred thigh, a slim shin, a shaggy fetlock, a dark hoof
-    for name, (px, pz) in (('front_left_leg', (3.2, -6.5)), ('front_right_leg', (-3.2, -6.5)),
-                           ('back_left_leg', (3.2, 6.5)), ('back_right_leg', (-3.2, 6.5))):
-        leg = m.part(name, pivot=(px, 11, pz))
-        leg.cube((-1.75, -3, -1.75), (3.5, 8, 3.5), **dict(fur, rim=False))
-        shin = leg.part(name.replace('leg', 'shin'), pivot=(0, 5, 0))
-        shin.cube((-1.25, 0, -1.25), (2.5, 6, 2.5), **mc('fur', clusters=0.0, rim=False, streaks=0.5))
-        shin.cube((-1.75, 3.5, -1.75), (3.5, 2.5, 3.5), **mc('mane', clusters=0.0, rim=False, streaks=1.0, fringe=1))
-        hoof = shin.part(name.replace('leg', 'hoof'), pivot=(0, 6, 0))
-        hoof.cube((-1.25, 0, -1.5), (2.5, 2, 3), **mc('hoof', clusters=0.0, rim=False))
-
-    # --- the deep body in thick fur, runes in its flanks, a shaggy belly and a round rump
-    body = m.part('body', pivot=(0, 4, 0))
-    body.cube((-5.5, -4.5, -10), (11, 10, 20), **fur, faces={
-        'west': dict(**fur, hd=True, map=[r[::-1] for r in rune_side], keys=rk, glow_keys='Rr'),
-        'east': dict(**fur, hd=True, map=rune_side, keys=rk, glow_keys='Rr'),
-        'up': dict(color='fur', pattern='mc', clusters=0.2, streaks=0.6, hd=True,
-                   map=hd_rows({8: '.........RR.........', 9: '........R..R........', 10: '.........RR.........',
-                                30: '.........rr.........'}, 20, 40), keys=rk, glow_keys='Rr'),
-        'down': dict(color='belly_d', pattern='mc', clusters=0.1),
+    # ---- the body: a furry loudspeaker, its baffle the chest
+    body = m.part('body', pivot=(0, 14, 0))
+    grille = ['g' + 'G.' * 9 + 'g'] * 2
+    baffle = hd_rows({0: 'B' * 20, 1: 'b' * 20, 20: 'b' * 20, 21: 'B' * 20}, 20, 22)
+    body.cube((-5, -6, -4), (10, 11, 8), **fur, faces={
+        'north': dict(color='grille', pattern='mc', clusters=0.1, rim=False, hd=True, map=baffle,
+                      keys={'B': 'brass', 'b': 'brass_d', 'g': 'grille_l', 'G': 'grille_d'}),
+        'down': dict(color='fur_d', pattern='mc', clusters=0.1, streaks=0.5),
     })
-    body.cube((-5, 5, -8), (10, 2, 16), **mc('belly', clusters=0.0, streaks=1.0, fringe=2, rim=False))
-    body.cube((-5, -4, 9), (10, 8, 2), **mc('fur', clusters=0.15, streaks=0.8, rim=False))
-    # the great mane round the shoulders, and the ruff under the chest
-    body.cube((-6.5, -6.5, -11.5), (13, 13, 7), **mane, fringe=2)
-    ruff = body.part('ruff', pivot=(0, 5, -9.5))
-    ruff.cube((-4, 0, -2), (8, 4, 4), **mane, fringe=2, rim=False)
-    tail = body.part('tail', pivot=(0, -3, 10.5), rot=(0.35, 0, 0))
-    tail.cube((-1.5, -1.5, 0), (3, 3, 2.5), **mc('mane', clusters=0.1, streaks=0.8, rim=False))
-    tail_tip = tail.part('tail_tip', pivot=(0, 0, 2.5), rot=(0.4, 0, 0))
-    tail_tip.cube((-2, -1.75, 0), (4, 3.5, 3.5), **mc('mane_l', clusters=0.0, streaks=0.6, rim=False, dark='mane_d'))
+    # brass corner caps on the baffle, like a speaker cabinet's
+    for i, (cx, cy) in enumerate(((-5, -6), (4, -6), (-5, 4), (4, 4))):
+        body.cube((cx - 0.25, cy - 0.25, -4.5), (1.5, 1.5, 1.5), **mc('brass', clusters=0.0, rim=False))
+    # the woofer: a big round cone in the chest that pumps with the sound
+    woofer = body.part('woofer', pivot=(0, -0.5, -4.1))
+    woofer.cube((-4, -4, -0.6), (8, 8, 1), color='cone', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='cone', pattern='mc', clusters=0.0, rim=False, hd=True, map=_disc(16), keys=cone_keys, glow_keys='g'),
+        'up': dict(skip=True), 'down': dict(skip=True), 'east': dict(skip=True), 'west': dict(skip=True), 'south': dict(skip=True)})
+    cap = woofer.part('woofer_cap', pivot=(0, 0, -0.6))
+    cap.cube((-1.5, -1.5, -1), (3, 3, 1), **mc('glow', clusters=0.0, rim=False, glow=True), faces={
+        'north': dict(color='glow', pattern='mc', clusters=0.0, rim=False, glow=True, hd=True, map=_disc(6, rim_glow=False),
+                      keys={'_': 'glow_d', 's': 'glow_d', 'c': 'glow', 'C': 'glow_l'})})
+    # a fluffy ruff round its neck and shoulders, and a fur cap over the top of the cabinet
+    body.cube((-5.5, -7.5, -4.5), (11, 2, 9), **mc('ruff', clusters=0.1, streaks=1.1, fringe=1, rim=False))
+    tuft = body.part('tuft', pivot=(0, 5, -1))
+    tuft.cube((-3.5, 0, -3), (7, 2, 7), **mc('ruff', clusters=0.1, streaks=1.0, fringe=2, rim=False))
 
-    # --- a short, strong neck, its mane flowing down the back
-    neck = body.part('neck', pivot=(0, -3, -9), rot=(0.45, 0, 0))
-    neck.cube((-3, -7, -3), (6, 7, 6), **fur, faces={'north': dict(color='belly', pattern='mc', clusters=0.0, streaks=0.8)})
-    neck_mane = neck.part('mane', pivot=(0, -7.5, 1.0), rot=(-0.15, 0, 0))
-    neck_mane.cube((-3.5, 0, 0), (7, 8, 3.5), **mane, fringe=2)
+    # ---- the head: a round bat face with big glowing eyes
+    head = body.part('head', pivot=(0, -7, -1))
+    ek = {'r': 'lid', 'i': 'eye', 'I': 'glow_d', 'p': 'pupil', 'h': 'eye_core', 'l': 'lid', 'd': 'lid_d', 'f': 'fur', 'F': 'fur_l'}
 
-    # --- the gentle deer head
-    head = neck.part('head', pivot=(0, -7, -0.5), rot=(-0.45, 0, 0))
-    face_keys = {'E': 'eye', 'I': 'eye_core', 'l': 'lid', 'R': 'rune'}
-    head.cube((-3.5, -5.5, -4), (7, 5.5, 7), **mc('fur', clusters=0.08, streaks=0.5, rim=False), faces={
-        'north': dict(color='fur', pattern='mc', clusters=0.0, rim=False, hd=True, map=hd_rows(ECHOER_FACE['neutral'], 12, 11),
-                      keys=face_keys, glow_keys='EIR', expr={k: hd_rows(v, 12, 11) for k, v in ECHOER_FACE.items() if k != 'neutral'}),
-    })
-    head.cube((-3, -6.5, -3), (6, 1, 5), **mc('mane', clusters=0.0, rim=False, streaks=0.6))
-    head.cube((-2.25, -3, -8), (4.5, 3.5, 4), **mc('snout', clusters=0.0, rim=False), faces={
-        'north': dict(color='snout', pattern='mc', clusters=0.0, rim=False, hd=True, map=['.........', '.........', '..nn.nn..'],
-                      keys={'n': 'nostril'}),
-    })
-    head.cube((-1.25, -3.25, -8.5), (2.5, 1, 1), **mc('nose', clusters=0.0, rim=False))
-    head.cube((-4, -3, -3), (8, 3.5, 4.5), **mc('mane', clusters=0.0, streaks=1.0, fringe=1, rim=False))
-    jaw = head.part('jaw', pivot=(0, 0, -3.5))
-    jaw.cube((-1.75, -0.5, -4.25), (3.5, 1, 4.25), **mc('snout_d', clusters=0.0, rim=False))
-    for side, sx in (('left', 1), ('right', -1)):
-        ear = head.part(f'{side}_ear', pivot=(3.5 * sx, -4.5, 0.5), rot=(0.3, 0.35 * sx, 0.75 * sx))
-        ear.cube((0 if sx > 0 else -4, -0.75, -1), (4, 1.5, 2), **mc('fur', clusters=0.0, rim=False), faces={
-            'north': dict(color='ear_in', pattern='mc', clusters=0.0, rim=False),
-            'up': dict(color='ear_in', pattern='mc', clusters=0.0, rim=False),
-        })
-        # the antlers: moon-bone beams branching into tines, their tips alight
-        parts = {}
-        for pname, parent, pivot, rot, origin, size, tip in ANTLER:
-            pv, rt = _mirror(sx, pivot, rot)
-            owner = head if parent is None else parts[parent]
-            seg = owner.part(f'{side}_{pname}', pivot=pv, rot=rt)
-            faces = {}
-            if tip:
-                faces = {'up': dict(color='rune', pattern='mc', clusters=0.0, glow=True),
-                         'north': dict(color='antler_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['RR', 'rr'],
-                                       keys=rk, glow_keys='Rr'),
-                         'south': dict(color='antler_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['RR', 'rr'],
-                                       keys=rk, glow_keys='Rr')}
-            seg.cube(origin, size, **mc('antler', clusters=0.2, rim=False), faces=faces)
-            parts[pname] = seg
-        # wind chimes hang from the branches, straight down in the head's space
-        for i, (on, point, cord, tube, colour) in enumerate(CHIMES):
-            hx, hy, hz = _head_point(on, point, sx)
-            chime = head.part(f'{side}_chime_{i}', pivot=(round(hx, 3), round(hy, 3), round(hz, 3)))
-            chime.cube((-0.25, 0, -0.25), (0.5, cord, 0.5), **mc('cord', clusters=0.0, rim=False))
-            chime.cube((-0.75, cord - 0.25, -0.75), (1.5, 0.5, 1.5), **mc('antler_d', clusters=0.0, rim=False))
-            chime.cube((-0.5, cord, -0.5), (1, tube, 1), **mc(colour, clusters=0.0, rim=False, glow=colour == 'chime_c'),
-                       faces={'down': dict(color='rune', pattern='mc', clusters=0.0, glow=True)})
+    def face(expr):
+        g = [list('F' * 16)] + [list('f' * 16) for _ in range(13)]
+        for x0, mirror in ((1, False), (9, True)):
+            e = eye(6, 6, expr, mirror, pupil='dot', rim=0.62)
+            for j, row in enumerate(e):
+                for i, ch in enumerate(row):
+                    if ch != '.':
+                        g[2 + j][x0 + i] = ch
+        return [''.join(r) for r in g]
+    head.cube((-4, -7, -3.5), (8, 7, 6), **dict(fur, streaks=0.5), faces={
+        'north': dict(color='fur', pattern='mc', clusters=0.0, rim=False, hd=True, map=face(''), keys=ek, glow_keys='iIh',
+                      expr={x: face(x) for x in ECHOER_EXPRS})})
+    head.cube((-4.5, -3.5, -3.6), (9, 3.5, 4), **mc('ruff', clusters=0.0, streaks=1.0, fringe=1, rim=False))
+    jaw = head.part('jaw', pivot=(0, -0.5, -2.5))
+    jaw.cube((-2, 0, -1.5), (4, 1, 2), **mc('fur_d', clusters=0.0, rim=False), faces={
+        'north': dict(color='mouth', pattern='mc', clusters=0.0, rim=False, hd=True, map=['FmmmmmmF', 'mmmmmmmm'], keys={'F': 'fang', 'm': 'mouth'}),
+        'up': dict(color='mouth', pattern='mc', clusters=0.0, rim=False)})
+    # the drill: a brass snout of five twisted segments that spins round when it sings
+    drill = head.part('drill', pivot=(0, -2.5, -3.6))
+    sizes = [(3.5, 2), (3, 2), (2.5, 2), (1.75, 2), (1, 2)]
+    parent = drill
+    z = 0.0
+    for i, (w, d) in enumerate(sizes):
+        seg = parent if i == 0 else parent.part(f'drill_{i}', pivot=(0, 0, -z), rot=(0, 0, 0.45))
+        z = d
+        side = dict(color='brass', pattern='mc', clusters=0.0, rim=False, hd=True, map=_spiral(int(w * 2 + 1), d * 2, i * 2),
+                    keys={'g': 'glow', 'd': 'groove', 'l': 'brass_l'}, glow_keys='g')
+        tip = dict(color='glow', pattern='mc', clusters=0.0, rim=False, glow=True) if i == len(sizes) - 1 else mc('brass_d', clusters=0.0, rim=False)
+        seg.cube((-w / 2, -w / 2, -d), (w, w, d), **mc('brass', clusters=0.0, rim=False), faces={
+            'up': side, 'down': side, 'east': side, 'west': side, 'north': tip, 'south': mc('brass_d', clusters=0.0, rim=False)})
+        parent = seg
+    # the ears: tall bat ears, each a tweeter - a little cone that pulses near its tip
+    for side_name, sx in (('left', 1), ('right', -1)):
+        ear = head.part(f'{side_name}_ear', pivot=(2.8 * sx, -6.5, -0.5), rot=(-0.15, -0.3 * sx, 0.5 * sx))
+        ear.cube((-2.5, -7, -0.5), (5, 7, 1), color='fur', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': dict(color='ear_in', pattern='mc', clusters=0.0, rim=False, hd=True, map=_ear(10, 14),
+                          keys={'f': 'fur', 'p': 'ear_in', 'P': 'ear_in_d'}),
+            'south': dict(color='fur', pattern='mc', clusters=0.1, streaks=0.6, rim=False, hd=True, map=[r.replace('p', 'f').replace('P', 'f') for r in _ear(10, 14)],
+                          keys={'f': 'fur'}),
+            'east': dict(color='fur', pattern='mc', clusters=0.0, rim=False), 'west': dict(color='fur', pattern='mc', clusters=0.0, rim=False),
+            'up': dict(skip=True)})
+        tw = ear.part(f'{side_name}_tweeter', pivot=(0, -2.8, -0.6))
+        tw.cube((-1.5, -1.5, -0.5), (3, 3, 0.5), color='cone', pattern='mc', clusters=0.0, rim=False, faces={
+            'north': dict(color='cone', pattern='mc', clusters=0.0, rim=False, hd=True, map=_disc(6, cap=0.35), keys=cone_keys, glow_keys='gkK'),
+            'up': dict(skip=True), 'down': dict(skip=True), 'east': dict(skip=True), 'west': dict(skip=True), 'south': dict(skip=True)})
 
-    # --- the soft halo of light behind the antlers
-    halo = head.part('halo', pivot=(0, -10, 4.5), rot=(0.12, 0, 0))
-    ring = _halo_map(32)
-    hk = {'H': 'halo_l', 'h': 'halo', 's': 'halo_d'}
-    halo.cube((-8, -8, 0), (16, 16, 0), color='halo', pattern='mc', clusters=0.0, rim=False, faces={
-        'north': dict(color='halo', pattern='mc', clusters=0.0, rim=False, hd=True, map=ring, keys=hk, glow_keys='Hhs'),
-        'south': dict(color='halo', pattern='mc', clusters=0.0, rim=False, hd=True, map=[r[::-1] for r in ring], keys=hk, glow_keys='Hhs'),
-    })
+    # ---- the wings: an arm and a hand, membranes with a speaker cone in each. A membrane is a flat
+    # plane whose two faces lie in one place, so both are painted alike (whichever the game draws last shows).
+    wk = {'v': 'vein', 'b': 'bone_d'}
+    for side_name, sx in (('left', 1), ('right', -1)):
+        def mir(rows):
+            return rows if sx > 0 else [r[::-1] for r in rows]
+        wing = body.part(f'{side_name}_wing', pivot=(4.5 * sx, -5, 0), rot=(0, -0.25 * sx, -0.4 * sx))
+        wing.cube((0 if sx > 0 else -9, -0.75, -1), (9, 1.5, 1.5), **mc('fur', clusters=0.0, rim=False, streaks=0.4))
+        arm_mem = mir(_membrane(18, 22, 3 if sx > 0 else 4, [0.55], scallop=2))
+        wing.cube((0 if sx > 0 else -9, 0, -0.5), (9, 0, 11), color='wing', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='wing', pattern='mc', clusters=0.15, rim=False, hd=True, map=arm_mem, keys=wk, map_material=True),
+            'down': dict(color='wing', pattern='mc', clusters=0.15, rim=False, hd=True, map=arm_mem, keys=wk, map_material=True)})
+        cone = wing.part(f'{side_name}_wing_cone', pivot=(4.6 * sx, -0.05, 5.0))
+        cone.cube((-1.75, -0.4, -1.75), (3.5, 0.5, 3.5), color='cone', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='cone', pattern='mc', clusters=0.0, rim=False, hd=True, map=_disc(7, cap=0.3), keys=cone_keys, glow_keys='gkK'),
+            'down': dict(color='cone', pattern='mc', clusters=0.0, rim=False, hd=True, map=_disc(7, cap=0.3), keys=cone_keys, glow_keys='gkK'),
+            'north': dict(skip=True), 'south': dict(skip=True), 'east': dict(skip=True), 'west': dict(skip=True)})
+        tip = wing.part(f'{side_name}_wing_tip', pivot=(9 * sx, 0, 0), rot=(0, -0.3 * sx, 0.75 * sx))
+        tip.cube((0 if sx > 0 else -12, -0.5, -1), (12, 1, 1), **mc('bone', clusters=0.0, rim=False))
+        tip.cube((11.25 if sx > 0 else -12.75, -0.5, -2), (1.5, 1, 1.5), **mc('claw', clusters=0.0, rim=False))
+        tip_mem = mir(_membrane(24, 24, 7 if sx > 0 else 8, [0.28, 0.58, 0.86], scallop=3, taper=0.62))
+        tip.cube((0 if sx > 0 else -12, 0, -0.5), (12, 0, 12), color='wing', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='wing', pattern='mc', clusters=0.15, rim=False, hd=True, map=tip_mem, keys=wk, map_material=True),
+            'down': dict(color='wing', pattern='mc', clusters=0.15, rim=False, hd=True, map=tip_mem, keys=wk, map_material=True)})
+        tcone = tip.part(f'{side_name}_tip_cone', pivot=(3.6 * sx, -0.05, 5.2))
+        tcone.cube((-1.25, -0.4, -1.25), (2.5, 0.5, 2.5), color='cone', pattern='mc', clusters=0.0, rim=False, faces={
+            'up': dict(color='cone', pattern='mc', clusters=0.0, rim=False, hd=True, map=_disc(5), keys=cone_keys, glow_keys='g'),
+            'down': dict(color='cone', pattern='mc', clusters=0.0, rim=False, hd=True, map=_disc(5), keys=cone_keys, glow_keys='g'),
+            'north': dict(skip=True), 'south': dict(skip=True), 'east': dict(skip=True), 'west': dict(skip=True)})
+
+    # ---- little clawed feet, and a coiled cable tail ending in a brass jack plug
+    for side_name, sx in (('left', 1), ('right', -1)):
+        foot = body.part(f'{side_name}_foot', pivot=(2.2 * sx, 5, 1))
+        foot.cube((-1, 0, -1), (2, 3, 2), **mc('fur_d', clusters=0.0, rim=False, streaks=0.5))
+        foot.cube((-1.25, 3, -1.75), (2.5, 2, 2.5), **mc('claw', clusters=0.0, rim=False), faces={
+            'north': mc('claw', clusters=0.0, rim=False, hd=True, map=['....', 'c.c.', 'cccc', 'CCCC'], keys={'c': 'fang', 'C': 'claw'})})
+    tail = body.part('tail', pivot=(0, 3, 4), rot=(0.6, 0, 0))
+    tail.cube((-0.5, -0.5, 0), (1, 1, 3), **mc('cable', clusters=0.0, rim=False))
+    t1 = tail.part('tail_1', pivot=(0, 0, 3), rot=(0.5, 0, 0))
+    t1.cube((-0.5, -0.5, 0), (1, 1, 3), **mc('cable', clusters=0.0, rim=False))
+    t2 = t1.part('tail_2', pivot=(0, 0, 3), rot=(-0.9, 0, 0))
+    t2.cube((-0.5, -0.5, 0), (1, 1, 2.5), **mc('cable', clusters=0.0, rim=False))
+    plug = t2.part('plug', pivot=(0, 0, 2.5), rot=(-0.6, 0, 0))
+    plug.cube((-1, -1, 0), (2, 2, 1.5), **mc('brass_d', clusters=0.0, rim=False))
+    plug.cube((-0.5, -0.5, 1.5), (1, 1, 2), **mc('brass', clusters=0.0, rim=False), faces={
+        'south': dict(color='glow', pattern='mc', clusters=0.0, rim=False, glow=True)})
     return m
 
 
@@ -344,18 +389,24 @@ SOUNDS = {
     'block.echoer_device.charge': [('mob/warden/sonic_charge1', 0.7, 1.4), ('mob/warden/sonic_charge2', 0.7, 1.5)],
     'block.echoer_device.fire': [('mob/warden/sonic_boom1', 0.7, 1.6), ('mob/warden/sonic_boom2', 0.7, 1.7)],
     'block.echoer_device.fizzle': [('block/amethyst_cluster/break3', 0.8, 0.8)],
-    # C4 Echoer: the wind chimes in its antlers clink as it moves
-    'entity.enchoer.chimes': [('block/note_block/chime', 0.35, 1.0), ('block/note_block/chime', 0.3, 1.26),
-                              ('block/note_block/chime', 0.3, 1.5), ('block/amethyst/shimmer', 0.6, 1.4)],
+    # CR1 Echoer: the speaker-bat - echolocation pings, wingbeats, the drill whirring up, and a bat's squeaks in its voice
+    'entity.enchoer.chimes': [('event:block.sculk_sensor.clicking', 0.3, 1.9), ('block/note_block/chime', 0.22, 1.5),
+                              ('block/note_block/chime', 0.22, 1.9)],
+    'entity.enchoer.flap': [('event:entity.phantom.flap', 0.35, 1.6), ('event:entity.phantom.flap', 0.3, 1.85)],
+    'entity.enchoer.drill': [('event:entity.breeze.whirl', 0.5, 1.7), ('event:block.grindstone.use', 0.22, 1.9)],
+    'entity.enchoer.ambient': [('event:entity.bat.ambient', 0.5, 1.3), ('mob/allay/idle_without_item1', 0.7, 0.75),
+                               ('block/amethyst/resonate1', 0.6, 0.9)],
+    'entity.enchoer.hurt': [('event:entity.bat.hurt', 0.8, 1.1), ('block/amethyst_cluster/break1', 0.8, 0.9)],
+    'entity.enchoer.death': [('event:entity.bat.death', 0.9, 0.9), ('block/amethyst_cluster/break2', 1.0, 0.6)],
 }
 SUBTITLES = {
     'entity.soul_golem.ambient': 'Soul Golem hums', 'entity.soul_golem.hurt': 'Soul Golem chips', 'entity.soul_golem.death': 'Soul Golem crumbles',
     'entity.soul_golem.step': 'Soul Golem waddles', 'entity.soul_golem.dig': 'Soul Golem digs', 'entity.soul_golem.find': 'Soul Golem finds something',
     'entity.soul_golem.slump': 'Soul Golem runs down', 'entity.soul_golem.recharge': 'Soul Golem recharges',
     'entity.nib.ambient': 'Nib twinkles', 'entity.nib.hurt': 'Nib flickers', 'entity.nib.transform': 'Nib turns to treasure',
-    'entity.enchoer.ambient': 'Echoer chimes', 'entity.enchoer.hum': 'Echoer hums', 'entity.enchoer.trade': 'Echoer waits, humming',
+    'entity.enchoer.ambient': 'Echoer chirps', 'entity.enchoer.hum': 'Echoer hums', 'entity.enchoer.trade': 'Echoer waits, humming',
     'entity.enchoer.yes': 'Echoer accepts', 'entity.enchoer.no': 'Echoer sighs', 'entity.enchoer.hurt': 'Echoer hurts', 'entity.enchoer.death': 'Echoer fades',
-    'entity.enchoer.chimes': 'Echoer\'s chimes clink',
+    'entity.enchoer.chimes': 'Echoer pings', 'entity.enchoer.flap': 'Echoer flaps', 'entity.enchoer.drill': 'Echoer\'s drill whirs',
     'block.echoer_device.charge': 'The Echoer charges', 'block.echoer_device.fire': 'The Echoer fires', 'block.echoer_device.fizzle': 'The Echoer fizzles',
 }
 
