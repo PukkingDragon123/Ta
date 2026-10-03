@@ -32,7 +32,7 @@ final class CodexFx {
 
     static {
         for (String k : new String[]{"jailer", "sculkling", "sculk_parasite", "strumling", "warden_core", "sculk_corruption", "deep_shrine",
-                "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb", "riveter"}) {
+                "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb"}) {
             THEMES.put(k, Theme.SCULK);
         }
         for (String k : new String[]{"harmoner", "enchoer", "songs", "prism_instruments", "music", "music_crystal", "conga_drum", "crane_flute",
@@ -53,7 +53,7 @@ final class CodexFx {
 
     /** Plate index in the portrait atlas (same order as PORTRAITS in tools/ui_art.py). */
     private static final List<String> PLATES = List.of("bulb", "bulb_white", "harmoner", "sniffer", "enchoer", "soul_golem", "nib", "slumbler",
-            "sifter", "riveter", "stomper", "sky_whale", "fanfare_eel", "kazoo_fish", "tubafish", "caravan", "gobbler", "swifter", "jailer",
+            "sifter", "stomper", "sky_whale", "fanfare_eel", "kazoo_fish", "tubafish", "caravan", "gobbler", "swifter", "jailer",
             "sculkling", "dictator", "thumper", "strummer", "strumling", "sculk_parasite");
 
     static Theme theme(String key) {

@@ -208,7 +208,6 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> SLUMBLER_SPAWN_EGG = ITEMS.registerItem("slumbler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SLUMBLER.get()));
     public static final DeferredItem<SpawnEggItem> SIFTER_SPAWN_EGG = ITEMS.registerItem("sifter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFTER.get()));
     public static final DeferredItem<SpawnEggItem> ENCHOER_SPAWN_EGG = ITEMS.registerItem("enchoer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.ENCHOER.get()));
-    public static final DeferredItem<SpawnEggItem> RIVETER_SPAWN_EGG = ITEMS.registerItem("riveter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.RIVETER.get()));
     public static final DeferredItem<SpawnEggItem> HARMONER_SPAWN_EGG = ITEMS.registerItem("harmoner_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.HARMONER.get()));
     public static final DeferredItem<SpawnEggItem> DICTATOR_SPAWN_EGG = ITEMS.registerItem("dictator_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.DICTATOR.get()));
     public static final DeferredItem<SpawnEggItem> THUMPER_SPAWN_EGG = ITEMS.registerItem("thumper_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.THUMPER.get()));

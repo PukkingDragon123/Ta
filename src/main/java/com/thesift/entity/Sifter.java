@@ -26,6 +26,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -53,6 +54,9 @@ public class Sifter extends Monster implements MusicListener {
     private boolean wasOnGround = true;
     private int calmTicks;
     private int burrowCooldown = 100;
+    /** S1 never freeze: how long it has lain in ambush, and how long it will before it digs out to look about. */
+    private int burrowTicks;
+    private int burrowPatience = 600;
 
     public Sifter(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -64,6 +68,16 @@ public class Sifter extends Monster implements MusicListener {
                 .add(Attributes.MOVEMENT_SPEED, 0.31)
                 .add(Attributes.ATTACK_DAMAGE, 4.0)
                 .add(Attributes.FOLLOW_RANGE, 24.0);
+    }
+
+    /**
+     * S1 never freeze: vanilla stops a mob's random strolls once it has been 100 ticks out of
+     * a player's 32-block reach, so Sift creatures seen across a valley stood frozen. The field
+     * itself (which drives despawning) is left alone.
+     */
+    @Override
+    public int getNoActionTime() {
+        return 0;
     }
 
     @Override
@@ -94,8 +108,22 @@ public class Sifter extends Monster implements MusicListener {
     }
 
     private boolean onSand() {
-        BlockState below = this.level().getBlockState(this.blockPosition().below());
-        return below.is(ModBlocks.DREAMSAND.get()) || below.is(BlockTags.SAND);
+        return isSand(this.level().getBlockState(this.blockPosition().below()));
+    }
+
+    /** Dreamsand or any sand: the dunes a Sifter hunts in. */
+    public static boolean isSand(BlockState state) {
+        return state.is(ModBlocks.DREAMSAND.get()) || state.is(BlockTags.SAND);
+    }
+
+    /**
+     * S1 spawning: a dune lurker hunts the open sand by daylight (the Sift has no night), so sand is
+     * where it wants to be at any light; elsewhere it shuns the light like any monster. Monster's
+     * light-only value refused every natural spawn on the sunlit dunes.
+     */
+    @Override
+    public float getWalkTargetValue(BlockPos pos, LevelReader level) {
+        return isSand(level.getBlockState(pos.below())) ? 10.0F : super.getWalkTargetValue(pos, level);
     }
 
     @Override
@@ -171,7 +199,13 @@ public class Sifter extends Monster implements MusicListener {
                     this.setDeltaMovement(this.getDeltaMovement().add(0, 0.55, 0));
                 } else if (!this.onSand()) {
                     this.setBurrowed(false);
+                } else if (++this.burrowTicks > this.burrowPatience) {
+                    // S1 never freeze: nothing came by - it digs out to find a better spot (and may burrow again later)
+                    this.emerge(server);
+                    this.burrowCooldown = 400 + this.random.nextInt(800);
                 }
+            } else {
+                this.burrowTicks = 0;
             }
         }
     }
@@ -279,6 +313,8 @@ public class Sifter extends Monster implements MusicListener {
             Sifter s = Sifter.this;
             s.getNavigation().stop();
             if (!s.isBurrowed() && s.level() instanceof ServerLevel server) {
+                s.burrowTicks = 0;
+                s.burrowPatience = 900 + s.random.nextInt(1500);
                 s.setBurrowed(true);
                 server.broadcastEntityEvent(s, EVENT_BURROW);
                 s.playSound(ModSounds.SIFTER_STEP.get(), 1.0F, 0.6F);

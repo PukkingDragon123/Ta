@@ -17,7 +17,6 @@ import com.thesift.client.renderer.boss.DictatorRenderer;
 import com.thesift.client.renderer.boss.MinionRenderer;
 import com.thesift.client.renderer.EnchoerRenderer;
 import com.thesift.client.renderer.EuphoryAltarRenderer;
-import com.thesift.client.renderer.RiveterRenderer;
 import com.thesift.client.renderer.SifterRenderer;
 import com.thesift.client.renderer.SlumblerRenderer;
 import com.thesift.client.sky.SiftSkyRenderer;
@@ -102,7 +101,6 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.SLUMBLER, ModelGeometry::slumbler);
         event.registerLayerDefinition(ModModelLayers.SIFTER, ModelGeometry::sifter);
         event.registerLayerDefinition(ModModelLayers.ENCHOER, ModelGeometry::enchoer);
-        event.registerLayerDefinition(ModModelLayers.RIVETER, ModelGeometry::riveter);
         // the wild creatures
         event.registerLayerDefinition(ModModelLayers.STOMPER, ModelGeometry::stomper);
         event.registerLayerDefinition(ModModelLayers.FANFARE_EEL, ModelGeometry::fanfare_eel);
@@ -129,7 +127,6 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.SLUMBLER.get(), SlumblerRenderer::new);
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);
-        event.registerEntityRenderer(ModEntities.RIVETER.get(), RiveterRenderer::new);
         event.registerEntityRenderer(ModEntities.GLOWBALL.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
         event.registerBlockEntityRenderer(ModBlockEntities.EUPHORY_ALTAR.get(), EuphoryAltarRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.INSTRUMENT_ALTAR.get(), com.thesift.client.renderer.InstrumentAltarRenderer::new);

@@ -18,7 +18,6 @@ public final class ModTags {
         public static final TagKey<Block> DEEP_SIFT_GROUND = tag("deep_sift_ground");
         public static final TagKey<Block> SIFT_STONE = tag("sift_stone");
         public static final TagKey<Block> SERBIM_ORES = tag("serbim_ores");
-        public static final TagKey<Block> RIVETER_ROOST = tag("riveter_roost");
         public static final TagKey<Block> INCORRECT_FOR_SIFTITE_TOOL = tag("incorrect_for_siftite_tool");
         public static final TagKey<Block> RESONANT = tag("resonant");
         /** Soft ground a ridden Sniffer ploughs straight through. */

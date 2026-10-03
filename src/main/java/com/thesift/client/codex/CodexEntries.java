@@ -2,7 +2,6 @@ package com.thesift.client.codex;
 
 import com.thesift.entity.Bulb;
 import com.thesift.entity.Harmoner;
-import com.thesift.entity.Riveter;
 import com.thesift.entity.Sifter;
 import com.thesift.entity.Slumbler;
 import com.thesift.entity.boss.Dictator;
@@ -81,9 +80,6 @@ public final class CodexEntries {
         }));
         l.add(mob(CREATURES, "sifter", ModEntities.SIFTER, (e, t) -> {
             if (e instanceof Sifter s && t % 50 == 10) s.chompAnimation.start(s.tickCount);
-        }));
-        l.add(mob(CREATURES, "riveter", ModEntities.RIVETER, (e, t) -> {
-            if (e instanceof Riveter r && t % 90 == 20) r.screamAnimation.start(r.tickCount);
         }));
         // ---- the wild creatures
         l.add(mob(CREATURES, "stomper", ModEntities.STOMPER, (e, t) -> {

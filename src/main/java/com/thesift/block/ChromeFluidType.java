@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
@@ -52,11 +53,16 @@ public class ChromeFluidType extends FluidType {
             return true;
         }
 
-        entity.moveRelative(0.012F, movementVector);
+        // S1 never freeze: a creature's walk input is its speed (0.1-0.4), not a 0..1 key press, so it used to crawl at a tenth of
+        // a player's pace and could never climb out. It wades like a player instead, and climbs the bank wherever it pushes
+        // against one (or its path jumps), the way a sneaking player does - nothing is left stuck on the bottom of a Chrome lake.
+        boolean creature = !(entity instanceof Player);
+        Vec3 input = creature && movementVector.lengthSqr() > 1.0E-6 ? movementVector.normalize() : movementVector;
+        entity.moveRelative(0.012F, input);
         entity.move(MoverType.SELF, entity.getDeltaMovement());
         Vec3 v = entity.getDeltaMovement();
         double y;
-        if (entity.isShiftKeyDown()) {
+        if (entity.isShiftKeyDown() || creature && (entity.horizontalCollision || entity.isJumping())) {
             // Wading up through the thick liquid.
             y = Math.min(v.y + 0.022, entity.horizontalCollision ? 0.2 : 0.11);
         } else {

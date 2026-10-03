@@ -16,7 +16,6 @@ public final class ModModelLayers {
     public static final ModelLayerLocation SLUMBLER = layer("slumbler");
     public static final ModelLayerLocation SIFTER = layer("sifter");
     public static final ModelLayerLocation ENCHOER = layer("enchoer");
-    public static final ModelLayerLocation RIVETER = layer("riveter");
     // ---- the wild creatures
     public static final ModelLayerLocation STOMPER = layer("stomper");
     public static final ModelLayerLocation FANFARE_EEL = layer("fanfare_eel");

@@ -100,6 +100,16 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
         return true;
     }
 
+    /**
+     * S1 spawning: a fish spawns inside its liquid. Mob's default refuses any spot with liquid in the
+     * bounding box, which kept every Sift fish from ever spawning naturally (vanilla's WaterAnimal
+     * overrides it the same way).
+     */
+    @Override
+    public boolean checkSpawnObstruction(net.minecraft.world.level.LevelReader level) {
+        return level.isUnobstructed(this);
+    }
+
     @Override
     public boolean causeFallDamage(double distance, float multiplier, DamageSource source) {
         return false;

@@ -259,6 +259,12 @@ public class SkyWhale extends PathfinderMob {
             if (this.riseTicks > 0) {
                 this.riseTicks--;
             }
+            // S1 never freeze: nosed into a cliff or a floating island, it turns for a new heading and climbs
+            // (it used to press against the rock until its waypoint timed out, up to half a minute)
+            if (this.horizontalCollision && this.riseTicks <= 0) {
+                this.waypoint = null;
+                this.riseTicks = 80;
+            }
             if (this.waypoint == null || --this.waypointTimer <= 0 || this.position().distanceToSqr(this.waypoint) < 16.0) {
                 this.waypointTimer = 300 + this.random.nextInt(300);
                 double a = this.random.nextDouble() * Math.PI * 2.0;

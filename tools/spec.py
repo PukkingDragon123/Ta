@@ -260,7 +260,7 @@ for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
 item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
 for a in ["helmet", "chestplate", "leggings", "boots"]:
     item(f"siftite_{a}", cls=f"armor:{a}", tab="combat", model="armor")
-for mob in ["bulb", "slumbler", "sifter", "enchoer", "riveter", "harmoner", "dictator", "thumper", "strummer",
+for mob in ["bulb", "slumbler", "sifter", "enchoer", "harmoner", "dictator", "thumper", "strummer",
             "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")

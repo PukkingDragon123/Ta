@@ -73,6 +73,16 @@ public class Slumbler extends PathfinderMob implements MusicListener {
                 .add(Attributes.FOLLOW_RANGE, 20.0);
     }
 
+    /**
+     * S1 never freeze: vanilla stops a mob's random strolls once it has been 100 ticks out of
+     * a player's 32-block reach, so Sift creatures seen across a valley stood frozen. The field
+     * itself (which drives despawning) is left alone.
+     */
+    @Override
+    public int getNoActionTime() {
+        return 0;
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -147,6 +157,11 @@ public class Slumbler extends PathfinderMob implements MusicListener {
         if (this.level() instanceof ServerLevel server) {
             if (this.wakeTimer > 0) {
                 this.wakeTimer--;
+            }
+            // S1 never freeze: every nap ends, even one music started while the SleepGoal cannot run (afloat in water)
+            if (this.isSlumbering() && --this.sleepTimer <= 0) {
+                this.setSlumbering(false);
+                this.wakeTimer = 600 + this.random.nextInt(600);
             }
             if (this.humCooldown > 0) {
                 this.humCooldown--;
@@ -249,12 +264,15 @@ public class Slumbler extends PathfinderMob implements MusicListener {
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putBoolean("Slumbering", this.isSlumbering());
+        output.putInt("SleepTimer", this.sleepTimer);
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         this.setSlumbering(input.getBooleanOr("Slumbering", false));
+        // S1: a nap saved without its timer (older worlds) still ends
+        this.sleepTimer = input.getIntOr("SleepTimer", this.isSlumbering() ? 300 + this.random.nextInt(300) : 0);
     }
 
     /** Naps for a while when nothing is bothering it. */
@@ -317,7 +335,6 @@ public class Slumbler extends PathfinderMob implements MusicListener {
                 }
                 return;
             }
-            s.sleepTimer--;
             s.getNavigation().stop();
         }
 

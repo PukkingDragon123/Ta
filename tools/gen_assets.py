@@ -734,7 +734,7 @@ def gen_lang():
     LANG.update({
         f'itemGroup.{NS}.blocks': 'The Sift: Blocks', f'itemGroup.{NS}.items': 'The Sift: Items & Gear',
         f'entity.{NS}.bulb': 'Bulb', f'entity.{NS}.slumbler': 'Slumbler', f'entity.{NS}.sifter': 'Sifter', f'entity.{NS}.enchoer': 'Echoer',
-        f'entity.{NS}.riveter': 'Riveter', f'entity.{NS}.glowball': 'Glowball',
+        f'entity.{NS}.glowball': 'Glowball',
         f'entity.{NS}.harmoner': 'Harmoner', f'entity.{NS}.sculk_harmoner': 'Sculk Harmoner',
         f'codex.{NS}.chapter.creatures': 'Creatures',
         f'codex.{NS}.chapter.items': 'Items & Gear',
@@ -752,8 +752,6 @@ def gen_lang():
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
         f'codex.{NS}.sifter.title': 'Sifter', f'codex.{NS}.sifter.tagline': 'Hostile - dune lurker',
         f'codex.{NS}.sifter.body': 'A sandstone-and-bone trap on crab legs. Sifters dig into the dunes until only the lid and a glowing lure show, then burst out and slam the lid shut on whatever came to look. A glow on the sand is never just a glow. Music makes one forget its prey.',
-        f'codex.{NS}.riveter.title': 'Riveter', f'codex.{NS}.riveter.tagline': 'Hostile - the sculk bat',
-        f'codex.{NS}.riveter.body': 'It hangs head-down from cave ceilings in the Deep Sift. By day it roosts asleep in its wings and only wakes if you walk right under it; by night it chitters with its neighbours and flits out to snap glow dust. When it sees you it screams - and every Warden nearby comes running. Sneak, come by day, or play music to lull it.',
         f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
         f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite gear. Tools beat Netherite and knock foes flying. Armour: no Deafening, softer sonic booms, helmet breathes water, legs and boots swim fast, full set halves Sculk Corruption.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
@@ -775,7 +773,7 @@ def gen_lang():
         f'codex.{NS}.ruins.title': 'Ruins & Statues', f'codex.{NS}.ruins.tagline': 'Dig, brush, explore',
         f'codex.{NS}.ruins.body': 'Sift Ruins, Collapsed Towers, Abandoned Altars and Dream Statues are scattered across the surface. Brush suspicious dreamsand for relics and read the Dream Journal Fragments you find.',
         f'codex.{NS}.deep_shrine.title': 'Deep Shrine', f'codex.{NS}.deep_shrine.tagline': 'Below the Sift',
-        f'codex.{NS}.deep_shrine.body': 'Hushslate shrines in the caves of the Deep Sift. Each holds an ancient gate of reinforced deepslate capped with Sift Gate Frame keystones - your way home - and a chest that sometimes keeps a Warden Core. Riveters roost nearby.',
+        f'codex.{NS}.deep_shrine.body': 'Hushslate shrines in the caves of the Deep Sift. Each holds an ancient gate of reinforced deepslate capped with Sift Gate Frame keystones - your way home - and a chest that sometimes keeps a Warden Core. Sculklings and Jailers prowl the dark around them.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage, and its three empty altars.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
@@ -783,7 +781,7 @@ def gen_lang():
         f'codex.{NS}.euphory_altar.title': 'Euphory Altar', f'codex.{NS}.euphory_altar.tagline': 'Enchanting by music',
         f'codex.{NS}.euphory_altar.body': 'Set an item on the altar, surround it with Sift Drums and feed it a Chrome Pearl. The drums play themselves, the rings spin up and the item comes out enchanted beyond what a table can do.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',
-        f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Riveters fall still. Soul Chimes ring when powered; Dream Snares lull whatever steps in them to sleep.',
+        f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Sculklings flee with their ears covered. Soul Chimes ring when powered; Dream Snares lull whatever steps in them to sleep.',
         f'codex.{NS}.flora.title': 'Coral Flora', f'codex.{NS}.flora.tagline': 'The pink plains',
         f'codex.{NS}.flora.body': 'Coral Bushes and tall Coral Thickets grow thick across the salmon Coral Turf of the Sift Plains, under pale weeping Lullwood trees.',
         f'codex.{NS}.dictator.title': 'The Conductor', f'codex.{NS}.dictator.tagline': 'Three movements, each more godlike',
@@ -963,10 +961,6 @@ SUBTITLES = {
     'entity.enchoer.no': 'Enchoer disagrees',
     'entity.enchoer.hurt': 'Enchoer hurts',
     'entity.enchoer.death': 'Enchoer shatters',
-    'entity.riveter.ambient': 'Riveter clicks',
-    'entity.riveter.scream': 'Riveter screams',
-    'entity.riveter.hurt': 'Riveter hurts',
-    'entity.riveter.death': 'Riveter dies',
     'block.sift_drum.low': 'Sift Drum thumps',
     'block.sift_drum.mid': 'Sift Drum beats',
     'block.sift_drum.high': 'Sift Drum taps',
@@ -1079,10 +1073,6 @@ SOUNDS = {
     'entity.enchoer.no': [('mob/allay/item_taken1', 0.9, 0.5)],
     'entity.enchoer.hurt': [('mob/allay/hurt1', 1.0, 0.6), ('block/amethyst_cluster/break1', 1.0, 0.8)],
     'entity.enchoer.death': [('mob/allay/death1', 1.0, 0.55), ('block/amethyst_cluster/break2', 1.0, 0.6)],
-    'entity.riveter.ambient': [('mob/bat/idle1', 0.5, 0.5), ('mob/bat/idle2', 0.5, 0.5), ('block/sculk/spread1', 0.6, 0.7)],
-    'entity.riveter.scream': [('event:entity.warden.roar', 0.8, 1.8), ('block/sculk_shrieker/shriek1', 1.0, 1.1), ('block/sculk_shrieker/shriek2', 1.0, 1.1)],
-    'entity.riveter.hurt': [('mob/bat/hurt1', 0.8, 0.6), ('mob/bat/hurt2', 0.8, 0.6)],
-    'entity.riveter.death': [('mob/bat/death', 1.0, 0.5), ('block/sculk/break1', 1.0, 0.8)],
     'block.sift_drum.low': [('block/note_block/basedrum', 1.0, 0.7)],
     'block.sift_drum.mid': [('block/note_block/basedrum', 1.0, 1.0), ('block/note_block/hat', 0.3, 0.8)],
     'block.sift_drum.high': [('block/note_block/snare', 1.0, 1.0)],
@@ -1370,9 +1360,6 @@ def gen_misc_tags():
     tag('block', f'{NS}:portal_frame', 'minecraft:reinforced_deepslate')
     for b in ['hushslate', 'cobbled_hushslate', 'minecraft:sculk', 'minecraft:deepslate', 'lumen_moss_block']:
         tag('block', f'{NS}:deep_sift_ground', rl(b))
-    for b in ['hushslate', 'cobbled_hushslate', 'hushslate_bricks', 'minecraft:sculk', 'minecraft:deepslate', 'minecraft:reinforced_deepslate',
-              'minecraft:deepslate_bricks', 'minecraft:deepslate_tiles']:
-        tag('block', f'{NS}:riveter_roost', rl(b))
     tag('block', f'{NS}:incorrect_for_siftite_tool', '#minecraft:incorrect_for_netherite_tool')
     for f in list(spec.FLOWERS) + ['echo_orchid', 'choir_lily', 'pitcher_bulb_bush', 'glowbell_vine', 'soul_chime']:
         tag('block', f'{NS}:resonant', rl(f))

@@ -108,6 +108,16 @@ public class Enchoer extends PathfinderMob implements MusicListener {
         });
     }
 
+    /**
+     * S1 never freeze: vanilla stops a mob's random strolls once it has been 100 ticks out of
+     * a player's 32-block reach, so Sift creatures seen across a valley stood frozen. The field
+     * itself (which drives despawning) is left alone.
+     */
+    @Override
+    public int getNoActionTime() {
+        return 0;
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -234,8 +244,9 @@ public class Enchoer extends PathfinderMob implements MusicListener {
                 if (this.stateTime % 50 == 0) {
                     server.sendParticles(ModParticles.DRIFTING_SOUL.get(), this.getX(), this.getY() + 1.4, this.getZ(), 1, 0.3, 0.1, 0.3, 0.0);
                 }
-                Player near = server.getNearestPlayer(this, 3.0);
-                if (this.stateTime > 1200 + this.random.nextInt(400) || (near != null && !near.isShiftKeyDown())) {
+                // S1 never freeze: it wakes as you walk up (not only once you stand right beside it); sneak to get close
+                Player near = server.getNearestPlayer(this, 7.0);
+                if (this.stateTime > 1200 + this.random.nextInt(400) || (near != null && !near.isShiftKeyDown()) || this.hurtTime > 0) {
                     this.setState(IDLE);
                     this.cooldown = 600;
                 }

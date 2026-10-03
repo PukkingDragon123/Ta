@@ -17,7 +17,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * The creatures' shared ears and reins (agent A1):
  * <ul>
- *   <li>every note played anywhere ({@link SongEvents#note}) reaches the Bulbs, Harmoners, Riveters,
+ *   <li>every note played anywhere ({@link SongEvents#note}) reaches the Bulbs, Harmoners,
  *   Slumblers and baby Stompers close enough to hear it, each in its own way;</li>
  *   <li>a rider's attack key on a tame Stomper arrives as {@link RiderStomp} and makes it stomp.</li>
  * </ul>
@@ -50,8 +50,6 @@ public final class CreatureLife {
                 bulb.hearNote(level, pitch);
             } else if (mob instanceof Harmoner harmoner) {
                 harmoner.hearNote(level, pitch);
-            } else if (mob instanceof Riveter riveter) {
-                riveter.hearNote(level, pitch);
             } else if (mob instanceof Slumbler slumbler) {
                 slumbler.hearNote(level, pitch);
             } else if (mob instanceof Stomper stomper) {

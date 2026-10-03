@@ -134,6 +134,16 @@ public class Bulb extends Animal implements HopMoveControl.Hopper, MusicListener
         return Animal.createAnimalAttributes().add(Attributes.MAX_HEALTH, 6.0).add(Attributes.MOVEMENT_SPEED, 0.3).add(Attributes.JUMP_STRENGTH, 0.4);
     }
 
+    /**
+     * S1 never freeze: vanilla stops a mob's random strolls once it has been 100 ticks out of
+     * a player's 32-block reach, so Sift creatures seen across a valley stood frozen. The field
+     * itself (which drives despawning) is left alone.
+     */
+    @Override
+    public int getNoActionTime() {
+        return 0;
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));

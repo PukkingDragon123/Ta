@@ -3,7 +3,6 @@ package com.thesift.event;
 import com.thesift.entity.Bulb;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.Harmoner;
-import com.thesift.entity.Riveter;
 import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
@@ -38,7 +37,6 @@ public final class ModBusEvents {
         event.put(ModEntities.SLUMBLER.get(), Slumbler.createAttributes().build());
         event.put(ModEntities.SIFTER.get(), Sifter.createAttributes().build());
         event.put(ModEntities.ENCHOER.get(), Enchoer.createAttributes().build());
-        event.put(ModEntities.RIVETER.get(), Riveter.createAttributes().build());
         event.put(ModEntities.HARMONER.get(), Harmoner.createAttributes().build());
         event.put(ModEntities.SCULK_HARMONER.get(), com.thesift.entity.SculkHarmoner.createAttributes().build());
         event.put(ModEntities.DICTATOR.get(), Dictator.createAttributes().build());
@@ -61,6 +59,10 @@ public final class ModBusEvents {
         // vanilla Sniffers roam the Sift and dig up its seeds (the Sift Sniffer was retired)
         event.register(net.minecraft.world.entity.EntityTypes.SNIFFER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        // S1 spawning: the Wishing Grove's Allays (vanilla never spawns them naturally, so they had no rules and
+        // turned up anywhere, deep in caves and in mid-air) land on the grove's ground like the other creatures
+        event.register(net.minecraft.world.entity.EntityTypes.ALLAY, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.HARMONER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.ENCHOER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -69,8 +71,6 @@ public final class ModBusEvents {
                 ModBusEvents::checkSlumbler, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.SIFTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSifter, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntities.RIVETER.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                ModBusEvents::checkRiveter, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         // the wild creatures
         event.register(ModEntities.STOMPER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
@@ -99,9 +99,20 @@ public final class ModBusEvents {
         return Mob.checkMobSpawnRules(type, level, reason, pos, random);
     }
 
+    /**
+     * S1 spawning, the Sifter's light rule: on sand it lies in wait under the open sky (the Sift has no night) but
+     * never by torchlight; anywhere else it needs the dark like any Overworld monster.
+     */
     private static <T extends Mob> boolean checkSifter(EntityType<T> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
             RandomSource random) {
-        return level.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(type, level, reason, pos, random);
+        if (level.getDifficulty() == Difficulty.PEACEFUL) {
+            return false;
+        }
+        if (com.thesift.entity.Sifter.isSand(level.getBlockState(pos.below()))) {
+            return (EntitySpawnReason.isSpawner(reason) || level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, pos) == 0)
+                    && Mob.checkMobSpawnRules(type, level, reason, pos, random);
+        }
+        return net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(type, level, reason, pos, random);
     }
 
     /** The music fish spawn inside Chrome (or water) that is at least two blocks deep. */
@@ -120,9 +131,5 @@ public final class ModBusEvents {
         }
         return pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) && level.getFluidState(pos).isEmpty()
                 && random.nextInt(3) == 0;
-    }
-
-    private static boolean checkRiveter(EntityType<Riveter> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
-        return level.getDifficulty() != Difficulty.PEACEFUL && Riveter.checkRiveterSpawnRules(type, level, reason, pos, random);
     }
 }

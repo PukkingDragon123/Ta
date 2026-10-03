@@ -87,8 +87,6 @@ footsteps leave puffs of dream dust.
   in the sand and bursts out when you come near.
 * **Enchoer**: a big, sad, furry trader with moose antlers. Trades Sift goods for Chrome
   Pearls and hums along to music.
-* **Riveter** (hostile): the sculk bat. It hangs head-down from cave ceilings with its long claws
-  dangling, and screams to wake nearby Wardens.
 
 ### The Conductor's orchestra
 Three great players wait in the Sift, each woken by a violet **Encore Sigil**:

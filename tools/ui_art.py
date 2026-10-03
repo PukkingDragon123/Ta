@@ -371,7 +371,7 @@ def boss_bars(out):
 # ================================================================== codex specimen plates
 
 # portrait order (index = position in the 10-wide atlas); 'bulb_white' is the White Forest Bulb
-PORTRAITS = ['bulb', 'bulb_white', 'harmoner', 'sniffer', 'enchoer', 'soul_golem', 'nib', 'slumbler', 'sifter', 'riveter',
+PORTRAITS = ['bulb', 'bulb_white', 'harmoner', 'sniffer', 'enchoer', 'soul_golem', 'nib', 'slumbler', 'sifter',
              'stomper', 'sky_whale', 'fanfare_eel', 'kazoo_fish', 'tubafish', 'caravan', 'gobbler', 'swifter', 'jailer', 'sculkling',
              'dictator', 'thumper', 'strummer', 'strumling', 'sculk_parasite']
 
@@ -380,7 +380,7 @@ BACK = {'meadow': ('#b8d8a0', '#6f9a58'), 'sculk': ('#1f4a50', '#081e22'), 'sky'
         'sand': ('#f0dca8', '#c8a868'), 'cave': ('#4a4258', '#1a1622'), 'chrome': ('#e8d0f8', '#8ad8e8'), 'snow': ('#f4f6fa', '#bcc8d8'),
         'boss': ('#5a2030', '#1a0810'), 'deep': ('#16304a', '#040a16')}
 HABITAT = {'bulb': 'meadow', 'bulb_white': 'snow', 'harmoner': 'meadow', 'sniffer': 'meadow', 'enchoer': 'chrome', 'soul_golem': 'cave',
-           'nib': 'meadow', 'slumbler': 'chrome', 'sifter': 'sand', 'riveter': 'cave', 'stomper': 'meadow', 'sky_whale': 'sky',
+           'nib': 'meadow', 'slumbler': 'chrome', 'sifter': 'sand', 'stomper': 'meadow', 'sky_whale': 'sky',
            'fanfare_eel': 'sea', 'kazoo_fish': 'sea', 'tubafish': 'sea', 'caravan': 'cave', 'gobbler': 'deep', 'swifter': 'snow',
            'jailer': 'sculk', 'sculkling': 'sculk', 'dictator': 'boss', 'thumper': 'boss', 'strummer': 'boss', 'strumling': 'sculk',
            'sculk_parasite': 'sculk'}
@@ -533,14 +533,6 @@ def _creature(name):
         d.line((12, 30, 36, 30), fill=(60, 40, 20, 255))
         for x in range(13, 36, 3):
             d.point((x, 31), fill=(240, 236, 220, 255))
-    elif name == 'riveter':
-        s.add(C(24, 2, 24, 8, 1.2), '#2a2034', 'flat')
-        s.add(E(24, 22, 9, 14), '#4a3a5a')
-        s.add(P([(15, 12), (8, 30), (16, 36)]) | P([(33, 12), (40, 30), (32, 36)]), '#36283f', 'bevel', depth=2)
-        s.add(E(24, 35, 6, 5), '#5a4a6a')                                    # head (upside down)
-        s.add(C(20, 40, 18, 45, 1.4) | C(28, 40, 30, 45, 1.4), '#5a4a6a')    # ears
-        img = s.render()
-        ex += [(21, 34, (255, 210, 90, 255), False), (26, 34, (255, 210, 90, 255), False)]
     elif name == 'stomper':
         s.add(E(22, 30, 15, 10), '#7a8a9a')
         s.add(C(34, 30, 40, 40, 2.6) | C(40, 40, 43, 38, 1.8), '#8a9aaa')      # trunk

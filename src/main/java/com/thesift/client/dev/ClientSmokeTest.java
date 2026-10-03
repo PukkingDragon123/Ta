@@ -341,7 +341,6 @@ public final class ClientSmokeTest {
         scene("mob_closeup_slumbler", 40, c -> c.camera(1.5, STAGE_Y + 2.2, STAGE_Z + 1.5, 1.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
         scene("mob_closeup_sifter", 40, c -> c.camera(6.5, STAGE_Y + 1.8, STAGE_Z + 2.8, 6.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
         scene("mob_closeup_enchoer", 40, c -> c.camera(10.5, STAGE_Y + 2.6, STAGE_Z + 1.5, 10.5, STAGE_Y + 1.6, STAGE_Z + 6.5));
-        scene("mob_closeup_riveter", 40, c -> c.camera(12.6, STAGE_Y + 1.6, STAGE_Z + 2.8, 13.5, STAGE_Y + 1.9, STAGE_Z + 6.5));
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
         scene("mob_closeup_sniffer", 40, c -> c.camera(-0.5, STAGE_Y + 3.4, STAGE_Z + 3.2, -3.5, STAGE_Y + 1.2, STAGE_Z + 8.5));
         scene("mob_closeup_dictator", 40, c -> c.camera(20.0, STAGE_Y + 2.8, STAGE_Z - 3.0, 20.0, STAGE_Y + 2.0, STAGE_Z + 5.5));
@@ -490,7 +489,6 @@ public final class ClientSmokeTest {
                 c.set(x, STAGE_Y, STAGE_Z + 11, plants[Math.floorMod(x, plants.length)].defaultBlockState());
             }
         }
-        c.set(13, STAGE_Y + 3, STAGE_Z + 6, ModBlocks.DREAMSTONE_BRICKS.get().defaultBlockState());
         float face = 180.0F;
         c.spawn(ModEntities.BULB.get(), -9.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         Entity baby = c.spawn(ModEntities.BULB.get(), -7.0, STAGE_Y, STAGE_Z + 5.0, 150.0F, false);
@@ -513,8 +511,6 @@ public final class ClientSmokeTest {
         c.spawn(ModEntities.SLUMBLER.get(), 1.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.spawn(ModEntities.SIFTER.get(), 6.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.spawn(ModEntities.ENCHOER.get(), 10.5, STAGE_Y, STAGE_Z + 6.5, face, false);
-        // hanging from the brick above by its feet (its hitbox is 1.9 tall)
-        c.spawn(ModEntities.RIVETER.get(), 13.5, STAGE_Y + 3 - 1.91, STAGE_Z + 6.5, face, false);
         c.camera(2.5, STAGE_Y + 4.5, STAGE_Z - 9.5, 2.5, STAGE_Y + 1.0, STAGE_Z + 6.5);
     }
 

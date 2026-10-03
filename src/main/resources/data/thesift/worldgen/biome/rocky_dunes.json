@@ -23,7 +23,12 @@
     },
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
-        "spawn_costs": {},
+        "spawn_costs": {
+          "thesift:sifter": {
+            "charge": 1.0,
+            "energy_budget": 0.12
+          }
+        },
         "spawns_by_category": {
           "creature": [
             {
@@ -47,7 +52,7 @@
               "count": {
                 "type": "minecraft:uniform",
                 "min_inclusive": 1,
-                "max_inclusive": 3
+                "max_inclusive": 2
               },
               "weight": 60
             }

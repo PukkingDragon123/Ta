@@ -20,7 +20,8 @@ def declare(block, item):
               cls="GlowKelpBlock", model="sea_kelp", tab="nature", name=f"{k.capitalize()} Glowkelp")
     block("abyss_anemone", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SEAGRASS).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9)"
           ".replaceable()", cls="WaterPlantBlock", model="sea_anemone", loot="self", tab="nature")
-    block("cloud_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL)",
+    block("cloud_block", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.SNOW).strength(0.2F).sound(SoundType.WOOL)"
+          ".isValidSpawn(com.thesift.block.CloudBlock::spawnable)",  # S1: glass forbids spawning; creatures live on the clouds
           cls="CloudBlock", model="glass", name="Cloud", tab="nature")
     block("chime_bell", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 6)",
           cls="ChimeBellBlock", model="sea_bell", tags=["flowers"], tab="nature")

@@ -723,7 +723,7 @@ def items():
         rows[py][px_] = 'g'
         out(f'item/slingshot_pulling_{i}', pal_sprite([''.join(r) for r in rows], dict(base_keys, g=hx('#e8ff9a'))))
     eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
-            'enchoer': ('#a3dcc5', '#efe2b2'), 'riveter': ('#1d2b47', '#1fa39b'), 'harmoner': ('#e8577f', '#ffd23f'),
+            'enchoer': ('#a3dcc5', '#efe2b2'), 'harmoner': ('#e8577f', '#ffd23f'),
             'dictator': ('#141e2c', '#e6e1d3')}
     # modern-style portrait eggs at 32x: each egg wears its mob's face (and ears, antlers, crests)
     E = {
@@ -737,8 +737,6 @@ def items():
         'enchoer': dict(face=['.ffffffff.', 'ffbffffbff', 'feefffeeff', 'ffffnnffff', 'ffffnnffff', 'fffmmmmfff', '.ffffffff.'],
                         top=['a.a......a.a', 'aaa......aaa', '.aaa....aaa.', '..aa....aa..'],
                         keys={'f': '#d5dfd4', 'b': '#4d6870', 'e': '#3a5059', 'n': '#aebdb4', 'm': '#6a807b', 'a': '#efe2b2'}),
-        'riveter': dict(face=['BBBBBBBBBB', 'ee..BB..ee', 'eeee..eeee', '.ee....ee.', '..........', '..tvvvvt..'],
-                        top=['h........h', '.h......h.', '.hh....hh.'], keys={'B': '#d9d4bf', 'e': '#a6fff5', 't': '#e9f4ef', 'v': '#07101c', 'h': '#1fa39b'}),
         'harmoner': dict(face=['e........e', 'e........e', '...bbbb...', '...bbbb...', '....BB....'],
                          top=['.t..t..t.', '.c..c..c.', '..c.c.c..', '...ccc...'],
                          keys={'e': '#1a1830', 'b': '#ffd23f', 'B': '#c99a1f', 't': '#ff8a3d', 'c': '#ffd86b'}),

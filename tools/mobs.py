@@ -368,107 +368,6 @@ def sifter() -> Model:
 from echoer import enchoer  # noqa: E402,F401
 
 
-# =========================================================================== RIVETER
-_SKULL = {0: 'BBBBBBBBBB', 1: 'dBBBBBBBBd'}
-RIVETER_FACE = {
-    'neutral': {**_SKULL, 2: 'ee..BB..ee', 3: 'eeee..eeee', 4: '.ee....ee.'},
-    'blink': {**_SKULL, 4: 'eeee..eeee'},
-    'angry': {**_SKULL, 2: 'eee.BB.eee', 3: '.eee..eee.'},
-    'hurt': {**_SKULL, 3: 'ee......ee', 4: '..ee..ee..'},
-    'dead': {**_SKULL, 2: 'e.e....e.e', 3: '.e......e.', 4: 'e.e....e.e'},
-}
-
-
-def riveter() -> Model:
-    """The sculk bat: a tall, starved, hunched thing of dark hide and bone. Its arms are folded wings
-    that end in four long teal claws; it hangs head-down from cave ceilings with them dangling."""
-    pal = {
-        'hide': '#1d2b47', 'hide_l': '#2c4066', 'hide_d': '#121b30',
-        'bone': '#d9d4bf', 'bone_l': '#efeadb', 'bone_d': '#a9a28c',
-        'claw': '#1fa39b', 'claw_l': '#4fd5c6', 'claw_d': '#11706a',
-        'shin': '#1a8a87', 'shin_l': '#35b6ab', 'shin_d': '#0f5f5e',
-        'eye': '#a6fff5', 'spot': '#3be6d8', 'maw': '#07101c', 'tooth': '#e9f4ef',
-    }
-    m = Model('riveter', (64, 64), pal, {'riveter': {}}, res=2, expressions=['blink', 'angry', 'hurt', 'dead'])
-    hide = dict(color='hide', pattern='mc', clusters=0.5)
-    body = m.part('body', pivot=(0, 24, 0))
-    body.cube((-2.5, -13, -1.5), (5, 2, 3), color='bone', pattern='mc', clusters=0.4, rim=False)
-    for side, sx in (('left', 1), ('right', -1)):
-        leg = body.part(f'{side}_leg', pivot=(1.6 * sx, -12, 0), rot=(-0.12, 0, 0))
-        leg.cube((-1, 0, -1), (2, 6, 2), **hide, faces={
-            'north': dict(**hide, map=['..', '..', '..', '..', 'bb', 'bb'], keys={'b': 'bone'}),
-        })
-        shin = leg.part(f'{side}_shin', pivot=(0, 6, 0), rot=(0.24, 0, 0))
-        shin.cube((-1, 0, -1), (2, 5, 2), color='shin', pattern='mc', clusters=0.4)
-        shin.cube((-1.5, 5, -2.5), (3, 1, 3), color='shin', pattern='mc', clusters=0.0, rim=False, faces={
-            'north': dict(color='bone', pattern='mc', clusters=0.0, rim=False, map=['b.b'], keys={'b': 'bone_d'}),
-        })
-    torso = body.part('torso', pivot=(0, -13, 0), rot=(0.22, 0, 0))
-    torso.cube((-1.5, -4, -1), (3, 4, 2), **hide, faces={
-        'south': dict(**hide, map=['.b.', '...', '.b.', '...'], keys={'b': 'bone'}),
-    })
-    torso.cube((-3.5, -10, -2), (7, 6, 4), **hide, faces={
-        'north': dict(**hide, map=[
-            '.......',
-            '.bb.bb.',
-            '.......',
-            '.bbsbb.',
-            '.......',
-            '..b.b..',
-        ], keys={'b': 'bone', 's': 'spot'}, glow_keys='s'),
-        'south': dict(**hide, map=['...b...', '..s....', '...b...', '.....s.', '...b...', '.......'], keys={'b': 'bone', 's': 'spot'}, glow_keys='s'),
-    })
-    torso.cube((-4.5, -12.5, -2.5), (9, 3, 5), color='hide', pattern='mc', clusters=0.5, faces={
-        'north': dict(color='hide', pattern='mc', clusters=0.3, map=['B.......B', 'B.......B', '.........'], keys={'B': 'bone'}),
-        'up': dict(color='hide_l', pattern='mc', clusters=0.4, map=['B.......B', '.........', '.........', '.........', 'B.......B'],
-                   keys={'B': 'bone'}),
-    })
-    for i, (sz, h) in enumerate(((0.5, 2), (2.0, 3))):
-        torso.cube((-0.5, -12.5 - h, sz), (1, h, 1), color='claw', pattern='mc', clusters=0.0, rim=False,
-                   faces={'up': dict(color='claw_l', pattern='mc', clusters=0.0)})
-    head = torso.part('head', pivot=(0, -11.5, -2.5), rot=(0.08, 0, 0))
-    head.cube((-2.5, -4, -4.5), (5, 4, 5), **hide, faces={
-        'north': dict(color='hide', pattern='mc', clusters=0.0, hd=True, map=hd_rows(RIVETER_FACE['neutral'], 10, 8), keys={'e': 'eye', 'B': 'bone', 'd': 'bone_d'},
-                      glow_keys='e', expr={k: hd_rows(v, 10, 8) for k, v in RIVETER_FACE.items() if k != 'neutral'}),
-        'up': dict(color='bone', pattern='mc', clusters=0.3, map=['.....', '.....', '..d..', '.d.d.', '.....'], keys={'d': 'bone_d'}),
-        'east': dict(color='hide', pattern='mc', clusters=0.2, map=['BBBBB', '...BB'], keys={'B': 'bone'}),
-        'west': dict(color='hide', pattern='mc', clusters=0.2, map=['BBBBB', 'BB...'], keys={'B': 'bone'}),
-        'down': dict(color='maw', pattern='mc', clusters=0.0),
-    })
-    jaw = head.part('jaw', pivot=(0, 0, 0))
-    jaw.cube((-2, 0, -4.5), (4, 1, 4), color='hide_d', pattern='mc', clusters=0.0, rim=False, faces={
-        'north': dict(color='hide_d', pattern='mc', clusters=0.0, rim=False, map=['t..t'], keys={'t': 'tooth'}),
-        'up': dict(color='maw', pattern='mc', clusters=0.0, map=['t..t', '....', '.ss.', '....'], keys={'t': 'tooth', 's': 'spot'}, glow_keys='s'),
-    })
-    for side, sx in (('left', 1), ('right', -1)):
-        horn = head.part(f'{side}_horn', pivot=(1.5 * sx, -4, -1), rot=(-0.7, 0, 0.35 * sx))
-        horn.cube((-0.5, -4, -0.5), (1, 4, 1), color='claw', pattern='mc', clusters=0.0, rim=False, faces={
-            'up': dict(color='claw_l', pattern='mc', clusters=0.0),
-            'north': dict(color='claw', pattern='mc', clusters=0.0, rim=False, map=['l', '.', '.', 'd'], keys={'l': 'claw_l', 'd': 'claw_d'}),
-        })
-    for side, sx in (('left', 1), ('right', -1)):
-        wing = torso.part(f'{side}_wing', pivot=(4.5 * sx, -10.5, 0.5))
-        x0 = 0 if sx > 0 else -4
-        wing.cube((x0, -4, -1.5), (4, 14, 3), color='hide', pattern='mc', clusters=0.6, faces={
-            'north': dict(color='hide', pattern='mc', clusters=0.5, map=['bbbb', '....', '....', '.s..', '....', '....', '....', '...s',
-                                                                          '....', '....', '.s..', '....', '....', '....'],
-                          keys={'b': 'bone', 's': 'spot'}, glow_keys='s'),
-            'up': dict(color='bone', pattern='mc', clusters=0.3),
-            'east' if sx > 0 else 'west': dict(color='hide', pattern='mc', clusters=0.5, map=['bbb', '...', '...', '...', '.s.'],
-                                               keys={'b': 'bone', 's': 'spot'}, glow_keys='s'),
-        })
-        for i in range(4):
-            cx = (0.5 + i) * sx
-            claw = wing.part(f'{side}_claw_{i}', pivot=(cx, 9.5, -0.5 if i % 2 else 0.5), rot=(0.08, 0, (0.05 - 0.035 * i) * sx))
-            claw.cube((-0.5, 0, -0.5), (1, 9 - (1 if i in (0, 3) else 0), 1), color='claw', pattern='mc', clusters=0.0, rim=False, faces={
-                'north': dict(color='claw', pattern='mc', clusters=0.0, rim=False, map=['d', 'd', '.', '.', '.', '.', 'l', 'l', 'l'],
-                              keys={'d': 'claw_d', 'l': 'claw_l'}),
-                'south': dict(color='claw', pattern='mc', clusters=0.0, rim=False, map=['d', 'd', 'd', '.', '.', '.', '.', 'l', 'l'],
-                              keys={'d': 'claw_d', 'l': 'claw_l'}),
-            })
-    return m
-
-
 # =========================================================================== HARMONER
 HARMONER_VARIANTS = {
     # name: body, belly, wing, crest, crest tip, beak.  Each colour leads to its own structure.
@@ -758,7 +657,7 @@ def dictator() -> Model:
     return m
 
 
-ALL = {'bulb': bulb, 'slumbler': slumbler, 'sifter': sifter, 'enchoer': enchoer, 'riveter': riveter, 'harmoner': harmoner,
+ALL = {'bulb': bulb, 'slumbler': slumbler, 'sifter': sifter, 'enchoer': enchoer, 'harmoner': harmoner,
        'dictator': dictator}
 
 import bosses  # noqa: E402  (the mini-bosses, their young and the Conductor's Mask)

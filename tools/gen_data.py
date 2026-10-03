@@ -64,8 +64,6 @@ def entity_loot():
     table('entity', 'entities/sifter', [pool([item('dreamsand', count=(0, 2)), item('star_shard', 1)], condition=None),
                                         pool([item('glowing_slime_ball', count=(0, 1), extra=[LOOTING])])])
     table('entity', 'entities/enchoer', [pool([item('chrome_pearl', count=(1, 2)), item('star_shard', count=(1, 2))])])
-    table('entity', 'entities/riveter', [pool([item('minecraft:echo_shard', count=(0, 1), extra=[LOOTING])]),
-                                         pool([item('minecraft:sculk', count=(0, 2))])])
     table('entity', 'entities/dictator', [pool([item('warden_core', 1)]), pool([item('minecraft:echo_shard', count=(6, 12))]),
                                           pool([item('siftite_ingot', count=(3, 6))]), pool([item('music_disc_lullaby', 1)])])
     table('entity', 'entities/thumper', [pool([item('conga_drum', 1)]), pool([item('minecraft:turtle_scute', count=(2, 5))]),

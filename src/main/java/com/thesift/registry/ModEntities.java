@@ -5,7 +5,6 @@ import com.thesift.entity.Bulb;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
-import com.thesift.entity.Riveter;
 import com.thesift.entity.boss.Dictator;
 import com.thesift.entity.boss.Strumling;
 import com.thesift.entity.boss.Strummer;
@@ -29,8 +28,6 @@ public final class ModEntities {
             b -> b.sized(0.9F, 1.2F).eyeHeight(0.95F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
             MobCategory.CREATURE, b -> b.sized(1.0F, 2.5F).eyeHeight(1.8F).clientTrackingRange(10));
-    public static final DeferredHolder<EntityType<?>, EntityType<Riveter>> RIVETER = ENTITIES.registerEntityType("riveter", Riveter::new,
-            MobCategory.MONSTER, b -> b.sized(0.8F, 1.9F).eyeHeight(0.4F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Harmoner>> HARMONER = ENTITIES.registerEntityType("harmoner", Harmoner::new,
             MobCategory.CREATURE, b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,

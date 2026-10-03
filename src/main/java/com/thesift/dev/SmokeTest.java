@@ -64,6 +64,7 @@ public final class SmokeTest {
     private static final List<String> FAILURES = new ArrayList<>();
     private static int ticks = -1;
     private static @Nullable MechanicsTest mechanics;
+    private static @Nullable CreatureCheck creatures; // S1 spawning & AI: every biome's spawn rules, no creature frozen
 
     private SmokeTest() {
     }
@@ -105,6 +106,8 @@ public final class SmokeTest {
             spawnMobs(sift);
             mechanics = new MechanicsTest(server, sift, SmokeTest::check);
             mechanics.start();
+            creatures = new CreatureCheck(sift, SmokeTest::check); // S1 spawning & AI
+            creatures.start();
             ticks = 0;
         } catch (Throwable t) {
             TheSift.LOGGER.error("SMOKE FAIL: exception", t);
@@ -121,7 +124,10 @@ public final class SmokeTest {
         if (mechanics != null && !mechanics.done()) {
             mechanics.tick();
         }
-        boolean finished = ticks >= 200 && (mechanics == null || mechanics.done());
+        if (creatures != null && !creatures.done()) {
+            creatures.tick(); // S1 spawning & AI
+        }
+        boolean finished = ticks >= 200 && (mechanics == null || mechanics.done()) && (creatures == null || creatures.done());
         if (finished || ticks > 3000) {
             for (Entity e : SPAWNED) {
                 TheSift.LOGGER.info("SMOKE: {} alive={} removal={} pos={} health={}", BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()), e.isAlive(),
@@ -414,7 +420,7 @@ public final class SmokeTest {
 
     private static void spawnMobs(ServerLevel sift) {
         List<EntityType<?>> types = List.of(ModEntities.BULB.get(), ModEntities.SLUMBLER.get(), ModEntities.SIFTER.get(), ModEntities.ENCHOER.get(),
-                ModEntities.RIVETER.get(), EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.THUMPER.get(),
+                EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.THUMPER.get(),
                 ModEntities.STRUMMER.get(), ModEntities.SCULK_PARASITE.get(), ModEntities.STRUMLING.get(),
                 com.thesift.registry.ModCaravans.CARAVAN.get(), // C: the Caravan
                 com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), com.thesift.registry.ModEchoer.NIB.get(), // A2 Echoer

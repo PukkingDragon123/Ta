@@ -109,6 +109,8 @@ public class Swifter extends Animal {
     private int huntCooldown = 400;
     private int napCooldown = 600;
     private int cryTicks;
+    /** S1 never freeze: how long the Bulb in its jaws has been carried (a hunt's flight lasts under three seconds). */
+    private int carryTicks;
 
     public Swifter(EntityType<? extends Animal> type, Level level) {
         super(type, level);
@@ -124,6 +126,16 @@ public class Swifter extends Animal {
         super.defineSynchedData(builder);
         builder.define(MODE, IDLE);
         builder.define(ANGRY, false);
+    }
+
+    /**
+     * S1 never freeze: vanilla stops a mob's random strolls once it has been 100 ticks out of
+     * a player's 32-block reach, so Sift creatures seen across a valley stood frozen. The field
+     * itself (which drives despawning) is left alone.
+     */
+    @Override
+    public int getNoActionTime() {
+        return 0;
     }
 
     @Override
@@ -329,6 +341,16 @@ public class Swifter extends Animal {
         }
         if (mode == SLEEP && this.hurtTime > 0) {
             this.setMode(IDLE);
+        }
+        // S1 never freeze: a Bulb still held long after the hunt (one cut short by a reload) is let go, not carried forever
+        if (this.isCarrying() && ++this.carryTicks > 120) {
+            Entity held = this.getFirstPassenger();
+            if (held != null) {
+                held.stopRiding();
+            }
+            this.carryTicks = 0;
+        } else if (!this.isCarrying()) {
+            this.carryTicks = 0;
         }
         if (mode == CRY && --this.cryTicks <= 0) {
             this.setMode(IDLE); // cried itself out

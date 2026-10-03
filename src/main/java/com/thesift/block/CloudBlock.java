@@ -3,7 +3,9 @@ package com.thesift.block;
 import com.thesift.registry.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -16,6 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CloudBlock extends HalfTransparentBlock {
     public CloudBlock(BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    /**
+     * S1 spawning: creatures spawn on cloud like on any other ground. The block copies glass, whose
+     * {@code isValidSpawn} is "never" - which kept every creature but the Sky Whales out of the Sound Garden.
+     */
+    public static boolean spawnable(BlockState state, BlockGetter level, BlockPos pos, EntityType<?> type) {
+        return true;
     }
 
     @Override
