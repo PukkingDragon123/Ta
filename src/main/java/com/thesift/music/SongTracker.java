@@ -89,15 +89,28 @@ public final class SongTracker {
         if (m == null) {
             return pitch;
         }
+        // the song furthest along wins, so a song that takes any instrument cannot pull the note off the one being played
+        int best = 0;
+        int tuned = pitch;
         for (Song song : Song.values()) {
-            if (song.accepts(instrument) && m.progress(song, now) > 0 && carriesSheet(player, song)) {
+            int done = m.progress(song, now);
+            if (done > best && song.accepts(instrument) && carriesSheet(player, song)) {
                 int want = m.nextNote(song, now);
+                if (want == pitch) {
+                    return pitch;
+                }
                 if (SongMatcher.matches(want, pitch)) {
-                    return want;
+                    best = done;
+                    tuned = want;
                 }
             }
         }
-        return pitch;
+        return tuned;
+    }
+
+    /** Forgets a player's progress through every song (tests start from a clean slate). */
+    public static void forget(Player player) {
+        PLAYERS.remove(player.getUUID());
     }
 
     /** True if the player has the song's Music Sheet anywhere on them. */

@@ -5,6 +5,7 @@ import com.thesift.entity.Enchoer;
 import com.thesift.music.Instrument;
 import com.thesift.music.Notes;
 import com.thesift.music.Song;
+import com.thesift.music.SongTracker;
 import com.thesift.music.SongEvents;
 import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModItems;
@@ -96,6 +97,7 @@ final class SongTest {
 
     private boolean perform(FakePlayer player, Instrument instrument, int[] notes) {
         this.heard.clear();
+        SongTracker.forget(player);
         for (int n : notes) {
             Notes.play(this.sift, player, instrument, n);
         }
@@ -121,7 +123,7 @@ final class SongTest {
         for (Song song : Song.values()) {
             boolean ok = this.perform(player, instrumentFor(song), song.notes());
             TheSift.LOGGER.info("SMOKE: song {} on {} -> heard {}", song.id(), instrumentFor(song), this.heard);
-            this.check.accept(ok && this.heard.size() == 1 && this.heard.get(0) == song, "songs: " + song.id() + " is performed on " + instrumentFor(song));
+            this.check.accept(ok && this.heard.size() == 1 && this.heard.get(0) == song, "songs: " + song.id() + " is performed on " + instrumentFor(song) + " (heard " + this.heard + ")");
         }
         // forgiving: a semitone off either way, a double tap and one stray note
         for (Song song : Song.values()) {
@@ -136,7 +138,7 @@ final class SongTest {
                 }
             }
             boolean ok = this.perform(player, instrumentFor(song), seq.stream().mapToInt(Integer::intValue).toArray());
-            this.check.accept(ok && this.heard.contains(song), "songs: " + song.id() + " forgives a semitone off, a double tap and a stray note");
+            this.check.accept(ok && this.heard.contains(song), "songs: " + song.id() + " forgives a semitone off, a double tap and a stray note (heard " + this.heard + ")");
         }
         // the wrong instrument, and no sheet, never perform it
         this.perform(player, Instrument.GUITAR, Song.OFFERING.notes());
