@@ -291,6 +291,8 @@ for _s, _t in SONG_TITLES.items():
 item("prism_flute", cls="PrismFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 item("prism_harp", cls="PrismHarpItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 item("prism_drum", cls="PrismDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
+# C4 songs: the Wind Chimes, the instrument of the Echoer's Offering (and the Crystal Hymn)
+item("wind_chimes", cls="WindChimesItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", tab="combat")
 # --- end songs & instruments
 
 # ---------------------------------------------------------------- the wild creatures' drops and gear

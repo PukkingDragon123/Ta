@@ -104,7 +104,10 @@ final class MechanicsTest {
         this.checkHarmoners();
         this.checkSniffer();
         this.startDictator();
+        this.songTest = SongTest.start(this.sift, this.check); // C4 songs: every song through the real tracker + the Echoer's reward
     }
+
+    private @Nullable SongTest songTest; // C4 songs
 
     private @Nullable Dictator dictator;
 
@@ -368,6 +371,9 @@ final class MechanicsTest {
         }
         if (this.ticks == 320) {
             this.checkAltar();
+        }
+        if (this.ticks == 260 && this.songTest != null) {
+            this.songTest.finish(); // C4 songs
         }
         switch (this.stage) {
             case RITUAL -> this.tickRitual();

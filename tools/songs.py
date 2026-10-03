@@ -22,7 +22,7 @@ SONGS = {
     'lullaby': ([13, 11, 10, 8, 10, 6], '#c7a6f0'),
 }
 SONG_DESC = {
-    'offering': 'Play it beside an offering and the Echoer will trade.',
+    'offering': 'Ring it on Wind Chimes while an Echoer holds your offering.',
     'nib': 'The Nibs of the Sound Garden dance to it.',
     'golem': 'Wakes and recharges Soul Golems.',
     'crystal': "The Caravans' hymn: it calms a colony.",
@@ -51,7 +51,20 @@ PRISM_RECIPES = {
     'prism_harp': (['GIG', 'ISI', 'GIG'], {'G': 'prism_gem', 'I': 'minecraft:gold_ingot', 'S': 'minecraft:string'}),
 }
 
-INSTRUMENTS = ['crane_flute', 'conga_drum', 'guitar', 'prism_flute', 'prism_harp', 'prism_drum']
+INSTRUMENTS = ['crane_flute', 'conga_drum', 'guitar', 'prism_flute', 'prism_harp', 'prism_drum',
+               'wind_chimes']  # C4 songs: the Wind Chimes
+
+# C4 songs: what each song must be played on (mirrors Song.java; None = any instrument)
+SONG_INSTRUMENT = {'offering': 'chimes', 'nib': 'strings', 'golem': None, 'crystal': 'chimes', 'whale': 'flute',
+                   'tide': 'drum', 'lullaby': 'strings'}
+INSTRUMENT_NAMES = {
+    'any': 'any instrument', 'flute': 'a flute (Crane or Prism Flute)', 'drum': 'a drum (Conga or Prism Drum)',
+    'strings': "strings (Guitar, Weaver's Guitar or Prism Harp)", 'chimes': 'the Wind Chimes',
+}
+INSTRUMENT_SHORT = {'any': 'Any instrument', 'flute': 'Flute', 'drum': 'Drum', 'strings': 'Strings', 'chimes': 'Wind Chimes'}
+# Wind Chimes: a stick crossbar, two strings, an iron and an amethyst tube
+WIND_CHIMES_RECIPE = (['SSS', 'T T', 'IAI'], {'S': 'minecraft:stick', 'T': 'minecraft:string', 'I': 'minecraft:iron_ingot',
+                                              'A': 'minecraft:amethyst_shard'})
 OPTIONAL_INSTRUMENTS = ['weaver_guitar']  # another agent's; tagged as optional
 
 
@@ -85,6 +98,10 @@ def generate():
             'neoforge:conditions': [{'type': 'neoforge:registered', 'registry': 'minecraft:item', 'value': f'{NS}:prism_gem'}],
             'type': 'minecraft:crafting_shaped', 'category': 'equipment',
             'key': {k: rl(v) for k, v in key.items()}, 'pattern': pattern, 'result': {'count': 1, 'id': rl(name)}})
+    pattern, key = WIND_CHIMES_RECIPE
+    GA.write(os.path.join(recipe_dir, 'wind_chimes.json'), {
+        'type': 'minecraft:crafting_shaped', 'category': 'equipment',
+        'key': {k: rl(v) for k, v in key.items()}, 'pattern': pattern, 'result': {'count': 1, 'id': rl('wind_chimes')}})
     lang()
 
 
@@ -92,13 +109,25 @@ def lang():
     L = {f'song.{NS}.{s}': t for s, t in spec.SONG_TITLES.items()}
     L.update({f'song.{NS}.{s}.desc': t for s, t in SONG_DESC.items()})
     L.update({
-        f'item.{NS}.music_sheet.hint': 'Use to pin it on screen. Carry it and play these notes on any instrument.',
+        # C4 songs: which instrument, which notes, where to look
+        f'item.{NS}.music_sheet.hint': 'Carry it and hold the instrument: a guide shows the next note and where to look. Use the sheet to pin it on screen.',
+        f'item.{NS}.music_sheet.instrument': 'Play on %s',
+        f'item.{NS}.music_sheet.scale': 'Straight ahead is F#4; every 5° up or down is one semitone.',
         f'message.{NS}.song.played': 'You played %s',
-        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Seven songs, written down',
-        f'codex.{NS}.songs.body': 'Every instrument plays single notes: look up for higher notes, down for lower - a ladder beside the crosshair shows the note. Sheets of music hide in the chests of the old ruins, towers, temples and shrines. Hold one to read its notes; use it to pin it on screen. Carry the sheet and play its notes in order, with no more than two seconds between them, to perform the song. The Lullaby puts monsters to sleep and opens Harmony Seals; the Whale Song calls a Sky Whale. Other songs wake golems, calm colonies, open drowned vaults and begin the Echoer\'s trade.',
+        f'message.{NS}.song.wrong_instrument': '%s must be played on %s',
+        f'music.{NS}.aim.up': '%s° up', f'music.{NS}.aim.down': '%s° down', f'music.{NS}.aim.ahead': 'straight ahead',
+        f'music.{NS}.guide.next': 'Next: %s, look %s',
+        f'music.{NS}.guide.needs': 'Needs %s',
+        f'music.{NS}.guide.done': 'Played!',
+        f'item.{NS}.wind_chimes.desc': 'Use to ring a note: look up for higher, down for lower.',
+        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Seven songs, seven sheets',
+        f'codex.{NS}.songs.body': 'Every instrument plays one note per use, picked by where you look: straight ahead is F#4, each 5 degrees up or down a semitone. Sheets hide in ruins, towers, temples and shrines; each lists its notes, where to look and the instrument it needs. Carry the sheet and hold that instrument: a guide shows the next note and where to aim. A semitone off, a double tap, one stray note or a four-second pause is forgiven. Offering, Crystal Hymn: Wind Chimes. Nibs, Lullaby: strings. Whale Song: flute. Tide Song: drum. Golem Hymn: anything.',
         f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Gem-inlaid',
         f'codex.{NS}.prism_instruments.body': 'Inlay an instrument with prism gems and it sings stronger. The Prism Flute\'s beam reaches further, hits harder and pierces everything along its line. The Prism Drum\'s shockwave rolls half as far again and rings out sooner. The Prism Harp heals you, your friends and your tamed creatures a little with every note it plays.',
     })
+    L.update({f'instrument.{NS}.{k}': v for k, v in INSTRUMENT_NAMES.items()})
+    L.update({f'instrument.{NS}.{k}.short': v for k, v in INSTRUMENT_SHORT.items()})
+    L[f'music.{NS}.guide.sneak'] = 'Sneak + use plays a single note'
     GA.LANG.update(L)
 
 
@@ -241,9 +270,44 @@ def prism_harp():
     return I.grid([''.join(r) for r in cells], pal, ol=True, no_ol='w')
 
 
+def wind_chimes():
+    """C4 songs: Wind Chimes - a ring hook, a stick crossbar, four tuned tubes of moon-silver
+    (long to short, each tipped with a cyan glint) and an amethyst clapper with a little sail."""
+    import items16 as I
+    cells = [['.'] * 16 for _ in range(16)]
+    for x, y in ((7, 0), (8, 0), (6, 1), (9, 1), (7, 2), (8, 2)):
+        cells[y][x] = 'k'
+    cells[3][7] = 's'
+    for x in range(1, 15):
+        cells[4][x] = 'W'
+        cells[5][x] = 'w'
+    cells[4][1] = cells[4][14] = 'w'
+    for x0, length in ((1, 6), (4, 8), (10, 7), (13, 5)):
+        cells[6][x0] = 's'
+        for y in range(7, 7 + length):
+            cells[y][x0] = 'T'
+            cells[y][x0 + 1] = 't'
+        cells[7][x0 + 1] = 'd'
+        cells[6 + length][x0] = 'g'
+        cells[6 + length][x0 + 1] = 'G'
+    for y in range(6, 10):
+        cells[y][7] = 's'
+    cells[10][7], cells[10][8], cells[11][7], cells[11][8] = 'C', 'c', 'c', 'e'
+    cells[12][7] = 's'
+    cells[13][7], cells[13][8], cells[14][7] = 'S', 'S', 'S'
+    pal = {
+        'k': ('#a8adbb', '#2a2a36'), 's': '#d8d0bc', 'W': ('#c49464', '#3a2414'), 'w': ('#8a5c36', '#3a2414'),
+        'T': ('#f0f8ff', '#28364a'), 't': ('#a9c8dc', '#28364a'), 'd': ('#7f9cb6', '#28364a'),
+        'g': ('#9ffaff', '#1a4a58'), 'G': ('#4fd8e8', '#1a4a58'),
+        'C': ('#e6c8ff', '#3a1a5a'), 'c': ('#b48ae8', '#3a1a5a'), 'e': ('#7c52c0', '#3a1a5a'), 'S': ('#c8f6ff', '#2a5a6a'),
+    }
+    return I.grid([''.join(r) for r in cells], pal, ol=True, no_ol='s')
+
+
 def art():
     out = {f'music_sheet_{s}': _sheet(s) for s in SONGS}
     out['prism_flute'] = prism_flute()
     out['prism_drum'] = prism_drum()
     out['prism_harp'] = prism_harp()
+    out['wind_chimes'] = wind_chimes()  # C4 songs
     return out

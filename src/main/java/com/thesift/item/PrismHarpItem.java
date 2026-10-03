@@ -39,8 +39,9 @@ public class PrismHarpItem extends Item {
                 }
                 server.sendParticles(ModParticles.STAR_SPARKLE.get(), e.getX(), e.getY() + e.getBbHeight() * 0.6, e.getZ(), 2, 0.3, 0.3, 0.3, 0.01);
             }
-            player.getCooldowns().addCooldown(player.getItemInHand(hand), NOTE_COOLDOWN);
         }
+        // both sides, so the client never plays (and the guide never counts) a note the server refuses
+        player.getCooldowns().addCooldown(player.getItemInHand(hand), NOTE_COOLDOWN);
         return InteractionResult.SUCCESS;
     }
 }

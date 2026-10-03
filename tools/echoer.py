@@ -19,17 +19,18 @@ def mc(color, **kw):
 
 
 # =========================================================================== THE ECHOER
-# the skull's front: 10 x 8 texels; the snout covers the lower middle. E glowing iris, I its white
-# core, l a dark lid line.
+# C4 Echoer: a furry god-deer. The skull's front is 14 x 11 texels (7 x 5.5 units at res 2), the eyes above the snout; E a soft
+# glowing iris, I its bright core, l a lid line, R the glowing rune on its brow.
+_BROW = {0: '.....RR.....'}
 ECHOER_FACE = {
-    'neutral': {1: '.EE....EE.', 2: 'EIE....EIE', 3: '.EE....EE.'},
-    'blink': {2: '.ll....ll.', 3: 'l..l..l..l'},
-    'happy': {1: '.EE....EE.', 2: 'E..E..E..E'},
-    'sleep': {3: '.ll....ll.'},
-    'hurt': {1: 'E..l..l..E', 2: '.EE....EE.', 3: 'E........E'},
-    'dead': {1: 'l.l....l.l', 2: '.l......l.', 3: 'l.l....l.l'},
+    'neutral': {**_BROW, 1: '..ll....ll..', 2: '.EEI....IEE.', 3: '..EE....EE..'},
+    'blink': {**_BROW, 2: '.lll....lll.'},
+    'happy': {**_BROW, 2: '..EE....EE..', 3: '.E..E..E..E.'},
+    'sleep': {**_BROW, 3: '.lll....lll.'},
+    'hurt': {**_BROW, 1: '.E..l..l..E.', 2: '..EE....EE..', 3: '.E........E.'},
+    'dead': {**_BROW, 1: '.l.l....l.l.', 2: '..l......l..', 3: '.l.l....l.l.'},
 }
-# the glowing runes down each flank (30 x 16 texels on the 15 x 8 unit side face)
+# the glowing runes in the fur of each flank (centred on the 20 x 9 unit side face)
 RUNES = {
     3: '...RRR.....R.R......RRR.......',
     4: '..R...R....RRR.....R...R..r...',
@@ -42,96 +43,190 @@ RUNES = {
     11: '..........................RRR.',
 }
 
+# The antlers, left side (x mirrored for the right): (part, parent, pivot, rot, cube origin, size, tip glows)
+ANTLER = [
+    ('antler', None, (2.2, -5.5, 0.5), (-0.3, 0.0, 0.6), (-1, -7, -1), (2, 7, 2), False),
+    ('antler_brow', 'antler', (0, -1.5, 0), (1.1, 0.0, -0.45), (-0.5, -3.5, -0.5), (1, 3.5, 1), True),
+    ('antler_mid', 'antler', (0, -7, 0), (-0.15, 0.0, -0.45), (-0.75, -6, -0.75), (1.5, 6, 1.5), False),
+    ('antler_fork', 'antler_mid', (0, -2, 0), (0.25, 0.0, 1.0), (-0.5, -5, -0.5), (1, 5, 1), True),
+    ('antler_back', 'antler_mid', (0, -3.5, 0), (-0.9, 0.0, 0.2), (-0.5, -4, -0.5), (1, 4, 1), True),
+    ('antler_top', 'antler_mid', (0, -6, 0), (0.3, 0.0, -0.4), (-0.5, -5, -0.5), (1, 5, 1), True),
+]
+# The wind chimes hung in the antlers: (antler part, point on it, cord length, tube length, tube colour)
+CHIMES = [
+    ('antler', (0, -5, 0), 1.5, 4.0, 'chime_a'),
+    ('antler_fork', (0, -4, 0), 1.0, 5.5, 'chime_b'),
+    ('antler_top', (0, -3.5, 0), 2.0, 3.5, 'chime_c'),
+    ('antler_back', (0, -3, 0), 1.5, 4.5, 'chime_a'),
+]
+
+
+def _rot(v, r):
+    """A point turned the way ModelPart turns its children (X, then Y, then Z)."""
+    import math
+    x, y, z = v
+    rx, ry, rz = r
+    y, z = y * math.cos(rx) - z * math.sin(rx), y * math.sin(rx) + z * math.cos(rx)
+    x, z = x * math.cos(ry) + z * math.sin(ry), -x * math.sin(ry) + z * math.cos(ry)
+    x, y = x * math.cos(rz) - y * math.sin(rz), x * math.sin(rz) + y * math.cos(rz)
+    return x, y, z
+
+
+def _mirror(sx, pivot, rot):
+    return (pivot[0] * sx, pivot[1], pivot[2]), (rot[0], rot[1] * sx, rot[2] * sx)
+
+
+def _head_point(name, point, sx):
+    """Where a point on one antler segment sits in the head's space."""
+    by_name = {a[0]: a for a in ANTLER}
+    p = point
+    seg = by_name[name]
+    while seg is not None:
+        pivot, rot = _mirror(sx, seg[2], seg[3])
+        q = _rot(p, rot)
+        p = (q[0] + pivot[0], q[1] + pivot[1], q[2] + pivot[2])
+        seg = by_name[seg[1]] if seg[1] else None
+    return p
+
+
+def _halo_map(n=28):
+    """A soft ring of light: '_' is cut away, H the bright band, h its gentle rim, s a few motes inside."""
+    import math
+    rows = []
+    c = (n - 1) / 2.0
+    for y in range(n):
+        row = ''
+        for x in range(n):
+            d = math.hypot(x - c, y - c)
+            if n / 2 - 3.4 <= d <= n / 2 - 0.4:
+                row += 'H' if n / 2 - 2.6 <= d <= n / 2 - 1.3 else 'h'
+            elif n / 2 - 6.0 < d < n / 2 - 4.6 and round(math.degrees(math.atan2(y - c, x - c))) % 30 == 0:
+                row += 's'
+            else:
+                row += '_'
+        rows.append(row)
+    return rows
+
 
 def enchoer() -> Model:
-    """A tall, graceful, moon-pale grazer: a slender deer-like body on long thin legs, an extremely
-    long neck of seven swaying segments, a small elegant head with big glowing eyes and two
-    swept-back horns tipped with light. Glowing runes are written down its flanks and a row of
-    luminous nodes runs up the back of its neck."""
+    """C4 Echoer: a majestic furry god-deer. A deep-chested body in thick ivory fur with glowing
+    runes in its flanks, a great lilac-white mane round the shoulders and a ruff under the chest, a
+    short strong neck, a gentle deer face with soft glowing eyes, leaf ears and a fluffy cheek
+    ruff - and huge branching moon-bone antlers hung with swaying wind-chime tubes, a soft halo of
+    light behind them. Shaggy fetlocks over dark hooves, an up-flicked fluffy tail."""
     pal = {
-        'hide': '#e9e3f3', 'hide_l': '#f8f5fc', 'hide_d': '#c8bfdc',
-        'belly': '#d7cde8', 'belly_l': '#e6def2', 'belly_d': '#b9addb',
-        'neck': '#e2dbef', 'neck_l': '#f3effa', 'neck_d': '#bfb4d6',
-        'hoof': '#4a3e66', 'hoof_l': '#5d5180', 'hoof_d': '#332a4a',
-        'horn': '#b9a6e6', 'horn_l': '#d2c4f4', 'horn_d': '#8e7ac4',
-        'snout': '#d9d0ea', 'snout_l': '#ebe5f5', 'snout_d': '#b6aacd', 'nostril': '#6e6190',
-        'rune': '#7ff7ff', 'rune_d': '#3cc9dc', 'eye': '#8ffaff', 'eye_core': '#ffffff', 'lid': '#6e6190',
-        'tuft': '#c6b6ee', 'tuft_l': '#ddd2f7', 'tuft_d': '#9d8bd1',
+        'fur': '#efe6d8', 'fur_l': '#fbf6ec', 'fur_d': '#cdbfae',
+        'belly': '#e2d6c4', 'belly_l': '#efe6d6', 'belly_d': '#bfae98',
+        'mane': '#f4eefc', 'mane_l': '#ffffff', 'mane_d': '#cbbfe2',
+        'snout': '#e8dece', 'snout_l': '#f6efe2', 'snout_d': '#c4b6a2', 'nose': '#8a6a86', 'nose_l': '#a888a2', 'nose_d': '#6a4e68', 'nostril': '#4a3a52',
+        'ear_in': '#f2c8d6', 'ear_in_d': '#d49ab0',
+        'hoof': '#5a4a66', 'hoof_l': '#6e5e7c', 'hoof_d': '#3e3248',
+        'antler': '#eadfbc', 'antler_l': '#fff7de', 'antler_d': '#b9a77c',
+        'rune': '#8ff6ff', 'rune_d': '#46c8dc', 'eye': '#bffcff', 'eye_core': '#ffffff', 'lid': '#7a6a8e',
+        'halo': '#fff1b8', 'halo_l': '#ffffff', 'halo_d': '#f2c86a',
+        'chime_a': '#e6eeff', 'chime_a_l': '#ffffff', 'chime_a_d': '#9aa8c4',
+        'chime_b': '#ffe08a', 'chime_b_l': '#fff3c4', 'chime_b_d': '#c99a3a',
+        'chime_c': '#9ff4ff', 'chime_c_l': '#dcffff', 'chime_c_d': '#4cc4dc',
+        'cord': '#cbbf9e', 'cord_l': '#e2d8bc', 'cord_d': '#9c9070',
     }
     m = Model('enchoer', (128, 128), pal, {'enchoer': {}}, res=2, expressions=['blink', 'happy', 'sleep', 'hurt', 'dead'])
-    hide = dict(color='hide', pattern='mc', clusters=0.18, bands=[(6, 'belly')])
     rk = {'R': 'rune', 'r': 'rune_d'}
+    fur = dict(color='fur', pattern='mc', clusters=0.12, streaks=0.9)
+    mane = dict(color='mane', pattern='mc', clusters=0.1, streaks=1.2)
     rune_side = hd_rows(RUNES, 30, 16)
-    rune_side_r = [r[::-1] for r in rune_side]
 
-    # --- four long, thin legs: thigh, shin, a dark hoof
-    for name, (px, pz) in (('front_left_leg', (2.5, -5.5)), ('front_right_leg', (-2.5, -5.5)),
-                           ('back_left_leg', (2.5, 5.0)), ('back_right_leg', (-2.5, 5.0))):
-        leg = m.part(name, pivot=(px, 12, pz))
-        leg.cube((-1.25, -2, -1.5), (2.5, 8, 3), **mc('hide', clusters=0.15))
-        shin = leg.part(name.replace('leg', 'shin'), pivot=(0, 6, 0))
-        shin.cube((-0.75, 0, -0.75), (1.5, 5, 1.5), **mc('hide', clusters=0.0, rim=False))
-        hoof = shin.part(name.replace('leg', 'hoof'), pivot=(0, 5, 0))
-        hoof.cube((-1, 0, -1.25), (2, 1, 2.5), **mc('hoof', clusters=0.0, rim=False))
+    # --- four strong deer legs: a furred thigh, a slim shin, a shaggy fetlock, a dark hoof
+    for name, (px, pz) in (('front_left_leg', (3.2, -6.5)), ('front_right_leg', (-3.2, -6.5)),
+                           ('back_left_leg', (3.2, 6.5)), ('back_right_leg', (-3.2, 6.5))):
+        leg = m.part(name, pivot=(px, 11, pz))
+        leg.cube((-1.75, -3, -1.75), (3.5, 8, 3.5), **dict(fur, rim=False))
+        shin = leg.part(name.replace('leg', 'shin'), pivot=(0, 5, 0))
+        shin.cube((-1.25, 0, -1.25), (2.5, 6, 2.5), **mc('fur', clusters=0.0, rim=False, streaks=0.5))
+        shin.cube((-1.75, 3.5, -1.75), (3.5, 2.5, 3.5), **mc('mane', clusters=0.0, rim=False, streaks=1.0, fringe=1))
+        hoof = shin.part(name.replace('leg', 'hoof'), pivot=(0, 6, 0))
+        hoof.cube((-1.25, 0, -1.5), (2.5, 2, 3), **mc('hoof', clusters=0.0, rim=False))
 
-    # --- the slender body, a deeper chest, a narrow rump
-    body = m.part('body', pivot=(0, 6, 0))
-    body.cube((-4, -4, -8), (8, 8, 15), **hide, faces={
-        'west': dict(**hide, hd=True, map=rune_side_r, keys=rk, glow_keys='Rr'),
-        'east': dict(**hide, hd=True, map=rune_side, keys=rk, glow_keys='Rr'),
-        'up': dict(color='hide', pattern='mc', clusters=0.25, hd=True,
-                   map=hd_rows({6: '.......RR.......', 7: '......R..R......', 8: '.......RR.......', 20: '.......rr.......'}, 16, 30),
-                   keys=rk, glow_keys='Rr'),
+    # --- the deep body in thick fur, runes in its flanks, a shaggy belly and a round rump
+    body = m.part('body', pivot=(0, 4, 0))
+    body.cube((-5.5, -4.5, -10), (11, 10, 20), **fur, faces={
+        'west': dict(**fur, hd=True, map=[r[::-1] for r in rune_side], keys=rk, glow_keys='Rr'),
+        'east': dict(**fur, hd=True, map=rune_side, keys=rk, glow_keys='Rr'),
+        'up': dict(color='fur', pattern='mc', clusters=0.2, streaks=0.6, hd=True,
+                   map=hd_rows({8: '.........RR.........', 9: '........R..R........', 10: '.........RR.........',
+                                30: '.........rr.........'}, 20, 40), keys=rk, glow_keys='Rr'),
         'down': dict(color='belly_d', pattern='mc', clusters=0.1),
     })
-    body.cube((-3.5, -4.5, -9.5), (7, 7, 2), **mc('hide', clusters=0.1))
-    body.cube((-3.5, -4.25, 6.5), (7, 6, 2), **mc('hide', clusters=0.15))
-    tail = body.part('tail', pivot=(0, -3, 8.5), rot=(0.7, 0, 0))
-    tail.cube((-1, -1, 0), (2, 2, 4), **mc('tuft', clusters=0.2, rim=False))
-    tail_tip = tail.part('tail_tip', pivot=(0, 0, 4), rot=(0.3, 0, 0))
-    tail_tip.cube((-1.5, -0.5, 0), (3, 1, 5), **mc('tuft', clusters=0.3, rim=False), faces={
-        'up': dict(color='tuft', pattern='mc', clusters=0.2, hd=True, map=hd_rows({7: '..rr..', 8: '.rRRr.', 9: '..rr..'}, 6, 10),
-                   keys=rk, glow_keys='Rr'),
-    })
+    body.cube((-5, 5, -8), (10, 2, 16), **mc('belly', clusters=0.0, streaks=1.0, fringe=2, rim=False))
+    body.cube((-5, -4, 9), (10, 8, 2), **mc('fur', clusters=0.15, streaks=0.8, rim=False))
+    # the great mane round the shoulders, and the ruff under the chest
+    body.cube((-6.5, -6.5, -11.5), (13, 13, 7), **mane, fringe=2)
+    ruff = body.part('ruff', pivot=(0, 5, -9.5))
+    ruff.cube((-4, 0, -2), (8, 4, 4), **mane, fringe=2, rim=False)
+    tail = body.part('tail', pivot=(0, -3, 10.5), rot=(0.35, 0, 0))
+    tail.cube((-1.5, -1.5, 0), (3, 3, 2.5), **mc('mane', clusters=0.1, streaks=0.8, rim=False))
+    tail_tip = tail.part('tail_tip', pivot=(0, 0, 2.5), rot=(0.4, 0, 0))
+    tail_tip.cube((-2, -1.75, 0), (4, 3.5, 3.5), **mc('mane_l', clusters=0.0, streaks=0.6, rim=False, dark='mane_d'))
 
-    # --- the neck: seven segments, each a little thinner, a glowing node on the back of each
-    widths = [4.0, 3.6, 3.4, 3.2, 3.0, 2.8, 2.6]
-    rots = [0.55, -0.05, -0.08, -0.08, -0.1, -0.12, -0.12]
-    parent, pivot = body, (0, -3, -8)
-    for i, wdt in enumerate(widths):
-        seg = parent.part(f'neck_{i}', pivot=pivot, rot=(rots[i], 0, 0))
-        ln = 5.0 if i == 0 else 4.5
-        h = wdt / 2
-        seg.cube((-h, -ln, -h), (wdt, ln, wdt), **mc('neck', clusters=0.12, rim=False), faces={
-            'north': dict(color='belly', pattern='mc', clusters=0.0, rim=False),
-        })
-        seg.cube((-0.5, -ln + 1.5, h - 0.25), (1, 1.5, 1), color='rune', pattern='mc', clusters=0.0, rim=False, glow=True)
-        parent, pivot = seg, (0, -ln + 0.3, 0)
+    # --- a short, strong neck, its mane flowing down the back
+    neck = body.part('neck', pivot=(0, -3, -9), rot=(0.45, 0, 0))
+    neck.cube((-3, -7, -3), (6, 7, 6), **fur, faces={'north': dict(color='belly', pattern='mc', clusters=0.0, streaks=0.8)})
+    neck_mane = neck.part('mane', pivot=(0, -7.5, 1.0), rot=(-0.15, 0, 0))
+    neck_mane.cube((-3.5, 0, 0), (7, 8, 3.5), **mane, fringe=2)
 
-    # --- the small elegant head
-    head = parent.part('head', pivot=pivot, rot=(0.25, 0, 0))
-    face_keys = {'E': 'eye', 'I': 'eye_core', 'l': 'lid'}
-    head.cube((-2.5, -4, -2.5), (5, 4, 5), **mc('hide', clusters=0.1, rim=False), faces={
-        'north': dict(color='hide', pattern='mc', clusters=0.0, rim=False, hd=True, map=hd_rows(ECHOER_FACE['neutral'], 10, 8),
-                      keys=face_keys, glow_keys='EI', expr={k: hd_rows(v, 10, 8) for k, v in ECHOER_FACE.items() if k != 'neutral'}),
+    # --- the gentle deer head
+    head = neck.part('head', pivot=(0, -7, -0.5), rot=(-0.45, 0, 0))
+    face_keys = {'E': 'eye', 'I': 'eye_core', 'l': 'lid', 'R': 'rune'}
+    head.cube((-3.5, -5.5, -4), (7, 5.5, 7), **mc('fur', clusters=0.08, streaks=0.5, rim=False), faces={
+        'north': dict(color='fur', pattern='mc', clusters=0.0, rim=False, hd=True, map=hd_rows(ECHOER_FACE['neutral'], 12, 11),
+                      keys=face_keys, glow_keys='EIR', expr={k: hd_rows(v, 12, 11) for k, v in ECHOER_FACE.items() if k != 'neutral'}),
     })
-    head.cube((-1.5, -2.5, -5.5), (3, 2.5, 3), **mc('snout', clusters=0.0, rim=False), faces={
-        'north': dict(color='snout', pattern='mc', clusters=0.0, rim=False, hd=True, map=['......', '......', '.n..n.', '......', '......'],
+    head.cube((-3, -6.5, -3), (6, 1, 5), **mc('mane', clusters=0.0, rim=False, streaks=0.6))
+    head.cube((-2.25, -3, -8), (4.5, 3.5, 4), **mc('snout', clusters=0.0, rim=False), faces={
+        'north': dict(color='snout', pattern='mc', clusters=0.0, rim=False, hd=True, map=['.........', '.........', '..nn.nn..'],
                       keys={'n': 'nostril'}),
     })
-    jaw = head.part('jaw', pivot=(0, 0, -2.5))
-    jaw.cube((-1.25, -0.25, -2.75), (2.5, 1, 2.75), **mc('snout_d', clusters=0.0, rim=False))
+    head.cube((-1.25, -3.25, -8.5), (2.5, 1, 1), **mc('nose', clusters=0.0, rim=False))
+    head.cube((-4, -3, -3), (8, 3.5, 4.5), **mc('mane', clusters=0.0, streaks=1.0, fringe=1, rim=False))
+    jaw = head.part('jaw', pivot=(0, 0, -3.5))
+    jaw.cube((-1.75, -0.5, -4.25), (3.5, 1, 4.25), **mc('snout_d', clusters=0.0, rim=False))
     for side, sx in (('left', 1), ('right', -1)):
-        horn = head.part(f'{side}_horn', pivot=(1.4 * sx, -4, 0.8), rot=(-0.7, 0, 0.18 * sx))
-        horn.cube((-0.5, -3.5, -0.5), (1, 3.5, 1), **mc('horn', clusters=0.0, rim=False))
-        tip = horn.part(f'{side}_horn_tip', pivot=(0, -3.5, 0), rot=(-0.55, 0, 0))
-        tip.cube((-0.5, -2.5, -0.5), (1, 2.5, 1), **mc('horn_l', clusters=0.0, rim=False), faces={
-            'north': dict(color='horn_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['RR', 'rr'], keys=rk, glow_keys='Rr'),
-            'south': dict(color='horn_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['RR', 'rr'], keys=rk, glow_keys='Rr'),
-            'up': dict(color='rune', pattern='mc', clusters=0.0, glow=True),
+        ear = head.part(f'{side}_ear', pivot=(3.5 * sx, -4.5, 0.5), rot=(0.3, 0.35 * sx, 0.75 * sx))
+        ear.cube((0 if sx > 0 else -4, -0.75, -1), (4, 1.5, 2), **mc('fur', clusters=0.0, rim=False), faces={
+            'north': dict(color='ear_in', pattern='mc', clusters=0.0, rim=False),
+            'up': dict(color='ear_in', pattern='mc', clusters=0.0, rim=False),
         })
-        ear = head.part(f'{side}_ear', pivot=(2.5 * sx, -3, 1), rot=(0.2, 0.5 * sx, 0.6 * sx))
-        ear.cube((0 if sx > 0 else -3, -0.5, -0.5), (3, 1, 1.5), **mc('tuft', clusters=0.0, rim=False))
+        # the antlers: moon-bone beams branching into tines, their tips alight
+        parts = {}
+        for pname, parent, pivot, rot, origin, size, tip in ANTLER:
+            pv, rt = _mirror(sx, pivot, rot)
+            owner = head if parent is None else parts[parent]
+            seg = owner.part(f'{side}_{pname}', pivot=pv, rot=rt)
+            faces = {}
+            if tip:
+                faces = {'up': dict(color='rune', pattern='mc', clusters=0.0, glow=True),
+                         'north': dict(color='antler_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['RR', 'rr'],
+                                       keys=rk, glow_keys='Rr'),
+                         'south': dict(color='antler_l', pattern='mc', clusters=0.0, rim=False, hd=True, map=['RR', 'rr'],
+                                       keys=rk, glow_keys='Rr')}
+            seg.cube(origin, size, **mc('antler', clusters=0.2, rim=False), faces=faces)
+            parts[pname] = seg
+        # wind chimes hang from the branches, straight down in the head's space
+        for i, (on, point, cord, tube, colour) in enumerate(CHIMES):
+            hx, hy, hz = _head_point(on, point, sx)
+            chime = head.part(f'{side}_chime_{i}', pivot=(round(hx, 3), round(hy, 3), round(hz, 3)))
+            chime.cube((-0.25, 0, -0.25), (0.5, cord, 0.5), **mc('cord', clusters=0.0, rim=False))
+            chime.cube((-0.75, cord - 0.25, -0.75), (1.5, 0.5, 1.5), **mc('antler_d', clusters=0.0, rim=False))
+            chime.cube((-0.5, cord, -0.5), (1, tube, 1), **mc(colour, clusters=0.0, rim=False, glow=colour == 'chime_c'),
+                       faces={'down': dict(color='rune', pattern='mc', clusters=0.0, glow=True)})
+
+    # --- the soft halo of light behind the antlers
+    halo = head.part('halo', pivot=(0, -10, 4.5), rot=(0.12, 0, 0))
+    ring = _halo_map(32)
+    hk = {'H': 'halo_l', 'h': 'halo', 's': 'halo_d'}
+    halo.cube((-8, -8, 0), (16, 16, 0), color='halo', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='halo', pattern='mc', clusters=0.0, rim=False, hd=True, map=ring, keys=hk, glow_keys='Hhs'),
+        'south': dict(color='halo', pattern='mc', clusters=0.0, rim=False, hd=True, map=[r[::-1] for r in ring], keys=hk, glow_keys='Hhs'),
+    })
     return m
 
 
@@ -249,6 +344,9 @@ SOUNDS = {
     'block.echoer_device.charge': [('mob/warden/sonic_charge1', 0.7, 1.4), ('mob/warden/sonic_charge2', 0.7, 1.5)],
     'block.echoer_device.fire': [('mob/warden/sonic_boom1', 0.7, 1.6), ('mob/warden/sonic_boom2', 0.7, 1.7)],
     'block.echoer_device.fizzle': [('block/amethyst_cluster/break3', 0.8, 0.8)],
+    # C4 Echoer: the wind chimes in its antlers clink as it moves
+    'entity.enchoer.chimes': [('block/note_block/chime', 0.35, 1.0), ('block/note_block/chime', 0.3, 1.26),
+                              ('block/note_block/chime', 0.3, 1.5), ('block/amethyst/shimmer', 0.6, 1.4)],
 }
 SUBTITLES = {
     'entity.soul_golem.ambient': 'Soul Golem hums', 'entity.soul_golem.hurt': 'Soul Golem chips', 'entity.soul_golem.death': 'Soul Golem crumbles',
@@ -257,6 +355,7 @@ SUBTITLES = {
     'entity.nib.ambient': 'Nib twinkles', 'entity.nib.hurt': 'Nib flickers', 'entity.nib.transform': 'Nib turns to treasure',
     'entity.enchoer.ambient': 'Echoer chimes', 'entity.enchoer.hum': 'Echoer hums', 'entity.enchoer.trade': 'Echoer waits, humming',
     'entity.enchoer.yes': 'Echoer accepts', 'entity.enchoer.no': 'Echoer sighs', 'entity.enchoer.hurt': 'Echoer hurts', 'entity.enchoer.death': 'Echoer fades',
+    'entity.enchoer.chimes': 'Echoer\'s chimes clink',
     'block.echoer_device.charge': 'The Echoer charges', 'block.echoer_device.fire': 'The Echoer fires', 'block.echoer_device.fizzle': 'The Echoer fizzles',
 }
 

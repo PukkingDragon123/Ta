@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -17,15 +18,23 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Server side: keeps every player's latest notes. When a player plays all of a {@link Song}'s
- * notes in order - no more than {@link #GAP} ticks apart - while carrying its Music Sheet, the
- * song is performed: a flourish and a chord ring out and {@link SongEvents#played} fires.
+ * Server side: follows every player's notes with a {@link SongMatcher}. When a player plays all
+ * of a {@link Song}'s notes in order on the instrument it asks for, while carrying its Music
+ * Sheet, the song is performed: a flourish and a chord ring out and {@link SongEvents#played}
+ * fires. Playing a known song's notes on the wrong instrument earns a hint on the action bar.
+ *
+ * <p>Why songs used to fail: the Guitar picked its note from a different look-angle scale than
+ * the on-screen ladder (so the ladder lied), the Guitar never told the client's sheet what it
+ * played, every note had to be the exact semitone (5 degrees of look angle) with no slip allowed,
+ * and two seconds between notes was too short to aim. All of that now goes through
+ * {@link Notes#play}, {@link Notes#lookPitch} and the forgiving {@link SongMatcher}.
  */
 public final class SongTracker {
-    /** The longest pause between two notes of one song (2 s). */
-    public static final int GAP = 40;
-    private static final int KEEP = 16;
-    private static final Map<UUID, History> HISTORY = new HashMap<>();
+    /** The longest pause between two notes of one song. */
+    public static final int GAP = SongMatcher.GAP;
+    /** Ticks between two wrong-instrument hints. */
+    private static final int HINT_EVERY = 60;
+    private static final Map<UUID, SongMatcher> PLAYERS = new HashMap<>();
     private static boolean started;
 
     private SongTracker() {
@@ -46,27 +55,49 @@ public final class SongTracker {
             return;
         }
         long now = level.getGameTime();
-        History h = HISTORY.computeIfAbsent(player.getUUID(), u -> new History());
-        if (now - h.last > GAP || now < h.last) {
-            h.size = 0;
-        }
-        h.push(pitch);
-        h.last = now;
-        for (Song song : Song.values()) {
-            if (h.endsWith(song) && carriesSheet(player, song)) {
-                h.size = 0;
-                flourish(level, player, at, song);
-                SongEvents.played(level, player, at, song);
-                break;
+        SongMatcher m = PLAYERS.computeIfAbsent(player.getUUID(), u -> new SongMatcher());
+        Song song = m.hear(pitch, now, SongEvents.instrument(), s -> carriesSheet(player, s));
+        if (song != null) {
+            flourish(level, player, at, song);
+            SongEvents.played(level, player, at, song);
+        } else {
+            Song wrong = m.wrongInstrument();
+            if (wrong != null && now - m.hintAt >= HINT_EVERY) {
+                m.hintAt = now;
+                player.sendOverlayMessage(Component.translatable("message.thesift.song.wrong_instrument",
+                        Component.translatable("song.thesift." + wrong.id()), Component.translatable(wrong.instrumentKey()))
+                        .withStyle(ChatFormatting.GOLD));
             }
         }
-        if (HISTORY.size() > 64) {
-            for (Iterator<History> it = HISTORY.values().iterator(); it.hasNext(); ) {
-                if (now - it.next().last > GAP) {
+        if (PLAYERS.size() > 64) {
+            for (Iterator<SongMatcher> it = PLAYERS.values().iterator(); it.hasNext(); ) {
+                SongMatcher old = it.next();
+                if (old != m && old.idle(now)) {
                     it.remove();
                 }
             }
         }
+    }
+
+    /**
+     * Server: a note about to be played on {@code instrument}, nudged onto the note a song the
+     * player is playing wants next when it is already within tolerance - so a forgiven note also
+     * sounds right.
+     */
+    public static int tune(Player player, Instrument instrument, int pitch, long now) {
+        SongMatcher m = PLAYERS.get(player.getUUID());
+        if (m == null) {
+            return pitch;
+        }
+        for (Song song : Song.values()) {
+            if (song.accepts(instrument) && m.progress(song, now) > 0 && carriesSheet(player, song)) {
+                int want = m.nextNote(song, now);
+                if (SongMatcher.matches(want, pitch)) {
+                    return want;
+                }
+            }
+        }
+        return pitch;
     }
 
     /** True if the player has the song's Music Sheet anywhere on them. */
@@ -106,32 +137,5 @@ public final class SongTracker {
         level.sendParticles(ModParticles.RESONANCE_RING.get(), c.x, c.y + 0.1, c.z, 0, 6.0, 0.0, 0.0, 1.0);
         Resonance.pulse(level, BlockPos.containing(c), 0.8F, 8);
         player.sendOverlayMessage(Component.translatable("message.thesift.song.played", Component.translatable("song.thesift." + song.id())));
-    }
-
-    private static final class History {
-        final int[] notes = new int[KEEP];
-        int size;
-        long last = Long.MIN_VALUE / 2;
-
-        void push(int pitch) {
-            if (this.size == KEEP) {
-                System.arraycopy(this.notes, 1, this.notes, 0, KEEP - 1);
-                this.size--;
-            }
-            this.notes[this.size++] = pitch;
-        }
-
-        boolean endsWith(Song song) {
-            int n = song.length();
-            if (this.size < n) {
-                return false;
-            }
-            for (int i = 0; i < n; i++) {
-                if (this.notes[this.size - n + i] != song.note(i)) {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

@@ -42,15 +42,16 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Echoer (entity id {@code enchoer}): a tall, moon-pale grazer of the Sift with an impossibly
- * long neck, a small head with glowing eyes and runes of light down its flanks. It does not trade:
- * it accepts offerings.
+ * The Echoer (entity id {@code enchoer}): a furry god-deer of the Sift - thick ivory fur and a great
+ * mane, glowing gentle eyes, runes of light in its flanks, huge antlers hung with wind chimes that
+ * sway and clink as it moves, and a soft halo behind them. It does not trade: it accepts offerings.
  *
  * <p>The ceremony: drop an offering ({@code #thesift:echoer_offerings}) near it. It walks over,
- * lowers its head and sniffs it, then tucks it away and waits about a minute, humming the first
- * notes of <em>The Offering</em> to remind you. Play that song nearby and it dances - and gives
- * something valuable in return ({@code thesift:gameplay/echoer_reward}). If no song comes it hangs
- * its head and gives the offering back.
+ * lowers its head and sniffs it, then tucks it away and waits about a minute, ringing the first
+ * notes of <em>The Offering</em> on its chimes to remind you. Play that song nearby on the Wind
+ * Chimes ({@link Song#OFFERING}) and it dances - and gives something valuable in return
+ * ({@code thesift:gameplay/echoer_reward}). If no song comes it hangs its head and gives the
+ * offering back.
  *
  * <p>Between ceremonies it wanders, tilts its head at things, bows to visitors, hums along to any
  * music and naps when nobody is around.
@@ -158,6 +159,17 @@ public class Enchoer extends PathfinderMob implements MusicListener {
         if (s != IDLE) {
             this.getNavigation().stop();
         }
+    }
+
+    /**
+     * Takes an offering at once and waits for the song (what inspecting a dropped offering ends
+     * in; used by the CI song test).
+     */
+    public void acceptOffering(ItemStack stack) {
+        this.offering = stack.copyWithCount(1);
+        this.target = null;
+        this.walkTime = 0;
+        this.setState(WAITING);
     }
 
     /** Free to wander: no ceremony under way and awake. */
@@ -306,11 +318,11 @@ public class Enchoer extends PathfinderMob implements MusicListener {
         if (near != null) {
             this.getLookControl().setLookAt(near);
         }
-        // every eight seconds it hums the start of the Offering, to remind you how it goes
+        // every eight seconds it rings the start of the Offering on its antler chimes, to remind you how it goes
         int t = this.stateTime % 160;
         if (t % 8 == 0 && t / 8 < 3) {
             int pitch = Song.OFFERING.note(t / 8);
-            server.playSound(null, this.getX(), this.getEyeY(), this.getZ(), SoundEvents.NOTE_BLOCK_FLUTE.value(), SoundSource.NEUTRAL, 1.0F,
+            server.playSound(null, this.getX(), this.getEyeY() + 0.6, this.getZ(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.NEUTRAL, 1.0F,
                     Notes.soundPitch(pitch));
             server.sendParticles(ModParticles.SIFT_NOTE.get(), this.getX(), this.getEyeY() + 0.5, this.getZ(), 0, pitch / 24.0, 0, 0, 1);
         }
@@ -331,6 +343,12 @@ public class Enchoer extends PathfinderMob implements MusicListener {
         }
         if (this.stateTime % 20 == 0) {
             this.playSound(ModSounds.ENCHOER_HUM.get(), 1.0F, 0.9F + this.random.nextFloat() * 0.3F);
+        }
+        // its chimes ring the whole Offering back to you as it dances
+        if (this.stateTime % 9 == 0 && this.stateTime / 9 < Song.OFFERING.length()) {
+            int pitch = Song.OFFERING.note(this.stateTime / 9);
+            server.playSound(null, this.getX(), this.getEyeY() + 0.6, this.getZ(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.NEUTRAL, 0.9F,
+                    Notes.soundPitch(pitch));
         }
         if (this.stateTime >= DANCE_TIME) {
             this.reward(server);
@@ -382,11 +400,24 @@ public class Enchoer extends PathfinderMob implements MusicListener {
         this.sad = approach(this.sad, st == DISAPPOINTED, 0.07F);
         this.sleep = approach(this.sleep, st == SLEEPING, 0.04F);
         this.sing = approach(this.sing, this.isSinging() || st == DANCING, 0.08F);
+        // the chimes in its antlers clink as it moves - a step, a turn of the head, the dance
+        double moving = this.getDeltaMovement().horizontalDistanceSqr();
+        float yawSpeed = Math.abs(Mth.wrapDegrees(this.yHeadRot - this.yHeadRotO));
+        int chance = st == DANCING ? 6 : moving > 0.002 ? 14 : yawSpeed > 4.0F ? 18 : 220;
+        if (st != SLEEPING && this.random.nextInt(chance) == 0) {
+            this.chimeClink(st == DANCING ? 0.8F : moving > 0.002 ? 0.55F : 0.35F);
+        }
         // the runes on its flanks shed motes of light
         if (this.random.nextInt(st == DANCING ? 2 : 8) == 0) {
             this.level().addParticle(ModParticles.STAR_SPARKLE.get(), this.getRandomX(0.6), this.getY() + 0.9 + this.random.nextDouble() * 0.4,
                     this.getRandomZ(0.6), 0, 0.01, 0);
         }
+    }
+
+    /** Client: one clink of the antler chimes. */
+    private void chimeClink(float volume) {
+        this.level().playLocalSound(this.getX(), this.getEyeY() + 0.7, this.getZ(), ModEchoer.ENCHOER_CHIMES.get(), SoundSource.NEUTRAL,
+                volume, 0.9F + this.random.nextFloat() * 0.35F, false);
     }
 
     private static float approach(float v, boolean on, float k) {
@@ -397,6 +428,7 @@ public class Enchoer extends PathfinderMob implements MusicListener {
     public void handleEntityEvent(byte id) {
         if (id == EVENT_BOW) {
             this.bowAnimation.start(this.tickCount);
+            this.chimeClink(0.8F);
         } else {
             super.handleEntityEvent(id);
         }

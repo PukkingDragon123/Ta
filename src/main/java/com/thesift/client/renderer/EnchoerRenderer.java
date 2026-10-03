@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
-/** The Echoer: its runes, eyes and horn tips glow, brighter while it hums or dances. */
+/** The Echoer, a furry god-deer: its runes, eyes, antler tips, glass chime and halo glow, brighter while it hums or dances. */
 public class EnchoerRenderer extends SiftMobRenderer<Enchoer, EnchoerRenderState, EnchoerModel> {
     private static final Expression[] PAINTED = {Expression.BLINK, Expression.HAPPY, Expression.SLEEP, Expression.HURT, Expression.DEAD};
     private static final ExpressionTextures TEXTURES = ExpressionTextures.single("enchoer", PAINTED);
@@ -50,10 +50,10 @@ public class EnchoerRenderer extends SiftMobRenderer<Enchoer, EnchoerRenderState
         poseStack.scale(0.92F, 0.92F, 0.92F);
     }
 
-    /** The neck and head reach far beyond the hitbox. */
+    /** The antlers, their chimes and the halo rise far above the hitbox, the muzzle reaches past it. */
     @Override
     protected AABB getBoundingBoxForCulling(Enchoer entity, float partialTicks) {
-        return super.getBoundingBoxForCulling(entity, partialTicks).inflate(1.5, 1.0, 1.5);
+        return super.getBoundingBoxForCulling(entity, partialTicks).inflate(1.5, 1.2, 1.5);
     }
 
     @Override

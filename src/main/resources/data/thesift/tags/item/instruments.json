@@ -7,6 +7,7 @@
     "thesift:prism_flute",
     "thesift:prism_harp",
     "thesift:prism_drum",
+    "thesift:wind_chimes",
     {
       "id": "thesift:weaver_guitar",
       "required": false

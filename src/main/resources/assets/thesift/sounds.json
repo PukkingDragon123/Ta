@@ -2547,6 +2547,34 @@
     ],
     "subtitle": "subtitles.thesift.block.echoer_device.fizzle"
   },
+  "entity.enchoer.chimes": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
+        "volume": 0.35,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
+        "volume": 0.3,
+        "pitch": 1.26
+      },
+      {
+        "name": "minecraft:block.note_block.chime",
+        "type": "event",
+        "volume": 0.3,
+        "pitch": 1.5
+      },
+      {
+        "name": "minecraft:block/amethyst/shimmer",
+        "volume": 0.6,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.enchoer.chimes"
+  },
   "entity.bulb.nibble": {
     "sounds": [
       {

@@ -11,9 +11,11 @@ import org.jspecify.annotations.Nullable;
  * The hub every instrument and every song-hearer goes through (server side).
  *
  * <ul>
- *   <li>Instruments call {@link #note} for every note a player plays.</li>
+ *   <li>Instruments call {@link #note(ServerLevel, Player, Vec3, int, Instrument)} for every note
+ *   a player plays (through {@link Notes#play}); blocks and creatures use the four-argument form
+ *   (no instrument).</li>
  *   <li>The song tracker listens to notes and, when a player completes a {@link Song} they know
- *   (they carry its Music Sheet), calls {@link #played}.</li>
+ *   (they carry its Music Sheet) on the instrument it asks for, calls {@link #played}.</li>
  *   <li>Anything that reacts to songs - creatures, blocks, puzzles, trades - registers a
  *   {@link SongListener} once at start-up and checks the distance itself.</li>
  * </ul>
@@ -33,6 +35,7 @@ public final class SongEvents {
 
     private static final List<NoteListener> NOTE_LISTENERS = new ArrayList<>();
     private static final List<SongListener> SONG_LISTENERS = new ArrayList<>();
+    private static @Nullable Instrument current;
 
     private SongEvents() {
     }
@@ -45,11 +48,27 @@ public final class SongEvents {
         SONG_LISTENERS.add(l);
     }
 
-    /** A note was played at {@code at} (pitch 0-24), by a player or by a block. */
+    /** A note was played at {@code at} (pitch 0-24) by a block or a creature (no instrument). */
     public static void note(ServerLevel level, @Nullable Player player, Vec3 at, int pitch) {
-        for (NoteListener l : NOTE_LISTENERS) {
-            l.onNote(level, player, at, pitch);
+        note(level, player, at, pitch, null);
+    }
+
+    /** A note was played at {@code at} (pitch 0-24) on {@code instrument} (null: a block or a creature). */
+    public static void note(ServerLevel level, @Nullable Player player, Vec3 at, int pitch, @Nullable Instrument instrument) {
+        Instrument outer = current;
+        current = instrument;
+        try {
+            for (NoteListener l : NOTE_LISTENERS) {
+                l.onNote(level, player, at, pitch);
+            }
+        } finally {
+            current = outer;
         }
+    }
+
+    /** While a note is being heard: the instrument it was played on (null for blocks and creatures). */
+    public static @Nullable Instrument instrument() {
+        return current;
     }
 
     /** A whole song was performed at {@code at}. */

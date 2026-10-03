@@ -310,13 +310,13 @@ def lang():
     for e, n in (('soul_golem', 'Soul Golem'), ('nib', 'Nib')):
         L[f'entity.{NS}.{e}'] = n
     L.update({
-        f'message.{NS}.echoer.waiting': 'The Echoer tucks your offering away and waits, humming... play it The Offering.',
+        f'message.{NS}.echoer.waiting': 'The Echoer tucks your offering away and waits, its chimes stirring... ring The Offering on Wind Chimes.',  # C4
         f'message.{NS}.soul_golem.energy': 'Soul energy: %s%%',
         f'message.{NS}.soul_golem.slumped': 'Your Soul Golem has run down. Play it some music - the Golem Hymn fills it up.',
         f'message.{NS}.soul_golem_core.needs_soil': 'The core needs a body: use it on a block of soul soil.',
         f'message.{NS}.echoer_device.range': 'The Echoer will reach %s blocks',
-        f'codex.{NS}.enchoer.title': 'Echoer', f'codex.{NS}.enchoer.tagline': 'Keeper of the offering song',
-        f'codex.{NS}.enchoer.body': 'A tall, moon-pale grazer with an endless swaying neck and runes of light on its flanks. It lives in a dome-shaped hut among singing gardens. It does not trade - it accepts offerings. Drop a Siftite or Serbim ingot (or a Prism Gem) near it: it sniffs the gift, tucks it away and waits a minute, humming the first notes of The Offering. Play the whole song and it dances and gives you something precious - music sheets, gems, enchanted books, rarely a Soul Golem Core, very rarely The Echoer itself. No song, and it hands the gift back, crestfallen. It bows to visitors, hums along to music and naps when alone.',
+        f'codex.{NS}.enchoer.title': 'Echoer', f'codex.{NS}.enchoer.tagline': 'The chime-crowned god-deer',  # C4 Echoer
+        f'codex.{NS}.enchoer.body': 'A furry god-deer with a great lilac mane, gentle glowing eyes, runes in its flanks and huge antlers hung with wind chimes that clink as it walks, a soft halo behind them. It lives in a dome hut among singing gardens and accepts offerings, not trades. Drop a Siftite or Serbim ingot (or a Prism Gem) near it: it sniffs the gift, tucks it away and rings the first notes of The Offering. Carry that sheet and play the whole song on Wind Chimes and it dances, rings the song back and gives you something precious - sheets, gems, books, rarely a Soul Golem Core. No song, and it hands the gift back.',
         f'codex.{NS}.soul_golem.title': 'Soul Golem', f'codex.{NS}.soul_golem.tagline': 'A little digger of the old days',
         f'codex.{NS}.soul_golem.body': 'Round soulstone constructs with lamp-lit eyes that waddle around the Echoer\'s Hut, picking up anything shiny and peering at suspicious blocks. Use one empty-handed to be shown its find. Set a Soul Golem Core into soul soil to build your own: it follows you and sifts the ground nearby, now and then turning up a gem. It runs on soul energy, which drains as it works; at zero it slumps. Any music recharges it a little - the Golem Hymn completely.',
         f'codex.{NS}.nib.title': 'Nibs', f'codex.{NS}.nib.tagline': 'Wisps of the flower meadows',

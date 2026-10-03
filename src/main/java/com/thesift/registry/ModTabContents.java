@@ -27,7 +27,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> combat() {
-        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON, ModItems.CONDUCTORS_STAFF, ModItems.CONGA_DRUM, ModItems.CANNONBALL, ModItems.CRANE_FLUTE, ModItems.GUITAR, ModItems.WEAVER_GUITAR, ModItems.PRISM_FLUTE, ModItems.PRISM_HARP, ModItems.PRISM_DRUM, ModItems.PRISM_HELMET, ModItems.PRISM_CHESTPLATE, ModItems.PRISM_LEGGINGS, ModItems.PRISM_BOOTS, ModItems.PRISM_SWORD);
+        return List.of(ModItems.SIFTITE_SWORD, ModItems.SIFTITE_SPEAR, ModItems.SIFTITE_HELMET, ModItems.SIFTITE_CHESTPLATE, ModItems.SIFTITE_LEGGINGS, ModItems.SIFTITE_BOOTS, ModItems.CONDUCTORS_BATON, ModItems.CONDUCTORS_STAFF, ModItems.CONGA_DRUM, ModItems.CANNONBALL, ModItems.CRANE_FLUTE, ModItems.GUITAR, ModItems.WEAVER_GUITAR, ModItems.PRISM_FLUTE, ModItems.PRISM_HARP, ModItems.PRISM_DRUM, ModItems.WIND_CHIMES, ModItems.PRISM_HELMET, ModItems.PRISM_CHESTPLATE, ModItems.PRISM_LEGGINGS, ModItems.PRISM_BOOTS, ModItems.PRISM_SWORD);
     }
 
     public static List<Supplier<? extends Item>> eggs() {
