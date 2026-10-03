@@ -32,4 +32,4 @@ jobs:
           echo "eula=true" > run-smoke/eula.txt
           printf 'online-mode=false\nlevel-seed=20260930\nspawn-protection=0\nsync-chunk-writes=false\nmax-tick-time=-1\n' > run-smoke/server.properties
           timeout 1500 ./gradlew runSmokeServer --no-configuration-cache > smoke.log 2>&1 || true
-          grep -v SMOKEPNG smoke.log | grep -E "FAIL|ERROR|Exception|Caused by|at com.thesift|PASSED" | cut -c1-400 | head -150 || true
+          grep -v SMOKEPNG smoke.log | grep -E "FAIL|ERROR|Exception|Caused by|at com.thesift|PASSED|never frozen" | cut -c1-400 | head -200 || true
