@@ -64,6 +64,7 @@ public class TheSiftClient {
         CaveCreaturesClient.register(modBus); // A4 cave creatures: the Jailer and Sculklings
         modBus.addListener(ClientEffects::registerOverlays);
         modBus.addListener(com.thesift.client.music.InstrumentHud::registerOverlays); // songs (agent D)
+        com.thesift.client.music.BandClient.register(modBus); // M2 band: the band panel, members' sway and hop on the beat
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onClientTick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onPlaySound);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onFogColor);

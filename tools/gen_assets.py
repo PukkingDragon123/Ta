@@ -1477,6 +1477,7 @@ def generate():
     __import__('cave_creatures').data(sys.modules[__name__])  # A4 cave creatures: loot, tags, spawns, text
     __import__('gatefx').assets(sys.modules[__name__])  # B1 Portal & sky FX: gate warp/shock post effects, sky Codex page
     __import__('conductor').assets(sys.modules[__name__])  # C3 Conductor: the 3D Conductor's Staff (flat sprite kept in the GUI)
+    __import__('band').assets(sys.modules[__name__])  # M2 band: band panel text, creature instrument names, Codex page
 
 
 def finalize():

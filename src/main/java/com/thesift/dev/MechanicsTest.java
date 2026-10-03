@@ -105,7 +105,10 @@ final class MechanicsTest {
         this.checkSniffer();
         this.startDictator();
         this.songTest = SongTest.start(this.sift, this.check); // C4 songs: every song through the real tracker + the Echoer's reward
+        this.bandTest = BandTest.start(this.sift, this.check); // M2 band: compatible songs recruit, others do not; play-along; leaving
     }
+
+    private @Nullable BandTest bandTest; // M2 band
 
     private @Nullable SongTest songTest; // C4 songs
 
@@ -374,6 +377,9 @@ final class MechanicsTest {
         }
         if (this.ticks == 260 && this.songTest != null) {
             this.songTest.finish(); // C4 songs
+        }
+        if (this.bandTest != null) {
+            this.bandTest.tick(); // M2 band
         }
         switch (this.stage) {
             case RITUAL -> this.tickRitual();

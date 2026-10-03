@@ -151,6 +151,7 @@ public final class CodexEntries {
         // songs & instruments (agent D)
         l.add(thing(ITEMS, "songs", ModItems.MUSIC_SHEET_LULLABY));
         l.add(thing(ITEMS, "prism_instruments", ModItems.PRISM_HARP));
+        l.add(thing(ITEMS, "band", ModItems.WIND_CHIMES)); // M2 band: every creature has a voice and may join your band
         // ---- places
         l.add(thing(PLACES, "portal", ModItems.SIFT_DRUM));
         l.add(thing(PLACES, "musical_temple", ModItems.HARMONY_STONE));

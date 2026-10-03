@@ -2,6 +2,7 @@ package com.thesift.music;
 
 import com.thesift.block.HarmonySealBlock;
 import com.thesift.entity.SkyWhale;
+import com.thesift.music.band.Bands;
 import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModEffects;
 import com.thesift.registry.ModParticles;
@@ -28,6 +29,8 @@ import org.jspecify.annotations.Nullable;
  *   Harmony Seal close by dissolves as if its stones had been tuned.</li>
  *   <li>{@link Song#WHALE}: the nearest Sky Whale hears it and comes to sing back.</li>
  * </ul>
+ * M2 band: both reach further (and the Lullaby lasts longer) the bigger the player's band
+ * ({@link Bands#power}).
  */
 public final class SongEffects {
     public static final double LULLABY_RADIUS = 12.0;
@@ -55,18 +58,22 @@ public final class SongEffects {
     }
 
     private static void lullaby(ServerLevel level, @Nullable Player player, Vec3 at) {
-        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(LULLABY_RADIUS),
-                m -> m.isAlive() && m instanceof Enemy && m instanceof Mob && m.distanceToSqr(at) <= LULLABY_RADIUS * LULLABY_RADIUS)) {
+        float power = Bands.power(player); // M2 band: a bigger band sings further and longer
+        double radius = LULLABY_RADIUS * power;
+        int sleep = Math.round(LULLABY_TICKS * power);
+        int sealRadius = Math.round(SEAL_RADIUS * power);
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(radius),
+                m -> m.isAlive() && m instanceof Enemy && m instanceof Mob && m.distanceToSqr(at) <= radius * radius)) {
             if (e instanceof com.thesift.entity.boss.MiniBoss || e instanceof com.thesift.entity.boss.Dictator || e instanceof net.minecraft.world.entity.boss.wither.WitherBoss || e instanceof net.minecraft.world.entity.boss.enderdragon.EnderDragon || e instanceof net.minecraft.world.entity.monster.warden.Warden) {
                 continue;
             }
-            e.addEffect(new MobEffectInstance(ModEffects.ENTRANCED, LULLABY_TICKS, 0, false, true), player);
+            e.addEffect(new MobEffectInstance(ModEffects.ENTRANCED, sleep, 0, false, true), player);
             level.sendParticles(ModParticles.SLEEP_SPORE.get(), e.getX(), e.getY() + e.getBbHeight() + 0.2, e.getZ(), 6, 0.3, 0.2, 0.3, 0.01);
         }
         // Harmony Seals answer the lullaby as though their stones had been tuned
         BlockPos c = BlockPos.containing(at);
         List<BlockPos> seals = new ArrayList<>();
-        for (BlockPos p : BlockPos.betweenClosed(c.offset(-SEAL_RADIUS, -SEAL_RADIUS / 2, -SEAL_RADIUS), c.offset(SEAL_RADIUS, SEAL_RADIUS / 2, SEAL_RADIUS))) {
+        for (BlockPos p : BlockPos.betweenClosed(c.offset(-sealRadius, -sealRadius / 2, -sealRadius), c.offset(sealRadius, sealRadius / 2, sealRadius))) {
             if (level.getBlockState(p).is(ModBlocks.HARMONY_SEAL.get())) {
                 seals.add(p.immutable());
             }
@@ -80,8 +87,9 @@ public final class SongEffects {
 
     private static void whale(ServerLevel level, Player player) {
         SkyWhale best = null;
-        double bestD = WHALE_RADIUS * WHALE_RADIUS;
-        for (SkyWhale w : level.getEntitiesOfClass(SkyWhale.class, player.getBoundingBox().inflate(WHALE_RADIUS), SkyWhale::isAlive)) {
+        double radius = WHALE_RADIUS * Bands.power(player); // M2 band: a bigger band is heard further off
+        double bestD = radius * radius;
+        for (SkyWhale w : level.getEntitiesOfClass(SkyWhale.class, player.getBoundingBox().inflate(radius), SkyWhale::isAlive)) {
             double d = w.distanceToSqr(player);
             if (d < bestD && !w.isAnswering()) {
                 bestD = d;
