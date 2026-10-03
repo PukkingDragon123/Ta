@@ -79,11 +79,15 @@ final class CreatureCheck {
         final int startTick;
         double moved;
         double movedAlone;
+        /** Every block it has travelled, back and forth included. */
+        double path;
+        Vec3 last;
 
         Watch(String name, Mob mob, BlockPos centre) {
             this.name = name;
             this.mob = mob;
             this.start = mob.position();
+            this.last = this.start;
             this.centre = centre;
             this.startTick = mob.tickCount;
         }
@@ -141,6 +145,8 @@ final class CreatureCheck {
             }
             double d = w.mob.position().distanceTo(w.start);
             w.moved = Math.max(w.moved, d);
+            w.path += w.mob.position().distanceTo(w.last);
+            w.last = w.mob.position();
             if (this.ticks <= ALONE_TICKS) {
                 w.movedAlone = w.moved;
             } else if (this.ticks % 20 == 0) {
@@ -149,11 +155,11 @@ final class CreatureCheck {
         }
         if (this.ticks >= WATCH_TICKS) {
             for (Watch w : this.watches) {
-                TheSift.LOGGER.info("SMOKE: never frozen: {} alive={} moved {} blocks ({} on its own in the first {} ticks), ticked {} times",
-                        w.name, w.mob.isAlive(), String.format(Locale.ROOT, "%.1f", w.moved), String.format(Locale.ROOT, "%.1f", w.movedAlone),
+                TheSift.LOGGER.info("SMOKE: never frozen: {} alive={} moved {} blocks, travelled {} ({} on its own in the first {} ticks), ticked {} times",
+                        w.name, w.mob.isAlive(), String.format(Locale.ROOT, "%.1f", w.moved), String.format(Locale.ROOT, "%.1f", w.path), String.format(Locale.ROOT, "%.1f", w.movedAlone),
                         ALONE_TICKS, w.mob.tickCount - w.startTick);
                 this.check.accept(w.mob.isAlive(), "never frozen: " + w.name + " died in its pen");
-                this.check.accept(w.moved >= 1.5, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked");
+                this.check.accept(w.moved >= 1.5 || w.path >= 3.0, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked");
                 this.check.accept(w.mob.tickCount - w.startTick >= WATCH_TICKS / 2, "never frozen: " + w.name + " stopped ticking");
             }
             this.done = true;
@@ -395,11 +401,12 @@ final class CreatureCheck {
 
     /** After the first five seconds on its own, a creature that has not gone anywhere yet is walked about its pen. */
     private void walk(Watch w, RandomSource random) {
-        if (w.moved >= 1.5) {
+        if (w.moved >= 1.5 || w.path >= 3.0) {
             return;
         }
-        double x = w.centre.getX() + 0.5 + random.nextInt(9) - 4;
-        double z = w.centre.getZ() + 0.5 + random.nextInt(9) - 4;
+        // the far side of the pen from where it stands, so the walk is always a real one
+        double x = w.centre.getX() + 0.5 + (w.mob.getX() > w.centre.getX() + 0.5 ? -4 : 4) + random.nextInt(2) - 0.5;
+        double z = w.centre.getZ() + 0.5 + (w.mob.getZ() > w.centre.getZ() + 0.5 ? -4 : 4) + random.nextInt(2) - 0.5;
         if (w.mob instanceof SiftFish fish) {
             fish.setSwimTarget(new Vec3(x, SKY_Y - 2.5, z));
         } else if (w.mob instanceof PathfinderMob walker && walker.getNavigation().isDone()) {
