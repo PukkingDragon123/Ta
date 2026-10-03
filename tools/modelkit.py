@@ -16,6 +16,7 @@ import random
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
+import numpy as np
 from PIL import Image, ImageDraw
 
 # --------------------------------------------------------------------------- colours
@@ -110,8 +111,12 @@ class Model:
     one per facial expression, from the 'expr' entries of the face specs."""
 
     def __init__(self, name: str, tex: tuple, palette: dict, variants: Optional[dict] = None, res: int = 1,
-                 expressions: Optional[list] = None):
+                 expressions: Optional[list] = None, detail: Optional[int] = None, materials: Optional[dict] = None):
         self.name = name
+        # C2 mob materials: 'detail' upsamples the finished paint before the material pass (None = auto:
+        # x2 for models painted at res < 3), 'materials' maps palette keys to MATERIALS names
+        self.detail = detail
+        self.materials = dict(materials or {})
         self.tex_w, self.tex_h = tex
         self.root = Part('root')
         self.palette = palette
@@ -222,6 +227,17 @@ class Painter:
         self.seed = seed
         self.any_glow = False
         self.expression = expression
+        # C2 mob materials: which face record (and so which material) painted each texel, and which
+        # texels are crisp (maps, decals, pictures, glow) and must not get material noise
+        self.fid = np.full((self.H, self.W), -1, np.int32)
+        self.crisp = np.zeros((self.H, self.W), bool)
+        self.face_recs = []
+        self._cur = -1
+        self._crisp_mode = False
+        d = getattr(model, 'detail', None)
+        if d is None:  # auto: double the low-res paints, as long as the PNG stays at most 768 texels across
+            d = 2 if self.r < 3 and max(self.W, self.H) * 2 <= 768 else 1
+        self.detail = max(1, int(d))
 
     def col(self, key):
         if isinstance(key, tuple):
@@ -232,14 +248,20 @@ class Painter:
     def put(self, x, y, c, glow=False):
         if 0 <= x < self.W and 0 <= y < self.H:
             self.px[x, y] = c
+            self.fid[y, x] = self._cur
+            self.crisp[y, x] = self._crisp_mode or glow
             if glow:
                 self.gx[x, y] = c
                 self.any_glow = True
 
     def paint_all(self):
+        """Paints every cube, then (C2) runs the material pass: the paint is upsampled 'detail' times and
+        every non-crisp texel gets material noise, per-face light, edge highlights and crevice shade.
+        The returned images are (tex_w, tex_h) * res * detail; the Java UVs stay in model units."""
         for i, c in enumerate(self.m.cubes()):
             self.paint_cube(c, i)
-        return self.img, (self.glow if self.any_glow else None)
+        img, glow = self.finish()
+        return img, (glow if self.any_glow else None)
 
     def paint_cube(self, cube: Cube, idx: int):
         rnd = random.Random(self.seed * 7919 + idx * 104729)
@@ -260,7 +282,10 @@ class Painter:
                     spec.update(ex)
                 else:
                     spec['map'] = ex
+            self._cur = len(self.face_recs)
+            self.face_recs.append((cube, face, fx * r, fy * r, fw * r, fh * r, spec, idx))
             self.paint_face(face, fx * r, fy * r, fw * r, fh * r, spec, rnd)
+            self._cur = -1
 
     def paint_mc(self, face, fx, fy, fw, fh, spec, rnd):
         """Vanilla-style face: flat base colour, a lit top rim, a shaded bottom rim and a few hand-sized
@@ -439,6 +464,7 @@ class Painter:
             pick = (lambda x, y: src[(x + ox) % w, (y + oy) % h])
         thr = spec.get('glow_bright')
         r = self.r
+        self._crisp_mode = True
         for yy in range(fh):
             for xx in range(fw):
                 if band is not None:
@@ -453,6 +479,7 @@ class Painter:
                 c = (c[0], c[1], c[2], 255)
                 lum = (c[0] * 0.3 + c[1] * 0.55 + c[2] * 0.15)
                 self.put(fx + xx, fy + yy, c, spec.get('glow', False) or (thr is not None and lum >= thr))
+        self._crisp_mode = False
         if 'map' in spec:
             self.draw_map(fx, fy, fw, fh, spec)
 
@@ -554,6 +581,7 @@ class Painter:
         if spec.get('center', True) and 'at' not in spec:
             ox = (fw - len(rows[0]) * k) // 2
             oy = 0
+        self._crisp_mode = not spec.get('map_material', False)
         for j, row in enumerate(rows):
             for i, ch in enumerate(row):
                 if ch in '. ':
@@ -570,6 +598,253 @@ class Painter:
                         if ch in shine_keys and k > 1 and sx == 0 and sy == 0:
                             c = shine
                         self.put(x, y, c, ch in glow_keys)
+        self._crisp_mode = False
+
+
+# --------------------------------------------------------------------------- C2 mob materials
+#
+# After the paint, every texel that is not crisp (maps, decals, pictures, glow) gets the treatment of
+# its material: 3-5 close tones in clusters, per-face light (tops lighter, bottoms darker), a lit top
+# edge and a shaded foot on every side face, crevice shade where another cube sits close in front of
+# the face (from the rest pose), and a few detail speckles. The material of a face is
+# spec['material'], else the model's materials map, else guessed from the pattern and palette key.
+# Extra spec keys: noise= (noise strength, 1.0), edge_light= (edge strength), crevice=False,
+# map_material=True (a map's texels get the material pass too instead of staying crisp).
+MATERIALS = {
+    'skin':     dict(step=0.045, cell=(2, 2), speck=(0.012, -0.12, None)),
+    'sculk':    dict(step=0.055, cell=(2, 2), speck=(0.010, 0.22, (60, 225, 230))),
+    'chitin':   dict(step=0.040, cell=(3, 2), speck=(0.010, 0.16, None), seams=4),
+    'fur':      dict(step=0.060, cell=(1, 3), speck=(0.010, -0.14, None)),
+    'stone':    dict(step=0.065, cell=(2, 2), speck=(0.030, -0.16, None)),
+    'bone':     dict(step=0.035, cell=(2, 2), speck=(0.012, -0.12, None)),
+    'metal':    dict(step=0.040, cell=(4, 1), speck=(0.008, 0.28, None), edge=1.6),
+    'cloth':    dict(step=0.035, cell=(2, 1), speck=(0.006, -0.10, None), weave=0.025),
+    'jelly':    dict(step=0.025, cell=(3, 3), speck=(0.008, 0.24, None), edge=1.3, ao=0.5),
+    'crystal':  dict(step=0.020, cell=(3, 3), speck=(0.008, 0.28, None), edge=1.8, ao=0.6),
+    'plant':    dict(step=0.055, cell=(1, 2), speck=(0.015, -0.14, None)),
+    'wood':     dict(step=0.050, cell=(1, 4), speck=(0.010, -0.14, None)),
+    'scales':   dict(step=0.040, cell=(2, 1), speck=(0.010, 0.14, None)),
+    'membrane': dict(step=0.030, cell=(2, 2), speck=(0.0, 0.0, None), edge=0.6, ao=0.6),
+    'flat':     dict(step=0.0, cell=(1, 1), speck=(0.0, 0.0, None), edge=0.0),
+}
+_PATTERN_MATERIAL = {'fur': 'fur', 'jelly': 'jelly', 'crystal': 'crystal', 'scales': 'scales', 'membrane': 'membrane', 'stars': 'jelly',
+                     'flat': 'flat'}
+# palette-key fragments, first match wins
+_KEY_MATERIAL = (('sculk', 'sculk'), ('belly', 'skin'), ('mouth', 'flat'), ('maw', 'flat'), ('throat', 'flat'), ('gullet', 'flat'),
+                 ('cavity', 'flat'), ('vein', 'flat'), ('void', 'flat'), ('eye', 'flat'), ('pupil', 'flat'), ('iris', 'flat'), ('glow', 'flat'), ('rune', 'flat'),
+                 ('soul', 'flat'), ('lamp', 'flat'), ('string', 'flat'), ('hole', 'flat'), ('pit', 'flat'), ('blush', 'flat'), ('star', 'flat'),
+                 ('tooth', 'bone'), ('teeth', 'bone'), ('fang', 'bone'), ('bone', 'bone'), ('skull', 'bone'), ('horn', 'bone'), ('claw', 'chitin'),
+                 ('baleen', 'bone'), ('beak', 'bone'), ('hoof', 'bone'), ('tusk', 'bone'), ('porc', 'bone'),
+                 ('chitin', 'chitin'), ('shell', 'chitin'), ('carapace', 'chitin'), ('plate', 'chitin'), ('barn', 'chitin'),
+                 ('armor', 'metal'), ('armour', 'metal'), ('iron', 'metal'), ('metal', 'metal'), ('steel', 'metal'), ('gold', 'metal'),
+                 ('brass', 'metal'), ('copper', 'metal'), ('chain', 'metal'), ('bell', 'metal'), ('kazoo', 'metal'), ('ring', 'metal'),
+                 ('valve', 'metal'), ('cage', 'metal'), ('frame', 'metal'),
+                 ('fur', 'fur'), ('wool', 'fur'), ('fluff', 'fur'), ('mane', 'fur'), ('hair', 'fur'), ('feather', 'fur'), ('tuft', 'fur'),
+                 ('plume', 'fur'), ('crest', 'fur'),
+                 ('stone', 'stone'), ('rock', 'stone'), ('slate', 'stone'), ('sand', 'stone'), ('coral', 'stone'), ('crust', 'stone'),
+                 ('moss', 'plant'), ('plant', 'plant'), ('leaf', 'plant'), ('petal', 'plant'), ('flower', 'plant'), ('grass', 'plant'),
+                 ('vine', 'plant'), ('stalk', 'plant'),
+                 ('jelly', 'jelly'), ('slime', 'jelly'), ('sac', 'jelly'), ('bladder', 'jelly'),
+                 ('glass', 'crystal'), ('crystal', 'crystal'), ('gem', 'crystal'), ('prism', 'crystal'), ('ice', 'crystal'),
+                 ('cloth', 'cloth'), ('robe', 'cloth'), ('cape', 'cloth'), ('silk', 'cloth'), ('ribbon', 'cloth'), ('drumhead', 'cloth'),
+                 ('sock', 'cloth'), ('sash', 'cloth'),
+                 ('wood', 'wood'), ('bark', 'wood'), ('scale', 'scales'),
+                 ('fin', 'membrane'), ('wing', 'membrane'), ('membrane', 'membrane'), ('web', 'membrane'), ('gill', 'membrane'))
+# baked per-face light of the material pass (the engine shades faces too; this is the painter's share)
+FACE_TONE = {'up': 0.07, 'north': 0.0, 'south': -0.03, 'west': -0.025, 'east': -0.025, 'down': -0.13}
+_NORMALS = {'north': (0, 0, -1), 'south': (0, 0, 1), 'up': (0, -1, 0), 'down': (0, 1, 0), 'west': (-1, 0, 0), 'east': (1, 0, 0)}
+_FACE_ORDER = ('up', 'down', 'north', 'south', 'west', 'east')
+
+
+def _hash(a, b, s):
+    """Deterministic per-cell noise in [-1, 1] (vectorised)."""
+    x = (np.asarray(a, np.int64) * 73856093) ^ (np.asarray(b, np.int64) * 19349663) ^ (int(s) * 83492791)
+    x &= 0xffffffff
+    x ^= x >> 13
+    x = (x * 1274126177) & 0xffffffff
+    x ^= x >> 16
+    return (x & 0xffff).astype(np.float32) / 32767.5 - 1.0
+
+
+def _lighten(c, f):
+    """Hue-keeping light and shadow: lights lift dark colours too, shadows drift cool (like shade())."""
+    pos = np.clip(f, 0, None)[..., None]
+    neg = np.clip(-f, 0, None)[..., None]
+    up = c + ((255.0 - c) * 0.45 + c * 0.55 + 6.0) * pos
+    down = up * (1.0 - neg * np.array([1.0, 1.0, 0.82], np.float32)) + neg * np.array([10.0, 6.0, 18.0], np.float32)
+    return np.clip(down, 0, 255)
+
+
+def _rest_frames(model):
+    """World rotation + translation of every cube at the rest pose (the preview's convention)."""
+    frames = {}
+
+    def visit(part, M, T):
+        o = _mv(M, list(part.pivot))
+        piv = [T[i] + o[i] for i in range(3)]
+        M2 = _mm(M, _rot_matrix(*part.rot))
+        for c in part.cubes:
+            frames[id(c)] = (np.array(M2, np.float64), np.array(piv, np.float64))
+        for ch in part.children:
+            visit(ch, M2, piv)
+
+    eye = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    for p in model.root.children:
+        visit(p, eye, [0, 0, 0])
+    return frames
+
+
+def _crevice(model, cube, face, fw, fh):
+    """Crevice shade (0..1) per texel of a face: how close another solid cube sits in front of it."""
+    cache = model.__dict__.get('_c2_frames')
+    if cache is None:
+        cache = model.__dict__['_c2_frames'] = (_rest_frames(model), [c for c in model.cubes() if min(c.size) >= 0.5])
+    frames, solids = cache
+    M, T = frames[id(cube)]
+    x0, y0, z0 = (o - cube.inflate for o in cube.origin)
+    w, h, d = (s + 2 * cube.inflate for s in cube.size)
+    x1, y1, z1 = x0 + w, y0 + h, z0 + d
+    # the face as corner + u, v axes (the preview's orientation)
+    corner, du, dv = {
+        'north': ((x0, y0, z0), (w, 0, 0), (0, h, 0)), 'south': ((x1, y0, z1), (-w, 0, 0), (0, h, 0)),
+        'up': ((x0, y0, z1), (w, 0, 0), (0, 0, -d)), 'down': ((x0, y1, z1), (w, 0, 0), (0, 0, -d)),
+        'west': ((x0, y0, z1), (0, 0, -d), (0, h, 0)), 'east': ((x1, y0, z0), (0, 0, d), (0, h, 0)),
+    }[face]
+    jj, ii = np.mgrid[0:fh, 0:fw]
+    u = (ii + 0.5) / fw
+    v = (jj + 0.5) / fh
+    pts = np.stack([corner[q] + du[q] * u + dv[q] * v for q in range(3)], -1).reshape(-1, 3)
+    wpts = pts @ M.T + T
+    wn = M @ np.array(_NORMALS[face], np.float64)
+    occ = np.zeros(len(pts))
+    for dist, weight in ((0.55, 0.6), (1.5, 0.4)):
+        q = wpts + wn * dist
+        hit = np.zeros(len(pts), bool)
+        for o in solids:
+            if o is cube:
+                continue
+            Mo, To = frames[id(o)]
+            loc = (q - To) @ Mo  # inverse rotation (orthonormal)
+            lo = np.array(o.origin, np.float64) - o.inflate
+            hi = lo + np.array(o.size, np.float64) + 2 * o.inflate
+            hit |= np.all((loc > lo + 0.05) & (loc < hi - 0.05), axis=1)
+        occ += hit * weight
+    return occ.reshape(fh, fw)
+
+
+def _painter_material(self, spec):
+    """The material of a face spec (see MATERIALS)."""
+    if spec.get('material'):
+        return spec['material']
+    key = spec.get('color')
+    mm = getattr(self.m, 'materials', None) or {}
+    name = key if isinstance(key, str) else ''
+    stem = name
+    for suf in ('_l', '_d', '_in'):
+        if stem.endswith(suf):
+            stem = stem[:-len(suf)]
+    stem = stem.rstrip('0123456789')
+    if name in mm:
+        return mm[name]
+    if stem in mm:
+        return mm[stem]
+    if spec.get('glow'):
+        return 'flat'
+    pat = spec.get('pattern', 'speckle')
+    if pat in _PATTERN_MATERIAL:
+        return _PATTERN_MATERIAL[pat]
+    if spec.get('streaks'):
+        return 'fur'
+    for frag, mat in _KEY_MATERIAL:
+        if frag in stem:
+            return mat
+    try:  # dark, cool hides read as sculk (judged on the base colour, so _l/_d tones agree)
+        c = self.col(stem if stem in self.pal else key)
+    except (KeyError, TypeError):
+        return 'skin'
+    if c[0] * 0.3 + c[1] * 0.55 + c[2] * 0.15 < 48 and c[2] >= c[0]:
+        return 'sculk'
+    return 'skin'
+
+
+def _painter_finish(self):
+    """The material pass (see MATERIALS). Returns the upsampled (texture, emissive)."""
+    k = self.detail
+    A = np.asarray(self.img, dtype=np.uint8).copy()
+    G = np.asarray(self.glow, dtype=np.uint8).copy()
+    fid, crisp = self.fid, self.crisp
+    if k > 1:
+        A = A.repeat(k, 0).repeat(k, 1)
+        G = G.repeat(k, 0).repeat(k, 1)
+        fid = fid.repeat(k, 0).repeat(k, 1)
+        crisp = crisp.repeat(k, 0).repeat(k, 1)
+    if getattr(self.m, 'material_pass', True):
+        out = A[..., :3].astype(np.float32)
+        r = self.r
+        for i, (cube, face, fx, fy, fw, fh, spec, idx) in enumerate(self.face_recs):
+            X0, Y0, FW, FH = fx * k, fy * k, fw * k, fh * k
+            region = (slice(Y0, Y0 + FH), slice(X0, X0 + FW))
+            mask = (fid[region] == i) & ~crisp[region] & (A[region][..., 3] > 0)
+            if not mask.any():
+                continue
+            mat = MATERIALS.get(self.material_of(spec), MATERIALS['skin'])
+            uw, uh = fw / r, fh / r
+            amp = spec.get('noise', 1.0) * (0.6 if spec.get('clusters', 1.0) == 0 else 1.0)
+            if min(uw, uh) < 2:
+                amp *= 0.5 if min(uw, uh) >= 1 else 0.0
+            ly, lx = np.mgrid[0:FH, 0:FW]
+            seed = self.seed * 131 + idx * 17 + _FACE_ORDER.index(face)
+            f = np.zeros((FH, FW), np.float32)
+            vertical = face not in ('up', 'down')
+            if spec.get('pattern', 'speckle') == 'mc':  # the other patterns bake FACE_LIGHT already
+                f += FACE_TONE[face]
+                if vertical and FH > 2:
+                    f += 0.05 * (0.5 - ly / (FH - 1)) * 2
+            # edges: a lit top edge, a shaded foot, soft side corners; a lit rim round the top face
+            e = mat.get('edge', 1.0) * spec.get('edge_light', 1.0)
+            if e and min(uw, uh) >= 2:
+                ring = (lx == 0) | (lx == FW - 1) | (ly == 0) | (ly == FH - 1)
+                if vertical:
+                    f += np.where(ly == 0, 0.07 * e, 0) + np.where(ly == FH - 1, -0.07, 0)
+                    f += np.where((lx == 0) | (lx == FW - 1), -0.03, 0)
+                elif face == 'up':
+                    f += np.where(ring, 0.05 * e, 0)
+                else:
+                    f += np.where(ring, -0.04, 0)
+            # crevices: another cube right in front of this face
+            if spec.get('crevice', True):
+                occ = _crevice(self.m, cube, face, fw, fh)
+                if k > 1:
+                    occ = occ.repeat(k, 0).repeat(k, 1)
+                f -= occ.astype(np.float32) * 0.17 * mat.get('ao', 1.0)
+            # material noise: three octaves of cell noise, quantised into 5 close tones
+            if amp > 0 and mat['step'] > 0:
+                cx, cy = mat['cell']
+                n = (0.55 * _hash(lx // (cx * 2), ly // (cy * 2), seed) + 0.35 * _hash(lx // cx, ly // cy, seed + 7)
+                     + 0.10 * _hash(lx, ly, seed + 13))
+                lvl = np.clip(np.round(n * 2.4), -2, 2)
+                f += lvl * mat['step'] * 1.15 * amp
+                if mat.get('weave'):
+                    f += np.where((lx + ly) % 2 == 0, mat['weave'], -mat['weave']) * amp
+                if mat.get('seams') and min(uw, uh) >= mat['seams'] * 1.5:
+                    per = mat['seams'] * r * k
+                    t = (ly if vertical else lx) % per
+                    f += np.where(t == per - 1, -0.10, 0) + np.where(t == 0, 0.05, 0)
+            dens, strength, tint = mat['speck']
+            sp = None
+            if amp > 0 and dens > 0:
+                sp = (_hash(lx, ly, seed + 29) + 1) * 0.5 < dens * amp
+                f += np.where(sp, strength, 0)
+            col = _lighten(out[region], f)
+            if sp is not None and tint is not None:
+                col = np.where(sp[..., None], col * 0.6 + np.array(tint, np.float32) * 0.4, col)
+            out[region] = np.where(mask[..., None], col, out[region])
+        A[..., :3] = np.round(out).astype(np.uint8)
+    return Image.fromarray(A, 'RGBA'), Image.fromarray(G, 'RGBA')
+
+
+Painter.material_of = _painter_material
+Painter.finish = _painter_finish
 
 
 def render_textures(model: Model, seed=1):
@@ -616,7 +891,7 @@ class Pose:
 
 def preview(model: Model, tex: Image.Image, pose: Optional[Pose] = None, yaw=35.0, pitch=22.0, scale=8, size=(360, 360), bg=(40, 44, 70, 255)):
     pose = pose or Pose()
-    res = model.res
+    res = max(1, tex.size[0] // model.tex_w)  # model.res times the material pass's detail
     img = Image.new('RGBA', size, bg)
     draw = ImageDraw.Draw(img)
     tp = tex.load()

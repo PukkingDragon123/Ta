@@ -17,4 +17,6 @@ public class SiftFishRenderState extends SiftRenderState {
     public final AnimationState spit = new AnimationState();
     public boolean calm;
     public boolean hunting;
+    /** C2: emissive brightness 0..1 set by the renderer (the Gobbler's heartbeat); below 0 the soft default pulse. */
+    public float glowPulse = -1.0F;
 }

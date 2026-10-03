@@ -25,7 +25,7 @@ public class SiftFishRenderer<T extends SiftFish, M extends EntityModel<SiftFish
         this.glow = new ExpressionTextures(name, new String[]{name}, "_glow", painted);
         this.size = size;
         // glowing sculk lines, spots, sprouts and eyes, softly pulsing
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> this.glow.get(s.expression), (s, age) -> 0.7F + 0.3F * Mth.sin(age * 0.1F + s.seed),
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> this.glow.get(s.expression), (s, age) -> s.glowPulse >= 0.0F ? s.glowPulse : 0.7F + 0.3F * Mth.sin(age * 0.1F + s.seed),
                 this.model, RenderTypes::entityTranslucentEmissive, false));
     }
 

@@ -6,11 +6,14 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * The Gobbler. A slow, heavy tail wave that runs from the torso through two tail segments to the
- * fluke; whisker barbels that trail behind the motion; a jaw that pumps as it breathes. Hunting,
- * its crown tendrils twitch like a listening Warden's. The lunge has a long wind-up (head reared,
- * body drawn back, mouth gaping), a snap forward and a slow settle; the gulp bulges its cheeks;
- * the spit throws the jaw open. Lulled by the Tide Song everything slows and droops.
+ * The Gobbler, a Warden-kin catfish of sculk (geometry from tools/gobbler.py). A slow, heavy tail
+ * wave runs from the torso through two tail segments to the fluke; the soul-lantern lures on its
+ * whiskers swing like pendulums behind the motion and bob in the current; the gill covers flare with
+ * every breath (wide open when it hunts, lunges or gulps); the sculk sensor spines on its back sway
+ * and sweep back as it speeds up, and shiver like the Warden's tendrils while it listens. The lunge
+ * has a long wind-up (head reared, body drawn back, mouth gaping, gills flared), a snap forward and a
+ * slow settle; the gulp bulges its cheeks; the spit throws the jaw open. Lulled by the Tide Song
+ * everything slows and droops. The glow pulse itself is the renderer's (SiftFishRenderState.glowPulse).
  */
 public class GobblerModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart body;
@@ -29,8 +32,13 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart rightBarbel;
     private final ModelPart leftBarbelTip;
     private final ModelPart rightBarbelTip;
+    private final ModelPart leftLure;
+    private final ModelPart rightLure;
     private final ModelPart leftChin;
     private final ModelPart rightChin;
+    private final ModelPart leftGill;
+    private final ModelPart rightGill;
+    private final ModelPart[] spines = new ModelPart[3];
 
     public GobblerModel(ModelPart root) {
         super(root);
@@ -50,8 +58,15 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
         this.rightBarbel = this.head.getChild("right_barbel");
         this.leftBarbelTip = this.leftBarbel.getChild("left_barbel_tip");
         this.rightBarbelTip = this.rightBarbel.getChild("right_barbel_tip");
+        this.leftLure = this.leftBarbelTip.getChild("left_lure");
+        this.rightLure = this.rightBarbelTip.getChild("right_lure");
         this.leftChin = this.jaw.getChild("left_chin_barbel");
         this.rightChin = this.jaw.getChild("right_chin_barbel");
+        this.leftGill = this.head.getChild("left_gill");
+        this.rightGill = this.head.getChild("right_gill");
+        for (int i = 0; i < this.spines.length; i++) {
+            this.spines[i] = this.body.getChild("spine_" + i);
+        }
     }
 
     @Override
@@ -74,10 +89,18 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
         this.rightFin.zRot -= Mth.sin(age * 0.2F + 0.6F) * 0.25F - e * 0.3F;
         this.leftFin.yRot += e * 0.4F;
         this.rightFin.yRot -= e * 0.4F;
-        // breathing: the jaw pumps, the chest of souls swells with it
+        // breathing: the jaw pumps, the chest of souls swells and the gill covers flare with it
         float breath = (Mth.sin(age * 0.1F) + 1.0F) * 0.5F;
         this.jaw.xRot = 0.05F + breath * 0.08F + (s.hunting ? 0.1F : 0.0F);
         this.chest.yScale = 1.0F + breath * 0.08F;
+        float flare = breath * 0.22F + (s.hunting ? 0.25F : 0.0F) + (s.calm ? -0.1F : 0.0F);
+        // the sculk spines: a slow sway, swept back by speed, a Warden shiver while it listens
+        float shiver = s.hunting ? Mth.sin(s.ageInTicks * 1.9F) * 0.1F : 0.0F;
+        for (int i = 0; i < this.spines.length; i++) {
+            ModelPart sp = this.spines[i];
+            sp.xRot += Mth.sin(age * 0.09F - i * 0.7F) * 0.1F - e * 0.45F + (s.calm ? -0.35F : 0.0F);
+            sp.zRot += Mth.sin(age * 0.07F + i * 1.3F) * 0.08F + shiver * (i % 2 == 0 ? 1.0F : -1.0F);
+        }
         // barbels trail behind the motion and curl in the current
         float drag = e * 0.5F;
         this.leftBarbel.yRot += drag * 0.6F + Mth.sin(age * 0.13F) * 0.12F;
@@ -88,6 +111,13 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
         this.rightBarbelTip.yRot -= Mth.sin(age * 0.13F + 0.1F) * 0.25F + drag * 0.4F;
         this.leftChin.xRot += Mth.sin(age * 0.15F) * 0.15F + drag * 0.5F;
         this.rightChin.xRot += Mth.sin(age * 0.15F + 1.3F) * 0.15F + drag * 0.5F;
+        // the soul-lantern lures: pendulums that lag behind the whiskers and swing back past rest
+        float swingL = Mth.sin(age * 0.12F - 1.4F);
+        float swingR = Mth.sin(age * 0.12F - 0.4F);
+        this.leftLure.xRot += -this.leftBarbel.xRot * 0.6F + swingL * 0.22F + drag * 0.9F;
+        this.rightLure.xRot += -this.rightBarbel.xRot * 0.6F + swingR * 0.22F + drag * 0.9F;
+        this.leftLure.zRot += Mth.sin(age * 0.09F + 0.7F) * 0.18F - this.leftBarbelTip.yRot * 0.3F;
+        this.rightLure.zRot += Mth.sin(age * 0.09F + 2.1F) * 0.18F - this.rightBarbelTip.yRot * 0.3F;
         // the crown tendrils: slow sway, a fast Warden twitch while it hunts, drooping when lulled
         float twitch = s.hunting ? Mth.sin(s.ageInTicks * 1.6F) * 0.18F : 0.0F;
         this.leftTendril.zRot += Mth.sin(age * 0.09F) * 0.08F + twitch + (s.calm ? 0.5F : 0.0F);
@@ -109,8 +139,15 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
             this.tail2.yRot += Mth.sin(s.ageInTicks * 1.5F - 0.8F) * 0.7F * strike;
             this.leftBarbel.yRot += 0.5F * strike;
             this.rightBarbel.yRot -= 0.5F * strike;
+            flare += 0.7F * wind + 0.4F * strike;
+            // the lures fly back on the strike and swing forward again after it
+            this.leftLure.xRot += 1.1F * strike - 0.3F * wind;
+            this.rightLure.xRot += 1.1F * strike - 0.3F * wind;
+            for (ModelPart sp : this.spines) {
+                sp.xRot += 0.35F * wind - 0.6F * strike;
+            }
         }
-        // the gulp: cheeks bulge, the jaw clamps shut
+        // the gulp: cheeks bulge, the jaw clamps shut, the gills pump the water back out
         float gulp = Anim.seconds(s.gulp, s.ageInTicks);
         if (gulp >= 0.0F && gulp < 2.5F) {
             float bulge = Anim.envelope(gulp, 0.0F, 0.15F, 1.9F, 0.4F);
@@ -118,6 +155,7 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
             this.jaw.xScale = this.head.xScale;
             this.jaw.xRot = Mth.lerp(bulge, this.jaw.xRot, 0.0F);
             this.body.xScale = 1.0F + 0.08F * bulge;
+            flare += bulge * (0.35F + 0.25F * Mth.sin(s.ageInTicks * 0.9F));
         }
         // the spit: the jaw flies open and the head jerks back
         float spit = Anim.seconds(s.spit, s.ageInTicks);
@@ -126,14 +164,24 @@ public class GobblerModel extends EntityModel<SiftFishRenderState> {
             this.jaw.xRot = Math.max(this.jaw.xRot, 1.1F * open);
             this.head.xRot -= 0.25F * open;
             this.body.z += 1.5F * open;
+            flare += 0.5F * open;
         }
+        // the gill covers open outwards from their hinge, with a little flutter at the trailing edge
+        float flutter = Mth.sin(s.ageInTicks * 0.8F) * 0.04F * (0.3F + e);
+        this.leftGill.yRot += Math.max(0.0F, flare) + flutter;
+        this.rightGill.yRot -= Math.max(0.0F, flare) + flutter;
+        this.leftGill.zRot -= flare * 0.15F;
+        this.rightGill.zRot += flare * 0.15F;
         if (!s.inLiquid) {
-            // stranded: flat on its side, gasping and thrashing its tail
+            // stranded: flat on its side, gasping and thrashing its tail, gills gaping
             this.body.zRot = (float) Math.PI * 0.5F;
             this.body.y += 4.0F;
             this.tail.yRot = Mth.sin(s.ageInTicks * 0.6F) * 0.5F;
             this.tail2.yRot = Mth.sin(s.ageInTicks * 0.6F - 0.8F) * 0.6F;
-            this.jaw.xRot = 0.3F + Math.max(0.0F, Mth.sin(s.ageInTicks * 0.3F)) * 0.5F;
+            float gasp = Math.max(0.0F, Mth.sin(s.ageInTicks * 0.3F));
+            this.jaw.xRot = 0.3F + gasp * 0.5F;
+            this.leftGill.yRot += gasp * 0.5F;
+            this.rightGill.yRot -= gasp * 0.5F;
         }
         float die = Anim.smooth(s.dying / 12.0F);
         if (die > 0.0F) {
