@@ -10,10 +10,14 @@ import org.jspecify.annotations.Nullable;
  * carrying the sheet performs it (see {@link SongMatcher} for how forgiving that is), and
  * {@link SongEvents} tells everyone listening.
  *
- * <p>Pitches are note-block pitches, 0 (F#3) to 24 (F#5); 12 (F#4) is played looking straight
- * ahead, and every 5 degrees up or down is one semitone (see {@link Notes#lookPitch}).
+ * <p>Pitches are note-block pitches, 0 (F#3) to 24 (F#5).
  *
- * <p>The notes and instruments are mirrored in tools/songs.py (sheet art and tooltips' lang).
+ * <p>M1 instrument play: a drum song also carries its rhythm ({@link #rhythmic()}: how many
+ * half-beats each note lasts before the next, {@link #STEP} ticks each), and a Prism song carries a
+ * colour of light for every note ({@link #prism()}, colours from {@link PrismLight}) - it can only
+ * be played on a Prism instrument, each note in its colour.
+ *
+ * <p>The notes, rhythms, colours and instruments are mirrored in tools/songs.py (sheet art, lang).
  */
 public enum Song {
     /** The Echoer's offering song, rung on the Wind Chimes beside an Echoer waiting with your offering. */
@@ -26,17 +30,32 @@ public enum Song {
     CRYSTAL(new int[]{13, 17, 20, 17, 13, 8}, Instrument.Family.CHIMES),
     /** The whale song: Sky Whales answer it. */
     WHALE(new int[]{8, 6, 3, 6, 8, 13}, Instrument.Family.FLUTE),
-    /** The tide song: opens drowned vaults of the deep and calms the Gobbler. */
-    TIDE(new int[]{3, 8, 10, 8, 3, 1}, Instrument.Family.DRUM),
+    /** The tide song: opens drowned vaults of the deep and calms the Gobbler. Drummed in its rolling rhythm. */
+    TIDE(new int[]{3, 8, 10, 8, 3, 1}, Instrument.Family.DRUM, new int[]{2, 1, 1, 2, 2, 4}, new int[0]),
     /** The lullaby: puts nearby creatures to sleep, opens harmony seals. */
-    LULLABY(new int[]{13, 11, 10, 8, 10, 6}, Instrument.Family.STRINGS);
+    LULLABY(new int[]{13, 11, 10, 8, 10, 6}, Instrument.Family.STRINGS),
+    /** M1: the Aurora, a Prism song - every note in its colour of light, on any Prism instrument. */
+    AURORA(new int[]{6, 10, 13, 18, 15, 13}, null, new int[0], new int[]{0, 1, 2, 3, 2, 0});
+
+    /** Ticks in one half-beat of a song's rhythm (120 beats a minute). */
+    public static final int STEP = 5;
 
     private final int[] notes;
     private final Instrument.@Nullable Family instrument;
+    /** Half-beats from each note to the next (the last: how long the last note rings); empty without a rhythm. */
+    private final int[] beats;
+    /** The colour of light of each note ({@link PrismLight}); empty for a song that is not a Prism song. */
+    private final int[] colours;
 
     Song(int[] notes, Instrument.@Nullable Family instrument) {
+        this(notes, instrument, new int[0], new int[0]);
+    }
+
+    Song(int[] notes, Instrument.@Nullable Family instrument, int[] beats, int[] colours) {
         this.notes = notes;
         this.instrument = instrument;
+        this.beats = beats;
+        this.colours = colours;
     }
 
     public int[] notes() {
@@ -51,22 +70,57 @@ public enum Song {
         return this.notes[i];
     }
 
-    /** The kind of instrument this song must be played on, or null for any instrument. */
+    /** The kind of instrument this song must be played on, or null for any instrument (of the right kind for a Prism song). */
     public Instrument.@Nullable Family instrument() {
         return this.instrument;
     }
 
-    /**
-     * True if a note played on {@code played} counts towards this song. Notes from blocks and
-     * creatures (no instrument) count only for the songs that take any instrument.
-     */
-    public boolean accepts(@Nullable Instrument played) {
-        return this.instrument == null || played != null && played.family() == this.instrument;
+    /** True if the song has a rhythm: each note must come its {@link #gap} after the one before. */
+    public boolean rhythmic() {
+        return this.beats.length == this.notes.length;
     }
 
-    /** Translation key of what this song is played on ({@code instrument.thesift.<family>} or {@code .any}). */
+    /** How many half-beats note {@code i} lasts (1 if the song has no rhythm). */
+    public int beat(int i) {
+        return this.rhythmic() ? this.beats[i] : 1;
+    }
+
+    /** Ticks from note {@code i} to note {@code i + 1} (0 for a song without a rhythm). */
+    public int gap(int i) {
+        return this.rhythmic() ? this.beats[i] * STEP : 0;
+    }
+
+    /** True for a Prism song: every note has its colour of light, and only Prism instruments play it. */
+    public boolean prism() {
+        return this.colours.length == this.notes.length;
+    }
+
+    /** The colour of light of note {@code i} ({@link PrismLight}), or -1 if this is not a Prism song. */
+    public int colour(int i) {
+        return this.prism() ? this.colours[i] : -1;
+    }
+
+    /**
+     * True if a note played on {@code played} counts towards this song. Notes from blocks and
+     * creatures (no instrument) count only for the songs that take any instrument; a Prism song
+     * takes only Prism instruments.
+     */
+    public boolean accepts(@Nullable Instrument played) {
+        if (played == null) {
+            return this.instrument == null && !this.prism();
+        }
+        if (this.prism() && !played.prism()) {
+            return false;
+        }
+        return this.instrument == null || played.family() == this.instrument;
+    }
+
+    /** Translation key of what this song is played on ({@code instrument.thesift.<family>}, {@code .prism} or {@code .any}). */
     public String instrumentKey() {
-        return "instrument.thesift." + (this.instrument == null ? "any" : this.instrument.id());
+        if (this.instrument != null) {
+            return "instrument.thesift." + this.instrument.id();
+        }
+        return "instrument.thesift." + (this.prism() ? "prism" : "any");
     }
 
     /** Lower-case id, as used in item ids ({@code music_sheet_<id>}) and translation keys. */

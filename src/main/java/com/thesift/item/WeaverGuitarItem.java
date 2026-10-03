@@ -19,17 +19,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 /**
- * The Weaver's Guitar, the Weaver's own instrument. It plays like any guitar (one note per strum,
- * pitched by where you look), but strum it while sneaking and it weaves: a ring of Musical
- * Cobwebs springs up around you, and every hostile creature nearby is snared in silk where it
- * stands - bounced, bound and slowed. Then the strings need a while to settle.
+ * The Weaver's Guitar, the Weaver's own instrument - a boss's spoils, so unlike the normal
+ * instruments it keeps a power. Use it and it plays like the Star Lute (six strings, chords: M1
+ * instrument play), but strum it while sneaking and it weaves: a ring of Musical Cobwebs springs up
+ * around you, and every hostile creature nearby is snared in silk where it stands - bounced, bound
+ * and slowed. Then the strings need a while to settle.
  */
 public class WeaverGuitarItem extends GuitarItem {
     private static final double RADIUS = 6.0;
     private static final int WEAVE_COOLDOWN = 160;
 
     public WeaverGuitarItem(Item.Properties properties) {
-        super(properties);
+        super(com.thesift.music.Instrument.WEAVER_GUITAR, properties);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class WeaverGuitarItem extends GuitarItem {
         ItemStack stack = player.getItemInHand(hand);
         if (level instanceof ServerLevel server) {
             int note = noteFor(player);
-            strum(server, player, note);
+            strum(server, player, com.thesift.music.Instrument.WEAVER_GUITAR, note);
             server.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.GUITAR_STRUM.get(), SoundSource.PLAYERS, 1.5F, 0.8F);
             server.sendParticles(ModParticles.RESONANCE_RING.get(), player.getX(), player.getY() + 0.1, player.getZ(), 0, RADIUS, 0.0, 0.0, 1.0);
             TemporaryBlocks.webRing(server, player.blockPosition(), 3.5, 200);

@@ -1,16 +1,21 @@
 {
   "replace": false,
   "values": [
-    "thesift:crane_flute",
-    "thesift:conga_drum",
-    "thesift:guitar",
-    "thesift:prism_flute",
-    "thesift:prism_harp",
-    "thesift:prism_drum",
-    "thesift:wind_chimes",
     {
       "id": "thesift:weaver_guitar",
       "required": false
-    }
+    },
+    "thesift:guitar",
+    "thesift:star_lute",
+    "thesift:prism_harp",
+    "thesift:crane_flute",
+    "thesift:serbim_flute",
+    "thesift:prism_flute",
+    "thesift:conga_drum",
+    "thesift:thunder_drums",
+    "thesift:prism_drum",
+    "thesift:wind_chimes",
+    "thesift:glass_bells",
+    "thesift:prism_chimes"
   ]
 }

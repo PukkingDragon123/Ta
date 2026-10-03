@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/instruments_temple_vault",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.16
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:serbim_flute",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:glass_bells",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:star_lute",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

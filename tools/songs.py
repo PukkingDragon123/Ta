@@ -20,7 +20,13 @@ SONGS = {
     'whale': ([8, 6, 3, 6, 8, 13], '#66d2f0'),
     'tide': ([3, 8, 10, 8, 3, 1], '#2b8fbb'),
     'lullaby': ([13, 11, 10, 8, 10, 6], '#c7a6f0'),
+    'aurora': ([6, 10, 13, 18, 15, 13], '#ff8ae0'),  # M1: a Prism song
 }
+# M1 instrument play: a drum song's rhythm (half-beats per note) and a Prism song's lights (0 rose, 1 amber, 2 cyan,
+# 3 violet) - mirrors music/Song.java
+SONG_BEATS = {'tide': [2, 1, 1, 2, 2, 4]}
+SONG_LIGHTS = {'aurora': [0, 1, 2, 3, 2, 0]}
+LIGHT_RGB = ['#ff5fa2', '#ffc341', '#3fe6e0', '#a67bff']
 SONG_DESC = {
     'offering': 'Ring it on Wind Chimes while an Echoer holds your offering.',
     'nib': 'The Nibs of the Sound Garden dance to it.',
@@ -29,6 +35,7 @@ SONG_DESC = {
     'whale': 'A Sky Whale nearby will come and sing back.',
     'tide': 'Opens the drowned vaults of the deep and calms the Gobbler.',
     'lullaby': 'Puts nearby monsters to sleep and opens Harmony Seals.',
+    'aurora': 'Lights up the dark, outlines monsters and lends night eyes.',
 }
 
 # Where the sheets are found: chest table -> [(song, weight)], plus how often a sheet turns up at all.
@@ -37,31 +44,23 @@ SHEET_LOOT = {
     'chests/tower_top': ([('whale', 3), ('crystal', 2), ('lullaby', 1)], 0.45),
     'chests/temple_vault': ([('golem', 2), ('lullaby', 2), ('crystal', 2), ('offering', 1)], 0.5),
     'chests/deep_shrine': ([('tide', 3), ('golem', 2), ('lullaby', 1)], 0.4),
-    'chests/sculk_castle': ([('lullaby', 2), ('whale', 2), ('tide', 1)], 0.5),
-    'chests/chrome_well': ([('tide', 3), ('nib', 1)], 0.3),
+    'chests/sculk_castle': ([('lullaby', 2), ('whale', 2), ('tide', 1), ('aurora', 1)], 0.5),
+    'chests/chrome_well': ([('tide', 3), ('nib', 1), ('aurora', 1)], 0.3),
+    'gameplay/frozen_crystal': ([('aurora', 1)], 0.25),  # M1: the Caravans' frozen treasure keeps the Aurora
 }
 
-# The gem-inlaid instruments need thesift:prism_gem (added by the Caravans agent). Each recipe also
-# carries a neoforge:registered condition, so it is skipped (not an error) while the gem is missing.
-# Set ENABLE_PRISM_RECIPES = False to leave the files out entirely.
-ENABLE_PRISM_RECIPES = True
-PRISM_RECIPES = {
-    'prism_flute': ([' G ', 'GFG', ' G '], {'G': 'prism_gem', 'F': 'crane_flute'}),
-    'prism_drum': ([' G ', 'GDG', ' G '], {'G': 'prism_gem', 'D': 'conga_drum'}),
-    'prism_harp': (['GIG', 'ISI', 'GIG'], {'G': 'prism_gem', 'I': 'minecraft:gold_ingot', 'S': 'minecraft:string'}),
-}
-
-INSTRUMENTS = ['crane_flute', 'conga_drum', 'guitar', 'prism_flute', 'prism_harp', 'prism_drum',
-               'wind_chimes']  # C4 songs: the Wind Chimes
+# M1 instrument play: every instrument version, its recipes (the Prism ones from the upgraded versions) and
+# its loot are in tools/instruments.py.
 
 # C4 songs: what each song must be played on (mirrors Song.java; None = any instrument)
 SONG_INSTRUMENT = {'offering': 'chimes', 'nib': 'strings', 'golem': None, 'crystal': 'chimes', 'whale': 'flute',
-                   'tide': 'drum', 'lullaby': 'strings'}
+                   'tide': 'drum', 'lullaby': 'strings', 'aurora': 'prism'}
 INSTRUMENT_NAMES = {
-    'any': 'any instrument', 'flute': 'a flute (Crane or Prism Flute)', 'drum': 'a drum (Conga or Prism Drum)',
-    'strings': "strings (Guitar, Weaver's Guitar or Prism Harp)", 'chimes': 'the Wind Chimes',
+    'any': 'any instrument', 'flute': 'a flute (Crane, Serbim or Prism Flute)', 'drum': 'a drum (Conga, Thunder or Prism Drum)',
+    'strings': "strings (Guitar, Star Lute, Weaver's Guitar or Prism Harp)", 'chimes': 'chimes (Wind Chimes, Glass Bells or Prism Chimes)',
+    'prism': 'a Prism instrument, each note in its light',
 }
-INSTRUMENT_SHORT = {'any': 'Any instrument', 'flute': 'Flute', 'drum': 'Drum', 'strings': 'Strings', 'chimes': 'Wind Chimes'}
+INSTRUMENT_SHORT = {'any': 'Any instrument', 'flute': 'Flute', 'drum': 'Drum', 'strings': 'Strings', 'chimes': 'Chimes', 'prism': 'Prism'}
 # Wind Chimes: a stick crossbar, two strings, an iron and an amethyst tube
 WIND_CHIMES_RECIPE = (['SSS', 'T T', 'IAI'], {'S': 'minecraft:stick', 'T': 'minecraft:string', 'I': 'minecraft:iron_ingot',
                                               'A': 'minecraft:amethyst_shard'})
@@ -83,21 +82,10 @@ def generate():
             'type': 'neoforge:add_table',
             'condition': {'type': 'neoforge:loot_table_id', 'loot_table_id': f'{NS}:{table}'},
             'table': f'{NS}:gameplay/music_sheets_{name}'})
-    for i in INSTRUMENTS:
-        GA.tag('item', f'{NS}:instruments', rl(i))
     for i in OPTIONAL_INSTRUMENTS:
         GA.tag('item', f'{NS}:instruments', {'id': rl(i), 'required': False})
     recipe_dir = os.path.join(D, 'recipe')
-    for name, (pattern, key) in PRISM_RECIPES.items():
-        path = os.path.join(recipe_dir, name + '.json')
-        if not ENABLE_PRISM_RECIPES:
-            if os.path.exists(path):
-                os.remove(path)
-            continue
-        GA.write(path, {
-            'neoforge:conditions': [{'type': 'neoforge:registered', 'registry': 'minecraft:item', 'value': f'{NS}:prism_gem'}],
-            'type': 'minecraft:crafting_shaped', 'category': 'equipment',
-            'key': {k: rl(v) for k, v in key.items()}, 'pattern': pattern, 'result': {'count': 1, 'id': rl(name)}})
+    __import__('instruments').generate()  # M1 instrument play: every version's recipe, loot, tag and text
     pattern, key = WIND_CHIMES_RECIPE
     GA.write(os.path.join(recipe_dir, 'wind_chimes.json'), {
         'type': 'minecraft:crafting_shaped', 'category': 'equipment',
@@ -110,20 +98,24 @@ def lang():
     L.update({f'song.{NS}.{s}.desc': t for s, t in SONG_DESC.items()})
     L.update({
         # C4 songs: which instrument, which notes, where to look
-        f'item.{NS}.music_sheet.hint': 'Carry it and hold the instrument: a guide shows the next note and where to look. Use the sheet to pin it on screen.',
+        f'item.{NS}.music_sheet.hint': 'Carry it and use the instrument: its play screen writes the song out its own way. Use the sheet to pin it.',
         f'item.{NS}.music_sheet.instrument': 'Play on %s',
-        f'item.{NS}.music_sheet.scale': 'Straight ahead is F#4; every 5° up or down is one semitone.',
+        f'item.{NS}.music_sheet.scale': 'Notes from F#3 to F#5.',
+        f'item.{NS}.music_sheet.rhythm': 'Keep its rhythm: ♩ one beat, ♪ half a beat',
+        f'item.{NS}.music_sheet.lights': 'Each note in its light: %s',
         f'message.{NS}.song.played': 'You played %s',
         f'message.{NS}.song.wrong_instrument': '%s must be played on %s',
         f'music.{NS}.aim.up': '%s° up', f'music.{NS}.aim.down': '%s° down', f'music.{NS}.aim.ahead': 'straight ahead',
         f'music.{NS}.guide.next': 'Next: %s, look %s',
+        f'music.{NS}.guide.play': 'Use the instrument to play - next: %s',
+        f'music.{NS}.guide.next_note': 'Next: %s',
         f'music.{NS}.guide.needs': 'Needs %s',
         f'music.{NS}.guide.done': 'Played!',
-        f'item.{NS}.wind_chimes.desc': 'Use to ring a note: look up for higher, down for lower.',
-        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Seven songs, seven sheets',
-        f'codex.{NS}.songs.body': 'Every instrument plays one note per use, picked by where you look: straight ahead is F#4, each 5 degrees up or down a semitone. Sheets hide in ruins, towers, temples and shrines; each lists its notes, where to look and the instrument it needs. Carry the sheet and hold that instrument: a guide shows the next note and where to aim. A semitone off, a double tap, one stray note or a four-second pause is forgiven. Offering, Crystal Hymn: Wind Chimes. Nibs, Lullaby: strings. Whale Song: flute. Tide Song: drum. Golem Hymn: anything.',
-        f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Gem-inlaid',
-        f'codex.{NS}.prism_instruments.body': 'Inlay an instrument with prism gems and it sings stronger. The Prism Flute\'s beam reaches further, hits harder and pierces everything along its line. The Prism Drum\'s shockwave rolls half as far again and rings out sooner. The Prism Harp heals you, your friends and your tamed creatures a little with every note it plays.',
+        f'item.{NS}.wind_chimes.desc': 'Use to play: strike the chimes as they swing past the mark.',
+        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Eight songs, eight sheets',
+        f'codex.{NS}.songs.body': 'Sheets hide in ruins, towers, temples and shrines. Carry one and play its notes in order on the right instrument. A semitone off or one slip is forgiven. Chimes: Offering, Crystal Hymn. Strings: Nibs, Lullaby. Flute: Whale. Drum, in rhythm: Tide. Prism, in its lights: Aurora. Golem Hymn: anything.',
+        f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Notes of light',
+        f'codex.{NS}.prism_instruments.body': 'Ring an upgraded instrument with prism gems: Star Lute to Prism Harp (a string for every note), Serbim Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - keys 1-4 or the mouse wheel - and lights the air. Prism songs such as the Aurora ask for the lights too.',
     })
     L.update({f'instrument.{NS}.{k}': v for k, v in INSTRUMENT_NAMES.items()})
     L.update({f'instrument.{NS}.{k}.short': v for k, v in INSTRUMENT_SHORT.items()})
@@ -166,6 +158,16 @@ def _sheet(song):
     cells[13][3] = 'r'
     cells[12][3] = 'R'
     cells[13][4] = 'r'
+    # M1: a Prism song's lights glow along the foot of the page; a drum song's beats tick under its staff
+    for i, light in enumerate(SONG_LIGHTS.get(song, [])):
+        x = 5 + round(i * 6 / max(1, len(notes) - 1))
+        cells[13][x] = '0123'[light]
+    for i, beat in enumerate(SONG_BEATS.get(song, [])):
+        x = 4 + round(i * 7 / (len(notes) - 1))
+        if beat > 1:
+            cells[12][x] = 't'
+    for k, rgb in enumerate(LIGHT_RGB):
+        pal['0123'[k]] = (rgb, '#3a2018')
     return I.grid([''.join(r) for r in cells], pal, ol=True)
 
 
@@ -310,4 +312,5 @@ def art():
     out['prism_drum'] = prism_drum()
     out['prism_harp'] = prism_harp()
     out['wind_chimes'] = wind_chimes()  # C4 songs
+    out.update(__import__('instruments').art())  # M1 instrument play: the upgraded versions and the Conga Drum's pair of drums
     return out

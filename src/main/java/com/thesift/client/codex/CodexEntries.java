@@ -148,6 +148,14 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "songs", ModItems.MUSIC_SHEET_LULLABY));
         l.add(thing(ITEMS, "prism_instruments", ModItems.PRISM_HARP));
         l.add(thing(ITEMS, "band", ModItems.WIND_CHIMES)); // M2 band: every creature has a voice and may join your band
+        // M1 instrument play: the four ways to play, and the versions you find or craft
+        l.add(thing(ITEMS, "instruments", ModItems.STAR_LUTE));
+        l.add(thing(ITEMS, "wind_chimes", ModItems.WIND_CHIMES));
+        l.add(thing(ITEMS, "star_lute", ModItems.STAR_LUTE));
+        l.add(thing(ITEMS, "serbim_flute", ModItems.SERBIM_FLUTE));
+        l.add(thing(ITEMS, "thunder_drums", ModItems.THUNDER_DRUMS));
+        l.add(thing(ITEMS, "glass_bells", ModItems.GLASS_BELLS));
+        l.add(thing(ITEMS, "prism_chimes", ModItems.PRISM_CHIMES));
         // ---- places
         l.add(thing(PLACES, "portal", ModItems.SIFT_DRUM));
         l.add(thing(PLACES, "musical_temple", ModItems.HARMONY_STONE));

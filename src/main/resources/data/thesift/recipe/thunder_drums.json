@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "H": "thesift:thick_hide",
+    "I": "thesift:serbim_ingot",
+    "D": "thesift:conga_drum",
+    "W": "thesift:lullwood_planks",
+    "S": "thesift:star_shard"
+  },
+  "pattern": [
+    "HHH",
+    "IDI",
+    "WSW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:thunder_drums"
+  }
+}

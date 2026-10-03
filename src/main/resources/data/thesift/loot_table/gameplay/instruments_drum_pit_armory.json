@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/instruments_drum_pit_armory",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:conga_drum",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:thunder_drums",
+          "weight": 2
+        }
+      ]
+    }
+  ]
+}

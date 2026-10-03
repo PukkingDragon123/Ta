@@ -19,18 +19,24 @@ import org.jspecify.annotations.Nullable;
 /**
  * Playing single notes on a hand-held instrument - the one call every instrument makes.
  *
- * <p>The note comes from where the player looks: straight ahead is the middle of the range
- * (F#4, pitch 12), and every {@link #DEG_PER_NOTE} degrees up plays a semitone higher, down
- * lower (pitch 0-24, like a note block). Holding any item in {@code #thesift:instruments} shows
- * the note ladder on screen.
+ * <p>M1 instrument play: using an instrument opens its play screen (client
+ * {@code InstrumentScreen}: strings to pick, drums to beat, chimes to strike on the swing, a
+ * flute to finger and blow), which sounds each note at once for the player and sends it to the
+ * server ({@link InstrumentPlay.PlayNote}); the server plays it through {@link #play} for everyone
+ * else and on to {@link SongEvents#note}, so the song tracker and every listener hear it.
  *
- * <p>Usage from an item's {@code use()} (call it on both sides; the client half feeds the
- * on-screen guide, the server half the song tracker):
- * <pre>{@code Notes.play(level, player, Instrument.GUITAR, Notes.lookPitch(player)); }</pre>
+ * <p>Pitches are note-block pitches, 0 (F#3) to 24 (F#5); {@link #lookPitch} (the old look-angle
+ * scale) is kept for anything that still picks a note by gaze.
  */
 public final class Notes {
     public static final TagKey<Item> INSTRUMENTS = TagKey.create(Registries.ITEM, TheSift.id("instruments"));
     public static final int MAX_PITCH = 24;
+    /** {@link #play} flag: the player already heard the note (their play screen sounded it). */
+    public static final int HEARD = 1;
+    /** {@link #play} flag: strum the major chord on the note (the Star Lute); only the note itself counts for songs. */
+    public static final int CHORD = 2;
+    /** {@link #play} flag: struck with weight (an accent, a perfectly timed chime) - a little louder. */
+    public static final int STRONG = 4;
     /** The look angle (degrees above/below the horizon) that reaches the top/bottom note. */
     private static final float RANGE_DEG = 60.0F;
     /** Degrees of look angle per semitone. */
@@ -45,18 +51,18 @@ public final class Notes {
     private Notes() {
     }
 
-    /** The note (0-24) for where this entity is looking. */
+    /** The note (0-24) for where this entity is looking (the old look-angle scale). */
     public static int lookPitch(Entity e) {
         float up = Mth.clamp(-e.getXRot(), -RANGE_DEG, RANGE_DEG);
         return Mth.clamp(Math.round((up + RANGE_DEG) / (2.0F * RANGE_DEG) * MAX_PITCH), 0, MAX_PITCH);
     }
 
-    /** Where to look for a note: degrees above (positive) or below (negative) the horizon. */
+    /** Where to look for a note on the old look-angle scale: degrees above (positive) or below (negative) the horizon. */
     public static int lookAngle(int pitch) {
         return Math.round((Mth.clamp(pitch, 0, MAX_PITCH) - MAX_PITCH / 2) * DEG_PER_NOTE);
     }
 
-    /** "30° up", "straight ahead", "15° down": where to look to play a note. */
+    /** "30° up", "straight ahead", "15° down": where to look for a note on the old look-angle scale. */
     public static Component aim(int pitch) {
         int a = lookAngle(pitch);
         if (a == 0) {
@@ -91,26 +97,74 @@ public final class Notes {
         return player.getEyePosition().add(player.getLookAngle().scale(0.6)).add(0.0, -0.2, 0.0);
     }
 
-    /**
-     * A player plays one note: the instrument sounds, a coloured note rises, and on the server
-     * {@link SongEvents#note} tells the song tracker and every listener which note and on what.
-     */
+    /** The notes a chord on {@code root} sounds (a major triad, kept within the range). */
+    public static int[] chord(int root) {
+        int[] out = {root, root + 4, root + 7};
+        for (int i = 1; i < out.length; i++) {
+            if (out[i] > MAX_PITCH) {
+                out[i] -= 12;
+            }
+        }
+        return out;
+    }
+
+    /** A player plays one note: no colour, the game time as its clock. */
     public static void play(Level level, Player player, Instrument instrument, int pitch) {
+        play(level, player, instrument, pitch, -1, level.getGameTime(), 0);
+    }
+
+    /**
+     * A player plays one note on {@code instrument}, in light {@code colour} (-1 none; Prism
+     * instruments) at {@code clock} (the player's own clock in ticks - for rhythm). On the server
+     * the instrument sounds for everyone (but the player, with {@link #HEARD}), a coloured note
+     * rises - a Prism note lights the place up - and {@link SongEvents#note} tells the song tracker
+     * and every listener. On the client the note feeds the local guide ({@link #CLIENT}) and, with
+     * {@link #HEARD}, sounds at once.
+     */
+    public static void play(Level level, Player player, Instrument instrument, int pitch, int colour, double clock, int flags) {
         int p = Mth.clamp(pitch, 0, MAX_PITCH);
         Vec3 at = mouth(player);
         if (level instanceof ServerLevel server) {
             p = SongTracker.tune(player, instrument, p, server.getGameTime());
-            float sp = soundPitch(p);
-            server.playSound(null, at.x, at.y, at.z, instrument.sound(), SoundSource.PLAYERS, 1.4F, sp);
-            SoundEvent layer = instrument.layer();
-            if (layer != null) {
-                server.playSound(null, at.x, at.y, at.z, layer, SoundSource.PLAYERS, 0.45F, sp);
+            Player except = (flags & HEARD) != 0 ? player : null;
+            float vol = (flags & STRONG) != 0 ? 1.7F : 1.4F;
+            for (int n : (flags & CHORD) != 0 ? chord(p) : new int[]{p}) {
+                float sp = soundPitch(n);
+                server.playSound(except, at.x, at.y, at.z, instrument.sound(), SoundSource.PLAYERS, n == p ? vol : vol * 0.6F, sp);
+                SoundEvent layer = instrument.layer();
+                if (layer != null) {
+                    server.playSound(except, at.x, at.y, at.z, layer, SoundSource.PLAYERS, n == p ? 0.45F : 0.25F, sp);
+                }
             }
             server.sendParticles(ModParticles.SIFT_NOTE.get(), at.x, at.y + 0.35, at.z, 0, p / 24.0, 0.0, 0.0, 1.0);
             server.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, at.x, at.y + 0.6, at.z, 0, p / 24.0, 0.0, 0.0, 1.0);
-            SongEvents.note(server, player, at, p, instrument);
+            if (colour >= 0 && instrument.prism()) {
+                PrismLight.flash(server, player, at, colour);
+            }
+            if (instrument.family() == Instrument.Family.DRUM) {
+                // Stompers love a drum
+                com.thesift.entity.Stomper.hearDrum(server, player.position(), 16.0);
+            }
+            SongEvents.note(server, player, at, p, instrument, colour, clock);
         } else {
-            CLIENT.hear(p, level.getGameTime(), instrument, s -> SongTracker.carriesSheet(player, s));
+            if ((flags & HEARD) != 0) {
+                int sounded = CLIENT.tune(p, level.getGameTime(), instrument, s -> SongTracker.carriesSheet(player, s));
+                hearLocally(player, instrument, sounded, flags);
+            }
+            CLIENT.hear(p, colour, clock, level.getGameTime(), instrument, s -> SongTracker.carriesSheet(player, s));
+        }
+    }
+
+    /** Client: sounds a note for the local player only, at once (the play screens). */
+    public static void hearLocally(Player player, Instrument instrument, int pitch, int flags) {
+        float vol = (flags & STRONG) != 0 ? 1.0F : 0.85F;
+        for (int n : (flags & CHORD) != 0 ? chord(pitch) : new int[]{pitch}) {
+            float sp = soundPitch(n);
+            player.playSound(instrument.sound(), n == pitch ? vol : vol * 0.6F, sp);
+            SoundEvent layer = instrument.layer();
+            if (layer != null) {
+                player.playSound(layer, n == pitch ? 0.32F : 0.18F, sp);
+            }
         }
     }
 

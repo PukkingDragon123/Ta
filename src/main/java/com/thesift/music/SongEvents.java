@@ -11,14 +11,16 @@ import org.jspecify.annotations.Nullable;
  * The hub every instrument and every song-hearer goes through (server side).
  *
  * <ul>
- *   <li>Instruments call {@link #note(ServerLevel, Player, Vec3, int, Instrument)} for every note
- *   a player plays (through {@link Notes#play}); blocks and creatures use the four-argument form
- *   (no instrument).</li>
+ *   <li>Instruments call {@link #note(ServerLevel, Player, Vec3, int, Instrument, int, double)} for
+ *   every note a player plays (through {@link Notes#play}); blocks and creatures use the
+ *   four-argument form (no instrument).</li>
  *   <li>The song tracker listens to notes and, when a player completes a {@link Song} they know
  *   (they carry its Music Sheet) on the instrument it asks for, calls {@link #played}.</li>
  *   <li>Anything that reacts to songs - creatures, blocks, puzzles, trades - registers a
  *   {@link SongListener} once at start-up and checks the distance itself.</li>
  * </ul>
+ * While a note is being heard, {@link #instrument()}, {@link #colour()} and {@link #clock()} say
+ * what it was played on, in which colour of light (Prism instruments) and when.
  */
 public final class SongEvents {
     /** Hears single notes (e.g. Soul Golems recharge on any music). */
@@ -36,6 +38,8 @@ public final class SongEvents {
     private static final List<NoteListener> NOTE_LISTENERS = new ArrayList<>();
     private static final List<SongListener> SONG_LISTENERS = new ArrayList<>();
     private static @Nullable Instrument current;
+    private static int currentColour = -1;
+    private static double currentClock;
 
     private SongEvents() {
     }
@@ -55,20 +59,46 @@ public final class SongEvents {
 
     /** A note was played at {@code at} (pitch 0-24) on {@code instrument} (null: a block or a creature). */
     public static void note(ServerLevel level, @Nullable Player player, Vec3 at, int pitch, @Nullable Instrument instrument) {
+        note(level, player, at, pitch, instrument, -1, level.getGameTime());
+    }
+
+    /**
+     * A note was played at {@code at} (pitch 0-24) on {@code instrument} (null: a block or a
+     * creature), in light {@code colour} ({@link PrismLight}, -1 for none) at {@code clock} (the
+     * player's own clock in ticks, for rhythm).
+     */
+    public static void note(ServerLevel level, @Nullable Player player, Vec3 at, int pitch, @Nullable Instrument instrument, int colour,
+            double clock) {
         Instrument outer = current;
+        int outerColour = currentColour;
+        double outerClock = currentClock;
         current = instrument;
+        currentColour = colour;
+        currentClock = clock;
         try {
             for (NoteListener l : NOTE_LISTENERS) {
                 l.onNote(level, player, at, pitch);
             }
         } finally {
             current = outer;
+            currentColour = outerColour;
+            currentClock = outerClock;
         }
     }
 
     /** While a note is being heard: the instrument it was played on (null for blocks and creatures). */
     public static @Nullable Instrument instrument() {
         return current;
+    }
+
+    /** While a note is being heard: its colour of light ({@link PrismLight}), or -1. */
+    public static int colour() {
+        return currentColour;
+    }
+
+    /** While a note is being heard: when it was played, on the player's clock (ticks). */
+    public static double clock() {
+        return currentClock;
     }
 
     /** A whole song was performed at {@code at}. */

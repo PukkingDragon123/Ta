@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "thesift:serbim_ingot",
+    "S": "thesift:star_shard",
+    "G": "thesift:chime_glass",
+    "W": "thesift:wind_chimes"
+  },
+  "pattern": [
+    "ISI",
+    "GWG",
+    "G G"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:glass_bells"
+  }
+}

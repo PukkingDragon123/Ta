@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "thesift:star_shard",
+    "T": "thesift:sculk_string",
+    "G": "thesift:guitar",
+    "I": "thesift:serbim_ingot"
+  },
+  "pattern": [
+    " S ",
+    "TGT",
+    "ISI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:star_lute"
+  }
+}

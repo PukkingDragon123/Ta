@@ -35,6 +35,9 @@ final class CodexFx {
                 "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb"}) {
             THEMES.put(k, Theme.SCULK);
         }
+        for (String k : new String[]{"instruments", "wind_chimes", "star_lute", "serbim_flute", "thunder_drums", "glass_bells", "prism_chimes"}) {
+            THEMES.put(k, Theme.MUSIC); // M1 instrument play
+        }
         for (String k : new String[]{"harmoner", "enchoer", "songs", "prism_instruments", "music", "music_crystal", "conga_drum", "crane_flute",
                 "guitar", "weaver_guitar", "vocals", "baton", "staff", "musical_temple", "euphory_altar", "echoer_device", "echoer_hut",
                 "kazoo_fish", "fanfare_eel", "tubafish", "nib", "soul_golem"}) {

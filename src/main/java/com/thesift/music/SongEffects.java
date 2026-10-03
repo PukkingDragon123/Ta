@@ -28,6 +28,9 @@ import org.jspecify.annotations.Nullable;
  *   <li>{@link Song#LULLABY}: hostile creatures nearby fall asleep where they stand, and any
  *   Harmony Seal close by dissolves as if its stones had been tuned.</li>
  *   <li>{@link Song#WHALE}: the nearest Sky Whale hears it and comes to sing back.</li>
+ *   <li>{@link Song#AURORA} (M1, a Prism song): a curtain of the four lights rises, the air around
+ *   glows bright for half a minute, monsters nearby are outlined through walls and the players
+ *   close by see in the dark.</li>
  * </ul>
  * M2 band: both reach further (and the Lullaby lasts longer) the bigger the player's band
  * ({@link Bands#power}).
@@ -37,6 +40,8 @@ public final class SongEffects {
     public static final int LULLABY_TICKS = 20 * 12;
     public static final int SEAL_RADIUS = 10;
     public static final double WHALE_RADIUS = 96.0;
+    public static final double AURORA_RADIUS = 32.0;
+    public static final int AURORA_TICKS = 20 * 30;
 
     private SongEffects() {
     }
@@ -53,6 +58,7 @@ public final class SongEffects {
                     whale(level, player);
                 }
             }
+            case AURORA -> aurora(level, at);
             default -> { }
         }
     }
@@ -81,6 +87,29 @@ public final class SongEffects {
         for (BlockPos seal : seals) {
             if (level.getBlockState(seal).is(ModBlocks.HARMONY_SEAL.get())) {
                 HarmonySealBlock.dissolve(level, seal);
+            }
+        }
+    }
+
+    /** M1: the Aurora - lights in the air, monsters outlined, eyes for the dark. */
+    private static void aurora(ServerLevel level, Vec3 at) {
+        PrismLight.burst(level, at);
+        level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_RESONATE, net.minecraft.sounds.SoundSource.PLAYERS,
+                1.5F, 0.7F);
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(AURORA_RADIUS),
+                m -> m.isAlive() && m instanceof Enemy && m.distanceToSqr(at) <= AURORA_RADIUS * AURORA_RADIUS)) {
+            e.addEffect(new MobEffectInstance(net.minecraft.world.effect.MobEffects.GLOWING, AURORA_TICKS, 0, false, false));
+        }
+        for (Player p : level.getEntitiesOfClass(Player.class, new AABB(at, at).inflate(12.0), Player::isAlive)) {
+            p.addEffect(new MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, AURORA_TICKS * 2, 0, false, true));
+        }
+        // the air itself glows: little lights hung all round, for half a minute
+        BlockPos c = BlockPos.containing(at);
+        for (int dx = -8; dx <= 8; dx += 4) {
+            for (int dz = -8; dz <= 8; dz += 4) {
+                if (dx * dx + dz * dz <= 72) {
+                    PrismLight.light(level, c.offset(dx, 1, dz), 15, AURORA_TICKS);
+                }
             }
         }
     }

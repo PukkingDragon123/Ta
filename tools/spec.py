@@ -270,9 +270,9 @@ item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(Mod
 item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Staff")
 # the three instruments taken from the Conductor's great players
-item("conga_drum", cls="CongaDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
+item("conga_drum", cls="InstrumentItem", factory="p -> new InstrumentItem(com.thesift.music.Instrument.DRUM, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", model="handheld", tab="combat")  # M1: a plain drum now
 item("cannonball", props="new Item.Properties().stacksTo(16)", tab="combat")
-item("crane_flute", cls="CraneFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+item("crane_flute", cls="InstrumentItem", factory="p -> new InstrumentItem(com.thesift.music.Instrument.FLUTE, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", model="handheld", tab="combat")  # M1: no beam
 # --- the Weaver (E2): sculk string from its brood, a plain guitar strung with it, the Weaver's own guitar
 item("sculk_string")
 item("guitar", cls="GuitarItem", props="new Item.Properties().stacksTo(1)", model="handheld", tab="combat")
@@ -284,15 +284,15 @@ for _d in ITEMS:
 item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
 # --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments
-SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn",
+SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn", "aurora": "Aurora",
                "whale": "Whale Song", "tide": "Tide Song", "lullaby": "Lullaby"}
 for _s, _t in SONG_TITLES.items():
     item(f"music_sheet_{_s}", cls="MusicSheetItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name=f"Music Sheet: {_t}")
-item("prism_flute", cls="PrismFluteItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
-item("prism_harp", cls="PrismHarpItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
-item("prism_drum", cls="PrismDrumItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()", model="handheld", tab="combat")
+item("prism_flute", cls="InstrumentItem", factory="p -> new InstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+item("prism_harp", cls="InstrumentItem", factory="p -> new InstrumentItem(com.thesift.music.Instrument.HARP, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
+item("prism_drum", cls="InstrumentItem", factory="p -> new InstrumentItem(com.thesift.music.Instrument.PRISM_DRUM, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 # C4 songs: the Wind Chimes, the instrument of the Echoer's Offering (and the Crystal Hymn)
-item("wind_chimes", cls="WindChimesItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", tab="combat")
+item("wind_chimes", cls="InstrumentItem", factory="p -> new InstrumentItem(com.thesift.music.Instrument.WIND_CHIMES, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", tab="combat")
 # --- end songs & instruments
 
 # ---------------------------------------------------------------- the wild creatures' drops and gear
@@ -360,3 +360,5 @@ __import__("swifter").declare(block, item)
 __import__("chrome").declare(block, item)
 # ---------------------------------------------------------------- A4 cave creatures: the Jailer and Sculklings (spawn eggs)
 __import__("cave_creatures").declare(block, item)
+# ---------------------------------------------------------------- M1 instrument play: the upgraded versions (tools/instruments.py)
+__import__("instruments").declare(block, item)

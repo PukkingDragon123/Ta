@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/instruments_deep_shrine",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.12
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:serbim_flute",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:thunder_drums",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:prism_flute",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

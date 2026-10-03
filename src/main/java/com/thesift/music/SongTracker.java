@@ -23,11 +23,9 @@ import org.jspecify.annotations.Nullable;
  * Sheet, the song is performed: a flourish and a chord ring out and {@link SongEvents#played}
  * fires. Playing a known song's notes on the wrong instrument earns a hint on the action bar.
  *
- * <p>Why songs used to fail: the Guitar picked its note from a different look-angle scale than
- * the on-screen ladder (so the ladder lied), the Guitar never told the client's sheet what it
- * played, every note had to be the exact semitone (5 degrees of look angle) with no slip allowed,
- * and two seconds between notes was too short to aim. All of that now goes through
- * {@link Notes#play}, {@link Notes#lookPitch} and the forgiving {@link SongMatcher}.
+ * <p>Every note goes through {@link Notes#play} (the play screens send theirs as
+ * {@link InstrumentPlay.PlayNote}) and the forgiving {@link SongMatcher}, which also follows a drum
+ * song's rhythm and a Prism song's colours.
  */
 public final class SongTracker {
     /** The longest pause between two notes of one song. */
@@ -56,7 +54,7 @@ public final class SongTracker {
         }
         long now = level.getGameTime();
         SongMatcher m = PLAYERS.computeIfAbsent(player.getUUID(), u -> new SongMatcher());
-        Song song = m.hear(pitch, now, SongEvents.instrument(), s -> carriesSheet(player, s));
+        Song song = m.hear(pitch, SongEvents.colour(), SongEvents.clock(), now, SongEvents.instrument(), s -> carriesSheet(player, s));
         if (song != null) {
             flourish(level, player, at, song);
             SongEvents.played(level, player, at, song);
@@ -86,26 +84,7 @@ public final class SongTracker {
      */
     public static int tune(Player player, Instrument instrument, int pitch, long now) {
         SongMatcher m = PLAYERS.get(player.getUUID());
-        if (m == null) {
-            return pitch;
-        }
-        // the song furthest along wins, so a song that takes any instrument cannot pull the note off the one being played
-        int best = 0;
-        int tuned = pitch;
-        for (Song song : Song.values()) {
-            int done = m.progress(song, now);
-            if (done > best && song.accepts(instrument) && carriesSheet(player, song)) {
-                int want = m.nextNote(song, now);
-                if (want == pitch) {
-                    return pitch;
-                }
-                if (SongMatcher.matches(want, pitch)) {
-                    best = done;
-                    tuned = want;
-                }
-            }
-        }
-        return tuned;
+        return m == null ? pitch : m.tune(pitch, now, instrument, s -> carriesSheet(player, s));
     }
 
     /** Forgets a player's progress through every song (tests start from a clean slate). */
@@ -148,6 +127,9 @@ public final class SongTracker {
         }
         level.sendParticles(ModParticles.STAR_SPARKLE.get(), c.x, c.y + 1.2, c.z, 24, 0.8, 0.8, 0.8, 0.06);
         level.sendParticles(ModParticles.RESONANCE_RING.get(), c.x, c.y + 0.1, c.z, 0, 6.0, 0.0, 0.0, 1.0);
+        if (song.prism()) {
+            PrismLight.burst(level, c);
+        }
         Resonance.pulse(level, BlockPos.containing(c), 0.8F, 8);
         player.sendOverlayMessage(Component.translatable("message.thesift.song.played", Component.translatable("song.thesift." + song.id())));
     }

@@ -11,11 +11,11 @@
   "key": {
     "G": "thesift:prism_gem",
     "I": "minecraft:gold_ingot",
-    "S": "minecraft:string"
+    "L": "thesift:star_lute"
   },
   "pattern": [
     "GIG",
-    "ISI",
+    "ILI",
     "GIG"
   ],
   "result": {
