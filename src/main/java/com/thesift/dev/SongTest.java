@@ -114,10 +114,11 @@ final class SongTest {
         FakePlayer player = FakePlayerFactory.getMinecraft(this.sift);
         player.snapTo(x + 0.5, y, z + 0.5, 0.0F, 0.0F);
         player.getInventory().clearContent();
+        // the instrument goes in the hand first: the sheets must not land in the held slot and be replaced
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.WIND_CHIMES.get()));
         for (Song song : Song.values()) {
             player.getInventory().add(new ItemStack(sheet(song)));
         }
-        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.WIND_CHIMES.get()));
 
         // every song, note for note, on its own instrument
         for (Song song : Song.values()) {
