@@ -787,7 +787,7 @@ def gen_lang():
         f'codex.{NS}.flora.title': 'Coral Flora', f'codex.{NS}.flora.tagline': 'The pink plains',
         f'codex.{NS}.flora.body': 'Coral Bushes and tall Coral Thickets grow thick across the salmon Coral Turf of the Sift Plains, under pale weeping Lullwood trees.',
         f'codex.{NS}.dictator.title': 'The Conductor', f'codex.{NS}.dictator.tagline': 'Three movements, each more godlike',
-        f'codex.{NS}.dictator.body': "When the music ends, only his Mask is left on the stage floor - and then souls, notes and sculk pour in and build him again around it. Every blow of his leaves Sculk Corruption. First he duels you on the stage: blinks, lunges and slashes. Then he lifts off his feet: barrages of notes, and chords that shake rings across the floor - jump them. At the last he soars high and rains notes down; when the whole stage starts to glow, run for a lit circle. Between movements he rises in a storm of song and cannot be hurt.",
+        f'codex.{NS}.dictator.body': "When the music ends, only his Mask is left on the stage floor - and then souls, notes and sculk pour in and build him again around it. Every blow of his leaves Sculk Corruption. First he duels you on the stage: blinks, lunges and slashes. Then he lifts off his feet: barrages of notes, and chords that shake rings across the floor - jump them. At the last his mask splits and he swells into a sculk colossus: fists that shake the stage, a roar of sound that sweeps after you (outrun it sideways), shockwave rings to jump, notes raining from his organ pipes - and when the whole stage glows, run for a lit circle. In every movement he conducts his band up out of the floor: Sculk Parasites, then Strumlings too. They fall with him. Between movements he cannot be hurt.",
         f'codex.{NS}.thumper.title': 'The Thumper', f'codex.{NS}.thumper.tagline': 'Percussion - a turtle with a heart of sculk',
         f'codex.{NS}.thumper.body': 'A giant Warden-kin turtle that crawls up out of its sunken arena. Its shell turns every blade and arrow. Only a CANNONBALL on one of its glowing sculk vents hurts it - and the vents open only when it strains: after a stomp, while it breathes its beam, when it bursts from the ground, and when it rams a solid wall. Man the Ancient Cannons on the towers. Jump its stomp rings, back away from its tail. Hurt, it hurls boulders; enraged, it burrows after you. Drops its Conga Drum.',
         f'codex.{NS}.strummer.title': 'The Weaver', f'codex.{NS}.strummer.tagline': 'Strings - a sculk spider and its bone musician',
@@ -837,7 +837,7 @@ def gen_lang():
         f'codex.{NS}.ancient_cannon.body': 'Bronze cannons on the towers of the Drum Pit. Use one with a Cannonball to load it, then use it again to fire: it swings round to face where you look, and the higher you look, the higher and further the ball arcs. A redstone pulse fires it along its last heading. Cannonballs are crafted from iron, gunpowder and cobbled dreamstone, four at a time.',
         f'message.{NS}.dictator.rebuild': 'Souls and song pour into the fallen Mask... the Conductor is remade!',
         f'message.{NS}.dictator.phase2': 'The Conductor rises off the stage, notes swirling about him!',
-        f'message.{NS}.dictator.phase3': 'The Conductor soars above the stage - find the light when the stage glows!',
+        f'message.{NS}.dictator.phase3': "The Conductor's mask splits - he swells into a colossus of sculk and song!",
         f'message.{NS}.encore.2': 'Silk trembles in the dark... the Weaver claws its way up!',
         f'effect.{NS}.sculk_corruption': 'Sculk Corruption',
         f'message.{NS}.encore.1': 'A flute sings from the sky... the Whistler answers the call!',
@@ -886,7 +886,7 @@ def gen_lang():
         f'cutscene.{NS}.thumper.0': 'The Titan Falls Silent',
         f'cutscene.{NS}.strummer.2': 'The Web Draws Tight', f'cutscene.{NS}.strummer.3': 'The Last Song of the Silk',
         f'cutscene.{NS}.strummer.0': 'The Weaver Unstrung',
-        f'cutscene.{NS}.dictator.2': 'The Second Movement', f'cutscene.{NS}.dictator.3': 'Finale Furioso',
+        f'cutscene.{NS}.dictator.2': 'The Second Movement', f'cutscene.{NS}.dictator.3': 'The Colossus Unmasked',
         f'cutscene.{NS}.dictator.0': 'The Baton Falls',
     })
     # sound subtitles
@@ -1476,6 +1476,7 @@ def generate():
     __import__('chrome').assets(sys.modules[__name__])  # A3 Chrome: chime glass recipes/tags, particles, Rainbow Daze post effect
     __import__('cave_creatures').data(sys.modules[__name__])  # A4 cave creatures: loot, tags, spawns, text
     __import__('gatefx').assets(sys.modules[__name__])  # B1 Portal & sky FX: gate warp/shock post effects, sky Codex page
+    __import__('conductor').assets(sys.modules[__name__])  # C3 Conductor: the 3D Conductor's Staff (flat sprite kept in the GUI)
 
 
 def finalize():

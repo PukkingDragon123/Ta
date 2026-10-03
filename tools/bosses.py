@@ -280,9 +280,12 @@ def conductor_mask() -> Model:
                 'ribbon': '#4a1640', 'ribbon_l': '#6a2a5e', 'ribbon_d': '#2a0a24', 'horn': '#2a2030', 'horn_l': '#3e3046'})
     m = Model('conductor_mask', (64, 64), pal, {'conductor_mask': {}}, res=2)
     mask = m.part('mask', pivot=(0, 12, 0))
+    # C3 Conductor: slanted glowing eye slits, as on the Conductor's own mask (tools/conductor.py)
+    def _slit(x, y):
+        u = (8 - x) if x < 10 else (x - 11)
+        return 0 <= u <= 5 and abs(y - (11.5 - u * 0.5)) < 0.9
     face = gen(20, 28, lambda x, y: (
-        'v' if (y in range(9, 13) and (3 <= x <= 7 or 12 <= x <= 16) and abs(y - 10.5) + abs(x - (5 if x < 10 else 14)) * 0.6 < 2.6) else
-        'g' if (y in (10, 11) and x in (5, 14)) else
+        ('g' if 1 <= ((8 - x) if x < 10 else (x - 11)) <= 4 else 'v') if _slit(x, y) else
         'm' if (y == 20 and 4 <= x <= 15) or (y == 21 and x in (4, 6, 8, 11, 13, 15)) else
         'c' if (x == 15 and 2 <= y <= 9) or (x == 16 and 9 <= y <= 14) or (x == 17 and 14 <= y <= 18) or (x == 4 and 14 <= y <= 24 and y % 3) else
         'G' if (y == 3 and 6 <= x <= 13) or (y == 2 and x in (7, 9, 10, 12)) else
@@ -301,6 +304,12 @@ def conductor_mask() -> Model:
         rib.cube((-1, 0, 0), (2, 14, 0), color='ribbon', pattern='mc', clusters=0.0, rim=False, faces={
             f: dict(color='ribbon', pattern='mc', clusters=0.0, rim=False, hd=True, map=['ll..'] + ['.l..'] * 25 + ['_.._', '__._'], keys={'l': 'ribbon_l'})
             for f in ('north', 'south')})
+    for side, sx in (('left', 1), ('right', -1)):
+        # C3 Conductor: the lower pair of his four horn-ears, swept out to the sides
+        low = mask.part(f'{side}_horn_lower', pivot=(4.5 * sx, -10, 0), rot=(0, 0, 1.15 * sx))
+        low.cube((-0.75, -3.5, -0.75), (1.5, 3.5, 1.5), color='horn', pattern='mc', clusters=0.0, rim=False)
+        low.cube((-0.4, -6, -0.4), (0.8, 2.5, 0.8), color='horn_l', pattern='mc', clusters=0.0, rim=False,
+                 faces={'up': dict(color='glow', pattern='mc', clusters=0.0, glow=True)})
     crown = mask.part('crown', pivot=(0, -14, 0))
     for i, x in enumerate((-3, -1, 1, 3)):
         crown.cube((x - 0.5, -2 - (i in (1, 2)) * 1.5, -0.5), (1, 2 + (i in (1, 2)) * 1.5, 1), color='gold', pattern='mc', clusters=0.0, rim=False,
@@ -789,3 +798,8 @@ ALL['strumling'] = sculk_spider
 # B2 Thumper & cutscenes: the Thumper Titan (layered shell, vents, barnacles, scaled limbs) - see tools/thumper_titan.py
 from thumper_titan import thumper_titan  # noqa: E402
 ALL['thumper'] = thumper_titan
+
+# C3 Conductor: the Conductor remade (mask, horn-ears, tattered tailcoat) and his kaiju final form - see tools/conductor.py
+import conductor as _conductor  # noqa: E402
+ALL['dictator'] = _conductor.dictator
+ALL['dictator_kaiju'] = _conductor.dictator_kaiju

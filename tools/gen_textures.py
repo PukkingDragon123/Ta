@@ -1984,6 +1984,7 @@ def main():
     __import__('gear_art').textures(out)  # B4 gear: Seraphim prism gear + tools, instruments, guitars, cannonball
     __import__('gatefx').textures(out)  # B1 Portal & sky FX: portal sky window, rainbows, aurora, colour clouds, shooting stars
     __import__('ui_art').textures(out)  # B3 Boss bars & Codex: themed boss bars, codex specimen plates, page effects
+    __import__('conductor').textures(out)  # C3 Conductor: texture of the 3D Conductor's Staff
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):

@@ -3,6 +3,7 @@ package com.thesift.entity.boss;
 import com.thesift.block.entity.ConductorsPodiumBlockEntity;
 import com.thesift.entity.KillBurst;
 import com.thesift.registry.ModEffects;
+import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
@@ -27,14 +28,19 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -46,10 +52,12 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -63,11 +71,15 @@ import org.jspecify.annotations.Nullable;
  *   <li>Full health to 66%: a duelist on the stage - he blinks behind you, lunges and slashes.</li>
  *   <li>66% to 33%: he rises off his feet and floats, firing barrages of homing notes and striking
  *   chords that roll rings of sound across the floor (jump them).</li>
- *   <li>Below 33%: he soars high over the stage on wings of song, rains notes down on marked
- *   spots and, at his finale, floods the whole stage with sound - only a few lit circles are
- *   safe. Spent after each finale, he sinks low for a while.</li>
+ *   <li>Below 33% (C3): his mask splits and he swells into a sculk colossus (the stage cutscene
+ *   films it): he stalks the stage, slams the floor with his fists, roars a sweeping beam of
+ *   sound out of the maw behind the mask, stamps out shockwave rings (jump them), rains notes
+ *   from the organ pipes on his back and, at his finale, floods the stage with sound - only a
+ *   few lit circles are safe. Spent after each finale, he kneels for a while.</li>
  * </ol>
- * Between movements he rises in a storm of song and cannot be hurt.
+ * In every movement he conducts his band up out of the stage - Sculk Parasites, and from the second
+ * movement Strumlings too - never more than a few at once; they all fall with him. Between
+ * movements he rises (or swells) in a storm of song and cannot be hurt.
  */
 public class Dictator extends Monster {
     private static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(Dictator.class, EntityDataSerializers.INT);
@@ -78,7 +90,19 @@ public class Dictator extends Monster {
     private static final byte EVENT_CRESCENDO = 112;
     private static final byte EVENT_SLASH = 113;
     private static final byte EVENT_ROAR = 114;
+    // C3 Conductor: entity events -41..-50
+    private static final byte EVENT_SUMMON = -41;
+    private static final byte EVENT_SLAM = -42;
     public static final int TRANSFORM_TICKS = 60;
+    /** His swelling into the colossus: as long as the stage film that shows it. */
+    public static final int KAIJU_TICKS = BossStages.LENGTH;
+    /** When, in the swelling, the mask splits and the colossus bursts out. */
+    public static final int KAIJU_BURST = 40;
+    /** How much bigger the colossus is than the man (width, height). */
+    public static final float KAIJU_WIDE = 2.6F;
+    public static final float KAIJU_TALL = 1.95F;
+    /** Marks the band he calls, so they can be counted and fall with him. */
+    public static final String SUMMON_TAG = "thesift_conductor_band";
     /** How long his body takes to rebuild around the Mask (about six seconds). */
     public static final int ASSEMBLE_TICKS = 120;
 
@@ -92,6 +116,22 @@ public class Dictator extends Monster {
     public static final int FINALE = 6;
     /** Spent after his finale: low over the stage, in reach. */
     public static final int REST = 7;
+    /** Conducting his band up out of the stage. */
+    public static final int SUMMON = 8;
+    /** Colossus: both fists raised and brought down on the floor in front of him. */
+    public static final int SLAM = 9;
+    /** Colossus: the mask swings open and he roars a beam of sound that sweeps after you. */
+    public static final int BEAM = 10;
+    /** Colossus: rears up and stamps - shockwave rings of music roll out across the stage. */
+    public static final int QUAKE = 11;
+    public static final int SUMMON_AT = 16;
+    public static final int SUMMON_TICKS = 34;
+    public static final int SLAM_HIT = 20;
+    public static final int SLAM_TICKS = 44;
+    public static final int BEAM_CHARGE = 26;
+    public static final int BEAM_TICKS = 72;
+    public static final int QUAKE_HIT = 18;
+    public static final int QUAKE_TICKS = 46;
     public static final int FINALE_TICKS = 70;
     private static final double SAFE_RADIUS = 2.2;
 
@@ -100,6 +140,7 @@ public class Dictator extends Monster {
     public final AnimationState crescendoAnimation = new AnimationState();
     public final AnimationState slashAnimation = new AnimationState();
     public final AnimationState roarAnimation = new AnimationState();
+    public final AnimationState slamAnimation = new AnimationState();
 
     private final ServerBossEvent bossEvent = new ServerBossEvent(UUID.randomUUID(), Component.translatable("entity.thesift.dictator"),
             BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_10);
@@ -108,7 +149,11 @@ public class Dictator extends Monster {
     private int blinkCooldown = 80;
     private int actionCooldown = 50;
     private int darknessCooldown = 160;
+    private int summonCooldown = 200;
     private int ringTicks = -1;
+    /** Where the rolling rings start (null: under him). */
+    private @Nullable Vec3 ringCentre;
+    private Vec3 beamDir = Vec3.ZERO;
     private int actionTicks;
     public int actionStart;
     private Vec3 chargeDir = Vec3.ZERO;
@@ -175,6 +220,16 @@ public class Dictator extends Monster {
         return this.entityData.get(TRANSFORM);
     }
 
+    /** How long the transformation into the current movement takes. */
+    public int transformLength() {
+        return this.getPhase() == 3 ? KAIJU_TICKS : TRANSFORM_TICKS;
+    }
+
+    /** The last movement: the sculk colossus. */
+    public boolean isKaiju() {
+        return this.getPhase() >= 3;
+    }
+
     /** Ticks left of his body's rebuilding around the Mask (0 once he stands whole). */
     public int assembleTicks() {
         return this.entityData.get(ASSEMBLE);
@@ -196,6 +251,15 @@ public class Dictator extends Monster {
         if (ACTION.equals(accessor)) {
             this.actionStart = this.tickCount;
         }
+        if (PHASE.equals(accessor)) {
+            this.refreshDimensions();
+        }
+    }
+
+    @Override
+    public EntityDimensions getDefaultDimensions(Pose pose) {
+        EntityDimensions d = super.getDefaultDimensions(pose);
+        return this.isKaiju() ? d.scale(KAIJU_WIDE, KAIJU_TALL) : d;
     }
 
     private boolean groundFighting() {
@@ -306,11 +370,14 @@ public class Dictator extends Monster {
     }
 
     private void enterPhase(ServerLevel level, int phase) {
-        if (phase > this.getPhase()) {
+        boolean onward = phase > this.getPhase();
+        // C3: the phase (and with it his size) first, so the film frames the whole colossus
+        this.entityData.set(PHASE, phase);
+        if (onward) {
             BossStages.cleared(level, this, BossStages.CONDUCTOR, phase); // B2 Thumper & cutscenes: the stage cutscene
         }
-        this.entityData.set(PHASE, phase);
-        this.entityData.set(TRANSFORM, TRANSFORM_TICKS);
+        this.entityData.set(TRANSFORM, this.transformLength());
+        this.getNavigation().stop();
         this.setAction(NONE);
         this.ringTicks = -1;
         this.strikes.clear();
@@ -327,18 +394,19 @@ public class Dictator extends Monster {
     /** How high over the stage floor he wants to be. */
     private double hoverHeight() {
         int phase = this.getPhase();
-        if (phase == 3) {
-            return this.getAction() == REST ? 1.6 : 9.0;
-        }
         return phase == 2 ? 2.8 : 0.0;
     }
 
     /** Rises (or sinks) to his new height in a storm of song; at the turn, a burst of power. */
     private void tickTransform(ServerLevel level) {
         int left = this.transformTicks();
-        int t = TRANSFORM_TICKS - left;
+        int t = this.transformLength() - left;
         this.entityData.set(TRANSFORM, left - 1);
         this.getNavigation().stop();
+        if (this.isKaiju()) {
+            this.tickSwell(level, t);
+            return;
+        }
         double want = this.floor() + Math.max(1.5, this.hoverHeight());
         this.setDeltaMovement(0.0, Mth.clamp((want - this.getY()) * 0.08, -0.15, 0.25), 0.0);
         if (t % 4 == 0) {
@@ -356,6 +424,66 @@ public class Dictator extends Monster {
                 p.push(away.x * 1.2, 0.5, away.z * 1.2);
             }
             this.level().broadcastEntityEvent(this, EVENT_CRESCENDO);
+        }
+    }
+
+
+    /**
+     * The last movement begins: he sinks to the stage while souls and song pour into him from
+     * every side, his heart pounding faster; then the mask splits, he bursts out of himself as the
+     * colossus, and at last throws his head back and roars.
+     */
+    private void tickSwell(ServerLevel level, int t) {
+        this.setDeltaMovement(0.0, Math.min(0.0, this.getDeltaMovement().y), 0.0);
+        Vec3 c = this.position().add(0.0, Math.min(this.getBbHeight() * 0.45, 2.0 + t * 0.12), 0.0);
+        if (t < KAIJU_BURST) {
+            for (int i = 0; i < 2 + t / 10; i++) {
+                double a = this.random.nextDouble() * Math.PI * 2.0;
+                double r = 8.0 + this.random.nextDouble() * 8.0;
+                Vec3 from = new Vec3(this.getX() + Math.cos(a) * r, this.floor() + 0.3 + this.random.nextDouble() * 6.0, this.getZ() + Math.sin(a) * r);
+                Vec3 v = c.subtract(from).scale(0.06);
+                level.sendParticles(i % 3 == 0 ? ModParticles.SIFT_NOTE.get() : ParticleTypes.SCULK_SOUL, from.x, from.y, from.z, 0, v.x, v.y, v.z, 1.0);
+            }
+            if (t % Math.max(4, 14 - t / 4) == 0) {
+                this.playSound(SoundEvents.WARDEN_HEARTBEAT, 4.0F, 0.6F + t * 0.012F);
+            }
+            if (t % 8 == 0) {
+                level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, this.getX(), this.floor() + 0.2, this.getZ(), 14, 3.0, 0.1, 3.0, 0.02);
+                level.sendParticles(ModParticles.RESONANCE_RING.get(), this.getX(), this.floor() + 0.1, this.getZ(), 0, 2.0 + t * 0.15, 0.0, 0.0, 1.0);
+            }
+            if (t == 6) {
+                this.playSound(ModSounds.CONDUCTOR_MASK_TRANSFORM.get(), 5.0F, 0.45F);
+            }
+            if (t == 24) {
+                this.playSound(SoundEvents.WARDEN_SONIC_CHARGE, 5.0F, 0.5F);
+            }
+        } else if (t == KAIJU_BURST) {
+            this.playSound(SoundEvents.GENERIC_EXPLODE.value(), 5.0F, 0.55F);
+            this.playSound(SoundEvents.WARDEN_ROAR, 6.0F, 0.5F);
+            this.playSound(ModSounds.CONDUCTOR_MASK_TRANSFORM.get(), 5.0F, 0.35F);
+            level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, c.x, c.y, c.z, 1, 0.0, 0.0, 0.0, 0.0);
+            level.sendParticles(ParticleTypes.SCULK_SOUL, c.x, c.y, c.z, 120, 2.0, 3.0, 2.0, 0.15);
+            level.sendParticles(ModParticles.SIFT_NOTE.get(), c.x, c.y + 2.0, c.z, 40, 3.0, 3.0, 3.0, 1.0);
+            for (int i = 0; i < 5; i++) {
+                level.sendParticles(ModParticles.RESONANCE_RING.get(), this.getX(), this.floor() + 0.1, this.getZ(), 0, 3.0 + i * 3.0, 0.0, 0.0, 1.0);
+            }
+            for (Player p : level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(8.0))) {
+                Vec3 away = p.position().subtract(this.position()).multiply(1, 0, 1);
+                away = away.lengthSqr() < 1.0E-4 ? new Vec3(1.0, 0.0, 0.0) : away.normalize();
+                p.push(away.x * 2.0, 0.7, away.z * 2.0);
+            }
+        } else {
+            if (t % 6 == 0) {
+                Vec3 pipes = this.pipes();
+                level.sendParticles(ModParticles.SIFT_NOTE.get(), pipes.x, pipes.y, pipes.z, 3, 1.5, 0.5, 1.5, 1.0);
+            }
+            if (t == KAIJU_BURST + 22) {
+                this.level().broadcastEntityEvent(this, EVENT_ROAR);
+                this.playSound(ModSounds.DICTATOR_ROAR.get(), 6.0F, 0.5F);
+                this.playSound(SoundEvents.WARDEN_SONIC_BOOM, 4.0F, 0.5F);
+                Vec3 m = this.mouth();
+                level.sendParticles(ParticleTypes.SONIC_BOOM, m.x, m.y, m.z, 1, 0.0, 0.0, 0.0, 0.0);
+            }
         }
     }
 
@@ -378,14 +506,19 @@ public class Dictator extends Monster {
         int phase = this.getPhase();
         LivingEntity target = this.getTarget();
         if (target == null || !target.isAlive()) {
-            if (phase > 1) {
+            if (phase == 2) {
                 this.hover(null);
             }
             return;
         }
         this.actionTicks++;
-        if (phase > 1) {
+        if (this.summonCooldown > 0) {
+            this.summonCooldown--;
+        }
+        if (phase == 2) {
             this.hover(target);
+        } else if (phase == 3) {
+            this.stride(level, target);
         }
         if (this.getAction() != NONE) {
             this.tickAction(level, target);
@@ -393,7 +526,7 @@ public class Dictator extends Monster {
             if (this.actionCooldown > 0) {
                 this.actionCooldown--;
             } else {
-                this.chooseAction(target, phase);
+                this.chooseAction(level, target, phase);
             }
             if (phase == 1 && --this.blinkCooldown <= 0 && (this.distanceTo(target) > 7.0 || this.random.nextInt(3) == 0)) {
                 this.blinkBehind(level, target);
@@ -408,9 +541,18 @@ public class Dictator extends Monster {
         }
     }
 
-    private void chooseAction(LivingEntity target, int phase) {
+    private void chooseAction(ServerLevel level, LivingEntity target, int phase) {
         double d = this.distanceTo(target);
         int roll = this.random.nextInt(10);
+        if (this.summonCooldown <= 0 && this.canSummon(level)) {
+            // C3: a conducting gesture, and his band crawls up out of the stage
+            this.summonCooldown = phase == 3 ? 340 : 420;
+            this.setAction(SUMMON);
+            this.getNavigation().stop();
+            this.level().broadcastEntityEvent(this, EVENT_SUMMON);
+            this.playSound(ModSounds.DICTATOR_CRESCENDO.get(), 3.0F, 0.75F);
+            return;
+        }
         switch (phase) {
             case 1 -> {
                 if (d > 4.0 && d < 16.0 && this.hasLineOfSight(target) && roll < 5) {
@@ -420,10 +562,22 @@ public class Dictator extends Monster {
             }
             case 2 -> this.setAction(roll < 5 ? BARRAGE : CHORD);
             default -> {
-                if (roll < 3) {
+                // the colossus
+                boolean sees = this.hasLineOfSight(target);
+                if (d < this.getBbWidth() * 0.5 + 6.5 && roll < 5) {
+                    this.setAction(SLAM);
+                    this.playSound(SoundEvents.WARDEN_ROAR, 3.0F, 0.8F);
+                } else if (sees && d > 5.0 && roll < 4) {
+                    this.setAction(BEAM);
+                } else if (roll < 6) {
+                    this.setAction(QUAKE);
+                    this.playSound(ModSounds.DICTATOR_CRESCENDO.get(), 4.0F, 0.6F);
+                } else if (roll < 8) {
+                    this.setAction(RAIN);
+                } else if (roll < 9) {
                     this.beginFinale();
                 } else {
-                    this.setAction(roll < 7 ? RAIN : BARRAGE);
+                    this.setAction(sees ? BEAM : QUAKE);
                 }
             }
         }
@@ -493,7 +647,7 @@ public class Dictator extends Monster {
                     }
                     this.playSound(ModSounds.THUMPER_SLAM.get(), 3.0F, 1.3F);
                     level.sendParticles(ModParticles.SIFT_NOTE.get(), this.getX(), this.getY() + 1.5, this.getZ(), 24, 2.0, 1.0, 2.0, 1.0);
-                    this.startRings();
+                    this.startRings(null);
                 }
                 if (t >= 40) {
                     this.endAction(40);
@@ -510,7 +664,50 @@ public class Dictator extends Monster {
                 if (t % 8 == 0) {
                     this.playSound(SoundEvents.NOTE_BLOCK_CHIME.value(), 2.5F, 0.5F + this.random.nextFloat() * 0.6F);
                 }
+                if (this.isKaiju() && t % 3 == 0 && t < 70) {
+                    // the colossus plays it on his organ pipes: notes shoot up out of them
+                    Vec3 pipes = this.pipes();
+                    level.sendParticles(ModParticles.SIFT_NOTE.get(), pipes.x, pipes.y, pipes.z, 2, 1.2, 0.3, 1.2, 1.0);
+                    level.sendParticles(ParticleTypes.END_ROD, pipes.x, pipes.y, pipes.z, 0, 0.0, 0.6, 0.0, 1.0);
+                }
                 if (t >= 90) {
+                    this.endAction(30);
+                }
+            }
+            case SUMMON -> {
+                // baton (or claw) raised, a long sweep, and the stage gives up his band
+                this.getNavigation().stop();
+                this.getLookControl().setLookAt(target, 30.0F, 30.0F);
+                if (t < SUMMON_AT && t % 3 == 0) {
+                    double ring = this.getBbWidth() * 0.5 + 2.5;
+                    for (int k = 0; k < 6; k++) {
+                        double ang = this.random.nextDouble() * Math.PI * 2.0;
+                        level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX() + Math.cos(ang) * ring, this.getY() + 0.2, this.getZ() + Math.sin(ang) * ring, 1, 0.2, 0.0, 0.2, 0.03);
+                    }
+                    this.playSound(SoundEvents.SCULK_CLICKING, 2.0F, 0.6F + t * 0.03F);
+                }
+                if (t == SUMMON_AT) {
+                    this.callBand(level, target);
+                }
+                if (t >= SUMMON_TICKS) {
+                    this.endAction(30);
+                }
+            }
+            case SLAM -> this.tickSlam(level, target, t);
+            case BEAM -> this.tickBeam(level, target, t);
+            case QUAKE -> {
+                this.getNavigation().stop();
+                if (t == QUAKE_HIT) {
+                    this.level().broadcastEntityEvent(this, EVENT_SLAM);
+                    this.playSound(SoundEvents.GENERIC_EXPLODE.value(), 4.0F, 0.5F);
+                    this.playSound(ModSounds.THUMPER_SLAM.get(), 4.0F, 0.6F);
+                    for (int semis : new int[]{0, 3, 7}) {
+                        this.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 4.0F, (float) Math.pow(2.0, (semis - 12) / 12.0));
+                    }
+                    level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, this.getX(), this.floor() + 0.2, this.getZ(), 40, 3.0, 0.1, 3.0, 0.05);
+                    this.startRings(new Vec3(this.getX(), this.floor(), this.getZ()));
+                }
+                if (t >= QUAKE_TICKS) {
                     this.endAction(30);
                 }
             }
@@ -560,7 +757,7 @@ public class Dictator extends Monster {
     // ------------------------------------------------------------------ his music, made solid
 
     private void volley(ServerLevel level, LivingEntity target, int count) {
-        Vec3 from = this.position().add(0.0, 2.6, 0.0);
+        Vec3 from = this.isKaiju() ? this.pipes() : this.position().add(0.0, this.getBbHeight() * 0.62, 0.0);
         Vec3 aim = target.getEyePosition().subtract(from).normalize();
         Vec3 side = new Vec3(-aim.z, 0.0, aim.x).normalize();
         for (int i = 0; i < count; i++) {
@@ -689,26 +886,33 @@ public class Dictator extends Monster {
         }
     }
 
-    private void startRings() {
+    private void startRings(@Nullable Vec3 centre) {
         this.ringTicks = 0;
-        this.level().broadcastEntityEvent(this, EVENT_CRESCENDO);
-        this.playSound(ModSounds.DICTATOR_CRESCENDO.get(), 4.0F, 1.0F);
+        this.ringCentre = centre;
+        if (!this.isKaiju()) {
+            this.level().broadcastEntityEvent(this, EVENT_CRESCENDO);
+        }
+        this.playSound(ModSounds.DICTATOR_CRESCENDO.get(), 4.0F, this.isKaiju() ? 0.6F : 1.0F);
     }
 
     /** Rings of sculk sound rolling out across the stage; anyone standing on the ring is struck. */
     private void rollRings(ServerLevel level) {
         int t = this.ringTicks++;
-        if (t > 46) {
+        boolean big = this.isKaiju();
+        int waves = big ? 4 : 3;
+        int gap = big ? 9 : 10;
+        int life = big ? 24 : 26;
+        if (t > (waves - 1) * gap + life) {
             this.ringTicks = -1;
             return;
         }
-        Vec3 c = this.getPhase() == 1 ? this.position() : new Vec3(this.getX(), this.floor(), this.getZ());
-        for (int wave = 0; wave < 3; wave++) {
-            int wk = t - wave * 10;
-            if (wk < 0 || wk > 26) {
+        Vec3 c = this.ringCentre != null ? this.ringCentre : this.getPhase() == 1 ? this.position() : new Vec3(this.getX(), this.floor(), this.getZ());
+        for (int wave = 0; wave < waves; wave++) {
+            int wk = t - wave * gap;
+            if (wk < 0 || wk > life) {
                 continue;
             }
-            double r = 1.5 + wk * 0.6;
+            double r = (big ? this.getBbWidth() * 0.5 + 1.0 : 1.5) + wk * (big ? 0.85 : 0.6);
             if (wk % 2 == 0) {
                 level.sendParticles(ModParticles.RESONANCE_RING.get(), c.x, this.floor() + 0.1, c.z, 0, r, 0.0, 0.0, 1.0);
             }
@@ -721,11 +925,218 @@ public class Dictator extends Monster {
                     continue;
                 }
                 double d = Math.sqrt(e.distanceToSqr(c.x, e.getY(), c.z));
-                if (Math.abs(d - r) < 0.7 && e.hurtServer(level, this.damageSources().sonicBoom(this), 7.0F)) {
+                if (Math.abs(d - r) < 0.7 && e.hurtServer(level, this.damageSources().sonicBoom(this), big ? 9.0F : 7.0F)) {
                     e.push(0.0, 0.6, 0.0);
                     this.corrupt(e);
                 }
             }
+        }
+    }
+
+    // ------------------------------------------------------------------ C3: the colossus
+
+    /** The maw behind the split mask, where his roar comes out. */
+    private Vec3 mouth() {
+        float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
+        double fwd = this.getBbWidth() * 0.5 + 1.2;
+        return new Vec3(this.getX() - Mth.sin(yaw) * fwd, this.getY() + this.getBbHeight() * 0.66, this.getZ() + Mth.cos(yaw) * fwd);
+    }
+
+    /** The tops of the organ pipes on his back. */
+    private Vec3 pipes() {
+        float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
+        double back = this.getBbWidth() * 0.2;
+        return new Vec3(this.getX() + Mth.sin(yaw) * back, this.getY() + this.getBbHeight() * 0.95, this.getZ() - Mth.cos(yaw) * back);
+    }
+
+    /** Stalks after his target, turning his whole bulk slowly; the stage shakes under each step. */
+    private void stride(ServerLevel level, LivingEntity target) {
+        int a = this.getAction();
+        double reach = this.getBbWidth() * 0.5 + 5.0;
+        if (a == NONE && this.distanceTo(target) > reach) {
+            if (this.tickCount % 10 == 0) {
+                this.getNavigation().moveTo(target, 0.6);
+            }
+        } else if (a != NONE) {
+            this.getNavigation().stop();
+        }
+        if (a != BEAM && (a != NONE || this.getNavigation().isDone())) {
+            double dx = target.getX() - this.getX();
+            double dz = target.getZ() - this.getZ();
+            float yaw = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+            this.setYRot(Mth.approachDegrees(this.getYRot(), yaw, a == SLAM && this.actionTicks > SLAM_HIT - 6 ? 0.0F : 4.0F));
+            this.yBodyRot = this.getYRot();
+        }
+        if (this.onGround() && this.getDeltaMovement().horizontalDistanceSqr() > 0.002 && this.tickCount % 16 == 0) {
+            this.playSound(SoundEvents.WARDEN_STEP, 3.0F, 0.5F);
+            level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, this.getX(), this.getY() + 0.1, this.getZ(), 6, this.getBbWidth() * 0.4, 0.05,
+                    this.getBbWidth() * 0.4, 0.01);
+        }
+    }
+
+    /** Both fists raised high, then brought down on the floor in front of him. */
+    private void tickSlam(ServerLevel level, LivingEntity target, int t) {
+        this.getNavigation().stop();
+        if (t == SLAM_HIT) {
+            float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
+            Vec3 fwd = new Vec3(-Mth.sin(yaw), 0.0, Mth.cos(yaw));
+            double ahead = this.getBbWidth() * 0.5 + 3.5;
+            Vec3 at = new Vec3(this.getX() + fwd.x * ahead, this.floor(), this.getZ() + fwd.z * ahead);
+            this.level().broadcastEntityEvent(this, EVENT_SLAM);
+            this.playSound(SoundEvents.GENERIC_EXPLODE.value(), 4.0F, 0.6F);
+            this.playSound(ModSounds.THUMPER_SLAM.get(), 4.0F, 0.7F);
+            level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y + 0.5, at.z, 3, 1.2, 0.2, 1.2, 0.0);
+            level.sendParticles(ParticleTypes.SCULK_SOUL, at.x, at.y + 0.3, at.z, 30, 2.0, 0.2, 2.0, 0.08);
+            level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, at.x, at.y + 0.2, at.z, 30, 2.5, 0.1, 2.5, 0.05);
+            for (int i = 0; i < 3; i++) {
+                level.sendParticles(ModParticles.RESONANCE_RING.get(), at.x, at.y + 0.1, at.z, 0, 2.0 + i * 2.5, 0.0, 0.0, 1.0);
+            }
+            for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(4.5, 3.0, 4.5))) {
+                if (e == this || MiniBoss.isBandmate(e)) {
+                    continue;
+                }
+                double d = e.position().multiply(1, 0, 1).distanceTo(at.multiply(1, 0, 1));
+                if (d < 4.5 && e.hurtServer(level, this.damageSources().mobAttack(this), d < 2.0 ? 18.0F : 12.0F)) {
+                    Vec3 away = e.position().subtract(at).multiply(1, 0, 1);
+                    away = away.lengthSqr() < 1.0E-4 ? fwd : away.normalize();
+                    e.push(away.x * 1.2, 0.8, away.z * 1.2);
+                    this.corrupt(e);
+                }
+            }
+        }
+        if (t >= SLAM_TICKS) {
+            this.endAction(25);
+        }
+    }
+
+    /**
+     * The roar: the mask swings open and souls pour into the maw, then a beam of sound bursts out
+     * of it and sweeps after the target - slowly enough to outrun sideways.
+     */
+    private void tickBeam(ServerLevel level, LivingEntity target, int t) {
+        this.getNavigation().stop();
+        Vec3 mouth = this.mouth();
+        Vec3 want = target.getEyePosition().subtract(mouth).normalize();
+        if (t <= 1 || this.beamDir.lengthSqr() < 1.0E-4) {
+            this.beamDir = want;
+            this.playSound(SoundEvents.WARDEN_SONIC_CHARGE, 5.0F, 0.6F);
+        }
+        if (t < BEAM_CHARGE) {
+            this.beamDir = this.beamDir.lerp(want, 0.2).normalize();
+            for (int i = 0; i < 3; i++) {
+                Vec3 from = mouth.add((this.random.nextDouble() - 0.5) * 8.0, (this.random.nextDouble() - 0.5) * 6.0, (this.random.nextDouble() - 0.5) * 8.0);
+                Vec3 v = mouth.subtract(from).scale(0.1);
+                level.sendParticles(ParticleTypes.SCULK_SOUL, from.x, from.y, from.z, 0, v.x, v.y, v.z, 1.0);
+            }
+        } else if (t < BEAM_TICKS - 8) {
+            if (t == BEAM_CHARGE) {
+                this.level().broadcastEntityEvent(this, EVENT_ROAR);
+                this.playSound(SoundEvents.WARDEN_SONIC_BOOM, 6.0F, 0.5F);
+                this.playSound(ModSounds.DICTATOR_ROAR.get(), 5.0F, 0.6F);
+            }
+            this.beamDir = this.beamDir.lerp(want, 0.045).normalize();
+            this.fireBeam(level, mouth, t);
+            if (t % 6 == 0) {
+                this.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 3.0F, 0.5F + this.random.nextFloat() * 0.2F);
+            }
+        }
+        float yaw = (float) (Mth.atan2(this.beamDir.z, this.beamDir.x) * Mth.RAD_TO_DEG) - 90.0F;
+        this.setYRot(Mth.approachDegrees(this.getYRot(), yaw, 6.0F));
+        this.yBodyRot = this.getYRot();
+        this.yHeadRot = this.getYRot();
+        if (t >= BEAM_TICKS) {
+            this.endAction(40);
+        }
+    }
+
+    private void fireBeam(ServerLevel level, Vec3 from, int t) {
+        Vec3 to = from.add(this.beamDir.scale(30.0));
+        HitResult hit = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+        Vec3 end = hit.getType() == HitResult.Type.MISS ? to : hit.getLocation();
+        Vec3 seg = end.subtract(from);
+        double len = seg.length();
+        for (double step = 1.5; step < len; step += 1.5) {
+            Vec3 p = from.add(seg.scale(step / len));
+            if (t % 3 == 0 && ((int) (step / 1.5)) % 2 == 0) {
+                level.sendParticles(ParticleTypes.SONIC_BOOM, p.x, p.y, p.z, 1, 0.0, 0.0, 0.0, 0.0);
+            }
+            level.sendParticles(ModParticles.SIFT_NOTE.get(), p.x, p.y, p.z, 1, 0.25, 0.25, 0.25, 1.0);
+        }
+        level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, end.x, end.y, end.z, 4, 0.5, 0.3, 0.5, 0.05);
+        if (t % 6 == 0) {
+            level.sendParticles(ModParticles.RESONANCE_RING.get(), end.x, end.y + 0.1, end.z, 0, 2.0, 0.0, 0.0, 1.0);
+        }
+        double len2 = Math.max(1.0E-6, seg.lengthSqr());
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(from, end).inflate(1.5))) {
+            if (e == this || MiniBoss.isBandmate(e)) {
+                continue;
+            }
+            Vec3 c = e.getBoundingBox().getCenter();
+            double k = Mth.clamp(c.subtract(from).dot(seg) / len2, 0.0, 1.0);
+            if (c.distanceTo(from.add(seg.scale(k))) > 1.1 + e.getBbWidth() * 0.5) {
+                continue;
+            }
+            if (e.hurtServer(level, this.damageSources().sonicBoom(this), 6.0F)) {
+                e.push(this.beamDir.x * 0.6, 0.15, this.beamDir.z * 0.6);
+                this.corrupt(e);
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------ C3: his band
+
+    private boolean canSummon(ServerLevel level) {
+        int phase = this.getPhase();
+        return this.bandCount(level, ModEntities.SCULK_PARASITE.get()) < phase + 2
+                || (phase > 1 && this.bandCount(level, ModEntities.STRUMLING.get()) < (phase == 2 ? 2 : 3));
+    }
+
+    private <T extends Entity> int bandCount(ServerLevel level, EntityType<T> type) {
+        return level.getEntities(type, this.getBoundingBox().inflate(48.0), e -> e.isAlive() && e.entityTags().contains(SUMMON_TAG)).size();
+    }
+
+    /** At the sweep of his baton his band crawls up out of the stage round him. */
+    private void callBand(ServerLevel level, LivingEntity target) {
+        int phase = this.getPhase();
+        int made = this.summonKind(level, ModEntities.SCULK_PARASITE.get(), phase == 3 ? 3 : 2, phase + 2, target);
+        if (phase > 1) {
+            made += this.summonKind(level, ModEntities.STRUMLING.get(), phase == 3 ? 2 : 1, phase == 2 ? 2 : 3, target);
+        }
+        if (made > 0) {
+            for (int n : new int[]{0, 3, 7, 10}) {
+                this.playSound(SoundEvents.NOTE_BLOCK_BELL.value(), 3.0F, (float) Math.pow(2.0, (n - 12) / 12.0));
+            }
+            this.playSound(SoundEvents.SCULK_BLOCK_BREAK, 3.0F, 0.5F);
+        }
+    }
+
+    private <T extends Mob> int summonKind(ServerLevel level, EntityType<T> type, int count, int max, LivingEntity target) {
+        int n = Math.min(count, max - this.bandCount(level, type));
+        int made = 0;
+        double r0 = this.getBbWidth() * 0.5 + 2.0;
+        for (int i = 0; i < n; i++) {
+            double a = this.random.nextDouble() * Math.PI * 2.0;
+            double r = r0 + this.random.nextDouble() * 3.0;
+            BlockPos at = BlockPos.containing(this.getX() + Math.cos(a) * r, this.getY() + 1.0, this.getZ() + Math.sin(a) * r);
+            var spawned = SpawnUtil.trySpawnMob(type, EntitySpawnReason.MOB_SUMMONED, level, at, 10, 3, 3, SpawnUtil.Strategy.ON_TOP_OF_COLLIDER, false);
+            if (spawned.isPresent()) {
+                T m = spawned.get();
+                m.addTag(SUMMON_TAG);
+                m.setTarget(target);
+                level.sendParticles(ParticleTypes.SCULK_SOUL, m.getX(), m.getY() + 0.3, m.getZ(), 14, 0.4, 0.3, 0.4, 0.04);
+                level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, m.getX(), m.getY() + 0.1, m.getZ(), 10, 0.5, 0.1, 0.5, 0.03);
+                level.sendParticles(ModParticles.RESONANCE_RING.get(), m.getX(), m.getY() + 0.1, m.getZ(), 0, 1.2, 0.0, 0.0, 1.0);
+                made++;
+            }
+        }
+        return made;
+    }
+
+    /** When the music ends, so does his band. */
+    private void dismissBand(ServerLevel level) {
+        for (Mob m : level.getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(64.0), e -> e.isAlive() && e.entityTags().contains(SUMMON_TAG))) {
+            level.sendParticles(ParticleTypes.SCULK_SOUL, m.getX(), m.getY() + 0.4, m.getZ(), 10, 0.3, 0.3, 0.3, 0.05);
+            m.kill(level);
         }
     }
 
@@ -789,6 +1200,14 @@ public class Dictator extends Monster {
             case EVENT_CRESCENDO -> this.crescendoAnimation.start(this.tickCount);
             case EVENT_SLASH -> this.slashAnimation.start(this.tickCount);
             case EVENT_ROAR -> this.roarAnimation.start(this.tickCount);
+            case EVENT_SUMMON -> this.summonAnimation.start(this.tickCount);
+            case EVENT_SLAM -> {
+                this.slamAnimation.start(this.tickCount);
+                for (int i = 0; i < 24; i++) {
+                    this.level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getRandomX(2.5), this.getY() + 0.2, this.getRandomZ(2.5),
+                            (this.random.nextDouble() - 0.5) * 0.2, 0.02, (this.random.nextDouble() - 0.5) * 0.2);
+                }
+            }
             default -> super.handleEntityEvent(id);
         }
     }
@@ -800,7 +1219,7 @@ public class Dictator extends Monster {
             if (this.assembleTicks() == 0) {
                 this.trackHealth(server);
             }
-            this.setNoGravity(this.getPhase() > 1 || this.transformTicks() > 0);
+            this.setNoGravity(this.getPhase() == 2 || (this.transformTicks() > 0 && !this.isKaiju()));
         }
         if (this.level().isClientSide()) {
             this.clientEffects();
@@ -813,11 +1232,11 @@ public class Dictator extends Monster {
             return;
         }
         if (this.random.nextInt(4) == 0) {
-            level.addParticle(ModParticles.GLOW_DUST.get(), this.getRandomX(0.6), this.getY() + this.random.nextDouble() * 3.0, this.getRandomZ(0.6), 0, -0.01, 0);
+            level.addParticle(ModParticles.GLOW_DUST.get(), this.getRandomX(0.6), this.getY() + this.random.nextDouble() * this.getBbHeight(), this.getRandomZ(0.6), 0, -0.01, 0);
         }
         if (this.deathTime > 2) {
             for (int i = 0; i < 3; i++) {
-                level.addParticle(ParticleTypes.SCULK_SOUL, this.getRandomX(0.8), this.getY() + this.random.nextDouble() * 3.2, this.getRandomZ(0.8), 0, 0.05, 0);
+                level.addParticle(ParticleTypes.SCULK_SOUL, this.getRandomX(0.8), this.getY() + this.random.nextDouble() * this.getBbHeight(), this.getRandomZ(0.8), 0, 0.05, 0);
             }
         }
         if (this.transformTicks() > 0) {
@@ -832,17 +1251,16 @@ public class Dictator extends Monster {
         if (phase >= 2 && this.deathTime == 0 && this.random.nextInt(2) == 0) {
             // notes swirl round him once he leaves the ground
             double a = this.tickCount * 0.15 + this.random.nextDouble() * 0.5;
-            level.addParticle(ModParticles.SIFT_NOTE.get(), this.getX() + Math.cos(a) * 1.4, this.getY() + 1.0 + this.random.nextDouble() * 2.0,
-                    this.getZ() + Math.sin(a) * 1.4, this.random.nextDouble(), 0, 0);
+            double r = this.getBbWidth() * 0.5 + 0.8;
+            level.addParticle(ModParticles.SIFT_NOTE.get(), this.getX() + Math.cos(a) * r, this.getY() + this.getBbHeight() * (0.2 + this.random.nextDouble() * 0.5),
+                    this.getZ() + Math.sin(a) * r, this.random.nextDouble(), 0, 0);
         }
-        if (phase == 3 && this.deathTime == 0) {
-            // soul trails from his wings of song
-            float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
-            float flap = Mth.sin(this.tickCount * 0.2F) * 0.5F;
-            for (int side = -1; side <= 1; side += 2) {
-                double x = this.getX() + Mth.cos(yaw) * 2.6 * side * Math.cos(flap) + Mth.sin(yaw) * 0.6;
-                double z = this.getZ() + Mth.sin(yaw) * 2.6 * side * Math.cos(flap) - Mth.cos(yaw) * 0.6;
-                level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, this.getY() + 3.0 + Math.sin(flap) * 2.4, z, 0, -0.02, 0);
+        if (phase == 3 && this.deathTime == 0 && (this.transformTicks() == 0 || this.transformTicks() < KAIJU_TICKS - KAIJU_BURST)) {
+            // the colossus: souls breathing out of his organ pipes
+            Vec3 pipes = this.pipes();
+            if (this.random.nextInt(3) == 0) {
+                level.addParticle(ParticleTypes.SCULK_SOUL, pipes.x + (this.random.nextDouble() - 0.5) * 3.0, pipes.y, pipes.z + (this.random.nextDouble() - 0.5) * 3.0,
+                        0, 0.06, 0);
             }
         }
     }
@@ -854,11 +1272,13 @@ public class Dictator extends Monster {
         super.die(source);
         if (this.level() instanceof ServerLevel level) {
             BossStages.cleared(level, this, BossStages.CONDUCTOR, BossStages.DEFEATED); // B2 Thumper & cutscenes: the defeat cutscene
+            this.dismissBand(level); // C3: his band falls with him
             this.spawnAtLocation(level, new ItemStack(ModItems.CONDUCTORS_STAFF.get()));
             if (this.podium != null && level.getBlockEntity(this.podium) instanceof ConductorsPodiumBlockEntity p) {
                 p.setDefeated();
             }
-            level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + 1.5, this.getZ(), 80, 1.2, 1.5, 1.2, 0.08);
+            level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + this.getBbHeight() * 0.4, this.getZ(), 80,
+                    this.getBbWidth() * 0.8, this.getBbHeight() * 0.3, this.getBbWidth() * 0.8, 0.08);
         }
     }
 

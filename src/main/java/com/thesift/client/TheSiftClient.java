@@ -92,6 +92,7 @@ public class TheSiftClient {
         event.registerLayerDefinition(ModModelLayers.BULB, ModelGeometry::bulb);
         event.registerLayerDefinition(ModModelLayers.HARMONER, ModelGeometry::harmoner);
         event.registerLayerDefinition(ModModelLayers.DICTATOR, ModelGeometry::dictator);
+        event.registerLayerDefinition(ModModelLayers.DICTATOR_KAIJU, ModelGeometry::dictator_kaiju); // C3 Conductor: the colossus
         event.registerLayerDefinition(ModModelLayers.THUMPER, ModelGeometry::thumper);
         event.registerLayerDefinition(ModModelLayers.STRUMMER, ModelGeometry::strummer);
         event.registerLayerDefinition(ModModelLayers.STRUMLING, ModelGeometry::strumling);

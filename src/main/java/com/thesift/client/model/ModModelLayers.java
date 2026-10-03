@@ -7,6 +7,7 @@ public final class ModModelLayers {
     public static final ModelLayerLocation BULB = layer("bulb");
     public static final ModelLayerLocation HARMONER = layer("harmoner");
     public static final ModelLayerLocation DICTATOR = layer("dictator");
+    public static final ModelLayerLocation DICTATOR_KAIJU = layer("dictator_kaiju"); // C3: the Conductor's colossus form
     public static final ModelLayerLocation THUMPER = layer("thumper");
     public static final ModelLayerLocation STRUMMER = layer("strummer");
     public static final ModelLayerLocation STRUMLING = layer("strumling");
