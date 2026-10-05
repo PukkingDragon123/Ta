@@ -10,6 +10,7 @@ import com.thesift.registry.ModCaravans;
 import com.thesift.registry.ModCaveCreatures;
 import com.thesift.registry.ModEchoer;
 import com.thesift.registry.ModEntities;
+import com.thesift.registry.ModSculkSea;
 import com.thesift.registry.ModSeaSky;
 import com.thesift.registry.ModSwifter;
 import java.io.Reader;
@@ -218,8 +219,14 @@ final class CreatureCheck {
     private void dress(Habitat h) {
         fill(LAB_X + 1, SKY_Y - 1, LAB_Z + 1, LAB_X + 7, SKY_Y - 1, LAB_Z + 7, h.ground().defaultBlockState());
         fill(LAB_X + 9, CAVE_Y - 1, LAB_Z + 2, LAB_X + 14, CAVE_Y - 1, LAB_Z + 7, h.caveFloor().defaultBlockState());
-        BlockState liquid = h.water() ? Blocks.WATER.defaultBlockState() : ModBlocks.CHROME.get().defaultBlockState();
+        BlockState liquid = h.water() ? Blocks.WATER.defaultBlockState() : sculkWater(h) ? ModBlocks.SCULK_WATER.get().defaultBlockState()
+                : ModBlocks.CHROME.get().defaultBlockState();
         fill(LAB_X + 2, TANK_Y - 2, LAB_Z + 10, LAB_X + 6, TANK_Y + 4, LAB_Z + 14, liquid);
+    }
+
+    /** CR3: the Sculk Swamp's pools are Sculk Water (its fish are tested in it). */
+    private static boolean sculkWater(Habitat h) {
+        return h.ground() == ModBlocks.SCULK_MUD.get();
     }
 
     /** The spawn lists of a biome: its own (from its json) plus every biome modifier that adds spawns to it. */
@@ -291,7 +298,7 @@ final class CreatureCheck {
                 boolean wet = cat == MobCategory.WATER_CREATURE || cat == MobCategory.WATER_AMBIENT || cat == MobCategory.UNDERGROUND_WATER_CREATURE;
                 boolean dark = !wet && (h.cave() || caveDweller(type));
                 BlockPos at = wet ? this.tankSpot() : dark ? this.caveSpot() : this.skySpot();
-                String where = wet ? (h.water() ? "water" : "chrome") : (dark ? "dark " : "open ")
+                String where = wet ? (h.water() ? "water" : sculkWater(h) ? "sculk water" : "chrome") : (dark ? "dark " : "open ")
                         + BuiltInRegistries.BLOCK.getKey(dark ? h.caveFloor() : h.ground()).getPath();
                 String why = this.whyNot(type, at);
                 String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath();
@@ -339,12 +346,12 @@ final class CreatureCheck {
                 ModEchoer.SOUL_GOLEM.get(), ModEntities.HARMONER.get(), ModEntities.SKY_WHALE.get(), ModEchoer.NIB.get(),
                 ModEntities.ENCHOER.get(), ModCaveCreatures.JAILER.get(), // CR1: the Echoer flies now, so it pens in the middle row
                 ModCaveCreatures.SCULKLING.get(), ModEntities.FANFARE_EEL.get(), ModEntities.KAZOO_FISH.get(), ModEntities.TUBAFISH.get(),
-                ModSeaSky.GOBBLER.get());
+                ModSeaSky.GOBBLER.get(), ModSculkSea.SCULK_FISH.get()); // CR3: the Coral Organ is rooted, so it has no pen
     }
 
     private static boolean swims(EntityType<?> type) {
         return type == ModEntities.FANFARE_EEL.get() || type == ModEntities.KAZOO_FISH.get() || type == ModEntities.TUBAFISH.get()
-                || type == ModSeaSky.GOBBLER.get();
+                || type == ModSeaSky.GOBBLER.get() || type == ModSculkSea.SCULK_FISH.get();
     }
 
     /** Pens in the sky over chunks x -9..-4, z 4..6 (inside the generated patch), each chunk force-loaded so it keeps ticking. */

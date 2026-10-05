@@ -39,6 +39,17 @@ public class KazooFish extends SiftFish {
         return 0.09;
     }
 
+    /** CR3: reef teal (the classic), sunset gold, lagoon blue, mint, and the rare glowing midnight. */
+    @Override
+    public int variantCount() {
+        return 5;
+    }
+
+    @Override
+    protected int[] variantWeights() {
+        return new int[]{30, 20, 20, 20, 6};
+    }
+
     @Override
     protected double speedFactor() {
         return this.panic > 0 ? 2.6 : 1.0;

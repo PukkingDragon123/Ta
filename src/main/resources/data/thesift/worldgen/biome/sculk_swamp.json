@@ -45,7 +45,17 @@
           "ambient": [],
           "water_creature": [],
           "underground_water_creature": [],
-          "water_ambient": [],
+          "water_ambient": [
+            {
+              "type": "thesift:sculk_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 2,
+                "max_inclusive": 4
+              },
+              "weight": 8
+            }
+          ],
           "axolotls": [],
           "misc": []
         }

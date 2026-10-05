@@ -32,7 +32,7 @@ final class CodexFx {
 
     static {
         for (String k : new String[]{"jailer", "sculkling", "sculk_parasite", "strumling", "warden_core", "sculk_corruption", "sculk_swamp", "sculk_ocean",
-                "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb"}) {
+                "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb", "sculk_fish", "coral_organ"}) { // CR3: sculk fish, coral organ
             THEMES.put(k, Theme.SCULK);
         }
         for (String k : new String[]{"instruments", "wind_chimes", "star_lute", "serbim_flute", "thunder_drums", "glass_bells", "prism_chimes"}) {

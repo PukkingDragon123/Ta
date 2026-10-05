@@ -850,6 +850,8 @@ Painter.finish = _painter_finish
 def render_textures(model: Model, seed=1):
     """Returns {variant: (texture, emissive or None)} plus {variant_expression: ...} for every
     expression of the model."""
+    if hasattr(model, 'render_textures'):  # CR3: sprite-built fish paint themselves (tools/fishkit.py)
+        return model.render_textures(seed)
     out = {}
     for vname, overrides in model.variants.items():
         pal = dict(model.palette)

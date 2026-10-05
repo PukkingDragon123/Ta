@@ -57,6 +57,13 @@ public final class CodexEntries {
         return new CodexEntry(cat, key, null, item, null);
     }
 
+    /** CR3: a fish on its page turns through its colour variants, one every three seconds. */
+    private static void fishColours(LivingEntity e, int t) {
+        if (e instanceof com.thesift.entity.SiftFish f && t % 60 == 0) {
+            f.setVariant((t / 60) % f.variantCount());
+        }
+    }
+
     private static List<CodexEntry> build() {
         List<CodexEntry> l = new ArrayList<>();
         // ---- creatures
@@ -111,9 +118,11 @@ public final class CodexEntries {
         }));
         l.add(mob(CREATURES, "fanfare_eel", ModEntities.FANFARE_EEL, (e, t) -> {
             if (e instanceof com.thesift.entity.FanfareEel f && t % 50 == 10) f.biteAnimation.start(f.tickCount);
+            fishColours(e, t); // CR3: the fish show off their colour variants on the page
         }));
-        l.add(mob(CREATURES, "kazoo_fish", ModEntities.KAZOO_FISH, (e, t) -> { }));
+        l.add(mob(CREATURES, "kazoo_fish", ModEntities.KAZOO_FISH, CodexEntries::fishColours));
         l.add(mob(CREATURES, "tubafish", ModEntities.TUBAFISH, (e, t) -> {
+            fishColours(e, t);
             if (e instanceof com.thesift.entity.Tubafish f) {
                 // puff up and down on the page
                 f.puffO = f.puff;
@@ -130,6 +139,24 @@ public final class CodexEntries {
             if (e instanceof com.thesift.entity.Gobbler g && t % 70 == 10) g.lungeAnimation.start(g.tickCount);
         }));
         l.add(thing(PLACES, "sea_and_sky", ModItems.ROSE_GLOWKELP));
+        // CR3 Fish & Coral Organs: the Sculk Ocean's biting schools, and its living organs playing, aiming and firing on the page
+        l.add(mob(CREATURES, "sculk_fish", com.thesift.registry.ModSculkSea.SCULK_FISH, (e, t) -> {
+            fishColours(e, t);
+            if (e instanceof com.thesift.entity.SculkFish f && t % 40 == 20) f.biteAnimation.start(f.tickCount);
+        }));
+        l.add(mob(CREATURES, "coral_organ", com.thesift.registry.ModSculkSea.CORAL_ORGAN, (e, t) -> {
+            if (e instanceof com.thesift.entity.CoralOrgan o) {
+                switch (t % 140) {
+                    case 10 -> o.chordAnimation.start(o.tickCount);
+                    case 70 -> o.chargeAnimation.start(o.tickCount);
+                    case 98 -> {
+                        o.chargeAnimation.stop();
+                        o.fireAnimation.start(o.tickCount);
+                    }
+                    default -> { }
+                }
+            }
+        }));
         // A2 Swifter & White Forest: the three-tailed cloud fox (acting out its poses), and its pale forest
         l.add(mob(CREATURES, "swifter", com.thesift.registry.ModSwifter.SWIFTER, (e, t) -> {
             if (e instanceof com.thesift.entity.Swifter s) s.codexPose(t);

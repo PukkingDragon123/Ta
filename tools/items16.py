@@ -1123,35 +1123,6 @@ def stomper_egg():
     }, {'C': CHROME[3], 'c': CHROME[1]})
 
 
-def kazoo_fish(cooked=False):
-    """Laid like vanilla cod: a teal fish with orange fins, stripes and a brass kazoo snout."""
-    rows = [
-        '................',
-        '...........oO...',
-        '...........ooO..',
-        '..........otooO.',
-        '.....OO..tTTtoo.',
-        '....OTTtTtTttbb.',
-        '....tTsTsTsb....',
-        '....ttTsTstb....',
-        '...tTTsTTstb....',
-        '...ttTTsTtb.....',
-        '..tTTtTsttb.....',
-        '..tewtsttb......',
-        '..tTTTttb.......',
-        '.kbttttbb.......',
-        'kKkbbb..........',
-        '.k..............',
-    ]
-    if cooked:
-        pal = {'o': '#a86a2a', 'O': '#d89a4a', 't': '#8a6a48', 'T': '#b08e62', 's': '#6a4a2e', 'b': '#4a3020',
-               'e': '#1a1210', 'w': '#e8dcc8', 'k': '#8a6a3a', 'K': '#c8a060'}
-    else:
-        pal = {'o': '#f07a2a', 'O': '#ffb05a', 't': '#2a9a98', 'T': '#5ad0c8', 's': '#f08a3a', 'b': '#155a62',
-               'e': '#0e1418', 'w': '#ffffff', 'k': '#c8962e', 'K': '#ffe08a'}
-    return grid(rows, pal, ol=True)
-
-
 def tuba_bubble():
     """A shimmering bubble blown from a tuba: a brass-tinted film, a window highlight and a
     rainbow sheen sliding round its lower rim."""
@@ -1528,8 +1499,6 @@ def all_items():
     for f in (conductors_staff, conga_drum, crane_flute, magic_strings, guitar, stomper_meat, stomper_steak, stomper_egg,
               tuba_bubble, bubble_gun, skysong_gem):
         out[f.__name__] = f()
-    out['kazoo_fish'] = kazoo_fish()
-    out['cooked_kazoo_fish'] = kazoo_fish(cooked=True)
     out.update(spawn_eggs())
     out.update(__import__('songs').art())  # songs & instruments (agent D)
     import plants_h_art  # H: the three Pitcher soups (W1: Pitcher Nectar removed)
@@ -1541,6 +1510,7 @@ def all_items():
     out.update(__import__('echoer_world').item_sprites())  # A2 Echoer: Soul Golem Core, Nib Dust, eggs
     out.update(__import__('swifter_art').item_sprites())  # A2 Swifter & White Forest: Swifter Fluff, Swifter egg
     out.update(__import__('cave_creatures').items())  # A4 cave creatures: Jailer and Sculkling eggs
+    out.update(__import__('sculk_sea').item_sprites())  # CR3 Fish & Coral Organs: fish meats, sushi, fish buckets, eggs (replaces older art)
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

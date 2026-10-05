@@ -159,6 +159,16 @@ FILES = FILES | frozenset({
     'music/game/swamp/labyrinthine',
 })
 
+# CR3 Fish & Coral Organs: the Sculk Fish, the Sculk Coral Organ and its hooked line
+FILES = FILES | frozenset({
+    'ambient/underwater/additions/dark1', 'ambient/underwater/additions/dark3', 'block/chain/step2', 'block/chain/step4', 'block/conduit/ambient',
+    'block/sculk/break1', 'block/sculk_catalyst/break1', 'block/sculk_catalyst/break3', 'block/sculk_sensor/sculk_clicking2',
+    'block/sculk_sensor/sculk_clicking5', 'block/sculk_shrieker/break2', 'block/sculk_shrieker/shriek2', 'block/sculk_shrieker/shriek4',
+    'dig/coral1', 'dig/coral3', 'entity/bobber/retrieve1', 'entity/bobber/retrieve2', 'entity/fish/flop1', 'entity/fish/flop3',
+    'entity/fish/hurt1', 'entity/fish/hurt2', 'entity/fish/hurt3', 'entity/leashknot/break', 'item/trident/pierce1', 'item/trident/pierce2',
+    'item/trident/throw1', 'item/trident/throw2', 'mob/evocation_illager/fangs', 'mob/warden/tendril_clicks_1', 'random/break',
+})
+
 
 def vanilla_names(sounds_json):
     """(events, files) defined by a vanilla sounds.json."""

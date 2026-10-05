@@ -1189,11 +1189,11 @@ def gen_wild_creatures():
         f'codex.{NS}.sky_whale.title': 'Sky Whale', f'codex.{NS}.sky_whale.tagline': 'Rare - the singer in the clouds',
         f'codex.{NS}.sky_whale.body': "A shaggy whale-bull with cloud-soft fur, a meadow of blooms on its back and glowbell vines trailing below, rowing through the sky on furry flippers. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you and the whale glides down, sings to you and spits out a Skysong Gem - one a day per whale.",
         f'codex.{NS}.fanfare_eel.title': 'Fanfare Eel', f'codex.{NS}.fanfare_eel.tagline': 'Hostile - brass with teeth',
-        f'codex.{NS}.fanfare_eel.body': 'A long sculk eel with pale bone ribs, a glowing line down its flank and a golden trumpet bell for a mouth, ringed with glowing fins. It hunts anything swimming in the Chrome lakes - fish and visitors alike - and every bite comes with a blast of sound. Fight it from the shore if you can.',
+        f'codex.{NS}.fanfare_eel.body': 'A long sculk eel with pale bone ribs, a glowing line and frills down its back and a golden trumpet bell for a mouth, ringed with glowing fins. It hunts anything swimming in the Chrome lakes - fish and visitors alike - and every bite comes with a blast of sound. Most glow cyan; some are violet with silver bells, a few smoulder like embers. Fight it from the shore if you can.',
         f'codex.{NS}.kazoo_fish.title': 'Kazoo Fish', f'codex.{NS}.kazoo_fish.tagline': 'Small, silly, delicious',
-        f'codex.{NS}.kazoo_fish.body': 'Teal schooling fish with coral fins, a pink kazoo for a nose, a tuft of moss on top and eyes that never quite agree. Schools follow a leader and buzz little tunes; scare one and they all scatter. Cook them for a decent meal.',
+        f'codex.{NS}.kazoo_fish.body': 'Chubby schooling fish with a kazoo for a nose, a tuft of moss with a glowing sprout on top, fins like living coral and googly eyes that never quite agree. Each school wears its own colours: reef teal, sunset gold, lagoon blue, mint - and, rarely, a midnight blue whose freckles glow. Schools follow a leader and buzz little tunes; scare one and they all scatter. Scoop one up in a bucket of water or Chrome to keep it.',
         f'codex.{NS}.tubafish.title': 'Tubafish', f'codex.{NS}.tubafish.tagline': 'Do not poke the tuba',
-        f'codex.{NS}.tubafish.body': 'A huge, round periwinkle pufferfish freckled with glowing spots, with a tuba bell on its back crowned by a little waving anemone. Get too close and it blasts a low note, swells up with its coral spikes out and blows a storm of bubbles - and touching it then stings. Drops Tuba Bubbles, which make a Bubble Gun.',
+        f'codex.{NS}.tubafish.body': 'A huge, round pufferfish freckled with glowing spots, pouting, with a little tuba growing out of its back, its bell crowned by a waving anemone. Most are periwinkle; some lilac with a silver tuba, some sea-foam, a rare few sunrise peach. Get too close and it blasts a low note, swells up with its coral spikes out and blows a storm of bubbles - and touching it then stings. Drops Tuba Bubbles, which make a Bubble Gun.',
         f'codex.{NS}.bubble_gun.title': 'Bubble Gun', f'codex.{NS}.bubble_gun.tagline': 'Up you go!',
         f'codex.{NS}.bubble_gun.body': 'Built from Tuba Bubbles, copper and gold. Each squeeze blows a big wobbly bubble that pops on whatever it hits, stinging a little and lifting it gently into the air. No ammo needed, just a breath between shots.',
         f'codex.{NS}.skysong_gem.title': 'Skysong Gem', f'codex.{NS}.skysong_gem.tagline': 'A gift from the clouds',
@@ -1258,6 +1258,9 @@ def check_sounds():
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         # W1 World & terrain: the Sculk Swamp's music, ambience and Sculk Water are registered in ModSculkSwamp.java
         with open(os.path.join(os.path.dirname(java), 'ModSculkSwamp.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # CR3 Fish & Coral Organs: the Sculk Fish, Coral Organ and hook sounds are registered in ModSculkSea.java
+        with open(os.path.join(os.path.dirname(java), 'ModSculkSea.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
@@ -1427,6 +1430,7 @@ def generate():
     __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
     __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
     __import__('sculk_world').assets(sys.modules[__name__])  # W1 World & terrain: swamp sounds, recipes, loot, tags, text (before gen_sounds)
+    __import__('sculk_sea').assets(sys.modules[__name__])  # CR3 Fish & Coral Organs: sounds, loot, tags, text (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)

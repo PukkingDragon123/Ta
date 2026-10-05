@@ -6,8 +6,10 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * Fanfare Eel: a travelling wave runs down its five segments (faster and wider when it darts in),
- * the trumpet bell flares on every bite, and out of the liquid it thrashes on its side.
+ * Fanfare Eel (CR3: hand-drawn sprites extruded into a rounded body, built at twice vanilla scale - see
+ * tools/fish_art.py): a travelling wave runs down its five segments (faster and wider when it darts in), the
+ * glowing frills ripple along its back, the trumpet bell flares on every bite, and out of the liquid it
+ * thrashes on its side.
  */
 public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart head;
@@ -18,6 +20,7 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
     private final ModelPart rightFin;
     private final ModelPart[] segments = new ModelPart[5];
     private final ModelPart[] bellFins = new ModelPart[4];
+    private final ModelPart[] frills = new ModelPart[5];
     private final ModelPart tailFin;
     private final ModelPart leftGill;
     private final ModelPart rightGill;
@@ -33,12 +36,13 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         this.leftFin = this.head.getChild("left_fin");
         this.rightFin = this.head.getChild("right_fin");
         for (int i = 0; i < 4; i++) {
-            this.bellFins[i] = this.bell.getChild("bell_fin_" + i);
+            this.bellFins[i] = this.bell.getChild("bell_fin_" + i).getChild("bell_fin_" + i + "_blade");
         }
         ModelPart p = this.head;
         for (int i = 0; i < 5; i++) {
             p = p.getChild("segment_" + i);
             this.segments[i] = p;
+            this.frills[i] = p.getChild("frill_" + i);
         }
         this.tailFin = this.segments[4].getChild("tail_fin");
         this.leftGill = this.head.getChild("left_gill");
@@ -74,16 +78,21 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         this.leftFin.zRot += Mth.sin(age * 0.6F) * 0.3F;
         this.rightFin.zRot -= Mth.sin(age * 0.6F) * 0.3F;
         this.crest.yRot = Mth.sin(age * speed) * 0.1F;
+        // the frills ripple down the back, a beat behind the body's wave
+        for (int i = 0; i < 5; i++) {
+            this.frills[i].zRot = Mth.sin(age * speed - i * 0.85F - 0.6F) * (0.1F + effort * 0.15F);
+            this.frills[i].xRot = effort * 0.3F;
+        }
         // the glowing bell fins ripple like a flower opening and closing
         for (int i = 0; i < 4; i++) {
-            this.bellFins[i].xRot = -0.25F + Mth.sin(age * 0.18F + i * 1.6F) * 0.12F - effort * 0.15F;
+            this.bellFins[i].xRot += Mth.sin(age * 0.18F + i * 1.6F) * 0.12F - effort * 0.15F;
         }
         float bite = Anim.seconds(s.bite, s.ageInTicks);
         if (bite >= 0.0F && bite < 0.6F) {
             float lunge = Anim.envelope(bite, 0.0F, 0.06F, 0.05F, 0.3F);
             float flare = Anim.backOut(Math.min(1.0F, bite / 0.12F)) * (1.0F - Anim.smooth((bite - 0.15F) / 0.4F));
-            this.head.z -= 2.5F * lunge;
-            this.pipe.z -= 1.5F * lunge;
+            this.head.z -= 5.0F * lunge;
+            this.pipe.z -= 3.0F * lunge;
             this.bell.xScale += 0.6F * flare;
             this.bell.yScale += 0.6F * flare;
             this.bell.zScale = 1.0F + 0.8F * flare;
@@ -97,7 +106,7 @@ public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
         if (!s.inLiquid) {
             // stranded: thrashing on its side
             this.head.zRot = (float) Math.PI * 0.5F;
-            this.head.y += 2.0F;
+            this.head.y += 4.0F;
             for (int i = 0; i < 5; i++) {
                 this.segments[i].yRot = Mth.sin(s.ageInTicks * 0.9F - i) * 0.5F;
             }

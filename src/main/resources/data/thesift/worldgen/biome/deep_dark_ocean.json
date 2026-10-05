@@ -79,6 +79,15 @@
                 "max_inclusive": 6
               },
               "weight": 8
+            },
+            {
+              "type": "thesift:sculk_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 3,
+                "max_inclusive": 6
+              },
+              "weight": 12
             }
           ],
           "axolotls": [],
@@ -172,7 +181,8 @@
       "thesift:patch_abyss_anemone",
       "thesift:sculk_reef",
       "thesift:sculk_coral_scatter",
-      "thesift:ocean_glow_lichen"
+      "thesift:ocean_glow_lichen",
+      "thesift:coral_organ"
     ],
     []
   ],

@@ -6,6 +6,8 @@
     "thesift:gobbler",
     "thesift:jailer",
     "thesift:sculkling",
-    "minecraft:warden"
+    "minecraft:warden",
+    "thesift:sculk_fish",
+    "thesift:coral_organ"
   ]
 }

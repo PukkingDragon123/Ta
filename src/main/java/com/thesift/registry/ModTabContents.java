@@ -23,7 +23,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> tools() {
-        return List.of(ModItems.SIFTITE_PICKAXE, ModItems.SIFTITE_AXE, ModItems.SIFTITE_SHOVEL, ModItems.SIFTITE_HOE, ModItems.BUBBLE_GUN, ModItems.PRISM_PICKAXE, ModItems.PRISM_AXE, ModItems.PRISM_SHOVEL, ModItems.PRISM_HOE);
+        return List.of(ModItems.SIFTITE_PICKAXE, ModItems.SIFTITE_AXE, ModItems.SIFTITE_SHOVEL, ModItems.SIFTITE_HOE, ModItems.BUBBLE_GUN, ModItems.PRISM_PICKAXE, ModItems.PRISM_AXE, ModItems.PRISM_SHOVEL, ModItems.PRISM_HOE, ModItems.KAZOO_FISH_BUCKET, ModItems.TUBAFISH_BUCKET, ModItems.FANFARE_EEL_BUCKET);
     }
 
     public static List<Supplier<? extends Item>> combat() {
@@ -31,7 +31,7 @@ public final class ModTabContents {
     }
 
     public static List<Supplier<? extends Item>> eggs() {
-        return List.of(ModItems.BULB_SPAWN_EGG, ModItems.SLUMBLER_SPAWN_EGG, ModItems.SIFTER_SPAWN_EGG, ModItems.ENCHOER_SPAWN_EGG, ModItems.HARMONER_SPAWN_EGG, ModItems.DICTATOR_SPAWN_EGG, ModItems.THUMPER_SPAWN_EGG, ModItems.STRUMMER_SPAWN_EGG, ModItems.STRUMLING_SPAWN_EGG, ModItems.STOMPER_SPAWN_EGG, ModItems.FANFARE_EEL_SPAWN_EGG, ModItems.KAZOO_FISH_SPAWN_EGG, ModItems.TUBAFISH_SPAWN_EGG, ModItems.SKY_WHALE_SPAWN_EGG, ModItems.SCULK_PARASITE_SPAWN_EGG, ModItems.CARAVAN_SPAWN_EGG, ModItems.GOBBLER_SPAWN_EGG, ModItems.SOUL_GOLEM_SPAWN_EGG, ModItems.NIB_SPAWN_EGG, ModItems.SWIFTER_SPAWN_EGG, ModItems.JAILER_SPAWN_EGG, ModItems.SCULKLING_SPAWN_EGG);
+        return List.of(ModItems.BULB_SPAWN_EGG, ModItems.SLUMBLER_SPAWN_EGG, ModItems.SIFTER_SPAWN_EGG, ModItems.ENCHOER_SPAWN_EGG, ModItems.HARMONER_SPAWN_EGG, ModItems.DICTATOR_SPAWN_EGG, ModItems.THUMPER_SPAWN_EGG, ModItems.STRUMMER_SPAWN_EGG, ModItems.STRUMLING_SPAWN_EGG, ModItems.STOMPER_SPAWN_EGG, ModItems.FANFARE_EEL_SPAWN_EGG, ModItems.KAZOO_FISH_SPAWN_EGG, ModItems.TUBAFISH_SPAWN_EGG, ModItems.SKY_WHALE_SPAWN_EGG, ModItems.SCULK_PARASITE_SPAWN_EGG, ModItems.CARAVAN_SPAWN_EGG, ModItems.GOBBLER_SPAWN_EGG, ModItems.SOUL_GOLEM_SPAWN_EGG, ModItems.NIB_SPAWN_EGG, ModItems.SWIFTER_SPAWN_EGG, ModItems.JAILER_SPAWN_EGG, ModItems.SCULKLING_SPAWN_EGG, ModItems.SCULK_FISH_SPAWN_EGG, ModItems.CORAL_ORGAN_SPAWN_EGG);
     }
 
     private ModTabContents() {}

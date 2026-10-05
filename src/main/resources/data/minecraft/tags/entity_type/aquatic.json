@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "thesift:gobbler",
+    "thesift:sculk_fish",
+    "thesift:coral_organ",
     "thesift:fanfare_eel",
     "thesift:kazoo_fish",
     "thesift:tubafish"

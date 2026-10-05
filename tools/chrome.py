@@ -450,40 +450,6 @@ SPILL = {(5, 6): 3, (6, 6): 2, (7, 6): 3, (8, 6): 3, (9, 6): 2, (10, 6): 0, (7, 
          (4, 7): 1, (4, 8): 0}
 SHADE_V = (0.62, 0.72, 0.82, 0.92, 1.0)
 
-FISH_ART = {
-    'kazoo_fish': ([
-        '......oOo.......',
-        '...tTTTTTTt..oO.',
-        'kKtwTsTTsTTTtoOo',
-        'kKteTsTTsTTTtto.',
-        '..tbTTTTTTTbtoO.',
-        '....bo...ob..o..',
-        '................',
-    ], {'o': '#f07a2a', 'O': '#ffb05a', 't': '#2a9a98', 'T': '#5ad0c8', 's': '#f08a3a', 'b': '#155a62', 'e': '#0e1418', 'w': '#ffffff',
-        'k': '#c8962e', 'K': '#ffe08a'}),
-    'tubafish': ([
-        '......gGGg......',
-        '.......gg.......',
-        '....bBBBBBBb....',
-        '..lLBwBsBBsBLl..',
-        '.lLbBeBBBsBBbLl.',
-        '..lbBsBBsBBBbl..',
-        '....bpppppppb...',
-    ], {'b': '#5d86cc', 'B': '#78a5e3', 's': '#3ff5e6', 'p': '#ffe6ef', 'e': '#1a1420', 'w': '#ffffff', 'L': '#c96a8c', 'l': '#f59ab8',
-        'g': '#b8923a', 'G': '#f2d27a'}),
-    'fanfare_eel': ([
-        '.GgG............',
-        'GhhhG.bbbbb.....',
-        'ghDhgbHrHrHbb...',
-        '.gGgbHHfHHfHHb..',
-        '....bcc...bHHb..',
-        '...........bHb..',
-        '............b...',
-    ], {'b': '#0c1a24', 'H': '#24485a', 'r': '#e3ddcc', 'c': '#16303e', 'f': '#3ff5e6', 'G': '#f2d27a', 'g': '#b8923a', 'h': '#fff0b0',
-        'D': '#0a1a22'}),
-}
-
-
 def _hex(c):
     return tuple(int(c[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
 
@@ -494,9 +460,8 @@ def _chrome_item_px(x, y, shade, f, n_frames):
 
 
 def _fish_layer(fish):
-    import items16  # the shared 16x16 sprite painter (outlines in the vanilla item style)
-    rows, pal = FISH_ART[fish]
-    return items16.grid(rows, pal, ol=True, size=(16, len(rows)))
+    # CR3 Fish & Coral Organs: the same fish that peek out of the plain water buckets (tools/fish_items.py)
+    return __import__('fish_items').bucket_fish(fish)
 
 
 def bucket_frames(fish=None, n_frames=8):

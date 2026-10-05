@@ -62,6 +62,17 @@ public class Tubafish extends SiftFish {
         return 0.05;
     }
 
+    /** CR3: periwinkle (the classic), lilac, sea-foam and the rare sunrise. */
+    @Override
+    public int variantCount() {
+        return 4;
+    }
+
+    @Override
+    protected int[] variantWeights() {
+        return new int[]{40, 25, 25, 8};
+    }
+
     @Override
     protected double speedFactor() {
         return this.isPuffed() ? 0.4 : 1.0;

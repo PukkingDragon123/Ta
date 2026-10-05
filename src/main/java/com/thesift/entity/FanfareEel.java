@@ -45,6 +45,17 @@ public class FanfareEel extends SiftFish implements Enemy {
         return 0.07;
     }
 
+    /** CR3: abyss teal (the classic), violet and the rare ember. */
+    @Override
+    public int variantCount() {
+        return 3;
+    }
+
+    @Override
+    protected int[] variantWeights() {
+        return new int[]{50, 35, 12};
+    }
+
     @Override
     protected double speedFactor() {
         if (this.prey == null) {

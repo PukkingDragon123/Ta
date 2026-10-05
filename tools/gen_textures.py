@@ -1953,6 +1953,7 @@ def main():
     __import__('conductor').textures(out)  # C3 Conductor: texture of the 3D Conductor's Staff
     __import__('sculk_world').textures(out)  # W1 World & terrain: Blightwood, Sculk Mud/Water/Coral (+ their vanilla references)
     __import__('sifter').textures(out)  # CR1: the bell-ring and echolocation-ring particles
+    __import__('sculk_sea').textures(out)  # CR3 Fish & Coral Organs: the Coral Organ's barb
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):

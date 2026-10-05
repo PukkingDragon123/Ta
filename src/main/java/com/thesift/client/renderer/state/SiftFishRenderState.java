@@ -10,6 +10,11 @@ public class SiftFishRenderState extends SiftRenderState {
     /** Tubafish swell, 0 deflated .. 1 puffed. */
     public float puff;
     public float seed;
+    /** CR3: which colour variant the fish is painted in. */
+    public int variant;
+    /** CR3: the Sculk Fish's snapping jaws, and whether its school is on the hunt. */
+    public final AnimationState snap = new AnimationState();
+    public boolean aggressive;
     public final AnimationState bite = new AnimationState();
     // the Gobbler: lunge (wind-up then strike), gulp, spit, the Tide Song's lull
     public final AnimationState lunge = new AnimationState();

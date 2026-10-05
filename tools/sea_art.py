@@ -1,5 +1,5 @@
-"""Sea & sky art (agents F + W): item sprites for the fish meats, the Gobbler's bladder, the sushi
-and the platter (hand-placed 16x16 rows in the items16.py style, light from the top left), and the
+"""Sea & sky art (agents F + W): item sprites for the Gobbler's bladder and egg (hand-placed 16x16 rows in the
+items16.py style, light from the top left; CR3 redrew the fish meats and sushi in tools/fish_items.py), and the
 block textures of the glowkelps, the abyss anemone, coral sand, clouds, chime bells and organ reeds.
 
 items16.all_items() takes items(); gen_textures.main() calls block_textures(out).
@@ -22,96 +22,8 @@ def _fix(rows):
     return (rows + [_E] * 16)[:16]
 
 
-# ============================================================================ fish meats
-
-TUBAFISH = [
-    '................',
-    '.......gG.......',
-    '......gGGg......',
-    '....bbbbbbbb....',
-    '...bBBBsBBBBb...',
-    '..bBBsBBBBsBBb..',
-    '..bBBBBBBBBBBbtt',
-    '..bewBBBsBBBBbtT',
-    '.LlBBBBBBBBBBbtt',
-    '.LlbBBsBBBBsBb..',
-    '..bpppppppppb...',
-    '...bppppppppb...',
-    '....bbppppbb....',
-    '......fbbf......',
-    '.....f....f.....',
-    _E,
-]
-
-
-def tubafish(cooked=False):
-    if cooked:
-        pal = {'b': '#7a4a2a', 'B': '#b07a48', 's': '#d8a868', 'p': '#e0b88a', 'e': '#2a1810', 'w': '#f0e0c8', 'L': '#a05a3a', 'l': '#c88060',
-               'g': '#9a7438', 'G': '#d0a858', 't': '#8a5a34', 'T': '#b08050', 'f': '#8a5a34'}
-    else:
-        pal = {'b': '#5d86cc', 'B': '#78a5e3', 's': '#3ff5e6', 'p': '#ffe6ef', 'e': '#1a1420', 'w': '#ffffff', 'L': '#c96a8c', 'l': '#f59ab8',
-               'g': '#b8923a', 'G': '#f2d27a', 't': '#e07a9a', 'T': '#ffb0c4', 'f': '#e07a9a'}
-    return I.grid(_fix(TUBAFISH), pal, ol=True)
-
-
-FANFARE_EEL = [
-    '................',
-    '..........GgG...',
-    '.........GhhhG..',
-    '.........ghDhg..',
-    '..........gGg...',
-    '.........bb.....',
-    '........bHb.....',
-    '.......bHrb.....',
-    '......bHrHb.....',
-    '.....bHrHbc.....',
-    '....bHrHbcc.....',
-    '...bHrHbc.......',
-    '..bHrHbc........',
-    '.bHHbcc.........',
-    '.cfcc...........',
-    '..c.............',
-]
-
-
-def fanfare_eel(cooked=False):
-    if cooked:
-        pal = {'b': '#5a3a24', 'H': '#8a5e3a', 'r': '#d8c09a', 'c': '#7a5034', 'f': '#a07040', 'G': '#a07a3a', 'g': '#7a5a2a', 'h': '#d0b070',
-               'D': '#2a1a10'}
-    else:
-        pal = {'b': '#0c1a24', 'H': '#24485a', 'r': '#e3ddcc', 'c': '#16303e', 'f': '#3ff5e6', 'G': '#f2d27a', 'g': '#b8923a', 'h': '#fff0b0',
-               'D': '#0a1a22'}
-    return I.grid(_fix(FANFARE_EEL), pal, ol=True)
-
-
-FILLET = [
-    '................',
-    '................',
-    '...........aab..',
-    '.........aabbbc.',
-    '.......aabvbbcc.',
-    '.....aabbvbbbcc.',
-    '....abbbvbbbcc..',
-    '...abbbvbbbcc...',
-    '..abbbvbbbcc....',
-    '..abbvbbbcc.....',
-    '.abbvbbbcc......',
-    '.abbbbbcc.......',
-    '.abbbcc.........',
-    '.accc...........',
-    '................',
-    '................',
-]
-
-
-def gobbler_fillet(cooked=False):
-    if cooked:
-        pal = {'a': '#e0b080', 'b': '#c08850', 'c': '#8a5a30', 'v': '#6a4022'}
-    else:
-        # pale teal-grey deep-sea flesh, a glowing sculk vein down the middle
-        pal = {'a': '#d8f0ec', 'b': '#a8d0cc', 'c': '#6a9a9a', 'v': ('#3ff5e6', '#0f4a50')}
-    return I.grid(FILLET, pal, ol=True)
-
+# ============================================================================ the Gobbler's bladder
+# (CR3 Fish & Coral Organs: every fish's raw and cooked meat and the sushi are drawn in tools/fish_items.py now)
 
 BLADDER = [
     '................',
@@ -138,77 +50,6 @@ def sculk_bladder():
     return I.grid(BLADDER, pal, ol=True)
 
 
-# ============================================================================ sushi
-
-ROLL = [
-    '................',
-    '................',
-    '.....kkkkkk.....',
-    '...kkrrrrrrkk...',
-    '..krrrwrrrrrrk..',
-    '..krrFFFFFrrrk..',
-    '.krrFfffffFrrrk.',
-    '.krrFfffffFrgrk.',
-    '.kwrrFFFFFrrrrk.',
-    '.kKrrrrrrrrrrKk.',
-    '.kKKrrrrrrrrKKk.',
-    '.kkKKKKKKKKKKkk.',
-    '.kkkkkkkkkkkkkk.',
-    '..kkkkGkkkkkkk..',
-    '....kkkkkkkk....',
-    '................',
-]
-NORI = {'k': ('#1f3a2a', '#0a1410'), 'K': ('#2f5a3a', '#0a1410'), 'r': ('#f6f2e6', '#6a6458'), 'w': ('#ffffff', '#6a6458')}
-SUSHI_FILLING = {
-    'kazoo_fish_sushi': ('#3fd0c4', '#f87d8d', '#ff6fae'),      # teal flesh, coral skin, a rose glowkelp sprinkle
-    'tubafish_sushi': ('#ffe6ef', '#78a5e3', '#5ff8ff'),        # pale puffer flesh rimmed in periwinkle, azure glowkelp
-    'fanfare_eel_sushi': ('#e8c27a', '#24485a', '#ffc04a'),     # glazed gold eel, dark hide, amber glowkelp
-    'gobbler_sushi': ('#a8d0cc', '#0f3a40', '#3ff5e6'),         # deep-sea fillet wrapped round a glowing sculk-bladder core
-}
-
-
-def sushi(name):
-    f, F, g = SUSHI_FILLING[name]
-    pal = dict(NORI)
-    pal.update({'f': (f, '#2a2a3a'), 'F': (F, '#1a1a2a'), 'g': (g, '#3a1a3a'), 'G': (g, '#3a1a3a')})
-    if name == 'gobbler_sushi':
-        rows = list(ROLL)
-        rows[6] = '.krrFfSSffFrrrk.'
-        rows[7] = '.krrFfSSffFrgrk.'
-        pal['S'] = I.GLOW[3]
-        return I.grid(rows, pal, ol=True, no_ol='gG')
-    return I.grid(ROLL, pal, ol=True, no_ol='gG')
-
-
-PLATTER = [
-    '................',
-    '................',
-    '................',
-    '..AAA.BBB.......',
-    '.AaaA.BbbB......',
-    '.AaaA.BbbB.CCC..',
-    '.kAAk.kBBk.CccC.',
-    '.kkkk.kkkk.CccC.',
-    '...DDD.....kCCk.',
-    '..DddD.....kkkk.',
-    '..DddD..........',
-    'wwkDDkwwwwwwwwww',
-    'WWkkkkWWWWWWWWWW',
-    'WWWWWWWWWWWWWWWW',
-    '.dd..........dd.',
-    '................',
-]
-
-
-def sushi_platter():
-    pal = {'k': ('#1f3a2a', '#0a1410'), 'w': ('#b18a52', '#2a1a16'), 'W': ('#8f6a36', '#2a1a16'), 'd': ('#4d3220', '#2a1a16')}
-    for ch, name in zip('ABCD', SUSHI_FILLING):
-        f, F, _g = SUSHI_FILLING[name]
-        pal[ch] = (F, '#0a1410')
-        pal[ch.lower()] = (f, '#2a2a3a')
-    return I.grid(PLATTER, pal, ol=True)
-
-
 def gobbler_egg():
     o = '#03141a'
     return I.egg(['#07222a', '#0f3a40', '#1a5560', '#25646a'], o, {
@@ -222,14 +63,7 @@ def gobbler_egg():
 
 
 def items():
-    out = {
-        'tubafish': tubafish(), 'cooked_tubafish': tubafish(True), 'fanfare_eel': fanfare_eel(), 'cooked_fanfare_eel': fanfare_eel(True),
-        'gobbler_fillet': gobbler_fillet(), 'cooked_gobbler_fillet': gobbler_fillet(True), 'sculk_bladder': sculk_bladder(),
-        'sushi_platter': sushi_platter(), 'gobbler_spawn_egg': gobbler_egg(),
-    }
-    for name in SUSHI_FILLING:
-        out[name] = sushi(name)
-    return out
+    return {'sculk_bladder': sculk_bladder(), 'gobbler_spawn_egg': gobbler_egg()}
 
 
 # ============================================================================ blocks

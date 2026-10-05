@@ -83,6 +83,7 @@ public class TheSiftClient {
         CaravansClient.register(modBus); // C: Caravans, music crystals, the cavern's shifting fog
         ChromeClient.register(modBus); // A3 Chrome: rainbow tint, ripples, note bursts, Rainbow Daze
         SculkSwampClient.register(modBus); // W1 World & terrain: Sculk Water's look and the Sculk Swamp's mist
+        SculkSeaClient.register(modBus); // CR3 Fish & Coral Organs: the Sculk Fish, the Sculk Coral Organ and its hooked line
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
         if (Boolean.getBoolean("thesift.clientsmoke")) {
@@ -135,14 +136,18 @@ public class TheSiftClient {
         // the wild creatures
         event.registerEntityRenderer(ModEntities.STOMPER.get(), com.thesift.client.renderer.StomperRenderer::new);
         event.registerEntityRenderer(ModEntities.SKY_WHALE.get(), com.thesift.client.renderer.SkyWhaleRenderer::new);
+        // CR3 Fish & Coral Organs: sprite-built fish at twice vanilla scale (drawn at about half size), each in its colour variants
         event.registerEntityRenderer(ModEntities.FANFARE_EEL.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
-                new com.thesift.client.model.FanfareEelModel(c.bakeLayer(ModModelLayers.FANFARE_EEL)), "fanfare_eel", 0.35F, 1.0F,
+                new com.thesift.client.model.FanfareEelModel(c.bakeLayer(ModModelLayers.FANFARE_EEL)), "fanfare_eel",
+                new String[]{"fanfare_eel", "fanfare_eel_violet", "fanfare_eel_ember"}, 0.35F, 0.5F,
                 Expression.BLINK, Expression.ANGRY, Expression.HURT, Expression.DEAD));
         event.registerEntityRenderer(ModEntities.KAZOO_FISH.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
-                new com.thesift.client.model.KazooFishModel(c.bakeLayer(ModModelLayers.KAZOO_FISH)), "kazoo_fish", 0.2F, 1.0F,
+                new com.thesift.client.model.KazooFishModel(c.bakeLayer(ModModelLayers.KAZOO_FISH)), "kazoo_fish",
+                new String[]{"kazoo_fish", "kazoo_fish_sunset", "kazoo_fish_lagoon", "kazoo_fish_mint", "kazoo_fish_midnight"}, 0.2F, 0.42F,
                 Expression.BLINK, Expression.HURT, Expression.DEAD));
         event.registerEntityRenderer(ModEntities.TUBAFISH.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
-                new com.thesift.client.model.TubafishModel(c.bakeLayer(ModModelLayers.TUBAFISH)), "tubafish", 0.6F, 1.25F,
+                new com.thesift.client.model.TubafishModel(c.bakeLayer(ModModelLayers.TUBAFISH)), "tubafish",
+                new String[]{"tubafish", "tubafish_lilac", "tubafish_seafoam", "tubafish_sunrise"}, 0.6F, 0.62F,
                 Expression.BLINK, Expression.HAPPY, Expression.ANGRY, Expression.HURT, Expression.DEAD));
         event.registerEntityRenderer(ModEntities.BUBBLE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.4F, true));
     }

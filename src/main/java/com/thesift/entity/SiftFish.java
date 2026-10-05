@@ -3,7 +3,9 @@ package com.thesift.entity;
 import com.thesift.registry.ModChrome;
 import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
+import com.thesift.registry.ModSculkSea;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -13,16 +15,23 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Bucketable;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -33,10 +42,16 @@ import org.jspecify.annotations.Nullable;
  * Base for the Sift's music fish. They swim through Chrome as easily as through water: steering
  * is done here directly (no pathfinding), each fish picking points inside the liquid to swim to.
  * Out of the liquid they flop about and slowly dry out. Like vanilla's fish they fit in a bucket -
- * a Chrome Bucket (A3 Chrome: see {@link #canBePickedUpWithBucket} and ModChrome.fishBucket).
+ * a Chrome Bucket (A3 Chrome: see {@link #canBePickedUpWithBucket} and ModChrome.fishBucket) or, CR3,
+ * a plain water bucket (ModSculkSea.waterBucket).
+ * <p>
+ * CR3 Fish &amp; Coral Organs: every fish is painted in a few colour variants (like vanilla's tropical
+ * fish). A school spawns in one variant, the variant is synced to the client (the renderer picks the
+ * texture) and saved - in the world and in whichever bucket the fish is carried in.
  */
 public abstract class SiftFish extends PathfinderMob implements Bucketable {
     private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(SiftFish.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(SiftFish.class, EntityDataSerializers.INT);
     private @Nullable Vec3 swimTarget;
     private int retarget;
     private int dryTicks;
@@ -44,6 +59,8 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
     /** Client: smoothed swim effort (0 drifting, 1 darting), for the tail beat. */
     public float effort;
     public float effortO;
+    /** CR3: whether the bucket it is being scooped into right now is a Chrome Bucket (else a water bucket). */
+    private boolean chromePickup = true;
 
     protected SiftFish(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -98,6 +115,64 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
     @Override
     public boolean canBreatheUnderwater() {
         return true;
+    }
+
+    /** S1 never freeze: the fish steer themselves, and must not count as idle out of a player's reach. */
+    @Override
+    public int getNoActionTime() {
+        return 0;
+    }
+
+    // ---- CR3 colour variants
+
+    /** How many colour variants this fish is painted in (variant 0 is the classic look). */
+    public int variantCount() {
+        return 1;
+    }
+
+    /** Relative odds of each variant for a newly spawned school (the last ones are the rare ones). */
+    protected int[] variantWeights() {
+        return new int[]{1};
+    }
+
+    public int getVariant() {
+        return Mth.clamp(this.entityData.get(VARIANT), 0, this.variantCount() - 1);
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(VARIANT, Mth.clamp(variant, 0, this.variantCount() - 1));
+    }
+
+    private int pickVariant(RandomSource random) {
+        int[] w = this.variantWeights();
+        int total = 0;
+        for (int x : w) {
+            total += x;
+        }
+        int r = random.nextInt(Math.max(1, total));
+        for (int i = 0; i < w.length; i++) {
+            r -= w[i];
+            if (r < 0) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    /** One school, one colour: the first fish of a spawn group picks the variant, the rest follow it. */
+    private record School(int variant) implements SpawnGroupData {
+    }
+
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+            @Nullable SpawnGroupData data) {
+        if (data instanceof School school) {
+            this.setVariant(school.variant());
+        } else {
+            this.setVariant(this.pickVariant(this.random));
+            data = new School(this.getVariant());
+        }
+        return super.finalizeSpawn(level, difficulty, reason, data);
     }
 
     /**
@@ -210,18 +285,21 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FROM_BUCKET, false);
+        builder.define(VARIANT, 0);
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putBoolean("FromBucket", this.fromBucket());
+        output.putInt("Variant", this.getVariant());
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         this.setFromBucket(input.getBooleanOr("FromBucket", false));
+        this.setVariant(input.getIntOr("Variant", 0));
     }
 
     @Override
@@ -237,16 +315,20 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
     @Override
     public void saveToBucketTag(ItemStack bucket) {
         Bucketable.saveDefaultDataToBucketTag(this, bucket);
+        // CR3: the fish keeps its colours in the bucket
+        int variant = this.getVariant();
+        CustomData.update(DataComponents.BUCKET_ENTITY_DATA, bucket, tag -> tag.putInt("Variant", variant));
     }
 
     @Override
     public void loadFromBucketTag(CompoundTag tag) {
         Bucketable.loadDefaultDataFromBucketTag(this, tag);
+        tag.getInt("Variant").ifPresent(this::setVariant);
     }
 
     @Override
     public ItemStack getBucketItemStack() {
-        return ModChrome.fishBucket(this.getType());
+        return this.chromePickup ? ModChrome.fishBucket(this.getType()) : ModSculkSea.waterBucket(this.getType());
     }
 
     @Override
@@ -254,14 +336,18 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
         return SoundEvents.BUCKET_FILL_FISH;
     }
 
-    /** These fish live in Chrome: a Chrome Bucket scoops them up (if the fish has a bucket of its own). */
+    /** These fish live in Chrome and water: a Chrome Bucket or a water bucket scoops them up (if the fish has a bucket of that kind). */
     @Override
     public boolean canBePickedUpWithBucket(ItemStack stack) {
-        return stack.is(ModItems.CHROME_BUCKET.get()) && !this.getBucketItemStack().isEmpty();
+        if (stack.is(ModItems.CHROME_BUCKET.get())) {
+            return !ModChrome.fishBucket(this.getType()).isEmpty();
+        }
+        return stack.is(Items.WATER_BUCKET) && !ModSculkSea.waterBucket(this.getType()).isEmpty();
     }
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        this.chromePickup = !player.getItemInHand(hand).is(Items.WATER_BUCKET);
         return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
     }
 

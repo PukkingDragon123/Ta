@@ -3784,6 +3784,263 @@
     ],
     "subtitle": "subtitles.thesift.block.sculk_water.ambient"
   },
+  "entity.sculk_fish.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block/sculk_sensor/sculk_clicking2",
+        "volume": 0.35,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:mob/warden/tendril_clicks_1",
+        "volume": 0.3,
+        "pitch": 1.8
+      },
+      {
+        "name": "minecraft:block/sculk_sensor/sculk_clicking5",
+        "volume": 0.35,
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_fish.ambient"
+  },
+  "entity.sculk_fish.bite": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/evocation_illager/fangs",
+        "volume": 0.6,
+        "pitch": 1.7
+      },
+      {
+        "name": "minecraft:mob/evocation_illager/fangs",
+        "volume": 0.6,
+        "pitch": 1.95
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_fish.bite"
+  },
+  "entity.sculk_fish.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/fish/hurt1",
+        "volume": 0.8,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:entity/fish/hurt3",
+        "volume": 0.8,
+        "pitch": 0.75
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_fish.hurt"
+  },
+  "entity.sculk_fish.death": {
+    "sounds": [
+      {
+        "name": "minecraft:block/sculk/break1",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:entity/fish/hurt2",
+        "volume": 0.8,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_fish.death"
+  },
+  "entity.sculk_fish.flop": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/fish/flop1",
+        "volume": 0.7,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:entity/fish/flop3",
+        "volume": 0.7,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.sculk_fish.flop"
+  },
+  "entity.coral_organ.pipe": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.flute",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.pipe"
+  },
+  "entity.coral_organ.reed": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.didgeridoo",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.reed"
+  },
+  "entity.coral_organ.drone": {
+    "sounds": [
+      {
+        "name": "minecraft:block/conduit/ambient",
+        "volume": 0.7,
+        "pitch": 0.55
+      },
+      {
+        "name": "minecraft:ambient/underwater/additions/dark1",
+        "volume": 0.5,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:ambient/underwater/additions/dark3",
+        "volume": 0.5,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.drone"
+  },
+  "entity.coral_organ.charge": {
+    "sounds": [
+      {
+        "name": "minecraft:block/sculk_shrieker/shriek2",
+        "volume": 0.6,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:block/sculk_shrieker/shriek4",
+        "volume": 0.6,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.charge"
+  },
+  "entity.coral_organ.fire": {
+    "sounds": [
+      {
+        "name": "minecraft:item/trident/throw1",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:item/trident/throw2",
+        "volume": 1.0,
+        "pitch": 0.65
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.fire"
+  },
+  "entity.coral_organ.reel": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/bobber/retrieve1",
+        "volume": 0.9,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/bobber/retrieve2",
+        "volume": 0.9,
+        "pitch": 0.55
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.reel"
+  },
+  "entity.coral_organ.clamp": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/evocation_illager/fangs",
+        "volume": 1.0,
+        "pitch": 0.55
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.clamp"
+  },
+  "entity.coral_organ.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:dig/coral1",
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:dig/coral3",
+        "volume": 1.0,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:block/sculk_catalyst/break3",
+        "volume": 1.0,
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.hurt"
+  },
+  "entity.coral_organ.death": {
+    "sounds": [
+      {
+        "name": "minecraft:block/sculk_catalyst/break1",
+        "volume": 1.2,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:block/sculk_shrieker/break2",
+        "volume": 1.2,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_organ.death"
+  },
+  "entity.coral_hook.hit": {
+    "sounds": [
+      {
+        "name": "minecraft:item/trident/pierce1",
+        "volume": 1.0,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:item/trident/pierce2",
+        "volume": 1.0,
+        "pitch": 1.15
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_hook.hit"
+  },
+  "entity.coral_hook.strain": {
+    "sounds": [
+      {
+        "name": "minecraft:block/chain/step2",
+        "volume": 0.8,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:block/chain/step4",
+        "volume": 0.8,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_hook.strain"
+  },
+  "entity.coral_hook.snap": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/leashknot/break",
+        "volume": 1.0,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:random/break",
+        "volume": 0.8,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.coral_hook.snap"
+  },
   "entity.caravan.ambient": {
     "sounds": [
       {
