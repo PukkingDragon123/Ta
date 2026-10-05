@@ -213,6 +213,55 @@ public class JailerModel extends EntityModel<JailerRenderState> {
             this.head.xRot += 0.35F * Anim.envelope(r, 0.0F, 0.08F, 0.15F, 0.27F);
         }
 
+        // ---- CR4 its grip beats with its heart: a thump, then the claws ease open and the cell sags
+        // a little - the bars glow (see JailerRenderer) and only now do blows count
+        float lo = Anim.seconds(s.loosen, s.ageInTicks);
+        if (s.carrying && lo >= 0.0F && lo < 1.0F) {
+            float eased = Anim.envelope(lo, Jailer.CUE_TICKS / 20.0F * 0.5F, Jailer.CUE_TICKS / 20.0F * 0.5F, Jailer.LOOSE_TICKS / 20.0F, 0.2F);
+            float thump = Anim.envelope(lo, 0.0F, 0.04F, 0.0F, 0.14F);
+            this.chest.xScale *= 1.0F + 0.05F * thump;
+            this.chest.zScale *= 1.0F + 0.05F * thump;
+            this.cage.y += 1.2F * eased;
+            this.cage.xScale *= 1.0F + 0.05F * eased;
+            this.cage.zScale *= 1.0F + 0.05F * eased;
+            this.head.xRot -= 0.15F * eased;
+            for (int i = 0; i < 2; i++) {
+                float sx = i == 0 ? 1.0F : -1.0F;
+                this.claws[i].xRot -= 0.5F * eased;
+                this.arm(i, 0.0F, -0.12F * eased, 0.0F, 0.08F * eased);
+                this.tendrils[i].zRot += sx * 0.2F * eased;
+            }
+        }
+
+        // ---- a good heave against the bars: they buckle outwards, the cell lurches, the Jailer flinches
+        float hv = Anim.seconds(s.heave, s.ageInTicks);
+        if (hv >= 0.0F && hv < 0.7F) {
+            float buckle = Anim.envelope(hv, 0.0F, 0.04F, 0.06F, 0.5F);
+            float wob = Mth.sin(hv * 40.0F) * (1.0F - hv / 0.7F);
+            this.cage.xScale *= 1.0F + 0.12F * buckle;
+            this.cage.zScale *= 1.0F + 0.08F * buckle;
+            this.cage.y -= 1.5F * buckle;
+            this.cage.zRot += 0.08F * wob;
+            for (int i = 0; i < this.bars.length; i++) {
+                this.bars[i].zRot += Mth.sin(hv * 50.0F + i * 1.7F) * 0.12F * buckle;
+            }
+            this.chest.xRot -= 0.2F * buckle;
+            this.head.xRot -= 0.2F * buckle;
+            this.jaw.xRot += 0.4F * buckle;
+        }
+
+        // ---- on guard: one leg drawn back, then a hard stamping kick at whoever came too close
+        float kicked = Anim.seconds(s.kick, s.ageInTicks);
+        if (kicked >= 0.0F && kicked < 1.0F) {
+            float wind = Anim.envelope(kicked, 0.0F, 0.35F, 0.05F, 0.1F);
+            float strike = Anim.envelope(kicked, 0.4F, 0.06F, 0.12F, 0.4F);
+            this.legs[1].xRot += 0.7F * wind - 1.3F * strike;
+            this.shins[1].xRot += 0.5F * wind - 0.3F * strike;
+            this.chest.xRot -= 0.15F * wind - 0.1F * strike;
+            this.body.z += 1.5F * strike;
+            this.jaw.xRot += 0.5F * strike;
+        }
+
         // ---- the cell bursts: arms flung wide, a stagger backwards, the frame tipping
         float b = Anim.seconds(s.cageBreak, s.ageInTicks);
         if (b >= 0.0F && b < 1.2F) {

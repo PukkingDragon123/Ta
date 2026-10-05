@@ -7,6 +7,10 @@
 * Sculklings (`thesift:sculkling`): small sculk goblins with giant bat ears (and no wings) that
   skitter through dark caves in packs, giggle, screech, swarm, snatch shiny things and run - and
   cover their ears and flee from music.
+* CR4: the Jailer's cell is studded with Sculkite (`thesift:sculkite`, item tag #thesift:sculkite), the
+  dark sculk crystal it grows its bars from - its only drop, the raw material of echo gear and Stomper
+  armour (their recipes and the sculkite ore come later). The Cypole of the Sculk Swamp lives in
+  tools/cypole.py and is hooked in through this module's hooks.
 
 Hooks (one line each): spec.py -> declare(block, item); mobs.py -> ALL.update(MODELS);
 gen_assets.generate() -> assets(GA) (sounds, lang, Codex text, loot, tags, spawns);
@@ -42,6 +46,9 @@ def rows(w, h, fn):
 def declare(block, item):
     item("jailer_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaveCreatures.JAILER.get())", tab="eggs")
     item("sculkling_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaveCreatures.SCULKLING.get())", tab="eggs")
+    # CR4: the Jailer's drop, a raw material (echo gear, Stomper armour)
+    item("sculkite", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
+    __import__('cypole').declare(block, item)  # CR4: the Cypole's spawn egg
 
 
 # =========================================================================== THE JAILER
@@ -63,6 +70,7 @@ JPAL = {
     'claw': '#1b2228', 'claw_l': '#33404a', 'claw_d': '#0d1216',
     'tendril': '#0f4752', 'tendril_l': '#18636f', 'tendril_d': '#08303a', 'tip': '#3ff5e6', 'tip_l': '#c8fffb',
     'iron': '#39474f', 'iron_l': '#566872', 'iron_d': '#202a31', 'patina': '#1f5b60', 'rivet': '#7d8f97',
+    'crystal': '#122640', 'crystal_l': '#1f4166', 'crystal_d': '#0a1424', 'crystal_g': '#4ff0e8',
     'vein': '#2fe6f0', 'vein_d': '#12858f', 'node': '#5ff8ff',
 }
 
@@ -159,6 +167,9 @@ def _roof(w):
                     return 'V' if t < 9 else 'v'
         return 'p' if (x * 13 + y * 7) % 29 == 0 else '.'
     return rows(w, w, px)
+
+
+XK = {'g': 'crystal_g', 'c': 'crystal_l'}
 
 
 def jailer() -> Model:
@@ -296,6 +307,16 @@ def jailer() -> Model:
         'up': mc('iron', clusters=0.0, map=['.....', '.ddd.', '.dVd.', '.ddd.', '.....'], keys=ik, glow_keys='V'),
     })
     lock.cube((-1, -4.5, -0.5), (2, 2.5, 1), **mc('iron_l', clusters=0.0, rim=False))   # the ring it is lifted by
+    # CR4: Sculkite, the dark crystal it grows its bars from, bursting out round the lock and at the corners
+    crystal = dict(color='crystal', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='crystal', pattern='mc', clusters=0.0, rim=False, map=['g', 'c'] + ['.'] * 6, keys=XK, glow_keys='g'),
+        'east': dict(color='crystal_l', pattern='mc', clusters=0.0, rim=False, map=['g'] + ['.'] * 7, keys=XK, glow_keys='g'),
+        'up': mc('crystal_g', clusters=0.0, rim=False, glow=True)})
+    for i, (cx, cz, ry, lean) in enumerate(((-2.2, -1.6, 0.4, -0.35), (2.0, 1.8, -0.9, 0.4), (1.6, -2.1, 2.1, 0.3), (-1.9, 2.0, -2.5, -0.3))):
+        shard = lock.part(f'sculkite_{i}', pivot=(cx, -1.6, cz), rot=(lean, ry, -lean * 0.6))
+        h = 3.0 if i < 2 else 2.2
+        shard.cube((-0.6, -h, -0.6), (1.2, h, 1.2), **crystal)
+        shard.cube((-0.35, -h - 0.9, -0.35), (0.7, 0.9, 0.7), **mc('crystal_g', clusters=0.0, rim=False, glow=True))
     bottom = CAGE_H - 2
     ring = mc('iron', clusters=0.5, accent='patina', spots=0.2)
     cage.cube((-half, bottom, -half), (CAGE_W, 2, 1.5), **ring)
@@ -308,6 +329,10 @@ def jailer() -> Model:
             f: mc('iron', clusters=0.2, hd=True, map=_iron_bar(4, int(post_h * 2), i * 3 + j), keys=ik, glow_keys='vV')
             for j, f in enumerate(('north', 'south', 'east', 'west'))
         })
+        # a little sculkite growing up out of each corner of the roof (CR4)
+        sx, sz = (1 if cx > 0 else -1), (1 if cz > 0 else -1)
+        tuft = cage.part(f'corner_sculkite_{i}', pivot=(cx + 1.0, 0.0, cz + 1.0), rot=(0.35 * sz, 0.5 * i, -0.35 * sx))
+        tuft.cube((-0.5, -2.2, -0.5), (1, 2.2, 1), **crystal)
         # a knot of sculk growing over each corner, its top glowing
         cage.cube((cx - 0.25, 0.75, cz - 0.25), (2.5, 1.5, 2.5), **mc('vein_d', clusters=0.3, rim=False), faces={
             'up': mc('vein', clusters=0.0, rim=False, glow=True)})
@@ -469,6 +494,7 @@ def sculkling() -> Model:
 
 
 MODELS = {'jailer': jailer, 'sculkling': sculkling}
+MODELS.update(__import__('cypole').MODELS)  # CR4: the Cypole (tools/cypole.py)
 
 
 # =========================================================================== sounds (vanilla events)
@@ -490,6 +516,12 @@ SOUNDS = {
                              ('event:entity.zombie.attack_iron_door', 0.5, 1.4)],
     'entity.jailer.break': [('event:block.anvil.destroy', 1.0, 0.8), ('event:block.chain.break', 1.0, 0.6)],
     'entity.jailer.regrow': [('event:block.sculk_catalyst.bloom', 1.0, 0.8), ('event:block.chain.place', 0.8, 0.8)],
+    # CR4 the harder cell: the heartbeat cue, the grip loosening, a good heave, squirming against it, a guard's kick
+    'entity.jailer.pulse': [('event:entity.warden.heartbeat', 1.0, 1.15)],
+    'entity.jailer.loosen': [('event:block.chain.step', 1.0, 0.65), ('event:block.chain.place', 0.9, 0.75)],
+    'entity.jailer.heave': [('event:block.chain.break', 1.0, 0.7), ('event:block.anvil.land', 0.5, 1.4), ('event:block.iron.hit', 1.0, 0.6)],
+    'entity.jailer.tighten': [('event:entity.iron_golem.damage', 0.6, 0.5), ('event:block.chain.hit', 0.8, 0.5)],
+    'entity.jailer.kick': [('event:entity.warden.attack_impact', 1.0, 1.15), ('event:entity.ravager.stunned', 0.5, 1.4)],
     'entity.sculkling.ambient': [('event:entity.witch.celebrate', 0.5, 1.8), ('event:entity.vex.ambient', 0.5, 1.4),
                                  ('event:entity.allay.ambient_without_item', 0.4, 0.9)],
     'entity.sculkling.screech': [('event:entity.fox.screech', 0.8, 1.3), ('event:entity.bat.ambient', 1.0, 0.6),
@@ -506,7 +538,8 @@ SUBTITLES = {
     'entity.jailer.hurt': 'Jailer hurts', 'entity.jailer.death': 'Jailer dies', 'entity.jailer.emerge': 'Jailer emerges',
     'entity.jailer.windup': 'Jailer heaves its cell', 'entity.jailer.slam': 'Cell slams down', 'entity.jailer.trap': 'Cell locks shut',
     'entity.jailer.squeeze': 'Cell squeezes', 'entity.jailer.rattle': 'Bars rattle', 'entity.jailer.break': 'Bars break',
-    'entity.jailer.regrow': 'Bars regrow',
+    'entity.jailer.regrow': 'Bars regrow', 'entity.jailer.pulse': "Jailer's heart thumps", 'entity.jailer.loosen': 'Grip loosens',
+    'entity.jailer.heave': 'Bars buckle', 'entity.jailer.tighten': 'Grip tightens', 'entity.jailer.kick': 'Jailer kicks',
     'entity.sculkling.ambient': 'Sculkling giggles', 'entity.sculkling.screech': 'Sculkling screeches', 'entity.sculkling.hurt': 'Sculkling hurts',
     'entity.sculkling.death': 'Sculkling dies', 'entity.sculkling.step': 'Something skitters', 'entity.sculkling.snatch': 'Sculkling snatches something',
     'entity.sculkling.scared': 'Sculkling whimpers', 'entity.sculkling.twitch': 'Ears twitch',
@@ -516,6 +549,7 @@ SUBTITLES = {
 def sounds(GA):
     GA.SOUNDS.update(SOUNDS)
     GA.SUBTITLES.update(SUBTITLES)
+    __import__('cypole').sounds(GA)  # CR4: the Cypole
 
 
 # =========================================================================== data: loot, tags, spawns, text
@@ -529,14 +563,11 @@ def data(GA):
     import gen_data as D
     for i in SHINIES:
         GA.tag('item', f'{NS}:sculkling_shinies', rl(i))
-    # the Jailer: bars of its broken cell, sculk, a chance of echo shards
+    # the Jailer (CR4): the Sculkite crystal it grows its cell from - its only drop
     D.table('entity', 'entities/jailer', [
-        D.pool([D.item('minecraft:iron_bars', count=(1, 3), extra=[D.LOOTING])]),
-        D.pool([D.item('minecraft:iron_nugget', count=(3, 8), extra=[D.LOOTING])]),
-        D.pool([D.item('minecraft:sculk', count=(1, 3))]),
-        D.pool([D.item('minecraft:echo_shard', count=(1, 2), extra=[D.LOOTING])],
-               condition={'type': 'minecraft:all_of', 'terms': [D.PLAYER_KILL, D.chance(0.35)]}),
+        D.pool([D.item('sculkite', count=(2, 4), extra=[D.LOOTING])]),
     ])
+    GA.tag('item', f'{NS}:sculkite', rl('sculkite'))
     # Sculklings hoard a little gold (anything they stole is dropped by the entity itself)
     D.table('entity', 'entities/sculkling', [
         D.pool([D.item('minecraft:gold_nugget', count=(0, 2), extra=[D.LOOTING])]),
@@ -550,16 +581,29 @@ def data(GA):
         'spawners': [{'type': rl('sculkling'), 'count': {'type': 'minecraft:uniform', 'min_inclusive': 3, 'max_inclusive': 5}, 'weight': 12},
                      {'type': rl('jailer'), 'count': 1, 'weight': 3}]})
     GA.LANG.update(lang())
+    __import__('cypole').data(GA)  # CR4: the Cypole's loot, spawn tags, particle, band voice and text
 
 
 def lang():
     L = {f'entity.{NS}.jailer': 'Jailer', f'entity.{NS}.sculkling': 'Sculkling', f'entity.{NS}.jail_cell': 'Jail Cell'}
     L.update({
-        f'message.{NS}.jailer.trapped': 'The Jailer has you! Hit the bars to break free.',
-        f'message.{NS}.jailer.struggle': 'The bars hold fast. Hit them!',
+        f'message.{NS}.jailer.trapped': "The Jailer has you! When its heart thumps and the bars glow, hit them - or struggle (sneak)!",
+        f'message.{NS}.jailer.struggle': 'Its grip is too tight - wait for the bars to glow!',
+        f'message.{NS}.jailer.beat': 'Listen for its heartbeat: strike the bars as they glow!',
         f'message.{NS}.sculkling.snatched': 'A Sculkling snatched your %s!',
         f'codex.{NS}.jailer.title': 'Jailer', f'codex.{NS}.jailer.tagline': 'Hostile - blind, and it carries a cell',
-        f'codex.{NS}.jailer.body': 'A tall, skinny kin of the Warden from the deepest, darkest caves of the Sift, hunched over a giant cell of sculk-iron bars. It has no eyes: it hunts by sound. Footsteps, fighting and every note you play draw it in - sneak and it cannot hear you. It creeps closer, listening, then strides. When it reaches you it heaves the cell over its head and slams it down. Inside you are hauled around and squeezed. Hit the bars until they break, or have a friend hurt the Jailer until it drops you. A broken cell slowly grows its bars back. Drops iron bars, sculk and sometimes echo shards.',
+        f'codex.{NS}.jailer.body': ('A tall, blind kin of the Warden from the deepest caves, hauling a cell of sculk-iron bars. It hunts '
+                                    'by sound - footsteps, fighting, every note - so sneak. Reach you and it slams the cell down over you. '
+                                    'Its grip beats with its heart: at each thump the bars glow and loosen - only then do blows (or a '
+                                    'struggle: sneak) bend them. It squeezes harder each time, and bars left alone grow back. It kicks '
+                                    'away rescuers; a friend can still break the bars from outside. Break free and it guards you, '
+                                    'regrows its cell in moments and slams again: run! Drops Sculkite.'),
+        f'item.{NS}.sculkite': 'Sculkite',
+        f'codex.{NS}.sculkite.title': 'Sculkite', f'codex.{NS}.sculkite.tagline': 'The Jailer\'s dark crystal',
+        f'codex.{NS}.sculkite.body': ('A dark crystal of sculk, cold to the touch and humming at a pitch only the sculk can hear. Jailers '
+                                      'grow the bars of their cells from it: it studs every cell, and a fallen Jailer leaves a few '
+                                      'shards behind. Smiths of the Sift work it into echo gear and into armour for Stompers - never '
+                                      'into armour for people, whom its hum drives to distraction.'),
         f'codex.{NS}.sculkling.title': 'Sculkling', f'codex.{NS}.sculkling.tagline': 'Hostile - giggling cave goblins',
         f'codex.{NS}.sculkling.body': 'Small blind sculk goblins with giant bat ears, skittering through dark caves in packs of three to five. They hear everything except a player who sneaks. Hear you, and they screech, swarm and scratch - and one may snatch something shiny from your pockets (gold, gems, ingots) and run, giggling. Kill the thief to get it back. Their ears cannot bear music: play a note and they cover them and flee.',
     })
@@ -595,4 +639,34 @@ def items():
         12: '.......gg.......',
     }, pal={'e': ('#0e3038', o), 'V': (I.GLOW[2], o), 'p': ('#020608', o), 'm': ('#04131a', o), 't': ('#efe8d2', o),
             'g': (I.GLOW[3], o)}, no_ol='Vg')
-    return {'jailer_spawn_egg': jailer, 'sculkling_spawn_egg': sculkling}
+    out = {'jailer_spawn_egg': jailer, 'sculkling_spawn_egg': sculkling, 'sculkite': sculkite()}
+    out.update(__import__('cypole').items())  # CR4: the Cypole's spawn egg
+    return out
+
+
+def sculkite():
+    """Sculkite: a cluster of dark sculk crystal - deep teal-black facets, edges lit cyan by the glow
+    trapped inside, one bright glint. Light from the top left like every vanilla item."""
+    import items16 as I
+    rows = [
+        '................',
+        '.........G......',
+        '........gH2.....',
+        '.......gH331....',
+        '...g..gH33321...',
+        '..gHg.H333221...',
+        '..H32gH332211...',
+        '..H332H322211.g.',
+        '...3322H2211.gHg',
+        '...3332H2111gH32',
+        '....33222211H322',
+        '....322211111321',
+        '.....2211111.21.',
+        '......11111.....',
+        '................',
+        '................',
+    ]
+    o = '#030b10'
+    pal = I.ramp('123', ['#0a1c26', '#123546', '#1d5466'], o)
+    pal.update({'H': ('#2fb8b8', o), 'g': (I.GLOW[2], o), 'G': (I.GLOW[4], o)})
+    return I.grid(rows, pal, ol=True, no_ol='G')

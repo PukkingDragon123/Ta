@@ -346,7 +346,8 @@ final class CreatureCheck {
                 ModEchoer.SOUL_GOLEM.get(), ModEntities.HARMONER.get(), ModEntities.SKY_WHALE.get(), ModEchoer.NIB.get(),
                 ModEntities.ENCHOER.get(), ModCaveCreatures.JAILER.get(), // CR1: the Echoer flies now, so it pens in the middle row
                 ModCaveCreatures.SCULKLING.get(), ModEntities.FANFARE_EEL.get(), ModEntities.KAZOO_FISH.get(), ModEntities.TUBAFISH.get(),
-                ModSeaSky.GOBBLER.get(), ModSculkSea.SCULK_FISH.get()); // CR3: the Coral Organ is rooted, so it has no pen
+                ModSeaSky.GOBBLER.get(), ModSculkSea.SCULK_FISH.get(), // CR3: the Coral Organ is rooted, so it has no pen
+                ModCaveCreatures.CYPOLE.get()); // CR4: the Cypole
     }
 
     private static boolean swims(EntityType<?> type) {
@@ -359,8 +360,10 @@ final class CreatureCheck {
         if (this.level.getDifficulty() == Difficulty.PEACEFUL) {
             TheSift.LOGGER.info("SMOKE: never frozen: peaceful difficulty, the monsters are left out");
         }
+        // six pens a row; as many rows as there are creatures to pen
+        int rows = (penned().size() + 5) / 6;
         for (int chunkX = -9; chunkX <= -4; chunkX++) {
-            for (int chunkZ = 4; chunkZ <= 6; chunkZ++) {
+            for (int chunkZ = 4; chunkZ < 4 + rows; chunkZ++) {
                 this.level.setChunkForced(chunkX, chunkZ, true);
             }
         }

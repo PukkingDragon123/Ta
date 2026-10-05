@@ -169,6 +169,11 @@ public final class CodexEntries {
         l.add(mob(CREATURES, "sculkling", com.thesift.registry.ModCaveCreatures.SCULKLING, (e, t) -> {
             if (e instanceof com.thesift.entity.cave.Sculkling s && t % 60 == 20) s.giggleAnimation.start(s.tickCount);
         }));
+        // CR4: the Jailer's Sculkite; the Cypole croaks, crashes its plates and shoots its tongue on the page
+        l.add(thing(ITEMS, "sculkite", ModItems.SCULKITE));
+        l.add(mob(CREATURES, "cypole", com.thesift.registry.ModCaveCreatures.CYPOLE, (e, t) -> {
+            if (e instanceof com.thesift.entity.swamp.Cypole c) c.codexPose(t);
+        }));
         l.add(thing(ITEMS, "sushi", ModItems.SUSHI_PLATTER));
         // ---- items
         l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));

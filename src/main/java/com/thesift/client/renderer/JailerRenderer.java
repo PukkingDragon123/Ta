@@ -2,6 +2,7 @@ package com.thesift.client.renderer;
 
 import com.thesift.TheSift;
 import com.thesift.client.CaveCreaturesClient;
+import com.thesift.client.model.Anim;
 import com.thesift.client.model.JailerModel;
 import com.thesift.client.renderer.state.JailerRenderState;
 import com.thesift.entity.cave.Jailer;
@@ -19,11 +20,23 @@ public class JailerRenderer extends SiftMobRenderer<Jailer, JailerRenderState, J
 
     public JailerRenderer(EntityRendererProvider.Context context) {
         super(context, new JailerModel(context.bakeLayer(CaveCreaturesClient.JAILER)), 0.8F);
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW,
-                (s, age) -> s.mode == Jailer.HUNTING || s.mode == Jailer.SLAMMING
-                        ? 0.8F + 0.2F * Mth.sin(age * 0.45F)
-                        : 0.55F + 0.3F * Math.max(0.0F, Mth.sin(age * 0.09F + s.seed)),
-                this.model, RenderTypes::entityTranslucentEmissive, false));
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW, JailerRenderer::glow, this.model, RenderTypes::entityTranslucentEmissive, false));
+    }
+
+    /**
+     * How bright its soul, tendrils and the sculk on its cell glow. Carrying someone, the glow beats
+     * with its grip: dim while it holds tight, flaring as it loosens - the prisoner's cue to strike.
+     */
+    private static float glow(JailerRenderState s, float age) {
+        if (s.carrying) {
+            float t = Anim.seconds(s.loosen, age);
+            float cue = Jailer.CUE_TICKS / 20.0F;
+            float loose = t < 0.0F ? 0.0F : Anim.envelope(t, 0.0F, cue, Jailer.LOOSE_TICKS / 20.0F, 0.2F);
+            return 0.22F + 0.78F * loose;
+        }
+        return s.mode == Jailer.HUNTING || s.mode == Jailer.SLAMMING
+                ? 0.8F + 0.2F * Mth.sin(age * 0.45F)
+                : 0.55F + 0.3F * Math.max(0.0F, Mth.sin(age * 0.09F + s.seed));
     }
 
     @Override
@@ -56,6 +69,9 @@ public class JailerRenderer extends SiftMobRenderer<Jailer, JailerRenderState, J
         state.rattle.copyFrom(entity.rattleAnimation);
         state.cageBreak.copyFrom(entity.breakAnimation);
         state.listen.copyFrom(entity.listenAnimation);
+        state.loosen.copyFrom(entity.loosenAnimation);
+        state.heave.copyFrom(entity.heaveAnimation);
+        state.kick.copyFrom(entity.kickAnimation);
     }
 
     /** The cell reaches well outside the Jailer's own box - and a prisoner looks out from inside it. */

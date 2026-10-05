@@ -3513,6 +3513,91 @@
     ],
     "subtitle": "subtitles.thesift.entity.jailer.regrow"
   },
+  "entity.jailer.pulse": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.heartbeat",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.15
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.jailer.pulse"
+  },
+  "entity.jailer.loosen": {
+    "sounds": [
+      {
+        "name": "minecraft:block.chain.step",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.65
+      },
+      {
+        "name": "minecraft:block.chain.place",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 0.75
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.jailer.loosen"
+  },
+  "entity.jailer.heave": {
+    "sounds": [
+      {
+        "name": "minecraft:block.chain.break",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:block.anvil.land",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:block.iron.hit",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.jailer.heave"
+  },
+  "entity.jailer.tighten": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.iron_golem.damage",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:block.chain.hit",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.jailer.tighten"
+  },
+  "entity.jailer.kick": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.attack_impact",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:entity.ravager.stunned",
+        "type": "event",
+        "volume": 0.5,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.jailer.kick"
+  },
   "entity.sculkling.ambient": {
     "sounds": [
       {
@@ -3654,6 +3739,273 @@
       }
     ],
     "subtitle": "subtitles.thesift.entity.sculkling.twitch"
+  },
+  "entity.cypole.croak": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/idle1",
+        "volume": 1.0,
+        "pitch": 0.62
+      },
+      {
+        "name": "minecraft:mob/frog/idle2",
+        "volume": 1.0,
+        "pitch": 0.58
+      },
+      {
+        "name": "minecraft:mob/frog/idle4",
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:mob/frog/idle6",
+        "volume": 1.0,
+        "pitch": 0.64
+      },
+      {
+        "name": "minecraft:mob/frog/idle7",
+        "volume": 1.0,
+        "pitch": 0.56
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.croak"
+  },
+  "entity.cypole.tick": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.hat",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:block.note_block.hat",
+        "type": "event",
+        "volume": 0.9,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.tick"
+  },
+  "entity.cypole.rattle": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.snare",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 1.9
+      },
+      {
+        "name": "minecraft:mob/warden/tendril_clicks_2",
+        "volume": 0.9,
+        "pitch": 1.9
+      },
+      {
+        "name": "minecraft:mob/warden/tendril_clicks_4",
+        "volume": 0.9,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.rattle"
+  },
+  "entity.cypole.angry": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/idle2",
+        "volume": 1.0,
+        "pitch": 0.42
+      },
+      {
+        "name": "minecraft:mob/frog/idle7",
+        "volume": 1.0,
+        "pitch": 0.45
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.angry"
+  },
+  "entity.cypole.calm": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/idle1",
+        "volume": 0.8,
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:mob/frog/idle4",
+        "volume": 0.8,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.calm"
+  },
+  "entity.cypole.windup": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/pufferfish/blow_up1",
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:mob/pufferfish/blow_up2",
+        "volume": 1.0,
+        "pitch": 0.65
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.windup"
+  },
+  "entity.cypole.crash": {
+    "sounds": [
+      {
+        "name": "minecraft:block.anvil.land",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 1.85
+      },
+      {
+        "name": "minecraft:block.anvil.land",
+        "type": "event",
+        "volume": 0.8,
+        "pitch": 2.0
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.crash"
+  },
+  "entity.cypole.shimmer": {
+    "sounds": [
+      {
+        "name": "minecraft:block/bell/resonate",
+        "volume": 1.0,
+        "pitch": 1.6
+      },
+      {
+        "name": "minecraft:block/amethyst/shimmer",
+        "volume": 1.0,
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.shimmer"
+  },
+  "entity.cypole.shockwave": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst1",
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst2",
+        "volume": 1.0,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:item/mace/smash_ground_heavy",
+        "volume": 0.9,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.shockwave"
+  },
+  "entity.cypole.tongue": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/tongue1",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:mob/frog/tongue2",
+        "volume": 1.0,
+        "pitch": 0.75
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.tongue"
+  },
+  "entity.cypole.slap": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/slime/attack1",
+        "volume": 1.0,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/slime/big1",
+        "volume": 0.8,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/slime/big2",
+        "volume": 0.8,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.slap"
+  },
+  "entity.cypole.shielded": {
+    "sounds": [
+      {
+        "name": "minecraft:item.shield.block",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.shielded"
+  },
+  "entity.cypole.hop": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/slime/small1",
+        "volume": 0.6,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/slime/small3",
+        "volume": 0.6,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:mob/slime/small4",
+        "volume": 0.6,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.hop"
+  },
+  "entity.cypole.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/hurt1",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:mob/frog/hurt2",
+        "volume": 1.0,
+        "pitch": 0.72
+      },
+      {
+        "name": "minecraft:block.chain.hit",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.hurt"
+  },
+  "entity.cypole.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/death1",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:mob/frog/death2",
+        "volume": 1.0,
+        "pitch": 0.68
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.cypole.death"
   },
   "music.sculk_swamp": {
     "sounds": [

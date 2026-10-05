@@ -344,7 +344,8 @@ def _features(GW):
 
 def _swamp_biome(GW):
     GW.biome('sculk_swamp', fog='#35585b', sky='#4d7d80', water='#0f5258', grass='#2e6b66', foliage='#2a5f5c', temp=0.75, down=0.9,
-             spawns=GW.mobs(monster=[('sculk_parasite', 40, 1, 2), ('strumling', 10, 1, 1)]),
+             spawns=GW.mobs(creature=[('cypole', 10, 1, 3)],  # CR4: Cypoles, the one-eyed cymbal frogs
+                            monster=[('sculk_parasite', 40, 1, 2), ('strumling', 10, 1, 1)]),
              parts=GW.particles(('minecraft:sculk_soul', 0.0007), ('glow_dust', 0.005), ('sift_mist', 0.0025), ('minecraft:sculk_charge_pop', 0.0014),
                                 ('drifting_soul', 0.0005)),
              music=f'{NS}:music.sculk_swamp', ambient_loop=f'{NS}:ambient.sculk_swamp.loop',

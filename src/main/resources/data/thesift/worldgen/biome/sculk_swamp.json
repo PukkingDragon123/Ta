@@ -25,7 +25,17 @@
       "argument": {
         "spawn_costs": {},
         "spawns_by_category": {
-          "creature": [],
+          "creature": [
+            {
+              "type": "thesift:cypole",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 3
+              },
+              "weight": 10
+            }
+          ],
           "monster": [
             {
               "type": "thesift:sculk_parasite",

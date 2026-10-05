@@ -46,9 +46,22 @@ import org.jspecify.annotations.Nullable;
  * Sift carrying a giant cell of sculk-iron bars. It cannot see. It hears: footsteps that are not
  * sneaking, fighting and music (every note draws it to the player). It creeps towards a sound,
  * listening, and charges once it is sure; when it reaches you it heaves the cell over its head and
- * slams it down over you. Inside, you are hauled around and squeezed now and then. Hit the bars
- * until they break (or have a friend hurt the Jailer badly enough to drop you) to get out. A broken
- * cell slowly grows its bars back.
+ * slams it down over you.
+ *
+ * <p>CR4: the cell is hard to get out of, but never hopeless.
+ * <ul>
+ *   <li>Its grip beats with its heart: a thump (the cue), and a moment later its claws loosen and the
+ *   bars glow ({@link #LOOSE_TICKS}). Only then do blows count: strike the bars, or struggle (each press
+ *   of the sneak key is one heave), on the loose beat and the bars bend; off the beat they barely
+ *   dent, and squirming only makes it squeeze sooner. One good blow per beat.</li>
+ *   <li>It squeezes now and then, harder every time. Bars left alone grow back even while it holds you.</li>
+ *   <li>It guards its prisoner: a rescuer who comes close is kicked away (a friend can still break the
+ *   bars from outside, or hurt the Jailer badly enough to make it drop the cell).</li>
+ *   <li>Break out and it is only stunned for a moment. It stands guard over you - it hears you even
+ *   sneaking, close by - while its cell regrows in a few seconds, and then it slams it down again.</li>
+ * </ul>
+ * It grows its bars from Sculkite, the dark sculk crystal studding its cell: kill one and the crystal
+ * is yours (its only drop, entities/jailer loot table).
  */
 public class Jailer extends Monster {
     public static final int IDLE = 0;
@@ -70,6 +83,16 @@ public class Jailer extends Monster {
     public static final int SLAM_LOCK = 14;
     public static final int SLAM_IMPACT = 18;
     public static final int SLAM_END = 30;
+    /** CR4 its grip: a heartbeat cue every BEAT_MIN..BEAT_MAX ticks, the grip loosens CUE_TICKS later for LOOSE_TICKS. */
+    public static final int BEAT_MIN = 20;
+    public static final int BEAT_MAX = 30;
+    public static final int CUE_TICKS = 6;
+    public static final int LOOSE_TICKS = 9;
+    /** The server keeps the grip loose a little longer than it looks, for the player's ping. */
+    private static final int LATENCY_TICKS = 2;
+    /** After a breakout it stands guard this long, hearing its escaped prisoner even when they sneak. */
+    private static final int GUARD_TICKS = 200;
+    private static final double GUARD_HEARING = 10.0;
 
     private static final EntityDataAccessor<Integer> MODE = SynchedEntityData.defineId(Jailer.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> CAGE = SynchedEntityData.defineId(Jailer.class, EntityDataSerializers.INT);
@@ -79,8 +102,14 @@ public class Jailer extends Monster {
     private static final byte EVENT_RATTLE = 97;
     private static final byte EVENT_BREAK = 98;
     private static final byte EVENT_LISTEN = 99;
-    private static final float BAR_HEALTH = 8.0F;
-    private static final float DROP_DAMAGE = 10.0F;
+    private static final byte EVENT_LOOSEN = -101;
+    private static final byte EVENT_HEAVE = -102;
+    private static final byte EVENT_KICK = -103;
+    /** How much the bars take before they burst (CR4: three times what they did). */
+    private static final float BAR_HEALTH = 24.0F;
+    /** A heave on the loose beat (struggling, no weapon needed). */
+    private static final float HEAVE = 5.0F;
+    private static final float DROP_DAMAGE = 16.0F;
 
     public final AnimationState emergeAnimation = new AnimationState();
     public final AnimationState slamAnimation = new AnimationState();
@@ -89,6 +118,9 @@ public class Jailer extends Monster {
     public final AnimationState rattleAnimation = new AnimationState();
     public final AnimationState breakAnimation = new AnimationState();
     public final AnimationState listenAnimation = new AnimationState();
+    public final AnimationState loosenAnimation = new AnimationState();
+    public final AnimationState heaveAnimation = new AnimationState();
+    public final AnimationState kickAnimation = new AnimationState();
     /** Client side: eases from 0 (upright) to 1 (hunched, creeping) while it hunts. */
     public float stalk;
     public float stalkO;
@@ -102,10 +134,20 @@ public class Jailer extends Monster {
     private int slamCooldown;
     private @Nullable Vec3 slamAt;
     private int squeezeTimer;
+    private int squeezes;
     private float barHealth = BAR_HEALTH;
     private float haulDamage;
     private int regrowTimer;
     private int hintTimer;
+    private int beatTimer;
+    private int looseIn;
+    private int looseTicks;
+    private int lastStruggle = -100;
+    private int quietTicks;
+    private int guardTicks;
+    private int kickTimer;
+    private int kickCooldown;
+    private @Nullable LivingEntity kickAt;
 
     public Jailer(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -255,6 +297,16 @@ public class Jailer extends Monster {
             return;
         }
         this.listenTimer = 5;
+        // on guard after a breakout: it follows its escaped prisoner's every breath, sneaking or not
+        LivingEntity escaped = this.suspect;
+        if (this.guardTicks > 0 && escaped != null && this.canHear(escaped) && this.distanceToSqr(escaped) < GUARD_HEARING * GUARD_HEARING) {
+            this.heardAt = escaped.position();
+            this.heardTicks = Math.max(this.heardTicks, 60);
+            this.certainty = 3.0F;
+            if (this.getMode() == IDLE) {
+                this.setMode(HUNTING);
+            }
+        }
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(NOTE_RANGE), this::canHear)) {
             float loud = loudness(e);
             double range = (e.hurtTime > 6 ? NOTE_RANGE : HEAR_RANGE) * loud;
@@ -278,12 +330,15 @@ public class Jailer extends Monster {
         if (this.hintTimer > 0) {
             this.hintTimer--;
         }
+        if (this.guardTicks > 0) {
+            this.guardTicks--;
+        }
         switch (this.getMode()) {
             case EMERGING -> this.tickEmerging(level);
             case SLAMMING -> this.tickSlam(level);
             case CARRYING -> this.tickCarrying(level);
             case STUNNED -> {
-                if (this.modeTicks > 50) {
+                if (this.modeTicks > 20) {
                     this.setMode(this.heardAt != null ? HUNTING : IDLE);
                 }
             }
@@ -297,19 +352,21 @@ public class Jailer extends Monster {
                         this.setMode(IDLE);
                     }
                 }
-                if (this.modeTicks % 40 == 0 && this.certainty > 0.0F) {
+                if (this.modeTicks % 40 == 0 && this.certainty > 0.0F && this.guardTicks <= 0) {
                     this.certainty = Math.max(0.0F, this.certainty - 0.5F);
                 }
             }
         }
-        // a broken cell grows its bars back, one by one
+        // a broken cell grows its bars back, one by one - quickly (CR4)
         if (this.getCage() < CAGE_WHOLE && this.getMode() != CARRYING && --this.regrowTimer <= 0) {
-            this.regrowTimer = 30;
+            this.regrowTimer = 6;
             this.setCage(this.getCage() + 1);
+            Vec3 c = this.cagePos();
+            level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, c.x, c.y + 1.0, c.z, 3, 0.5, 0.8, 0.5, 0.02);
             if (this.getCage() == CAGE_WHOLE) {
                 this.barHealth = BAR_HEALTH;
                 this.playSound(ModCaveCreatures.JAILER_REGROW.get(), 1.0F, 1.0F);
-                level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, this.cagePos().x, this.cagePos().y + 1.0, this.cagePos().z, 12, 0.5, 0.8, 0.5, 0.02);
+                level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, c.x, c.y + 1.0, c.z, 12, 0.5, 0.8, 0.5, 0.02);
             }
         }
     }
@@ -404,10 +461,18 @@ public class Jailer extends Monster {
         this.setMode(CARRYING);
         this.barHealth = BAR_HEALTH;
         this.haulDamage = 0.0F;
-        this.squeezeTimer = 50 + this.random.nextInt(30);
+        this.squeezes = 0;
+        this.quietTicks = 0;
+        this.squeezeTimer = 60 + this.random.nextInt(20);
+        this.beatTimer = 24;
+        this.looseIn = 0;
+        this.looseTicks = 0;
+        this.kickTimer = 0;
+        this.kickCooldown = 20;
         level.broadcastEntityEvent(this, EVENT_TRAP);
         this.playSound(ModCaveCreatures.JAILER_TRAP.get(), 2.0F, 0.9F);
         player.sendOverlayMessage(Component.translatable("message.thesift.jailer.trapped"));
+        this.hintTimer = 80;
         return true;
     }
 
@@ -425,39 +490,146 @@ public class Jailer extends Monster {
             this.setMode(IDLE);
             return;
         }
+        // its heart beats in its grip: a thump, then the claws loosen for a moment
+        if (this.looseTicks > 0) {
+            this.looseTicks--;
+        }
+        if (--this.beatTimer <= 0) {
+            this.beatTimer = BEAT_MIN + this.random.nextInt(BEAT_MAX - BEAT_MIN + 1);
+            this.looseIn = CUE_TICKS;
+            level.broadcastEntityEvent(this, EVENT_LOOSEN);
+            this.playSound(ModCaveCreatures.JAILER_PULSE.get(), 1.6F, 1.0F);
+        }
+        if (this.looseIn > 0 && --this.looseIn == 0) {
+            this.looseTicks = LOOSE_TICKS + LATENCY_TICKS;
+            this.playSound(ModCaveCreatures.JAILER_LOOSEN.get(), 1.2F, 0.9F + this.random.nextFloat() * 0.2F);
+        }
+        // it squeezes, harder every time
         if (--this.squeezeTimer <= 0) {
-            this.squeezeTimer = 60 + this.random.nextInt(50);
+            this.squeezeTimer = 55 + this.random.nextInt(30);
+            float crush = 4.0F + 1.5F * Math.min(this.squeezes, 3);
+            this.squeezes++;
             level.broadcastEntityEvent(this, EVENT_SQUEEZE);
             this.playSound(ModCaveCreatures.JAILER_SQUEEZE.get(), 1.5F, 0.8F + this.random.nextFloat() * 0.2F);
-            prisoner.hurtServer(level, this.damageSources().mobAttack(this), 3.0F);
+            prisoner.hurtServer(level, this.damageSources().mobAttack(this), crush);
             level.sendParticles(ParticleTypes.SCULK_SOUL, cell.getX(), cell.getY() + 1.6, cell.getZ(), 4, 0.4, 0.4, 0.4, 0.02);
+        }
+        // bars left alone grow back, even while it holds you
+        if (++this.quietTicks > 40 && this.barHealth < BAR_HEALTH && this.quietTicks % 20 == 0) {
+            this.barHealth = Math.min(BAR_HEALTH, this.barHealth + BAR_HEALTH / CAGE_WHOLE);
+            this.setCage(Mth.ceil(CAGE_WHOLE * this.barHealth / BAR_HEALTH));
+            this.playSound(ModCaveCreatures.JAILER_REGROW.get(), 0.6F, 1.4F);
+            level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, cell.getX(), cell.getY() + 1.0, cell.getZ(), 6, 0.5, 0.8, 0.5, 0.02);
+        }
+        if (this.hintTimer == 1 && prisoner instanceof Player p && this.barHealth >= BAR_HEALTH) {
+            p.sendOverlayMessage(Component.translatable("message.thesift.jailer.beat"));
+        }
+        this.tickGuardKick(level, prisoner);
+    }
+
+    /** It guards its prisoner: anyone else who comes close gets a heavy kick (after a telegraphing wind-up). */
+    private void tickGuardKick(ServerLevel level, LivingEntity prisoner) {
+        if (this.kickCooldown > 0) {
+            this.kickCooldown--;
+        }
+        if (this.kickTimer > 0) {
+            LivingEntity target = this.kickAt;
+            if (--this.kickTimer == 0 && target != null) {
+                this.kickAt = null;
+                if (target.isAlive() && this.distanceToSqr(target) < 3.8 * 3.8) {
+                    this.playSound(ModCaveCreatures.JAILER_KICK.get(), 1.4F, 0.9F + this.random.nextFloat() * 0.15F);
+                    if (target.hurtServer(level, this.damageSources().mobAttack(this), 6.0F)) {
+                        Vec3 away = target.position().subtract(this.position()).multiply(1.0, 0.0, 1.0);
+                        away = away.lengthSqr() < 1.0E-4 ? Vec3.directionFromRotation(0.0F, this.getYRot()) : away.normalize();
+                        target.push(away.x * 1.1, 0.45, away.z * 1.1);
+                    }
+                }
+            }
+            return;
+        }
+        if (this.kickCooldown > 0) {
+            return;
+        }
+        for (Player rescuer : level.getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(3.0, 1.5, 3.0),
+                pl -> pl != prisoner && pl.isAlive() && !pl.isCreative() && !pl.isSpectator())) {
+            this.kickAt = rescuer;
+            this.kickTimer = 8;
+            this.kickCooldown = 45;
+            level.broadcastEntityEvent(this, EVENT_KICK);
+            this.playSound(ModCaveCreatures.JAILER_LISTEN.get(), 1.0F, 1.3F);
+            break;
         }
     }
 
-    /** The cell is hit (from inside, or by a friend outside). Enough hits and the bars give way. */
+    /** The cell is hit (from inside, or by a friend outside). Only blows on the loose beat really count. */
     public boolean hitBars(ServerLevel level, JailCell cell, DamageSource source, float amount) {
         if (!this.isCarrying() || source.getEntity() == this) {
             return false;
         }
-        this.barHealth -= Math.max(0.5F, amount / 3.0F);
-        // each hit snaps a bar or two
-        this.setCage(Math.max(1, Mth.ceil(CAGE_WHOLE * this.barHealth / BAR_HEALTH)));
-        level.broadcastEntityEvent(this, EVENT_RATTLE);
-        this.playSound(ModCaveCreatures.JAILER_RATTLE.get(), 1.3F, 0.85F + this.random.nextFloat() * 0.3F);
-        level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.IRON_BARS.defaultBlockState()), cell.getX(), cell.getY() + 1.0,
-                cell.getZ(), 10, 0.5, 0.7, 0.5, 0.1);
-        if (this.barHealth <= 0.0F) {
-            this.breakOut(level);
+        Entity by = source.getEntity();
+        boolean inside = by != null && by == cell.prisoner();
+        boolean loose = this.looseTicks > 0;
+        float blow = Math.min(amount, 12.0F);
+        float dent;
+        if (inside) {
+            dent = loose ? 3.0F + blow * 0.5F : Math.min(amount, 8.0F) * 0.15F;
+        } else {
+            dent = blow * (loose ? 0.6F : 0.3F); // a friend outside has the leverage
         }
+        if (inside && !loose) {
+            this.squeezeTimer = Math.max(8, this.squeezeTimer - 10); // it feels you thrashing
+            if (by instanceof Player p) {
+                this.hint(p);
+            }
+        }
+        this.damageBars(level, cell, dent, loose);
         return true;
     }
 
-    /** A trapped player sneaking to get out only rattles the bars. */
+    /** A trapped player presses the sneak key: one heave against the bars (holding the key down is not another). */
     public void struggle(Player player) {
+        JailCell cell = this.cell();
+        boolean fresh = this.tickCount - this.lastStruggle > 2;
+        this.lastStruggle = this.tickCount;
+        if (cell == null || !fresh || !(this.level() instanceof ServerLevel level)) {
+            return;
+        }
+        if (this.looseTicks > 0) {
+            this.damageBars(level, cell, HEAVE, true);
+        } else {
+            // squirming against a tight grip only makes it squeeze sooner
+            this.squeezeTimer = Math.max(8, this.squeezeTimer - 15);
+            level.broadcastEntityEvent(this, EVENT_RATTLE);
+            this.playSound(ModCaveCreatures.JAILER_TIGHTEN.get(), 0.9F, 0.8F + this.random.nextFloat() * 0.2F);
+            this.hint(player);
+        }
+    }
+
+    private void hint(Player player) {
         if (this.hintTimer <= 0) {
             this.hintTimer = 60;
             player.sendOverlayMessage(Component.translatable("message.thesift.jailer.struggle"));
-            this.playSound(ModCaveCreatures.JAILER_RATTLE.get(), 0.6F, 1.3F);
+        }
+    }
+
+    private void damageBars(ServerLevel level, JailCell cell, float dent, boolean heave) {
+        this.barHealth -= dent;
+        this.quietTicks = 0;
+        // each good blow snaps a bar or two
+        this.setCage(Math.max(1, Mth.ceil(CAGE_WHOLE * this.barHealth / BAR_HEALTH)));
+        if (heave) {
+            this.looseTicks = 0; // one good blow per loosening
+            level.broadcastEntityEvent(this, EVENT_HEAVE);
+            this.playSound(ModCaveCreatures.JAILER_HEAVE.get(), 1.5F, 0.85F + this.random.nextFloat() * 0.3F);
+            level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, cell.getX(), cell.getY() + 1.0, cell.getZ(), 10, 0.6, 0.8, 0.6, 0.05);
+        } else {
+            level.broadcastEntityEvent(this, EVENT_RATTLE);
+            this.playSound(ModCaveCreatures.JAILER_RATTLE.get(), 1.3F, 0.85F + this.random.nextFloat() * 0.3F);
+        }
+        level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.IRON_BARS.defaultBlockState()), cell.getX(), cell.getY() + 1.0,
+                cell.getZ(), heave ? 18 : 6, 0.5, 0.7, 0.5, 0.1);
+        if (this.barHealth <= 0.0F) {
+            this.breakOut(level);
         }
     }
 
@@ -467,8 +639,11 @@ public class Jailer extends Monster {
         LivingEntity prisoner = cell == null ? null : cell.prisoner();
         Vec3 at = cell != null ? cell.position() : this.cagePos();
         this.setCage(0);
-        this.regrowTimer = 200;
+        this.regrowTimer = 40;
         this.barHealth = BAR_HEALTH;
+        this.looseTicks = 0;
+        this.kickTimer = 0;
+        this.kickAt = null;
         level.broadcastEntityEvent(this, EVENT_BREAK);
         this.playSound(ModCaveCreatures.JAILER_BREAK.get(), 2.0F, 0.9F);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.IRON_BARS.defaultBlockState()), at.x, at.y + 1.0, at.z, 40, 0.6, 0.9,
@@ -481,13 +656,14 @@ public class Jailer extends Monster {
             Vec3 away = prisoner.position().subtract(this.position()).multiply(1.0, 0.0, 1.0);
             away = away.lengthSqr() < 1.0E-4 ? Vec3.directionFromRotation(0.0F, this.getYRot()) : away.normalize();
             prisoner.push(away.x * 0.5, 0.3, away.z * 0.5);
-            // it heard exactly where you went
+            // it heard exactly where you went - and it will not let you go
             this.suspect = prisoner;
             this.heardAt = prisoner.position();
-            this.heardTicks = 100;
+            this.heardTicks = 200;
             this.certainty = 3.0F;
+            this.guardTicks = GUARD_TICKS;
         }
-        this.slamCooldown = 120;
+        this.slamCooldown = 20;
         this.setMode(STUNNED);
     }
 
@@ -520,7 +696,7 @@ public class Jailer extends Monster {
         boolean hurt = super.hurtServer(level, source, damage);
         if (hurt && this.isAlive()) {
             if (this.isCarrying()) {
-                // a friend outside: hurt it enough and it drops the cell
+                // a friend outside: hurt it badly enough and it drops the cell
                 this.haulDamage += damage;
                 if (this.haulDamage >= DROP_DAMAGE) {
                     this.breakOut(level);
@@ -556,6 +732,17 @@ public class Jailer extends Monster {
             case EVENT_RATTLE -> this.rattleAnimation.start(this.tickCount);
             case EVENT_BREAK -> this.breakAnimation.start(this.tickCount);
             case EVENT_LISTEN -> this.listenAnimation.start(this.tickCount);
+            case EVENT_LOOSEN -> {
+                this.loosenAnimation.start(this.tickCount);
+                // the sculk on the bars flares up: now!
+                Vec3 c = this.cagePos();
+                for (int i = 0; i < 8; i++) {
+                    this.level().addParticle(ParticleTypes.SCULK_CHARGE_POP, c.x + (this.random.nextDouble() - 0.5) * 1.3,
+                            c.y + 0.2 + this.random.nextDouble() * 1.9, c.z + (this.random.nextDouble() - 0.5) * 1.3, 0.0, 0.015, 0.0);
+                }
+            }
+            case EVENT_HEAVE -> this.heaveAnimation.start(this.tickCount);
+            case EVENT_KICK -> this.kickAnimation.start(this.tickCount);
             default -> super.handleEntityEvent(id);
         }
     }
@@ -681,7 +868,10 @@ public class Jailer extends Monster {
         }
     }
 
-    /** With a prisoner in the cell it wanders off, away from anyone else it can hear coming. */
+    /**
+     * With a prisoner in the cell it wanders off with them - but it guards them: when anyone else comes
+     * near it stops, turns to face them and kicks whoever gets too close (see {@link #tickGuardKick}).
+     */
     private class HaulGoal extends Goal {
         private int timer;
 
@@ -698,6 +888,27 @@ public class Jailer extends Monster {
         public void tick() {
             Jailer j = Jailer.this;
             JailCell cell = j.cell();
+            LivingEntity prisoner = cell == null ? null : cell.prisoner();
+            Player rescuer = null;
+            for (Player p : j.level().getEntitiesOfClass(Player.class, j.getBoundingBox().inflate(7.0, 3.0, 7.0),
+                    pl -> pl != prisoner && pl.isAlive() && !pl.isSpectator() && !pl.isCreative())) {
+                if (rescuer == null || j.distanceToSqr(p) < j.distanceToSqr(rescuer)) {
+                    rescuer = p;
+                }
+            }
+            if (rescuer != null) {
+                // on guard: stand between them and the cell
+                j.getNavigation().stop();
+                j.getLookControl().setLookAt(rescuer, 20.0F, 20.0F);
+                double dx = rescuer.getX() - j.getX();
+                double dz = rescuer.getZ() - j.getZ();
+                float yaw = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+                float turned = Mth.approachDegrees(j.getYRot(), yaw, 6.0F);
+                j.setYRot(turned);
+                j.setYBodyRot(turned);
+                this.timer = 0;
+                return;
+            }
             if (cell != null) {
                 j.getLookControl().setLookAt(cell.getX(), cell.getY() + 1.0, cell.getZ());
             }
@@ -705,10 +916,7 @@ public class Jailer extends Monster {
                 return;
             }
             this.timer = 60 + j.random.nextInt(60);
-            LivingEntity prisoner = cell == null ? null : cell.prisoner();
-            Player rescuer = j.level().getNearestPlayer(j, 16.0);
-            Vec3 to = rescuer != null && rescuer != prisoner ? DefaultRandomPos.getPosAway(j, 12, 5, rescuer.position())
-                    : DefaultRandomPos.getPos(j, 10, 5);
+            Vec3 to = DefaultRandomPos.getPos(j, 10, 5);
             if (to != null) {
                 j.getNavigation().moveTo(to.x, to.y, to.z, 0.7);
             }

@@ -19,4 +19,8 @@ public class JailerRenderState extends SiftRenderState {
     public final AnimationState rattle = new AnimationState();
     public final AnimationState cageBreak = new AnimationState();
     public final AnimationState listen = new AnimationState();
+    /** CR4 the grip's heartbeat (the bars glow: strike now!), a good heave against the bars, a guard's kick. */
+    public final AnimationState loosen = new AnimationState();
+    public final AnimationState heave = new AnimationState();
+    public final AnimationState kick = new AnimationState();
 }
