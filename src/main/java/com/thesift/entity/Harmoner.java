@@ -61,7 +61,7 @@ import org.jspecify.annotations.Nullable;
  * their heads tucked under a wing at night, and when one starts to sing the others nearby join in
  * a moment later, in harmony. Play a note and one will sing it back to you.
  */
-public class Harmoner extends Animal implements MusicListener {
+public class Harmoner extends Animal implements MusicListener, Resting {
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Harmoner.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> GUIDING = SynchedEntityData.defineId(Harmoner.class, EntityDataSerializers.BOOLEAN);
     /** Ids 60-67 are vanilla's. */
@@ -163,6 +163,12 @@ public class Harmoner extends Animal implements MusicListener {
     /** Roosting asleep for the night, head under its wing. */
     public boolean isRoosting() {
         return this.entityData.get(SLEEPING);
+    }
+
+    /** S1: a roosting Harmoner sleeps on purpose till morning (dev/CreatureCheck's never-frozen check lets it off). */
+    @Override
+    public boolean isResting() {
+        return this.isRoosting();
     }
 
     private void setRoosting(boolean b) {

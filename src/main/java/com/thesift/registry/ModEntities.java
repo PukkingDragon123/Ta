@@ -29,13 +29,13 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
             MobCategory.CREATURE, b -> b.sized(1.0F, 1.8F).eyeHeight(1.6F).clientTrackingRange(10)); // M3: a deer spirit (antlers above the box)
     public static final DeferredHolder<EntityType<?>, EntityType<Harmoner>> HARMONER = ENTITIES.registerEntityType("harmoner", Harmoner::new,
-            MobCategory.CREATURE, b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
+            MobCategory.CREATURE, b -> b.sized(0.45F, 0.75F).eyeHeight(0.55F).clientTrackingRange(10)); // S1 land: small and fluffy
     public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,
             MobCategory.MONSTER, b -> b.sized(1.4F, 5.6F).eyeHeight(4.9F).clientTrackingRange(16).fireImmune()); // C3: 1.5x taller (the colossus scales this, Dictator.getDefaultDimensions)
     /** Summoned by the Conductor's Staff: circles its summoner and sings buffs over them. */
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.SculkHarmoner>> SCULK_HARMONER = ENTITIES.registerEntityType(
             "sculk_harmoner", com.thesift.entity.SculkHarmoner::new, MobCategory.MISC,
-            b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10).noSummon());
+            b -> b.sized(0.45F, 0.75F).eyeHeight(0.55F).clientTrackingRange(10).noSummon()); // S1 land: small and fluffy
     // the Conductor's three great players, and their young
     public static final DeferredHolder<EntityType<?>, EntityType<Thumper>> THUMPER = ENTITIES.registerEntityType("thumper", Thumper::new,
             MobCategory.MONSTER, b -> b.sized(3.0F, 2.9F).eyeHeight(2.0F).clientTrackingRange(16));

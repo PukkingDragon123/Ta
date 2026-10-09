@@ -185,10 +185,19 @@ public class MiniCreator extends PathfinderMob {
         super.tick();
         if (this.level().isClientSide()) {
             // a faint sparkle trails off his floating blocks
-            if (this.random.nextFloat() < 0.06F) {
+            if (this.random.nextFloat() < 0.14F) {
                 double a = this.tickCount * 0.08 + this.random.nextInt(4) * Math.PI / 2.0;
-                this.level().addParticle(ParticleTypes.WAX_ON, this.getX() + Math.cos(a) * 0.45, this.getY() + 0.85, this.getZ() + Math.sin(a) * 0.45,
+                this.level().addParticle(ParticleTypes.WAX_ON, this.getX() + Math.cos(a) * 0.42, this.getY() + 0.85, this.getZ() + Math.sin(a) * 0.42,
                         0.0, 0.0, 0.0);
+            }
+            // S1 land: a soft divine shimmer - motes rising off his halo, and magic drawn in towards him now and then
+            if (this.random.nextFloat() < 0.04F) {
+                this.level().addParticle(ParticleTypes.END_ROD, this.getX() + (this.random.nextDouble() - 0.5) * 0.3, this.getY() + 1.15,
+                        this.getZ() + (this.random.nextDouble() - 0.5) * 0.3, 0.0, 0.02, 0.0);
+            }
+            if (this.random.nextFloat() < 0.08F) {
+                this.level().addParticle(ParticleTypes.ENCHANT, this.getX(), this.getY() + 0.9, this.getZ(), (this.random.nextDouble() - 0.5) * 2.0,
+                        this.random.nextDouble() * 0.6, (this.random.nextDouble() - 0.5) * 2.0);
             }
             return;
         }

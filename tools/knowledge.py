@@ -464,8 +464,8 @@ def lang(GA):
         f'band.{NS}.instrument.creator_bells': 'Creator Bells',
         f'codex.{NS}.mini_creator.title': 'Mini Creator',
         f'codex.{NS}.mini_creator.tagline': 'Your guide - a small piece of a big song',
-        f'codex.{NS}.mini_creator.body': 'A small platypus in the Creator\'s white and gold, with four little blocks floating over his '
-                                         'back. He says he is a piece of the Creator\'s song that slipped free when the Creator was '
+        f'codex.{NS}.mini_creator.body': 'A small platypus dressed for exploring in the Creator\'s white and gold - field coat, '  # S1 land
+                                         'satchel and a wide-brimmed hat under a floating halo - with rune-carved blocks circling him. He says he is a piece of the Creator\'s song that slipped free when the Creator was '
                                          'taken. He appears when you first arrive in the Sift, gives you this book and tells you '
                                          'what to look for next; he pops back whenever you finish a goal. Talk to him (use him) to '
                                          'hear your current goal again. He cannot be hurt, and he plays bells in your band.',

@@ -450,7 +450,7 @@ DREAMY_PARTICLES = [('drifting_soul', 0.0008), ('dream_pollen', 0.0012), ('glow_
 def biomes():
     biome('sift_plains', fog='#aef0e2', sky='#5ed6c6', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
           spawns=mobs(creature=[('bulb', 12, 2, 4), ('sift_sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]
-                      + [('stomper', 2, 1, 3), ('sky_whale', 1, 1, 1)],
+                      + [('stomper', 2, 1, 3)],  # S1 land: Sky Whales spawn only over the Sky Islands
                       water=[('fanfare_eel', 3, 1, 1)], water_ambient=[('kazoo_fish', 8, 3, 6)]),
           parts=particles(*DREAMY_PARTICLES),
           feats=[(1, 'chrome_pool_surface'), (2, 'floating_island'), (2, 'floating_islet'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
@@ -474,7 +474,7 @@ def biomes():
                 [(9, 'patch_chrome_reeds'), (9, 'patch_blushgrass'), (9, 'trees_sift_plains')])
     biome('wishing_grove', fog='#b4eee2', sky='#5ed6c6', water='#ffb8e6', grass='#f59ac6', foliage='#f9b3d4', temp=0.8, down=0.7,
           spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2), ('harmoner', 8, 1, 3)]
-                      + [('sky_whale', 1, 1, 1)]),
+                      + []),  # S1 land: Sky Whales spawn only over the Sky Islands
           parts=particles(('wishwood_leaf', 0.003), ('star_sparkle', 0.002), ('drifting_soul', 0.003), ('wishing_star', 0.0003)),
           feats=[(2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_wishing_grove'), (9, 'patch_grove_flowers'), (9, 'patch_blushgrass'), (9, 'patch_pitcher_plant')])

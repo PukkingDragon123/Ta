@@ -70,8 +70,9 @@ public class HarmonerModel extends EntityModel<HarmonerRenderState> {
         float blend = Anim.smooth(Mth.frac(age / 24.0F) * 6.0F);
         float yaw = Mth.lerp(blend, turn(n - 1, 1), turn(n, 1));
         float tilt = Mth.lerp(blend, turn(n - 1, 2), turn(n, 2));
-        this.head.yRot = s.yRot * Anim.DEG * 0.7F + yaw * 0.45F * ground;
-        this.head.xRot = s.xRot * Anim.DEG * 0.6F;
+        // S1: the look is clamped, so the head never twists round past its shoulders
+        this.head.yRot = Mth.clamp(s.yRot * Anim.DEG * 0.7F, -0.9F, 0.9F) + yaw * 0.45F * ground;
+        this.head.xRot = Mth.clamp(s.xRot * Anim.DEG * 0.6F, -0.6F, 0.6F);
         this.head.zRot = tilt * 0.2F * ground;
 
         // --- hopping along the ground
@@ -80,6 +81,11 @@ public class HarmonerModel extends EntityModel<HarmonerRenderState> {
         this.rightLeg.y -= Math.abs(Mth.sin(pos)) * 1.2F * walk;
         this.leftLeg.xRot = Mth.cos(pos) * 0.6F * walk;
         this.rightLeg.xRot = Mth.cos(pos) * 0.6F * walk;
+        // S1 land: the fluffy little body squashes as it lands and stretches as it springs off again
+        float squash = (1.0F - Math.abs(Mth.sin(pos))) * 0.12F * walk;
+        this.body.yScale = 1.0F - squash;
+        this.body.xScale = 1.0F + squash * 0.6F;
+        this.body.zScale = 1.0F + squash * 0.6F;
 
         // --- tail wag, spreading in flight
         this.tail.yRot = Mth.sin(age * 0.15F) * 0.12F * ground;

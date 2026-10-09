@@ -122,7 +122,9 @@ public final class ModBusEvents {
         if (EntitySpawnReason.isSpawner(reason)) {
             return true;
         }
-        return pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) && level.getFluidState(pos).isEmpty()
+        // S1 land: born over the Sky Islands - only over Sky Grass, with open sky above (finalizeSpawn lifts it high over the island)
+        return level.getBlockState(pos.below()).is(ModBlocks.SKY_GRASS_BLOCK.get())
+                && pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) && level.getFluidState(pos).isEmpty()
                 && random.nextInt(3) == 0;
     }
 }

@@ -24,6 +24,9 @@ public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
     private final ModelPart backLeft;
     private final ModelPart backRight;
     private final ModelPart[] orbs = new ModelPart[4];
+    /** S1 land: two glowing rune plates circling the other way, and the halo over his explorer's hat. */
+    private final ModelPart[] runes = new ModelPart[2];
+    private final ModelPart halo;
 
     public MiniCreatorModel(ModelPart root) {
         super(root);
@@ -31,6 +34,9 @@ public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
         this.head = this.body.getChild("head");
         this.jaw = this.head.getChild("jaw");
         this.crown = this.head.getChild("crown");
+        this.halo = this.crown.getChild("halo");
+        this.runes[0] = root.getChild("rune_0");
+        this.runes[1] = root.getChild("rune_1");
         this.tail = this.body.getChild("tail");
         for (int i = 0; i < 4; i++) {
             this.tassels[i] = this.body.getChild("tassel_" + i);
@@ -148,5 +154,16 @@ public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
             o.yRot = age * 0.05F + i;
             o.xRot = age * 0.03F * (i % 2 == 0 ? 1 : -1);
         }
+        // S1 land: the rune plates wheel the other way, lower and closer, turning as they go; the halo floats and turns slowly
+        for (int i = 0; i < 2; i++) {
+            float a = -age * orbitSpeed * 1.4F + i * Mth.PI - spin;
+            ModelPart r = this.runes[i];
+            r.x = Mth.cos(a) * radius * 0.7F;
+            r.z = Mth.sin(a) * radius * 0.7F;
+            r.y = 12.5F + Mth.sin(age * 0.12F + i * 2.1F) * 0.8F - (tk >= 0.0F ? 2.0F : 0.0F);
+            r.yRot = -a;
+        }
+        this.halo.y -= 0.4F + Mth.sin(age * 0.1F) * 0.4F;
+        this.halo.yRot = age * 0.03F;
     }
 }

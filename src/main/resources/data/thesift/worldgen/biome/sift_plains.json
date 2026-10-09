@@ -66,11 +66,6 @@
                 "max_inclusive": 3
               },
               "weight": 2
-            },
-            {
-              "type": "thesift:sky_whale",
-              "count": 1,
-              "weight": 1
             }
           ],
           "monster": [],

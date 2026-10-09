@@ -41,8 +41,14 @@ def _rows(spec, w, h):
     return [((spec.get(y, '')) + '.' * w)[:w] for y in range(h)]
 
 
-def _fur(color='fur', **kw):
+GLINTS = {'r': 'glint_r', 'y': 'glint_y', 'c': 'glint_c', 'v': 'glint_v'}
+
+
+def _fur(color='fur', glints=0.0, size=(8, 8), seed=0, **kw):
+    """Cloud fur; glints > 0 sprinkles Rainbow Snow glints through it (size: the face in texels)."""
     d = dict(color=color, pattern='mc', clusters=0.2, streaks=0.3)
+    if glints:
+        d.update(hd=True, map_material=True, map=__import__('landkit').speckle(size[0], size[1], seed, 'rycv', glints), keys=GLINTS)
     d.update(kw)
     return d
 
@@ -86,7 +92,7 @@ def _adult(m):
     body = root.part('body')
     body.cube((-3.5, -3.5, -6), (7, 7, 13), **_fur(bands=[(5, 'belly')], fringe=1), faces={
         'down': dict(color='belly_d', pattern='mc', clusters=0.1), 'up': _fur(clusters=0.3, streaks=0.4)})
-    body.cube((-4.5, -4.5, -7.5), (9, 9, 5), **_fur('fluff', fringe=2, streaks=0.45, bands=[(6, 'belly')]))   # the cloud collar
+    body.cube((-4.5, -4.5, -7.5), (9, 9, 5), **_fur('fluff', 0.02, (18, 18), 3, fringe=2, streaks=0.45, bands=[(6, 'belly')]))   # the cloud collar
     body.cube((-4, -2.5, 3), (8, 5.5, 4.5), **_fur('fluff', fringe=1))                                          # fluffy haunches
     body.cube((-2.5, -4.5, -1.5), (5, 1, 5), **_fur('fluff', rim=False))                                       # cloud lumps on the back
     body.cube((-2, -4.25, 4), (4, 1, 3), **_fur('fluff', rim=False))
@@ -120,10 +126,10 @@ def _adult(m):
         base = root.part(f'tail_{side}', pivot=(1.3 * sx, -2.5, 6.5), rot=(0.42 if sx else 0.6, 0.56 * sx, 0))
         base.cube((-1.5, -1.5, 0), (3, 3, 4), **_fur('shade', rim=False))
         mid = base.part(f'tail_{side}_mid', pivot=(0, 0, 3.5), rot=(0.12, 0, 0))
-        mid.cube((-2.5, -2.5, 0), (5, 5, 5.5), **_fur('fluff', streaks=0.45))
+        mid.cube((-2.5, -2.5, 0), (5, 5, 5.5), **_fur('fluff', 0.02, (12, 12), int(sx * 7) + 20, streaks=0.45))
         mid.cube((-2, -3.25, 1), (4, 1, 3.5), **_fur('fluff', rim=False))
         tip = mid.part(f'tail_{side}_tip', pivot=(0, 0, 5), rot=(0.1, 0, 0))
-        tip.cube((-2, -2, 0), (4, 4, 4.5), **_fur('tip', streaks=0.2))
+        tip.cube((-2, -2, 0), (4, 4, 4.5), **_fur('tip', 0.05, (10, 10), int(sx * 5) + 40, streaks=0.2))
         tip.cube((-1.25, -1.25, 4.5), (2.5, 2.5, 1.25), **_fur('tip', rim=False))
 
 
@@ -169,9 +175,11 @@ def swifter() -> Model:
         'fur': '#f1f6ff', 'fur_l': '#ffffff', 'fur_d': '#cfdff6',
         'fluff': '#f8fbff', 'fluff_l': '#ffffff', 'fluff_d': '#d9e6f9',
         'belly': '#e0ebfb', 'belly_l': '#f2f7ff', 'belly_d': '#b8cdee',
-        'shade': '#c2d6f2', 'shade_l': '#d8e6f8', 'shade_d': '#9db9e3',
+        'shade': '#c8cdf2', 'shade_l': '#dde0f8', 'shade_d': '#a4abe0',  # S1 land: lilac shadows of the White Forest
+        'tip': '#e6eeff', 'tip_l': '#ffffff', 'tip_d': '#c4d2f4',
+        # S1 land: Rainbow Snow glints caught in its fur
+        'glint_r': '#ffc6e6', 'glint_y': '#fff2b8', 'glint_c': '#c2f2ff', 'glint_v': '#d8ccff',
         'sock': '#a9c6ee', 'sock_l': '#c6daf5', 'sock_d': '#84a8dc',
-        'tip': '#ffffff', 'tip_l': '#ffffff', 'tip_d': '#e3ecfa',
         'ear_in': '#97bdf0', 'nose': '#34466e', 'mouth': '#5b6e98',
         'eye': '#4fc2ff', 'pupil': '#14213f', 'lid': '#2a3a64', 'white': '#ffffff', 'tear': '#7fd6ff', 'blush': '#ffc2da',
     }

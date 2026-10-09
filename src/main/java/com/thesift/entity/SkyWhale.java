@@ -5,6 +5,7 @@ import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
 import java.lang.reflect.Method;
 import java.util.List;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +30,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -126,6 +130,7 @@ public class SkyWhale extends PathfinderMob {
     /** Answers a player's song: the whale comes to hover and sing to them (also used by the Whale Song). */
     public void answer(ServerLevel level, Player player) {
         this.answering = player;
+        this.food = null;
         this.answerTicks = ANSWER_TIMEOUT;
         this.songTicks = -1;
         this.riseTicks = 0;
@@ -254,18 +259,23 @@ public class SkyWhale extends PathfinderMob {
     }
 
     private void steer(ServerLevel level) {
-        int ground = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(this.getX()), Mth.floor(this.getZ()));
+        // S1 land: the ground is what lies under the whale (the heightmap is the top of an island overhead when it
+        // swims beneath one, and it used to be pushed up into the island's underside)
+        int ground = this.groundBelow(level);
         if (this.answering == null) {
             if (this.riseTicks > 0) {
                 this.riseTicks--;
+            } else {
+                this.graze(level);
             }
             // S1 never freeze: nosed into a cliff or a floating island, it turns for a new heading and climbs
             // (it used to press against the rock until its waypoint timed out, up to half a minute)
             if (this.horizontalCollision && this.riseTicks <= 0) {
                 this.waypoint = null;
+                this.food = null;
                 this.riseTicks = 80;
             }
-            if (this.waypoint == null || --this.waypointTimer <= 0 || this.position().distanceToSqr(this.waypoint) < 16.0) {
+            if (this.food == null && (this.waypoint == null || --this.waypointTimer <= 0 || this.position().distanceToSqr(this.waypoint) < 16.0)) {
                 this.waypointTimer = 300 + this.random.nextInt(300);
                 double a = this.random.nextDouble() * Math.PI * 2.0;
                 double d = 24.0 + this.random.nextDouble() * 40.0;
@@ -293,7 +303,7 @@ public class SkyWhale extends PathfinderMob {
         // the majestic bob
         v = v.add(0.0, Mth.sin(this.tickCount * 0.035F + this.getId()) * 0.0035, 0.0);
         // never scrape the ground
-        if (this.answering == null && this.getY() < ground + 12.0) {
+        if (this.answering == null && this.food == null && this.getY() < ground + 12.0) {
             v = v.add(0.0, 0.01, 0.0);
         }
         this.setDeltaMovement(v);
@@ -313,6 +323,98 @@ public class SkyWhale extends PathfinderMob {
             this.setYRot(cur + Mth.clamp(Mth.wrapDegrees(yaw - cur), -3.0F, 3.0F));
             this.yBodyRot = this.getYRot();
         }
+    }
+
+    // ------------------------------------------------------------------ grazing (S1 land)
+
+    /** What it grazes on: W-sky's Driftfruit, hanging under the islands (block tag thesift:sky_whale_food). */
+    private static final net.minecraft.tags.TagKey<Block> FOOD = com.thesift.world.sky.SkyIslands.SKY_WHALE_FOOD;
+    private @Nullable BlockPos food;
+    private int grazeCooldown = 200;
+    private int grazeTimer;
+
+    /** The top of whatever lies below it (up to 48 blocks down), else 48 blocks down. */
+    private int groundBelow(ServerLevel level) {
+        BlockPos.MutableBlockPos at = this.blockPosition().mutable();
+        int floor = Math.max(level.getMinY(), at.getY() - 48);
+        while (at.getY() > floor) {
+            if (!level.getBlockState(at).getCollisionShape(level, at).isEmpty()) {
+                return at.getY() + 1;
+            }
+            at.move(0, -1, 0);
+        }
+        return floor;
+    }
+
+    /**
+     * Every half minute or so a wandering whale looks for a Driftfruit hanging under the islands nearby, glides
+     * over until its mouth meets the fruit, and gulps it down.
+     */
+    private void graze(ServerLevel level) {
+        if (this.food != null) {
+            BlockState state = level.getBlockState(this.food);
+            if (!state.is(FOOD) || --this.grazeTimer <= 0) {
+                this.food = null;
+                this.waypoint = null;
+                return;
+            }
+            Vec3 fruit = Vec3.atCenterOf(this.food);
+            // aim the body a mouth-length short of the fruit, so the open mouth arrives at it
+            Vec3 flat = new Vec3(fruit.x - this.getX(), 0.0, fruit.z - this.getZ());
+            Vec3 back = flat.lengthSqr() > 1.0E-4 ? flat.normalize().scale(3.6) : Vec3.ZERO;
+            this.waypoint = fruit.subtract(back).subtract(0.0, 0.9, 0.0);
+            this.waypointTimer = 40;
+            if (this.mouthPos().distanceToSqr(fruit) < 2.8 * 2.8) {
+                this.eat(level, this.food, state);
+                this.food = null;
+                this.waypoint = null;
+            }
+            return;
+        }
+        if (--this.grazeCooldown > 0) {
+            return;
+        }
+        this.grazeCooldown = 500 + this.random.nextInt(700);
+        this.food = this.findFood(level);
+        this.grazeTimer = 600;
+    }
+
+    /** The nearest Driftfruit in a sample of columns round it (most hang from vines a little above it). */
+    private @Nullable BlockPos findFood(ServerLevel level) {
+        BlockPos best = null;
+        double bestD = Double.MAX_VALUE;
+        BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
+        int y0 = Mth.floor(this.getY());
+        for (int i = 0; i < 72; i++) {
+            int x = Mth.floor(this.getX()) + this.random.nextInt(49) - 24;
+            int z = Mth.floor(this.getZ()) + this.random.nextInt(49) - 24;
+            for (int y = y0 - 12; y <= y0 + 28; y++) {
+                at.set(x, y, z);
+                if (level.getBlockState(at).is(FOOD)) {
+                    double d = at.distToCenterSqr(this.getX(), this.getY(), this.getZ());
+                    if (d < bestD) {
+                        bestD = d;
+                        best = at.immutable();
+                    }
+                    break;
+                }
+            }
+        }
+        return best;
+    }
+
+    private void eat(ServerLevel level, BlockPos pos, BlockState state) {
+        level.levelEvent(2001, pos, Block.getId(state));
+        if (Boolean.TRUE.equals(level.getGameRules().get(GameRules.MOB_GRIEFING))) {
+            level.removeBlock(pos, false); // the vine grows a new one at its tip in time
+        }
+        level.broadcastEntityEvent(this, EVENT_SPIT); // the gulp: the throat swells round the fruit
+        this.playSound(net.minecraft.sounds.SoundEvents.GENERIC_EAT.value(), 2.0F, 0.45F);
+        this.playSound(ModSounds.SKY_WHALE_MOO.get(), 1.2F, 1.4F);
+        Vec3 m = this.mouthPos();
+        level.sendParticles(ModParticles.STAR_SPARKLE.get(), m.x, m.y, m.z, 20, 0.8, 0.6, 0.8, 0.05);
+        level.sendParticles(ParticleTypes.CLOUD, m.x, m.y, m.z, 8, 0.6, 0.4, 0.6, 0.02);
+        this.heal(10.0F);
     }
 
     /** Client: wisps of cloud off the tail and glowing motes along the body. */

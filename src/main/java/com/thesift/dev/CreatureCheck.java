@@ -84,12 +84,15 @@ final class CreatureCheck {
         /** Every block it has travelled, back and forth included. */
         double path;
         Vec3 last;
+        /** S1 land: where it stood at the last walk, to tell a stuck path from a slow one. */
+        Vec3 lastWalk;
 
         Watch(String name, Mob mob, BlockPos centre) {
             this.name = name;
             this.mob = mob;
             this.start = mob.position();
             this.last = this.start;
+            this.lastWalk = this.start;
             this.centre = centre;
             this.startTick = mob.tickCount;
         }
@@ -401,9 +404,13 @@ final class CreatureCheck {
                 at = new Vec3(cx + 0.5, SKY_Y + 4.0, cz + 0.5); // open sky
             } else {
                 // a meadow of Sift grass with a glass fence two blocks high
-                fill(cx - 6, SKY_Y - 1, cz - 6, cx + 6, SKY_Y + 1, cz + 6, glass);
-                fill(cx - 5, SKY_Y - 1, cz - 5, cx + 5, SKY_Y - 1, cz + 5, grass);
-                fill(cx - 5, SKY_Y, cz - 5, cx + 5, SKY_Y + 1, cz + 5, Blocks.AIR.defaultBlockState());
+                // S1 land: big creatures (the Stomper is 2.4 wide, the Sift Sniffer 1.6) get a 13 x 13 meadow and a fence three
+                // high, still a block clear of the next pen, so they have room to turn and walk about
+                int half = type.getWidth() > 1.5F ? 7 : 6;
+                int top = half == 7 ? SKY_Y + 2 : SKY_Y + 1;
+                fill(cx - half, SKY_Y - 1, cz - half, cx + half, top, cz + half, glass);
+                fill(cx - half + 1, SKY_Y - 1, cz - half + 1, cx + half - 1, SKY_Y - 1, cz + half - 1, grass);
+                fill(cx - half + 1, SKY_Y, cz - half + 1, cx + half - 1, top, cz + half - 1, Blocks.AIR.defaultBlockState());
                 at = new Vec3(cx + 0.5, SKY_Y, cz + 0.5);
             }
             Entity e = type.create(this.level, EntitySpawnReason.COMMAND);
@@ -431,8 +438,17 @@ final class CreatureCheck {
         double z = w.centre.getZ() + 0.5 + (w.mob.getZ() > w.centre.getZ() + 0.5 ? -4 : 4) + random.nextInt(2) - 0.5;
         if (w.mob instanceof SiftFish fish) {
             fish.setSwimTarget(new Vec3(x, SKY_Y - 2.5, z));
-        } else if (w.mob instanceof PathfinderMob walker && walker.getNavigation().isDone()) {
-            walker.getNavigation().moveTo(x, w.mob.getType() == ModEntities.HARMONER.get() ? SKY_Y + 2.0 : SKY_Y, z, 1.0);
+        } else if (w.mob instanceof PathfinderMob walker) {
+            // S1 land: a path it has not got anywhere along in a second is dropped and walked afresh (a big creature's path
+            // could hang on, never done and never followed)
+            boolean stuck = !walker.getNavigation().isDone() && w.mob.position().distanceTo(w.lastWalk) < 0.3;
+            if (stuck) {
+                walker.getNavigation().stop();
+            }
+            if (walker.getNavigation().isDone()) {
+                walker.getNavigation().moveTo(x, w.mob.getType() == ModEntities.HARMONER.get() ? SKY_Y + 2.0 : SKY_Y, z, 1.0);
+            }
         }
+        w.lastWalk = w.mob.position();
     }
 }

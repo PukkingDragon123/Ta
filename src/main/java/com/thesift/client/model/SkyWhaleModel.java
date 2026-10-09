@@ -6,7 +6,8 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * CR2: the Sky Whale, a humpback of the sky (geometry in tools/sky_whale.py).
+ * CR2: the Sky Whale, a humpback of the sky (geometry in tools/sky_whale.py). S1 land: six glowing eyes, six fins
+ * (the middle and rear pairs ripple a beat behind the front one), clouds along its back and flanks.
  *
  * <ul>
  *   <li>swimming: the spine drives a slow vertical wave from the chest down the tail stock to the
@@ -36,6 +37,11 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
     private final ModelPart[] finTips = new ModelPart[2];
     private final ModelPart[] tail = new ModelPart[4];
     private final ModelPart[] flukes = new ModelPart[2];
+    /** S1 land: the middle and rear fin pairs (six fins in all) and their trailing tips. */
+    private final ModelPart[] fins2 = new ModelPart[2];
+    private final ModelPart[] fins2Tips = new ModelPart[2];
+    private final ModelPart[] fins3 = new ModelPart[2];
+    private final ModelPart[] fins3Tips = new ModelPart[2];
 
     public SkyWhaleModel(ModelPart root) {
         super(root);
@@ -53,6 +59,10 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
             this.fins[s] = this.body.getChild(SIDES[s] + "_fin");
             this.finTips[s] = this.fins[s].getChild(SIDES[s] + "_fin_tip");
             this.flukes[s] = this.tail[3].getChild(SIDES[s] + "_fluke");
+            this.fins2[s] = this.body.getChild(SIDES[s] + "_fin_2");
+            this.fins2Tips[s] = this.fins2[s].getChild(SIDES[s] + "_fin_2_tip");
+            this.fins3[s] = this.tail[0].getChild(SIDES[s] + "_fin_3");
+            this.fins3Tips[s] = this.fins3[s].getChild(SIDES[s] + "_fin_3_tip");
         }
     }
 
@@ -97,6 +107,18 @@ public class SkyWhaleModel extends EntityModel<SkyWhaleRenderState> {
             this.fins[k].yRot += Mth.sin(stroke - 0.8F) * 0.06F * sx;
             this.finTips[k].zRot += Mth.sin(stroke - 0.9F) * 0.18F * sx;
             this.finTips[k].yRot += Mth.sin(stroke - 1.3F) * 0.05F * sx;
+            // S1 land: the middle and rear fins ripple in the same slow stroke, each pair a beat behind the one
+            // before, their tips flowing after them like veils
+            for (int p = 0; p < 2; p++) {
+                float st = stroke - 1.1F * (p + 1);
+                ModelPart fin = p == 0 ? this.fins2[k] : this.fins3[k];
+                ModelPart tip = p == 0 ? this.fins2Tips[k] : this.fins3Tips[k];
+                fin.zRot += (Mth.sin(st) * 0.2F - lift * 0.2F) * sx - bank * 0.25F;
+                fin.xRot += Mth.cos(st) * 0.06F;
+                fin.yRot += Mth.sin(st - 0.6F) * 0.08F * sx;
+                tip.zRot += Mth.sin(st - 0.9F) * 0.26F * sx;
+                tip.yRot += Mth.sin(st - 1.3F) * 0.06F * sx;
+            }
         }
 
         // --- the blowhole flares now and then

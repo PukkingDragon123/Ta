@@ -361,6 +361,11 @@ public final class ClientSmokeTest {
         scene("mob_closeup_caravan", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN.get(), 52, 0.0, 2.3, 0.4));
         scene("mob_closeup_caravan_queen", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_QUEEN.get(), 64, 0.0, 6.0, 1.4));
         scene("mob_closeup_caravan_larva", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_LARVA.get(), 78, 0.0, 1.5, 0.25));
+        // S1 land creatures: close-ups of the remade Swifter (and a cub), Sculk Harmoner, Mini Creator and Sky Whale
+        scene("mob_closeup_swifter", 50, c -> landStage(c, 0));
+        scene("mob_closeup_sculk_harmoner", 40, c -> landStage(c, 1));
+        scene("mob_closeup_mini_creator", 40, c -> landStage(c, 2));
+        scene("mob_closeup_sky_whale", 60, c -> landStage(c, 3));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -543,22 +548,53 @@ public final class ClientSmokeTest {
         c.camera(x0 + 2.4, STAGE_Y + 1.9, z0 - 1.6, x0 + 0.5, STAGE_Y + 0.5, z0 + 0.5);
     }
 
+    /** S1 land: the land creatures' close-ups stand on their own lawns north of the live pen, clear of every other stage. */
+    private static final int LAND_Z = STAGE_Z + 42;
+
+    /** S1 land creatures: each close-up sets its creature down on a shared lawn and frames it three-quarters from the front. */
+    private static void landStage(Ctx c, int which) {
+        c.run("gamemode spectator @a");
+        floor(c, -100, LAND_Z - 6, -54, LAND_Z + 18);
+        switch (which) {
+            case 0 -> {
+                c.spawn(com.thesift.registry.ModSwifter.SWIFTER.get(), -60.5, STAGE_Y, LAND_Z + 5.5, 160.0F, false);
+                if (c.spawn(com.thesift.registry.ModSwifter.SWIFTER.get(), -58.5, STAGE_Y, LAND_Z + 3.5, 200.0F, false)
+                        instanceof net.minecraft.world.entity.AgeableMob cub) {
+                    cub.setAge(-24000);
+                }
+                c.camera(-56.8, STAGE_Y + 1.7, LAND_Z + 0.6, -60.0, STAGE_Y + 0.6, LAND_Z + 5.0);
+            }
+            case 1 -> {
+                c.spawn(ModEntities.SCULK_HARMONER.get(), -68.5, STAGE_Y, LAND_Z + 5.5, 160.0F, false);
+                c.camera(-66.6, STAGE_Y + 1.3, LAND_Z + 3.0, -68.5, STAGE_Y + 0.5, LAND_Z + 5.5);
+            }
+            case 2 -> {
+                c.spawn(com.thesift.registry.ModKnowledge.MINI_CREATOR.get(), -76.5, STAGE_Y, LAND_Z + 5.5, 160.0F, false);
+                c.camera(-74.6, STAGE_Y + 1.3, LAND_Z + 3.0, -76.5, STAGE_Y + 0.4, LAND_Z + 5.5);
+            }
+            default -> {
+                c.spawn(ModEntities.SKY_WHALE.get(), -90.0, STAGE_Y + 1.5, LAND_Z + 8.0, 135.0F, false);
+                c.camera(-80.0, STAGE_Y + 5.0, LAND_Z - 2.0, -90.0, STAGE_Y + 2.5, LAND_Z + 8.0);
+            }
+        }
+    }
+
     /** S1: the Stomper elephant and a Stompling on a patch of Sift Plains turf, three-quarters from the front. */
     private static void stomperStage(Ctx c) {
         c.run("gamemode spectator @a");
-        floor(c, -48, STAGE_Z - 6, -28, STAGE_Z + 12);
-        c.fill(-48, STAGE_Y - 1, STAGE_Z - 6, -28, STAGE_Y - 1, STAGE_Z + 12, ModBlocks.CORAL_TURF.get().defaultBlockState());
+        floor(c, -48, LAND_Z - 6, -28, LAND_Z + 12);
+        c.fill(-48, STAGE_Y - 1, LAND_Z - 6, -28, STAGE_Y - 1, LAND_Z + 12, ModBlocks.CORAL_TURF.get().defaultBlockState());
         Block[] plants = plantsFor(c);
         for (int x = -48; x <= -28; x++) {
             if (plants.length > 0 && Math.floorMod(x * 5, 3) != 0) {
-                c.set(x, STAGE_Y, STAGE_Z + 11, plants[Math.floorMod(x, plants.length)].defaultBlockState());
+                c.set(x, STAGE_Y, LAND_Z + 11, plants[Math.floorMod(x, plants.length)].defaultBlockState());
             }
         }
-        c.spawn(ModEntities.STOMPER.get(), -38.5, STAGE_Y, STAGE_Z + 5.5, 180.0F, false);
-        if (c.spawn(ModEntities.STOMPER.get(), -34.0, STAGE_Y, STAGE_Z + 2.5, 150.0F, false) instanceof net.minecraft.world.entity.AgeableMob baby) {
+        c.spawn(ModEntities.STOMPER.get(), -38.5, STAGE_Y, LAND_Z + 5.5, 180.0F, false);
+        if (c.spawn(ModEntities.STOMPER.get(), -34.0, STAGE_Y, LAND_Z + 2.5, 150.0F, false) instanceof net.minecraft.world.entity.AgeableMob baby) {
             baby.setAge(-24000);
         }
-        c.camera(-33.0, STAGE_Y + 3.0, STAGE_Z - 1.5, -38.0, STAGE_Y + 1.7, STAGE_Z + 5.0);
+        c.camera(-33.0, STAGE_Y + 3.0, LAND_Z - 1.5, -38.0, STAGE_Y + 1.7, LAND_Z + 5.0);
     }
 
     private static void livePen(Ctx c) {

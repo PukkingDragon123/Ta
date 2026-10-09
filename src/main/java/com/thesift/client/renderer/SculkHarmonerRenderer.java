@@ -13,9 +13,15 @@ import net.minecraft.resources.Identifier;
 public class SculkHarmonerRenderer extends MobRenderer<SculkHarmoner, HarmonerRenderState, HarmonerModel> {
     private static final ExpressionTextures TEXTURES = new ExpressionTextures("harmoner", new String[]{"harmoner_sculk"}, Expression.BLINK,
             Expression.HAPPY);
+    /** S1 land: its crest, wing tips and eye glints glow, pulsing with its song. */
+    private static final ExpressionTextures GLOW = new ExpressionTextures("harmoner", new String[]{"harmoner_sculk"}, "_glow", Expression.BLINK,
+            Expression.HAPPY);
 
     public SculkHarmonerRenderer(EntityRendererProvider.Context context) {
         super(context, new HarmonerModel(context.bakeLayer(ModModelLayers.HARMONER)), 0.2F);
+        this.addLayer(new net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer<>(this, s -> GLOW.get(0, s.expression),
+                (s, age) -> 0.7F + 0.3F * net.minecraft.util.Mth.sin(age * 0.3F + s.seed), this.model,
+                net.minecraft.client.renderer.rendertype.RenderTypes::entityTranslucentEmissive, false));
     }
 
     @Override

@@ -29,7 +29,8 @@ PAL = {
     'inside': '#4a2c1a', 'inside_l': '#6a4228', 'inside_d': '#2a170c',
     # weathering: verdigris drips and the dune sand caked on it
     'patina': '#5fae96', 'patina_l': '#93d6bf', 'patina_d': '#3d806e',
-    'sand': '#e8c890', 'sand_l': '#f7e0b2', 'sand_d': '#c49a62', 'grit': '#a8814c',
+    # S1 land: the Rocky Dunes' chime sand - pale lavender, glinting pink and cyan
+    'sand': '#d8d1ee', 'sand_l': '#efebf9', 'sand_d': '#a396c8', 'grit': '#d070a8',
     # the inscription band: engraved grooves round gold runes (the runes glow when it rings)
     'engrave': '#5c3a1c', 'rune': '#ffd56c', 'rune_l': '#fff4c8',
     # the iron clapper

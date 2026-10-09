@@ -550,7 +550,6 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
     private void tickGrab(ServerLevel level) {
         int phase = this.getGrabPhase();
         this.grabTicks++;
-        this.getNavigation().stop();
         if (this.grabCooldown > 0 && phase == StomperRig.NONE) {
             this.grabCooldown--;
         }
@@ -563,6 +562,8 @@ public class Stomper extends TamableAnimal implements net.minecraft.world.entity
             }
             return;
         }
+        // it stands its ground while its trunk is busy (only then: stopping every tick froze it in place)
+        this.getNavigation().stop();
         LivingEntity victim = this.held();
         int len = StomperRig.LENGTH[phase];
         switch (phase) {
