@@ -113,7 +113,8 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
                 .add(Attributes.MOVEMENT_SPEED, 0.17)
                 .add(Attributes.ATTACK_DAMAGE, 7.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.6)
-                .add(Attributes.FOLLOW_RANGE, 20.0);
+                .add(Attributes.FOLLOW_RANGE, 20.0)
+                .add(Attributes.TEMPT_RANGE, 10.0); // its TemptGoal (fish) reads this; monsters don't get it by default
     }
 
     /**
