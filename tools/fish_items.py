@@ -523,26 +523,28 @@ def organ_egg():
 
 
 def cypole_egg():
-    """The Cypole: a squat swamp-teal frog, its one great golden eye on top, brass plates by its pale throat."""
+    """The Cypole: one great golden eye with a bar of a pupil on its domed head, warty swamp-teal skin with
+    lichen spots, a pale throat between two brass cymbal plates green with verdigris, webbed feet."""
     return _egg([
         '........',
-        '......aa',
-        '.....aII',
-        '.....aIP',
-        '....abbb',
-        '...abbbb',
-        '..abbbbb',
-        '.aBbbbbb',
-        '.aBBkkkk',
-        '.aBBkkkk',
-        '..aBkkkk',
-        '..abbbbb',
-        '.wwabbbb',
-        '.wwwaaaa',
+        '....aaaa',
+        '...aoooo',
+        '...aoJJJ',
+        '...aoPPP',
+        '..abaoII',
+        '.abwbaoo',
+        'abbbsbbb',
+        'abwbbbwb',
+        'aYBabkkk',
+        'aBgBakkK',
+        'agBBakkk',
+        '.aaabbkk',
+        '.wwaabbb',
+        'awwwaaaa',
         '........',
-        '........',
-    ], {'a': '#071514', 'b': '#2f5c54', 'c': '#50867a', 'd': '#1b3836', 'I': '#e8b03a', 'P': '#0d0b16', 'k': '#b4c0b0', 'B': '#d6a640',
-        'w': '#244944'}, x_lit=6, y_lit=6, x_dark=11, y_dark=10)
+    ], {'a': '#071514', 'b': '#2f5c54', 'c': '#50867a', 'd': '#1b3836', 'o': '#2a1e0a', 'J': '#f0c25a', 'I': '#b8801e', 'P': '#0d0b16',
+        'k': '#b4c0b0', 'K': '#dce4d8', 'B': '#d6a640', 'Y': '#fbe9a6', 'g': '#4f9080', 's': '#689654', 'w': '#6aa092'},
+        x_lit=6, y_lit=7, x_dark=11, y_dark=10)
 
 
 def s2_sprites():

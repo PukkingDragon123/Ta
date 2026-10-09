@@ -850,7 +850,7 @@ Painter.finish = _painter_finish
 def render_textures(model: Model, seed=1):
     """Returns {variant: (texture, emissive or None)} plus {variant_expression: ...} for every
     expression of the model."""
-    if hasattr(model, 'render_textures'):  # S2: hand-painted models paint themselves (tools/handpaint.py)
+    if hasattr(model, 'render_textures'):  # models that paint themselves (stomper.py, sift_sniffer.py; WATER: aquakit glow variants)
         return model.render_textures(seed)
     out = {}
     for vname, overrides in model.variants.items():

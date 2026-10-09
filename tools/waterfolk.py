@@ -1,6 +1,6 @@
-"""S2: the Sift's water creatures remade at the Slumbler's finish (tools/handpaint.py): the Kazoo Fish, the
-Fanfare Eel, the Sculk Fish, the Gobbler, the Sculk Coral Organ and the Cypole - geometry and hand-painted
-textures at vanilla density, one texel per model unit. Every palette comes from where the creature lives:
+"""S2/WATER: the Sift's water creatures: the Kazoo Fish, the Fanfare Eel, the Sculk Fish, the Gobbler, the Sculk
+Coral Organ and the Cypole - geometry and high-resolution skins in the Sculk-mob pipeline (tools/aquakit.py on
+modelkit: res=2 + auto detail + the material pass, 4 texels per model unit, glow layers). Every palette comes from where the creature lives:
 the cyan water, teal grass and pink coral of the Sift Plains, the pale rainbow Chrome of the Chrome Lakes,
 the pink kelp and turquoise water of the Magic Kelp Forest, the near-black water and cyan sculk light of
 the Sculk Ocean, the murky teal of the Sculk Swamp.
@@ -12,10 +12,11 @@ import math
 
 import numpy as np
 
-import handpaint as HP
+import aquakit as AK
 from modelkit import Model
 
-M = HP.Material
+M = AK.Mat
+up = AK.up
 
 # ---------------------------------------------------------------- shared tones
 
@@ -23,8 +24,23 @@ BRASS = ('#4a2f12', '#6e4618', '#94621f', '#b9842c', '#d6a640', '#ecc866', '#fbe
 BONE = ('#5d5866', '#7f7a82', '#a39b98', '#c4baab', '#ddd3c0', '#eee7d6', '#fbf7ec')
 CREAM = ('#6f7f7a', '#94a69c', '#bccbbd', '#d9e4d3', '#ecf2e4', '#f7faf0', '#ffffff')
 MOUTH = ('#1c0610', '#330b1c', '#4f1426', '#6e2032', '#8f3240', '#ae4c52', '#c86a68')
-EYE = {'P': '#0d0b16', 'I': '#e8b03a', 'i': '#a8701e', 'H': '#fff6d6', 'G': '#7ff6f0', 'g': '#29dfeb', 'W': '#e9f6f4', 'm': '#2a0a16',
-       'd': 0.6, 'D': 0.45, 'l': 1.25}
+EYE = {'P': '#0d0b16', 'I': '#e8b03a', 'J': '#f8d26a', 'i': '#a8701e', 'H': '#fff6d6', 'G': '#c8fff8', 'g': '#29dfeb', 'W': '#e9f6f4',
+       'w': '#b9b2a2', 'm': '#2a0a16', 'o': '#120f1c', 'K': '#06090c', 'd': 0.6, 'D': 0.45, 'l': 1.25, 'L': 1.4}
+# a round fish eye, 4 x 4 texels: a gold ring, a black pupil with a highlight
+FISH_EYE = ['.ii.', 'iPHi', 'IPPJ', '.II.']
+
+
+def _disc(n, rings):
+    """An n x n round decal: rings = [(radius, char), ...] from the inside out; outside them '.'."""
+    c = (n - 1) / 2
+    out = []
+    for y in range(n):
+        row = ''
+        for x in range(n):
+            d = math.hypot(x - c, y - c)
+            row += next((ch for rad, ch in rings if d <= rad), '.')
+        out.append(row)
+    return out
 
 
 def _sail(length, height, front=0.35):
@@ -95,10 +111,10 @@ KAZOO = {  # variant: (body, back/stripes, belly, fins, glow) - each from its wa
 
 def _kazoo_mats(body, back, belly, fin, glow):
     return {
-        'skin': M([body, body], base=0.55, noise=0.08, cell=1.8, mottle=None, mottle2=None, belly=belly, back=back, gloss='#f4fffb', gloss_rate=0.025,
-                  light=glow),
-        'fin': M([fin], base=0.55, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None),
-        'brass': M([BRASS], base=0.58, noise=0.06, cell=1.5, rim=1.0, ao=0.5, gloss='#fff8d8', gloss_rate=0.12),
+        'skin': M([body, body], base=0.55, noise=0.08, cell=1.8, mottle=None, mottle2=None, belly=belly, back=back, gloss='#f4fffb', gloss_rate=0.03,
+                  light=glow, scales=(1.5, 1.0), material='scales', mnoise=0.6),
+        'fin': M([fin], base=0.56, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None, flat=True, material='membrane'),
+        'brass': M([BRASS], base=0.58, noise=0.06, cell=1.5, rim=1.0, ao=0.5, gloss='#fff8d8', gloss_rate=0.12, material='metal', mnoise=0.5),
         'mouth': M([MOUTH], base=0.4, noise=0.03, rim=0.2, ao=0.3),
     }
 
@@ -118,17 +134,16 @@ def _spots(c):
 def kazoo_fish() -> Model:
     """A little deep-bodied reef fish with a brass kazoo for a snout (KazooFishModel animates it): a chunky
     rounded body with saddle stripes, a sail of a dorsal fin, sculling pectorals, a peduncle and a forked tail."""
-    m = Model('kazoo_fish', (64, 32), {}, {'kazoo_fish': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('kazoo_fish', (64, 32), {}, {'kazoo_fish': {}}, res=2)
     S = dict(mat='skin', back=-1.5, belly=1.0, marks=[(_stripes, 'back', 0)])
     body = m.part('body', pivot=(0, 20, 0))
     body.cube((-1.5, -3, -3), (3, 6, 6), lights=_spots, **S)
     body.cube((-1, -4, -2), (2, 1, 4), **S)
     body.cube((-1, 3, -2), (2, 1, 3), **S)
-    eye = dict(decal=['..', 'IP', '..'], keys=EYE, at=(0, 1))
+    eye = dict(decal=FISH_EYE, keys=EYE, at=(0, 1))
     body.cube((-1.5, -2, -5), (3, 4, 2), **S, faces={'east': dict(eye), 'west': dict(eye, mirror=True)})
     kazoo = body.part('kazoo', pivot=(0, 0.5, -5))
-    kazoo.cube((-1, -1, -4), (2, 2, 3), mat='brass', faces={'north': dict(decal=['m.', '..'], keys=EYE, at=(0, 0))})
+    kazoo.cube((-1, -1, -4), (2, 2, 3), mat='brass', faces={'north': dict(decal=_disc(4, [(0.8, 'K'), (1.3, 'm'), (2.2, 'r')]), keys=dict(EYE, r=0.7), at=(0, 0))})
     kazoo.cube((-0.5, -2, -3), (1, 1, 1), mat='brass', light=0.1)
     kazoo.cube((-1.5, -1.5, -1), (3, 3, 1), mat='brass', light=-0.12)
     dorsal = body.part('dorsal', pivot=(0, -4, -1))
@@ -145,7 +160,7 @@ def kazoo_fish() -> Model:
     tail = stem.part('tail', pivot=(0, 0, 2))
     tail.cube((0, -3.5, 0), (0, 7, 4), mat='fin', shape=_fork(7, 4), tone=_rays(), no_occlude=True)
     variants = {name: _kazoo_mats(*pal) for name, pal in KAZOO.items()}
-    return HP.use(m, variants['kazoo_fish'], 'kazoo_fish', variants=variants, glow_layer=True)
+    return AK.finish(m, variants, glow_variants=['kazoo_fish_midnight'])
 
 
 # ================================================================ the Fanfare Eel
@@ -173,10 +188,10 @@ EEL_W = (5, 5, 4, 3, 2)
 
 def _eel_mats(back, flank, belly, frill, glow):
     mats = {
-        'skin': M([back, flank], base=0.55, noise=0.08, cell=1.8, mottle=(2.6, 0.7), mottle2=None, belly=belly, gloss='#f6fbe0', gloss_rate=0.03,
-                  light=glow),
-        'fin': M([frill], base=0.55, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=glow),
-        'brass': M([BRASS], base=0.58, noise=0.06, cell=1.5, rim=1.0, ao=0.5, gloss='#fff8d8', gloss_rate=0.1),
+        'skin': M([back, flank], base=0.55, noise=0.08, cell=1.8, mottle=(2.6, 0.7), mottle2=None, belly=belly, gloss='#f6fbe0', gloss_rate=0.04,
+                  light=glow, pores=0.03),
+        'fin': M([frill], base=0.56, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=glow, flat=True, material='membrane'),
+        'brass': M([BRASS], base=0.58, noise=0.06, cell=1.5, rim=1.0, ao=0.5, gloss='#fff8d8', gloss_rate=0.1, material='metal', mnoise=0.5),
         'mouth': M([MOUTH], base=0.35, noise=0.03, rim=0.2, ao=0.2),
     }
     mats['skin'].flank = mats['skin'].ramps[1]
@@ -208,19 +223,19 @@ def fanfare_eel() -> Model:
     """A long segmented eel whose mouth is a brass trumpet bell (FanfareEelModel animates it): a broad head with
     gold eyes and gill slits, the bell on its snout, six tapering segments under a scalloped crest, gold saddles
     and flanks under a green back, pectoral fins and a leaf of a tail fin."""
-    m = Model('fanfare_eel', (64, 64), {}, {'fanfare_eel': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('fanfare_eel', (64, 64), {}, {'fanfare_eel': {}}, res=2)
     head = m.part('head', pivot=(0, 20, -9))
     S = dict(mat='skin', belly=1.2, marks=[(_bands, 'flank', 0)])
-    eye = dict(decal=['.....', '.IP..', '.....', '.d.d.'], keys=EYE, at=(0, 0))
+    eye = dict(decal=['............', '..' + FISH_EYE[0], '..' + FISH_EYE[1], '..' + FISH_EYE[2], '..' + FISH_EYE[3], '',
+                      '.......D.D.D', '.......D.D.D', '.......D.D.D', '........d.d.'], keys=EYE, at=(0, 0))
     head.cube((-3, -3, -6), (6, 6, 6), **S, faces={'east': dict(eye), 'west': dict(eye, mirror=True)})
     head.cube((-2, -4, -5), (4, 1, 4), **S)
     head.cube((-2.5, 3, -5), (5, 1, 4), **S)
     pipe = head.part('pipe', pivot=(0, 0.5, -6))
     pipe.cube((-1, -1, -2), (2, 2, 2), mat='brass', light=-0.05)
     bell = pipe.part('bell', pivot=(0, 0, -2))
-    bell.cube((-3, -3, -2), (6, 6, 2), mat='brass', faces={'north': dict(decal=['......', '.mmmm.', '.mDDm.', '.mDDm.', '.mmmm.', '......'],
-                                                                           keys=dict(EYE, D='#0a0308'), at=(0, 0))})
+    bell.cube((-3, -3, -2), (6, 6, 2), mat='brass', faces={'north': dict(decal=_disc(12, [(1.6, 'K'), (2.7, 'm'), (3.6, 'M'), (4.6, 'r'), (5.2, 'L'), (6.2, 's')]),
+                                                                           keys=dict(EYE, K='#0a0308', M='#4f1426', r=0.75, s=0.85), at=(0, 0))})
     for side, sx in (('left', 1), ('right', -1)):
         fin = head.part(f'{side}_fin', pivot=(3 * sx, 1.5, -1), rot=(0, 0.5 * sx, 0.3 * sx))
         fin.cube(((0 if sx > 0 else -3), 0, 0), (3, 0, 3), mat='fin', shape=_round(3, 3), tone=_rays(), no_occlude=True)
@@ -235,7 +250,7 @@ def fanfare_eel() -> Model:
     tail.cube((0, -3, 0), (0, 6, 5), mat='fin', shape=lambda lx, ly, lz: np.abs(ly) < 3.2 - np.abs((lz - lz.min() + 0.5) - 2.2) * 1.1,
               tone=_rays(), no_occlude=True)
     variants = {name: _eel_mats(*pal) for name, pal in EEL.items()}
-    return HP.use(m, variants['fanfare_eel'], 'fanfare_eel', variants=variants, glow_layer=True)
+    return AK.finish(m, variants, glow_variants=['fanfare_eel_deep'])
 
 
 # ================================================================ the Sculk Fish
@@ -262,9 +277,9 @@ SCULK = {  # variant: (skin, back, belly, fin, light)
 def _sculk_mats(skin, back, belly, fin, light):
     return {
         'skin': M([skin, back], base=0.5, noise=0.09, cell=1.6, mottle=(2.2, 0.66), mottle2=None, belly=belly, back=back, gloss=None, light=light,
-                  spots=(None, 2.0, 0.78, 2)),
-        'fin': M([fin], base=0.5, noise=0.06, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=light),
-        'bone': M([BONE], base=0.62, noise=0.04, cell=1.5, rim=0.5, ao=0.3),
+                  spots=(None, 2.0, 0.78, 2), scales=(1.5, 1.0), material='scales', mnoise=0.6),
+        'fin': M([fin], base=0.52, noise=0.06, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=light, flat=True, material='membrane'),
+        'bone': M([BONE], base=0.62, noise=0.04, cell=1.5, rim=0.5, ao=0.3, material='bone'),
         'mouth': M([MOUTH], base=0.32, noise=0.03, rim=0.2, ao=0.2),
     }
 
@@ -286,17 +301,16 @@ def sculk_fish() -> Model:
     """A small deep-bodied biter of the Sculk Ocean (SculkFishModel animates it): a blunt heavy head with an
     underbite jaw of bone fangs, glowing eyes, two sensor tendrils on the brow, a row of lights down its
     flank, a spiny dorsal, a peduncle and a fan of a tail."""
-    m = Model('sculk_fish', (64, 32), {}, {'sculk_fish': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('sculk_fish', (64, 32), {}, {'sculk_fish': {}}, res=2)
     S = dict(mat='skin', back=-1.5, belly=1.5)
     body = m.part('body', pivot=(0, 20, 0))
     body.cube((-1.5, -3, -3), (3, 6, 6), lights=_photophores, **S)
     body.cube((-1, -4, -2), (2, 1, 4), **S)
-    eye = dict(decal=['..', 'Gg', '..'], keys=EYE, at=(0, 0), glow_keys='Gg')
+    eye = dict(decal=['.oo.', 'oGgo', 'oggo', '.oo.'], keys=EYE, at=(0, 1), glow_keys='Gg')
     body.cube((-1.5, -3, -5), (3, 4, 2), **S, faces={'east': dict(eye), 'west': dict(eye, mirror=True)})
     body.cube((-1, -3, -6), (2, 2, 1), **S)
     jaw = body.part('jaw', pivot=(0, 1, -2))
-    jaw.cube((-1.5, 0, -4), (3, 2, 4), **S, faces={'north': dict(decal=['W.W', '...'], keys=EYE, at=(0, 0)), 'up': dict(mat='mouth')})
+    jaw.cube((-1.5, 0, -4), (3, 2, 4), **S, faces={'north': dict(decal=['W.w..W', 'w....w'], keys=EYE, at=(0, 0)), 'up': dict(mat='mouth')})
     for x, z in ((-1.5, -4), (1, -4), (-1.5, -2.5), (1, -2.5)):
         jaw.cube((x, -1, z), (0.5, 1, 0.5), mat='bone', ao=0)
     dorsal = body.part('dorsal', pivot=(0, -4, -1))
@@ -314,7 +328,7 @@ def sculk_fish() -> Model:
     tail = stem.part('tail', pivot=(0, 0, 2))
     tail.cube((0, -3.5, 0), (0, 7, 4), mat='fin', shape=_fork(7, 4), tone=_rays(), no_occlude=True)
     variants = {name: _sculk_mats(*pal) for name, pal in SCULK.items()}
-    return HP.use(m, variants['sculk_fish'], 'sculk_fish', variants=variants, glow_layer=True)
+    return AK.finish(m, variants)
 
 
 # ================================================================ the Gobbler
@@ -330,17 +344,17 @@ def _veins(c):
     """Glowing veins meandering over the upper flanks and the back (thin lines of the noise's mid level)."""
     if c['face'] == 'down':
         return None
-    v = HP.fbm(c['wp'] * np.array([1.0, 1.6, 1.0]), 5.0, 211, 2)
-    return (np.abs(v - 0.5) < 0.028) & (c['loc'][..., 1] < c['loc'][..., 1].max() - 1.5)
+    v = AK.fbm(c['wp'] * np.array([1.0, 1.6, 1.0]), 5.0, 211, 2)
+    return (np.abs(v - 0.5) < 0.02) & (c['loc'][..., 1] < c['loc'][..., 1].max() - 1.5)
 
 
 def _pits(c):
     """Scattered glowing sensory pits over the blind head, and a row of them along the lip."""
     if c['face'] not in ('east', 'west', 'up', 'north'):
         return None
-    wp = np.floor(c['wp'] + 0.5).astype(np.int64)
-    scatter = HP._hash3(wp[..., 0], wp[..., 1], wp[..., 2], 5) < 0.07
-    lip = (c['loc'][..., 1] > c['loc'][..., 1].max() - 1.5) & (np.floor(c['wp'][..., 2] + 40) % 2 == 0) & (c['face'] in ('east', 'west'))
+    wp = np.floor(c['wp'] * 2 + 0.5).astype(np.int64)
+    scatter = AK._hash3(wp[..., 0], wp[..., 1], wp[..., 2], 5) < 0.022
+    lip = (c['loc'][..., 1] > c['loc'][..., 1].max() - 1.0) & (np.floor(c['wp'][..., 2] * 2 + 80) % 3 == 0) & (c['face'] in ('east', 'west'))
     return scatter | lip
 
 
@@ -360,8 +374,7 @@ def gobbler() -> Model:
     """The blind deep-sea catfish (GobblerModel animates it): a huge eyeless head lined with glowing sensory
     pits, an underbite jaw of bone fangs, long barbels and chin barbels, warden-like sensor tendrils, gill flaps,
     a heavy tapering body threaded with glowing veins, sensor spines on its back and a broad tail fluke."""
-    m = Model('gobbler', (128, 128), {}, {'gobbler': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('gobbler', (128, 128), {}, {'gobbler': {}}, res=2)
     S = dict(mat='skin', back=-2, belly=3.5, lights=_veins)
     body = m.part('body', pivot=(0, 13, 2))
     body.cube((-7, -6, -6), (14, 12, 12), **S)
@@ -411,12 +424,12 @@ def gobbler() -> Model:
     fluke.cube((0, -8, 0), (0, 16, 7), mat='fin', shape=_fork(16, 7), tone=_rays(), no_occlude=True)
     mats = {
         'skin': M([GOB_SKIN, GOB_BACK], base=0.5, noise=0.09, cell=2.0, mottle=(3.0, 0.64), mottle2=None, belly=GOB_BELLY, back=GOB_BACK,
-                  spots=(None, 3.0, 0.76, 2), light=ABYSS_LIGHT, gloss='#bfe9ea', gloss_rate=0.02),
-        'fin': M([GOB_FIN], base=0.5, noise=0.06, cell=1.5, rim=0.0, ao=0.0, mottle=None, light=ABYSS_LIGHT),
-        'bone': M([BONE], base=0.64, noise=0.04, cell=1.5, rim=0.5, ao=0.2),
+                  spots=(None, 3.0, 0.76, 2), light=ABYSS_LIGHT, gloss='#bfe9ea', gloss_rate=0.03, pores=0.03),
+        'fin': M([GOB_FIN], base=0.52, noise=0.06, cell=1.5, rim=0.0, ao=0.0, mottle=None, light=ABYSS_LIGHT, flat=True, material='membrane'),
+        'bone': M([BONE], base=0.64, noise=0.04, cell=1.5, rim=0.5, ao=0.2, material='bone'),
         'mouth': M([MOUTH], base=0.3, noise=0.04, rim=0.2, ao=0.4),
     }
-    return HP.use(m, mats, 'gobbler', glow_layer=True)
+    return AK.finish(m, {'gobbler': mats})
 
 
 # ================================================================ the Sculk Coral Organ
@@ -431,21 +444,22 @@ def _rings(c):
     """Bands of light round each pipe, every few texels up."""
     if c['face'] in ('up', 'down'):
         return None
-    return np.floor(c['wp'][..., 1] + 40) % 7 == 0
+    return np.floor(c['wp'][..., 1] * 2 + 80) % 9 == 0
 
 
 def _pipe_mouth(w):
-    """The organ pipe's mouth: a dark slit with a pale lip a third of the way up the pipe."""
-    rows = ['.' * w, 'L' * w, ('D' * (w - 2)).center(w, '.'), ('D' * (w - 2)).center(w, '.'), '.' * w]
-    return rows
+    """The organ pipe's mouth (texel scale): a pale upper lip over a dark slot that narrows into the pipe,
+    and a soft shadow under it."""
+    n = 2 * w
+    return ['.' * n, '.' + 'L' * (n - 2) + '.', '.' + 'l' * (n - 2) + '.', '.' + 'D' * (n - 2) + '.', '..' + 'K' * (n - 4) + '..',
+            '..' + 'K' * (n - 4) + '..', '...' + 'D' * (n - 6) + '...', '..' + 'd' * (n - 4) + '..']
 
 
 def coral_organ() -> Model:
     """A living reef of sculk coral grown into organ pipes (CoralOrganModel animates it): a stepped mound of
     dark coral rock, five pipes of different heights with dark mouths, pale rims and glowing rings, a glowing
     bladder at the front, the bone harpoon horn that aims and fires, tendrils and little coral fans."""
-    m = Model('coral_organ', (128, 128), {}, {'coral_organ': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('coral_organ', (128, 128), {}, {'coral_organ': {}}, res=2)
     R = dict(mat='rock', back=-1)
     base = m.part('base', pivot=(0, 24, 0))
     base.cube((-10, -3, -9), (20, 3, 18), **R)
@@ -455,16 +469,16 @@ def coral_organ() -> Model:
         p = base.part(f'pipe_{i}', pivot=(x, -6, z), rot=((0.05, -0.03, 0.04, -0.05, 0.06)[i], 0, (0.07, 0.03, -0.02, -0.08, 0.05)[i]))
         p.cube((-w / 2 - 0.5, -3, -w / 2 - 0.5), (w + 1, 3, w + 1), mat='rock', back=-99, faces={'up': dict(skip=True)})
         p.cube((-w / 2, -h, -w / 2), (w, h, w), mat='pipe', lights=_rings, back=-h + 1,
-               faces={'north': dict(decal=_pipe_mouth(w), keys=dict(EYE, L='#cfe8e2', D='#04080a'), at=(0, h // 3)),
-                      'up': dict(decal=['D' * w] * w, keys=dict(EYE, D='#04080a'), at=(0, 0))})
+               faces={'north': dict(decal=_pipe_mouth(w), keys=dict(EYE, L='#cfe8e2', l='#8fb4b0', D='#0a1418', K='#020406'), at=(0, 2 * (h // 3))),
+                      'up': dict(decal=_disc(2 * w, [(w - 1.6, 'K'), (w - 0.9, 'D')]), keys=dict(EYE, D='#0a1418', K='#020406'), at=(0, 0))})
         p.cube((-w / 2 - 0.5, -h - 1, -w / 2 - 0.5), (w + 1, 1, w + 1), mat='bone', faces={'up': dict(skip=True)})
     sac = base.part('sac', pivot=(0, -4, -7))
-    sac.cube((-3, -3, -3), (6, 5, 5), mat='sac', lights=lambda c: HP._hash3(c['ii'], c['jj'], np.full_like(c['ii'], len(c['face'])), 9) < 0.12)
+    sac.cube((-3, -3, -3), (6, 5, 5), mat='sac', lights=lambda c: AK._hash3(c['ii'], c['jj'], np.full_like(c['ii'], len(c['face'])), 9) < 0.12)
     launcher = base.part('launcher', pivot=(0, -9, -3))
     launcher.cube((-2.5, -2.5, -2.5), (5, 5, 5), mat='rock', back=-1)
     launcher.cube((-2, -2, -7), (4, 4, 5), mat='bone')
     launcher.cube((-1.5, -1.5, -10), (3, 3, 3), mat='bone', light=0.05)
-    launcher.cube((-1, -1, -12), (2, 2, 2), mat='bone', light=0.1, faces={'north': dict(decal=['DD', 'DD'], keys=dict(EYE, D='#04080a'))})
+    launcher.cube((-1, -1, -12), (2, 2, 2), mat='bone', light=0.1, faces={'north': dict(decal=_disc(4, [(0.9, 'K'), (1.6, 'D')]), keys=dict(EYE, D='#0a1418', K='#020406'))})
     launcher.cube((-0.5, -3, -9), (1, 1, 3), mat='bone', light=0.12)
     launcher.cube((-2.5, -0.5, -5), (1, 1, 2), mat='bone', light=0.08)
     launcher.cube((1.5, -0.5, -5), (1, 1, 2), mat='bone', light=0.08)
@@ -475,18 +489,19 @@ def coral_organ() -> Model:
     for i, (x, z, h) in enumerate(((-8, -7, 5), (7, -6, 4), (-9, 3, 6), (9, 4, 5), (-3, 7, 4), (4, 7, 6))):
         c = base.part(f'coral_{i}', pivot=(x, -3 if abs(x) > 8 else -6, z), rot=(0, 0.6 * i, 0))
         fan = dict(mat='coral', no_occlude=True, lights=lambda c: c['loc'][..., 1] < -3.5,
-                   shape=lambda lx, ly, lz: (np.abs(lx + lz) < 1.2 + (-ly) * 0.5) & ((np.floor(-ly) + np.floor(lx + lz)) % 2 == 0))
+                   shape=lambda lx, ly, lz: (np.abs(lx + lz) < 0.8 + (-ly) * 0.45) & (((-ly + lx + lz) % 1.0 < 0.5) | ((-ly - lx - lz) % 1.0 < 0.5)))
         c.cube((-2, -h, 0), (4, h, 0), **fan)
         c.cube((0, -h, -2), (0, h, 4), **fan)
     dim = ('#0a4a54', '#0f7480', '#1fb6c2', '#5fe6e6')
     mats = {
-        'rock': M([ROCK, PIPE], base=0.5, noise=0.1, cell=2.0, mottle=(2.6, 0.62), back=ROCK, light=dim, spots=(None, 2.4, 0.76, 2)),
-        'pipe': M([PIPE, ROCK], base=0.55, noise=0.08, cell=1.8, mottle=(2.2, 0.72), back=PIPE, light=dim),
-        'bone': M([BONE], base=0.64, noise=0.05, cell=1.6, rim=0.7, ao=0.4),
-        'coral': M([CORAL], base=0.55, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=ABYSS_LIGHT),
-        'sac': M([SAC], base=0.6, noise=0.05, cell=1.6, rim=1.0, ao=0.2, mottle=None, light=ABYSS_LIGHT, gloss='#e6fffb', gloss_rate=0.1),
+        'rock': M([ROCK, PIPE], base=0.5, noise=0.1, cell=2.0, mottle=(2.6, 0.62), back=ROCK, light=dim, spots=(None, 2.4, 0.76, 2), pores=0.06,
+                  material='stone'),
+        'pipe': M([PIPE, ROCK], base=0.55, noise=0.08, cell=1.8, mottle=(2.2, 0.72), back=PIPE, light=dim, pores=0.04, material='stone'),
+        'bone': M([BONE], base=0.56, noise=0.05, cell=1.6, rim=0.7, ao=0.4, material='bone'),
+        'coral': M([CORAL], base=0.55, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=ABYSS_LIGHT, material='plant'),
+        'sac': M([SAC], base=0.6, noise=0.05, cell=1.6, rim=1.0, ao=0.2, mottle=None, light=ABYSS_LIGHT, gloss='#e6fffb', gloss_rate=0.1, material='jelly'),
     }
-    return HP.use(m, mats, 'coral_organ', glow_layer=True)
+    return AK.finish(m, {'coral_organ': mats})
 
 
 # ================================================================ the Cypole
@@ -497,19 +512,20 @@ SWAMP_BELLY = ('#4a5a50', '#627266', '#7c8c7e', '#98a696', '#b4c0b0', '#ced8ca',
 PATINA = ('#1d4a42', '#2a6156', '#3a786a', '#4f9080', '#6aa896', '#8cc2b0', '#b4dccc')
 SAC_SW = ('#1f3e3a', '#2a504a', '#38645c', '#4a7a70', '#609084', '#7aa89a', '#9ac2b4')
 TONGUE = ('#4c1426', '#6c1f34', '#8e2e44', '#b04256', '#cc5c6a', '#e27e84', '#f2a6a2')
+ALGAE = ('#1e3a22', '#2a4e2c', '#3a6438', '#4f7c46', '#689654', '#86b066', '#a8c87e')  # lichen and duckweed blotches on its back
 TIP = ('#2b6b5a', '#3a8a74', '#4fae90', '#6ccdaa', '#90e6c4', '#b8f6dc', '#e2fff2')
 CYPOLE_MOUTH = (0.0, 15.6, -10.6)  # = tools/cypole.py MOUTH (Cypole.MOUTH_FORWARD / MOUTH_UP in Java)
 
 
 def _warts(c):
     """Warty bumps on the back: lone darker texels with a lit pixel above."""
-    h = HP.fbm(c['wp'] * 1.0, 1.3, 77, 1)
-    return h > 0.74
+    h = AK.fbm(c['wp'] * 1.0, 1.1, 77, 1)
+    return h > 0.7
 
 
 def _patina(c):
     """Verdigris blooming on the brass."""
-    return HP.fbm(c['wp'] + 5.0, 1.8, 91, 2) > 0.6
+    return AK.fbm(c['wp'] + 5.0, 1.8, 91, 2) > 0.6
 
 
 def _disc_grooves(c):
@@ -524,8 +540,7 @@ def cypole() -> Model:
     contract): a squat warty frog the murky teal of the swamp water, a pale belly, one great golden eye on a
     domed mound (iris, cornea and two lids), brass tympana and two brass cymbal plates by its vocal sac, all
     blooming with verdigris, frog legs and hands, and the sticky tongue with its glowing tip."""
-    m = Model('cypole', (128, 64), {}, {'cypole': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('cypole', (128, 64), {}, {'cypole': {}}, res=2)
     S = dict(mat='skin', back=-1)
     W = dict(mat='skin', back=99, marks=[(_warts, 'warts', -2)])
     for side, sx in (('left', 1), ('right', -1)):
@@ -536,7 +551,7 @@ def cypole() -> Model:
         shin = leg.part(f'{side}_shin', pivot=(0.5 * sx, 1.5, 3.5))
         shin.cube((-1, -1, -7), (2, 2, 7), **S, belly=0.5)
         foot = shin.part(f'{side}_foot', pivot=(0, 1, -6.5), rot=(0, -0.45 * sx, 0))
-        foot.cube((-2.5, 0, -5), (5, 1, 5), mat='web', faces={'north': dict(decal=['.D.D.'], keys=EYE, at=(0, 0))})
+        foot.cube((-2.5, 0, -5), (5, 1, 5), mat='web', faces={'north': dict(decal=up(['.D.D.']), keys=EYE, at=(0, 0))})
     body = m.part('body', pivot=(0, 19.5, 2), rot=(-0.26, 0, 0))
     body.cube((-6.5, -4, -6.5), (13, 3, 13), **S, belly=-2.0)
     body.cube((-6, -1, -6), (12, 2, 12), mat='belly')
@@ -545,20 +560,21 @@ def cypole() -> Model:
     body.cube((-4.5, -4, 6), (9, 4, 1), **S)
     head = body.part('head', pivot=(0, -2.5, -6.5), rot=(0.26, 0, 0))
     head.cube((-6, -3, -7), (12, 3, 7), **S)
-    head.cube((-5, -3, -8), (10, 3, 1), **S, faces={'north': dict(decal=['..........', '...D..D...'], keys=EYE, at=(0, 0))})
+    head.cube((-5, -3, -8), (10, 3, 1), **S, faces={'north': dict(decal=up(['..........', '...D..D...']), keys=EYE, at=(0, 0))})
     head.cube((-4.5, -4, -6), (9, 1, 6), **W)
     eye = head.part('eye', pivot=(0, -3.5, -3.5), rot=(0.08, 0, 0))
     eye.cube((-3, -5, -3), (6, 5, 6), mat='skin', back=99, marks=[(_warts, 'warts', -2)])
     eye.cube((-2.5, -6, -2.5), (5, 1, 5), **W)
     eye.cube((-2, -4.5, -4), (4, 4, 1), mat='cornea')
     iris = eye.part('iris', pivot=(0, -2.5, -4.1))
-    iris.cube((-2, -2, 0), (4, 4, 0), mat='iris', faces={'north': dict(decal=['HIIi', 'PPPP', 'IIIi', 'iiii'], keys=EYE, at=(0, 0)),
+    iris.cube((-2, -2, 0), (4, 4, 0), mat='iris', faces={'north': dict(decal=['ooJJJJoo', 'oJHHJJIo', 'JHJJJJIi', 'PPPPPPPP', 'oPPPPPPo', 'IIJJJIii', 'oiIIIiio', 'ooiiiioo'],
+                                                          keys=EYE, at=(0, 0)),
                                                           'south': dict(skip=True)})
     upper = eye.part('upper_lid', pivot=(0, -5, -4.2))
-    upper.cube((-3, 0, 0), (6, 5, 0), mat='skin', back=99, faces={'north': dict(decal=['......', '......', '......', '......', 'dddddd'],
+    upper.cube((-3, 0, 0), (6, 5, 0), mat='skin', back=99, faces={'north': dict(decal=up(['......', '......', '......', '......', 'dddddd']),
                                                                                     keys=EYE, at=(0, 0))})
     lower = eye.part('lower_lid', pivot=(0, -0.5, -4.2))
-    lower.cube((-3, -5, 0), (6, 5, 0), mat='skin', back=-99, faces={'north': dict(decal=['dddddd'], keys=EYE, at=(0, 0))})
+    lower.cube((-3, -5, 0), (6, 5, 0), mat='skin', back=-99, faces={'north': dict(decal=up(['dddddd']), keys=EYE, at=(0, 0))})
     for side, sx in (('left', 1), ('right', -1)):
         tym = head.part(f'{side}_tympanum', pivot=(6 * sx, -1.5, -3))
         tym.cube((0, -2.5, -2.5), (0, 5, 5), mat='brass', tone=_disc_grooves, marks=[(_patina, 'patina', 0)], no_occlude=True)
@@ -579,28 +595,28 @@ def cypole() -> Model:
         fore = arm.part(f'{side}_forearm', pivot=(0, 3.5, 0), rot=(0.15, 0, 0.22 * sx))
         fore.cube((-1, 0, -1), (2, 1, 2), **S)
         hand = fore.part(f'{side}_hand', pivot=(0, 1, 0), rot=(0, -0.3 * sx, 0))
-        hand.cube((-2, 0, -3), (4, 1, 4), mat='web', faces={'north': dict(decal=['D.D.'], keys=EYE, at=(0, 0))})
+        hand.cube((-2, 0, -3), (4, 1, 4), mat='web', faces={'north': dict(decal=up(['D.D.']), keys=EYE, at=(0, 0))})
     tongue = m.part('tongue', pivot=CYPOLE_MOUTH)
     tongue.cube((-1, -0.5, -1), (2, 1, 1), mat='tongue')
     tip = m.part('tongue_tip', pivot=CYPOLE_MOUTH)
     tip.cube((-1, -1, -2), (2, 2, 2), mat='tip', glow=True)
     mats = {
         'skin': M([SWAMP_SKIN, SWAMP_BACK], base=0.52, noise=0.09, cell=1.8, mottle=(2.6, 0.64), back=SWAMP_BACK, belly=SWAMP_BELLY,
-                  gloss='#d8f2ea', gloss_rate=0.015, spots=(None, 2.6, 0.77, 2)),
-        'web': M([SWAMP_SKIN], base=0.45, noise=0.06, cell=1.5, rim=0.6, ao=0.3, mottle=None),
+                  gloss='#d8f2ea', gloss_rate=0.04, spots=(ALGAE, 2.0, 0.7, 0), pores=0.05),
+        'web': M([SWAMP_SKIN], base=0.45, noise=0.06, cell=1.5, rim=0.6, ao=0.3, mottle=None, pores=0.04),
         'belly': M([SWAMP_BELLY, SWAMP_BELLY], base=0.6, noise=0.07, cell=1.8, mottle=None, mottle2=None, ao=0.6),
-        'brass': M([BRASS], base=0.58, noise=0.06, cell=1.5, rim=0.6, ao=0.3, gloss='#fff8d8', gloss_rate=0.08),
+        'brass': M([BRASS], base=0.58, noise=0.06, cell=1.5, rim=0.6, ao=0.3, gloss='#fff8d8', gloss_rate=0.08, material='metal', mnoise=0.5),
         'cornea': M([('#2a2a1e', '#3c3a24', '#504c2c', '#665e34', '#7c7240', '#94884e', '#b0a464')], base=0.5, noise=0.03, rim=0.3, ao=0.2),
         'iris': M([('#5a3a0e', '#7c5212', '#a06c18', '#c48a22', '#e0a836', '#f0c860', '#fbe6a0')], base=0.6, noise=0.02, rim=0.0, ao=0.0,
                   mottle=None),
-        'sac': M([SAC_SW], base=0.6, noise=0.05, cell=1.6, rim=1.0, ao=0.3, mottle=None, gloss='#e2fff4', gloss_rate=0.08),
+        'sac': M([SAC_SW], base=0.6, noise=0.05, cell=1.6, rim=1.0, ao=0.3, mottle=None, gloss='#e2fff4', gloss_rate=0.08, material='jelly'),
         'mouth': M([MOUTH], base=0.35, noise=0.03, rim=0.2, ao=0.3),
         'tongue': M([TONGUE], base=0.55, noise=0.04, rim=0.3, ao=0.0),
         'tip': M([TIP], base=0.6, noise=0.04, rim=0.3, ao=0.0),
     }
     mats['skin'].warts = mats['skin'].ramps[1]
-    mats['brass'].patina = HP.ramp(*PATINA)
-    return HP.use(m, mats, 'cypole', glow_layer=True)
+    mats['brass'].patina = PATINA
+    return AK.finish(m, {'cypole': mats})
 
 
 MODELS = {'kazoo_fish': kazoo_fish, 'fanfare_eel': fanfare_eel, 'sculk_fish': sculk_fish, 'gobbler': gobbler, 'coral_organ': coral_organ,

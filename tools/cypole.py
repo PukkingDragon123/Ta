@@ -31,7 +31,7 @@ def declare(block, item):
 
 
 # =========================================================================== the model
-# S2: the Cypole's model and hand-painted texture are in tools/waterfolk.py (its mouth stays at (0, 15.6, -10.6):
+# S2/WATER: the Cypole's model and high-res texture are in tools/waterfolk.py (its mouth stays at (0, 15.6, -10.6):
 # Cypole.MOUTH_FORWARD / MOUTH_UP in Java)
 MODELS = {'cypole': lambda: __import__('waterfolk').cypole()}
 

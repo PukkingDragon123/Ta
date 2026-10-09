@@ -190,5 +190,5 @@ def sky_whale() -> Model:
 
 # =========================================================================== FISH
 ALL = {'stomper': stomper, 'sky_whale': sky_whale}
-# S2: the water creatures (Kazoo Fish, Fanfare Eel, Sculk Fish, Gobbler, Sculk Coral Organ), hand-painted in tools/waterfolk.py
+# S2/WATER: the water creatures (Kazoo Fish, Fanfare Eel, Sculk Fish, Gobbler, Sculk Coral Organ), high-res skins in tools/waterfolk.py
 ALL.update({k: v for k, v in __import__('waterfolk').MODELS.items() if k != 'cypole'})

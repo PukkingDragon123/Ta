@@ -1,11 +1,11 @@
-"""S2: the Slumbler, its stingray-like tadpole and its eggs (geometry, hand-painted textures, item art).
+"""S2/WATER: the Slumbler, its stingray-like tadpole and its eggs (geometry, high-resolution textures, item art).
 
 The Slumbler is a big, sleepy amphibian of the Sift swamps, sitting up like a toad: a heavy, soft
 pear of a body sagging onto the ground, a broad flat head with a wide mouth line and heavy-lidded
 eyes, three frilled coral gills fanning behind each cheek, stubby webbed arms and frog-folded hind
 legs with long toes, a thick tail with a low crest. Its moist blue-grey skin is mottled lavender and
 teal with indigo blotches, wet highlights and a pale belly; its mouth is red. Everything is painted
-by hand at vanilla density (tools/handpaint.py), one texel per model unit.
+in the Sculk-mob pipeline (tools/aquakit.py on modelkit, res=2 + auto detail + materials): 4 texels per model unit.
 
 The tadpole is a little ray of the same skin: a flat rounded disc with wing-fins, eyes on top and a
 whip of a tail. The eggs are clear jelly with dark curled tadpoles inside.
@@ -16,7 +16,7 @@ import math
 
 import numpy as np
 
-import handpaint as HP
+import aquakit as AK
 from modelkit import Model
 
 # ---------------------------------------------------------------- the family palette
@@ -33,27 +33,28 @@ INDIGO = ('#1b1a37', '#272950', '#35396a', '#464f85', '#5d68a0', '#7c89bb', '#a6
 VIOLET = ('#211b41', '#30285b', '#433978', '#574d93', '#7065ad', '#9086c6', '#b6addc')
 SPOT = ('#2b5867', '#3d7a88', '#559ba6', '#74b9be', '#9cd5d2', '#c3ebe2', '#e6faf2')
 GLOSS = '#e4f6f4'
-EYE = {'P': '#120e1e', 'I': '#e0a23a', 'i': '#a8661f', 'H': '#fff6d2', 'l': 0.7, 'm': '#3a0b1c', 'n': 0.55}
+EYE = {'P': '#120e1e', 'I': '#e0a23a', 'J': '#f4c45a', 'i': '#a8661f', 'H': '#fff6d2', 'o': '#1d1530', 'l': 0.7, 'L': 1.2, 'm': '#3a0b1c',
+       'M': '#6e1a2c', 'n': 0.55}
 
 
 def materials():
-    M = HP.Material
+    M = AK.Mat
     return {
         'skin': M([SKIN, LAVENDER, TEAL], base=0.55, noise=0.1, cell=2.0, mottle=(3.0, 0.62), mottle2=(2.4, 0.72), belly=BELLY, gloss=GLOSS,
-                  gloss_rate=0.035, spots=(SPOT, 1.8, 0.8, 0), back=INDIGO, back2=VIOLET),
+                  gloss_rate=0.03, spots=(SPOT, 2.4, 0.74, 0), back=INDIGO, back2=VIOLET, pores=0.02),
         'belly': M([BELLY, BELLY], base=0.66, noise=0.07, cell=2.0, mottle=None, mottle2=None, gloss=GLOSS, gloss_rate=0.02, ao=0.6),
-        'mouth': M([MOUTH], base=0.5, noise=0.06, cell=1.6, rim=0.3, ao=0.6, sym=False),
+        'mouth': M([MOUTH], base=0.5, noise=0.06, cell=1.6, rim=0.3, ao=0.6, sym=False, pores=0.05),
         'tongue': M([TONGUE], base=0.55, noise=0.06, cell=1.6, rim=0.3, ao=0.5),
-        'gill': M([GILL], base=0.55, noise=0.05, cell=1.5, rim=0.0, ao=0.0, mottle=None),
-        'bone': M([BONE], base=0.62, noise=0.05, cell=1.5, rim=0.6, ao=0.4),
-        'web': M([VIOLET, LAVENDER], base=0.45, noise=0.06, cell=1.6, rim=0.0, ao=0.0, mottle=(2.4, 0.6)),
+        'gill': M([GILL], base=0.55, noise=0.05, cell=1.5, rim=0.0, ao=0.0, mottle=None, material='membrane'),
+        'bone': M([BONE], base=0.62, noise=0.05, cell=1.5, rim=0.6, ao=0.4, material='bone'),
+        'web': M([VIOLET, LAVENDER], base=0.45, noise=0.06, cell=1.6, rim=0.0, ao=0.0, mottle=(2.4, 0.6), material='membrane'),
     }
 
 
 def _folds(ctx):
     """Soft skin folds across a pale throat or chest: every third row a shade darker."""
     v = ctx['jj'] if ctx['face'] not in ('up', 'down') else ctx['ii']
-    return np.where(v % 3 == 2, -0.12, 0.0)
+    return np.where(v % 4 == 3, -0.12, np.where(v % 4 == 0, 0.05, 0.0))
 
 
 def _gill_tone(ctx):
@@ -85,8 +86,7 @@ def slumbler() -> Model:
     """See the module notes. Parts the Java model animates: body (the rump), chest, head, jaw, throat,
     the cheeks, eyes and eyelids, three gills a side, arms (arm, forearm, hand), hind legs (leg, foot)
     and the tail (three segments)."""
-    m = Model('slumbler', (128, 128), {}, {'slumbler': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('slumbler', (160, 128), {}, {'slumbler': {}}, res=2)
     S = dict(mat='skin')
     # ---- the rump: a heavy pear sagging onto the ground, rounded from layered boxes
     body = m.part('body', pivot=(0, 18, 5))
@@ -104,14 +104,15 @@ def slumbler() -> Model:
     head = chest.part('head', pivot=(0, -4, -12), rot=(0.8, 0, 0))
     lip = ['m' * 20]
     head.cube((-10, -5, -13), (20, 5, 14), back=-3, faces={'down': dict(mat='mouth', light=-0.1),
-                                                           'east': dict(decal=['n' + '.' * 13], keys=EYE, at=(0, 4)),
-                                                           'west': dict(decal=['.' * 13 + 'n'], keys=EYE, at=(0, 4))}, **S)
+                                                           'east': dict(decal=['nn', 'nnn', 'nn'], keys=EYE, at=(0, 7)),
+                                                           'west': dict(decal=['nn', 'nnn', 'nn'], keys=EYE, at=(25, 7), mirror=True)}, **S)
     head.cube((-8, -6, -11), (16, 1, 11), back=99, **S)
     head.cube((-9, -4, -14), (18, 4, 1), back=-3, faces={'down': dict(mat='mouth'),
-                                                         'north': dict(decal=['.....n......n.....'], keys=EYE, at=(0, 1))}, **S)
+                                                         'north': dict(decal=['..........ln............ln..........', '..........nn............nn..........'], keys=EYE, at=(0, 2))}, **S)
     jaw = head.part('jaw', pivot=(0, 0, 0))
-    jaw.cube((-9, 0, -13), (18, 3, 13), belly=1.0, faces={'up': dict(mat='mouth'), 'north': dict(decal=['m' * 18], keys=EYE),
-                                                          'east': dict(decal=['m' * 12 + 'n'], keys=EYE), 'west': dict(decal=['n' + 'm' * 12], keys=EYE)}, **S)
+    jaw.cube((-9, 0, -13), (18, 3, 13), belly=1.0, faces={'up': dict(mat='mouth'), 'north': dict(decal=['m' * 36, 'M' * 36, 'L' * 36], keys=EYE),
+                                                          'east': dict(decal=['m' * 24 + 'nn', 'M' * 24 + 'n.', 'L' * 24], keys=EYE),
+                                                          'west': dict(decal=['nn' + 'm' * 24, '.n' + 'M' * 24, '..' + 'L' * 24], keys=EYE)}, **S)
     jaw.cube((-4, -0.5, -12), (8, 1, 9), mat='tongue', faces={'down': dict(skip=True)})
     throat = jaw.part('throat', pivot=(0, 3, -6))
     throat.cube((-6, 0, -5), (12, 2, 9), mat='belly', tone=_folds)
@@ -121,11 +122,11 @@ def slumbler() -> Model:
         cheek.cube(((0 if sx > 0 else -2), -2, -3), (2, 4, 6), back=-1, **S)
         eye = head.part(f'{side}_eye', pivot=(6 * sx, -5, -10))
         eye.cube((-2.5, -3, -2), (5, 3, 4), back=99, **S, faces={
-            'north': dict(decal=['.....', '.HPI.' if sx > 0 else '.IPH.', '.iPi.'], keys=EYE),
-            out: dict(decal=['....', 'Ii..', 'ii..'], keys=EYE, mirror=sx < 0)})
+            'north': dict(decal=['.llllllll.', 'oJJJJJJIio', 'JHHJJJJIii', 'JHPPPPPPPi', 'IPPPPPPPPi', 'oiIIIIiiio'], keys=EYE, mirror=sx < 0),
+            out: dict(decal=['lllll...', 'oJJIo...', 'IPPio...', 'oiiio...'], keys=EYE, at=(0, 1) if sx > 0 else (0, 1), mirror=sx < 0)})
         lid = eye.part(f'{side}_eyelid', pivot=(0, -3, 0))  # the model scales it down over the eye
-        lid.cube((-2.5, 0, -2), (5, 2, 4), inflate=0.2, back=99, **S, faces={'north': dict(decal=['lllll'], keys=EYE, at='bottom'),
-                                                                                 out: dict(decal=['llll'], keys=EYE, at='bottom')})
+        lid.cube((-2.5, 0, -2), (5, 2, 4), inflate=0.2, back=99, **S, faces={'north': dict(decal=['L' * 10, 'l' * 10], keys=EYE, at='bottom'),
+                                                                                 out: dict(decal=['L' * 8, 'l' * 8], keys=EYE, at='bottom')})
         for i, (y, ry, rz, ln) in enumerate(((-4.0, 0.7, -0.6, 9), (-2.0, 0.85, -0.05, 10), (0.0, 0.7, 0.5, 8))):
             g = head.part(f'{side}_gill_{i}', pivot=(10 * sx, y, -3), rot=(0, -ry * sx, rz * sx))
             g.cube(((0 if sx > 0 else -ln), -2, 0), (ln, 4, 0), mat='gill', tone=_gill_tone, shape=_gill_shape(ln, 2.3), no_occlude=True)
@@ -155,12 +156,12 @@ def slumbler() -> Model:
     t3.cube((-2.5, -1, 0), (5, 3, 6), back=0, belly_y=21.5, **S)
     t2.cube((0, -4, 0), (0, 2, 6), mat='web', shape=_crest_shape(6, 2), no_occlude=True)
     t3.cube((0, -3, 0), (0, 2, 6), mat='web', shape=_crest_shape(6, 2), no_occlude=True)
-    return HP.use(m, materials(), 'slumbler')
+    return AK.finish(m, {'slumbler': materials()})
 
 
 # ---------------------------------------------------------------- the tadpole and its eggs (mobs.ALL)
 
-JELLY = ('#5f8fa6', '#7fb0c2', '#a2cdd8', '#c2e3e8', '#dcf2f2', '#eefaf8', '#fbfffe')
+JELLY = ('#3e6f86', '#5a8fa4', '#78acbc', '#97c6cf', '#b6dcdf', '#d3eeec', '#eefcf8')
 
 
 def _round_plane(w, d):
@@ -176,14 +177,13 @@ def slumbler_tadpole() -> Model:
     """The Slumbler's tadpole: a little ray in its parents' skin (SlumblerTadpoleModel animates it) -
     a flat rounded disc with a pale belly, eyes on a low hump, wing-fins (an inner half and a rounded
     outer half that ripples), two snout lobes, little pelvic fins and a whip of a tail with a crest."""
-    m = Model('slumbler_tadpole', (64, 32), {}, {'slumbler_tadpole': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('slumbler_tadpole', (64, 32), {}, {'slumbler_tadpole': {}}, res=2)
     S = dict(mat='skin', back=99)
     body = m.part('body', pivot=(0, 22, 0))
     body.cube((-3, -1, -4), (6, 2, 8), **S, faces={'down': dict(mat='belly')})
     body.cube((-2, -2, -3), (4, 1, 5), **S)
     for side, sx in (('left', 1), ('right', -1)):
-        body.cube(((1 if sx > 0 else -2), -3, -3), (1, 1, 1), **S, faces={'up': dict(decal=['I'], keys=EYE), 'north': dict(decal=['P'], keys=EYE)})
+        body.cube(((1 if sx > 0 else -2), -3, -3), (1, 1, 1), **S, faces={'up': dict(decal=['oo', 'JH'] if sx > 0 else ['oo', 'HJ'], keys=EYE), 'north': dict(decal=['IJ', 'PP'], keys=EYE)})
         wing = body.part(f'{side}_wing', pivot=(3 * sx, 0, 0))
         wing.cube(((0 if sx > 0 else -3), -1, -3), (3, 1, 6), **S, faces={'down': dict(mat='belly')})
         tip = wing.part(f'{side}_wing_tip', pivot=(3 * sx, 0, 0))
@@ -191,7 +191,7 @@ def slumbler_tadpole() -> Model:
         pel = body.part(f'{side}_pelvic', pivot=(2 * sx, 0, 3), rot=(0, 0.5 * sx, 0))
         pel.cube(((0 if sx > 0 else -2), 0, 0), (2, 0, 2), mat='web', shape=_round_plane(2, 2), no_occlude=True)
     snout = body.part('snout', pivot=(0, 0, -4))
-    snout.cube((-2, -1, -1), (4, 2, 1), **S, faces={'north': dict(decal=['....', '.mm.'], keys=EYE), 'down': dict(mat='belly')})
+    snout.cube((-2, -1, -1), (4, 2, 1), **S, faces={'north': dict(decal=['........', '........', '.mmmmmm.', '..MMMM..'], keys=EYE), 'down': dict(mat='belly')})
     for side, sx in (('left', 1), ('right', -1)):
         lobe = snout.part(f'{side}_lobe', pivot=(1.5 * sx, 0, -1), rot=(0, 0.3 * sx, 0))
         lobe.cube((-0.5, -0.5, -2), (1, 1, 2), **S)
@@ -202,15 +202,14 @@ def slumbler_tadpole() -> Model:
     t3 = t2.part('tail3', pivot=(0, 0, 4))
     t3.cube((-0.5, -0.5, 0), (1, 1, 3), **S)
     t3.cube((0, -2, 0), (0, 2, 3), mat='web', shape=_crest_shape(3, 2), no_occlude=True)
-    return HP.use(m, materials(), 'slumbler_tadpole')
+    return AK.finish(m, {'slumbler_tadpole': materials()})
 
 
 def slumbler_eggs() -> Model:
     """A clutch of Slumbler eggs (SlumblerEggsModel wobbles it): a raft of clear jelly eggs, each with
     a dark little tadpole curled inside. The tadpole is each egg's first cube and the jelly a child drawn
     after it, so it shows through the translucent jelly."""
-    m = Model('slumbler_eggs', (64, 32), {}, {'slumbler_eggs': {}}, res=1, detail=1)
-    m.material_pass = False
+    m = Model('slumbler_eggs', (64, 32), {}, {'slumbler_eggs': {}}, res=2)
     raft = m.part('raft', pivot=(0, 24, 0))
     spots = ((0, 0, 0, 4), (3.5, 0.5, 1, 3), (-3.5, 0.5, 1, 3), (1, 0.5, -3.5, 3), (-2, 0.5, 3.5, 3), (2.5, 0.5, 4, 3), (-3, 0.5, -3, 3))
     for i, (x, y, z, d) in enumerate(spots):
@@ -219,8 +218,9 @@ def slumbler_eggs() -> Model:
         jelly = egg.part(f'jelly_{i}')
         jelly.cube((-d / 2, -d / 2, -d / 2), (d, d, d), mat='jelly', opacity=130, ao=0, no_occlude=True)
     mats = materials()
-    mats['jelly'] = HP.Material([JELLY], base=0.62, noise=0.05, cell=1.5, rim=1.0, ao=0.0, mottle=None, gloss='#ffffff', gloss_rate=0.12)
-    return HP.use(m, mats, 'slumbler_eggs')
+    mats['jelly'] = AK.Mat([JELLY], base=0.42, noise=0.05, cell=1.5, rim=1.0, ao=0.0, mottle=None, gloss='#ffffff', gloss_rate=0.07, opacity=130,
+                           material='jelly', mnoise=0.4)
+    return AK.finish(m, {'slumbler_eggs': mats})
 
 
 EXTRA = {'slumbler_tadpole': slumbler_tadpole, 'slumbler_eggs': slumbler_eggs}
@@ -267,7 +267,7 @@ def _sprite(rows, pal):
         assert len(r) == 16, (y, r)
         for x, ch in enumerate(r):
             if ch != '.':
-                c = HP.hx(pal[ch])
+                c = AK.hx(pal[ch])
                 px[x, y] = c + (255,)
     return img
 
