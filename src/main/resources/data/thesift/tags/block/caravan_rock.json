@@ -8,6 +8,8 @@
     "minecraft:budding_amethyst",
     "minecraft:smooth_basalt",
     "minecraft:tuff",
-    "#thesift:caravan_minable"
+    "#thesift:caravan_minable",
+    "thesift:egg_laden_ore",
+    "thesift:deep_egg_laden_ore"
   ]
 }

@@ -35,6 +35,11 @@
                 "max_inclusive": 4
               },
               "weight": 40
+            },
+            {
+              "type": "thesift:caravan_queen",
+              "count": 1,
+              "weight": 2
             }
           ],
           "ambient": [],
@@ -100,6 +105,7 @@
       "thesift:ore_prism_deep",
       "thesift:ore_prism_cavern",
       "thesift:ore_siftite_cavern",
+      "thesift:ore_egg_laden_cavern",
       "thesift:ore_diamond_cavern",
       "thesift:ore_emerald_cavern",
       "thesift:ore_gold_cavern",

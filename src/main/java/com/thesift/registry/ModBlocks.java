@@ -341,6 +341,10 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 4));
     public static final DeferredBlock<MusicCrystalBlock> MUSIC_CRYSTAL = BLOCKS.registerBlock("music_crystal", MusicCrystalBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_PURPLE).strength(1.5F).lightLevel(s -> s.getValue(com.thesift.block.MusicCrystalBlock.FROZEN) ? 10 : 7).noOcclusion());
+    public static final DeferredBlock<EggLadenOreBlock> EGG_LADEN_ORE = BLOCKS.registerBlock("egg_laden_ore", EggLadenOreBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_ORANGE).strength(3.0F, 3.0F).requiresCorrectToolForDrops().lightLevel(s -> 3));
+    public static final DeferredBlock<EggLadenOreBlock> DEEP_EGG_LADEN_ORE = BLOCKS.registerBlock("deep_egg_laden_ore", EggLadenOreBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_ORANGE).strength(4.5F, 3.0F).requiresCorrectToolForDrops().lightLevel(s -> 3));
     public static final DeferredBlock<ColoredFallingBlock> CORAL_SAND = BLOCKS.registerBlock("coral_sand", p -> new ColoredFallingBlock(new ColorRGBA(0xF58A9C), p),
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.COLOR_PINK));
     public static final DeferredBlock<GlowKelpBlock> ROSE_GLOWKELP = BLOCKS.registerBlock("rose_glowkelp", GlowKelpBlock::new,

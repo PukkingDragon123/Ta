@@ -43,7 +43,7 @@ final class CodexFx {
                 "kazoo_fish", "fanfare_eel", "tubafish", "nib", "soul_golem"}) {
             THEMES.put(k, Theme.MUSIC);
         }
-        for (String k : new String[]{"chrome", "prism", "skysong_gem", "caravan", "caravan_colony", "slumbler", "siftite"}) {
+        for (String k : new String[]{"chrome", "prism", "skysong_gem", "caravan", "caravan_queen", "caravan_larva", "egg_laden_ore", "slumbler", "slumbler_tadpole", "siftite"}) {
             THEMES.put(k, Theme.CHROME);
         }
         for (String k : new String[]{"sky_whale", "sea_and_sky", "portal", "white_forest", "swifter", "bulb", "stomper"}) {

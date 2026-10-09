@@ -217,6 +217,18 @@ FILES = FILES | frozenset({
 })
 
 
+# CR2: the Caravan Queen, Caravan larvae and egg-laden ore; the Slumbler's spit, eggs and tadpoles
+FILES = FILES | frozenset({
+    'block/amethyst/break2', 'block/amethyst/step5', 'block/amethyst_cluster/break4', 'block/amethyst_cluster/place1',
+    'block/amethyst_cluster/place2', 'block/bell/bell_use01', 'block/frogspawn/hatch1', 'block/frogspawn/hatch2', 'block/frogspawn/hatch3',
+    'entity/fish/flop2', 'entity/fish/flop4', 'entity/player/attack/sweep1', 'entity/player/attack/sweep3', 'mob/axolotl/attack1',
+    'mob/axolotl/attack2', 'mob/dolphin/splash1', 'mob/dolphin/splash2', 'mob/dolphin/splash3', 'mob/frog/eat1', 'mob/frog/eat2',
+    'mob/frog/eat3', 'mob/frog/lay_spawn1', 'mob/frog/lay_spawn2', 'mob/llama/spit1', 'mob/llama/spit2', 'mob/silverfish/hit3',
+    'mob/silverfish/say4', 'mob/silverfish/step4', 'mob/sniffer/eat1', 'mob/sniffer/eat2', 'mob/sniffer/longdig1', 'mob/sniffer/longdig2',
+    'mob/tadpole/death1', 'mob/tadpole/death2', 'mob/tadpole/hurt1', 'mob/tadpole/hurt2', 'mob/tadpole/hurt3', 'mob/wolf/shake',
+    'random/glass1', 'random/glass2', 'random/glass3',
+})
+
 def vanilla_names(sounds_json):
     """(events, files) defined by a vanilla sounds.json."""
     with open(sounds_json) as f:

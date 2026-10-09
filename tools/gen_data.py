@@ -58,6 +58,7 @@ def entity_loot():
     table('entity', 'entities/bulb', [pool([item('glowing_slime_ball', count=(0, 2), extra=[LOOTING])])])
     table('entity', 'entities/slumbler', [
         pool([item('thick_hide', count=(1, 3), extra=[LOOTING])]),
+        pool([item('slumbler_gill', count=(1, 2), extra=[LOOTING])]),  # CR2: its frilled gills, for a helmet to breathe in Chrome
         pool([item('chrome_pearl')], condition={'type': 'minecraft:all_of', 'terms': [PLAYER_KILL, {
             'type': 'minecraft:random_chance_with_enchanted_bonus', 'enchanted_chance': {'type': 'minecraft:linear', 'base': 0.2, 'per_level_above_first': 0.05},
             'enchantment': 'minecraft:looting', 'unenchanted_chance': 0.15}]})])

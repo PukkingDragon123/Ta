@@ -1381,6 +1381,8 @@ def all_items():
     out.update(__import__('swifter_art').item_sprites())  # A2 Swifter & White Forest: Swifter Fluff, Swifter egg
     out.update(__import__('cave_creatures').items())  # A4 cave creatures: Jailer and Sculkling eggs
     out.update(__import__('sculk_sea').item_sprites())  # CR3 Fish & Coral Organs: fish meats, sushi, fish buckets, eggs (replaces older art)
+    out.update(__import__('slumbler').items())  # CR2: Slumbler gill, tadpole bucket, Slumbler and tadpole eggs (replace older art)
+    out.update(__import__('sky_whale').items())  # CR2: a Sky Whale egg that matches the whale
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

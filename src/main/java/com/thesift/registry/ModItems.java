@@ -164,6 +164,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> DEEP_PRISM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_PRISM_ORE);
     public static final DeferredItem<BlockItem> PRISM_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PRISM_BLOCK);
     public static final DeferredItem<BlockItem> MUSIC_CRYSTAL = ITEMS.registerSimpleBlockItem(ModBlocks.MUSIC_CRYSTAL);
+    public static final DeferredItem<BlockItem> EGG_LADEN_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.EGG_LADEN_ORE);
+    public static final DeferredItem<BlockItem> DEEP_EGG_LADEN_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_EGG_LADEN_ORE);
     public static final DeferredItem<BlockItem> CORAL_SAND = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_SAND);
     public static final DeferredItem<BlockItem> ROSE_GLOWKELP = ITEMS.registerSimpleBlockItem(ModBlocks.ROSE_GLOWKELP);
     public static final DeferredItem<BlockItem> AZURE_GLOWKELP = ITEMS.registerSimpleBlockItem(ModBlocks.AZURE_GLOWKELP);
@@ -276,6 +278,13 @@ public final class ModItems {
     public static final DeferredItem<Item> PRISM_SHOVEL = ITEMS.registerItem("prism_shovel", Item::new, () -> new Item.Properties().shovel(com.thesift.item.PrismGear.TOOL, 1.5F, -3.0F).rarity(Rarity.RARE));
     public static final DeferredItem<Item> PRISM_HOE = ITEMS.registerItem("prism_hoe", Item::new, () -> new Item.Properties().hoe(com.thesift.item.PrismGear.TOOL, -3.5F, 0.0F).rarity(Rarity.RARE));
     public static final DeferredItem<SpawnEggItem> CARAVAN_SPAWN_EGG = ITEMS.registerItem("caravan_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get()));
+    public static final DeferredItem<SpawnEggItem> CARAVAN_QUEEN_SPAWN_EGG = ITEMS.registerItem("caravan_queen_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaravans.CARAVAN_QUEEN.get()));
+    public static final DeferredItem<SpawnEggItem> CARAVAN_LARVA_SPAWN_EGG = ITEMS.registerItem("caravan_larva_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaravans.CARAVAN_LARVA.get()));
+    public static final DeferredItem<Item> CARAVAN_PINCER = ITEMS.registerItem("caravan_pincer", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<Item> SLUMBLER_GILL = ITEMS.registerItem("slumbler_gill", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<SpawnEggItem> SLUMBLER_TADPOLE_SPAWN_EGG = ITEMS.registerItem("slumbler_tadpole_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSlumbler.SLUMBLER_TADPOLE.get()));
+    public static final DeferredItem<MobBucketItem> SLUMBLER_TADPOLE_BUCKET = ITEMS.registerItem("slumbler_tadpole_bucket", p -> new MobBucketItem(ModSlumbler.SLUMBLER_TADPOLE.get(), net.minecraft.world.level.material.Fluids.WATER, net.minecraft.sounds.SoundEvents.BUCKET_EMPTY_FISH, p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY));
+    public static final DeferredItem<ChromeFishBucketItem> CHROME_SLUMBLER_TADPOLE_BUCKET = ITEMS.registerItem("chrome_slumbler_tadpole_bucket", p -> new ChromeFishBucketItem(ModSlumbler.SLUMBLER_TADPOLE.get(), p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY));
     public static final DeferredItem<Item> TUBAFISH = ITEMS.registerItem("tubafish", Item::new, () -> new Item.Properties().food(ModSeaFoods.TUBAFISH));
     public static final DeferredItem<Item> COOKED_TUBAFISH = ITEMS.registerItem("cooked_tubafish", Item::new, () -> new Item.Properties().food(ModSeaFoods.COOKED_TUBAFISH));
     public static final DeferredItem<Item> FANFARE_EEL = ITEMS.registerItem("fanfare_eel", Item::new, () -> new Item.Properties().food(ModSeaFoods.FANFARE_EEL));

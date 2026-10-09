@@ -52,6 +52,7 @@ public class TheSift {
         com.thesift.registry.ModEurophy.register(modBus); // F1 Materials & Europhy Table: the table's block entity, menu and music
         com.thesift.registry.ModSculkSea.register(modBus); // CR3 Fish & Coral Organs: Sculk Fish, Sculk Coral Organs and their hooks, fish buckets
         com.thesift.registry.ModBandTable.register(modBus); // F2 Band Table: the Music Band Table, its score, the Sift enchantments' effects
+        com.thesift.registry.ModSlumbler.register(modBus); // CR2: the Slumbler's Chrome spit, its eggs and its tadpoles
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

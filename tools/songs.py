@@ -35,7 +35,7 @@ SONG_DESC = {
     'offering': 'Ring it on Wind Chimes while an Echoer holds your offering.',
     'nib': 'The Nibs of the Sound Garden dance to it.',
     'golem': 'Wakes and recharges Soul Golems.',
-    'crystal': "The Caravans' hymn: it calms a colony.",
+    'crystal': "The Caravans' hymn: it calms a caravan.",
     'whale': 'A Sky Whale nearby will come and sing back.',
     'lullaby': 'Puts nearby monsters to sleep and lulls the Gobbler.',
     'aurora': 'Lights up the dark, outlines monsters and lends night eyes.',

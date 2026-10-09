@@ -85,6 +85,7 @@ public class TheSiftClient {
         ChromeClient.register(modBus); // A3 Chrome: rainbow tint, ripples, note bursts, Rainbow Daze
         SculkSwampClient.register(modBus); // W1 World & terrain: Sculk Water's look and the Sculk Swamp's mist
         SculkSeaClient.register(modBus); // CR3 Fish & Coral Organs: the Sculk Fish, the Sculk Coral Organ and its hooked line
+        SlumblerClient.register(modBus); // CR2: the Slumbler's tadpoles, eggs and Chrome spit
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
         EurophyClient.register(modBus); // F1: the Europhy Table's clockwork, renderer and screen

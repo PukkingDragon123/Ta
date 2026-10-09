@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.thesift.TheSift;
+import com.thesift.entity.Resting;
 import com.thesift.entity.SiftFish;
 import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModCaravans;
@@ -156,11 +157,13 @@ final class CreatureCheck {
         }
         if (this.ticks >= WATCH_TICKS) {
             for (Watch w : this.watches) {
-                TheSift.LOGGER.info("SMOKE: never frozen: {} alive={} moved {} blocks, travelled {} ({} on its own in the first {} ticks), ticked {} times",
+                // CR2: a creature that has lain down for a nap is resting, not frozen (it wakes and goes on with its life)
+                boolean resting = w.mob instanceof Resting r && r.isResting();
+                TheSift.LOGGER.info("SMOKE: never frozen: {} alive={} moved {} blocks, travelled {} ({} on its own in the first {} ticks), ticked {} times{}",
                         w.name, w.mob.isAlive(), String.format(Locale.ROOT, "%.1f", w.moved), String.format(Locale.ROOT, "%.1f", w.path), String.format(Locale.ROOT, "%.1f", w.movedAlone),
-                        ALONE_TICKS, w.mob.tickCount - w.startTick);
+                        ALONE_TICKS, w.mob.tickCount - w.startTick, resting ? ", resting" : "");
                 this.check.accept(w.mob.isAlive(), "never frozen: " + w.name + " died in its pen");
-                this.check.accept(w.moved >= 1.5 || w.path >= 3.0, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked");
+                this.check.accept(w.moved >= 1.5 || w.path >= 3.0 || resting, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked");
                 this.check.accept(w.mob.tickCount - w.startTick >= WATCH_TICKS / 2, "never frozen: " + w.name + " stopped ticking");
             }
             this.done = true;
@@ -348,7 +351,8 @@ final class CreatureCheck {
                 ModCaveCreatures.SCULKLING.get(), ModEntities.FANFARE_EEL.get(), ModEntities.KAZOO_FISH.get(), ModEntities.TUBAFISH.get(),
                 ModSeaSky.GOBBLER.get(), ModSculkSea.SCULK_FISH.get(), // CR3: the Coral Organ is rooted, so it has no pen
                 ModCaveCreatures.CYPOLE.get(), // CR4: the Cypole
-                com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get()); // E1: the Sift Sniffer
+                com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get(), // E1: the Sift Sniffer
+                ModCaravans.CARAVAN_QUEEN.get()); // CR2: the Caravan Queen (she roams until she finds a cave to settle in)
     }
 
     private static boolean swims(EntityType<?> type) {

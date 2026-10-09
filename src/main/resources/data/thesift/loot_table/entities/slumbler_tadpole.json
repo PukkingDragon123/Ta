@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:prismarine_crystals",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 0,
+              "max": 1
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.3
+      }
+    }
+  ],
+  "random_sequence": "thesift:entities/slumbler_tadpole"
+}

@@ -93,7 +93,17 @@ public final class CodexEntries {
         l.add(mob(CREATURES, "soul_golem", com.thesift.registry.ModEchoer.SOUL_GOLEM, (e, t) -> { }));
         l.add(mob(CREATURES, "nib", com.thesift.registry.ModEchoer.NIB, (e, t) -> { }));
         l.add(mob(CREATURES, "slumbler", ModEntities.SLUMBLER, (e, t) -> {
-            if (e instanceof Slumbler s && t % 120 == 20) s.yawnAnimation.start(s.tickCount);
+            if (e instanceof Slumbler s) {
+                if (t % 120 == 20) {
+                    s.yawnAnimation.start(s.tickCount);
+                } else if (t % 120 == 80) {
+                    s.spitAnimation.start(s.tickCount); // CR2: and spits a gob of Chrome
+                }
+            }
+        }));
+        // CR2: the Slumbler's stingray-like tadpole, gliding and snapping on the page
+        l.add(mob(CREATURES, "slumbler_tadpole", com.thesift.registry.ModSlumbler.SLUMBLER_TADPOLE, (e, t) -> {
+            if (e instanceof com.thesift.entity.slumbler.SlumblerTadpole tp && t % 50 == 15) tp.biteAnimation.start(tp.tickCount);
         }));
         l.add(mob(CREATURES, "sifter", ModEntities.SIFTER, (e, t) -> {
             if (e instanceof Sifter s && t % 50 == 10) s.bonkAnimation.start(s.tickCount); // CR1: the bell rears and swings
@@ -134,6 +144,21 @@ public final class CodexEntries {
         l.add(mob(CREATURES, "caravan", com.thesift.registry.ModCaravans.CARAVAN, (e, t) -> {
             if (e instanceof com.thesift.entity.caravan.Caravan c && t % 16 == 4) c.tapAnimation.start(c.tickCount);
         }));
+        // CR2: the Caravan Queen spits gems, swats and rings her shell on the page; a larva snaps; the ore Caravans fill with eggs
+        l.add(mob(CREATURES, "caravan_queen", com.thesift.registry.ModCaravans.CARAVAN_QUEEN, (e, t) -> {
+            if (e instanceof com.thesift.entity.caravan.CaravanQueen q) {
+                switch (t % 120) {
+                    case 10 -> q.spitAnimation.start(q.tickCount);
+                    case 60 -> q.swatAnimation.start(q.tickCount);
+                    case 95 -> q.tapAnimation.start(q.tickCount);
+                    default -> { }
+                }
+            }
+        }));
+        l.add(mob(CREATURES, "caravan_larva", com.thesift.registry.ModCaravans.CARAVAN_LARVA, (e, t) -> {
+            if (e instanceof com.thesift.entity.caravan.CaravanLarva lv && t % 40 == 10) lv.biteAnimation.start(lv.tickCount);
+        }));
+        l.add(thing(PLACES, "egg_laden_ore", () -> ModBlocks.EGG_LADEN_ORE.get().asItem()));
         // sea & sky: the blind deep-sea catfish, the two water seas and the cloud garden, sushi
         l.add(mob(CREATURES, "gobbler", com.thesift.registry.ModSeaSky.GOBBLER, (e, t) -> {
             if (e instanceof com.thesift.entity.Gobbler g && t % 70 == 10) g.lungeAnimation.start(g.tickCount);
@@ -209,7 +234,6 @@ public final class CodexEntries {
         l.add(thing(PLACES, "sculk_ocean", ModItems.SCULK_CORAL_FAN));
         l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_DREAMSAND));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
-        l.add(thing(PLACES, "caravan_colony", ModItems.PRISM_BLOCK)); // C
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));

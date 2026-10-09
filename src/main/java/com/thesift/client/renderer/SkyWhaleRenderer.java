@@ -22,7 +22,7 @@ public class SkyWhaleRenderer extends SiftMobRenderer<SkyWhale, SkyWhaleRenderSt
 
     public SkyWhaleRenderer(EntityRendererProvider.Context context) {
         super(context, new SkyWhaleModel(context.bakeLayer(ModModelLayers.SKY_WHALE)), 2.2F);
-        // freckles and the nose ring glow softly, pulsing slowly
+        // CR2: the star freckles on its back, fins and flukes, and its eyes, glow softly, pulsing slowly
         this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(s.expression), (s, age) -> 0.55F + 0.35F * Mth.sin(age * 0.05F), this.model,
                 RenderTypes::entityTranslucentEmissive, false));
     }

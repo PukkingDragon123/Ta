@@ -1807,6 +1807,7 @@ def main():
     __import__("caravans").textures(out)  # C: music crystals, prism ore/block, worn prism armour
     __import__("sculk_bloom").textures(out)  # A1: the Sculk Bloom (flower, pot and item)
     __import__("cypole").textures(out)  # CR4: the Cypole's shockwave ring particle
+    __import__("slumbler").textures(out)  # CR2: the Slumbler's scale shimmer, the Chrome Bucket of Slumbler Tadpole
     corruption_overlays()
     boss_bar()
     mini_boss_bars()

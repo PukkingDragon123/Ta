@@ -3,8 +3,14 @@ package com.thesift.registry;
 import com.thesift.TheSift;
 import com.thesift.block.entity.MusicCrystalBlockEntity;
 import com.thesift.entity.caravan.Caravan;
+import com.thesift.entity.caravan.CaravanLarva;
+import com.thesift.entity.caravan.CaravanQueen;
+import com.thesift.entity.caravan.SpatGem;
+import com.thesift.music.Instrument;
 import com.thesift.music.Song;
 import com.thesift.music.SongEvents;
+import com.thesift.music.band.BandRegistry;
+import com.thesift.music.band.BandVoice;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -44,8 +50,9 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * C: the Caravans Cavern - the Caravan, the music crystal's block entity, Prism armour and the song
- * hooks: the Crystal Hymn calms colonies, and every note played heals whoever wears Prism.
+ * C: the Caravans Cavern - the nomadic Caravan crabs (CR2), their Queen and the larvae that crawl out
+ * of egg-laden ore, the gems the Queen spits, the music crystal's block entity, Prism armour and the
+ * song hooks: the Crystal Hymn calms caravans, and every note played heals whoever wears Prism.
  * Registered from one line in {@link TheSift}.
  */
 public final class ModCaravans {
@@ -54,6 +61,13 @@ public final class ModCaravans {
 
     public static final DeferredHolder<EntityType<?>, EntityType<Caravan>> CARAVAN = ENTITIES.registerEntityType("caravan", Caravan::new,
             MobCategory.MONSTER, b -> b.sized(0.8F, 0.55F).eyeHeight(0.35F).clientTrackingRange(10));
+    // CR2: the Queen (a vast hermit crab), the larvae that crawl out of egg-laden ore and the gems the Queen spits
+    public static final DeferredHolder<EntityType<?>, EntityType<CaravanQueen>> CARAVAN_QUEEN = ENTITIES.registerEntityType("caravan_queen",
+            CaravanQueen::new, MobCategory.MONSTER, b -> b.sized(2.3F, 2.4F).eyeHeight(1.2F).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<CaravanLarva>> CARAVAN_LARVA = ENTITIES.registerEntityType("caravan_larva",
+            CaravanLarva::new, MobCategory.MONSTER, b -> b.sized(0.45F, 0.3F).eyeHeight(0.18F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<SpatGem>> SPAT_GEM = ENTITIES.registerEntityType("spat_gem",
+            SpatGem::new, MobCategory.MISC, b -> b.sized(0.3F, 0.3F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MusicCrystalBlockEntity>> MUSIC_CRYSTAL_ENTITY = BLOCK_ENTITIES.register(
             "music_crystal", () -> new BlockEntityType<>(MusicCrystalBlockEntity::new, ModBlocks.MUSIC_CRYSTAL.get()));
 
@@ -72,6 +86,8 @@ public final class ModCaravans {
 
     private static final double PRISM_HEARING = 12.0;
     private static final double HYMN_REACH = 32.0;
+    /** CR2: a Queen never spawns within this many blocks of another (she keeps her own stretch of the caves). */
+    private static final double QUEEN_SPACING = 96.0;
 
     private ModCaravans() {
     }
@@ -84,25 +100,50 @@ public final class ModCaravans {
         NeoForge.EVENT_BUS.addListener(ModCaravans::onBreak);
         SongEvents.listenSongs(ModCaravans::onSong);
         SongEvents.listenNotes(ModCaravans::onNote);
+        // CR2: the Queen leads her caravans' music on deep hymn bells over the chime of her gems; the larvae
+        // click along. Monsters both: they answer the Crystal Hymn but never join a player's band.
+        BandRegistry.voice(CARAVAN_QUEEN, SoundEvents.NOTE_BLOCK_BELL).transpose(-12).volume(1.4F)
+                .layer(SoundEvents.AMETHYST_BLOCK_CHIME, 0.6F)
+                .families(Instrument.Family.CHIMES).songs(Song.CRYSTAL)
+                .temper(BandVoice.Temper.HOSTILE).instrument("hymn_bells").colour(0xC9A2FF).register();
+        BandRegistry.voice(CARAVAN_LARVA, SoundEvents.NOTE_BLOCK_HAT).transpose(12).volume(0.5F)
+                .layer(SoundEvents.AMETHYST_CLUSTER_HIT, 0.3F)
+                .songs(Song.CRYSTAL).temper(BandVoice.Temper.HOSTILE).instrument("larva_clicks").colour(0xFFB43A).register();
     }
 
     private static void attributes(EntityAttributeCreationEvent event) {
         event.put(CARAVAN.get(), Caravan.createAttributes().build());
+        event.put(CARAVAN_QUEEN.get(), CaravanQueen.createAttributes().build());
+        event.put(CARAVAN_LARVA.get(), CaravanLarva.createAttributes().build());
     }
 
     private static void spawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(CARAVAN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModCaravans::checkCaravan,
                 RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(CARAVAN_QUEEN.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModCaravans::checkQueen,
+                RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
-    /** Caravans spawn in their own crystal light (the colony glows): no darkness check, only solid ground. */
-    private static boolean checkCaravan(EntityType<Caravan> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
+    /** Caravans spawn in their own crystal light (the cavern glows): no darkness check, only solid ground. */
+    private static boolean checkCaravan(EntityType<? extends Mob> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
+            RandomSource random) {
         return level.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(type, level, reason, pos, random);
     }
 
-    /** Breaking a music crystal (or anything of the colony) where Caravans can see brings the swarm. */
+    /** CR2: a Queen is rare - she only comes where no other Queen keeps the caves. */
+    private static boolean checkQueen(EntityType<CaravanQueen> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,
+            RandomSource random) {
+        return checkCaravan(type, level, reason, pos, random)
+                && level.getEntitiesOfClass(CaravanQueen.class, new AABB(pos).inflate(QUEEN_SPACING), CaravanQueen::isAlive).isEmpty();
+    }
+
+    /** Breaking a music crystal - or, CR2, an egg-laden ore - where Caravans can see it brings the swarm. */
     private static void onBreak(BreakBlockEvent event) {
-        if (event.getLevel() instanceof ServerLevel server && event.getState().is(ModBlocks.MUSIC_CRYSTAL.get()) && !event.getPlayer().isCreative()) {
+        if (!(event.getLevel() instanceof ServerLevel server) || event.getPlayer().isCreative()) {
+            return;
+        }
+        if (event.getState().is(ModBlocks.MUSIC_CRYSTAL.get()) || event.getState().is(ModBlocks.EGG_LADEN_ORE.get())
+                || event.getState().is(ModBlocks.DEEP_EGG_LADEN_ORE.get())) {
             Caravan.alarm(server, event.getPos(), event.getPlayer());
         }
     }
@@ -115,6 +156,10 @@ public final class ModCaravans {
         boolean any = false;
         for (Caravan c : level.getEntitiesOfClass(Caravan.class, new AABB(at, at).inflate(HYMN_REACH))) {
             c.calm(2400 + level.getRandom().nextInt(1200));
+            any = true;
+        }
+        for (CaravanLarva l : level.getEntitiesOfClass(CaravanLarva.class, new AABB(at, at).inflate(HYMN_REACH))) {
+            l.calm(2400 + level.getRandom().nextInt(1200));
             any = true;
         }
         if (any && player != null) {

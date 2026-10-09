@@ -36,6 +36,18 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_YAWN = reg("entity.slumbler.yawn");
     public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_STEP = reg("entity.slumbler.step");
     public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_BITE = reg("entity.slumbler.bite");
+    // CR2: the Slumbler eats fish, spits Chrome, shakes itself dry and lays eggs; its eggs and tadpoles
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_EAT = reg("entity.slumbler.eat");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_SPIT = reg("entity.slumbler.spit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_SHAKE = reg("entity.slumbler.shake");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_LAY = reg("entity.slumbler.lay");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CHROME_SPIT_SPLASH = reg("entity.chrome_spit.splash");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_EGGS_HATCH = reg("entity.slumbler_eggs.hatch");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_TADPOLE_BITE = reg("entity.slumbler_tadpole.bite");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_TADPOLE_HURT = reg("entity.slumbler_tadpole.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_TADPOLE_DEATH = reg("entity.slumbler_tadpole.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_TADPOLE_FLOP = reg("entity.slumbler_tadpole.flop");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SLUMBLER_TADPOLE_CRASH = reg("entity.slumbler_tadpole.crash");
     // ---- Sifter
     public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_AMBIENT = reg("entity.sifter.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> SIFTER_HURT = reg("entity.sifter.hurt");
@@ -182,6 +194,26 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_STEP = reg("entity.caravan.step");
     public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_ALARM = reg("entity.caravan.alarm");
     public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_BUILD = reg("entity.caravan.build");
+    // CR2: the territorial warning and the eggs a Caravan lays in an ore socket
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_WARN = reg("entity.caravan.warn");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_LAY_EGGS = reg("entity.caravan.lay_eggs");
+    // CR2: the Caravan Queen, the gems she spits and the larvae that hatch from egg-laden ore
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_AMBIENT = reg("entity.caravan_queen.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_HURT = reg("entity.caravan_queen.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_DEATH = reg("entity.caravan_queen.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_STEP = reg("entity.caravan_queen.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_SPIT = reg("entity.caravan_queen.spit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_SWAT = reg("entity.caravan_queen.swat");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_FEED = reg("entity.caravan_queen.feed");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_SETTLE = reg("entity.caravan_queen.settle");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_ROAR = reg("entity.caravan_queen.roar");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_QUEEN_BURST = reg("entity.caravan_queen.burst");
+    public static final DeferredHolder<SoundEvent, SoundEvent> SPAT_GEM_HIT = reg("entity.spat_gem.hit");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_LARVA_AMBIENT = reg("entity.caravan_larva.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_LARVA_HURT = reg("entity.caravan_larva.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_LARVA_DEATH = reg("entity.caravan_larva.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_LARVA_STEP = reg("entity.caravan_larva.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> CARAVAN_LARVA_EMERGE = reg("entity.caravan_larva.emerge");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_CRYSTAL_CHIME = reg("block.music_crystal.chime");
     public static final DeferredHolder<SoundEvent, SoundEvent> MUSIC_CRYSTAL_SHATTER = reg("block.music_crystal.shatter");
 

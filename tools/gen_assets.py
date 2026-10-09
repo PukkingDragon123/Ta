@@ -699,10 +699,10 @@ def gen_lang():
         f'codex.{NS}.bulb.title': 'Bulb', f'codex.{NS}.bulb.tagline': 'Squishy jelly bunny',
         f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Pods make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
-        f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose, Gold and Coral - the Drum Pit, where the Thumper sleeps. Azure and Jade - a Caravan colony deep below. Violet and the rare Night - the Sculk Castle.',
+        f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose, Gold, Jade and Coral - the Drum Pit, where the Thumper sleeps. Azure, Violet and the rare Night - the Sculk Castle.',
         # A2 Echoer: the Echoer's codex page is in tools/echoer_world.py
-        f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Chrome lake salamander',
-        f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
+        f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Neutral - a sleepy living instrument',
+        f'codex.{NS}.slumbler.body': 'A huge, wide-mouthed salamander of the Chrome lakes in rainbow scales, its back a carved wooden instrument - a spruce top whose f-holes glow when it hums, a scroll at the tip of its tail, strings for whiskers - with frilled pink gills. It sleeps a great deal, napping half-submerged in shallow Chrome; awake, it gulps plankton, nuzzles other Slumblers, hums along to music and shakes itself dry when it climbs out. Hit one and it bites - and spits gobs of Chrome that leave you dizzy with Rainbow Daze. Feed two of them fish and they lay a clutch of eggs that hatches into stingray-like tadpoles. Drops Thick Hide, its gills and sometimes a Chrome Pearl.',
         # CR1: the Sifter's Codex page comes from tools/sifter.py
         f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
         f'codex.{NS}.siftite.body': 'Siftite Ore lies rare and deep and needs a diamond pickaxe; it breaks into Siftite Dust. In the Europhy Table, 4 Siftite Dust and a Copper Ingot played into shape make a Siftite Ingot. With the Siftite template (Siftite Dust duplicates it) Siftite upgrades Netherite tools and weapons: they outdig and outhit Netherite and knock foes flying. Siftite is never forged into armour.',
@@ -754,10 +754,10 @@ def gen_lang():
         f'message.{NS}.harmoner.tamed': 'The Harmoner chirps and settles on your shoulder. It will follow you - and sing along with your flute.',
         f'message.{NS}.harmoner.lost': 'The Harmoner tilts its head. It cannot sense any place of its colour nearby.',
         f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards the Drum Pit!',
-        f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and dives towards a Caravan colony far below!',
+        f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and takes off towards the Sculk Castle!',
         f'message.{NS}.harmoner.guide.gold': 'The Gold Harmoner sings and takes off towards the Drum Pit!',
         f'message.{NS}.harmoner.guide.violet': 'The Violet Harmoner sings a wary tune and takes off towards the Sculk Castle!',
-        f'message.{NS}.harmoner.guide.jade': 'The Jade Harmoner sings and dives towards a Caravan colony far below!',
+        f'message.{NS}.harmoner.guide.jade': 'The Jade Harmoner sings and takes off towards the Drum Pit!',
         f'message.{NS}.harmoner.guide.coral': 'The Coral Harmoner sings and takes off towards the Drum Pit!',
         f'message.{NS}.harmoner.guide.night': 'The Night Harmoner sings a dark little tune and takes off towards the Sculk Castle...',
         f'effect.{NS}.deafened': 'Deafened', f'effect.{NS}.euphoria': 'Euphoria', f'effect.{NS}.entranced': 'Entranced',
@@ -1122,7 +1122,7 @@ def gen_wild_creatures():
         f'codex.{NS}.stomper.title': 'Stomper', f'codex.{NS}.stomper.tagline': 'Mammoth, bullfrog, both',
         f'codex.{NS}.stomper.body': "A mint-green giant with two frog-dome eyes, a trunk and the Sift's pink grass growing on its back. It slurps Chrome and hoses monsters (or you) with it. Drums make it dance and stomp. Two fed Hummingblooms lay an egg: tame the baby with them and ride it (jump to hop, attack to stomp). White Forest Stompers are frosted pale.",
         f'codex.{NS}.sky_whale.title': 'Sky Whale', f'codex.{NS}.sky_whale.tagline': 'Rare - the singer in the clouds',
-        f'codex.{NS}.sky_whale.body': "A shaggy whale-bull with cloud-soft fur, a meadow of blooms on its back and glowbell vines trailing below, rowing through the sky on furry flippers. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you and the whale glides down, sings to you and spits out a Skysong Gem - one a day per whale.",
+        f'codex.{NS}.sky_whale.body': "A whale of the sky, as long as a house: a deep periwinkle back freckled with glowing stars, a pale grooved throat that swells when it sings, long white flippers and great notched flukes that row it slowly through the clouds, a blowhole puffing cloud. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you and the whale glides down, sings to you and spits out a Skysong Gem - one a day per whale.",
         f'codex.{NS}.fanfare_eel.title': 'Fanfare Eel', f'codex.{NS}.fanfare_eel.tagline': 'Hostile - brass with teeth',
         f'codex.{NS}.fanfare_eel.body': 'A long sculk eel with pale bone ribs, a glowing line and frills down its back and a golden trumpet bell for a mouth, ringed with glowing fins. It hunts anything swimming in the Chrome lakes - fish and visitors alike - and every bite comes with a blast of sound. Most glow cyan; some are violet with silver bells, a few smoulder like embers. Fight it from the shore if you can.',
         f'codex.{NS}.kazoo_fish.title': 'Kazoo Fish', f'codex.{NS}.kazoo_fish.tagline': 'Small, silly, delicious',
@@ -1365,6 +1365,7 @@ def generate():
     __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
     __import__('sculk_world').assets(sys.modules[__name__])  # W1 World & terrain: swamp sounds, recipes, loot, tags, text (before gen_sounds)
     __import__('sculk_sea').assets(sys.modules[__name__])  # CR3 Fish & Coral Organs: sounds, loot, tags, text (before gen_sounds)
+    __import__('slumbler').assets(sys.modules[__name__])  # CR2: the Slumbler's family: sounds, loot, tags, text (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)

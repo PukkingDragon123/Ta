@@ -143,129 +143,8 @@ def bulb() -> Model:
 
 # =========================================================================== SLUMBLER
 def slumbler() -> Model:
-    pal = {
-        'skin': '#8fd0dc', 'skin_d': '#6aaec4', 'skin_l': '#b4e4ec', 'pearl': '#f0d9f2', 'lilac': '#c3a9ec',
-        'belly': '#efe3f3', 'belly_l': '#fbf4fc', 'belly_d': '#d5c3df', 'spot': '#6d8fd3', 'glow': '#a8fbff',
-        'mouth': '#d9577f', 'mouth_d': '#9c2f55', 'lid_d': '#5f9cb8', 'gill_l': '#ffc0e4',
-        'tongue': '#ff8fb0', 'teeth': '#fff8ec', 'eye': '#1a1d38', 'iris': '#ffd66b', 'eye_hi': '#ffffff',
-        'lid': '#7fb6cf', 'gill': '#f59ad0', 'gill_d': '#c85f9f', 'claw': '#eae3f2', 'fin': '#bfe9f5',
-    }
-    m = Model('slumbler', (128, 128), pal, {'slumbler': {}}, res=2, expressions=['angry', 'hurt', 'dead'])
-    body = m.part('body', pivot=(0, 14, 0))
-    body.cube((-8, -5, -11), (16, 9, 22), color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', faces={
-        'up': dict(color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', map=[
-            '................',
-            '.....g....g.....',
-            '................',
-            '...g........g...',
-            '................',
-            '.....g....g.....',
-            '................',
-            '..g..........g..',
-            '................',
-            '.....g....g.....',
-            '................',
-            '...g........g...',
-            '................',
-            '.....g....g.....',
-            '................',
-            '..g..........g..',
-            '................',
-            '.....g....g.....',
-        ], keys={'g': 'glow'}, glow_keys='g'),
-        'down': dict(color='belly', pattern='mc', clusters=0.4),
-        'west': dict(color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', bands=[(6, 'belly')]),
-        'east': dict(color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', bands=[(6, 'belly')]),
-    })
-    crest = body.part('crest', pivot=(0, -5, 0))
-    crest.cube((0, -4, -9), (0, 4, 18), color='fin', pattern='mc', clusters=0.0, rim=False, ribs=3, accent='lilac', alpha='membrane', edge='bottom',
-               faces={'west': dict(color='fin', pattern='mc', clusters=0.0, rim=False, ribs=3, accent='lilac', alpha='frill'),
-                      'east': dict(color='fin', pattern='mc', clusters=0.0, rim=False, ribs=3, accent='lilac', alpha='frill')})
-    head = body.part('head', pivot=(0, -1, -11))
-    head.cube((-9, -4, -10), (18, 5, 10), color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', faces={
-        'down': dict(color='mouth', pattern='mc', clusters=0.0, rim=False, map=[
-            't.t.t.t.t.t.t.t.t.',
-            '..................',
-            'd................d',
-            'd................d',
-            'd................d',
-            'd................d',
-            'd................d',
-            'd................d',
-            'dd..............dd',
-            'dddddddddddddddddd',
-        ], keys={'t': 'teeth', 'd': 'mouth_d'}),
-        'north': dict(color='skin', pattern='mc', clusters=0.3, map=[
-            '..................',
-            '..................',
-            '...o..........o...',
-            '..................',
-            'tttttttttttttttttt',
-        ], keys={'o': 'skin_d', 't': 'teeth'}),
-    })
-    jaw = head.part('jaw', pivot=(0, 1, 0))
-    jaw.cube((-9, 0, -10), (18, 3, 10), color='belly', pattern='mc', clusters=0.4, faces={
-        'up': dict(color='mouth', pattern='mc', clusters=0.0, rim=False, map=[
-            'dddddddddddddddddd',
-            'd.......rr.......d',
-            'd......rrrr......d',
-            'd......rrrr......d',
-            'd......rrrr......d',
-            'd.......rr.......d',
-            'd................d',
-            'd................d',
-            'd................d',
-            't.t.t.t.t.t.t.t.t.',
-        ], keys={'t': 'teeth', 'd': 'mouth_d', 'r': 'tongue'}),
-        'north': dict(color='belly', pattern='mc', clusters=0.0, rim=False, map=['.t.t.t.t.t.t.t.t.t'], keys={'t': 'teeth'}),
-        'west': dict(color='skin', pattern='mc', clusters=0.3),
-        'east': dict(color='skin', pattern='mc', clusters=0.3),
-    })
-    for side, sx in (('left', 1), ('right', -1)):
-        eye = head.part(f'{side}_eye', pivot=(5.5 * sx, -4, -6))
-        # big gold eyes with a slit pupil and a wet highlight (6 x 6 texels per face)
-        eye_keys = {'E': 'eye', 'h': 'eye_hi', 'i': 'iris', 'r': 'skin_d', 'l': 'lid', 'L': 'lid_d'}
-        eye.cube((-1.5, -3, -1.5), (3, 3, 3), color='skin', pattern='mc', clusters=0.3, faces={
-            'north': dict(color='iris', pattern='mc', clusters=0.0, rim=False, hd=True, keys=eye_keys,
-                          map=['riiiir', 'iihEii', 'iiEEii', 'iiEEii', 'iiEEii', 'riiiir'],
-                          expr={'angry': ['LLLLLL', 'llllLL' if sx > 0 else 'LLllll', 'iiEEhi', 'iiEEii', 'iiEEii', 'riiiir'],
-                                'hurt': ['llllll', 'llllll', 'LLllLL', 'llLLll', 'llllll', 'llllll'],
-                                'dead': ['riiiir', 'iEiiEi', 'iiEEii', 'iiEEii', 'iEiiEi', 'riiiir']}),
-            ('east' if sx > 0 else 'west'): dict(color='iris', pattern='mc', clusters=0.0, rim=False, hd=True, keys=eye_keys,
-                                                 map=['riiiir', 'iiEEii', 'iiEEii', 'iiEEii', 'iiEEii', 'riiiir']),
-        })
-        lid = eye.part(f'{side}_eyelid')
-        lid.cube((-1.5, -3, -1.5), (3, 3, 3), inflate=0.12, color='lid', pattern='mc', clusters=0.0, rim=False, faces={
-            'north': dict(color='lid', pattern='mc', clusters=0.0, rim=False, map=['...', 'ddd', '...'], keys={'d': 'skin_d'}),
-        })
-        gills = head.part(f'{side}_gills', pivot=(9 * sx, -3, -3), rot=(0, -0.35 * sx, 0))
-        gills.cube((0 if sx > 0 else -5, -5, 0), (5, 8, 0), color='gill', pattern='mc', clusters=0.0, rim=False, ribs=2, accent='gill_d', alpha='membrane',
-                   edge='outer', edge_depth=2, scallop=2)
-    for side, sx in (('left', 1), ('right', -1)):
-        for end, sz in (('front', -7), ('hind', 7)):
-            leg = body.part(f'{side}_{end}_leg', pivot=(7.5 * sx, 2.5, sz))
-            leg.cube((0 if sx > 0 else -5, -1.5, -2), (5, 3, 4), color='skin', pattern='mc', clusters=0.3)
-            foot = leg.part(f'{side}_{end}_foot', pivot=(4.5 * sx, 0.5, 0))
-            foot.cube((-2, 0, -2.5), (4, 7, 5), color='skin_d', pattern='mc', clusters=0.3, faces={
-                'north': dict(color='skin_d', pattern='mc', clusters=0.3, map=['....', '....', '....', '....', '....', 'c.c.', 'c.cc'], keys={'c': 'claw'}),
-                'down': dict(color='skin_d', pattern='mc', clusters=0.0, rim=False),
-            })
-    tail1 = body.part('tail1', pivot=(0, -1, 11))
-    tail1.cube((-5, -3, 0), (10, 6, 10), color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', faces={
-        'up': dict(color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', map=['..........', '....gg....', '..........', '..........', '....gg....'],
-                   keys={'g': 'glow'}, glow_keys='g'),
-        'down': dict(color='belly', pattern='mc', clusters=0.4),
-    })
-    tail2 = tail1.part('tail2', pivot=(0, 0, 10))
-    tail2.cube((-3.5, -2, 0), (7, 4, 10), color='skin', pattern='mc', clusters=0.3, spots=0.3, accent='spot', faces={
-        'down': dict(color='belly', pattern='mc', clusters=0.4),
-        'up': dict(color='skin', pattern='mc', clusters=0.3, map=['.......', '...g...', '.......', '.......', '...g...'], keys={'g': 'glow'}, glow_keys='g'),
-    })
-    tail3 = tail2.part('tail3', pivot=(0, 0, 10))
-    tail3.cube((-2, -1.5, 0), (4, 3, 9), color='skin', pattern='mc', clusters=0.3, faces={'down': dict(color='belly', pattern='mc', clusters=0.4)})
-    tail3.cube((0, -5, 0), (0, 10, 10), color='fin', pattern='mc', clusters=0.0, rim=False, ribs=3, accent='lilac', alpha='membrane', edge='bottom',
-               faces={'west': dict(color='fin', pattern='mc', clusters=0.0, rim=False, ribs=3, accent='pearl'), 'east': dict(color='fin', pattern='mc', clusters=0.0, rim=False, ribs=3, accent='pearl')})
-    return m
+    """CR2: the Slumbler, a living instrument in rainbow scales (tools/slumbler.py)."""
+    return __import__('slumbler').slumbler()
 
 
 # =========================================================================== SIFTER
@@ -583,6 +462,7 @@ import parasite  # noqa: E402
 
 ALL.update(parasite.ALL)
 ALL.update(__import__('caravans').MODELS)  # C: the Caravan (tools/caravans.py)
+ALL.update(__import__('slumbler').EXTRA)  # CR2: the Slumbler's tadpole and its eggs (tools/slumbler.py)
 
 # A2 Echoer: Soul Golems and Nibs (tools/echoer.py)
 import echoer  # noqa: E402

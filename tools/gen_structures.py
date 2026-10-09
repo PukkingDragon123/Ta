@@ -331,7 +331,6 @@ def generate():
         GA.write(os.path.join(D, 'structure_set', name + '.json'), {
             'placement': {'type': 'minecraft:random_spread', 'salt': 77310000 + idx * 7919, 'separation': sep, 'spacing': spacing},
             'structures': [{'structure': f'{NS}:{name}', 'weight': 1}]})
-    __import__('caravans').structures(sys.modules[__name__])  # C: the Caravan colony
     print(f'structures ok: {len(STRUCTURES)} structures, {total} blocks')
 
 

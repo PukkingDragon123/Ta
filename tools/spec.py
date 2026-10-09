@@ -323,6 +323,28 @@ for _t, _s in [("sword", "sword(com.thesift.item.PrismGear.TOOL, 3.0F, -2.4F)"),
          tab="combat" if _t == "sword" else "tools")
 # --- end B4 gear
 item("caravan_spawn_egg",cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN.get())", tab="eggs", model="generated")
+# --- CR2: the Caravan Queen, the larvae that hatch from Egg-laden Ore, the Caravan's pincer
+item("caravan_queen_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN_QUEEN.get())", tab="eggs", model="generated")
+item("caravan_larva_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaravans.CARAVAN_LARVA.get())", tab="eggs", model="generated")
+item("caravan_pincer", cls="Item", props="new Item.Properties()")
+block("egg_laden_ore", "custom", STONE + ".mapColor(MapColor.COLOR_ORANGE).strength(3.0F, 3.0F).requiresCorrectToolForDrops().lightLevel(s -> 3)",
+      cls="EggLadenOreBlock", model="cube_all", tags=["pickaxe"], loot="silk", name="Egg-laden Ore")
+block("deep_egg_laden_ore", "custom", DEEP + ".mapColor(MapColor.COLOR_ORANGE).strength(4.5F, 3.0F).requiresCorrectToolForDrops().lightLevel(s -> 3)",
+      cls="EggLadenOreBlock", model="cube_all", tags=["pickaxe"], loot="silk", name="Deep Egg-laden Ore")
+# --- CR2: the Slumbler's gill (for a helmet to come) and its tadpole: spawn egg, and a bucket of water or of Chrome to carry it in
+item("slumbler_gill", cls="Item", props="new Item.Properties()")
+item("slumbler_tadpole_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModSlumbler.SLUMBLER_TADPOLE.get())", tab="eggs",
+     model="generated")
+item("slumbler_tadpole_bucket", cls="MobBucketItem",
+     factory="p -> new MobBucketItem(ModSlumbler.SLUMBLER_TADPOLE.get(), net.minecraft.world.level.material.Fluids.WATER, "
+             "net.minecraft.sounds.SoundEvents.BUCKET_EMPTY_FISH, p)",
+     props="new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, "
+           "net.minecraft.world.item.component.CustomData.EMPTY)",
+     name="Bucket of Slumbler Tadpole", tab="tools")
+item("chrome_slumbler_tadpole_bucket", cls="ChromeFishBucketItem", factory="p -> new ChromeFishBucketItem(ModSlumbler.SLUMBLER_TADPOLE.get(), p)",
+     props="new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, "
+           "net.minecraft.world.item.component.CustomData.EMPTY)",
+     name="Chrome Bucket of Slumbler Tadpole")
 # ---------------------------------------------------------------- sea & sky (F + W): kelp, clouds, the Gobbler's drops, fish meat, sushi
 __import__("sea_spec").declare(block, item)
 # ---------------------------------------------------------------- A2 Echoer: the Echoer's hearth and its household

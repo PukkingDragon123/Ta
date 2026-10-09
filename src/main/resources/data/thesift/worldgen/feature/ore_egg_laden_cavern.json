@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 0.0,
+  "size": 3,
+  "targets": [
+    {
+      "state": {
+        "id": "thesift:egg_laden_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:dreamstone"
+      }
+    },
+    {
+      "state": {
+        "id": "thesift:deep_egg_laden_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:hushslate"
+      }
+    },
+    {
+      "state": {
+        "id": "thesift:egg_laden_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:stone"
+      }
+    },
+    {
+      "state": {
+        "id": "thesift:deep_egg_laden_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "minecraft:deepslate"
+      }
+    }
+  ]
+}

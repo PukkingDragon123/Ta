@@ -229,8 +229,7 @@ public final class SmokeTest {
 
     // W1 World & terrain: the towers, temples, wells, altars, stone instruments, bridges, settlements, statues, shrines,
     // ruins and the Echoer's Hut are gone (their relics are buried in relic caches now)
-    private static final String[] STRUCTURES = {"sculk_castle", "thumper_arena",
-            "caravan_colony"}; // C: the Caravan colony
+    private static final String[] STRUCTURES = {"sculk_castle", "thumper_arena"}; // CR2: the Caravan colony is gone, Caravans are nomads
 
     private static void structures(ServerLevel sift) {
         // every template parses and can be stamped into the world
@@ -400,6 +399,8 @@ public final class SmokeTest {
                 EntityTypes.SNIFFER, ModEntities.HARMONER.get(), ModEntities.THUMPER.get(),
                 ModEntities.STRUMMER.get(), ModEntities.SCULK_PARASITE.get(), ModEntities.STRUMLING.get(),
                 com.thesift.registry.ModCaravans.CARAVAN.get(), // C: the Caravan
+                com.thesift.registry.ModCaravans.CARAVAN_QUEEN.get(), com.thesift.registry.ModCaravans.CARAVAN_LARVA.get(), // CR2: her and the larvae
+                com.thesift.registry.ModSlumbler.SLUMBLER_TADPOLE.get(), com.thesift.registry.ModSlumbler.SLUMBLER_EGGS.get(), // CR2: the Slumbler's young
                 com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), com.thesift.registry.ModEchoer.NIB.get(), // A2 Echoer
                 com.thesift.registry.ModSwifter.SWIFTER.get(), // A2 Swifter
                 com.thesift.registry.ModCaveCreatures.JAILER.get(), com.thesift.registry.ModCaveCreatures.SCULKLING.get(), // A4 cave creatures
