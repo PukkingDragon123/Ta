@@ -1,0 +1,6 @@
+{
+  "parent": "thesift:block/pointed_azure_crystal",
+  "textures": {
+    "cross": "thesift:block/pointed_azure_crystal_down_tip_merge"
+  }
+}

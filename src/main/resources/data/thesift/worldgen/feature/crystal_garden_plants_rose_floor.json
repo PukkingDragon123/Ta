@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:rose_crystal_cluster",
+          "properties": {
+            "facing": "up",
+            "waterlogged": "false"
+          }
+        },
+        "weight": 4
+      },
+      {
+        "data": {
+          "id": "thesift:pointed_rose_crystal",
+          "properties": {
+            "vertical_direction": "up",
+            "thickness": "tip",
+            "waterlogged": "false"
+          }
+        },
+        "weight": 2
+      }
+    ]
+  }
+}

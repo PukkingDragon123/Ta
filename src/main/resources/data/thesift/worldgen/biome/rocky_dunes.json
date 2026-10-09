@@ -101,7 +101,8 @@
   },
   "features": [
     [
-      "thesift:biome_blend"
+      "thesift:biome_blend",
+      "thesift:cave_scrub"
     ],
     [],
     [
@@ -118,7 +119,8 @@
       "thesift:ore_prism_deep",
       "thesift:ore_bauxite",
       "thesift:ore_galena",
-      "thesift:ore_magnesite"
+      "thesift:ore_magnesite",
+      "thesift:ore_copper_sift"
     ],
     [],
     [

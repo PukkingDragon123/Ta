@@ -431,6 +431,36 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SEA_LANTERN).mapColor(MapColor.COLOR_BLUE).strength(2.0F, 6.0F).lightLevel(s -> 12));
     public static final DeferredBlock<EurophyTableBlock> EUROPHY_TABLE = BLOCKS.registerBlock("europhy_table", EurophyTableBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CALCITE).mapColor(MapColor.TERRACOTTA_WHITE).strength(3.0F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> 6).noOcclusion());
+    public static final DeferredBlock<Block> ROSE_CRYSTAL_DRIPSTONE = BLOCKS.registerBlock("rose_crystal_dripstone", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_BLOCK).mapColor(MapColor.COLOR_PINK).lightLevel(s -> 3));
+    public static final DeferredBlock<PointedCrystalBlock> POINTED_ROSE_CRYSTAL = BLOCKS.registerBlock("pointed_rose_crystal", PointedCrystalBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POINTED_DRIPSTONE).mapColor(MapColor.COLOR_PINK).sound(SoundType.AMETHYST_CLUSTER).lightLevel(s -> 5));
+    public static final DeferredBlock<CrystalClusterBlock> ROSE_CRYSTAL_CLUSTER = BLOCKS.registerBlock("rose_crystal_cluster", CrystalClusterBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_PINK).lightLevel(s -> 7));
+    public static final DeferredBlock<Block> AZURE_CRYSTAL_DRIPSTONE = BLOCKS.registerBlock("azure_crystal_dripstone", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 3));
+    public static final DeferredBlock<PointedCrystalBlock> POINTED_AZURE_CRYSTAL = BLOCKS.registerBlock("pointed_azure_crystal", PointedCrystalBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POINTED_DRIPSTONE).mapColor(MapColor.COLOR_LIGHT_BLUE).sound(SoundType.AMETHYST_CLUSTER).lightLevel(s -> 5));
+    public static final DeferredBlock<CrystalClusterBlock> AZURE_CRYSTAL_CLUSTER = BLOCKS.registerBlock("azure_crystal_cluster", CrystalClusterBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 7));
+    public static final DeferredBlock<Block> AMBER_CRYSTAL_DRIPSTONE = BLOCKS.registerBlock("amber_crystal_dripstone", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_BLOCK).mapColor(MapColor.COLOR_ORANGE).lightLevel(s -> 3));
+    public static final DeferredBlock<PointedCrystalBlock> POINTED_AMBER_CRYSTAL = BLOCKS.registerBlock("pointed_amber_crystal", PointedCrystalBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POINTED_DRIPSTONE).mapColor(MapColor.COLOR_ORANGE).sound(SoundType.AMETHYST_CLUSTER).lightLevel(s -> 5));
+    public static final DeferredBlock<CrystalClusterBlock> AMBER_CRYSTAL_CLUSTER = BLOCKS.registerBlock("amber_crystal_cluster", CrystalClusterBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_ORANGE).lightLevel(s -> 7));
+    public static final DeferredBlock<ShockerPlantBlock> SHOCKER_PLANT = BLOCKS.registerBlock("shocker_plant", ShockerPlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TORCHFLOWER).mapColor(MapColor.COLOR_YELLOW).lightLevel(s -> s.getValue(com.thesift.block.ShockerPlantBlock.CHARGED) ? 9 : 2));
+    public static final DeferredBlock<AcidWeeperBlock> ACID_WEEPER = BLOCKS.registerBlock("acid_weeper", AcidWeeperBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.HANGING_ROOTS).mapColor(MapColor.COLOR_LIGHT_GREEN).lightLevel(s -> 6).randomTicks());
+    public static final DeferredBlock<AcidPuddleBlock> ACID_PUDDLE = BLOCKS.registerBlock("acid_puddle", AcidPuddleBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().noCollision().noOcclusion().noLootTable().instabreak().randomTicks().lightLevel(s -> 5).sound(SoundType.SLIME_BLOCK).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
+    public static final DeferredBlock<Block> WRITHING_SCULK = BLOCKS.registerBlock("writhing_sculk", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SCULK).lightLevel(s -> 3));
+    public static final DeferredBlock<SculkTendrilBlock> SCULK_TENDRIL = BLOCKS.registerBlock("sculk_tendril", SculkTendrilBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SCULK_VEIN).noOcclusion().lightLevel(s -> s.getValue(com.thesift.block.SculkTendrilBlock.TIP) ? 6 : 2));
+    public static final DeferredBlock<SculkGrasperBlock> SCULK_GRASPER = BLOCKS.registerBlock("sculk_grasper", SculkGrasperBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SCULK_CATALYST).noOcclusion().lightLevel(s -> s.getValue(com.thesift.block.SculkGrasperBlock.ACTIVE) ? 11 : 4));
 
     private ModBlocks() {}
 }

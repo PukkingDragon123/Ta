@@ -184,6 +184,10 @@ final class CreatureCheck {
             case "deep_sift" -> new Habitat(ModBlocks.LUMEN_MOSS_BLOCK.get(), hush, false, true);
             case "caravans_cavern" -> new Habitat(Blocks.CALCITE, Blocks.CALCITE, false, true);
             case "sculk_swamp" -> new Habitat(ModBlocks.SCULK_MUD.get(), hush, false, false);
+            // W-deep caves: the cave biomes (their creatures are tested in the pitch-dark room)
+            case "sift_caves" -> new Habitat(ModBlocks.DREAMSTONE.get(), hush, false, true);
+            case "cave_jungle" -> new Habitat(ModBlocks.LUMEN_MOSS_BLOCK.get(), hush, false, true); // (its glowing moss is lit: tested on dark rock)
+            case "sculk_caves" -> new Habitat(Blocks.SCULK, Blocks.SCULK, false, true);
             // forest_mountains, chrome_lakes, wishing_grove (and any biome added later)
             default -> new Habitat(ModBlocks.SIFT_GRASS_BLOCK.get(), hush, false, false);
         };

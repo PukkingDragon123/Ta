@@ -1,0 +1,138 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.sculk_swamp.loop",
+      "additions": {
+        "sound": "thesift:ambient.sculk_swamp.additions",
+        "tick_chance": 0.016
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sculk_swamp.mood",
+        "tick_delay": 3000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "minecraft:music.overworld.deep_dark"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [],
+          "monster": [
+            {
+              "type": "thesift:sculk_parasite",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 30
+            },
+            {
+              "type": "thesift:strumling",
+              "count": 1,
+              "weight": 8
+            }
+          ],
+          "ambient": [],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "minecraft:sculk_soul"
+          },
+          "probability": 0.0015
+        },
+        {
+          "particle": {
+            "type": "minecraft:sculk_charge_pop"
+          },
+          "probability": 0.0025
+        },
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.003
+        },
+        {
+          "particle": {
+            "type": "thesift:drifting_soul"
+          },
+          "probability": 0.0015
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#0f2e33",
+    "minecraft:visual/sky_color": "#123a40",
+    "minecraft:visual/water_fog_color": "#06272b"
+  },
+  "carvers": [
+    "thesift:sculk_burrow",
+    "minecraft:cave",
+    "minecraft:cave_extra_underground"
+  ],
+  "downfall": 0.5,
+  "effects": {
+    "water_color": "#0f5258",
+    "grass_color": "#2e6b66",
+    "foliage_color": "#2a5f5c"
+  },
+  "features": [
+    [],
+    [
+      "thesift:sculk_lake_underground"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      "thesift:ore_siftite",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep",
+      "thesift:ore_bauxite",
+      "thesift:ore_galena",
+      "thesift:ore_magnesite",
+      "thesift:ore_copper_sift",
+      "thesift:cave_ore_galena",
+      "thesift:ore_cave_tuff"
+    ],
+    [
+      "thesift:sculk_caves_patch"
+    ],
+    [
+      "thesift:chrome_spring",
+      "thesift:ore_sculkite_mud",
+      "thesift:ore_sculkite_deep",
+      "thesift:ore_writhing_sculk"
+    ],
+    [
+      "thesift:sculk_caves_vein",
+      "thesift:sculk_tendrils_hanging",
+      "thesift:sculk_tendrils_standing",
+      "thesift:sculk_grasper"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.2
+}

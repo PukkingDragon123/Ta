@@ -1,0 +1,14 @@
+{
+  "type": "thesift:cave_scrub",
+  "cover": [
+    "thesift:sift_grass_block",
+    "thesift:coral_turf",
+    "thesift:white_turf"
+  ],
+  "floor": {
+    "id": "thesift:dreamstone"
+  },
+  "roof": 3,
+  "max_gap": 24,
+  "depth": 64
+}

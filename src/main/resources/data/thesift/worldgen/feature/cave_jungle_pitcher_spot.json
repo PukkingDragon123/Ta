@@ -1,0 +1,161 @@
+{
+  "type": "minecraft:simple_random_selector",
+  "features": [
+    {
+      "feature": {
+        "type": "minecraft:block_column",
+        "allowed_placement": {
+          "type": "minecraft:matching_block_tag",
+          "tag": "minecraft:air"
+        },
+        "direction": "up",
+        "prioritize_tip": true,
+        "layers": [
+          {
+            "height": {
+              "type": "minecraft:uniform",
+              "min_inclusive": 2,
+              "max_inclusive": 5
+            },
+            "provider": {
+              "id": "minecraft:big_dripleaf_stem",
+              "properties": {
+                "facing": "north",
+                "waterlogged": "false"
+              }
+            }
+          },
+          {
+            "height": 1,
+            "provider": {
+              "id": "minecraft:big_dripleaf",
+              "properties": {
+                "facing": "north",
+                "tilt": "none",
+                "waterlogged": "false"
+              }
+            }
+          }
+        ]
+      },
+      "placement": []
+    },
+    {
+      "feature": {
+        "type": "minecraft:block_column",
+        "allowed_placement": {
+          "type": "minecraft:matching_block_tag",
+          "tag": "minecraft:air"
+        },
+        "direction": "up",
+        "prioritize_tip": true,
+        "layers": [
+          {
+            "height": {
+              "type": "minecraft:uniform",
+              "min_inclusive": 2,
+              "max_inclusive": 5
+            },
+            "provider": {
+              "id": "minecraft:big_dripleaf_stem",
+              "properties": {
+                "facing": "east",
+                "waterlogged": "false"
+              }
+            }
+          },
+          {
+            "height": 1,
+            "provider": {
+              "id": "minecraft:big_dripleaf",
+              "properties": {
+                "facing": "east",
+                "tilt": "none",
+                "waterlogged": "false"
+              }
+            }
+          }
+        ]
+      },
+      "placement": []
+    },
+    {
+      "feature": {
+        "type": "minecraft:block_column",
+        "allowed_placement": {
+          "type": "minecraft:matching_block_tag",
+          "tag": "minecraft:air"
+        },
+        "direction": "up",
+        "prioritize_tip": true,
+        "layers": [
+          {
+            "height": {
+              "type": "minecraft:uniform",
+              "min_inclusive": 2,
+              "max_inclusive": 5
+            },
+            "provider": {
+              "id": "minecraft:big_dripleaf_stem",
+              "properties": {
+                "facing": "south",
+                "waterlogged": "false"
+              }
+            }
+          },
+          {
+            "height": 1,
+            "provider": {
+              "id": "minecraft:big_dripleaf",
+              "properties": {
+                "facing": "south",
+                "tilt": "none",
+                "waterlogged": "false"
+              }
+            }
+          }
+        ]
+      },
+      "placement": []
+    },
+    {
+      "feature": {
+        "type": "minecraft:block_column",
+        "allowed_placement": {
+          "type": "minecraft:matching_block_tag",
+          "tag": "minecraft:air"
+        },
+        "direction": "up",
+        "prioritize_tip": true,
+        "layers": [
+          {
+            "height": {
+              "type": "minecraft:uniform",
+              "min_inclusive": 2,
+              "max_inclusive": 5
+            },
+            "provider": {
+              "id": "minecraft:big_dripleaf_stem",
+              "properties": {
+                "facing": "west",
+                "waterlogged": "false"
+              }
+            }
+          },
+          {
+            "height": 1,
+            "provider": {
+              "id": "minecraft:big_dripleaf",
+              "properties": {
+                "facing": "west",
+                "tilt": "none",
+                "waterlogged": "false"
+              }
+            }
+          }
+        ]
+      },
+      "placement": []
+    }
+  ]
+}

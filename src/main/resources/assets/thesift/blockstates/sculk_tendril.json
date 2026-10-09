@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "hanging=true,tip=true": {
+      "model": "thesift:block/sculk_tendril_hang_tip"
+    },
+    "hanging=true,tip=false": {
+      "model": "thesift:block/sculk_tendril_hang_body"
+    },
+    "hanging=false,tip=true": {
+      "model": "thesift:block/sculk_tendril_up_tip"
+    },
+    "hanging=false,tip=false": {
+      "model": "thesift:block/sculk_tendril_up_body"
+    }
+  }
+}

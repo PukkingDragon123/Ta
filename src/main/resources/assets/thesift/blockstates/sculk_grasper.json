@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "thesift:block/sculk_grasper"
+    },
+    "active=true": {
+      "model": "thesift:block/sculk_grasper_active"
+    }
+  }
+}

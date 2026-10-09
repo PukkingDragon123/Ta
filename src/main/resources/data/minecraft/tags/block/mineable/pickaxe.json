@@ -88,6 +88,15 @@
     "thesift:galena_ore",
     "thesift:deep_galena_ore",
     "thesift:pure_soul_block",
-    "thesift:europhy_table"
+    "thesift:europhy_table",
+    "thesift:rose_crystal_dripstone",
+    "thesift:pointed_rose_crystal",
+    "thesift:rose_crystal_cluster",
+    "thesift:azure_crystal_dripstone",
+    "thesift:pointed_azure_crystal",
+    "thesift:azure_crystal_cluster",
+    "thesift:amber_crystal_dripstone",
+    "thesift:pointed_amber_crystal",
+    "thesift:amber_crystal_cluster"
   ]
 }

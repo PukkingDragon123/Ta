@@ -1,0 +1,67 @@
+{
+  "feature": "thesift:crystal_spike_amber",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 3
+    },
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 24,
+        "max_inclusive": 48
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "absolute": 120
+        },
+        "min_inclusive": {
+          "above_bottom": 6
+        }
+      }
+    },
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 1,
+        "max_inclusive": 3
+      }
+    },
+    {
+      "type": "minecraft:offset",
+      "x": {
+        "type": "minecraft:clamped_normal",
+        "deviation": 3.0,
+        "max_inclusive": 8,
+        "mean": 0.0,
+        "min_inclusive": -8
+      },
+      "y": {
+        "type": "minecraft:clamped_normal",
+        "deviation": 0.6,
+        "max_inclusive": 2,
+        "mean": 0.0,
+        "min_inclusive": -2
+      },
+      "z": {
+        "type": "minecraft:clamped_normal",
+        "deviation": 3.0,
+        "max_inclusive": 8,
+        "mean": 0.0,
+        "min_inclusive": -8
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

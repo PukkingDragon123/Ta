@@ -90,11 +90,15 @@
       "thesift:ore_prism_deep",
       "thesift:ore_bauxite",
       "thesift:ore_galena",
-      "thesift:ore_magnesite"
+      "thesift:ore_magnesite",
+      "thesift:ore_copper_sift",
+      "thesift:ore_copper_cave_rich",
+      "thesift:ore_cave_tuff"
     ],
     [
-      "minecraft:sculk_patch_deep_dark",
-      "minecraft:sculk_vein"
+      "thesift:crystal_cluster_azure",
+      "thesift:crystal_spikes_azure",
+      "minecraft:sculk_patch_deep_dark"
     ],
     [
       "thesift:chrome_spring",
@@ -102,9 +106,11 @@
       "thesift:ore_sculkite_deep"
     ],
     [
-      "thesift:glowbell_vine",
-      "thesift:lumen_moss_patch_floor",
-      "thesift:lumen_moss_patch_ceiling"
+      "thesift:crystal_garden_azure_floor",
+      "thesift:crystal_garden_azure_ceiling",
+      "thesift:cave_glow_lichen",
+      "thesift:deep_glowbell_vine",
+      "thesift:sculk_caves_vein"
     ],
     []
   ],

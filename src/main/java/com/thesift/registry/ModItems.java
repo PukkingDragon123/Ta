@@ -196,6 +196,20 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> DEEP_GALENA_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_GALENA_ORE);
     public static final DeferredItem<BlockItem> PURE_SOUL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PURE_SOUL_BLOCK);
     public static final DeferredItem<BlockItem> EUROPHY_TABLE = ITEMS.registerSimpleBlockItem(ModBlocks.EUROPHY_TABLE);
+    public static final DeferredItem<BlockItem> ROSE_CRYSTAL_DRIPSTONE = ITEMS.registerSimpleBlockItem(ModBlocks.ROSE_CRYSTAL_DRIPSTONE);
+    public static final DeferredItem<BlockItem> POINTED_ROSE_CRYSTAL = ITEMS.registerSimpleBlockItem(ModBlocks.POINTED_ROSE_CRYSTAL);
+    public static final DeferredItem<BlockItem> ROSE_CRYSTAL_CLUSTER = ITEMS.registerSimpleBlockItem(ModBlocks.ROSE_CRYSTAL_CLUSTER);
+    public static final DeferredItem<BlockItem> AZURE_CRYSTAL_DRIPSTONE = ITEMS.registerSimpleBlockItem(ModBlocks.AZURE_CRYSTAL_DRIPSTONE);
+    public static final DeferredItem<BlockItem> POINTED_AZURE_CRYSTAL = ITEMS.registerSimpleBlockItem(ModBlocks.POINTED_AZURE_CRYSTAL);
+    public static final DeferredItem<BlockItem> AZURE_CRYSTAL_CLUSTER = ITEMS.registerSimpleBlockItem(ModBlocks.AZURE_CRYSTAL_CLUSTER);
+    public static final DeferredItem<BlockItem> AMBER_CRYSTAL_DRIPSTONE = ITEMS.registerSimpleBlockItem(ModBlocks.AMBER_CRYSTAL_DRIPSTONE);
+    public static final DeferredItem<BlockItem> POINTED_AMBER_CRYSTAL = ITEMS.registerSimpleBlockItem(ModBlocks.POINTED_AMBER_CRYSTAL);
+    public static final DeferredItem<BlockItem> AMBER_CRYSTAL_CLUSTER = ITEMS.registerSimpleBlockItem(ModBlocks.AMBER_CRYSTAL_CLUSTER);
+    public static final DeferredItem<BlockItem> SHOCKER_PLANT = ITEMS.registerSimpleBlockItem(ModBlocks.SHOCKER_PLANT);
+    public static final DeferredItem<BlockItem> ACID_WEEPER = ITEMS.registerSimpleBlockItem(ModBlocks.ACID_WEEPER);
+    public static final DeferredItem<BlockItem> WRITHING_SCULK = ITEMS.registerSimpleBlockItem(ModBlocks.WRITHING_SCULK);
+    public static final DeferredItem<BlockItem> SCULK_TENDRIL = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_TENDRIL);
+    public static final DeferredItem<BlockItem> SCULK_GRASPER = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_GRASPER);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));

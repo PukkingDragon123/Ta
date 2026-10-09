@@ -247,6 +247,11 @@ public final class CodexEntries {
         l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_DREAMSAND));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
+        // W-deep caves: the normal caves and their crystal, the Cave Jungle, the Sculk Caves
+        l.add(thing(PLACES, "sift_caves", ModItems.POINTED_AZURE_CRYSTAL));
+        l.add(thing(PLACES, "crystal_dripstone", ModItems.ROSE_CRYSTAL_CLUSTER));
+        l.add(thing(PLACES, "cave_jungle", ModItems.SHOCKER_PLANT));
+        l.add(thing(PLACES, "sculk_caves", ModItems.SCULK_GRASPER));
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
         l.add(thing(MAGIC, "europhy_table", ModItems.EUROPHY_TABLE)); // F1: crafting by music (replaces the Euphory Altar)

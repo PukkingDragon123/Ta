@@ -1,0 +1,122 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.deep_sift.loop",
+      "additions": {
+        "sound": "thesift:ambient.sift.additions",
+        "tick_chance": 0.0111
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "minecraft:music.overworld.lush_caves"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [],
+          "monster": [],
+          "ambient": [],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "minecraft:spore_blossom_air"
+          },
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.006
+        },
+        {
+          "particle": {
+            "type": "thesift:dream_pollen"
+          },
+          "probability": 0.002
+        },
+        {
+          "particle": {
+            "type": "thesift:sift_mist"
+          },
+          "probability": 0.0012
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#4aa58a",
+    "minecraft:visual/sky_color": "#2b6655",
+    "minecraft:visual/water_fog_color": "#3fd8b0"
+  },
+  "carvers": [
+    "thesift:jungle_cave",
+    "minecraft:cave",
+    "minecraft:canyon"
+  ],
+  "downfall": 1.0,
+  "effects": {
+    "water_color": "#3fd8b0",
+    "grass_color": "#4fc98a",
+    "foliage_color": "#3fb87a"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "thesift:ore_siftite",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep",
+      "thesift:ore_bauxite",
+      "thesift:ore_galena",
+      "thesift:ore_magnesite",
+      "thesift:ore_copper_sift",
+      "thesift:ore_copper_cave_rich",
+      "thesift:cave_ore_bauxite"
+    ],
+    [],
+    [
+      "thesift:chrome_spring",
+      "thesift:ore_sculkite_mud",
+      "thesift:ore_sculkite_deep"
+    ],
+    [
+      "thesift:cave_glow_lichen",
+      "thesift:jungle_floor_plants",
+      "thesift:jungle_glowbell_vine",
+      "thesift:jungle_acid_weeper",
+      "thesift:cave_jungle_pitcher_spot",
+      "minecraft:classic_vines_cave_feature",
+      "minecraft:lush_caves_clay",
+      "minecraft:spore_blossom"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.95
+}

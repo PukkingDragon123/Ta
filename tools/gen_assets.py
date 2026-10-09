@@ -318,6 +318,8 @@ def gen_block(b):
         __import__('chrome').gen_block(sys.modules[__name__], b)
     elif k.startswith('w1_'):  # W1 World & terrain: Sculk Water, the Sculk Coral fans
         __import__('sculk_world').gen_block(sys.modules[__name__], b)
+    elif k.startswith('wd_'):  # W-deep caves: pointed crystals, crystal clusters, cave plants, acid, sculk tendrils, the Sculk Grasper
+        __import__('caves').gen_block(sys.modules[__name__], b)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -1394,6 +1396,7 @@ def generate():
     __import__('sifter').assets(sys.modules[__name__])  # CR1: bell and echo ring particles, the living bell's Codex page
     __import__('band_table').assets(sys.modules[__name__])  # F2 Band Table: Sift enchantments, their books, recipe, sheet loot, text
     __import__('knowledge').item_models(sys.modules[__name__])  # F3 Knowledge and lore: 3D lore books and scrolls in the hand
+    __import__('caves').assets(sys.modules[__name__])  # W-deep caves: crystal/speleothem tags, damage types, acid particles, recipes, text
 
 
 def finalize():

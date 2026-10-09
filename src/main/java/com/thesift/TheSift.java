@@ -54,6 +54,7 @@ public class TheSift {
         com.thesift.registry.ModBandTable.register(modBus); // F2 Band Table: the Music Band Table, its score, the Sift enchantments' effects
         com.thesift.registry.ModSlumbler.register(modBus); // CR2: the Slumbler's Chrome spit, its eggs and its tadpoles
         com.thesift.registry.ModKnowledge.register(modBus); // F3 Knowledge & lore: discoveries, lore books/scrolls, the Mini Creator's quests
+        com.thesift.registry.ModCaves.register(modBus); // W-deep caves: the Sculk Grasper, cave scrub worldgen, acid particles
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

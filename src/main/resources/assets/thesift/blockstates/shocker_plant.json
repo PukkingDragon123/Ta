@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "charged=false": {
+      "model": "thesift:block/shocker_plant"
+    },
+    "charged=true": {
+      "model": "thesift:block/shocker_plant_charged"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "thesift:block/pointed_rose_crystal",
+  "textures": {
+    "cross": "thesift:block/pointed_rose_crystal_down_middle"
+  }
+}

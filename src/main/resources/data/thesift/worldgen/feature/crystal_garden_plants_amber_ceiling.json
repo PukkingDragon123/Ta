@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:amber_crystal_cluster",
+          "properties": {
+            "facing": "down",
+            "waterlogged": "false"
+          }
+        },
+        "weight": 4
+      },
+      {
+        "data": {
+          "id": "thesift:pointed_amber_crystal",
+          "properties": {
+            "vertical_direction": "down",
+            "thickness": "tip",
+            "waterlogged": "false"
+          }
+        },
+        "weight": 2
+      }
+    ]
+  }
+}

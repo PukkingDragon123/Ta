@@ -1,0 +1,6 @@
+{
+  "parent": "thesift:block/pointed_amber_crystal",
+  "textures": {
+    "cross": "thesift:block/pointed_amber_crystal_down_frustum"
+  }
+}

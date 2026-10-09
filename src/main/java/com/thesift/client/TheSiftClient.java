@@ -90,6 +90,7 @@ public class TheSiftClient {
         com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
         EurophyClient.register(modBus); // F1: the Europhy Table's clockwork, renderer and screen
         com.thesift.client.knowledge.KnowledgeClient.register(modBus); // F3 Knowledge & lore: Mini Creator, lore reading, sheet art tooltips
+        CavesClient.register(modBus); // W-deep caves: the Sculk Grasper's tendril, acid drops and fizz
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }

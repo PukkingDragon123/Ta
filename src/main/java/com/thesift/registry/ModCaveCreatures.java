@@ -185,7 +185,7 @@ public final class ModCaveCreatures {
         if (level.getDifficulty() == Difficulty.PEACEFUL || level.canSeeSky(pos) || level.getRawBrightness(pos, 0) > 0) {
             return false;
         }
-        if (pos.getY() >= maxY && !level.getBiome(pos).is(DEEP_SIFT)) {
+        if (pos.getY() >= maxY && !level.getBiome(pos).is(DEEP_SIFT) && !level.getBiome(pos).is(ModCaves.SCULK_CAVES)) { // W-deep: and the Sculk Caves
             return false;
         }
         return level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);

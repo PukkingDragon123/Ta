@@ -1,0 +1,126 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "thesift:ambient.deep_sift.loop",
+      "additions": {
+        "sound": "thesift:ambient.sift.additions",
+        "tick_chance": 0.0111
+      },
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "thesift:ambient.sift.mood",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 18000,
+        "min_delay": 6000,
+        "replace_current_music": true,
+        "sound": "thesift:music.deep_sift"
+      }
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [],
+          "monster": [],
+          "ambient": [],
+          "water_creature": [],
+          "underground_water_creature": [],
+          "water_ambient": [],
+          "axolotls": [],
+          "misc": []
+        }
+      },
+      "modifier": "overlay"
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "thesift:glow_dust"
+          },
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "thesift:star_sparkle"
+          },
+          "probability": 0.0012
+        },
+        {
+          "particle": {
+            "type": "thesift:drifting_soul"
+          },
+          "probability": 0.0006
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:visual/fog_color": "#8bb4b0",
+    "minecraft:visual/sky_color": "#3d6670",
+    "minecraft:visual/water_fog_color": "#4fd0e0"
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.4,
+  "effects": {
+    "water_color": "#4fd0e0",
+    "grass_color": "#63d6c6",
+    "foliage_color": "#6fe2dc"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "thesift:ore_siftite",
+      "thesift:ore_hushslate_blob",
+      "thesift:ore_prism_deep",
+      "thesift:ore_bauxite",
+      "thesift:ore_galena",
+      "thesift:ore_magnesite",
+      "thesift:ore_copper_sift",
+      "thesift:ore_copper_cave_rich",
+      "thesift:cave_ore_bauxite",
+      "thesift:cave_ore_galena",
+      "thesift:cave_ore_magnesite",
+      "thesift:ore_cave_tuff",
+      "thesift:ore_cave_calcite"
+    ],
+    [
+      "thesift:crystal_cluster_rose",
+      "thesift:crystal_spikes_rose",
+      "thesift:crystal_cluster_azure",
+      "thesift:crystal_spikes_azure",
+      "thesift:crystal_cluster_amber",
+      "thesift:crystal_spikes_amber"
+    ],
+    [
+      "thesift:chrome_spring",
+      "thesift:ore_sculkite_mud",
+      "thesift:ore_sculkite_deep"
+    ],
+    [
+      "thesift:crystal_garden_rose_floor",
+      "thesift:crystal_garden_rose_ceiling",
+      "thesift:crystal_garden_azure_floor",
+      "thesift:crystal_garden_azure_ceiling",
+      "thesift:crystal_garden_amber_floor",
+      "thesift:crystal_garden_amber_ceiling",
+      "thesift:cave_glow_lichen"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.6
+}

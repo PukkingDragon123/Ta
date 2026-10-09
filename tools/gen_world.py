@@ -549,11 +549,13 @@ def generate():
     features()
     __import__('caravans').world(sys.modules[__name__])  # C: the Caravans Cavern
     __import__('materials').world(sys.modules[__name__])  # F1: Bauxite, Galena, Magnesite and Scukite in every Sift biome's caves
+    __import__('caves').ores(sys.modules[__name__])  # W-deep: vanilla Copper ore in every Sift biome (joins COMMON_UNDERGROUND)
     biomes()
     dimension_json()
     __import__('sea_sky').world(sys.modules[__name__])  # sea & sky: kelp forest, deep dark ocean, sound garden
     __import__('swifter').world(sys.modules[__name__])  # A2: the White Forest, white lullwood, cloud bushes, Swifter dens
     __import__('sculk_world').world(sys.modules[__name__])  # W1: Sculk Swamp, Sculk Ocean, soft biome edges, relic caches
     __import__('sculk_sea').world(sys.modules[__name__])  # CR3: Coral Organs on the Sculk Ocean floor, Sculk Fish spawns
+    __import__('caves').world(sys.modules[__name__])  # W-deep: cave biomes by depth, crystals, no grass in caves (after every biome)
     carver_tags()
     print(f'world ok: {len(FEATURES)} features, {len(PLACED)} placed')
