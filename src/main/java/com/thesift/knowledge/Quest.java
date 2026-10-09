@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public enum Quest {
     ARRIVAL(p -> true),
-    INSTRUMENT(p -> carries(p, s -> s.is(Quest.INSTRUMENTS))),
+    INSTRUMENT(p -> carries(p, s -> s.is(Tags.INSTRUMENTS))),
     SHEET(p -> carries(p, s -> s.getItem() instanceof MusicSheetItem) || Knowledge.count(p, "song:") > 0),
     PERFORM(p -> Knowledge.count(p, "song:") > 0),
     EUROPHY(p -> Knowledge.has(p, "item:thesift:europhy_table") || Knowledge.has(p, "item:thesift:euphory_altar")),
@@ -25,7 +25,10 @@ public enum Quest {
     HERALDS(p -> Quest.metHerald(p)),
     SOUL(p -> Knowledge.has(p, "dim:thesift:soul_dimension"));
 
-    public static final TagKey<Item> INSTRUMENTS = TagKey.create(Registries.ITEM, TheSift.id("instruments"));
+    /** Held in a nested class: an enum constant's arguments may not refer forward to the enum's own static fields. */
+    public static final class Tags {
+        public static final TagKey<Item> INSTRUMENTS = TagKey.create(Registries.ITEM, TheSift.id("instruments"));
+    }
     /** The Heralds and the Conductor (some still to come): meeting any of them completes the Heralds goal. */
     private static final String[] HERALDS_IDS = {"dictator", "thumper", "strummer", "crocodile", "owl", "octopus", "weaver", "conductor"};
 
