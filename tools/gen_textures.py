@@ -13,7 +13,6 @@ from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(__file__))
 import hditems as HI  # noqa: E402
-import mcitems as MI  # noqa: E402
 import mctex as M  # noqa: E402
 import sprites as S  # noqa: E402
 from texlib import (Tex, bricks, cobbled, darken, draw_map, fbm, hx, iridescent, lerp, lighten, polished, quantize, ramp,  # noqa: E402
@@ -407,18 +406,6 @@ def functional():
                 c = lerp(c, hx('#ffffff'), max(0.0, 0.35 - r * 0.04) + (0.25 if math.sin(r * 2 - t * 3) > 0.92 else 0))
                 px[x, y + f * 16] = (c[0], c[1], c[2], 190)
     out('block/sift_portal', p, {'animation': {'frametime': 2}, 'texture': {'mipmap_strategy': 'mean'}})
-    glyphs = [
-        ['..L..', '.L.L.', 'L...L', '.L.L.', '..L..'], ['LLLLL', '..L..', '.L.L.', 'L...L', '.....'], ['L...L', '.L.L.', '..L..', '..L..', '..L..'],
-        ['.LLL.', 'L...L', 'L.L.L', 'L...L', '.LLL.'], ['L.L.L', '.L.L.', 'L.L.L', '.L.L.', 'L.L.L'], ['..L..', '..L..', 'LLLLL', '..L..', '..L..'],
-        ['L....', 'LL...', 'L.L..', 'L..L.', 'LLLLL'], ['.L.L.', 'L.L.L', '.....', 'L.L.L', '.L.L.']]
-    for i, gl in enumerate(glyphs):
-        g = polished(DREAM, 130 + i)
-        big = []
-        for row in gl:
-            r2 = ''.join(ch * 2 for ch in row)
-            big += [r2, r2]
-        draw_map(g, big, {'L': hx('#7fe8ff')}, 3, 3)
-        out(f'block/glyph_stone_{i}', g)
     # cake
     top = Tex()
     for y in range(16):
@@ -546,28 +533,11 @@ def items():
         for y in (5, 6):
             bucket.set(x, y, iridescent(x, y, 1.0, 0.8))
     out('item/chrome_bucket', bucket)
-    out('item/siftite_upgrade_smithing_template', pal_sprite(S.TEMPLATE, {'d': hx('#1c2e3f'), 'S': hx('#3a586c'), 'c': hx('#2e485c'),
-                                                                         'W': hx('#9aeefc'), 'p': SIFTITE_PINK}))
     out('item/music_disc_lullaby', pal_sprite(S.DISC, {'d': hx('#101828'), 'm': hx('#26304a'), 'c': hx('#3a4870'), 'p': hx('#7fe8ff'),
                                                       'P': hx('#ff9fd8')}))
     out('item/sift_cake', pal_sprite(S.CAKE_ITEM, {'W': hx('#fff0fa'), 'w': hx('#ffd6ec'), 's': hx('#7fe3e6'), 'p': hx('#f0a9cb'),
                                                   'P': hx('#7fe3e6'), 'g': hx('#fff7c2'), 'd': hx('#c77fa6')}))
-    # tools and armour: vanilla silhouettes, shaded by rule (see mcitems.py), with a pink glint
-    gear = [hx('#164f66'), SIFTITE[0], SIFTITE[1], SIFTITE[3], SIFTITE[4]]
-
-    def glint(img, n):
-        k = 0
-        for y in range(16):
-            for x in range(16):
-                if img.get(x, y)[:3] == gear[4][:3] and k < n:
-                    k += 1
-                    if k == n:
-                        img.set(x, y, SIFTITE_PINK)
-        return img
-
-    for t, fn in MI.TOOLS.items():
-        out(f'item/siftite_{t}', glint(MI.shade(fn(), gear), 2))
-    out('item/siftite_spear_in_hand', glint(MI.shade(MI.spear(), gear), 2))
+    # RR: no Siftite tools any more (Siftite is a material only)
     # slingshot + pulling frames
     base_keys = {'h': hx('#8a6a4a'), 'w': hx('#6fe2dc')}
     out('item/slingshot', pal_sprite(S.SLINGSHOT, base_keys))
@@ -615,44 +585,6 @@ def items():
         e = E[mob]
         keys = {k: hx(v) for k, v in e['keys'].items()}
         out(f'item/{mob}_spawn_egg', HI.egg(hx(b), hx(s), e.get('face'), keys, e.get('top'), seed=i))
-
-
-# ================================================================== the Grand Stage and the Encore Sigils
-
-
-def stage_things():
-    teal, teal_d, brass, brass_l = hx('#2ef2e2'), hx('#15a89f'), hx('#b89a52'), hx('#dcc27a')
-    violet, violet_l = hx('#7a3ab8'), hx('#c46cff')
-    # Encore Sigil: a hushslate floor tile carved with a ring of three notes - drum, flute, strings
-    top = M.polished(HUSH[1:6], 170)
-    draw_map(top, ['....vvvvvv....', '..vv......vv..', '.v...VVVV...v.', '.v..V....V..v.', 'v..V..bb..V..v', 'v..V.b..b.V..v', 'v..V.b..b.V..v',
-                   'v..V..bb..V..v', '.v..V....V..v.', '.v...VVVV...v.', '..vv......vv..', '....vvvvvv....'], {'v': violet, 'V': violet_l, 'b': brass_l}, 1, 2)
-    out('block/encore_sigil_top', top)
-    side = M.polished(HUSH[1:6], 171)
-    for x in range(16):
-        side.set(x, 1, brass)
-        side.set(x, 14, brass)
-        if x % 5 == 2:
-            for y in range(4, 12):
-                side.set(x, y, violet if y % 2 else violet_l)
-    out('block/encore_sigil_side', side)
-    # Instrument Altar: a pedestal of polished hushslate with a gold rim and a glowing cradle on top
-    top = M.polished(HUSH[1:6], 172)
-    draw_map(top, ['bbbbbbbbbbbbbb', 'b............b', 'b..tttttttt..b', 'b..t......t..b', 'b..t.TTTT.t..b', 'b..t.T..T.t..b', 'b..t.T..T.t..b',
-                   'b..t.TTTT.t..b', 'b..t......t..b', 'b..tttttttt..b', 'b............b', 'bbbbbbbbbbbbbb'], {'b': brass, 't': teal_d, 'T': teal}, 1, 2)
-    out('block/instrument_altar_top', top)
-    side = M.polished(HUSH[1:6], 173)
-    for x in range(16):
-        side.set(x, 0, brass_l)
-        side.set(x, 1, brass)
-        side.set(x, 15, brass)
-        if x in (3, 12):
-            for y in range(3, 14):
-                side.set(x, y, teal if y % 4 == 0 else teal_d)
-    for y in range(5, 11):
-        for x in range(6, 10):
-            side.set(x, y, teal_d if (x + y) % 2 else teal)
-    out('block/instrument_altar_side', side)
 
 
 # ================================================================== Sculk Corruption overlays
@@ -1206,25 +1138,6 @@ def corruption_overlays():
     out('misc/sculk_veins', _sc_veins(31))
 
 
-# ================================================================== the Dictator's things
-
-
-def dictator_things():
-    teal, teal_d, brass, brass_l = hx('#2ef2e2'), hx('#15a89f'), hx('#b89a52'), hx('#dcc27a')
-    # the podium: dark hushslate with a brass rail and glowing grooves; the top is a music stand of runes
-    side = M.polished(HUSH[1:6], 160)
-    for x in range(16):
-        side.set(x, 2, brass); side.set(x, 1, brass_l)
-        if x % 4 == 1:
-            for y in range(5, 13):
-                side.set(x, y, teal_d if y % 3 else teal)
-    out('block/conductors_podium_side', side)
-    top = M.polished(HUSH[1:6], 161)
-    draw_map(top, ['..........', '.bbbbbbbb.', '.b......b.', '.b.tttt.b.', '.b.t..t.b.', '.b.tttt.b.', '.b..tt..b.', '.b......b.', '.bbbbbbbb.',
-                   '..........'], {'b': brass, 't': teal}, 3, 3)
-    out('block/conductors_podium_top', top)
-
-
 # F3 Knowledge and lore: the old Sift Codex art is gone - the Knowledge Book's is in tools/knowledge_art.py
 
 
@@ -1651,8 +1564,6 @@ def main():
     flora()
     functional()
     items()
-    dictator_things()
-    stage_things()
     particles()
     nebula()
     logo()

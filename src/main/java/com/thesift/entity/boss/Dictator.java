@@ -1,6 +1,6 @@
 package com.thesift.entity.boss;
 
-import com.thesift.block.entity.ConductorsPodiumBlockEntity;
+import com.thesift.block.entity.BossDenBlockEntity;
 import com.thesift.entity.KillBurst;
 import com.thesift.registry.ModEffects;
 import com.thesift.registry.ModEntities;
@@ -1274,7 +1274,7 @@ public class Dictator extends Monster {
             BossStages.cleared(level, this, BossStages.CONDUCTOR, BossStages.DEFEATED); // B2 Thumper & cutscenes: the defeat cutscene
             this.dismissBand(level); // C3: his band falls with him
             this.spawnAtLocation(level, new ItemStack(ModItems.CONDUCTORS_STAFF.get()));
-            if (this.podium != null && level.getBlockEntity(this.podium) instanceof ConductorsPodiumBlockEntity p) {
+            if (this.podium != null && level.getBlockEntity(this.podium) instanceof BossDenBlockEntity p) {
                 p.setDefeated();
             }
             level.sendParticles(ParticleTypes.SCULK_SOUL, this.getX(), this.getY() + this.getBbHeight() * 0.4, this.getZ(), 80,

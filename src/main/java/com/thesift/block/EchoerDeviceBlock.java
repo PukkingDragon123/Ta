@@ -29,16 +29,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Echoer: an ancient soulstone horn that mines with sound. Give it a redstone signal (or use
- * it) and it draws in a breath of light, then fires an echo beam out of its face that shatters
- * the first breakable block in its path.
+ * RR: the Echoer Drill - a soulstone drill cannon that drills to a rhythm (it was the Echoer, a horn that fired one
+ * echo shot). Its listening horn hears redstone pulses, taps by hand, notes played and note blocks within eight
+ * blocks; when the rhythm rests it reads it (see {@link EchoerDeviceBlockEntity}): the number of beats picks the
+ * pattern (a shot, a bore, a wide bore, a vein hunt), the tempo the direction (fast digs down, slow digs up) and the
+ * loudest beat the depth. The block entity renderer draws the barrel, the coils, the spinning bit and the recoil.
  *
  * <ul>
- *   <li>Range: a redstone signal sets it - strength 1-15 reaches that many blocks. Used by hand
- *   it fires at its dialled range; sneak-use turns the dial (4, 8 or 16 blocks).</li>
- *   <li>The drops go into a container touching it (the back first), or pop out of its top.</li>
- *   <li>The beam stops at unbreakable blocks and at anything with an inventory or a block entity,
- *   without breaking it.</li>
+ *   <li>Use it to tap a beat at its dialled reach; sneak-use turns the dial (4, 8 or 16 blocks).</li>
+ *   <li>A redstone pulse is a beat as deep as its strength.</li>
+ *   <li>The drops go into a container touching it (the back first), or pop out of it.</li>
+ *   <li>It stops at unbreakable blocks and at anything with an inventory or a block entity.</li>
  * </ul>
  */
 public class EchoerDeviceBlock extends BaseEntityBlock {
@@ -82,7 +83,8 @@ public class EchoerDeviceBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, ModEchoer.ECHOER_DEVICE_BE.get(), EchoerDeviceBlockEntity::serverTick);
+        return level.isClientSide() ? createTickerHelper(type, ModEchoer.ECHOER_DEVICE_BE.get(), EchoerDeviceBlockEntity::clientTick)
+                : createTickerHelper(type, ModEchoer.ECHOER_DEVICE_BE.get(), EchoerDeviceBlockEntity::serverTick);
     }
 
     @Override
@@ -95,7 +97,7 @@ public class EchoerDeviceBlock extends BaseEntityBlock {
                         0.8F + next.getValue(RANGE) * 0.3F);
                 player.sendOverlayMessage(Component.translatable("message.thesift.echoer_device.range", dialRange(next)));
             } else if (server.getBlockEntity(pos) instanceof EchoerDeviceBlockEntity device) {
-                device.charge(server, pos, state, dialRange(state));
+                device.hear(server, player, dialRange(state)); // a tap: one beat of the rhythm
             }
         }
         return InteractionResult.SUCCESS;
@@ -108,7 +110,7 @@ public class EchoerDeviceBlock extends BaseEntityBlock {
             BlockState now = state.setValue(POWERED, powered);
             level.setBlock(pos, now, Block.UPDATE_ALL);
             if (powered && level instanceof ServerLevel server && server.getBlockEntity(pos) instanceof EchoerDeviceBlockEntity device) {
-                device.charge(server, pos, now, Math.max(1, server.getBestNeighborSignal(pos)));
+                device.hear(server, null, Math.max(1, server.getBestNeighborSignal(pos))); // a pulse: one beat, as deep as its strength
             }
         }
     }
@@ -116,18 +118,25 @@ public class EchoerDeviceBlock extends BaseEntityBlock {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         Direction f = state.getValue(FACING);
-        double x = pos.getX() + 0.5 + f.getStepX() * 0.55;
-        double y = pos.getY() + 0.5 + f.getStepY() * 0.55;
-        double z = pos.getZ() + 0.5 + f.getStepZ() * 0.55;
+        // the bit's tip sticks out of the front face; the coils sit inside the cage
+        double x = pos.getX() + 0.5 + f.getStepX() * 0.9;
+        double y = pos.getY() + 0.5 + f.getStepY() * 0.9;
+        double z = pos.getZ() + 0.5 + f.getStepZ() * 0.9;
         if (state.getValue(CHARGING)) {
-            // light gathering into the horn's mouth
-            for (int i = 0; i < 3; i++) {
+            // sound gathering into the coils, sparks jumping between them
+            for (int i = 0; i < 2; i++) {
                 double ox = (random.nextDouble() - 0.5) * 1.6;
                 double oy = (random.nextDouble() - 0.5) * 1.6;
                 double oz = (random.nextDouble() - 0.5) * 1.6;
                 level.addParticle(net.minecraft.core.particles.ParticleTypes.SCULK_SOUL, x + ox, y + oy, z + oz, -ox * 0.08, -oy * 0.08, -oz * 0.08);
             }
-        } else if (random.nextInt(8) == 0) {
+            if (random.nextInt(3) == 0) {
+                double c = 0.5 - 0.15;
+                level.addParticle(net.minecraft.core.particles.ParticleTypes.ELECTRIC_SPARK, pos.getX() + 0.5 + f.getStepX() * c + (random.nextDouble() - 0.5) * 0.7,
+                        pos.getY() + 0.5 + f.getStepY() * c + (random.nextDouble() - 0.5) * 0.7, pos.getZ() + 0.5 + f.getStepZ() * c + (random.nextDouble() - 0.5) * 0.7,
+                        0.0, 0.0, 0.0);
+            }
+        } else if (random.nextInt(10) == 0) {
             level.addParticle(net.minecraft.core.particles.ParticleTypes.SOUL, x, y, z, f.getStepX() * 0.01, 0.01, f.getStepZ() * 0.01);
         }
     }

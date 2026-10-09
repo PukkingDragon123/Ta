@@ -210,10 +210,9 @@ public final class CodexEntries {
         }));
         l.add(thing(ITEMS, "sushi", ModItems.SUSHI_PLATTER));
         // ---- items
-        l.add(thing(ITEMS, "bubble_gun", ModItems.BUBBLE_GUN));
         l.add(thing(ITEMS, "prism", ModItems.PRISM_GEM)); // C
         l.add(thing(ITEMS, "skysong_gem", ModItems.SKYSONG_GEM));
-        l.add(thing(ITEMS, "siftite", ModItems.SIFTITE_PICKAXE));
+        l.add(thing(ITEMS, "siftite", ModItems.SIFTITE_INGOT)); // RR: Siftite is a material only now
         // F1 Materials: Bauxite, Magnesite, Galena and the soul materials
         l.add(thing(ITEMS, "bauxite", ModItems.BAUXITE));
         l.add(thing(ITEMS, "magnesite", ModItems.MAGNESITE));
@@ -245,7 +244,7 @@ public final class CodexEntries {
         l.add(thing(PLACES, "brass_coral_reef", ModItems.BRASS_TRUMPET_CORAL_BELL));
         l.add(thing(PLACES, "chrome_coral_ocean", ModItems.ROSE_BUBBLE_CORAL_FAN));
         l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_CHIME_SAND));
-        l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
+        l.add(thing(PLACES, "sculk_castle", ModItems.HUSHSLATE_BRICKS)); // RR: the podium is gone
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // W-deep caves: the normal caves and their crystal, the Cave Jungle, the Sculk Caves
         l.add(thing(PLACES, "sift_caves", ModItems.POINTED_AZURE_CRYSTAL));
@@ -288,9 +287,8 @@ public final class CodexEntries {
         l.add(mob(DICTATOR, "strummer", ModEntities.STRUMMER, perform));
         l.add(mob(DICTATOR, "strumling", ModEntities.STRUMLING, attack));
         l.add(mob(DICTATOR, "sculk_parasite", ModEntities.SCULK_PARASITE, attack));
-        l.add(thing(DICTATOR, "stage", ModItems.INSTRUMENT_ALTAR));
+        l.add(thing(DICTATOR, "stage", ModItems.WEAVER_GUITAR)); // RR: no altars - bring the three instruments
         l.add(thing(DICTATOR, "sculk_corruption", () -> Items.SCULK_VEIN));
-        l.add(thing(DICTATOR, "encore_sigil", ModItems.ENCORE_SIGIL));
         l.add(thing(DICTATOR, "ancient_cannon", ModItems.ANCIENT_CANNON));
         l.add(thing(DICTATOR, "conga_drum", ModItems.CONGA_DRUM));
         l.add(thing(DICTATOR, "crane_flute", ModItems.CRANE_FLUTE));

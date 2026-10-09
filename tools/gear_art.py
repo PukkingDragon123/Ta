@@ -5,8 +5,8 @@ Prism armour layers to match and fresh silhouettes for the newer instruments and
 Siftite = the angel: white-gold and pale-cyan metal, feathered wing blades, halo rings.
 Prism   = the Seraphim: six wings, many eyes, a radiant rainbow of hexagonal gem facets.
 
-items16.music_frames() takes the Siftite icons from siftite_icon() (they keep their travelling
-glint animation; Siftite is tools only, no armour); gen_textures.main() calls textures(out) last,
+RR: the Siftite tools are gone (Siftite is a material only), and their icons with them.
+gen_textures.main() calls textures(out) last,
 which writes the Prism gear, the prism tools and the reworked instruments over any older drawings
 of the same names.
 """
@@ -20,24 +20,7 @@ import items16 as I
 
 # ============================================================================ palettes
 
-S_OL = '#1c2150'
-F_OL = '#2e2b5c'
 G_OL = '#4a2418'
-SIFT = {
-    # pale-cyan blade metal, dark to light
-    '1': ('#46619e', S_OL), '2': ('#6f9fd6', S_OL), '3': ('#a6d8f0', S_OL), '4': ('#d8f6fd', S_OL), '5': ('#ffffff', S_OL),
-    # white feathers with lavender shadow
-    'e': ('#7f7ab4', F_OL), 'f': ('#c2c0e6', F_OL), 'F': ('#f6f7ff', F_OL),
-    # white gold
-    'G': ('#a6622a', G_OL), 'g': ('#e3a73c', G_OL), 'y': ('#ffe48a', G_OL), 'Y': ('#fffbe2', G_OL),
-    # ivory grip, bound in gold
-    'i': ('#e9ddc8', '#2e2020'), 'I': ('#a89479', '#2e2020'), 'j': ('#6e5c50', '#2e2020'),
-    # sky-cyan gem
-    'c': ('#7ff4ff', '#14325a'), 'C': ('#25a6d0', '#14325a'),
-    # halo light and sparkle (cast no outline)
-    'h': '#fff2a0', 's': '#ffffff',
-}
-SIFT_GLOW = 'h5FYs'
 
 P_OL = '#24203f'
 
@@ -77,176 +60,9 @@ def _grid(rows, pal, no_ol='hs'):
     return img
 
 
-# ============================================================================ Siftite icons
-
-SIFTITE_ROWS = {
-    # the wing-blade: a long sabre curving like a wing's leading edge, its trailing edge three
-    # stepped feathers; little gold wings for a guard, a sky gem at their heart, a halo pommel
-    'sword': [
-        '..............54',
-        '.............543',
-        '............5432',
-        '...........5432F',
-        '..........5432fF',
-        '.........5432fe.',
-        '........5432F...',
-        '.......5432fF...',
-        '......5432fe....',
-        '..y..5432F......',
-        '.gYy5432fF......',
-        '..Gycy2fe.......',
-        '...iYgy.........',
-        '..iI..gG........',
-        '.iI.............',
-        'Yg..............',
-    ],
-    # the feather-crest pick: two metal wings swept out from a gold boss and its halo gem, the
-    # inner edge of each wing fringed with feather tips
-    'pickaxe': [
-        '.....5555.......',
-        '...55444455.....',
-        '..5443333yg5....',
-        '.543fFeFgYcy5...',
-        '.43fe.fe.gCyG4..',
-        '.3fe..e.IgGg34..',
-        '.fe....Ii..F34..',
-        '.e....Ii...fF34.',
-        '.....Ii.....F34.',
-        '....Ii.....eF34.',
-        '...Ii.......f34.',
-        '..Ii.......eF3..',
-        '.iI.........f3..',
-        'yY.........eF...',
-        'Yh..........e...',
-        '................',
-    ],
-    # the angel's axe: one great folded wing for a blade, three rows of covert feathers, a gold
-    # socket and a halo ring at its crown
-    'axe': [
-        '................',
-        '.........5555...',
-        '.......55444445.',
-        '......5443Ff4445',
-        '.....543FfefF345',
-        '.....43fefFef345',
-        '.....gYfe.fe3345',
-        '....IgG...e.F34.',
-        '...Ii.g......fF.',
-        '...I.........e..',
-        '..Ii............',
-        '.Ii.............',
-        '.I..............',
-        'Ii..............',
-        'Y...............',
-        '................',
-    ],
-    # a single great flight feather for a spade: a white vane with a gold quill down its middle
-    'shovel': [
-        '............55..',
-        '..........55F45.',
-        '.........5Fy4335',
-        '.........FyF4334',
-        '........5yF4334.',
-        '........Fy4e33..',
-        '........yfe32...',
-        '.......gYe.e....',
-        '......IgG.......',
-        '.....Ii.........',
-        '....Ii..........',
-        '...Ii...........',
-        '..Ii............',
-        '.Ii.............',
-        'hY..............',
-        'Y...............',
-    ],
-    # a halo on a staff: a gold ring crowning the haft, a feather blade curling from it
-    'hoe': [
-        '.........yyyy...',
-        '........y____g..',
-        '..555544g____G..',
-        '.43fFefegGGGG...',
-        '.3e.e.e...Ii....',
-        '.e.......Ii.....',
-        '........Ii......',
-        '.......Ii.......',
-        '......Ii........',
-        '.....Ii.........',
-        '....Ii..........',
-        '...Ii...........',
-        '..Ii............',
-        '.Ii.............',
-        'yY..............',
-        'Y...............',
-    ],
-    # a leaf-bladed spear of feathers, little wings spread at its socket
-    'spear': [
-        '.............555',
-        '...........55443',
-        '..........54433F',
-        '.........5443Ff.',
-        '.........443Fe..',
-        '..........3Ffe..',
-        '........eYg.e...',
-        '.......fyGF.....',
-        '......fFIGf.....',
-        '.....eIi........',
-        '....Ii..........',
-        '...Ii...........',
-        '..Ii............',
-        '.Ii.............',
-        'Ii..............',
-        'Y...............',
-    ],
-}
-
-
 def _fit(rows):
     """Clips or pads each row to 16 pixels (so a drawing can be sketched a pixel wide)."""
     return [(r + '.' * 16)[:16] for r in rows]
-
-
-def siftite_icon(name):
-    """(base image, glint paths) for a Siftite tool icon. The glint runs over the
-    halo and the brightest edge pixels, from the handle (bottom left) out to the tip."""
-    if name == 'spear_in_hand':
-        img = _spear_in_hand(siftite_icon('spear')[0], SIFT)
-    else:
-        img = _grid(_fit(SIFTITE_ROWS[name]), SIFT)
-    return img, _glint_paths(img, name)
-
-
-def _glint_paths(img, name):
-    px = img.load()
-    w, h = img.size
-    bright = []
-    for y in range(h):
-        for x in range(w):
-            c = px[x, y]
-            if c[3] and c[0] > 236 and c[1] > 236 and c[2] > 200:
-                bright.append((x, y))
-    if name == 'spear_in_hand':
-        bright.sort(key=lambda p: (p[0] + p[1]))
-    else:
-        bright.sort(key=lambda p: (p[0] - p[1]))  # from the handle out to the tip
-    return [bright] if bright else []
-
-
-def _spear_in_hand(icon, pal):
-    """The 32x32 in-hand spear: the icon's head mirrored to point up-left, on a long grip."""
-    out = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
-    head = icon.crop((5, 0, 16, 10)).transpose(Image.FLIP_LEFT_RIGHT)
-    grip_l, grip_d, grip_o = I.rgba(pal['i'][0]), I.rgba(pal['I'][0]), I.rgba(pal['i'][1])
-    px = out.load()
-    for t in range(8, 31):
-        for dx, c in ((-1, grip_o), (0, grip_l), (1, grip_d), (2, grip_o)):
-            x, y = t + dx, t
-            if 0 <= x < 32 and 0 <= y < 32 and px[x, y][3] == 0:
-                px[x, y] = c
-        if t % 6 == 0:  # gold wraps
-            px[t, t] = I.rgba(pal['g'][0])
-            px[t + 1, t] = I.rgba(pal['G'][0])
-    out.alpha_composite(head, (0, 0))
-    return out
 
 
 # ============================================================================ worn armour

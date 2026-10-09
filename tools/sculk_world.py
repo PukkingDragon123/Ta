@@ -111,8 +111,6 @@ def assets(GA):
     GA.shapeless('sculk_mud', ['minecraft:mud', 'minecraft:sculk'], 'sculk_mud', 2, 'building')
     GA.shaped('sculk_coral_block', ['##', '##'], {'#': 'sculk_coral'}, 'sculk_coral_block', 1, 'building')
     GA.shapeless('cyan_dye_from_sculk_coral', ['sculk_coral_fan'], 'minecraft:cyan_dye', 1, 'misc', 'cyan_dye')
-    # the carved Glyph Stones came only from ruins that have crumbled away: carve them yourself
-    GA.cutting('polished_dreamstone', 'glyph_stone')
     # --- loot: the wall fan drops the fan (silk touch), like a vanilla coral
     GA.loot('sculk_coral_wall_fan', 'dead_tube_coral_fan', {'dead_tube_coral_fan': 'sculk_coral_fan'})
     # --- tags
@@ -137,7 +135,7 @@ def assets(GA):
                                         'between the roots: each soak corrupts you a little more. Sculk Blooms and wild Pitcher Plants '
                                         'grow on the hummocks. Sculk Parasites and Sculk Spiders crawl up out of the mud around anyone '
                                         'who wades in, light or dark - and in its deepest hollow, under a ring of humming webs, the '
-                                        'Weaver waits on its Encore Sigil.',
+                                        'Weaver sleeps in its den.',
         f'codex.{NS}.sculk_ocean.title': 'Sculk Ocean',
         f'codex.{NS}.sculk_ocean.tagline': 'A cold sea grown over with sculk',
         f'codex.{NS}.sculk_ocean.body': 'The Sift\'s cold sea, its water stained the dark teal of the sculk below. Its floor of Sculk Mud is '
@@ -148,8 +146,8 @@ def assets(GA):
         f'codex.{NS}.relics.title': 'Buried Relics', f'codex.{NS}.relics.tagline': 'All that is left of the old ruins',
         f'codex.{NS}.relics.body': 'The Sift\'s old towers, temples and settlements have crumbled into the ground. Where a cracked brick '
                                    'or two pokes out of the dunes, the shores or the swamp mud, there is Suspicious Chime Sand just '
-                                   'below: brush it for glyph stones, seeds, Star Shards, lost Music Sheets and - rarely - '
-                                   'a Siftite Upgrade Template or the Lullaby disc.',
+                                   'below: brush it for Siftite, seeds, Star Shards, lost Music Sheets and - rarely - '
+                                   'the Lullaby disc.',
     })
 
 
@@ -267,10 +265,11 @@ def _features(GW):
                                                     {'type': 'minecraft:offset', 'x': 0, 'y': _uniform(0, 4), 'z': 0}, BIOME])
     feature('sculk_bloom', {'type': 'minecraft:simple_block', 'to_place': state('sculk_bloom')})
     placed('patch_sculk_bloom', 'sculk_bloom', [count(2), sq, hm('WORLD_SURFACE_WG'), BIOME] + GW.surface_patch(20, 6, 2) + [survive('sculk_bloom')])
-    # the Weaver's hollow: its Encore Sigil set into the floor under a ring of humming webs, sculk round it
+    # the Weaver's hollow: a ring of humming webs, sculk round it; RR: the Encore Sigil is gone - a hidden Boss Den in the
+    # air just above the floor wakes the Weaver when someone comes near (block/BossDenBlock)
     feature('weaver_hollow', {'type': 'minecraft:sequence', 'features': [
-        {'feature': {'type': 'minecraft:simple_block', 'to_place': state('encore_sigil', boss=2, spent=False)},
-         'placement': [{'type': 'minecraft:offset', 'x': 0, 'y': -1, 'z': 0}]},
+        {'feature': {'type': 'minecraft:simple_block', 'to_place': state('boss_den', boss=2, spent=False)},
+         'placement': []},
         {'feature': {'type': 'minecraft:simple_block', 'to_place': state('minecraft:sculk')},
          'placement': [count(36), {'type': 'minecraft:offset', 'x': _uniform(-6, 6), 'y': -1, 'z': _uniform(-6, 6)},
                        {'type': 'minecraft:block_predicate_filter', 'predicate': {'type': 'minecraft:matching_blocks',

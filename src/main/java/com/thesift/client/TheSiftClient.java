@@ -19,7 +19,6 @@ import com.thesift.client.renderer.EnchoerRenderer;
 import com.thesift.client.renderer.SifterRenderer;
 import com.thesift.client.renderer.SlumblerRenderer;
 import com.thesift.client.sky.SiftSkyRenderer;
-import com.thesift.registry.ModBlockEntities;
 import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModFluids;
 import com.thesift.registry.ModParticles;
@@ -91,6 +90,7 @@ public class TheSiftClient {
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
         EurophyClient.register(modBus); // F1: the Europhy Table's clockwork, renderer and screen
+        EchoerDrillClient.register(modBus); // RR: the Echoer Drill's gun (barrel, coils, spinning bit, recoil)
         com.thesift.client.knowledge.KnowledgeClient.register(modBus); // F3 Knowledge & lore: Mini Creator, lore reading, sheet art tooltips
         CavesClient.register(modBus); // W-deep caves: the Sculk Grasper's tendril, acid drops and fizz
         com.thesift.world.sky.SkySwingClient.register(modBus); // W-sky: swinging on Sky Vines (rope physics) and the rope's renderer
@@ -138,7 +138,6 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);
         event.registerEntityRenderer(ModEntities.GLOWBALL.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
-        event.registerBlockEntityRenderer(ModBlockEntities.INSTRUMENT_ALTAR.get(), com.thesift.client.renderer.InstrumentAltarRenderer::new);
         // the wild creatures
         event.registerEntityRenderer(ModEntities.STOMPER.get(), com.thesift.client.renderer.StomperRenderer::new);
         event.registerEntityRenderer(ModEntities.SKY_WHALE.get(), com.thesift.client.renderer.SkyWhaleRenderer::new);
@@ -149,7 +148,6 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.KAZOO_FISH.get(), c -> new com.thesift.client.renderer.SiftFishRenderer<>(c,
                 new com.thesift.client.model.KazooFishModel(c.bakeLayer(ModModelLayers.KAZOO_FISH)), "kazoo_fish",
                 new String[]{"kazoo_fish", "kazoo_fish_sunset", "kazoo_fish_lagoon", "kazoo_fish_mint", "kazoo_fish_midnight"}, 0.2F, 1.0F));
-        event.registerEntityRenderer(ModEntities.BUBBLE.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.4F, true));
     }
 
     private static void particle(RegisterParticleProvidersEvent event, DeferredHolder<ParticleType<?>, SimpleParticleType> type, SiftParticle.Kind kind) {

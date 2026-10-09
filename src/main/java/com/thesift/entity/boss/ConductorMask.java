@@ -1,6 +1,6 @@
 package com.thesift.entity.boss;
 
-import com.thesift.block.entity.ConductorsPodiumBlockEntity;
+import com.thesift.block.entity.BossDenBlockEntity;
 import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
@@ -165,7 +165,7 @@ public class ConductorMask extends PathfinderMob {
             }
             level.addFreshEntity(d);
             d.rebuild(level);
-            if (level.getBlockEntity(this.stage) instanceof ConductorsPodiumBlockEntity podium) {
+            if (level.getBlockEntity(this.stage) instanceof BossDenBlockEntity podium) {
                 podium.bossRaised(d);
             }
         }

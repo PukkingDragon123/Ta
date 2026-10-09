@@ -1,7 +1,7 @@
 package com.thesift.registry;
 
 import com.thesift.TheSift;
-import com.thesift.block.entity.ConductorsPodiumBlockEntity;
+import com.thesift.block.entity.BossDenBlockEntity;
 import com.thesift.block.entity.SiftDrumBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,12 +14,9 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SiftDrumBlockEntity>> SIFT_DRUM = BLOCK_ENTITIES.register("sift_drum",
             () -> new BlockEntityType<>(SiftDrumBlockEntity::new, ModBlocks.SIFT_DRUM.get()));
     // F1: the Euphory Altar is gone - the Europhy Table (registry/ModEurophy) took over its ritual
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.thesift.block.entity.EncoreSigilBlockEntity>> ENCORE_SIGIL = BLOCK_ENTITIES.register(
-            "encore_sigil", () -> new BlockEntityType<>(com.thesift.block.entity.EncoreSigilBlockEntity::new, ModBlocks.ENCORE_SIGIL.get()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.thesift.block.entity.InstrumentAltarBlockEntity>> INSTRUMENT_ALTAR = BLOCK_ENTITIES.register(
-            "instrument_altar", () -> new BlockEntityType<>(com.thesift.block.entity.InstrumentAltarBlockEntity::new, ModBlocks.INSTRUMENT_ALTAR.get()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConductorsPodiumBlockEntity>> CONDUCTORS_PODIUM = BLOCK_ENTITIES.register(
-            "conductors_podium", () -> new BlockEntityType<>(ConductorsPodiumBlockEntity::new, ModBlocks.CONDUCTORS_PODIUM.get()));
+    // RR: the Encore Sigils, Instrument Altars and Conductor's Podium are gone - a hidden Boss Den wakes each boss
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BossDenBlockEntity>> BOSS_DEN = BLOCK_ENTITIES.register(
+            "boss_den", () -> new BlockEntityType<>(BossDenBlockEntity::new, ModBlocks.BOSS_DEN.get()));
 
     private ModBlockEntities() {}
 }

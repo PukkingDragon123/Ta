@@ -377,14 +377,12 @@ EGGS = {
 
 def all_items():
     out = {
-        'siftite_sword': sword(), 'siftite_pickaxe': pickaxe(), 'siftite_axe': axe(), 'siftite_shovel': shovel(), 'siftite_hoe': hoe(),
-        'siftite_spear': spear(), 'siftite_spear_in_hand': spear(),
         'siftite_ingot': ingot(SIFTITE, SIFT_PINK), 'serbim_ingot': ingot(SERBIM), 'siftite_nugget': nugget(), 'raw_serbim': raw_serbim(),
         'chrome_pearl': pearl(), 'glowing_slime_ball': slime_ball(), 'star_shard': star_shard(), 'echo_seed': echo_seed(),
         'warden_core': warden_core(), 'thick_hide': hide(), 'sift_cake': cake(), 'dream_stew': stew(),
         'glowcap_skewer': skewer(), 'bulb_lantern': lantern(), 'chrome_bucket': bucket(CHROME),
         'sift_codex': codex(), 'music_disc_lullaby': disc(), 'soul_chime': chime(), 'glowbell_vine': glowbell(),
-        'lullwood_door': door('#b1a9d4', '#8f86c0'), 'wishwood_door': door('#e6a0b8', '#c9738f'), 'siftite_upgrade_smithing_template': template(),
+        'lullwood_door': door('#b1a9d4', '#8f86c0'), 'wishwood_door': door('#e6a0b8', '#c9738f'),
         'slingshot': slingshot(-1), 'slingshot_pulling_0': slingshot(0), 'slingshot_pulling_1': slingshot(1), 'slingshot_pulling_2': slingshot(2),
         'conductors_staff': staff(),
     }

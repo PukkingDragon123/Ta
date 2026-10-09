@@ -20,8 +20,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:siftite_upgrade_smithing_template",
-          "weight": 2
+          "name": "thesift:siftite_ingot",
+          "weight": 1
         },
         {
           "type": "minecraft:item",

@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "thesift:siftite_shovel",
     "thesift:prism_shovel"
   ]
 }

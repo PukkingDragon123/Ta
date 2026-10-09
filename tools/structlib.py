@@ -192,9 +192,11 @@ def spawner(mob, count=2, nearby=5, rng=12, delay=(200, 500)):
                                         'Delay': 40, 'SpawnRange': 4})
 
 
-def sigil(boss):
-    """An Encore Sigil: wakes one of the three mini-bosses (0 Thumper, 2 Strummer; 1 is retired)."""
-    return B('encore_sigil', boss=boss, spent='false')
+def den(boss):
+    """RR: a hidden Boss Den (it replaced the Encore Sigil and the Conductor's Podium): set it in the air just above
+    the floor. 0 wakes the Thumper, 2 the Weaver (when someone comes near, once); 3 is the Grand Stage (bring the
+    Conga Drum, the Crane Flute and the Weaver's Guitar onto it)."""
+    return B('boss_den', boss=boss, spent='false')
 
 
 def suspicious(loot):

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "thesift:block/conductors_podium_top",
-    "side": "thesift:block/conductors_podium_side"
-  }
-}

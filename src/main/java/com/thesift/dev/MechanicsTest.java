@@ -7,7 +7,7 @@ import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
 import com.thesift.entity.boss.Dictator;
-import com.thesift.block.entity.ConductorsPodiumBlockEntity;
+import com.thesift.block.entity.BossDenBlockEntity;
 import com.thesift.portal.PortalFrames;
 import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModEffects;
@@ -108,7 +108,10 @@ final class MechanicsTest {
         this.startDictator();
         this.songTest = SongTest.start(this.sift, this.check); // C4 songs: every song through the real tracker + the Echoer's reward
         this.bandTest = BandTest.start(this.sift, this.check); // M2 band: compatible songs recruit, others do not; play-along; leaving
+        this.drillTest = DrillTest.start(this.sift, this.check); // RR: the Echoer Drill reads a rhythm (a straight bore, stairs down)
     }
+
+    private @Nullable DrillTest drillTest; // RR Echoer Drill
 
     private @Nullable BandTest bandTest; // M2 band
 
@@ -116,7 +119,7 @@ final class MechanicsTest {
 
     private @Nullable Dictator dictator;
 
-    /** A podium wakes the Dictator; at half health he should move on to his second phase. */
+    /** The Grand Stage (a hidden boss den) wakes the Dictator; at half health he should move on to his second phase. */
     private void startDictator() {
         int x = -24, z = 30;
         int y = this.sift.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) + 2;
@@ -127,14 +130,14 @@ final class MechanicsTest {
             this.sift.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
         }
         BlockPos at = new BlockPos(x, y, z);
-        this.sift.setBlock(at, ModBlocks.CONDUCTORS_PODIUM.get().defaultBlockState(), Block.UPDATE_ALL);
-        if (!(this.sift.getBlockEntity(at) instanceof ConductorsPodiumBlockEntity podium)) {
-            check(false, "dictator: podium block entity");
+        this.sift.setBlock(at, ModBlocks.BOSS_DEN.get().defaultBlockState().setValue(com.thesift.block.BossDenBlock.BOSS, com.thesift.block.BossDenBlock.STAGE), Block.UPDATE_ALL); // RR: the Grand Stage's hidden den
+        if (!(this.sift.getBlockEntity(at) instanceof BossDenBlockEntity podium)) {
+            check(false, "dictator: stage den block entity");
             return;
         }
         this.sift.setChunkForced(x >> 4, z >> 4, true);
         this.dictator = podium.wake(this.sift, at, null);
-        check(this.dictator != null && this.dictator.isAlive(), "dictator: the podium wakes the Dictator");
+        check(this.dictator != null && this.dictator.isAlive(), "dictator: the Grand Stage wakes the Dictator");
         if (this.dictator != null) {
             // a real blow, as a player would land it, takes him just under half health
             this.dictator.setHealth(this.dictator.getMaxHealth() * 0.5F + 1.0F);
@@ -397,6 +400,9 @@ final class MechanicsTest {
         }
         if (this.europhy != null) {
             this.europhy.tick(this.ticks); // F1: play the tune at 40, check the ingot at 320
+        }
+        if (this.drillTest != null) {
+            this.drillTest.tick(this.ticks); // RR: beats at 10-20, the tunnels checked at 160
         }
         if (this.ticks == 260 && this.songTest != null) {
             this.songTest.finish(); // C4 songs

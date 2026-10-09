@@ -18,7 +18,6 @@ public final class ModTags {
         public static final TagKey<Block> DEEP_SIFT_GROUND = tag("deep_sift_ground");
         public static final TagKey<Block> SIFT_STONE = tag("sift_stone");
         public static final TagKey<Block> SIFTITE_ORES = tag("siftite_ores");
-        public static final TagKey<Block> INCORRECT_FOR_SIFTITE_TOOL = tag("incorrect_for_siftite_tool");
         public static final TagKey<Block> RESONANT = tag("resonant");
         /** Soft ground a ridden Sniffer ploughs straight through. */
         public static final TagKey<Block> SNIFFER_MINEABLE = tag("sniffer_mineable");
@@ -36,7 +35,6 @@ public final class ModTags {
         public static final TagKey<Item> HARMONER_FOOD = tag("harmoner_food");
         public static final TagKey<Item> SLUMBLER_FOOD = tag("slumbler_food");
         public static final TagKey<Item> SLINGSHOT_AMMO = tag("slingshot_ammo");
-        public static final TagKey<Item> SIFTITE_TOOL_MATERIALS = tag("siftite_tool_materials");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, TheSift.id(name));

@@ -190,13 +190,10 @@ block("sift_gate_frame", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).
       cls="SiftGateFrameBlock", model="cube_column", tags=["pickaxe", "needs_diamond", "portal_frame"], tab="functional")
 block("sift_portal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12)", cls="SiftPortalBlock", model="portal",
       item=False, loot="none")
-block("conductors_podium", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 7)",
-      cls="ConductorsPodiumBlock", model="cube_column", tab="functional", loot="none", name="Conductor's Podium")
-block("encore_sigil", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(s -> 6)",
-      cls="EncoreSigilBlock", model="cube_column", tab="functional", loot="none", name="Encore Sigil")
-block("instrument_altar", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion()",
-      cls="InstrumentAltarBlock", model="cube_column", tab="functional", loot="none", name="Instrument Altar")
-block("glyph_stone", "custom", STONE + f".mapColor({DREAM_COLOR})", cls="GlyphStoneBlock", model="glyph", tags=["pickaxe"])
+# RR: the Conductor's Podium, Encore Sigils, Instrument Altars and Glyph Stones are gone. A hidden, untouchable Boss Den
+# wakes each boss in its den (boss 0 the Thumper, 2 the Weaver, 3 the Grand Stage - see block/BossDenBlock)
+block("boss_den", "custom", "BlockBehaviour.Properties.of().noCollision().noLootTable().noOcclusion().strength(-1.0F, 3600000.0F)",
+      cls="BossDenBlock", model="none", item=False, loot="none")
 # the Thumper's arena: its tower cannons (see registry/ModSiege for the block entity and the cannonball)
 block("ancient_cannon", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion()",
       cls="AncientCannonBlock", model="cannon", tags=["pickaxe"], tab="functional")
@@ -230,12 +227,8 @@ item("dream_stew", props="new Item.Properties().stacksTo(1).food(ModFoods.DREAM_
 item("glowcap_skewer", props="new Item.Properties().food(ModFoods.GLOWCAP_SKEWER)")
 item("chrome_bucket", cls="ChromeBucket", props="new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)")
 item("slingshot", cls="SlingshotItem", props="new Item.Properties().durability(384).enchantable(1)", model="slingshot")
-item("siftite_upgrade_smithing_template", cls="SiftiteTemplate", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
 item("star_shard", props="new Item.Properties().rarity(Rarity.RARE)")
-for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
-    item(f"siftite_{t}", cls=f"tool:{t}", model="handheld", tab="combat" if t == "sword" else "tools")
-item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
-# CLEAN: no basic Siftite armour set (SPEC 7) - Siftite stays a tool/weapon material
+# CLEAN: no basic Siftite armour set (SPEC 7); RR: no Siftite tools or weapons either - Siftite is a material only
 for mob in ["bulb", "slumbler", "sifter", "enchoer", "harmoner", "dictator", "thumper", "strummer",
             "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
@@ -281,8 +274,6 @@ item("stomper_steak", props="new Item.Properties().food(ModFoods.STOMPER_STEAK, 
 item("stomper_egg", cls="StomperEggItem", props="new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON)")
 item("kazoo_fish", props="new Item.Properties().food(ModFoods.KAZOO_FISH)", name="Raw Kazoo Fish")
 item("cooked_kazoo_fish", props="new Item.Properties().food(ModFoods.COOKED_KAZOO_FISH)")
-item("tuba_bubble")
-item("bubble_gun", cls="BubbleGunItem", props="new Item.Properties().durability(256)", model="handheld", tab="tools")
 item("skysong_gem", props="new Item.Properties().rarity(Rarity.EPIC)")
 
 # ---------------------------------------------------------------- H: potted pitchers and their soups
@@ -342,9 +333,9 @@ item("chrome_slumbler_tadpole_bucket", cls="ChromeFishBucketItem", factory="p ->
 __import__("sea_spec").declare(block, item)
 # ---------------------------------------------------------------- A2 Echoer: the Echoer's hearth and its household
 # The Echoer device (a mining-beam horn), the hut's hearthstone, the Soul Golem's core, Nib Dust (Nibs' treasure)
-block("echoer_device", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops()"
+block("echoer_device", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops().noOcclusion()"
       ".lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4)",
-      cls="EchoerDeviceBlock", model="echoer_device", tags=["pickaxe"], tab="functional", name="The Echoer")
+      cls="EchoerDeviceBlock", model="echoer_device", tags=["pickaxe"], tab="functional", name="Echoer Drill")  # RR: the drill cannon
 block("echoer_hut_heart", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).noLootTable().lightLevel(s -> 9)",
       cls="EchoerHutHeartBlock", model="echoer_hut_heart", item=False, loot="none", tab="functional", name="Echoer's Hearthstone")
 item("soul_golem_core", cls="SoulGolemCoreItem", props="new Item.Properties().stacksTo(16).rarity(Rarity.RARE)")

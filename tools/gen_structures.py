@@ -5,7 +5,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 import gen_assets as GA  # noqa: E402
-from structlib import AIR, B, Build, chest, sigil, stairs  # noqa: E402
+from structlib import AIR, B, Build, chest, den, stairs  # noqa: E402
 
 NS = 'thesift'
 OUT = os.path.join(GA.RES, 'data', NS, 'structure')
@@ -128,20 +128,16 @@ def sculk_castle(seed):
         for dy in range(1, 6):
             b.set(x, TOP + dy, z, HUSH_CH if dy in (1, 5) else HUSH_POL)
         b.set(x, TOP + 6, z, SOUL_L if k % 2 else SENSOR)
-    # the Grand Stage: a raised round stage, the podium at its heart and three Instrument Altars
-    # waiting for the drum, the flute and the guitar; the vault chest beside it
+    # the Grand Stage: a raised round stage with a hidden Boss Den at its heart (RR: no podium, no altars - step onto it
+    # carrying the drum, the flute and the guitar); the vault chest beside it
     b.disc(c, c, TOP + 1, 5.4, HUSH_POL, pick=lambda x, y, z: HUSH_CH if math.hypot(x - c, z - c) > 4.6 else
            B('lumen_moss_block') if abs(math.hypot(x - c, z - c) - 2.0) < 0.5 else HUSH_POL)
-    for k in range(3):
-        a = math.pi / 2 + k * math.tau / 3
-        ax, az = c + round(math.cos(a) * 3.6), c + round(math.sin(a) * 3.6)
-        b.set(ax, TOP + 2, az, B('instrument_altar'))
     for k in range(6):
         a = k * math.tau / 6 + math.pi / 6
         b.set(c + round(math.cos(a) * 5.0), TOP + 2, c + round(math.sin(a) * 5.0), SOUL_L if k % 2 else DRUM)
-    b.set(c, TOP + 2, c, B('conductors_podium'))
+    b.set(c, TOP + 2, c, den(3))
     b.set(c + 7, TOP + 1, c, chest('chests/sculk_castle', 'west'))
-    b.decay(0.015, min_y=3, protect=('thesift:conductors_podium', 'thesift:instrument_altar', 'thesift:sift_drum', 'minecraft:chest', 'thesift:hushslate_tiles', 'thesift:polished_hushslate',
+    b.decay(0.015, min_y=3, protect=('thesift:boss_den', 'thesift:sift_drum', 'minecraft:chest', 'thesift:hushslate_tiles', 'thesift:polished_hushslate',
                                       'thesift:crumbling_dreamstone', 'minecraft:slime_block', 'minecraft:soul_lantern'))
     return b
 
@@ -154,7 +150,7 @@ def thumper_arena(seed):
     tiers of hushslate seats stepping up all round it, four ramps down into it, and four cannon
     towers - each with a spiral stair inside, an Ancient Cannon on top and chests of cannonballs.
     Walls and pillars of crumbling dreamstone stand about the floor: the Thumper smashes through
-    them (the solid towers stop it dead). The sigil it sleeps under is in the middle."""
+    them (the solid towers stop it dead). It sleeps under the middle of the skin (a hidden Boss Den just above it)."""
     S = 51
     y0 = 4
     H = y0 + 17
@@ -282,12 +278,12 @@ def thumper_arena(seed):
         for k in range(8):
             a = rnd.random() * math.tau
             b.set(tx + round(math.cos(a) * 3.5), y0, tz + round(math.sin(a) * 3.5), SCULK)
-    # the sigil in the middle of the skin, catalysts round it
-    b.set(c, y0, c, sigil(0))
+    # RR: the hidden den just above the middle of the skin (no sigil any more), catalysts round it
+    b.set(c, y0 + 1, c, den(0))
     for k in range(4):
         a = k * math.tau / 4
         b.set(c + round(math.cos(a) * 5), y0, c + round(math.sin(a) * 5), B('minecraft:sculk_catalyst', bloom='false'))
-    b.decay(0.02, top_bias=0.03, protect=('minecraft:chest', 'thesift:encore_sigil', 'thesift:ancient_cannon', 'thesift:polished_dreamstone',
+    b.decay(0.02, top_bias=0.03, protect=('minecraft:chest', 'thesift:boss_den', 'thesift:ancient_cannon', 'thesift:polished_dreamstone',
                                          'thesift:polished_dreamstone_stairs', 'thesift:dreamstone_brick_stairs', 'minecraft:sculk_catalyst',
                                          'thesift:hushslate_bricks', 'thesift:dreamstone_pillar', 'thesift:crumbling_dreamstone'),
             min_y=y0 + TOP + 2)

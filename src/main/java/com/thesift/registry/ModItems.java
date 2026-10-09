@@ -150,10 +150,6 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GLOWBELL_VINE = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWBELL_VINE);
     public static final DeferredItem<BlockItem> SIFT_DRUM = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_DRUM);
     public static final DeferredItem<BlockItem> SIFT_GATE_FRAME = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_GATE_FRAME);
-    public static final DeferredItem<BlockItem> CONDUCTORS_PODIUM = ITEMS.registerSimpleBlockItem(ModBlocks.CONDUCTORS_PODIUM);
-    public static final DeferredItem<BlockItem> ENCORE_SIGIL = ITEMS.registerSimpleBlockItem(ModBlocks.ENCORE_SIGIL);
-    public static final DeferredItem<BlockItem> INSTRUMENT_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.INSTRUMENT_ALTAR);
-    public static final DeferredItem<BlockItem> GLYPH_STONE = ITEMS.registerSimpleBlockItem(ModBlocks.GLYPH_STONE);
     public static final DeferredItem<BlockItem> ANCIENT_CANNON = ITEMS.registerSimpleBlockItem(ModBlocks.ANCIENT_CANNON);
     public static final DeferredItem<BlockItem> CRUMBLING_DREAMSTONE = ITEMS.registerSimpleBlockItem(ModBlocks.CRUMBLING_DREAMSTONE);
     public static final DeferredItem<BlockItem> SIFT_CAKE = ITEMS.registerSimpleBlockItem("sift_cake", ModBlocks.SIFT_CAKE, p -> p.stacksTo(1));
@@ -284,14 +280,7 @@ public final class ModItems {
     public static final DeferredItem<Item> GLOWCAP_SKEWER = ITEMS.registerItem("glowcap_skewer", Item::new, () -> new Item.Properties().food(ModFoods.GLOWCAP_SKEWER));
     public static final DeferredItem<ChromeBucket> CHROME_BUCKET = ITEMS.registerItem("chrome_bucket", ChromeBucket::new, () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
     public static final DeferredItem<SlingshotItem> SLINGSHOT = ITEMS.registerItem("slingshot", SlingshotItem::new, () -> new Item.Properties().durability(384).enchantable(1));
-    public static final DeferredItem<SiftiteTemplate> SIFTITE_UPGRADE_SMITHING_TEMPLATE = ITEMS.registerItem("siftite_upgrade_smithing_template", SiftiteTemplate::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> STAR_SHARD = ITEMS.registerItem("star_shard", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
-    public static final DeferredItem<Item> SIFTITE_SWORD = ITEMS.registerItem("siftite_sword", Item::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 3.0F, -2.4F));
-    public static final DeferredItem<Item> SIFTITE_PICKAXE = ITEMS.registerItem("siftite_pickaxe", Item::new, () -> new Item.Properties().pickaxe(ModMaterials.SIFTITE_TOOL, 1.0F, -2.8F));
-    public static final DeferredItem<Item> SIFTITE_AXE = ITEMS.registerItem("siftite_axe", Item::new, () -> new Item.Properties().axe(ModMaterials.SIFTITE_TOOL, 5.5F, -3.0F));
-    public static final DeferredItem<Item> SIFTITE_SHOVEL = ITEMS.registerItem("siftite_shovel", Item::new, () -> new Item.Properties().shovel(ModMaterials.SIFTITE_TOOL, 1.5F, -3.0F));
-    public static final DeferredItem<Item> SIFTITE_HOE = ITEMS.registerItem("siftite_hoe", Item::new, () -> new Item.Properties().hoe(ModMaterials.SIFTITE_TOOL, -3.0F, 0.0F));
-    public static final DeferredItem<Item> SIFTITE_SPEAR = ITEMS.registerItem("siftite_spear", Item::new, () -> new Item.Properties().spear(ModMaterials.SIFTITE_TOOL, 0.8F, 0.9F, 0.6F, 4.5F, 11.0F, 8.5F, 4.9F, 13.0F, 4.4F));
     public static final DeferredItem<SpawnEggItem> BULB_SPAWN_EGG = ITEMS.registerItem("bulb_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.BULB.get()));
     public static final DeferredItem<SpawnEggItem> SLUMBLER_SPAWN_EGG = ITEMS.registerItem("slumbler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SLUMBLER.get()));
     public static final DeferredItem<SpawnEggItem> SIFTER_SPAWN_EGG = ITEMS.registerItem("sifter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFTER.get()));
@@ -346,8 +335,6 @@ public final class ModItems {
     public static final DeferredItem<StomperEggItem> STOMPER_EGG = ITEMS.registerItem("stomper_egg", StomperEggItem::new, () -> new Item.Properties().stacksTo(16).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> KAZOO_FISH = ITEMS.registerItem("kazoo_fish", Item::new, () -> new Item.Properties().food(ModFoods.KAZOO_FISH));
     public static final DeferredItem<Item> COOKED_KAZOO_FISH = ITEMS.registerItem("cooked_kazoo_fish", Item::new, () -> new Item.Properties().food(ModFoods.COOKED_KAZOO_FISH));
-    public static final DeferredItem<Item> TUBA_BUBBLE = ITEMS.registerItem("tuba_bubble", Item::new, () -> new Item.Properties());
-    public static final DeferredItem<BubbleGunItem> BUBBLE_GUN = ITEMS.registerItem("bubble_gun", BubbleGunItem::new, () -> new Item.Properties().durability(256));
     public static final DeferredItem<Item> SKYSONG_GEM = ITEMS.registerItem("skysong_gem", Item::new, () -> new Item.Properties().rarity(Rarity.EPIC));
     public static final DeferredItem<Item> LULLABY_SOUP = ITEMS.registerItem("lullaby_soup", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.LULLABY_SOUP, ModSoups.LULLABY_SOUP_CONSUMABLE).usingConvertsTo(Items.BOWL));
     public static final DeferredItem<Item> ECHO_CHOWDER = ITEMS.registerItem("echo_chowder", Item::new, () -> new Item.Properties().stacksTo(1).food(ModSoups.ECHO_CHOWDER, ModSoups.ECHO_CHOWDER_CONSUMABLE).usingConvertsTo(Items.BOWL));

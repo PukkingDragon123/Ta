@@ -164,115 +164,9 @@ TOOL_MAP = {
 }
 GEM = {'p': PINK[2], 'P': PINK[1], 'q': PINK[3], 'w': WHITE, 'h': S_RAMP[5], 'o': PINK[0], 'g': GOLD[3], 'G': GOLD[2]}
 
-# ---------------------------------------------------------------------------- the music motif
-# Siftite gear is engraved like sheet music: staff lines cut into blades and plates, pink notes
-# inlaid along them, a pair of beamed quavers on the breastplate (and a treble clef on the worn
-# armour, which has the room). The textures animate: a pulse of light runs along each staff line
-# and each note glints as the light passes it.
-
-FRAMES, FRAMETIME = 16, 3
-ENGRAVE = S_RAMP[1]   # the cut line, a step darker than the metal around it
-NOTE, NOTE_HI, NOTE_LO = PINK[2], PINK[3], PINK[1]
-
-# the breastplate's beamed quavers, in the order the light traces them: left head, up its stem,
-# across the beam, down the right stem, right head. Capital letters mark the shaded pixels.
-QUAVERS = [(5, 10, 'p'), (6, 10, 'p'), (5, 11, 'P'), (6, 11, 'P'), (6, 9, 'p'), (6, 8, 'P'), (6, 7, 'p'), (7, 8, 'P'),
-           (7, 7, 'p'), (8, 7, 'P'), (8, 6, 'p'), (9, 7, 'P'), (9, 6, 'p'), (10, 7, 'P'), (10, 6, 'p'), (10, 8, 'p'),
-           (10, 9, 'p'), (9, 10, 'p'), (10, 10, 'p'), (9, 11, 'P'), (10, 11, 'P')]
-
-
-# per item: lines = engraved staff lines (the light runs along them in list order), glows = light
-# paths with no engraving (heads too thin to cut), notes = inlaid notes (single pixels, or glyphs
-# of (x, y, shade)), detail = static gem / glint pixels.
-MUSIC = {
-    'sword': dict(lines=[[(7, 8), (8, 7), (9, 6), (10, 5), (11, 4), (12, 3), (13, 2)]],
-                  notes=[(8, 8), (10, 4), (13, 3)], detail='5,9,p 4,9,P 5,8,q 14,1,w'),
-    'pickaxe': dict(glows=[[(6, 3), (7, 3), (8, 3), (9, 3), (10, 3), (11, 4), (12, 5), (13, 6), (13, 7), (13, 8), (13, 9), (13, 10)]],
-                    notes=[(8, 3), (12, 5), (13, 9)]),
-    'axe': dict(glows=[[(10, 2), (9, 2), (8, 3), (7, 4), (7, 5)], [(10, 6), (11, 7), (12, 7)]],
-                notes=[[(8, 5, 'p'), (9, 5, 'p'), (9, 4, 'P'), (9, 3, 'P')]]),
-    'shovel': dict(glows=[[(9, 5), (10, 4), (11, 3), (12, 3), (13, 4), (13, 5), (12, 6), (11, 7)]],
-                   notes=[[(10, 5, 'p'), (11, 5, 'p'), (11, 4, 'P')]]),
-    'hoe': dict(glows=[[(7, 2), (8, 2), (9, 2), (10, 3), (11, 4), (12, 5)]], notes=[(8, 2), (11, 5)]),
-    'spear': dict(lines=[[(10, 6), (11, 5), (12, 4), (13, 3), (14, 2)]], notes=[(10, 4), (12, 2)]),
-    'spear_in_hand': dict(lines=[[(6, 5), (5, 4), (4, 3), (3, 2), (2, 1)]], notes=[(2, 3), (4, 5)]),
-    # CLEAN: no Siftite armour (SPEC 7)
-}
-
-
-def _pulse(i, length, f, delay):
-    """How brightly the travelling light shines on step i of a path in frame f: 2 core, 1 halo."""
-    t = (f - delay) % FRAMES
-    span = FRAMES * 0.75  # the light crosses in three quarters of the loop, then the metal rests
-    if t > span:
-        return 0
-    s = -1.5 + (length + 3) * t / span
-    d = abs(i - s)
-    return 2 if d < 0.6 else 1 if d < 1.6 else 0
-
-
-def _lit(shade, lv):
-    """A pink inlay pixel at pulse level lv."""
-    if shade == 'P':
-        return (NOTE_LO, NOTE, NOTE_HI)[lv]
-    return (NOTE, NOTE_HI, WHITE)[lv]
-
-
-def music_frames(name):
-    m = MUSIC[name]
-    import gear_art  # B4 gear: angelic Siftite icons (wing blades, feather crests, halos), glinting along their bright edges
-    base, glows = gear_art.siftite_icon(name)
-    m = dict(glows=glows)
-    if m.get('detail'):
-        dots(base, m['detail'], GEM)
-    tracks = [(p, 'line', k * 3) for k, p in enumerate(m.get('lines', []))]
-    tracks += [(p, 'glow', k * 3) for k, p in enumerate(m.get('glows', []))]
-    if m.get('quavers'):
-        tracks.append(([(x, y) for x, y, _ in QUAVERS], 'quavers', 5))
-    shade = {(x, y): s for x, y, s in QUAVERS}
-
-    def nearest(pt):
-        best = None
-        for p, kind, delay in tracks:
-            for i, q in enumerate(p):
-                d = abs(q[0] - pt[0]) + abs(q[1] - pt[1])
-                if best is None or d < best[0]:
-                    best = (d, i, len(p), delay)
-        return best[1:]
-
-    notes = []
-    for n in m.get('notes', []):
-        glyph = n if isinstance(n, list) else [(n[0], n[1], 'p')]
-        notes.append((glyph, nearest(glyph[0][:2])))
-    frames = []
-    for f in range(FRAMES):
-        img = base.copy()
-        px = img.load()
-        for p, kind, delay in tracks:
-            for i, (x, y) in enumerate(p):
-                lv = _pulse(i, len(p), f, delay)
-                if kind == 'line':
-                    c = (m.get('engrave', ENGRAVE), S_RAMP[4], WHITE)[lv]
-                elif kind == 'quavers':
-                    c = _lit(shade[(x, y)], lv)
-                else:
-                    c = (px[x, y], mix(px[x, y], S_RAMP[5], 0.65), S_RAMP[6])[lv]
-                px[x, y] = rgba(c)
-        for glyph, (i, length, delay) in notes:
-            lv = _pulse(i, length, f, delay)
-            for x, y, s in glyph:
-                px[x, y] = rgba(_lit(s, lv))
-        frames.append(img)
-    return frames
-
-
 def item_animations():
-    """{texture name: (frames, frametime)} for every animated item texture."""
-    return {'siftite_' + n: (music_frames(n), FRAMETIME) for n in MUSIC}
-
-
-def tools():
-    return {k: v[0][0] for k, v in item_animations().items()}
+    """{texture name: (frames, frametime)} for every animated item texture (RR: none since the Siftite tools are gone)."""
+    return {}
 
 
 # ============================================================================ materials
@@ -693,31 +587,6 @@ def door(wood, window, twig, out):
     return grid(rows, pal)
 
 
-def siftite_upgrade_smithing_template():
-    """The vanilla upgrade template on a slate plate, its rune in siftite."""
-    rows = [
-        '................',
-        '....ccccccccc...',
-        '...cdeeeeeedec..',
-        '...ceeededddda..',
-        '...addddbcddda..',
-        '...addcbfbddca..',
-        '...adcbfhgbcba..',
-        '...acbfhpggbca..',
-        '...adeegggeeda..',
-        '...aedefgfedda..',
-        '...adddfffdeca..',
-        '...acddeeeddba..',
-        '...abcddccccba..',
-        '....abbccbaaa...',
-        '.....aaaaa......',
-        '................',
-    ]
-    pal = {'a': '#141a30', 'b': '#20283f', 'c': '#2a3450', 'd': '#36425e', 'e': '#46526e',
-           'f': S_RAMP[1], 'g': S_RAMP[3], 'h': S_RAMP[5], 'p': PINK[2]}
-    return grid(rows, pal)
-
-
 def slingshot(pull):
     """A forked branch with siftite-capped tips; the band pulls back a glowing slime ball."""
     rows = [
@@ -965,58 +834,6 @@ def stomper_egg():
         10: '.......cc.......',
         12: '.....c..........',
     }, {'C': CHROME[3], 'c': CHROME[1]})
-
-
-def tuba_bubble():
-    """A shimmering bubble blown from a tuba: a brass-tinted film, a window highlight and a
-    rainbow sheen sliding round its lower rim."""
-    rows = [
-        '................',
-        '................',
-        '......OOOO......',
-        '....OOiiiioo....',
-        '...Oiwwiiiiio...',
-        '..Oiwiiiiiiiio..',
-        '..Owiiiiiiiiio..',
-        '.OiiiiiiiiiiiiO.',
-        '.Oiiiiiiiiiiipo.',
-        '.Oiiiiiiiiiiipo.',
-        '..oiiiiiiiiiyo..',
-        '..oiiiiiiiiyco..',
-        '...oiiiiivcco...',
-        '....ooiiiioo....',
-        '......oooo......',
-        '................',
-    ]
-    pal = {'O': '#f6dc80', 'o': '#c8902e', 'i': '#ffe8a030', 'w': '#ffffff', 'p': '#ff9ad6', 'c': '#8ff0ff', 'y': '#fff07a',
-           'v': '#c8a0ff'}
-    return grid(rows, pal)
-
-
-def bubble_gun():
-    """A toy brass bubble blaster: belled barrel, red grip, a glass bubble tank on top."""
-    rows = [
-        '................',
-        '................',
-        '.....CCw........',
-        '....CwCCc.......',
-        '....CCbcd.......',
-        '.....ccd........',
-        '......G.......b.',
-        '..vGGGGGGGGGvGG.',
-        '..GgggGgggggGgm.',
-        '..ddddddddddGgm.',
-        '....rRtd.....dd.',
-        '....rRt.........',
-        '...rRr..........',
-        '...rr...........',
-        '................',
-        '................',
-    ]
-    pal = {'C': ('#bff4ff', '#1a3a5a'), 'c': ('#7fd0e8', '#1a3a5a'), 'd': ('#a8702a', '#3a1e10'), 'w': ('#ffffff', '#1a3a5a'),
-           'b': ('#ffffff', '#3a1e10'), 'G': ('#ffd86a', '#3a1e10'), 'g': ('#e0a83a', '#3a1e10'), 'v': ('#fff4c0', '#3a1e10'),
-           'm': ('#5a2e14', '#3a1e10'), 'r': ('#d04a5a', '#3a1020'), 'R': ('#f07a84', '#3a1020'), 't': ('#3a2a2a', '#1a1010')}
-    return grid(rows, pal, ol=True)
 
 
 def skysong_gem():
@@ -1285,17 +1102,16 @@ def hummingbloom():
 
 def all_items():
     out = {}
-    out.update(tools())
     for f in (siftite_ingot, siftite_nugget, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
               warden_core, thick_hide):
         out[f.__name__] = f()
     for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern,
-              music_disc_lullaby, soul_chime, glowbell_vine, siftite_upgrade_smithing_template):
+              music_disc_lullaby, soul_chime, glowbell_vine):
         out[f.__name__] = f()
     out['lullwood_door'] = door(('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea'), '#24353e', '#4a6470', '#2a2450')
     out['wishwood_door'] = door(('#c9738f', '#d98aa4', '#e6a0b8', '#f0b6ca'), '#4a1f38', '#8a4a6a', '#4a1f38')
     for f in (conductors_staff, conga_drum, crane_flute, magic_strings, guitar, stomper_meat, stomper_steak, stomper_egg,
-              tuba_bubble, bubble_gun, skysong_gem):
+              skysong_gem):
         out[f.__name__] = f()
     out.update(spawn_eggs())
     out.update(__import__('songs').art())  # songs & instruments (agent D)

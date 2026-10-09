@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "thesift:polished_dreamstone",
-  "result": {
-    "count": 1,
-    "id": "thesift:glyph_stone"
-  }
-}

@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Grand Stage's performance timeline, shared by the server (the podium) and the client (the
- * score, the dark sky, the silence). Ticks from the moment the third instrument is placed.
+ * The Grand Stage's performance timeline, shared by the server (its hidden Boss Den) and the client (the
+ * score, the dark sky, the silence). Ticks from the moment the three instruments reach the stage.
  */
 public final class Performance {
     /** Ticks per beat (120 bpm). */

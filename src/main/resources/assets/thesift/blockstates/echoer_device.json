@@ -19,22 +19,22 @@
       "model": "thesift:block/echoer_device"
     },
     "charging=true,facing=north,powered=false,range=0": {
-      "model": "thesift:block/echoer_device_charging"
+      "model": "thesift:block/echoer_device"
     },
     "charging=true,facing=north,powered=false,range=1": {
-      "model": "thesift:block/echoer_device_charging"
+      "model": "thesift:block/echoer_device"
     },
     "charging=true,facing=north,powered=false,range=2": {
-      "model": "thesift:block/echoer_device_charging"
+      "model": "thesift:block/echoer_device"
     },
     "charging=true,facing=north,powered=true,range=0": {
-      "model": "thesift:block/echoer_device_charging"
+      "model": "thesift:block/echoer_device"
     },
     "charging=true,facing=north,powered=true,range=1": {
-      "model": "thesift:block/echoer_device_charging"
+      "model": "thesift:block/echoer_device"
     },
     "charging=true,facing=north,powered=true,range=2": {
-      "model": "thesift:block/echoer_device_charging"
+      "model": "thesift:block/echoer_device"
     },
     "charging=false,facing=east,powered=false,range=0": {
       "model": "thesift:block/echoer_device",
@@ -61,27 +61,27 @@
       "y": 90
     },
     "charging=true,facing=east,powered=false,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 90
     },
     "charging=true,facing=east,powered=false,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 90
     },
     "charging=true,facing=east,powered=false,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 90
     },
     "charging=true,facing=east,powered=true,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 90
     },
     "charging=true,facing=east,powered=true,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 90
     },
     "charging=true,facing=east,powered=true,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 90
     },
     "charging=false,facing=south,powered=false,range=0": {
@@ -109,27 +109,27 @@
       "y": 180
     },
     "charging=true,facing=south,powered=false,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 180
     },
     "charging=true,facing=south,powered=false,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 180
     },
     "charging=true,facing=south,powered=false,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 180
     },
     "charging=true,facing=south,powered=true,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 180
     },
     "charging=true,facing=south,powered=true,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 180
     },
     "charging=true,facing=south,powered=true,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 180
     },
     "charging=false,facing=west,powered=false,range=0": {
@@ -157,27 +157,27 @@
       "y": 270
     },
     "charging=true,facing=west,powered=false,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 270
     },
     "charging=true,facing=west,powered=false,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 270
     },
     "charging=true,facing=west,powered=false,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 270
     },
     "charging=true,facing=west,powered=true,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 270
     },
     "charging=true,facing=west,powered=true,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 270
     },
     "charging=true,facing=west,powered=true,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "y": 270
     },
     "charging=false,facing=up,powered=false,range=0": {
@@ -205,27 +205,27 @@
       "x": 270
     },
     "charging=true,facing=up,powered=false,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 270
     },
     "charging=true,facing=up,powered=false,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 270
     },
     "charging=true,facing=up,powered=false,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 270
     },
     "charging=true,facing=up,powered=true,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 270
     },
     "charging=true,facing=up,powered=true,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 270
     },
     "charging=true,facing=up,powered=true,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 270
     },
     "charging=false,facing=down,powered=false,range=0": {
@@ -253,27 +253,27 @@
       "x": 90
     },
     "charging=true,facing=down,powered=false,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 90
     },
     "charging=true,facing=down,powered=false,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 90
     },
     "charging=true,facing=down,powered=false,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 90
     },
     "charging=true,facing=down,powered=true,range=0": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 90
     },
     "charging=true,facing=down,powered=true,range=1": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 90
     },
     "charging=true,facing=down,powered=true,range=2": {
-      "model": "thesift:block/echoer_device_charging",
+      "model": "thesift:block/echoer_device",
       "x": 90
     }
   }

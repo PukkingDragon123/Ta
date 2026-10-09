@@ -311,14 +311,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(30.0F, 1200.0F).requiresCorrectToolForDrops().lightLevel(s -> 3));
     public static final DeferredBlock<SiftPortalBlock> SIFT_PORTAL = BLOCKS.registerBlock("sift_portal", SiftPortalBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12));
-    public static final DeferredBlock<ConductorsPodiumBlock> CONDUCTORS_PODIUM = BLOCKS.registerBlock("conductors_podium", ConductorsPodiumBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 7));
-    public static final DeferredBlock<EncoreSigilBlock> ENCORE_SIGIL = BLOCKS.registerBlock("encore_sigil", EncoreSigilBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_PURPLE).strength(-1.0F, 3600000.0F).lightLevel(s -> 6));
-    public static final DeferredBlock<InstrumentAltarBlock> INSTRUMENT_ALTAR = BLOCKS.registerBlock("instrument_altar", InstrumentAltarBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion());
-    public static final DeferredBlock<GlyphStoneBlock> GLYPH_STONE = BLOCKS.registerBlock("glyph_stone", GlyphStoneBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.SAND));
+    public static final DeferredBlock<BossDenBlock> BOSS_DEN = BLOCKS.registerBlock("boss_den", BossDenBlock::new,
+            () -> BlockBehaviour.Properties.of().noCollision().noLootTable().noOcclusion().strength(-1.0F, 3600000.0F));
     public static final DeferredBlock<AncientCannonBlock> ANCIENT_CANNON = BLOCKS.registerBlock("ancient_cannon", AncientCannonBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion());
     public static final DeferredBlock<CrumblingDreamstoneBlock> CRUMBLING_DREAMSTONE = BLOCKS.registerBlock("crumbling_dreamstone", CrumblingDreamstoneBlock::new,
@@ -380,7 +374,7 @@ public final class ModBlocks {
     public static final DeferredBlock<OrganReedBlock> ORGAN_REED = BLOCKS.registerBlock("organ_reed", OrganReedBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 4));
     public static final DeferredBlock<EchoerDeviceBlock> ECHOER_DEVICE = BLOCKS.registerBlock("echoer_device", EchoerDeviceBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4));
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(3.5F, 6.0F).requiresCorrectToolForDrops().noOcclusion().lightLevel(s -> s.getValue(com.thesift.block.EchoerDeviceBlock.CHARGING) ? 11 : 4));
     public static final DeferredBlock<EchoerHutHeartBlock> ECHOER_HUT_HEART = BLOCKS.registerBlock("echoer_hut_heart", EchoerHutHeartBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).noLootTable().lightLevel(s -> 9));
     public static final DeferredBlock<SculkBloomBlock> SCULK_BLOOM = BLOCKS.registerBlock("sculk_bloom", p -> new SculkBloomBlock(MobEffects.DARKNESS, 4.0F, 3, p),

@@ -58,6 +58,9 @@ public final class ModEchoer {
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_CHARGE = reg("block.echoer_device.charge");
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_FIRE = reg("block.echoer_device.fire");
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_FIZZLE = reg("block.echoer_device.fizzle");
+    // RR: the Echoer Drill hears a beat, and bites into the rock
+    public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_BEAT = reg("block.echoer_device.beat");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_BITE = reg("block.echoer_device.bite");
     /** CR1 Echoer: its echolocation pings (a sonar click or a chime blip from its speakers). */
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_CHIMES = reg("entity.enchoer.chimes");
     /** CR1 Echoer: its bat wings, and the brass drill of its snout whirring up when it sings. */
@@ -91,6 +94,7 @@ public final class ModEchoer {
         Enchoer.listen();
         SoulGolem.listen();
         Nib.listen();
+        EchoerDeviceBlockEntity.listen(); // RR: the Echoer Drill hears notes and note blocks as beats
     }
 
     private static void attributes(EntityAttributeCreationEvent event) {

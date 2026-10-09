@@ -64,8 +64,6 @@ public final class ModEntities {
             b -> b.sized(0.45F, 0.4F).eyeHeight(0.25F).clientTrackingRange(4));
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.SkyWhale>> SKY_WHALE = ENTITIES.registerEntityType("sky_whale",
             com.thesift.entity.SkyWhale::new, MobCategory.CREATURE, b -> b.sized(4.0F, 3.0F).eyeHeight(1.8F).clientTrackingRange(16));
-    public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.BubbleEntity>> BUBBLE = ENTITIES.registerEntityType("bubble",
-            com.thesift.entity.BubbleEntity::new, MobCategory.MISC, b -> b.sized(0.4F, 0.4F).clientTrackingRange(4).updateInterval(10));
 
     private ModEntities() {
     }

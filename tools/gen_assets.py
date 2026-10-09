@@ -276,11 +276,6 @@ def gen_block(b):
         item_block(bid)
     elif k == 'portal':
         copy_template('nether_portal', bid, token_tex('nether_portal', bid), item=False)
-    elif k == 'glyph':
-        for i in range(8):
-            block_model(f'{bid}_{i}', 'minecraft:block/cube_column', {'end': 'block/polished_dreamstone', 'side': f'block/{bid}_{i}'})
-        write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': {f'glyph={i}': {'model': f'{NS}:block/{bid}_{i}'} for i in range(8)}})
-        item_block(bid, f'{bid}_0')
     elif k == 'cake':
         copy_template('cake', bid, token_tex('cake', bid))
     elif k == 'lantern':
@@ -655,12 +650,7 @@ def gen_recipes():
     shapeless('siftite_ingot_from_block', ['siftite_block'], 'siftite_ingot', 9)
     shaped('siftite_ingot_from_nuggets', ['###', '###', '###'], {'#': 'siftite_nugget'}, 'siftite_ingot', 1, 'misc')
     shapeless('siftite_nugget', ['siftite_ingot'], 'siftite_nugget', 9)
-    shaped('siftite_upgrade_smithing_template', ['#S#', '#C#', '###'], {'#': 'siftite_dust', 'C': 'dreamstone', 'S': 'siftite_upgrade_smithing_template'},
-           'siftite_upgrade_smithing_template', 2, 'misc')
-    for t in ['sword', 'pickaxe', 'axe', 'shovel', 'hoe', 'spear']:  # CLEAN: no Siftite armour
-        write(os.path.join(D, 'recipe', f'siftite_{t}_smithing.json'),
-              {'type': 'minecraft:smithing_transform', 'addition': f'#{NS}:siftite_tool_materials', 'base': f'minecraft:netherite_{t}',
-               'result': {'id': f'{NS}:siftite_{t}'}, 'template': f'{NS}:siftite_upgrade_smithing_template'})
+    # RR: no Siftite gear (no template, no smithing) - Siftite is a material only
     # gear & food
     shaped('slingshot', ['#S#', ' # ', ' # '], {'#': 'lullwood_planks', 'S': 'thick_hide'}, 'slingshot', 1, 'equipment')
     shaped('sift_cake', ['GGG', 'BEB', 'PPP'], {'G': 'glowing_slime_ball', 'B': 'minecraft:pitcher_pod', 'E': '#minecraft:eggs', 'P': 'dreambloom'}, 'sift_cake', 1, 'food')
@@ -710,8 +700,8 @@ def gen_lang():
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Neutral - a big, sleepy swamp amphibian',  # S2: the remade Slumbler
         f'codex.{NS}.slumbler.body': 'A huge, soft amphibian of the Sift swamps and Chrome lakes that sits up like a toad: blue-grey skin mottled lavender and teal, a broad flat head with heavy-lidded golden eyes, a wide red mouth and three frilled coral gills behind each cheek that rise and fall as it breathes. It sleeps a great deal, often half-submerged in shallow Chrome, and wakes with an enormous yawn. Hit one and it bites - and puffs its cheeks to spit gobs of Chrome that leave you dizzy. Feed two of them fish and they lay a clutch of jelly eggs that hatch into little stingray-like tadpoles. Drops Thick Hide and its gills, which make a helmet for breathing in Chrome.',
         # CR1: the Sifter's Codex page comes from tools/sifter.py
-        f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
-        f'codex.{NS}.siftite.body': 'Siftite Ore lies rare and deep and needs a diamond pickaxe; it breaks into Siftite Dust. In the Europhy Table, 4 Siftite Dust and a Copper Ingot played into shape make a Siftite Ingot. With the Siftite template (Siftite Dust duplicates it) Siftite upgrades Netherite tools and weapons: they outdig and outhit Netherite and knock foes flying. Siftite is never forged into armour.',
+        f'codex.{NS}.siftite.title': 'Siftite', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
+        f'codex.{NS}.siftite.body': 'Siftite Ore lies rare and deep and needs a diamond pickaxe; it breaks into Siftite Dust. In the Europhy Table, 4 Siftite Dust and a Copper Ingot played into shape make a Siftite Ingot. Siftite is a material, not a gear set: nine nuggets make an ingot and nine ingots a block, and Echoers prize it as an offering.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
@@ -723,9 +713,9 @@ def gen_lang():
         f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
         f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes: cyan light floods the place, the world bends towards the gate, a blinding flash - and the portal opens with a shockwave. Look into it: it is a window onto the Sift\'s own sky, clouds and stars drifting deep behind the frame.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
-        f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage, and its three empty altars.",
+        f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
-        f'codex.{NS}.sift_drum.body': 'Left- or right-click to play a beat; hold for a drum roll. Sneak and left-click to break it. Stone beneath booms low, wood thumps, anything else taps high. Redstone plays it too. Every beat ripples out to altars and Sift creatures and sets off Sculk Sensors, like a note block.',
+        f'codex.{NS}.sift_drum.body': 'Left- or right-click to play a beat; hold for a drum roll. Sneak and left-click to break it. Stone beneath booms low, wood thumps, anything else taps high. Redstone plays it too. Every beat ripples out to Sift creatures and sets off Sculk Sensors, like a note block.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',
         f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Sculklings flee with their ears covered. Soul Chimes ring when powered.',
         f'codex.{NS}.flora.title': 'Coral Flora', f'codex.{NS}.flora.tagline': 'The pink plains',
@@ -748,8 +738,8 @@ def gen_lang():
         f'codex.{NS}.weaver_guitar.body': "The Weaver's own guitar, and being a boss's spoils it keeps a power. It plays like the Star Lute: six strings, and chords. Sneak and use it to weave: Musical Cobwebs spring up around you and every hostile creature near is snared in silk. Only the Weaver drops it; only it sounds on the Grand Stage.",
         f'codex.{NS}.musical_cobweb.title': 'Musical Cobweb', f'codex.{NS}.musical_cobweb.tagline': 'Tuned silk',
         f'codex.{NS}.musical_cobweb.body': "The Weaver's glowing webs. They barely hold you - a little drag and a springy bounce - but every strand is tuned and plays its note when touched, so a web plays runs as you push through it. Shears or Silk Touch keep the web; otherwise it leaves Sculk String.",
-        f'codex.{NS}.stage.title': 'The Grand Stage', f'codex.{NS}.stage.tagline': 'Three altars, three instruments',
-        f'codex.{NS}.stage.body': "On the roof of the Sculk Castle stands a stage with three empty altars. Place the Conga Drum, the Crane Flute and the Weaver's Guitar on them and they begin to play together. The sky darkens. The world falls silent. And from beneath the stage, a mask rises...",
+        f'codex.{NS}.stage.title': 'The Grand Stage', f'codex.{NS}.stage.tagline': 'Three instruments, one performance',
+        f'codex.{NS}.stage.body': "On the roof of the Sculk Castle stands a round stage ringed with drums and soul lanterns. Step onto it carrying the Conga Drum, the Crane Flute and the Weaver's Guitar and the three begin to play together. The sky darkens. The world falls silent. And from beneath the stage, a mask rises...",
         f'codex.{NS}.vocals.title': 'The Vocals', f'codex.{NS}.vocals.tagline': 'A Warden answers',
         f'codex.{NS}.vocals.body': 'When the Dictator reaches his crescendo, a Warden claws up through the floor to sing for him. A Glowing Slime Ball from a slingshot leaves it Deafened.',
         f'entity.{NS}.dictator': 'The Conductor', f'entity.{NS}.thumper': 'The Thumper',
@@ -784,23 +774,15 @@ def gen_lang():
         f'message.{NS}.dictator.phase3': "The Conductor's mask splits - he swells into a colossus of sculk and song!",
         f'message.{NS}.encore.2': 'Silk trembles in the dark... the Weaver claws its way up!',
         f'effect.{NS}.sculk_corruption': 'Sculk Corruption',
-        f'message.{NS}.encore.1': 'A flute sings from the sky... the Whistler answers the call!',
         f'effect.{NS}.sculk_corruption': 'Sculk Corruption',
         f'codex.{NS}.sculk_corruption.title': 'Sculk Corruption', f'codex.{NS}.sculk_corruption.tagline': "The Conductor's curse",
         f'codex.{NS}.sculk_corruption.body': 'A slow wither: one heart of harm every few seconds - but the longer it lasts, the more the dark closes in from the edges of your sight, until the world is a pinhole. Every blow from the Conductor adds to it. Milk washes it away.',
-        f'codex.{NS}.encore_sigil.title': 'Encore Sigils', f'codex.{NS}.encore_sigil.tagline': 'Where the great players wait',
-        f'codex.{NS}.encore_sigil.body': 'Violet sigils in old floors. The Thumper sleeps under its Drum Pit - a sunken arena ringed by cannon towers - and the Weaver under a ring of humming webs in a hollow of the Sculk Swamp. Walk up to one and its player comes out, once.',
         f'message.{NS}.staff.summon': 'The orchestra answers - a Sculk Harmoner sings for you!',
         f'codex.{NS}.staff.title': "Conductor's Staff", f'codex.{NS}.staff.tagline': 'The Dictator conducts no more',
         f'codex.{NS}.staff.body': 'His tuning-fork staff, taken from his hand. Use it to cast a beam of song: every creature it touches is Entranced for three seconds - it stops, forgets its target and just sings. Sneak and use it to call the orchestra: a Sculk Harmoner appears and circles you for twenty seconds, its song keeping you strong, fast, healing and hard to hurt.',
         f'biome.{NS}.sift_plains': 'Sift Plains', f'biome.{NS}.forest_mountains': 'Forest Mountains', f'biome.{NS}.rocky_dunes': 'Rocky Dunes',
         f'biome.{NS}.chrome_lakes': 'Chrome Lakes', f'biome.{NS}.deep_sift': 'Deep Sift', f'biome.{NS}.wishing_grove': 'Wishing Grove',
         f'fluid_type.{NS}.chrome': 'Chrome',
-        f'item.{NS}.smithing_template.siftite_upgrade.applies_to': 'Netherite Tools',
-        f'item.{NS}.smithing_template.siftite_upgrade.ingredients': 'Siftite Ingot',
-        f'item.{NS}.smithing_template.siftite_upgrade.base_slot_description': 'Add netherite weapon or tool',
-        f'item.{NS}.smithing_template.siftite_upgrade.additions_slot_description': 'Add Siftite Ingot',
-        f'upgrade.{NS}.siftite_upgrade': 'Siftite Upgrade',
         f'item.{NS}.music_disc_lullaby.desc': 'Sift - Lullaby of the Deep',
         f'jukebox_song.{NS}.lullaby': 'Sift - Lullaby of the Deep',
         f'message.{NS}.drum.need_sensors': 'The drum needs three Sculk Sensors within 8 blocks to listen (%s found).',
@@ -1055,8 +1037,6 @@ SOUNDS.update({
     'entity.kazoo_fish.hurt': [('mob/pufferfish/hurt1', 0.8, 1.6), ('block/note_block/didgeridoo', 0.4, 2.0)],
     'entity.kazoo_fish.death': [('mob/pufferfish/death1', 0.8, 1.6), ('mob/pufferfish/death2', 0.8, 1.6)],
     'entity.kazoo_fish.flop': [('mob/pufferfish/flop1', 0.6, 1.4), ('mob/pufferfish/flop2', 0.6, 1.4)],
-    'item.bubble_gun.shoot': [('block/bubble_column/bubble1', 1.0, 1.2), ('mob/pufferfish/blow_out2', 0.6, 1.6), ('block/bubble_column/bubble3', 1.0, 1.3)],
-    'entity.bubble.pop': [('block/bubble_column/bubble2', 1.0, 1.4), ('random/pop', 0.8, 1.2)],
     'entity.sky_whale.ambient': [('item/goat_horn/call1', 0.9, 0.5), ('item/goat_horn/call4', 0.9, 0.45), ('mob/happy_ghast/ambient3', 1.0, 0.5)],
     'entity.sky_whale.song': [('item/goat_horn/call2', 1.2, 0.55), ('item/goat_horn/call5', 1.2, 0.5), ('item/goat_horn/call7', 1.2, 0.5)],
     'entity.sky_whale.moo': [('mob/cow/say2', 1.0, 0.35), ('mob/cow/say3', 1.0, 0.38), ('mob/cow/say1', 1.0, 0.33)],
@@ -1074,7 +1054,6 @@ SUBTITLES.update({
     'entity.fanfare_eel.death': 'Fanfare Eel dies', 'entity.fanfare_eel.flop': 'Fanfare Eel flops',
     'entity.kazoo_fish.ambient': 'Kazoo Fish buzzes', 'entity.kazoo_fish.hurt': 'Kazoo Fish hurts', 'entity.kazoo_fish.death': 'Kazoo Fish dies',
     'entity.kazoo_fish.flop': 'Kazoo Fish flops',
-    'item.bubble_gun.shoot': 'Bubble Gun blows', 'entity.bubble.pop': 'Bubble pops',
     'entity.sky_whale.ambient': 'Sky Whale sings', 'entity.sky_whale.song': 'Sky Whale answers', 'entity.sky_whale.moo': 'Sky Whale moos',
     'entity.sky_whale.hurt': 'Sky Whale hurts', 'entity.sky_whale.death': 'Sky Whale dies', 'entity.sky_whale.spit': 'Sky Whale spits out a gem',
     'entity.sky_whale.flap': 'Sky Whale flaps',
@@ -1089,8 +1068,6 @@ def gen_wild_creatures():
     smelt('cooked_kazoo_fish', 'kazoo_fish', 'cooked_kazoo_fish', 0.35, 200, ('smelting', 'smoking'))
     smelt('cooked_kazoo_fish_campfire', 'kazoo_fish', 'cooked_kazoo_fish', 0.35, 1200, ('campfire_cooking',))
     # gear
-    shaped('bubble_gun', [' TT', 'GCT', 'G  '], {'T': 'chrome_pearl', 'C': 'minecraft:copper_ingot', 'G': 'minecraft:gold_ingot'}, 'bubble_gun', 1,
-           'equipment')
     shaped('enchanted_golden_apple_from_skysong_gem', ['GGG', 'GAG', 'GSG'], {'G': 'minecraft:gold_block', 'A': 'minecraft:apple', 'S': 'skysong_gem'},
            'minecraft:enchanted_golden_apple', 1, 'misc')
     shapeless('hummingbloom_dye', ['hummingbloom'], 'minecraft:purple_dye', 1, 'misc', 'dye')
@@ -1112,7 +1089,7 @@ def gen_wild_creatures():
     # names, messages and the Codex
     LANG.update({
         f'entity.{NS}.stomper': 'Stomper', f'entity.{NS}.fanfare_eel': 'Fanfare Eel', f'entity.{NS}.kazoo_fish': 'Kazoo Fish',
-        f'entity.{NS}.sky_whale': 'Sky Whale', f'entity.{NS}.bubble': 'Bubble',
+        f'entity.{NS}.sky_whale': 'Sky Whale',
         f'message.{NS}.stomper.tamed': 'The little Stomper trumpets and nuzzles you with its trunk. It is yours now!',
         f'message.{NS}.sky_whale.heard': 'Far above, something vast hears your song...',
         f'message.{NS}.sky_whale.gem': 'The Sky Whale sings back - and spits out a glittering Skysong Gem!',
@@ -1125,8 +1102,6 @@ def gen_wild_creatures():
         f'codex.{NS}.fanfare_eel.body': 'A long eel of overlapping scaly segments under a scalloped crest, with a brass trumpet bell for a mouth. It hunts anything swimming in the Sift\'s waters - fish and visitors alike - and every bite comes with a blast of sound. It wears the colours of its waters: moss green over gold in the plains and Chrome Lakes, violet and pink among the Magic Kelp, sculk-dark with a line of cyan lights in the Sculk Ocean. Fight it from the shore if you can.',
         f'codex.{NS}.kazoo_fish.title': 'Kazoo Fish', f'codex.{NS}.kazoo_fish.tagline': 'Small, silly, delicious',
         f'codex.{NS}.kazoo_fish.body': 'Chunky little schooling fish with a brass kazoo for a snout, a sail of a dorsal fin and saddle stripes. Each school wears the colours of its waters: reef teal with coral fins in the plains, rose and gold among the Magic Kelp, sky blue and lilac in the Chrome Lakes, mint in the shallows - and in the Sculk Ocean a near-black midnight with a row of glowing lights. Schools follow a leader and buzz little tunes; scare one and they all scatter. Scoop one up in a bucket of water or Chrome to keep it.',
-        f'codex.{NS}.bubble_gun.title': 'Bubble Gun', f'codex.{NS}.bubble_gun.tagline': 'Up you go!',
-        f'codex.{NS}.bubble_gun.body': 'Built from Chrome Pearls, copper and gold. Each squeeze blows a big wobbly bubble that pops on whatever it hits, stinging a little and lifting it gently into the air. No ammo needed, just a breath between shots.',
         f'codex.{NS}.skysong_gem.title': 'Skysong Gem', f'codex.{NS}.skysong_gem.tagline': 'A gift from the clouds',
         f'codex.{NS}.skysong_gem.body': 'Spat out by a Sky Whale that answered your song. Set one below an apple in a ring of gold blocks to craft an Enchanted Golden Apple.',
     })
@@ -1289,7 +1264,6 @@ def gen_misc_tags():
     tag('block', f'{NS}:portal_frame', 'minecraft:reinforced_deepslate')
     for b in ['hushslate', 'cobbled_hushslate', 'minecraft:sculk', 'minecraft:deepslate', 'lumen_moss_block']:
         tag('block', f'{NS}:deep_sift_ground', rl(b))
-    tag('block', f'{NS}:incorrect_for_siftite_tool', '#minecraft:incorrect_for_netherite_tool')
     for f in list(spec.FLOWERS) + ['echo_orchid', 'glowbell_vine', 'soul_chime']:
         tag('block', f'{NS}:resonant', rl(f))
     tag('block', f'{NS}:sift_stone', rl('hushslate'))
@@ -1314,9 +1288,6 @@ def gen_misc_tags():
     for i in ['glowcap', 'minecraft:tropical_fish', 'minecraft:cod', 'glowcap_skewer']:
         tag('item', f'{NS}:slumbler_food', rl(i))
     tag('item', f'{NS}:slingshot_ammo', rl('glowing_slime_ball'))
-    tag('item', f'{NS}:siftite_tool_materials', rl('siftite_ingot'))
-    for t, vt in [('sword', 'swords'), ('pickaxe', 'pickaxes'), ('axe', 'axes'), ('shovel', 'shovels'), ('hoe', 'hoes'), ('spear', 'spears')]:
-        tag('item', f'minecraft:{vt}', rl(f'siftite_{t}'))
     for b in ['#minecraft:dirt', '#minecraft:sand', 'minecraft:gravel', 'minecraft:clay', 'minecraft:mud', 'minecraft:moss_block', 'minecraft:snow_block',
               'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'chime_sand', 'suspicious_chime_sand', 'sift_soil', 'sift_grass_block',
               'coral_turf', 'lumen_moss_block']:

@@ -74,7 +74,6 @@ public class TheSift {
         com.thesift.music.SongTracker.init(); // songs (agent D): the song tracker + Lullaby/Whale effects
         com.thesift.music.band.Bands.register(modBus); // M2 band: creatures join your band, play along, follow; band registry
         com.thesift.music.InstrumentPlay.register(modBus); // M1 instrument play: notes from the play screens reach the server
-        com.thesift.item.SiftiteGear.register(); // H: Siftite tool knockback (CLEAN: no Siftite armour)
         com.thesift.item.PrismGear.register(); // B4 gear: the Prism Sword reveals nearby monsters
         com.thesift.entity.CreatureLife.register(modBus); // A1 creatures: creatures hear notes, Stomper riders stomp
         com.thesift.entity.boss.BossStages.register(modBus); // B2 Thumper & cutscenes: boss stage cutscene payloads, viewers kept safe

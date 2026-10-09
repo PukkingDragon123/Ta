@@ -5,21 +5,14 @@
       "feature": {
         "type": "minecraft:simple_block",
         "to_place": {
-          "id": "thesift:encore_sigil",
+          "id": "thesift:boss_den",
           "properties": {
             "boss": "2",
             "spent": "false"
           }
         }
       },
-      "placement": [
-        {
-          "type": "minecraft:offset",
-          "x": 0,
-          "y": -1,
-          "z": 0
-        }
-      ]
+      "placement": []
     },
     {
       "feature": {

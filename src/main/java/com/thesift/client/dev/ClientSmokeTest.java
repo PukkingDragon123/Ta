@@ -663,7 +663,7 @@ public final class ClientSmokeTest {
         c.camera(x0 + 0.5, STAGE_Y + 2.6, z0 - 3.2, x0 + 0.5, STAGE_Y + 0.4, z0 + 0.5);
     }
 
-    /** The mini-bosses with their young, the Mask, and the Grand Stage's altars. */
+    /** The mini-bosses with their young and the Mask (RR: the Grand Stage has no altars any more). */
     private static void bossStage(Ctx c) {
         int x0 = -120, z0 = 0;
         floor(c, x0 - 14, z0 - 8, x0 + 14, z0 + 8);
@@ -673,11 +673,6 @@ public final class ClientSmokeTest {
         c.spawn(ModEntities.SCULK_PARASITE.get(), x0 - 5.5, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.STRUMLING.get(), x0 + 3.0, STAGE_Y, z0 - 1.5, face, false);
         c.spawn(ModEntities.CONDUCTOR_MASK.get(), x0 + 12.0, STAGE_Y + 1.0, z0 - 3.0, face, false);
-        BlockState altar = ModBlocks.INSTRUMENT_ALTAR.get().defaultBlockState();
-        for (int i = 0; i < 3; i++) {
-            c.set(x0 - 12 + i * 2, STAGE_Y, z0 - 4, altar);
-        }
-        c.set(x0 - 12, STAGE_Y, z0 - 6, ModBlocks.ENCORE_SIGIL.get().defaultBlockState());
         c.camera(x0 + 0.5, STAGE_Y + 6.0, z0 - 14.0, x0 + 0.5, STAGE_Y + 1.5, z0 + 1.0);
     }
 

@@ -1694,41 +1694,6 @@
     ],
     "subtitle": "subtitles.thesift.entity.kazoo_fish.flop"
   },
-  "item.bubble_gun.shoot": {
-    "sounds": [
-      {
-        "name": "minecraft:block/bubble_column/bubble1",
-        "volume": 1.0,
-        "pitch": 1.2
-      },
-      {
-        "name": "minecraft:mob/pufferfish/blow_out2",
-        "volume": 0.6,
-        "pitch": 1.6
-      },
-      {
-        "name": "minecraft:block/bubble_column/bubble3",
-        "volume": 1.0,
-        "pitch": 1.3
-      }
-    ],
-    "subtitle": "subtitles.thesift.item.bubble_gun.shoot"
-  },
-  "entity.bubble.pop": {
-    "sounds": [
-      {
-        "name": "minecraft:block/bubble_column/bubble2",
-        "volume": 1.0,
-        "pitch": 1.4
-      },
-      {
-        "name": "minecraft:random/pop",
-        "volume": 0.8,
-        "pitch": 1.2
-      }
-    ],
-    "subtitle": "subtitles.thesift.entity.bubble.pop"
-  },
   "entity.sky_whale.ambient": {
     "sounds": [
       {
@@ -2173,6 +2138,38 @@
       }
     ],
     "subtitle": "subtitles.thesift.block.echoer_device.fizzle"
+  },
+  "block.echoer_device.beat": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.hat",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block/sculk_sensor/sculk_clicking1",
+        "volume": 0.5,
+        "pitch": 1.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.echoer_device.beat"
+  },
+  "block.echoer_device.bite": {
+    "sounds": [
+      {
+        "name": "minecraft:block.grindstone.use",
+        "type": "event",
+        "volume": 0.7,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:dig/stone1",
+        "volume": 0.8,
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.echoer_device.bite"
   },
   "entity.enchoer.chimes": {
     "sounds": [

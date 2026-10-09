@@ -110,18 +110,6 @@ def item_entry(i):
     if cls.startswith("BlockItem:"):
         blk = const(cls.split(":")[1])
         return "BlockItem", f"ITEMS.registerItem(\"{id}\", p -> new BlockItem(ModBlocks.{blk}.get(), p), () -> {props})"
-    if cls.startswith("tool:"):
-        t = cls.split(":")[1]
-        spec = {
-            "sword": "sword(ModMaterials.SIFTITE_TOOL, 3.0F, -2.4F)",
-            "pickaxe": "pickaxe(ModMaterials.SIFTITE_TOOL, 1.0F, -2.8F)",
-            "axe": "axe(ModMaterials.SIFTITE_TOOL, 5.5F, -3.0F)",
-            "shovel": "shovel(ModMaterials.SIFTITE_TOOL, 1.5F, -3.0F)",
-            "hoe": "hoe(ModMaterials.SIFTITE_TOOL, -3.0F, 0.0F)",
-            "spear": "spear(ModMaterials.SIFTITE_TOOL, 0.8F, 0.9F, 0.6F, 4.5F, 11.0F, 8.5F, 4.9F, 13.0F, 4.4F)",
-        }[t]
-        ctor = "Item::new"
-        return "Item", f"ITEMS.registerItem(\"{id}\", {ctor}, () -> new Item.Properties().{spec})"
     if cls.startswith("egg:"):
         m = const(cls.split(":")[1])
         return "SpawnEggItem", f"ITEMS.registerItem(\"{id}\", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.{m}.get()))"

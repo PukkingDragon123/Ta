@@ -389,6 +389,7 @@ SOUNDS = {
     'block.echoer_device.charge': [('mob/warden/sonic_charge1', 0.7, 1.4), ('mob/warden/sonic_charge2', 0.7, 1.5)],
     'block.echoer_device.fire': [('mob/warden/sonic_boom1', 0.7, 1.6), ('mob/warden/sonic_boom2', 0.7, 1.7)],
     'block.echoer_device.fizzle': [('block/amethyst_cluster/break3', 0.8, 0.8)],
+    **__import__('echoer_drill').SOUNDS,  # RR: the Echoer Drill hears a beat, bites into the rock
     # CR1 Echoer: the speaker-bat - echolocation pings, wingbeats, the drill whirring up, and a bat's squeaks in its voice
     'entity.enchoer.chimes': [('event:block.sculk_sensor.clicking', 0.3, 1.9), ('block/note_block/chime', 0.22, 1.5),
                               ('block/note_block/chime', 0.22, 1.9)],
@@ -407,7 +408,8 @@ SUBTITLES = {
     'entity.enchoer.ambient': 'Echoer chirps', 'entity.enchoer.hum': 'Echoer hums', 'entity.enchoer.trade': 'Echoer waits, humming',
     'entity.enchoer.yes': 'Echoer accepts', 'entity.enchoer.no': 'Echoer sighs', 'entity.enchoer.hurt': 'Echoer hurts', 'entity.enchoer.death': 'Echoer fades',
     'entity.enchoer.chimes': 'Echoer pings', 'entity.enchoer.flap': 'Echoer flaps', 'entity.enchoer.drill': 'Echoer\'s drill whirs',
-    'block.echoer_device.charge': 'The Echoer charges', 'block.echoer_device.fire': 'The Echoer fires', 'block.echoer_device.fizzle': 'The Echoer fizzles',
+    'block.echoer_device.charge': 'Echoer Drill listens', 'block.echoer_device.fire': 'Echoer Drill fires', 'block.echoer_device.fizzle': 'Echoer Drill jams',
+    **__import__('echoer_drill').SUBTITLES,  # RR
 }
 
 NS = 'thesift'

@@ -449,7 +449,6 @@ MAP = {
     'polished_dreamstone': C('polished_andesite'),
     'dreamstone_pillar_side': C('purpur_pillar_side'),
     'dreamstone_pillar_top': C('purpur_pillar_top'),
-    **{f'glyph_stone_{i}': C('smooth_stone', acc=True) for i in range(8)},
     # --- Hushslate (deepslate family)
     'hushslate': C('deepslate'),
     'hushslate_top': C('deepslate_top'),
@@ -552,20 +551,9 @@ MAP = {
     'sift_portal': ('anim_mat', 'nether_portal', {}),
     # --- designed blocks: Sift layout, vanilla material
     'bulb_lantern': C('lantern', seg=2, match='L'),
-    'conductors_podium_side': M('polished_deepslate', 'stripped_dark_oak_log'),
-    'conductors_podium_top': M('polished_deepslate', 'dark_oak_planks'),
-    'echoer_device_front': M('deepslate', 'spruce_planks'),
-    'echoer_device_front_lit': M('deepslate', 'spruce_planks'),
-    'echoer_device_side': M('deepslate', 'spruce_planks'),
-    'echoer_device_top': M('deepslate', 'spruce_planks'),
-    'echoer_device_back': M('deepslate', 'spruce_planks'),
     'echoer_hut_heart_side': M('calcite'),
     'echoer_hut_heart_top': M('calcite'),
     'echoer_hut_heart_top_spent': M('calcite'),
-    'encore_sigil_side': M('polished_blackstone'),
-    'encore_sigil_top': M('polished_blackstone'),
-    'instrument_altar_side': M('polished_deepslate'),
-    'instrument_altar_top': M('polished_deepslate'),
     'sift_gate_frame_side': M('end_portal_frame_side'),
     'sift_gate_frame_top': M('end_portal_frame_top'),
     'pitcher_planter_side': M('bricks'),
@@ -590,6 +578,7 @@ MAP = {
     'soul_chime_wood': C('cherry_planks'),
 }
 SKIP = {'glow_particle'}  # a particle sprite that only lives in block/
+SKIP |= set(__import__('echoer_drill').TEXTURES)  # RR: the Echoer Drill's housing is drawn in tools/echoer_drill.py
 # E1 Sniffer & rot: the Sift Sniffer egg's faces are vanilla's Sniffer egg faces re-themed already (tools/sift_sniffer.py)
 SKIP |= {f'sift_sniffer_egg_{s}_{f}' for s in ('not_cracked', 'slightly_cracked', 'very_cracked')
          for f in ('north', 'east', 'south', 'west', 'top', 'bottom')}
