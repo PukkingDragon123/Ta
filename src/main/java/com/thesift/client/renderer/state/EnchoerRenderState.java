@@ -2,24 +2,19 @@ package com.thesift.client.renderer.state;
 
 import net.minecraft.world.entity.AnimationState;
 
-/** The Echoer's pose weights (0..1, already smoothed by the entity), its bow, and (CR1) its wings, drill and cones. */
+/** M3: the Echoer's pose amounts (0..1, smoothed by the entity), its voice, its bow and its nod. */
 public class EnchoerRenderState extends SiftRenderState {
-    public float inspect;
-    public float wait;
+    /** 0 standing on the ground, 1 skipping or hovering in the air. */
+    public float air;
     public float dance;
-    public float sad;
+    public float listen;
     public float sleep;
-    public float sing;
+    /** Holding a gift up between its antlers. */
+    public float present;
+    /** The note it is singing (a spring, about 0..1): its mouth opens, its antler tips flare. */
+    public float voice;
     public final AnimationState bow = new AnimationState();
-    /** Per-entity offset so a flock of Echoers does not move in unison. */
+    public final AnimationState nod = new AnimationState();
+    /** Per-entity offset so two Echoers never move in unison. */
     public float seed;
-    /** The wingbeat (radians, a full beat per turn) and how hard it beats (0 folded .. 1 full). */
-    public float flap;
-    public float beat;
-    /** The drill's spin (radians). */
-    public float drill;
-    /** The speaker cones' throw (a spring, about 0..1). */
-    public float pump;
-    /** How fast it flies (blocks per tick, horizontal), for the lean into its flight. */
-    public float speed;
 }

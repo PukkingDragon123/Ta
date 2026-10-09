@@ -1,226 +1,280 @@
 package com.thesift.client.model;
 
 import com.thesift.client.renderer.state.EnchoerRenderState;
+import com.thesift.entity.Enchoer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * CR1 Echoer, the speaker-bat (geometry in tools/echoer.py): a furry loudspeaker body with a woofer
- * in its chest, bat wings with a speaker cone in each, tweeter ears, a spiralling brass drill for a
- * snout and a coiled cable tail with a jack plug. The wingbeat, the drill's spin and the cones' throw
- * come from the entity, so the flap sounds and the rings it sends out land on the beat.
+ * The Echoer, a deer spirit (CAVE: geometry and paint in tools/echoer.py, the Sculk-mob pipeline). Every pose
+ * is a smoothed amount from the entity or an envelope, so nothing snaps.
  *
  * <ul>
- *   <li>flight: a bat's stroke - a quick downstroke, the hand trailing the arm (follow-through), the
- *   wings sweeping forward on the way down and back on the way up; the body bobs against them and
- *   leans into its flight, the cable tail streams and swings</li>
- *   <li>idle hover: slower beats, ears twitching one at a time, the drill pointing where it looks</li>
- *   <li>inspect: nose down over the offering, ears forward, the drill ticking round as it pings</li>
- *   <li>waiting: upright and attentive, ears tall; humming: head up, jaw open, cones pumping on the
- *   beat and the drill whirring; dance: twirls and barrel-rolls with its wings flung wide</li>
- *   <li>disappointed: it sags in the air, ears and wings drooping; asleep: wings folded round it like
- *   a cloak, head tucked, ears laid back</li>
- *   <li>bow: a little rise (anticipation), then it tips forward with its wings swept ahead and
- *   settles back (follow-through)</li>
+ *   <li>skipping through the air (tied to limbSwing): a slow bounding gait - forelegs reach out together
+ *   and fold, hind legs drive back, the body rises with each bound and rocks over it, head held level</li>
+ *   <li>hovering: it treads the air, legs paddling slowly, rising and sinking a little</li>
+ *   <li>on the ground: it stands and breathes, ears and tail flicking; walking, a light diagonal walk</li>
+ *   <li>singing: every note opens its mouth and lifts its head (the renderer flares the antler tips)</li>
+ *   <li>listening: head cocked, ears forward, swaying; dancing: it rears and paws the air, tossing its antlers</li>
+ *   <li>the gift bow (3 s): a lift of the head, then down onto one knee, the other foreleg forward, neck and
+ *   antlers lowered towards you; presenting: head held low, the gift floating between the antlers</li>
+ *   <li>a nod for visitors, sleep (lying with legs folded, head turned to its flank), a hurt flinch and a
+ *   death fall (the renderer then pops it)</li>
+ *   <li>CAVE: the crystal chimes on its antlers swing behind every movement and keep hanging plumb as it lowers
+ *   its head; its antlers spread a little and the star on its chest swells with every note it sings</li>
  * </ul>
  */
 public class EnchoerModel extends EntityModel<EnchoerRenderState> {
+    private static final String[] SIDES = {"left", "right"};
     private final ModelPart body;
-    private final ModelPart woofer;
-    private final ModelPart wooferCap;
-    private final ModelPart tuft;
+    private final ModelPart neck;
     private final ModelPart head;
     private final ModelPart jaw;
-    private final ModelPart drill;
-    private final ModelPart leftEar;
-    private final ModelPart rightEar;
-    private final ModelPart leftTweeter;
-    private final ModelPart rightTweeter;
-    private final ModelPart leftWing;
-    private final ModelPart rightWing;
-    private final ModelPart leftTip;
-    private final ModelPart rightTip;
-    private final ModelPart[] cones = new ModelPart[4];
-    private final ModelPart leftFoot;
-    private final ModelPart rightFoot;
-    private final ModelPart[] tail = new ModelPart[4];
+    private final ModelPart tail;
+    private final ModelPart[] ears = new ModelPart[2];
+    private final ModelPart star;
+    private final ModelPart[] antlers = new ModelPart[2];
+    private final ModelPart[] chimes = new ModelPart[2];
+    /** [side][front 0 / hind 1]. */
+    private final ModelPart[][] legs = new ModelPart[2][2];
+    private final ModelPart[][] shins = new ModelPart[2][2];
+    private final ModelPart[][] hooves = new ModelPart[2][2];
 
     public EnchoerModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.woofer = this.body.getChild("woofer");
-        this.wooferCap = this.woofer.getChild("woofer_cap");
-        this.tuft = this.body.getChild("tuft");
-        this.head = this.body.getChild("head");
+        this.neck = this.body.getChild("neck");
+        this.head = this.neck.getChild("head");
         this.jaw = this.head.getChild("jaw");
-        this.drill = this.head.getChild("drill");
-        this.leftEar = this.head.getChild("left_ear");
-        this.rightEar = this.head.getChild("right_ear");
-        this.leftTweeter = this.leftEar.getChild("left_tweeter");
-        this.rightTweeter = this.rightEar.getChild("right_tweeter");
-        this.leftWing = this.body.getChild("left_wing");
-        this.rightWing = this.body.getChild("right_wing");
-        this.leftTip = this.leftWing.getChild("left_wing_tip");
-        this.rightTip = this.rightWing.getChild("right_wing_tip");
-        this.cones[0] = this.leftWing.getChild("left_wing_cone");
-        this.cones[1] = this.rightWing.getChild("right_wing_cone");
-        this.cones[2] = this.leftTip.getChild("left_tip_cone");
-        this.cones[3] = this.rightTip.getChild("right_tip_cone");
-        this.leftFoot = this.body.getChild("left_foot");
-        this.rightFoot = this.body.getChild("right_foot");
-        this.tail[0] = this.body.getChild("tail");
-        this.tail[1] = this.tail[0].getChild("tail_1");
-        this.tail[2] = this.tail[1].getChild("tail_2");
-        this.tail[3] = this.tail[2].getChild("plug");
+        this.tail = this.body.getChild("tail");
+        this.star = this.body.getChild("star");
+        for (int k = 0; k < 2; k++) {
+            String side = SIDES[k];
+            this.ears[k] = this.head.getChild(side + "_ear");
+            this.antlers[k] = this.head.getChild(side + "_antler");
+            this.chimes[k] = this.antlers[k].getChild(side + "_antler_upper").getChild(side + "_chime");
+            for (int f = 0; f < 2; f++) {
+                String leg = side + (f == 0 ? "_front" : "_hind");
+                this.legs[k][f] = this.body.getChild(leg + "_leg");
+                this.shins[k][f] = this.legs[k][f].getChild(leg + "_shin");
+                this.hooves[k][f] = this.shins[k][f].getChild(leg + "_hoof");
+            }
+        }
     }
 
     @Override
     public void setupAnim(EnchoerRenderState s) {
         super.setupAnim(s);
-        float age = s.ageInTicks;
-        float awake = 1.0F - s.sleep;
-        float fly = Math.min(1.0F, s.speed * 6.0F) * awake;
-        float beat = s.beat * awake;
-        float f = s.flap;
-        // a bat's stroke: a quick downstroke and a slower upstroke; the hand follows the arm a beat late
-        float w = Mth.sin(f + 0.45F * Mth.sin(f));
-        float wTip = Mth.sin(f - 0.8F + 0.45F * Mth.sin(f - 0.8F));
+        float age = s.ageInTicks + s.seed;
+        float sleep = s.sleep;
+        float awake = 1.0F - sleep;
+        float moving = Math.min(1.0F, s.walkAnimationSpeed * 1.6F) * awake;
+        float air = s.air * awake;
+        float skip = air * moving;
+        float hover = air * (1.0F - moving);
+        float walk = (1.0F - s.air) * moving;
+        float stand = (1.0F - s.air) * (1.0F - moving) * awake;
+        float c = s.walkAnimationPos * Enchoer.SKIP_RATE;
 
-        // --- the body bobs against its wings and leans into its flight
-        this.body.y += Mth.sin(f - 1.2F) * 1.1F * beat;
-        this.body.xRot += 0.28F * fly;
-        float amp = 0.72F * beat;
-        this.leftWing.zRot += w * amp;
-        this.rightWing.zRot -= w * amp;
-        this.leftTip.zRot += wTip * amp * 0.75F;
-        this.rightTip.zRot -= wTip * amp * 0.75F;
-        float sweep = Mth.cos(f) * 0.22F * beat;
-        this.leftWing.yRot += sweep;
-        this.rightWing.yRot -= sweep;
+        // --- breathing, and a little life in the ears and tail
+        float br = Mth.sin(age * 0.07F);
+        this.neck.xRot += br * 0.02F;
+        float flick = Anim.envelope((age * 0.05F) % 5.0F, 4.2F, 0.12F, 0.1F, 0.25F);
+        this.ears[0].zRot += flick * 0.45F;
+        this.ears[1].zRot -= Anim.envelope((age * 0.05F + 2.3F) % 5.0F, 4.2F, 0.12F, 0.1F, 0.25F) * 0.45F;
+        this.tail.xRot += Mth.sin(age * 0.6F) * 0.12F * Anim.envelope((age * 0.04F + 1.0F) % 4.0F, 3.0F, 0.15F, 0.4F, 0.3F) * awake;
 
-        // --- looking about, ears twitching one at a time
-        this.head.yRot += s.yRot * Anim.DEG * 0.8F * awake;
-        this.head.xRot += s.xRot * Anim.DEG * 0.6F * awake;
-        float cycle = Mth.positiveModulo(age + s.seed * 7.0F, 110.0F);
-        this.leftEar.zRot -= Anim.envelope(cycle, 10.0F, 2.0F, 1.0F, 5.0F) * 0.35F * awake;
-        this.rightEar.zRot += Anim.envelope(cycle, 62.0F, 2.0F, 1.0F, 5.0F) * 0.35F * awake;
-        this.leftEar.xRot += Mth.sin(f - 1.6F) * 0.06F * beat;
-        this.rightEar.xRot += Mth.sin(f - 1.6F) * 0.06F * beat;
-
-        // --- the drill turns with its spin; the speakers pump
-        this.drill.zRot += s.drill;
-        float pump = Mth.clamp(s.pump, -0.3F, 1.2F);
-        this.woofer.z -= pump * 0.9F;
-        this.woofer.xScale = 1.0F + 0.06F * pump;
-        this.woofer.yScale = 1.0F + 0.06F * pump;
-        this.wooferCap.z -= pump * 0.6F;
-        this.leftTweeter.z -= pump * 0.45F;
-        this.rightTweeter.z -= pump * 0.45F;
-        this.leftTweeter.xScale = this.leftTweeter.yScale = 1.0F + 0.12F * pump;
-        this.rightTweeter.xScale = this.rightTweeter.yScale = 1.0F + 0.12F * pump;
-        for (ModelPart cone : this.cones) {
-            cone.y -= pump * 0.35F;
-            cone.yScale = 1.0F + 2.0F * Math.max(0.0F, pump);
-            cone.xScale = cone.zScale = 1.0F + 0.1F * pump;
+        // --- the skip through the air: forelegs reach out and fold, hind legs drive back, the body rides each bound
+        for (int k = 0; k < 2; k++) {
+            float p = c + k * 0.35F;
+            float reach = Mth.sin(p);
+            this.legs[k][0].xRot += (-0.2F - 0.85F * reach) * skip;
+            this.shins[k][0].xRot += (0.25F + 1.15F * Math.max(0.0F, -Mth.sin(p + 0.7F))) * skip;
+            this.hooves[k][0].xRot += 0.35F * Math.max(0.0F, -Mth.sin(p + 0.7F)) * skip;
+            float drive = Mth.sin(p - 0.45F);
+            this.legs[k][1].xRot += (0.15F + 0.75F * drive) * skip;
+            this.shins[k][1].xRot += (-0.2F - 0.8F * Math.max(0.0F, Mth.sin(p + 1.9F))) * skip;
+            this.hooves[k][1].xRot += 0.3F * Math.max(0.0F, -drive) * skip;
+        }
+        float rise = 0.5F + 0.5F * Mth.sin(c - 0.6F);
+        this.body.y -= (1.0F + 1.8F * rise) * skip;
+        this.body.xRot -= Mth.cos(c) * 0.11F * skip;
+        this.neck.xRot += (Mth.cos(c) * 0.08F - 0.08F) * skip;
+        this.head.xRot += Mth.cos(c) * 0.05F * skip;
+        this.tail.xRot -= (0.25F + 0.15F * Mth.sin(c)) * skip;
+        for (int k = 0; k < 2; k++) {
+            float sx = k == 0 ? 1.0F : -1.0F;
+            this.ears[k].yRot += sx * 0.35F * skip;
         }
 
-        // --- the cable tail streams behind and swings; the feet dangle
-        float trail = 0.35F * fly;
-        for (int i = 0; i < this.tail.length; i++) {
-            this.tail[i].yRot += Mth.sin(age * 0.09F + s.seed - i * 0.7F) * (0.18F + 0.06F * i) * awake;
-            this.tail[i].xRot -= trail * (i == 0 ? 1.0F : 0.4F);
+        // --- treading the air while it hovers
+        float t = age * 0.09F;
+        for (int k = 0; k < 2; k++) {
+            float ph = k == 0 ? 0.0F : Mth.PI;
+            this.legs[k][0].xRot += (-0.3F + Mth.sin(t + ph) * 0.3F) * hover;
+            this.shins[k][0].xRot += (0.6F + Mth.sin(t + ph + 1.2F) * 0.35F) * hover;
+            this.legs[k][1].xRot += (0.25F + Mth.sin(t + ph + Mth.HALF_PI) * 0.25F) * hover;
+            this.shins[k][1].xRot += (-0.35F - Math.max(0.0F, Mth.sin(t + ph + 2.5F)) * 0.35F) * hover;
         }
-        float dangle = Mth.sin(f - 2.0F) * 0.12F * beat;
-        this.leftFoot.xRot += (0.35F * fly + dangle) * awake;
-        this.rightFoot.xRot += (0.35F * fly + dangle) * awake;
-        this.tuft.xRot += Mth.sin(f - 2.4F) * 0.08F * beat;
+        this.body.y += (Mth.sin(t * 0.8F) * 0.8F - 0.8F) * hover;
+        this.body.xRot += Mth.sin(t * 0.8F + 1.0F) * 0.03F * hover;
 
-        // --- inspecting an offering: nose down over it, ears forward
-        float in = s.inspect;
-        if (in > 0.0F) {
-            this.body.xRot += 0.5F * in;
-            this.head.xRot += 0.35F * in;
-            this.leftEar.xRot -= 0.35F * in;
-            this.rightEar.xRot -= 0.35F * in;
+        // --- walking on the ground: a light diagonal walk
+        for (int k = 0; k < 2; k++) {
+            float ph = k == 0 ? 0.0F : Mth.PI;
+            float swing = Mth.cos(c * 1.6F + ph);
+            this.legs[k][0].xRot += swing * 0.45F * walk;
+            this.shins[k][0].xRot += Math.max(0.0F, -Mth.sin(c * 1.6F + ph)) * 0.6F * walk;
+            this.legs[k][1].xRot -= swing * 0.4F * walk;
+            this.shins[k][1].xRot -= Math.max(0.0F, Mth.sin(c * 1.6F + ph)) * 0.4F * walk;
+        }
+        this.body.y -= Math.abs(Mth.cos(c * 1.6F)) * 0.4F * walk;
+        this.neck.xRot += Mth.sin(c * 3.2F) * 0.04F * walk;
+
+        // --- standing: a weight shift now and then
+        this.body.zRot += Mth.sin(age * 0.021F) * 0.015F * stand;
+
+        // --- head look (clamped, shared between neck and head), never while asleep
+        float yaw = Mth.clamp(s.yRot, -40.0F, 40.0F) * Anim.DEG * awake;
+        float pitch = Mth.clamp(s.xRot, -25.0F, 25.0F) * Anim.DEG * awake;
+        this.neck.yRot += yaw * 0.4F;
+        this.head.yRot += yaw * 0.6F;
+        this.head.xRot += pitch * 0.6F;
+
+        // --- its song: every note opens the mouth and lifts the head
+        float v = Mth.clamp(s.voice, 0.0F, 1.2F);
+        float jawOpen = 0.45F * v;
+        this.head.xRot -= 0.12F * v;
+        this.neck.xRot -= 0.04F * v;
+
+        // --- listening: head cocked, ears forward, swaying a little
+        float ls = s.listen * awake;
+        this.head.zRot += 0.22F * ls;
+        this.neck.xRot -= 0.12F * ls;
+        this.body.zRot += Mth.sin(age * 0.07F) * 0.025F * ls;
+        for (int k = 0; k < 2; k++) {
+            float sx = k == 0 ? 1.0F : -1.0F;
+            this.ears[k].yRot -= sx * 0.4F * ls;
+            this.ears[k].zRot -= sx * 0.25F * ls;
         }
 
-        // --- waiting for the song: upright, ears tall, a slow attentive sway
-        float wt = s.wait;
-        this.body.xRot -= 0.1F * wt;
-        this.leftEar.zRot -= 0.25F * wt;
-        this.rightEar.zRot += 0.25F * wt;
-        this.head.zRot += Mth.sin(age * 0.05F) * 0.08F * wt;
-
-        // --- humming: head up, mouth open, swaying to its own beat
-        float sing = s.sing * awake;
-        if (sing > 0.0F) {
-            this.head.xRot -= 0.25F * sing;
-            this.jaw.xRot += (0.25F + 0.12F * Mth.sin(age * 0.6F)) * sing;
-            this.body.zRot += Mth.sin(age * 0.25F) * 0.08F * sing;
-            this.head.zRot += Mth.sin(age * 0.25F - 0.6F) * 0.1F * sing;
-        }
-
-        // --- the ceremony dance: twirls and barrel-rolls, wings flung wide, the tail whipping
-        float d = s.dance;
+        // --- dancing: it rears in the air and paws, tossing its antlers to the beat
+        float d = s.dance * awake;
         if (d > 0.0F) {
-            float b = age * 0.4F;
-            this.body.yRot += Mth.sin(b * 0.5F) * 1.1F * d;
-            this.body.zRot += Mth.sin(b) * 0.3F * d;
-            this.body.y -= Math.abs(Mth.sin(b)) * 2.0F * d;
-            this.leftWing.zRot -= 0.25F * d;
-            this.rightWing.zRot += 0.25F * d;
-            for (int i = 0; i < this.tail.length; i++) {
-                this.tail[i].yRot += Mth.sin(b * 2.0F - i) * 0.45F * d;
+            float b = age * 0.45F;
+            this.body.xRot -= 0.3F * d;
+            this.body.y -= 1.2F * d + Math.abs(Mth.sin(b)) * 0.8F * d;
+            for (int k = 0; k < 2; k++) {
+                float ph = k == 0 ? 0.0F : Mth.PI;
+                this.legs[k][0].xRot -= (0.95F + 0.45F * Mth.sin(b + ph)) * d;
+                this.shins[k][0].xRot += (0.9F + 0.4F * Mth.sin(b + ph + 0.8F)) * d;
+                this.legs[k][1].xRot -= 0.15F * d;
             }
+            this.neck.xRot += (0.2F + Mth.sin(b) * 0.14F) * d;
+            this.head.zRot += Mth.sin(b * 0.5F) * 0.18F * d;
+            this.tail.xRot -= 0.35F * d;
+            jawOpen = Math.max(jawOpen, 0.2F * d);
         }
 
-        // --- disappointed: it sags in the air, ears and wings drooping
-        float sad = s.sad;
-        if (sad > 0.0F) {
-            this.body.y += 1.5F * sad;
-            this.head.xRot += 0.45F * sad;
-            this.head.yRot += Mth.sin(age * 0.3F) * 0.2F * sad;
-            this.leftEar.zRot += 0.55F * sad;
-            this.rightEar.zRot -= 0.55F * sad;
-            this.leftWing.zRot += 0.3F * sad;
-            this.rightWing.zRot -= 0.3F * sad;
+        // --- a nod for a visitor (1.2 s)
+        float nod = Anim.seconds(s.nod, s.ageInTicks);
+        if (nod >= 0.0F && nod < 1.2F) {
+            float e = Anim.envelope(nod, 0.0F, 0.3F, 0.2F, 0.6F);
+            this.neck.xRot += 0.3F * e;
+            this.head.xRot += 0.25F * e;
         }
 
-        // --- asleep: the wings folded round it like a cloak, head tucked, ears laid back
-        float z = s.sleep;
-        if (z > 0.0F) {
-            this.leftWing.xRot += 0.2F * z;
-            this.leftWing.yRot -= 1.1F * z;
-            this.leftWing.zRot += 1.45F * z;
-            this.rightWing.xRot += 0.2F * z;
-            this.rightWing.yRot += 1.1F * z;
-            this.rightWing.zRot -= 1.45F * z;
-            this.leftTip.yRot += 2.6F * z;
-            this.leftTip.zRot -= 0.75F * z;
-            this.rightTip.yRot -= 2.6F * z;
-            this.rightTip.zRot += 0.75F * z;
-            this.head.xRot += 0.35F * z;
-            this.leftEar.xRot += 0.3F * z;
-            this.leftEar.zRot += 0.5F * z;
-            this.rightEar.xRot += 0.3F * z;
-            this.rightEar.zRot -= 0.5F * z;
-            // and now and then an ear flicks in its sleep
-            this.leftEar.zRot += Math.max(0.0F, Mth.sin(age * 0.03F + s.seed) - 0.92F) * 3.0F * Mth.sin(age * 1.3F) * z;
-        }
-
-        // --- the bow: a little rise, then it tips forward with its wings swept ahead, and settles back
-        float bt = Anim.seconds(s.bow, age);
-        if (bt >= 0.0F && bt < 2.2F) {
-            float up = Anim.envelope(bt, 0.0F, 0.18F, 0.0F, 0.25F);
-            float bow = Anim.envelope(bt, 0.25F, 0.5F, 0.6F, 0.8F);
-            this.body.y -= 1.2F * up;
-            this.body.xRot += 0.6F * bow - 0.1F * up;
+        // --- the gift bow (3 s): a lift of the head, then down onto one knee, neck and antlers lowered to you
+        float bowT = Anim.seconds(s.bow, s.ageInTicks);
+        if (bowT >= 0.0F && bowT < 3.0F) {
+            float lift = Anim.envelope(bowT, 0.0F, 0.35F, 0.1F, 0.3F);
+            float bow = Anim.envelope(bowT, 0.45F, 0.7F, 1.1F, 0.75F);
+            this.neck.xRot -= 0.25F * lift;
+            this.body.xRot -= 0.05F * lift;
+            this.body.xRot += 0.2F * bow;
+            this.body.y += 1.6F * bow;
+            this.legs[0][0].xRot -= 0.7F * bow;
+            this.shins[0][0].xRot += 0.15F * bow;
+            this.legs[1][0].xRot -= 0.1F * bow;
+            this.shins[1][0].xRot += 1.5F * bow;
+            this.hooves[1][0].xRot += 0.5F * bow;
+            for (int k = 0; k < 2; k++) {
+                this.legs[k][1].xRot -= 0.3F * bow;
+                this.shins[k][1].xRot += 0.08F * bow;
+            }
+            this.neck.xRot += 0.42F * bow;
             this.head.xRot += 0.3F * bow;
-            this.leftWing.yRot += 0.6F * bow;
-            this.rightWing.yRot -= 0.6F * bow;
-            this.leftWing.zRot += 0.3F * bow;
-            this.rightWing.zRot -= 0.3F * bow;
+            this.tail.xRot += 0.3F * bow;
         }
+        // --- presenting: head held low, the gift floating between its antlers
+        float pr = s.present * awake;
+        this.neck.xRot += 0.32F * pr;
+        this.head.xRot += 0.22F * pr + Mth.sin(age * 0.06F) * 0.04F * pr;
+        this.body.xRot += 0.08F * pr;
+        for (int k = 0; k < 2; k++) {
+            this.legs[k][1].xRot -= 0.1F * pr;
+        }
+
+        // --- sleep: lying in the grass, legs folded under, head turned back onto its flank
+        if (sleep > 0.0F) {
+            this.body.y += 8.2F * sleep;
+            this.body.xRot *= awake;
+            for (int k = 0; k < 2; k++) {
+                float sx = k == 0 ? 1.0F : -1.0F;
+                this.legs[k][0].xRot = Mth.lerp(sleep, this.legs[k][0].xRot, 1.25F);
+                this.shins[k][0].xRot = Mth.lerp(sleep, this.shins[k][0].xRot, -2.5F);
+                this.hooves[k][0].xRot = Mth.lerp(sleep, this.hooves[k][0].xRot, 0.6F);
+                this.legs[k][1].xRot = Mth.lerp(sleep, this.legs[k][1].xRot, -1.05F);
+                this.shins[k][1].xRot = Mth.lerp(sleep, this.shins[k][1].xRot, 2.0F);
+                this.legs[k][1].zRot += sx * 0.12F * sleep;
+            }
+            this.neck.yRot += 1.0F * sleep;
+            this.neck.xRot += 0.45F * sleep + br * 0.03F * sleep;
+            this.head.xRot += 0.35F * sleep;
+            this.head.zRot += 0.35F * sleep;
+            this.ears[0].zRot += 0.3F * sleep;
+            this.ears[1].zRot -= 0.3F * sleep;
+        }
+
+        // --- hurt: a flinch that eases out (no snapping)
+        if (s.hurtTicks >= 0.0F && s.dying <= 0.0F) {
+            float h = Mth.clamp(s.hurtTicks / 10.0F, 0.0F, 1.0F);
+            float k = Mth.sin(h * Mth.PI) * (1.0F - 0.4F * h);
+            this.neck.xRot -= 0.3F * k;
+            this.head.xRot -= 0.15F * k;
+            this.body.zRot += 0.08F * k;
+            this.ears[0].zRot += 0.5F * k;
+            this.ears[1].zRot -= 0.5F * k;
+            jawOpen = Math.max(jawOpen, 0.3F * k);
+        }
+        // --- death: its legs give way and it sinks onto its side (the renderer then pops it)
+        float roll = Anim.smooth(s.dying / 14.0F);
+        if (roll > 0.0F) {
+            this.body.y += 6.0F * roll;
+            this.body.zRot += 1.1F * roll;
+            this.neck.xRot += 0.5F * roll;
+            this.head.xRot += 0.2F * roll;
+            for (int k = 0; k < 2; k++) {
+                this.shins[k][0].xRot += 0.9F * roll;
+                this.legs[k][1].xRot -= 0.4F * roll;
+            }
+            jawOpen = Math.max(jawOpen, 0.25F * roll);
+        }
+        this.jaw.xRot += jawOpen;
+
+        // --- CAVE: its song spreads the antlers and swells the star; the chimes swing behind every movement and
+        // hang plumb however far it lowers its head (bow, presenting, sleep)
+        float dip = this.neck.xRot - 0.42F + this.head.xRot + 0.17F + this.body.xRot;
+        for (int k = 0; k < 2; k++) {
+            float sx = k == 0 ? 1.0F : -1.0F;
+            this.antlers[k].zRot += sx * 0.06F * v;
+            float swing = Mth.sin(age * 0.13F + k * 2.1F) * 0.12F + Mth.sin(c - 1.2F + k) * 0.3F * skip + Mth.sin(age * 0.45F - 0.8F) * 0.25F * d;
+            this.chimes[k].zRot += swing * sx;
+            this.chimes[k].xRot += Mth.cos(age * 0.1F + k) * 0.08F - dip;
+        }
+        float swell = 1.0F + 0.3F * v + 0.05F * Mth.sin(age * 0.1F) * awake;
+        this.star.xScale = swell;
+        this.star.yScale = swell;
     }
 }

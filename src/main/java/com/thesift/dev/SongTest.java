@@ -23,7 +23,6 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -44,8 +43,9 @@ import org.jspecify.annotations.Nullable;
  *   <li>never on the wrong instrument, without its sheet, out of rhythm or in the wrong lights;</li>
  *   <li>an instrument refuses a note it cannot sound.</li>
  * </ul>
- * Then the Offering is rung on the Wind Chimes beside a waiting Echoer, which must dance - and
- * {@link #finish} checks it gave its reward.
+ * Then the Offering is rung on the Wind Chimes beside an Echoer (M3), which must bow to give a gift
+ * - {@link #finish} checks the gift rose out of its antlers - and the gift must start the player's
+ * cooldown (one gift per player every ten minutes).
  */
 final class SongTest {
     private static boolean listening;
@@ -332,7 +332,7 @@ final class SongTest {
         this.perform(player, Instrument.GUITAR, Song.LULLABY.notes(), new int[Song.LULLABY.length()], onBeat(Song.LULLABY));
         this.check.accept(!this.heard.contains(Song.LULLABY), "songs: no song without its music sheet");
 
-        // the Echoer's ceremony: it waits with an offering; the Offering on the Wind Chimes makes it dance
+        // M3 the Echoer's gift: a song played for it makes it bow and raise a gift for the player
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.WIND_CHIMES.get()));
         player.getInventory().add(new ItemStack(ModItems.MUSIC_SHEET_OFFERING.get()));
         Enchoer e = ModEntities.ENCHOER.get().create(this.sift, EntitySpawnReason.COMMAND);
@@ -342,15 +342,16 @@ final class SongTest {
         }
         e.snapTo(x + 2.5, y, z + 0.5, 90.0F, 0.0F);
         this.sift.addFreshEntity(e);
-        e.acceptOffering(new ItemStack(Items.DIAMOND));
-        this.check.accept(e.getState() == Enchoer.WAITING, "songs: the echoer waits for the offering song");
+        player.setData(com.thesift.registry.ModEchoer.NEXT_GIFT.get(), 0L);
+        this.check.accept(Enchoer.canReceiveGift(this.sift, player), "songs: a player with no gift yet may be given one");
         int[] ring = new int[Song.OFFERING.length()];
         for (int i = 0; i < ring.length; i++) {
             ring[i] = playable(Instrument.WIND_CHIMES, Song.OFFERING.note(i));
         }
         this.perform(player, Instrument.WIND_CHIMES, ring, new int[ring.length], onBeat(Song.OFFERING));
-        this.check.accept(this.heard.contains(Song.OFFERING) && e.getState() == Enchoer.DANCING,
-                "songs: the Offering on the Wind Chimes makes the waiting echoer dance (state " + e.getState() + ")");
+        this.check.accept(this.heard.contains(Song.OFFERING) && e.getState() == Enchoer.GIFTING && !e.pendingGifts().isEmpty(),
+                "songs: the Offering played for the echoer makes it come to give a gift (state " + e.getState() + ", " + e.pendingGifts() + ")");
+        this.check.accept(!Enchoer.canReceiveGift(this.sift, player), "songs: the gift starts the player's echoer cooldown");
         this.echoer = e;
         player.getInventory().clearContent();
     }
@@ -363,8 +364,8 @@ final class SongTest {
         }
         int gifts = this.sift.getEntitiesOfClass(ItemEntity.class, e.getBoundingBox().inflate(10.0), ItemEntity::isAlive).size();
         TheSift.LOGGER.info("SMOKE: echoer after the offering song: state {}, {} gifts nearby", e.getState(), gifts);
-        this.check.accept(e.getState() != Enchoer.DANCING && e.getState() != Enchoer.WAITING && gifts > 0,
-                "songs: the echoer finishes its dance and gives its reward (" + gifts + " items)");
+        this.check.accept(e.getState() != Enchoer.GIFTING && e.pendingGifts().isEmpty() && gifts > 0,
+                "songs: the echoer bows and its gift rises out of its antlers (" + gifts + " items, state " + e.getState() + ")");
         e.discard();
         active = null;
     }

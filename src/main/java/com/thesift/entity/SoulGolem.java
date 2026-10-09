@@ -47,7 +47,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * A Soul Golem: a small ancient construct of soulstone, round as a frog, lit from inside by soul
- * fire. It waddles and hops about on stubby legs.
+ * fire, a cap of moss on its head and a soul lantern hanging over it. It waddles and hops about on
+ * stubby legs.
  *
  * <ul>
  *   <li>Wild golems (around an Echoer's hearth) potter about looking for valuables: they pick up
@@ -71,8 +72,8 @@ public class SoulGolem extends PathfinderMob {
     private static final int DIG_COST = 8;
 
     public final AnimationState happyAnimation = new AnimationState();
-    /** Client-side smoothed slump (0 upright, 1 run down). */
-    public float slumpO, slump;
+    /** Client-side smoothed slump (0 upright, 1 run down), and (CAVE) how far into digging and peeking it is. */
+    public float slumpO, slump, digO, dig, peekO, peek;
 
     private java.util.@Nullable UUID owner;
     private ItemStack stash = ItemStack.EMPTY;
@@ -218,6 +219,10 @@ public class SoulGolem extends PathfinderMob {
         if (this.level().isClientSide()) {
             this.slumpO = this.slump;
             this.slump = Mth.clamp(this.slump + (this.isSlumped() ? 0.06F : -0.1F), 0.0F, 1.0F);
+            this.digO = this.dig;
+            this.peekO = this.peek;
+            this.dig = Mth.clamp(this.dig + (this.getMode() == DIGGING ? 0.12F : -0.08F), 0.0F, 1.0F);
+            this.peek = Mth.clamp(this.peek + (this.getMode() == PEEKING ? 0.08F : -0.08F), 0.0F, 1.0F);
             if (!this.isSlumped() && this.random.nextInt(14) == 0) {
                 this.level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, this.getX(), this.getY() + 1.0, this.getZ(), 0, 0.01, 0);
             }

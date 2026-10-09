@@ -47,6 +47,8 @@ public class Nib extends PathfinderMob {
     private int stateTime;
     private int restTime;
     private final float phase;
+    /** Client: how far it has settled on a flower, and into its swirl (smoothed, for the model). */
+    public float restO, rest, swirlO, swirl;
 
     public Nib(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -129,8 +131,13 @@ public class Nib extends PathfinderMob {
             v = v.normalize().scale(max);
         }
         this.setDeltaMovement(v);
-        this.setYRot((float) (Mth.atan2(v.z, v.x) * Mth.RAD_TO_DEG) - 90.0F);
+        // M3: turn smoothly towards where it flies (it used to snap round and spin on the spot when nearly still)
+        if (v.horizontalDistanceSqr() > 1.0E-4) {
+            float want = (float) (Mth.atan2(v.z, v.x) * Mth.RAD_TO_DEG) - 90.0F;
+            this.setYRot(Mth.approachDegrees(this.getYRot(), want, 15.0F));
+        }
         this.yBodyRot = this.getYRot();
+        this.yHeadRot = this.getYRot();
     }
 
     private Vec3 pickTarget(ServerLevel level) {
@@ -203,6 +210,10 @@ public class Nib extends PathfinderMob {
     public void aiStep() {
         super.aiStep();
         if (this.level().isClientSide()) {
+            this.restO = this.rest;
+            this.swirlO = this.swirl;
+            this.rest = Mth.clamp(this.rest + (this.getState() == RESTING ? 0.1F : -0.15F), 0.0F, 1.0F);
+            this.swirl = Mth.clamp(this.swirl + (this.getState() == SWIRLING ? 0.1F : -0.1F), 0.0F, 1.0F);
             // a trail of sparkles
             if (this.random.nextInt(this.getState() == RESTING ? 12 : 3) == 0) {
                 this.level().addParticle(ModParticles.GLOW_DUST.get(), this.getX(), this.getY() + 0.1, this.getZ(), 0, -0.005, 0);

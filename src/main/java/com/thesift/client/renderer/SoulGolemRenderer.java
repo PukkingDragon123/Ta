@@ -47,6 +47,8 @@ public class SoulGolemRenderer extends SiftMobRenderer<SoulGolem, SoulGolemRende
         state.energy = entity.getEnergy() / (float) SoulGolem.MAX_ENERGY;
         state.slump = Mth.lerp(partialTicks, entity.slumpO, entity.slump);
         state.mode = entity.getMode();
+        state.dig = Mth.lerp(partialTicks, entity.digO, entity.dig);   // CAVE
+        state.peek = Mth.lerp(partialTicks, entity.peekO, entity.peek);
         state.happy.copyFrom(entity.happyAnimation);
         state.seed = (entity.getId() * 13) % 97;
     }

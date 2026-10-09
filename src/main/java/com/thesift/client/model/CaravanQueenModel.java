@@ -97,8 +97,9 @@ public class CaravanQueenModel extends EntityModel<CaravanQueenRenderState> {
         float roll = Mth.sin(pos) * 0.06F * walk;
         this.body.zRot = roll;
         this.body.y -= Math.abs(Mth.sin(pos)) * 0.7F * walk;
-        this.shell.zRot = Mth.sin(pos - 0.9F) * 0.07F * walk;
-        this.shell.xRot = Mth.cos(pos * 2.0F - 0.6F) * 0.025F * walk;
+        // CAVE: added to the shell's rest tilt (assigning them levelled the shell, which is set tipped back on her back)
+        this.shell.zRot += Mth.sin(pos - 0.9F) * 0.07F * walk;
+        this.shell.xRot += Mth.cos(pos * 2.0F - 0.6F) * 0.025F * walk;
         for (int k = 0; k < 2; k++) {
             this.arms[k].xRot += Mth.sin(pos + k * Mth.PI) * 0.1F * walk;
         }

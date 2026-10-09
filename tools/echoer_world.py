@@ -127,32 +127,14 @@ def item_sprites():
     dust = [r[:16].ljust(16, '.') for r in dust]
     dpal = {'p': ('#d98ac9', '#5a2a55'), 'Y': ('#ffe7a0', '#5a2a55'), 'y': ('#ffd36b', '#5a2a55'), 'W': '#ffffff',
             'S': '#fff3b0', 's': '#ffb8ea'}
+    import echoer as E
     out = {
+        'enchoer_spawn_egg': E.echoer_egg(),  # M3: the deer spirit's egg (replaces items16's)
         'soul_golem_core': I.grid(core, pal, ol=False),
         'nib_dust': I.grid(dust, dpal, ol=True, no_ol='SWs'),
-        # the Soul Golem: two glowing eye domes and its lamp stalk on a soulstone egg
-        'soul_golem_spawn_egg': I.egg(['#3a2f27', '#4b3e34', '#6c5a4b', '#87725f'], '#1a1410', {
-            0: '.......l........',
-            1: '......lLl.......',
-            2: '.......s........',
-            4: '....EEE..EEE....',
-            5: '....EeE..EeE....',
-            8: '.....mmmmmm.....',
-            11: '....c.....c.....',
-            12: '.....c...c......',
-        }, {'l': '#7ff3ff', 'L': '#d6fdff', 's': '#3a2f27', 'E': '#a9faff', 'e': '#ffffff', 'm': '#1a1410', 'c': '#5fe9ff'},
-            no_ol='c'),
-        # the Nib: a little glowing body with two wing-pairs spread across a twilight egg
-        'nib_spawn_egg': I.egg(['#3b4aa0', '#5566c0', '#7a8ce0', '#a0b4f4'], '#141a40', {
-            3: '..WW........WW..',
-            4: '.WvWW......WWvW.',
-            5: '.WWvWW.bb.WWvWW.',
-            6: '..WWvW.bb.WvWW..',
-            7: '...WWW.bb.WWW...',
-            8: '....ww.bb.ww....',
-            9: '...wsw....wsw...',
-            10: '....ww....ww....',
-        }, {'W': '#9ff4ff', 'v': '#ffffff', 'w': '#62c9f0', 's': '#ff9be3', 'b': '#fff3b0'}),
+        # M3: the clawed mole golem and the meadow wisp, in vanilla's per-mob egg style (tools/echoer.py)
+        'soul_golem_spawn_egg': E.golem_egg(),
+        'nib_spawn_egg': E.nib_egg(),
     }
     return out
 
@@ -160,27 +142,50 @@ def item_sprites():
 # ============================================================================ data
 
 
+def _gifts():
+    """M3: what an Echoer gives for each song (vanilla treasures and the Sift's own, in the song's spirit)."""
+    import gen_data as D
+    i = D.item
+    return {
+        'offering': [i('skysong_gem', 2), i('soul_golem_core', 4), i('minecraft:diamond', 6, count=(1, 2)), i('star_shard', 8, count=(2, 4)),
+                     i('minecraft:emerald', 6, count=(3, 6))],
+        'nib': [i('nib_dust', 10, count=(3, 6)), i('minecraft:gold_ingot', 6, count=(2, 4)), i('minecraft:glow_berries', 4, count=(4, 8)),
+                i('minecraft:amethyst_shard', 6, count=(3, 6)), i('music_sheet_nib', 2)],
+        'golem': [i('soul_golem_core', 4), i('soul_dust', 8, count=(3, 6)), i('minecraft:lapis_lazuli', 6, count=(6, 12)),
+                  i('minecraft:copper_ingot', 4, count=(6, 10)), i('music_sheet_golem', 2)],
+        'crystal': [i('prism_gem', 8, count=(1, 3)), i('minecraft:amethyst_shard', 6, count=(4, 8)), i('minecraft:diamond', 4),
+                    i('minecraft:quartz', 4, count=(6, 12)), i('music_sheet_crystal', 2)],
+        'whale': [i('chrome_pearl', 8, count=(2, 4)), i('minecraft:nautilus_shell', 6, count=(1, 2)), i('minecraft:prismarine_crystals', 6, count=(4, 8)),
+                  i('minecraft:heart_of_the_sea', 1), i('music_sheet_whale', 2)],
+        'lullaby': [i('music_disc_lullaby', 3), i('swifter_fluff', 6, count=(2, 4)), i('minecraft:phantom_membrane', 4, count=(1, 3)),
+                    i('minecraft:emerald', 6, count=(3, 6)), i('music_sheet_lullaby', 2)],
+        'aurora': [i('prism_gem', 6, count=(1, 2)), i('star_shard', 8, count=(2, 5)), i('minecraft:glowstone_dust', 4, count=(8, 16)),
+                   i('minecraft:firework_rocket', 4, count=(4, 8)), i('minecraft:diamond', 3)],
+        'heartbeat': [i('minecraft:golden_apple', 6), i('minecraft:blaze_rod', 4, count=(2, 4)), i('minecraft:experience_bottle', 6, count=(4, 8)),
+                      i('minecraft:emerald', 6, count=(3, 6))],
+        'dolphin': [i('minecraft:heart_of_the_sea', 2), i('minecraft:nautilus_shell', 6, count=(1, 3)), i('chrome_pearl', 8, count=(2, 4)),
+                    i('minecraft:trident', 1), i('minecraft:prismarine_crystals', 5, count=(4, 8))],
+        'canon': [i('minecraft:experience_bottle', 8, count=(6, 12)), i('minecraft:lapis_lazuli', 6, count=(8, 16)), i('minecraft:diamond', 4),
+                  i('minecraft:amethyst_shard', 4, count=(4, 8))],
+        'requiem': [i('minecraft:echo_shard', 8, count=(1, 3)), i('minecraft:disc_fragment_5', 6, count=(1, 2)),
+                    i('minecraft:recovery_compass', 2), i('sculkite', 6, count=(1, 2)), i('minecraft:sculk_catalyst', 3)],
+    }
+
+
 def generate(GA):
+    ECHOER_GIFTS = _gifts()
     import gen_data as D
     tag, rl = GA.tag, GA.rl
-    # --- the Echoer's offerings (the prism gem comes from the Caravans' cavern, if it is there)
-    for i in ('siftite_ingot', 'siftite_dust'):
-        tag('item', f'{NS}:echoer_offerings', rl(i))
-    tag('item', f'{NS}:echoer_offerings', {'id': f'{NS}:prism_gem', 'required': False})
-
-    book = D.item('minecraft:book', 8, extra=[D.ENCHANT])
-    sheets = [D.item(f'music_sheet_{s}', 3) for s in ('nib', 'golem', 'crystal', 'whale', 'lullaby')]
-    D.table('gift', 'gameplay/echoer_reward', [D.pool(sheets + [
-        book,
-        D.item('minecraft:diamond', 6, count=(1, 2)),
-        D.item('minecraft:emerald', 8, count=(2, 5)),
-        D.item('star_shard', 8, count=(1, 3)),
-        D.item('chrome_pearl', 6, count=(2, 4)),
-        D.item('skysong_gem', 2),
-        D.item('minecraft:amethyst_shard', 5, count=(3, 6)),
-        D.item('soul_golem_core', 3),
-        D.item('echoer_device', 1),
-    ])])
+    # --- M3: the Echoer's gifts. Every song has its own (thesift:gameplay/echoer_gift/<song>), and one gift in twenty
+    # brings something truly rare along with it; the Echoer gives each player one gift every ten minutes (Enchoer.java)
+    book = D.item('minecraft:book', 4, extra=[D.ENCHANT])
+    D.table('gift', 'gameplay/echoer_gift/rare', [D.pool([
+        D.item('minecraft:enchanted_golden_apple', 2), D.item('minecraft:totem_of_undying', 2), D.item('minecraft:heart_of_the_sea', 2),
+        D.item('minecraft:music_disc_otherside', 2), D.item('minecraft:music_disc_relic', 2), D.item('skysong_gem', 3),
+        D.item('echoer_device', 2), D.item('minecraft:netherite_scrap', 2)])])
+    rare = {'type': 'minecraft:loot_table', 'value': f'{NS}:gameplay/echoer_gift/rare', 'weight': 1}
+    for song, entries in ECHOER_GIFTS.items():
+        D.table('gift', f'gameplay/echoer_gift/{song}', [D.pool(entries + [book]), D.pool([rare], condition=D.chance(0.05))])
     D.table('gift', 'gameplay/soul_golem_dig', [D.pool([
         D.item('minecraft:gold_nugget', 10, count=(2, 5)), D.item('minecraft:lapis_lazuli', 8, count=(2, 4)),
         D.item('minecraft:amethyst_shard', 8, count=(1, 3)), D.item('minecraft:quartz', 6, count=(1, 3)),
@@ -206,12 +211,12 @@ def lang():
     for e, n in (('soul_golem', 'Soul Golem'), ('nib', 'Nib')):
         L[f'entity.{NS}.{e}'] = n
     L.update({
-        f'message.{NS}.echoer.waiting': 'The Echoer tucks your offering away and waits, its chimes stirring... ring The Offering on Wind Chimes.',  # C4
+        f'message.{NS}.echoer.no_gift': 'The Echoer dances to your song, but has no gift for you yet.',  # M3
         f'message.{NS}.soul_golem.energy': 'Soul energy: %s%%',
         f'message.{NS}.soul_golem.slumped': 'Your Soul Golem has run down. Play it some music - the Golem Hymn fills it up.',
         f'message.{NS}.soul_golem_core.needs_soil': 'The core needs a body: use it on a block of soul soil.',
-        f'codex.{NS}.enchoer.title': 'Echoer', f'codex.{NS}.enchoer.tagline': 'The singing speaker-bat',  # CR1 Echoer
-        f'codex.{NS}.enchoer.body': 'A flying speaker-bat: woofer chest, tweeter ears, a brass drill snout that whirrs when it sings. It pings about with echolocation rings and takes offerings, not trades: drop a Siftite or Serbim ingot or Prism Gem by it, then play The Offering on Wind Chimes. It dances and gives something precious - no song, and you get the gift back.',
+        f'codex.{NS}.enchoer.title': 'Echoer', f'codex.{NS}.enchoer.tagline': 'The deer spirit that sings',  # M3 Echoer
+        f'codex.{NS}.enchoer.body': 'A deer spirit of the meadows with great pale antlers whose tines glow as it sings - and it sings all the time, so you hear one long before you see it, skipping through the air on glints of light. Play near it and it stops to listen. Finish a song and it comes to you, bows its antlers, and a gift rises out of them for you to take: each song has gifts of its own, and once in a while something truly rare comes with it. An Echoer gives each player one gift every ten minutes; until then it only dances to your songs.',
         f'codex.{NS}.soul_golem.title': 'Soul Golem', f'codex.{NS}.soul_golem.tagline': 'A little digger of the old days',
         f'codex.{NS}.soul_golem.body': 'Round soulstone constructs with lamp-lit eyes that keep house for Echoers at their pale hearths in the meadows, picking up anything shiny and peering at suspicious blocks. Use one empty-handed to be shown its find. Set a Soul Golem Core into soul soil to build your own: it follows you and sifts the ground nearby, now and then turning up a gem. It runs on soul energy, which drains as it works; at zero it slumps. Any music recharges it a little - the Golem Hymn completely.',
         f'codex.{NS}.nib.title': 'Nibs', f'codex.{NS}.nib.tagline': 'Wisps of the flower meadows',

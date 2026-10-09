@@ -335,29 +335,11 @@ def items():
     o = {'prism_gem': prism_gem(), 'caravan_pincer': caravan_pincer()}
     for p in ARMOR:
         o[f'prism_{p}'] = _prism_armor(p)
-    # CR2: a gem-crusted crab shell, small dark eyes on stalks, claws out to the sides
-    o['caravan_spawn_egg'] = I.egg(['#1c3438', '#28525a', '#3a7476', '#5a9a98'], '#0c1c1e', {
-        1: '......k..k......', 2: '.....kKk.Kk.....', 3: '......KK.K......', 7: '....Ee....eE....', 8: '....ss....ss....'},
-        pal={'k': ('#bafff4', '#1aa89a'), 'K': ('#4ff0dc', '#1aa89a'), 'e': '#4ff0dc', 'E': '#140c1c', 's': '#152e32', 'c': '#28525a',
-             'C': '#3a7476'},
-        under={9: '.cC..........Cc.', 10: '..c..........c..'}, no_ol='')
-    o['caravan_spawn_egg'].putpixel((7, 4), (255, 255, 255, 255))
-    # the Queen side on: a block of grey stone shell with the spiral worn into it and amber gems crusting the
-    # top; her brown body leans out of its mouth, a small dark eye on a stalk, the big claw low in front,
-    # the soft belly sagging under the shell and long legs out below
-    o['caravan_queen_spawn_egg'] = I.egg(['#544c49', '#6a625e', '#7a716c', '#958b84'], '#2a2422', {
-        0: '.........k......', 1: '.......k.kK..k..', 2: '......KK.KK.KK..', 3: '.......l........', 4: '......ddd.l.....',
-        5: '..E..d...d......', 6: '..s..d.dd.d.....', 7: '..s.nd.d..d.....', 8: '.bbbnhd..d......', 9: 'bbbbnh.dd....l..',
-        10: 'CCbbnnn.........', 11: 'CcCLppppppppL...', 12: '.CL.Lpppppp.L...', 13: '..L..L....L..L..', 14: '.L...L.....L..L.'},
-        pal={'k': ('#ffe08a', '#c0681a'), 'K': ('#ffb43a', '#c0681a'), 'd': '#4a4240', 'l': '#a59b94', 'n': ('#bfa8b0', '#5a4a50'),
-             'h': '#2a2024', 'E': '#140c08', 's': ('#4a3020', '#2a1a10'), 'b': ('#6a452e', '#2a1a10'), 'p': ('#b08a7a', '#5a3a30'),
-             'L': ('#6a452e', '#2a1a10'), 'C': ('#7a5236', '#2a1a10'), 'c': ('#e3ddcc', '#2a1a10')}, no_ol='kK')
-    # the larva: a brown grub of shelled segments with amber crust between them, a small dark eye and a gem nub
-    o['caravan_larva_spawn_egg'] = I.egg(['#4a2e1a', '#6a4428', '#8a5a36', '#a87448'], '#22140a', {
-        4: '.......k........', 5: '......kK..k.....', 6: '..mhhhhhhhhKh...', 7: '.mhEhHhHhHhHh...', 8: '..mhhhhhhhhhhh..',
-        9: '...l.l.l.l.l.l..'},
-        pal={'k': ('#ffe08a', '#c0681a'), 'K': ('#ffb43a', '#c0681a'), 'h': ('#7a5030', '#2a180a'), 'H': ('#c8741e', '#2a180a'),
-             'E': '#140c08', 'm': '#e3ddcc', 'l': '#2a180a'}, no_ol='kK')
+    # CAVE: the three Caravans' eggs in vanilla's per-mob style (drawn in tools/echoer.py with the Echoer's)
+    import echoer as E
+    o['caravan_spawn_egg'] = E.caravan_egg()
+    o['caravan_queen_spawn_egg'] = E.caravan_queen_egg()
+    o['caravan_larva_spawn_egg'] = E.caravan_larva_egg()
     return o
 
 
@@ -731,7 +713,10 @@ def _crab_palettes(prefix):
             'leg': _hexs(_mix(shd, sh, 0.5)), 'leg_l': sh, 'leg_d': _hexs(_mix(shd, '#000000', 0.3)),
             'claw_tip': _hexs(_mix(belly, crl, 0.35)), 'eye': cr, 'eye_l': crl, 'pupil': '#140c1c', 'eye_hi': '#ffffff',
             'sac': _hexs(_mix(crd, belly, 0.35)), 'sac_l': _hexs(_mix(cr, '#ffffff', 0.25)), 'sac_d': _hexs(_mix(crd, shd, 0.45)),
-            'rune': cr}
+            'rune': cr,
+            # CAVE: carapace mottling and grooves, leg joint seams and pale knee bands
+            'shell_m': _hexs(_mix(sh, shl, 0.5)), 'shell_n': _hexs(_mix(sh, shd, 0.55)), 'groove': _hexs(_mix(shd, '#000000', 0.25)),
+            'band': _hexs(_mix(belly, sh, 0.35))}
     return variants
 
 
@@ -748,6 +733,54 @@ def _crust(w, h, seed, density=0.2, lit=0.35):
         if on and y > 0:
             g[y - 1][x] = 'w'  # a glint on the top facet
     return [''.join(r) for r in g]
+
+
+def _q(v):
+    """CAVE: a size on the half-unit grid (the models use exact UVs, see modelkit Cube.faces)."""
+    return max(0.5, round(v * 2) / 2)
+
+
+def _carapace(w, h, seed, crust=0.1):
+    """CAVE: a crab's carapace from above (hd map): the H-shaped grooves of the plates (g), a groove down the
+    middle, mottled light and dark patches (m / n) and gem grit grown into it (k K w)."""
+    rnd = random.Random(seed)
+    cx, cy = (w - 1) / 2.0, (h - 1) / 2.0
+    g = [['.'] * w for _ in range(h)]
+    for _ in range(int(w * h * 0.05)):
+        x, y = rnd.randrange(w), rnd.randrange(h)
+        t = 'm' if rnd.random() < 0.5 else 'n'
+        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1))[:rnd.randrange(1, 5)]:
+            if x + dx < w and y + dy < h:
+                g[y + dy][x + dx] = t
+    for y in range(h):
+        for x in range(w):
+            u, v = (x - cx) / (w / 2.0), (y - cy) / (h / 2.0)
+            if abs(u) < 0.08 and abs(v) < 0.55:
+                g[y][x] = 'g'
+            elif abs(abs(u) - (0.42 + 0.12 * v * v)) < 0.06 and abs(v) < 0.7:
+                g[y][x] = 'g'
+            elif abs(v + 0.05) < 0.06 and abs(u) < 0.4:
+                g[y][x] = 'g'
+    return overlay_rows([''.join(r) for r in g], _crust(w, h, seed + 1, crust))
+
+
+def _leg_map(w, h, mirror=False):
+    """CAVE: a jointed leg's long face (hd map, columns along the leg from its root): dark seams at the
+    joints (j), a pale band before the knee (p) and a row of little dark spines along its top (k)."""
+    def px(x, y):
+        if x in (0, w - 1):
+            return 'j'
+        if w - 4 <= x <= w - 3:
+            return 'p'
+        if y == 0 and x % 3 == 1:
+            return 'k'
+        return '.'
+    rows = [''.join(px(x, y) for x in range(w)) for y in range(h)]
+    return [r[::-1] for r in rows] if mirror else rows
+
+
+LEG_KEYS = {'j': 'groove', 'p': 'band', 'k': 'shell_d'}
+CARAPACE_KEYS = {'g': 'groove', 'm': 'shell_m', 'n': 'shell_n', 'k': 'crystal_d', 'K': 'crystal', 'w': 'crystal_l'}
 
 
 def _dots(w, h, step, row, phase=0):
@@ -816,22 +849,30 @@ def _pincer_teeth(w, h):
 def _claw(body, side, sx, pivot, rot, s, crystal_armour):
     """A claw on its arm: palm and fixed finger, the hinged pincer, and (soldiers, Queens) crystal knuckles.
     `s` scales the whole limb."""
+    q = _q  # CAVE: every size on the half-unit grid (exact UVs)
     arm = body.part(f'{side}_arm', pivot=pivot, rot=rot)
-    arm.cube((-0.7 * s, -0.7 * s, -3.4 * s), (1.4 * s, 1.4 * s, 3.4 * s), **_mc('shell', clusters=0.2, rim=False))
+    aw = q(1.4 * s)
+    arm.cube((-aw / 2, -aw / 2, -q(3.4 * s)), (aw, aw, q(3.4 * s)), **_mc('shell', clusters=0.2, rim=False), faces={
+        'up': _mc('shell', clusters=0.2, rim=False, hd=True, map=_leg_map(int(aw * 2), int(q(3.4 * s) * 2)), keys=LEG_KEYS)})
     claw = arm.part(f'{side}_claw', pivot=(0, 0, -3.2 * s), rot=(-0.15, 1.0 * sx, 0))
-    claw.cube((-1.25 * s, -1.35 * s, -3.0 * s), (2.5 * s, 2.7 * s, 3.0 * s), **_mc('shell', clusters=0.3, spots=0.3, accent='shell_l'), faces={
-        'up': _mc('shell_l', clusters=0.2, hd=True, map=_crust(math.ceil(2.5 * s) * 2, math.ceil(3.0 * s) * 2, 11 + int(s * 3), 0.25),
-                  keys=CRUST_KEYS, glow_keys='Kw'),
+    cw, ch, cd = q(2.5 * s), q(2.7 * s), q(3.0 * s)
+    claw.cube((-cw / 2, -ch / 2, -cd), (cw, ch, cd), **_mc('shell', clusters=0.3, spots=0.3, accent='shell_l'), faces={
+        'up': _mc('shell_l', clusters=0.2, hd=True, map=_carapace(int(cw * 2), int(cd * 2), 11 + int(s * 3), 0.2),
+                  keys=CARAPACE_KEYS, glow_keys='Kw'),
+        'east': _mc('shell', clusters=0.2, hd=True, map=_crust(int(cd * 2), int(ch * 2), 21 + int(s), 0.08), keys=CRUST_KEYS, glow_keys='Kw'),
+        'west': _mc('shell', clusters=0.2, hd=True, map=_crust(int(cd * 2), int(ch * 2), 31 + int(s), 0.08), keys=CRUST_KEYS, glow_keys='Kw'),
         'down': _mc('belly_d', clusters=0.2)})
     # the fixed finger, pale at the tip, with a row of teeth along its biting edge
-    claw.cube((-0.75 * s, 0.1 * s, -5.3 * s), (1.35 * s, 1.15 * s, 2.4 * s), **_mc('shell_d', clusters=0.1, rim=False), faces={
+    fw, fh, fd = q(1.35 * s), q(1.15 * s), q(2.4 * s)
+    claw.cube((-0.75 * s, 0.1 * s, -cd - fd + 0.6 * s), (fw, fh, fd), **_mc('shell_d', clusters=0.1, rim=False), faces={
         'north': _mc('claw_tip', clusters=0.0, rim=False),
-        'up': _mc('shell_d', clusters=0.0, rim=False, hd=True, map=_pincer_teeth(int(math.ceil(1.35 * s)) * 2, int(math.ceil(2.4 * s)) * 2)[::-1],
+        'up': _mc('shell_d', clusters=0.0, rim=False, hd=True, map=_pincer_teeth(int(fw * 2), int(fd * 2))[::-1],
                   keys={'t': 'claw_tip'})})
-    pincer = claw.part(f'{side}_pincer', pivot=(0, -0.55 * s, -3.0 * s), rot=(-0.2, 0, 0))
-    pincer.cube((-0.6 * s, -0.5 * s, -2.5 * s), (1.2 * s, 0.95 * s, 2.5 * s), **_mc('shell_d', clusters=0.1, rim=False), faces={
+    pincer = claw.part(f'{side}_pincer', pivot=(0, -0.55 * s, -cd), rot=(-0.2, 0, 0))
+    pw, ph, pd = q(1.2 * s), q(0.95 * s), q(2.5 * s)
+    pincer.cube((-pw / 2, -ph / 2, -pd), (pw, ph, pd), **_mc('shell_d', clusters=0.1, rim=False), faces={
         'north': _mc('claw_tip', clusters=0.0, rim=False),
-        'down': _mc('shell_d', clusters=0.0, rim=False, hd=True, map=_pincer_teeth(int(math.ceil(1.2 * s)) * 2, int(math.ceil(2.5 * s)) * 2),
+        'down': _mc('shell_d', clusters=0.0, rim=False, hd=True, map=_pincer_teeth(int(pw * 2), int(pd * 2)),
                     keys={'t': 'claw_tip'})})
     if crystal_armour:
         knuckles = claw.part(f'{side}_claw_crystal', pivot=(0, -1.35 * s, -1.4 * s))
@@ -849,11 +890,17 @@ def _crab_legs(body, pivot_x, pivot_y, body_y, zs, l1, t1, l2, t2, a1=-0.38, spr
             spread = spreads[i]
             bend = _leg_bend(body_y + pivot_y, l1, a1, spread, l2 + t2 * 0.6)
             leg = body.part(f'{side}_leg_{i}', pivot=(pivot_x * sx, pivot_y, z), rot=(0, spread * sx, a1 * sx))
+            # CAVE: banded, spined joints (maps along the leg; exact UVs)
+            m1, m2 = _leg_map(int(l1 * 2), int(t1 * 2), sx < 0), _leg_map(int(l2 * 2), int(t2 * 2), sx < 0)
             leg.cube((0 if sx > 0 else -l1, -t1 / 2, -t1 / 2), (l1, t1, t1), **_mc('shell', clusters=0.25, rim=False), faces={
-                'up': _mc('shell_l', clusters=0.3, rim=False)})
+                'up': _mc('shell_l', clusters=0.3, rim=False, hd=True, map=m1, keys=LEG_KEYS),
+                'north': _mc('shell', clusters=0.2, rim=False, hd=True, map=m1, keys=LEG_KEYS),
+                'south': _mc('shell', clusters=0.2, rim=False, hd=True, map=[r[::-1] for r in m1], keys=LEG_KEYS)})
             shin = leg.part(f'{side}_shin_{i}', pivot=(l1 * sx, 0, 0), rot=(0, 0, bend * sx))
             shin.cube((0 if sx > 0 else -l2, -t2 / 2, -t2 / 2), (l2, t2, t2), **_mc('leg', clusters=0.15, rim=False), faces={
-                'up': _mc('leg_l', clusters=0.2, rim=False)})
+                'up': _mc('leg_l', clusters=0.2, rim=False, hd=True, map=m2, keys=LEG_KEYS),
+                'north': _mc('leg', clusters=0.15, rim=False, hd=True, map=m2, keys=LEG_KEYS),
+                'south': _mc('leg', clusters=0.15, rim=False, hd=True, map=[r[::-1] for r in m2], keys=LEG_KEYS)})
             tt = t2 * 0.8
             shin.cube((l2 if sx > 0 else -l2 - t2 * 1.2, -tt / 2, -tt / 2), (t2 * 1.2, tt, tt), color='crystal', pattern='crystal', glow=True)
             legs.append(leg)
@@ -868,11 +915,17 @@ def caravan():
     variants = _crab_palettes('caravan')
     m = Model('caravan', (64, 64), dict(variants['caravan_amber']), variants, res=2,
               materials={'leg': 'chitin', 'claw_tip': 'chitin', 'belly': 'chitin'})
+    m.exact_uv = True  # CAVE: the game's float box UVs (see modelkit Cube.faces)
     body = m.part('body', pivot=(0, 19, 0))
     mottled = _mc('shell', clusters=0.35, spots=0.3, accent='shell_l')
+    face = ['....................', '.n..n..........n..n.', '....................', '.....gggggggggg.....', '......g......g......',
+            '.......gggggg.......', '....................']
     body.cube((-5, -2.5, -4), (10, 3.5, 8), **mottled, faces={
-        'up': _mc('shell', clusters=0.3, hd=True, map=_crust(20, 16, 3), keys=CRUST_KEYS, glow_keys='Kw'),
-        'north': _mc('shell_d', clusters=0.3, spots=0.2, accent='shell'), 'down': _mc('belly', clusters=0.2)})
+        'up': _mc('shell', clusters=0.3, hd=True, map=_carapace(20, 16, 3, 0.12), keys=CARAPACE_KEYS, glow_keys='Kw'),
+        'east': _mc('shell', clusters=0.3, hd=True, map=_carapace(16, 7, 13, 0.05), keys=CARAPACE_KEYS, glow_keys='Kw'),
+        'west': _mc('shell', clusters=0.3, hd=True, map=_carapace(16, 7, 14, 0.05), keys=CARAPACE_KEYS, glow_keys='Kw'),
+        'north': _mc('shell_d', clusters=0.3, spots=0.2, accent='shell', hd=True, map=face, keys=CARAPACE_KEYS),
+        'down': _mc('belly', clusters=0.2, hd=True, map=[('j' if y % 4 == 3 else '.') * 20 for y in range(16)], keys=LEG_KEYS)})
     # the flared rim of the shell, pores glowing along its edge
     pores = _mc('shell_d', clusters=0.15, hd=True, map=_dots(14, 4, 3, 1), keys={'g': 'crystal'}, glow_keys='g')
     body.cube((-6, -1, -3.5), (12, 1.5, 7), **_mc('shell_d', clusters=0.2), faces={
@@ -881,8 +934,10 @@ def caravan():
         'up': _mc('shell', clusters=0.3, hd=True, map=_crust(24, 14, 4, 0.12), keys=CRUST_KEYS, glow_keys='Kw'),
         'down': _mc('belly_d', clusters=0.2)})
     body.cube((-4, -3.5, -3), (8, 1, 6), **mottled, faces={
-        'up': _mc('shell_l', clusters=0.3, hd=True, map=_crust(16, 12, 5, 0.25), keys=CRUST_KEYS, glow_keys='Kw')})
-    body.cube((-3.5, -2, -5), (7, 2, 1), **_mc('shell_d', clusters=0.2))      # the brow over the mouth
+        'up': _mc('shell_l', clusters=0.3, hd=True, map=_carapace(16, 12, 5, 0.25), keys=CARAPACE_KEYS, glow_keys='Kw')})
+    body.cube((-3.5, -2, -5), (7, 2, 1), **_mc('shell_d', clusters=0.2), faces={    # the brow over the mouth
+        'north': _mc('shell_d', clusters=0.2, hd=True, map=['..............', '.k.k.k..k.k.k.', '..............', '..............'],
+                     keys=CRUST_KEYS, glow_keys='k')})
     body.cube((-3.5, -2, 4), (7, 2.5, 1), **_mc('shell_d', clusters=0.2))     # the tail plate
     body.cube((-4, 1, -3), (8, 1, 6.5), **_mc('belly', clusters=0.25))        # the belly plate
     # the gem crust: seven gems, the biggest in the middle
@@ -893,18 +948,19 @@ def caravan():
         _gem(body, f'gem_{i}', (x, y, z), (rx, 0, rz), w, h)
     for side, sx in (('left', 1), ('right', -1)):
         stalk = body.part(f'{side}_eye_stalk', pivot=(1.6 * sx, -2.2, -4.4), rot=(-0.2, 0, 0.18 * sx))
-        stalk.cube((-0.35, -2.6, -0.35), (0.7, 2.6, 0.7), **_mc('shell_d', clusters=0.0, rim=False))
+        stalk.cube((-0.5, -2.5, -0.5), (1, 2.5, 1), **_mc('shell', clusters=0.0, rim=False), faces={
+            'north': _mc('shell', clusters=0.0, rim=False, hd=True, map=['..', 'jj', '..', 'pp', '..'], keys=LEG_KEYS)})
         _crab_eye(stalk, f'{side}_eye', 1.0)
         # feelers that tap along in the caravan's music, with a glowing bead at the tip
         feeler = body.part(f'{side}_feeler', pivot=(0.6 * sx, -1.4, -5), rot=(-0.75, -0.35 * sx, 0))
-        feeler.cube((-0.2, -0.2, -3.5), (0.4, 0.4, 3.5), **_mc('shell_l', clusters=0.0, rim=False))
+        feeler.cube((-0.25, -0.25, -3.5), (0.5, 0.5, 3.5), **_mc('shell_l', clusters=0.0, rim=False))
         ftip = feeler.part(f'{side}_feeler_tip', pivot=(0, 0, -3.5), rot=(0.95, 0, 0))
-        ftip.cube((-0.15, -0.15, -3), (0.3, 0.3, 3), **_mc('shell_l', clusters=0.0, rim=False))
-        ftip.cube((-0.45, -0.45, -3.8), (0.9, 0.9, 0.9), color='crystal_l', pattern='crystal', glow=True)
+        ftip.cube((-0.25, -0.25, -3), (0.5, 0.5, 3), **_mc('band', clusters=0.0, rim=False))
+        ftip.cube((-0.5, -0.5, -4), (1, 1, 1), color='crystal_l', pattern='crystal', glow=True)
         mouth = body.part(f'{side}_mouthpart', pivot=(0.8 * sx, -0.3, -5), rot=(0.15, 0, 0))
-        mouth.cube((-0.6, 0, -0.4), (1.2, 1.7, 0.4), **_mc('belly_d', clusters=0.0, rim=False))
+        mouth.cube((-0.5, 0, -0.5), (1, 1.5, 0.5), **_mc('belly_d', clusters=0.0, rim=False))
         _claw(body, side, sx, (4.2 * sx, 0.3, -3.2), (0.25, -0.6 * sx, 0.1 * sx), 1.0, True)
-    _crab_legs(body, 5.0, 0.4, 19, (-2.1, -0.5, 1.1, 2.7), 4.2, 1.2, 5.6, 0.9)
+    _crab_legs(body, 5.0, 0.4, 19, (-2.1, -0.5, 1.1, 2.7), 4.0, 1.0, 5.5, 1.0)  # CAVE: half-unit grid
     return m
 
 
@@ -922,6 +978,7 @@ def caravan_queen():
                   'stone': '#7a716c', 'stone_l': '#958b84', 'stone_d': '#544c49', 'hollow': '#2a2024'})
     m = Model('caravan_queen', (192, 192), dict(variants['caravan_queen_amber']), variants, res=2,
               materials={'leg': 'chitin', 'claw_tip': 'chitin', 'belly': 'chitin', 'nacre': 'bone', 'soft': 'skin', 'stone': 'stone'})
+    m.exact_uv = True  # CAVE: the game's float box UVs (see modelkit Cube.faces)
     sk = dict(CRUST_KEYS, d='stone_d', l='stone_l')
 
     def strata(w, h, seed):
@@ -998,17 +1055,22 @@ def caravan_queen():
     mw, mh = sw * 2, sh_ * 2
 
     def mouth(x, y):
-        """The mouth of the shell: a dark hollow behind a pearly lip, her soft body filling it."""
-        if 2 <= x < mw - 2 and y >= mh // 2:
-            if x in (2, 3, mw - 4, mw - 3) or y in (mh // 2, mh // 2 + 1):
-                return 'N' if (x + y) % 7 == 0 else 'n'
-            return 'h'
+        """CAVE: the mouth of the shell, an arch: a dark hollow behind a pearly lip that shimmers pink and teal
+        in bands, her soft body filling the bottom of it."""
+        u, v = (x + 0.5 - mw / 2.0) / (mw * 0.4), (y + 0.5 - mh) / (mh * 0.62)
+        r = u * u + v * v
+        if r < 1.0:
+            return 'f' if v > -0.32 else 'h'
+        if r < 1.35:
+            band = int((math.atan2(v, u) * 6.0) + r * 9.0) % 4
+            return ('n', 'N', 'p', 'Q')[band]
         return '.'
     mouth_map = overlay_rows(strata(mw, mh, 13), [''.join(mouth(x, y) for x in range(mw)) for y in range(mh)])
     shell.cube((-sw / 2, -sh_, -4), (sw, sh_, sd), color='stone', pattern='mc', faces=stone((sw, sh_, sd), 11, **{
         'east': _mc('stone', clusters=0.35, hd=True, map=spiral(sd * 2, mh, 21), keys=sk, glow_keys='K'),
         'west': _mc('stone', clusters=0.35, hd=True, map=spiral(sd * 2, mh, 22, mirror=True), keys=sk, glow_keys='K'),
-        'north': _mc('stone', clusters=0.3, hd=True, keys=dict(sk, h='hollow', n='nacre', N='nacre_l'), map=mouth_map)}))
+        'north': _mc('stone', clusters=0.3, hd=True, keys=dict(sk, h='hollow', n='nacre', N='nacre_l', p='soft_l', Q='sac_l', f='soft'),
+                     map=mouth_map)}))
     # the worn crown of the whorl: two smaller blocks stepping up at the back
     shell.cube((-7, -21, 1), (14, 4, 11), color='stone', pattern='mc', faces=stone((14, 4, 11), 31))
     shell.cube((-4, -24, 5), (8, 3, 7), color='stone_l', pattern='mc', faces=stone((8, 3, 7), 41))
@@ -1024,19 +1086,23 @@ def caravan_queen():
     head.cube((-4.5, -3, -3), (9, 5, 3), **_mc('shell_d', clusters=0.3, spots=0.2, accent='shell'))
     for side, sx in (('left', 1), ('right', -1)):
         stalk = head.part(f'{side}_eye_stalk', pivot=(2.4 * sx, -3, -1.5), rot=(-0.25, 0, 0.15 * sx))
-        stalk.cube((-0.5, -6, -0.5), (1, 6, 1), **_mc('shell_d', clusters=0.15, rim=False))
-        _crab_eye(stalk, f'{side}_eye', 1.6)
+        stalk.cube((-0.5, -6, -0.5), (1, 6, 1), **_mc('shell', clusters=0.15, rim=False), faces={
+            'north': _mc('shell', clusters=0.1, rim=False, hd=True, map=['..', 'jj', '..', '..', 'pp', '..', '..', 'jj', '..', '..', 'pp', '..'],
+                         keys=LEG_KEYS)})
+        _crab_eye(stalk, f'{side}_eye', 1.5)
         feeler = head.part(f'{side}_feeler', pivot=(1.0 * sx, -1.0, -3), rot=(-0.7, -0.3 * sx, 0))
-        feeler.cube((-0.3, -0.3, -9), (0.6, 0.6, 9), **_mc('shell_l', clusters=0.0, rim=False))
+        feeler.cube((-0.5, -0.5, -9), (1, 1, 9), **_mc('shell_l', clusters=0.0, rim=False), faces={
+            'up': _mc('shell_l', clusters=0.0, rim=False, hd=True, map=[('j' if y % 3 == 2 else '.') * 2 for y in range(18)], keys=LEG_KEYS)})
         ftip = feeler.part(f'{side}_feeler_tip', pivot=(0, 0, -9), rot=(0.85, 0, 0))
-        ftip.cube((-0.2, -0.2, -8), (0.4, 0.4, 8), **_mc('shell_l', clusters=0.0, rim=False))
+        ftip.cube((-0.25, -0.25, -8), (0.5, 0.5, 8), **_mc('band', clusters=0.0, rim=False))
+        ftip.cube((-0.5, -0.5, -9), (1, 1, 1), color='crystal_l', pattern='crystal', glow=True)
         mouth = head.part(f'{side}_mouthpart', pivot=(1.4 * sx, 2, -2.6), rot=(0.15, 0, 0))
-        mouth.cube((-1.1, 0, -0.6), (2.2, 2.6, 0.6), **_mc('belly_d', clusters=0.2, rim=False))
+        mouth.cube((-1, 0, -0.5), (2, 2.5, 0.5), **_mc('belly_d', clusters=0.2, rim=False))
     # ---- claws held up in front: the right one huge, as a hermit crab's is; crystals grow from both
     _claw(body, 'left', 1, (6.0, 1.5, -10.0), (0.15, -0.5, 0.1), 2.0, True)
     _claw(body, 'right', -1, (-6.0, 1.0, -10.0), (0.1, 0.45, -0.1), 3.0, True)
     # ---- three pairs of long walking legs arching high over her body, crystals at the knees
-    legs = _crab_legs(body, 6.0, -1.0, 12, (-9.5, -6.5, -3.5), 12.0, 2.2, 16.0, 1.8, a1=-0.7, spreads=(0.85, 0.2, -0.45))
+    legs = _crab_legs(body, 6.0, -1.0, 12, (-9.5, -6.5, -3.5), 12.0, 2.0, 16.0, 2.0, a1=-0.7, spreads=(0.85, 0.2, -0.45))  # CAVE: half grid
     for i, leg in enumerate(legs):
         sx = 1 if leg.name.startswith('left') else -1
         _gem(leg, leg.name + '_gem', (10.5 * sx, -1.0, 0), (0, 0, -0.4 * sx), 1.0, 2.2)
@@ -1045,35 +1111,46 @@ def caravan_queen():
 
 def caravan_larva():
     """A Caravan larva: what hatches from the eggs Caravans leave in ore sockets. A small grub of five
-    shelled segments, each plate tinted with its caravan's colour and a gem nub on two of them,
-    bristly little legs, a pair of glowing pinprick eyes and snapping mandibles."""
+    shelled segments, each plate tinted with its caravan's colour, ridged and crusted with gem grit (a gem nub
+    on two of them), a row of glowing breathing pores down each flank, bristly little legs and spines, a pair
+    of glowing pinprick eyes with a glint and snapping mandibles. CAVE: the head and the segments hang from a
+    'body' root, so the head turns and rears without dragging the whole grub round with it."""
     from modelkit import Model
     variants = _crab_palettes('caravan_larva')
     m = Model('caravan_larva', (48, 48), dict(variants['caravan_larva_amber']), variants, res=2,
               materials={'leg': 'chitin', 'claw_tip': 'chitin', 'belly': 'skin'})
+    m.exact_uv = True  # the game's float box UVs (see modelkit Cube.faces)
     plate = _mc('shell', clusters=0.3, spots=0.3, accent='shell_l')
-    sizes = ((4.0, 3.2, 3.0), (4.6, 3.6, 2.8), (4.2, 3.2, 2.6), (3.4, 2.6, 2.4), (2.4, 1.8, 2.2))
-    prev = m.part('head', pivot=(0, 22.2, -3.2))
-    head = prev
+    sizes = ((4.0, 3.0, 3.0), (4.5, 3.5, 3.0), (4.0, 3.0, 2.5), (3.5, 2.5, 2.5), (2.5, 2.0, 2.0))
+    body = m.part('body', pivot=(0, 22.25, -3.0))
+    head = body.part('head', pivot=(0, 0, 0))
     w, h, d = sizes[0]
     head.cube((-w / 2, -h / 2, -d), (w, h, d), **plate, faces={
-        'north': _mc('shell_d', clusters=0.0, hd=True, map=['........', '.e....e.', '........', '..dddd..', '........', '........'],
-                     keys={'e': 'eye', 'd': 'pupil'}, glow_keys='e'),
+        'north': _mc('shell_d', clusters=0.0, hd=True, map=['........', '.Ge..eG.', '..e..e..', '........', '..dddd..', '...dd...'],
+                     keys={'e': 'eye', 'G': 'eye_l', 'd': 'pupil'}, glow_keys='eG'),
+        'up': _mc('shell_l', clusters=0.25, hd=True, map=_carapace(8, 6, 59, 0.15), keys=CARAPACE_KEYS, glow_keys='Kw'),
         'down': _mc('belly', clusters=0.2)})
     for side, sx in (('left', 1), ('right', -1)):
-        mand = head.part(f'{side}_mandible', pivot=(1.0 * sx, 0.8, -d), rot=(0, -0.35 * sx, 0))
-        mand.cube((-0.4, -0.4, -1.6), (0.8, 0.8, 1.6), **_mc('claw_tip', clusters=0.0, rim=False))
-    z = 0.0
+        mand = head.part(f'{side}_mandible', pivot=(1.0 * sx, 0.75, -d), rot=(0, -0.35 * sx, 0))
+        mand.cube((-0.5, -0.5, -1.5), (1, 1, 1.5), **_mc('claw_tip', clusters=0.0, rim=False), faces={
+            'up': _mc('claw_tip', clusters=0.0, rim=False, hd=True, map=['..', 't.', '..'], keys={'t': 'shell_d'})})
+    prev, z = body, 0.0
     for i, (w, h, d) in enumerate(sizes[1:], start=1):
-        seg = prev.part(f'segment_{i}', pivot=(0, 0.3 if i > 1 else 0, z if i > 1 else 0), rot=(0, 0, 0))
-        seg.cube((-w / 2, -h / 2, 0), (w, h, d), **plate, faces={'down': _mc('belly', clusters=0.2),
-                                                                'up': _mc('shell_l', clusters=0.25, hd=True,
-                                                                          map=_crust(math.ceil(w) * 2, math.ceil(d) * 2, 60 + i, 0.25),
-                                                                          keys=CRUST_KEYS, glow_keys='Kw')})
+        seg = prev.part(f'segment_{i}', pivot=(0, 0.25 if i > 1 else 0, z))
+        pores = [('.' * (int(d * 2) // 2 - 1) + 'g' + '.' * int(d * 2)) [:int(d * 2)] if y == 1 else
+                 ('b' * int(d * 2) if y >= int(h * 2) - 2 else '.' * int(d * 2)) for y in range(int(h * 2))]
+        seg.cube((-w / 2, -h / 2, 0), (w, h, d), **plate, faces={
+            'down': _mc('belly', clusters=0.2, hd=True, map=['j' * int(w * 2)] + ['.' * int(w * 2)] * (int(d * 2) - 1), keys=LEG_KEYS),
+            'up': _mc('shell_l', clusters=0.25, hd=True, map=_carapace(int(w * 2), int(d * 2), 60 + i, 0.2), keys=CARAPACE_KEYS, glow_keys='Kw'),
+            'east': _mc('shell', clusters=0.25, hd=True, map=pores, keys={'g': 'crystal', 'b': 'belly_d'}, glow_keys='g'),
+            'west': _mc('shell', clusters=0.25, hd=True, map=[r[::-1] for r in pores], keys={'g': 'crystal', 'b': 'belly_d'}, glow_keys='g')})
         for side, sx in (('left', 1), ('right', -1)):
-            seg.cube((w / 2 - 0.1 if sx > 0 else -w / 2 - 0.9, h / 2 - 0.4, d * 0.3), (1.0, 0.4, 0.4), **_mc('leg', clusters=0.0, rim=False))
+            # a bristly little leg each side, and a short spine on its shoulder
+            seg.cube((w / 2 - 0.25 if sx > 0 else -w / 2 - 0.75, h / 2 - 0.5, d * 0.3), (1.0, 0.5, 0.5), **_mc('leg', clusters=0.0, rim=False))
+            if i % 2 == 0:
+                seg.cube((w / 2 - 1.0 if sx > 0 else -w / 2 + 0.5, -h / 2 - 0.5, d * 0.4), (0.5, 0.5, 0.5), **_mc('claw_tip', clusters=0.0, rim=False))
         if i in (1, 3):
-            _gem(seg, f'nub_{i}', (0, -h / 2, d / 2), (0.2 if i == 1 else -0.2, 0, 0), 1.0, 1.8 if i == 1 else 1.4)
+            _gem(seg, f'nub_{i}', (0, -h / 2, d / 2), (0.2 if i == 1 else -0.2, 0, 0), 1.0, 1.8 if i == 1 else 1.5)
         prev = seg
         z = d
     return m

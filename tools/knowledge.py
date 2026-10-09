@@ -190,7 +190,7 @@ FIELD_NOTES = {
     'bulb': 'Habitat: Sift Plains, Wishing Grove, White Forest|Temper: Gentle, hops to music|Diet: Pitcher Pods|Drops: Glowing Slime Balls',
     'harmoner': 'Habitat: Sift Plains, Wishing Grove|Temper: Friendly guide|Diet: Seeds|Drops: Nothing - it leads you instead',
     'sniffer': 'Habitat: Plains, Forest Mountains, Rocky Dunes|Temper: Neutral, rams when hit|Diet: Pink grass, Torchflower seeds|Drops: Flowers from its back',
-    'enchoer': 'Habitat: Plains and meadows|Temper: Peaceful, takes offerings|Diet: Music|Drops: Chrome Pearls, Star Shards',
+    'enchoer': 'Habitat: Plains and meadows|Temper: Peaceful, gives gifts for songs|Diet: Music|Drops: Chrome Pearls, Star Shards',
     'soul_golem': 'Habitat: Echoer hearths|Temper: Helpful|Diet: Soul energy|Drops: Its core',
     'nib': 'Habitat: Flower meadows, Sound Garden|Temper: Shy|Diet: Nectar of light|Drops: Nib Dust and treasure (by song)',
     'slumbler': 'Habitat: Chrome Lakes|Temper: Sleepy, bites when woken|Diet: Chrome plankton|Drops: Thick Hide, Chrome Pearls',

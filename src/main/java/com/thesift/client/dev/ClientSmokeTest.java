@@ -349,11 +349,18 @@ public final class ClientSmokeTest {
         scene("mob_closeup_coral_organ", 40, c -> tank(c, com.thesift.registry.ModSculkSea.CORAL_ORGAN.get(), -61, 5, 3));
         scene("mob_closeup_cypole", 40, ClientSmokeTest::cypolePad);
         scene("mob_closeup_sifter", 40, c -> c.camera(6.5, STAGE_Y + 1.8, STAGE_Z + 2.8, 6.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
-        scene("mob_closeup_enchoer", 40, c -> c.camera(10.5, STAGE_Y + 2.6, STAGE_Z + 1.5, 10.5, STAGE_Y + 1.6, STAGE_Z + 6.5));
+        // M3: the Echoer is a deer spirit again (2.4 blocks to the antler tips), hovering a little over the stage
+        scene("mob_closeup_enchoer", 40, c -> c.camera(13.4, STAGE_Y + 3.2, STAGE_Z + 2.0, 10.5, STAGE_Y + 1.7, STAGE_Z + 6.5));
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
         scene("mob_closeup_sniffer", 40, c -> c.camera(-0.5, STAGE_Y + 3.4, STAGE_Z + 3.2, -3.5, STAGE_Y + 1.2, STAGE_Z + 8.5));
         scene("mob_closeup_dictator", 40, c -> c.camera(20.0, STAGE_Y + 2.8, STAGE_Z - 3.0, 20.0, STAGE_Y + 2.0, STAGE_Z + 5.5));
         scene("mob_closeup_stomper", 60, ClientSmokeTest::stomperStage); // S1: the Stomper elephant and a Stompling
+        // CAVE: the remade Soul Golem, Nib and Caravans, each on a little floor of its own east of the stage
+        scene("mob_closeup_soul_golem", 40, c -> closeup(c, com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), 32, 0.0, 1.9, 0.5));
+        scene("mob_closeup_nib", 40, c -> closeup(c, com.thesift.registry.ModEchoer.NIB.get(), 42, 0.5, 1.0, 0.65));
+        scene("mob_closeup_caravan", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN.get(), 52, 0.0, 2.3, 0.4));
+        scene("mob_closeup_caravan_queen", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_QUEEN.get(), 64, 0.0, 6.0, 1.4));
+        scene("mob_closeup_caravan_larva", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_LARVA.get(), 78, 0.0, 1.5, 0.25));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -461,6 +468,14 @@ public final class ClientSmokeTest {
         }
     }
 
+    /** CAVE: one creature on a little floor of its own, east of the stage, in a three-quarter view from in front. */
+    private static void closeup(Ctx c, EntityType<?> type, int x, double lift, double dist, double look) {
+        int z0 = STAGE_Z - 20;
+        floor(c, x - 4, z0 - 4, x + 4, z0 + 4);
+        c.spawn(type, x + 0.5, STAGE_Y + lift, z0 + 0.5, 180.0F, false);
+        c.camera(x + 0.5 + dist * 0.55, STAGE_Y + look + dist * 0.4, z0 + 0.5 - dist, x + 0.5, STAGE_Y + look, z0 + 0.5);
+    }
+
     private static void floor(Ctx c, int x0, int z0, int x1, int z1) {
         c.fill(x0, STAGE_Y - 1, z0, x1, STAGE_Y - 1, z1, ModBlocks.SIFT_GRASS_BLOCK.get().defaultBlockState());
         c.fill(x0, STAGE_Y, z0, x1, STAGE_Y + 6, z1, Blocks.AIR.defaultBlockState());
@@ -497,7 +512,7 @@ public final class ClientSmokeTest {
         }
         c.spawn(ModEntities.SLUMBLER.get(), 1.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.spawn(ModEntities.SIFTER.get(), 6.5, STAGE_Y, STAGE_Z + 6.5, face, false);
-        c.spawn(ModEntities.ENCHOER.get(), 10.5, STAGE_Y, STAGE_Z + 6.5, face, false);
+        c.spawn(ModEntities.ENCHOER.get(), 10.5, STAGE_Y + 0.6, STAGE_Z + 6.5, face, false); // M3: it hovers
         c.camera(2.5, STAGE_Y + 4.5, STAGE_Z - 9.5, 2.5, STAGE_Y + 1.0, STAGE_Z + 6.5);
     }
 

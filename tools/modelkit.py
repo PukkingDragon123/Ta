@@ -67,7 +67,12 @@ class Cube:
     def faces(self):
         """Texture rectangles (x, y, w, h) of each face, vanilla box-UV layout."""
         u, v = self.uv
-        w, h, d = (int(math.ceil(s)) for s in self.size)
+        if getattr(self, 'exact', False):
+            # CAVE exact UV: the game lays box UVs out with the cube's real (float) size, so a model that sets
+            # exact_uv paints its faces exactly there (sizes in steps of 1/res; see Model.pack)
+            w, h, d = self.size
+        else:
+            w, h, d = (int(math.ceil(s)) for s in self.size)
         return {
             'up': (u + d, v, w, d),
             'down': (u + d + w, v, w, d),
@@ -138,6 +143,8 @@ class Model:
 
     # ------------------------------------------------------------ packing
     def pack(self):
+        for c in self.cubes():  # CAVE exact UV (opt-in: m.exact_uv = True), see Cube.faces
+            c.exact = getattr(self, 'exact_uv', False)
         cubes = sorted(self.cubes(), key=lambda c: (-c.footprint[1], -c.footprint[0]))
         shelves = []  # [y, height, x_cursor]
         y_cursor = 0
@@ -266,7 +273,8 @@ class Painter:
     def paint_cube(self, cube: Cube, idx: int):
         rnd = random.Random(self.seed * 7919 + idx * 104729)
         r = self.r
-        for face, (fx, fy, fw, fh) in cube.faces().items():
+        for face, rect in cube.faces().items():
+            fx, fy, fw, fh = (int(round(a * r)) / r for a in rect)  # CAVE exact UV: whole texels
             if fw <= 0 or fh <= 0:
                 continue
             spec = dict(cube.paint)
@@ -283,8 +291,9 @@ class Painter:
                 else:
                     spec['map'] = ex
             self._cur = len(self.face_recs)
-            self.face_recs.append((cube, face, fx * r, fy * r, fw * r, fh * r, spec, idx))
-            self.paint_face(face, fx * r, fy * r, fw * r, fh * r, spec, rnd)
+            fx, fy, fw, fh = (int(round(a * r)) for a in (fx, fy, fw, fh))
+            self.face_recs.append((cube, face, fx, fy, fw, fh, spec, idx))
+            self.paint_face(face, fx, fy, fw, fh, spec, rnd)
             self._cur = -1
 
     def paint_mc(self, face, fx, fy, fw, fh, spec, rnd):
@@ -940,7 +949,7 @@ def preview(model: Model, tex: Image.Image, pose: Optional[Pose] = None, yaw=35.
         x0, y0, z0 = x0 - g, y0 - g, z0 - g
         x1, y1, z1 = x0 + w + 2 * g, y0 + h + 2 * g, z0 + d + 2 * g
         faces = c.faces()
-        iw, ih, idd = (int(math.ceil(s)) for s in c.size)
+        iw, ih, idd = c.size if getattr(c, 'exact', False) else (int(math.ceil(s)) for s in c.size)  # CAVE exact UV
 
         def P(x, y, z):
             v = _mv(Ms, [x, y, z])
@@ -950,7 +959,7 @@ def preview(model: Model, tex: Image.Image, pose: Optional[Pose] = None, yaw=35.
             fx, fy, fw, fh = faces[name]
             if fw <= 0 or fh <= 0:
                 return
-            fx, fy, fw, fh, nu, nv = fx * res, fy * res, fw * res, fh * res, nu * res, nv * res
+            fx, fy, fw, fh, nu, nv = (int(round(a * res)) for a in (fx, fy, fw, fh, nu, nv))
             for j in range(fh):
                 for i in range(fw):
                     col = tp[fx + i, fy + j]

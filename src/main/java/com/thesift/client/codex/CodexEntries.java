@@ -92,13 +92,14 @@ public final class CodexEntries {
         l.add(mob(CREATURES, "sniffer", com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER, (e, t) -> { })); // E1: the Sift Sniffer
         l.add(mob(CREATURES, "enchoer", ModEntities.ENCHOER, (e, t) -> {
             if (e instanceof com.thesift.entity.Enchoer en) {
-                // CR1: the speaker-bat beats its wings on the page, and every few seconds its drill whirrs round
-                en.flapO = en.flap;
-                en.flap += 0.55F;
-                en.beatO = 1.0F;
-                en.beat = 1.0F;
-                en.drillO = en.drill;
-                en.drill += t % 120 < 50 ? 0.8F : 0.0F;
+                // M3: the deer spirit sings on the page (a note every second) and bows its antlers now and then
+                if (t % 20 == 0) {
+                    en.voice.kick(0.55F);
+                }
+                en.voice.tick();
+                if (t % 160 == 40) {
+                    en.bowAnimation.start(en.tickCount);
+                }
             }
         }));
         // A2 Echoer: its household and the meadow wisps

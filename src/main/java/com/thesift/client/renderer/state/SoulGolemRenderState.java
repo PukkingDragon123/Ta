@@ -9,6 +9,9 @@ public class SoulGolemRenderState extends SiftRenderState {
     public float slump;
     /** {@link com.thesift.entity.SoulGolem#NORMAL}, DIGGING or PEEKING. */
     public int mode;
+    /** CAVE: how far into digging and peeking it is (smoothed by the entity, so the poses blend in and out). */
+    public float dig;
+    public float peek;
     public final AnimationState happy = new AnimationState();
     public float seed;
 }

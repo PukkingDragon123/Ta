@@ -64,9 +64,9 @@ public class CaravanRenderer extends SiftMobRenderer<Caravan, CaravanRenderState
         state.growth = entity.getGrowth() / 100.0F;
         state.seed = entity.getId();
         state.hand = (entity.getId() & 1) == 0 ? 1.0F : -1.0F;
-        // side-on once it is really moving (a carrying worker walks claws-first, holding its load out in front)
-        float moving = Anim.smooth(Mth.clamp(state.walkAnimationSpeed * 2.4F - 0.15F, 0.0F, 1.0F));
-        state.scuttle = state.carrying ? 0.0F : moving;
+        // side-on once it is really moving (a carrying worker walks claws-first, holding its load out in front);
+        // CAVE: eased by the entity, so it no longer snaps round when it picks up or sets down its load
+        state.scuttle = Anim.smooth(Mth.lerp(partialTicks, entity.scuttleO, entity.scuttle));
         this.items.updateForTopItem(state.carried, entity.getCarried(), ItemDisplayContext.GROUND, entity.level(), null, entity.getId());
         state.tap.copyFrom(entity.tapAnimation);
         state.mine.copyFrom(entity.mineAnimation);

@@ -27,7 +27,7 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.CREATURE,
             b -> b.sized(0.9F, 1.25F).eyeHeight(1.0F).clientTrackingRange(8)); // CR1: a neutral living bell (eyes on its shoulder)
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,
-            MobCategory.CREATURE, b -> b.sized(0.9F, 1.3F).eyeHeight(0.95F).clientTrackingRange(10)); // CR1: a speaker-bat (eyes at its drill)
+            MobCategory.CREATURE, b -> b.sized(1.0F, 1.8F).eyeHeight(1.6F).clientTrackingRange(10)); // M3: a deer spirit (antlers above the box)
     public static final DeferredHolder<EntityType<?>, EntityType<Harmoner>> HARMONER = ENTITIES.registerEntityType("harmoner", Harmoner::new,
             MobCategory.CREATURE, b -> b.sized(0.55F, 0.9F).eyeHeight(0.75F).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Dictator>> DICTATOR = ENTITIES.registerEntityType("dictator", Dictator::new,

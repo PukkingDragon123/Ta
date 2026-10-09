@@ -112,6 +112,8 @@ public class Caravan extends Monster {
     /** A note of a jam every BEAT ticks: the Crystal Hymn twice through, then a chord. */
     public static final int BEAT = 8;
 
+    /** CAVE client: how far it has turned side-on to scuttle (eased, see aiStep), for the renderer. */
+    public float scuttleO, scuttle;
     public final AnimationState tapAnimation = new AnimationState();
     public final AnimationState mineAnimation = new AnimationState();
     public final AnimationState biteAnimation = new AnimationState();
@@ -472,6 +474,13 @@ public class Caravan extends Monster {
     @Override
     public void aiStep() {
         super.aiStep();
+        if (this.level().isClientSide()) {
+            // CAVE: the side-on turn eases in and out - it used to snap a quarter turn whenever the crab picked up or
+            // set down its load mid-stride (a carrying worker walks claws-first)
+            this.scuttleO = this.scuttle;
+            float want = this.getCarried().isEmpty() ? Mth.clamp(this.walkAnimation.speed() * 2.4F - 0.15F, 0.0F, 1.0F) : 0.0F;
+            this.scuttle += Mth.clamp(want - this.scuttle, -0.08F, 0.08F);
+        }
         if (this.level() instanceof ServerLevel server) {
             if (this.mineCooldown > 0) {
                 this.mineCooldown--;

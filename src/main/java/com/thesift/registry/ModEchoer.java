@@ -1,28 +1,30 @@
 package com.thesift.registry;
 
+import com.mojang.serialization.Codec;
 import com.thesift.TheSift;
 import com.thesift.block.entity.EchoerDeviceBlockEntity;
 import com.thesift.block.entity.EchoerHutHeartBlockEntity;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.Nib;
 import com.thesift.entity.SoulGolem;
+import com.thesift.music.Song;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnPlacementTypes;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 /**
  * A2 Echoer: everything around the Echoer's hearth - the Soul Golems who live there, the Nibs of the
@@ -63,17 +65,24 @@ public final class ModEchoer {
     public static final DeferredHolder<SoundEvent, SoundEvent> DEVICE_BITE = reg("block.echoer_device.bite");
     /** CR1 Echoer: its echolocation pings (a sonar click or a chime blip from its speakers). */
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_CHIMES = reg("entity.enchoer.chimes");
-    /** CR1 Echoer: its bat wings, and the brass drill of its snout whirring up when it sings. */
-    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_FLAP = reg("entity.enchoer.flap");
-    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_DRILL = reg("entity.enchoer.drill");
+    /** M3 Echoer (a deer spirit): its endless song (heard 48 blocks off), the glint under each hoof as it skips on the air, a gift rising. */
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_SING = reg("entity.enchoer.sing");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_STEP = reg("entity.enchoer.step");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_GIFT = reg("entity.enchoer.gift");
 
-    /** What the Echoer accepts as an offering (siftite ingots and dust, prism gems). */
-    public static final TagKey<Item> ECHOER_OFFERINGS = TagKey.create(Registries.ITEM, TheSift.id("echoer_offerings"));
-    public static final ResourceKey<LootTable> ECHOER_REWARD = loot("gameplay/echoer_reward");
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, TheSift.MODID);
+    /** M3: the game time from which a player may be given the Echoers' next gift (one every Enchoer.GIFT_COOLDOWN ticks; kept through death). */
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> NEXT_GIFT = ATTACHMENTS.register("echoer_next_gift",
+            () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG.fieldOf("time")).copyOnDeath().build());
     public static final ResourceKey<LootTable> GOLEM_DIG_LOOT = loot("gameplay/soul_golem_dig");
     public static final ResourceKey<LootTable> NIB_TRANSFORM_LOOT = loot("gameplay/nib_transform");
 
     private ModEchoer() {
+    }
+
+    /** M3: the gifts an Echoer gives for a song ({@code thesift:gameplay/echoer_gift/<song>}; each may add a rare one). */
+    public static ResourceKey<LootTable> giftTable(Song song) {
+        return loot("gameplay/echoer_gift/" + song.id());
     }
 
     private static DeferredHolder<SoundEvent, SoundEvent> reg(String name) {
@@ -88,9 +97,10 @@ public final class ModEchoer {
         ENTITIES.register(bus);
         BLOCK_ENTITIES.register(bus);
         SOUNDS.register(bus);
+        ATTACHMENTS.register(bus);
         bus.addListener(ModEchoer::attributes);
         bus.addListener(ModEchoer::spawnPlacements);
-        // the songs: the Offering (Echoer), the Golem Hymn and every stray note (Soul Golems), the Nibs' song
+        // the songs: any song (the Echoer's gifts), the Golem Hymn and every stray note (Soul Golems), the Nibs' song
         Enchoer.listen();
         SoulGolem.listen();
         Nib.listen();

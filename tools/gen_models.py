@@ -21,16 +21,15 @@ POSES = {
     # CR1 Sifter (a living bell): 'swing' (rocked to its left, the clapper striking the lip) and 'bonk' (thrown forward)
     'sifter': {'rest': Pose(), 'swing': Pose(bell={'rot': (0, 0, 0.18)}, clapper={'rot': (0, 0, -0.36)}),
                'bonk': Pose(bell={'rot': (0.45, 0, 0)}, clapper={'rot': (-0.36, 0, 0)}, body={'pos': (0, 0, -3)})},
-    # CR1 Echoer (speaker-bat): wings at the top and bottom of a beat, and folded round it asleep
+    # CAVE Echoer (a deer spirit): standing, at the top of a skip through the air, and bowing its antlers to give a gift
     'enchoer': {'rest': Pose(),
-                'down': Pose(left_wing={'rot': (0, 0.2, 0.75)}, right_wing={'rot': (0, -0.2, -0.75)},
-                             left_wing_tip={'rot': (0, 0, 0.35)}, right_wing_tip={'rot': (0, 0, -0.35)}),
-                'up': Pose(left_wing={'rot': (0, -0.2, -0.7)}, right_wing={'rot': (0, 0.2, 0.7)},
-                           left_wing_tip={'rot': (0, 0, -0.5)}, right_wing_tip={'rot': (0, 0, 0.5)}),
-                'fold': Pose(left_wing={'rot': (0.2, -1.1, 1.45)}, right_wing={'rot': (0.2, 1.1, -1.45)},
-                             left_wing_tip={'rot': (0, 2.6, -0.75)}, right_wing_tip={'rot': (0, -2.6, 0.75)},
-                             left_ear={'rot': (0.3, 0, 0.5)}, right_ear={'rot': (0.3, 0, -0.5)}, head={'rot': (0.35, 0, 0)})},
-    'soul_golem': {'rest': Pose(), 'slump': Pose(body={'rot': (0.5, 0, 0), 'pos': (0, 1, 0)}, stalk={'rot': (0.9, 0, 0)})},
+                'skip': Pose(left_front_leg={'rot': (-1.05, 0, 0)}, right_front_leg={'rot': (-0.9, 0, 0)},
+                             left_hind_leg={'rot': (0.75, 0, 0)}, right_hind_leg={'rot': (0.65, 0, 0)}),
+                'bow': Pose(body={'rot': (0.2, 0, 0), 'pos': (0, 1.6, 0)}, neck={'rot': (0.85, 0, 0)}, head={'rot': (0.15, 0, 0)},
+                            left_front_leg={'rot': (-0.7, 0, 0)}, right_front_leg={'rot': (-0.1, 0, 0)}, right_front_shin={'rot': (1.5, 0, 0)})},
+    'soul_golem': {'rest': Pose(), 'slump': Pose(body={'rot': (0.5, 0, 0), 'pos': (0, 1, 0)}, stalk={'rot': (0.75, 0, 0)}, jaw={'rot': (-0.5, 0, 0)})},
+    'nib': {'rest': Pose(), 'fold': Pose(left_wing={'rot': (0, 0, -1.25)}, right_wing={'rot': (0, 0, 1.25)},
+                                         left_wing_low={'rot': (0, 0, -1.1)}, right_wing_low={'rot': (0, 0, 1.1)})},  # CAVE
     'harmoner': {'rest': Pose(), 'fly': Pose(left_wing={'rot': (0, 0, -1.3)}, right_wing={'rot': (0, 0, 1.3)}, left_leg={'rot': (0.9, 0, 0)},
                                               right_leg={'rot': (0.9, 0, 0)}),
                  'sing': Pose(head={'rot': (-0.5, 0, 0)}, jaw={'rot': (0.6, 0, 0)}, crest={'rot': (0.4, 0, 0)}, plume_0={'rot': (0, 0, -0.3)},

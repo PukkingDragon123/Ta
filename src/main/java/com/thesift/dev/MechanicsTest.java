@@ -249,7 +249,7 @@ final class MechanicsTest {
         }
     }
 
-    /** A2 Echoer: the Echoer no longer trades - its ceremony reward table must give something. */
+    /** M3 Echoer: every song's gift table (and the Nibs' treasure) must give something. */
     private void checkTrades() {
         Enchoer e = ModEntities.ENCHOER.get().create(this.sift, EntitySpawnReason.COMMAND);
         if (e == null) {
@@ -258,12 +258,18 @@ final class MechanicsTest {
         }
         e.snapTo(0.5, 100.0, 0.5, 0.0F, 0.0F);
         List<ItemStack> got = new ArrayList<>();
+        int songs = 0;
+        for (com.thesift.music.Song song : com.thesift.music.Song.values()) {
+            int before = got.size();
+            e.dropFromGiftLootTable(this.sift, com.thesift.registry.ModEchoer.giftTable(song), (l, stack) -> got.add(stack));
+            songs += got.size() > before ? 1 : 0;
+        }
         for (int i = 0; i < 16; i++) {
-            e.dropFromGiftLootTable(this.sift, com.thesift.registry.ModEchoer.ECHOER_REWARD, (l, stack) -> got.add(stack));
             e.dropFromGiftLootTable(this.sift, com.thesift.registry.ModEchoer.NIB_TRANSFORM_LOOT, (l, stack) -> got.add(stack));
         }
         TheSift.LOGGER.info("SMOKE: echoer rewards and nib treasure {}", got);
-        check(got.size() >= 32, "echoer: the offering reward and nib transform loot tables give items");
+        check(songs == com.thesift.music.Song.values().length, "echoer: every song's gift table gives a gift (" + songs + ")");
+        check(got.size() >= songs + 16, "echoer: the gift and nib transform loot tables give items");
         e.discard();
     }
 
