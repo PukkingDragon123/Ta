@@ -217,6 +217,8 @@ public final class CodexEntries {
         l.add(thing(MAGIC, "echoer_device", ModItems.ECHOER_DEVICE)); // A2 Echoer
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));
         l.add(thing(MAGIC, "music_crystal", ModItems.MUSIC_CRYSTAL)); // C
+        l.add(thing(MAGIC, "band_table", ModItems.BAND_TABLE)); // F2 Band Table
+        l.add(thing(MAGIC, "sift_enchantments", () -> Items.ENCHANTED_BOOK)); // F2 Band Table: the Sift enchantments
         l.add(thing(MAGIC, "flora", () -> ModBlocks.CORAL_BUSH.get().asItem()));
         // H: where the Sift's seeds grow, and the potted pitchers that make its soups
         l.add(thing(MAGIC, "sift_gardening", ModItems.ECHO_SEED));

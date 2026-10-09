@@ -1097,4 +1097,42 @@ public final class ModelGeometry {
         p38.addOrReplaceChild("clamp", CubeListBuilder.create().texOffs(8, 52).addBox(-2.7F, -0.5F, -2.7F, 5.4F, 1F, 0.6F).texOffs(22, 52).addBox(-2.7F, -0.5F, 2.1F, 5.4F, 1F, 0.6F).texOffs(36, 0).addBox(-2.7F, -0.5F, -2.1F, 0.6F, 1F, 4.2F).texOffs(48, 0).addBox(2.1F, -0.5F, -2.1F, 0.6F, 1F, 4.2F).texOffs(60, 9).addBox(-2.7F, 0.5F, -2.7F, 0.6F, 1.6F, 0.6F).texOffs(44, 57).addBox(-2.8F, -1.1F, -2.8F, 0.8F, 0.6F, 0.8F).texOffs(60, 20).addBox(2.1F, 0.5F, -2.7F, 0.6F, 1.6F, 0.6F).texOffs(48, 57).addBox(2F, -1.1F, -2.8F, 0.8F, 0.6F, 0.8F).texOffs(60, 25).addBox(-2.7F, 0.5F, 2.1F, 0.6F, 1.6F, 0.6F).texOffs(52, 57).addBox(-2.8F, -1.1F, 2F, 0.8F, 0.6F, 0.8F).texOffs(60, 35).addBox(2.1F, 0.5F, 2.1F, 0.6F, 1.6F, 0.6F).texOffs(56, 57).addBox(2F, -1.1F, 2F, 0.8F, 0.6F, 0.8F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
         return LayerDefinition.create(mesh, 64, 64);
     }
+
+    public static LayerDefinition band_table() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        root.addOrReplaceChild("base_plinth", CubeListBuilder.create().texOffs(56, 0).addBox(-8F, -2F, -8F, 16F, 2F, 16F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_body", CubeListBuilder.create().texOffs(0, 0).addBox(-7F, -10F, -7F, 14F, 8F, 14F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_post_0", CubeListBuilder.create().texOffs(64, 22).addBox(-8F, -10F, -8F, 2F, 8F, 2F).texOffs(66, 53).addBox(-8F, -13F, -8F, 2F, 1F, 2F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_post_1", CubeListBuilder.create().texOffs(72, 22).addBox(6F, -10F, -8F, 2F, 8F, 2F).texOffs(74, 53).addBox(6F, -13F, -8F, 2F, 1F, 2F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_post_2", CubeListBuilder.create().texOffs(80, 22).addBox(-8F, -10F, 6F, 2F, 8F, 2F).texOffs(82, 53).addBox(-8F, -13F, 6F, 2F, 1F, 2F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_post_3", CubeListBuilder.create().texOffs(88, 22).addBox(6F, -10F, 6F, 2F, 8F, 2F).texOffs(90, 53).addBox(6F, -13F, 6F, 2F, 1F, 2F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_top", CubeListBuilder.create().texOffs(0, 22).addBox(-8F, -12F, -8F, 16F, 2F, 16F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_drum", CubeListBuilder.create().texOffs(96, 22).addBox(3F, -16.5F, -7F, 4F, 4.5F, 4F).texOffs(88, 40).addBox(2.5F, -17.5F, -7.5F, 5F, 1F, 5F).texOffs(108, 40).addBox(2.5F, -12.5F, -7.5F, 5F, 0.5F, 5F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_metronome", CubeListBuilder.create().texOffs(20, 47).addBox(-7F, -15F, -7F, 3F, 3F, 3F).texOffs(76, 47).addBox(-6.5F, -18F, -6.5F, 2F, 3F, 2F).texOffs(124, 53).addBox(-6F, -19F, -6F, 1F, 1F, 1F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_chime_tree", CubeListBuilder.create().texOffs(98, 53).addBox(-7.5F, -13F, 4.5F, 2F, 1F, 2F).texOffs(120, 0).addBox(-7F, -23F, 5F, 1F, 10F, 1F).texOffs(110, 53).addBox(-7F, -24F, 5F, 6F, 1F, 1F).texOffs(56, 53).addBox(-1.5F, -24.5F, 4.5F, 1F, 2F, 2F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_horn_box", CubeListBuilder.create().texOffs(112, 22).addBox(2.5F, -15F, 2.5F, 4F, 3F, 4F).texOffs(6, 58).addBox(4F, -16F, 4F, 1F, 1F, 1F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("base_stand", CubeListBuilder.create().texOffs(24, 53).addBox(-1.5F, -13F, 1F, 3F, 1F, 3F).texOffs(62, 53).addBox(-0.5F, -16F, 2F, 1F, 3F, 1F), PartPose.offsetAndRotation(0F, 24F, 0F, 0F, 0F, 0F));
+        PartDefinition p12 = root.addOrReplaceChild("book", CubeListBuilder.create(), PartPose.offsetAndRotation(0F, 8F, 2.5F, 0.6F, 0F, 0F));
+        p12.addOrReplaceChild("book_left", CubeListBuilder.create().texOffs(0, 40).addBox(-4.5F, -0.5F, -3F, 4.5F, 0.5F, 6F).texOffs(44, 40).addBox(-4.25F, -1.25F, -2.75F, 4F, 0.75F, 5.5F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        p12.addOrReplaceChild("book_right", CubeListBuilder.create().texOffs(22, 40).addBox(0F, -0.5F, -3F, 4.5F, 0.5F, 6F).texOffs(64, 40).addBox(0.25F, -1.25F, -2.75F, 4F, 0.75F, 5.5F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        p12.addOrReplaceChild("book_page", CubeListBuilder.create().texOffs(0, 47).addBox(0F, 0F, -2.75F, 4F, 0F, 5.5F), PartPose.offsetAndRotation(0F, -1.3F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("pendulum", CubeListBuilder.create().texOffs(124, 0).addBox(-0.25F, -5.5F, -0.25F, 0.5F, 5.5F, 0.5F).texOffs(0, 58).addBox(-0.75F, -4F, -0.5F, 1.5F, 1F, 1F), PartPose.offsetAndRotation(-5.5F, 10.5F, -7.2F, 0F, 0F, 0F));
+        root.addOrReplaceChild("stick_0", CubeListBuilder.create().texOffs(32, 47).addBox(-0.25F, -0.25F, -5F, 0.5F, 0.5F, 5F).texOffs(10, 58).addBox(-0.5F, -0.5F, -5.6F, 1F, 1F, 1F), PartPose.offsetAndRotation(6.2F, 6F, -1.5F, 0.18F, 0F, 0F));
+        root.addOrReplaceChild("stick_1", CubeListBuilder.create().texOffs(44, 47).addBox(-0.25F, -0.25F, -5F, 0.5F, 0.5F, 5F).texOffs(14, 58).addBox(-0.5F, -0.5F, -5.6F, 1F, 1F, 1F), PartPose.offsetAndRotation(3.8F, 6F, -1.5F, 0.18F, 0F, 0F));
+        root.addOrReplaceChild("chime_0", CubeListBuilder.create().texOffs(18, 58).addBox(-0.15F, 0F, -0.15F, 0.3F, 0.8F, 0.3F).texOffs(84, 40).addBox(-0.4F, 0.8F, -0.4F, 0.8F, 6F, 0.8F), PartPose.offsetAndRotation(-5.3F, 1F, 5.5F, 0F, 0F, 0F));
+        root.addOrReplaceChild("chime_1", CubeListBuilder.create().texOffs(22, 58).addBox(-0.15F, 0F, -0.15F, 0.3F, 0.8F, 0.3F).texOffs(56, 47).addBox(-0.4F, 0.8F, -0.4F, 0.8F, 5F, 0.8F), PartPose.offsetAndRotation(-3.9F, 1F, 5.5F, 0F, 0F, 0F));
+        root.addOrReplaceChild("chime_2", CubeListBuilder.create().texOffs(26, 58).addBox(-0.15F, 0F, -0.15F, 0.3F, 0.8F, 0.3F).texOffs(124, 47).addBox(-0.4F, 0.8F, -0.4F, 0.8F, 4F, 0.8F), PartPose.offsetAndRotation(-2.5F, 1F, 5.5F, 0F, 0F, 0F));
+        PartDefinition p22 = root.addOrReplaceChild("horn", CubeListBuilder.create().texOffs(106, 53).addBox(-0.5F, -2F, -0.5F, 1F, 2F, 1F), PartPose.offsetAndRotation(4.5F, 8F, 4.5F, 0F, 0F, 0F));
+        p22.addOrReplaceChild("horn_flare", CubeListBuilder.create().texOffs(48, 53).addBox(-0.75F, -1.5F, -0.75F, 1.5F, 1.5F, 1.5F).texOffs(36, 53).addBox(-1.25F, -2.5F, -1.25F, 2.5F, 1F, 2.5F).texOffs(60, 47).addBox(-1.75F, -3.25F, -1.75F, 3.5F, 0.75F, 3.5F), PartPose.offsetAndRotation(0F, -2F, 0F, 0.75F, 0F, 0F));
+        root.addOrReplaceChild("note_0", CubeListBuilder.create().texOffs(84, 47).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_1", CubeListBuilder.create().texOffs(92, 47).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_2", CubeListBuilder.create().texOffs(100, 47).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_3", CubeListBuilder.create().texOffs(108, 47).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_4", CubeListBuilder.create().texOffs(116, 47).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_5", CubeListBuilder.create().texOffs(0, 53).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_6", CubeListBuilder.create().texOffs(8, 53).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        root.addOrReplaceChild("note_7", CubeListBuilder.create().texOffs(16, 53).addBox(-2F, -5F, 0F, 4F, 5F, 0F), PartPose.offsetAndRotation(0F, 0F, 0F, 0F, 0F, 0F));
+        return LayerDefinition.create(mesh, 128, 96);
+    }
 }

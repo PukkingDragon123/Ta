@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/music_sheets_vanilla_ancient_city",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.35
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_requiem",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_heartbeat",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

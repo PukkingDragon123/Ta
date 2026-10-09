@@ -51,6 +51,7 @@ public class TheSift {
         com.thesift.registry.ModRings.register(modBus); // CR1: the Sifter's bell rings and the Echoer's echolocation pings
         com.thesift.registry.ModEurophy.register(modBus); // F1 Materials & Europhy Table: the table's block entity, menu and music
         com.thesift.registry.ModSculkSea.register(modBus); // CR3 Fish & Coral Organs: Sculk Fish, Sculk Coral Organs and their hooks, fish buckets
+        com.thesift.registry.ModBandTable.register(modBus); // F2 Band Table: the Music Band Table, its score, the Sift enchantments' effects
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

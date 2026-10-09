@@ -266,7 +266,10 @@ item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1)
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
 # --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments
 SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn", "aurora": "Aurora",
-               "whale": "Whale Song", "lullaby": "Lullaby"}  # CLEAN: the Tide Song is gone
+               "whale": "Whale Song", "lullaby": "Lullaby",  # CLEAN: the Tide Song is gone
+               # F2 Band Table & songs: a drum song, the Dolphin's symphony and the two enchanting songs
+               "heartbeat": "The Heartbeat", "dolphin": "Symphony of the Dolphin", "canon": "The Enchanter's Canon",
+               "requiem": "Sculk Requiem"}
 for _s, _t in SONG_TITLES.items():
     item(f"music_sheet_{_s}", cls="MusicSheetItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name=f"Music Sheet: {_t}")
 item("prism_flute", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
@@ -274,6 +277,9 @@ item("prism_harp", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentIte
 item("prism_drum", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_DRUM, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
 # C4 songs: the Wind Chimes, the instrument of the Echoer's Offering (and the Crystal Hymn)
 item("wind_chimes", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentItem(com.thesift.music.Instrument.WIND_CHIMES, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", tab="combat")
+# F2 Band Table: the Music Band Table (block entity, renderer and score screen in Java; art and data in tools/band_table.py)
+block("band_table", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).strength(2.5F).lightLevel(s -> 6)"
+      ".noOcclusion()", cls="BandTableBlock", model="band_table", tags=["axe"], tab="functional", name="Music Band Table")
 # --- end songs & instruments
 
 # ---------------------------------------------------------------- the wild creatures' drops and gear

@@ -329,6 +329,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
     public static final DeferredBlock<ChromeLiquidBlock> CHROME = BLOCKS.registerBlock("chrome", ChromeLiquidBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8));
+    public static final DeferredBlock<BandTableBlock> BAND_TABLE = BLOCKS.registerBlock("band_table", BandTableBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).strength(2.5F).lightLevel(s -> 6).noOcclusion());
     public static final DeferredBlock<PitcherPlanterBlock> PITCHER_PLANTER = BLOCKS.registerBlock("pitcher_planter", PitcherPlanterBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT).mapColor(MapColor.TERRACOTTA_PINK).strength(1.0F).lightLevel(s -> s.getValue(com.thesift.block.PitcherPlanterBlock.STAGE) == 4 ? 6 : 0).noOcclusion());
     public static final DeferredBlock<DropExperienceBlock> PRISM_ORE = BLOCKS.registerBlock("prism_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),

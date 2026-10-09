@@ -1,0 +1,140 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "minecraft:stored_enchantments",
+    "cases": [
+      {
+        "when": [
+          {
+            "thesift:melody_steps": 1
+          },
+          {
+            "thesift:melody_steps": 2
+          },
+          {
+            "thesift:melody_steps": 3
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_melody_steps"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:hushed_step": 1
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_hushed_step"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:sculk_ward": 1
+          },
+          {
+            "thesift:sculk_ward": 2
+          },
+          {
+            "thesift:sculk_ward": 3
+          },
+          {
+            "thesift:sculk_ward": 4
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_sculk_ward"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:echo_strike": 1
+          },
+          {
+            "thesift:echo_strike": 2
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_echo_strike"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:resonance": 1
+          },
+          {
+            "thesift:resonance": 2
+          },
+          {
+            "thesift:resonance": 3
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_resonance"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:crescendo": 1
+          },
+          {
+            "thesift:crescendo": 2
+          },
+          {
+            "thesift:crescendo": 3
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_crescendo"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:reverb": 1
+          },
+          {
+            "thesift:reverb": 2
+          },
+          {
+            "thesift:reverb": 3
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_reverb"
+        }
+      },
+      {
+        "when": [
+          {
+            "thesift:fortissimo": 1
+          },
+          {
+            "thesift:fortissimo": 2
+          }
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/sift_book_fortissimo"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/enchanted_book"
+    }
+  }
+}

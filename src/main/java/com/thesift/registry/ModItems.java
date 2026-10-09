@@ -158,6 +158,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GLOWING_SLIME_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWING_SLIME_BLOCK);
     public static final DeferredItem<BlockItem> SOUL_CHIME = ITEMS.registerSimpleBlockItem(ModBlocks.SOUL_CHIME);
     public static final DeferredItem<BlockItem> MUSICAL_COBWEB = ITEMS.registerSimpleBlockItem(ModBlocks.MUSICAL_COBWEB);
+    public static final DeferredItem<BlockItem> BAND_TABLE = ITEMS.registerSimpleBlockItem(ModBlocks.BAND_TABLE);
     public static final DeferredItem<BlockItem> PITCHER_PLANTER = ITEMS.registerSimpleBlockItem(ModBlocks.PITCHER_PLANTER);
     public static final DeferredItem<BlockItem> PRISM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.PRISM_ORE);
     public static final DeferredItem<BlockItem> DEEP_PRISM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_PRISM_ORE);
@@ -245,6 +246,10 @@ public final class ModItems {
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_AURORA = ITEMS.registerItem("music_sheet_aurora", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_WHALE = ITEMS.registerItem("music_sheet_whale", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_LULLABY = ITEMS.registerItem("music_sheet_lullaby", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_HEARTBEAT = ITEMS.registerItem("music_sheet_heartbeat", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_DOLPHIN = ITEMS.registerItem("music_sheet_dolphin", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_CANON = ITEMS.registerItem("music_sheet_canon", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_REQUIEM = ITEMS.registerItem("music_sheet_requiem", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<SiftInstrumentItem> PRISM_FLUTE = ITEMS.registerItem("prism_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftInstrumentItem> PRISM_HARP = ITEMS.registerItem("prism_harp", p -> new SiftInstrumentItem(com.thesift.music.Instrument.HARP, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftInstrumentItem> PRISM_DRUM = ITEMS.registerItem("prism_drum", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));

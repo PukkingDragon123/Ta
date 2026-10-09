@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:book",
+    "G": "minecraft:gold_ingot",
+    "N": "minecraft:note_block",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    " B ",
+    "GNG",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:band_table"
+  }
+}

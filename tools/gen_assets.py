@@ -308,6 +308,8 @@ def gen_block(b):
         echoer_world.gen_block(sys.modules[__name__], bid, k)
     elif k == 'sift_sniffer_egg':  # E1 Sniffer & rot: the fluffy egg
         __import__('sift_sniffer').gen_egg(sys.modules[__name__], bid)
+    elif k == 'band_table':  # F2 Band Table: the table's still body, from its model
+        __import__('band_table').gen_block(sys.modules[__name__], bid)
     elif k == 'swifter_den':  # A2 Swifter: the den, a nest of fluff and twigs
         __import__('swifter').gen_den(sys.modules[__name__], bid)
     elif k == 'chime_pane':  # A3 Chrome: the Chime Glass Pane
@@ -1387,6 +1389,7 @@ def generate():
     __import__('conductor').assets(sys.modules[__name__])  # C3 Conductor: the 3D Conductor's Staff (flat sprite kept in the GUI)
     __import__('band').assets(sys.modules[__name__])  # M2 band: band panel text, creature instrument names, Codex page
     __import__('sifter').assets(sys.modules[__name__])  # CR1: bell and echo ring particles, the living bell's Codex page
+    __import__('band_table').assets(sys.modules[__name__])  # F2 Band Table: Sift enchantments, their books, recipe, sheet loot, text
 
 
 def finalize():

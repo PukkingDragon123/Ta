@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "thesift:gameplay/music_sheets_vanilla_shipwreck_treasure",
+  "pools": [
+    {
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_dolphin",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

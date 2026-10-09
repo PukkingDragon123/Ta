@@ -23,6 +23,21 @@
           "type": "minecraft:item",
           "name": "thesift:music_sheet_aurora",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_requiem",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_canon",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_heartbeat",
+          "weight": 1
         }
       ]
     }

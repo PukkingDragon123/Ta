@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "thesift:block/band_table"
+    },
+    "facing=east": {
+      "model": "thesift:block/band_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "thesift:block/band_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "thesift:block/band_table",
+      "y": 270
+    }
+  }
+}

@@ -97,7 +97,8 @@ public final class Bands {
     /** How strongly this player's songs ring out: 1 alone, {@link #POWER_PER_MEMBER} more per band member. */
     public static float power(@Nullable Player player) {
         Band band = player == null ? null : bandOf(player);
-        return band == null ? 1.0F : power(band);
+        // F2 Band Table: Reverb on the instrument in hand makes songs reach further still
+        return (band == null ? 1.0F : power(band)) * com.thesift.enchant.SiftEnchantEffects.reverb(player);
     }
 
     private static float power(Band band) {

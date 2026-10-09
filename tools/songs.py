@@ -20,10 +20,15 @@ SONGS = {
     'whale': ([8, 6, 3, 6, 8, 13], '#66d2f0'),
     'lullaby': ([13, 11, 10, 8, 10, 6], '#c7a6f0'),
     'aurora': ([6, 10, 13, 18, 15, 13], '#ff8ae0'),  # M1: a Prism song
+    # F2 Band Table & songs: a drum song, the Dolphin's symphony, the two enchanting songs
+    'heartbeat': ([1, 3, 1, 3, 10, 8, 6, 1], '#d0404a'),
+    'dolphin': ([10, 15, 13, 18, 15, 10, 13, 18], '#4ab8e8'),
+    'canon': ([6, 13, 11, 16, 13, 18, 16, 21], '#e8b040'),
+    'requiem': ([18, 15, 13, 8, 10, 6, 8, 6], '#1f8a8a'),
 }
 # M1 instrument play: a drum song's rhythm (half-beats per note) and a Prism song's lights (0 rose, 1 amber, 2 cyan,
 # 3 violet) - mirrors music/Song.java
-SONG_BEATS = {}  # CLEAN: the Tide Song (the only drum song so far) is gone
+SONG_BEATS = {'heartbeat': [1, 3, 1, 3, 2, 2, 2, 4]}  # F2: the Heartbeat (CLEAN: the Tide Song is gone)
 SONG_LIGHTS = {'aurora': [0, 1, 2, 3, 2, 0]}
 LIGHT_RGB = ['#ff5fa2', '#ffc341', '#3fe6e0', '#a67bff']
 SONG_DESC = {
@@ -34,14 +39,18 @@ SONG_DESC = {
     'whale': 'A Sky Whale nearby will come and sing back.',
     'lullaby': 'Puts nearby monsters to sleep and lulls the Gobbler.',
     'aurora': 'Lights up the dark, outlines monsters and lends night eyes.',
+    'heartbeat': 'The deep pulse under the Sift, drummed. At the Band Table it wakes Resonance and Crescendo in a weapon.',
+    'dolphin': 'Dolphins dance to it, and the Clam Chests of the deep open for it.',
+    'canon': 'Each phrase answers the last. At the Band Table it binds Reverb and Fortissimo into an instrument.',
+    'requiem': "The Ancient Cities' lament. At the Band Table it binds Sculk Ward and Echo Strike.",
 }
 
 # Where the sheets are found: chest table -> [(song, weight)], plus how often a sheet turns up at all.
 SHEET_LOOT = {
-    'chests/sculk_castle': ([('lullaby', 2), ('whale', 2), ('aurora', 1)], 0.5),
+    'chests/sculk_castle': ([('lullaby', 2), ('whale', 2), ('aurora', 1), ('requiem', 2), ('canon', 1), ('heartbeat', 1)], 0.5),
     # W1: the old ruins are gone; their sheets are brushed out of buried relics (gen_data's archaeology tables), the
     # Sifter swallows some, the Gobbler some, and the Thumper's cannon towers keep a few
-    'chests/drum_pit_armory': ([('whale', 2), ('golem', 2), ('crystal', 1)], 0.3),
+    'chests/drum_pit_armory': ([('whale', 2), ('golem', 2), ('crystal', 1), ('heartbeat', 3), ('canon', 1)], 0.3),
     'gameplay/frozen_crystal': ([('aurora', 1)], 0.25),  # M1: the Caravans' frozen treasure keeps the Aurora
 }
 
@@ -50,7 +59,7 @@ SHEET_LOOT = {
 
 # C4 songs: what each song must be played on (mirrors Song.java; None = any instrument)
 SONG_INSTRUMENT = {'offering': 'chimes', 'nib': 'strings', 'golem': None, 'crystal': 'chimes', 'whale': 'flute',
-                   'lullaby': 'strings', 'aurora': 'prism'}
+                   'lullaby': 'strings', 'aurora': 'prism', 'heartbeat': 'drum', 'dolphin': 'flute', 'canon': 'strings', 'requiem': 'chimes'}
 INSTRUMENT_NAMES = {
     'any': 'any instrument', 'flute': 'a flute (Crane, Serbim or Prism Flute)', 'drum': 'a drum (Conga, Thunder or Prism Drum)',
     'strings': "strings (Guitar, Star Lute, Weaver's Guitar or Prism Harp)", 'chimes': 'chimes (Wind Chimes, Glass Bells or Prism Chimes)',
@@ -108,8 +117,8 @@ def lang():
         f'music.{NS}.guide.needs': 'Needs %s',
         f'music.{NS}.guide.done': 'Played!',
         f'item.{NS}.wind_chimes.desc': 'Use to play: strike the chimes as they swing past the mark.',
-        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Seven songs, seven sheets',
-        f'codex.{NS}.songs.body': 'Sheets lie in buried relics, the Sculk Castle and the Drum Pit armoury, and some creatures carry them. Carry one and play its notes in order on the right instrument. A semitone off or one slip is forgiven. Chimes: Offering, Crystal Hymn. Strings: Nibs, Lullaby. Flute: Whale. Prism, in its lights: Aurora. Golem Hymn: anything.',
+        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Eleven songs, eleven sheets',
+        f'codex.{NS}.songs.body': 'Sheets lie in relics, castles, the Drum Pit, Ancient Cities, libraries and sunken treasure. Play a carried sheet\'s notes in order on the right instrument; one slip is forgiven. Chimes: Offering, Crystal, Requiem. Strings: Nibs, Lullaby, Canon. Flute: Whale, Dolphin. Drum, on the beat: Heartbeat. Prism: Aurora. Golem Hymn: any.',
         f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Notes of light',
         f'codex.{NS}.prism_instruments.body': 'Ring an upgraded instrument with prism gems: Star Lute to Prism Harp (a string for every note), Serbim Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - keys 1-4 or the mouse wheel - and lights the air. Prism songs such as the Aurora ask for the lights too.',
     })

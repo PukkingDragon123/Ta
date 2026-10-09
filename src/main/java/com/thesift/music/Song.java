@@ -34,7 +34,16 @@ public enum Song {
     /** The lullaby: puts nearby creatures to sleep and lulls the Gobbler. */
     LULLABY(new int[]{13, 11, 10, 8, 10, 6}, Instrument.Family.STRINGS),
     /** M1: the Aurora, a Prism song - every note in its colour of light, on any Prism instrument. */
-    AURORA(new int[]{6, 10, 13, 18, 15, 13}, null, new int[0], new int[]{0, 1, 2, 3, 2, 0});
+    AURORA(new int[]{6, 10, 13, 18, 15, 13}, null, new int[0], new int[]{0, 1, 2, 3, 2, 0}),
+    // ---- F2 Band Table & songs: a drum song, the Dolphin's symphony and the two enchanting songs
+    /** The Heartbeat, a drum song: lub-dub, lub-dub, then a rising roll - the deep pulse under the Sift. Enchants weapons. */
+    HEARTBEAT(new int[]{1, 3, 1, 3, 10, 8, 6, 1}, Instrument.Family.DRUM, new int[]{1, 3, 1, 3, 2, 2, 2, 4}, new int[0]),
+    /** The Symphony of the Dolphin, whistled on a flute: it opens Clam Chests and sets dolphins dancing (heard via {@link SongEvents}). */
+    DOLPHIN(new int[]{10, 15, 13, 18, 15, 10, 13, 18}, Instrument.Family.FLUTE),
+    /** The Enchanter's Canon on strings, each phrase answering the last a fifth higher: binds songs into instruments. */
+    CANON(new int[]{6, 13, 11, 16, 13, 18, 16, 21}, Instrument.Family.STRINGS),
+    /** The Sculk Requiem, rung on chimes: the Ancient Cities' lament, which wards against the Sculk. */
+    REQUIEM(new int[]{18, 15, 13, 8, 10, 6, 8, 6}, Instrument.Family.CHIMES);
 
     /** Ticks in one half-beat of a song's rhythm (120 beats a minute). */
     public static final int STEP = 5;
