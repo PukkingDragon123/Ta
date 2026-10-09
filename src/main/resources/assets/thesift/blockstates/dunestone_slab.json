@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/dunestone_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/dunestone"
+    },
+    "type=top": {
+      "model": "thesift:block/dunestone_slab_top"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": "thesift:white_lullwood_planks",
+    "#": "minecraft:stick"
+  },
+  "pattern": [
+    "W#W",
+    "W#W"
+  ],
+  "result": {
+    "count": 3,
+    "id": "thesift:white_lullwood_fence"
+  },
+  "group": "wooden_fence"
+}

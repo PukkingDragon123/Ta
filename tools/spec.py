@@ -81,15 +81,7 @@ stone_set("cracked_hushslate_bricks", DEEP_BRICK, mapcolor=HUSH_COLOR, stairs=Fa
 stone_set("hushslate_tiles", DEEP_BRICK, mapcolor=HUSH_COLOR)
 block("chiseled_hushslate", "cube", DEEP_BRICK + f".mapColor({HUSH_COLOR})", tags=["pickaxe"])
 
-SAND_COLOR = "MapColor.COLOR_PINK"
-block("dreamsand", "falling", "BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.COLOR_PINK)",
-      dust="0xF2A7C3", tags=["shovel", "sand"])
-block("suspicious_dreamsand", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SUSPICIOUS_SAND).mapColor(MapColor.COLOR_PINK)",
-      cls="SuspiciousDreamsandBlock", model="suspicious", tags=["shovel"], loot="none", item_kind="block")
-stone_set("dreamsandstone", SANDSTONE, mapcolor=SAND_COLOR, kind="sandstone")
-stone_set("smooth_dreamsandstone", SANDSTONE, mapcolor=SAND_COLOR, wall=False, kind="cube")
-stone_set("cut_dreamsandstone", SANDSTONE, mapcolor=SAND_COLOR, stairs=False, wall=False, kind="sandstone_cut")
-block("chiseled_dreamsandstone", "sandstone_chiseled", SANDSTONE + f".mapColor({SAND_COLOR})", tags=["pickaxe"])
+# W-land: the old pink Dreamsand family is gone - Chime Sand, Suspicious Chime Sand and Chime Sandstone took its place (tools/wland.py)
 
 BLUSH_COLOR = "MapColor.COLOR_RED"
 stone_set("blush_bricks", BRICK, mapcolor=BLUSH_COLOR)
@@ -129,6 +121,7 @@ WOODS = {
                        leaf_chance="0.025F", sapling_on="sift",
                        leaves_props="BlockBehaviour.Properties.ofFullCopy(Blocks.DARK_OAK_LEAVES).mapColor(MapColor.COLOR_CYAN)"),
 }
+WOODS.update(__import__("wland").WOODS)  # W-land: the White Forest's White Lullwood is a full wood family
 for w, c in WOODS.items():
     LOG = f"BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG).mapColor({c['bark']})"
     PL = f"BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).mapColor({c['plank']})"
@@ -149,7 +142,7 @@ for w, c in WOODS.items():
     block(f"{w}_leaves", "leaves", c.get("leaves_props") or ("BlockBehaviour.Properties.ofFullCopy(Blocks.CHERRY_LEAVES).mapColor(MapColor.COLOR_LIGHT_BLUE)"
           if w == "wishwood" else "BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_OAK_LEAVES).mapColor(MapColor.SNOW)"),
           tags=["hoe", "leaves"], loot=f"leaves:{w}_sapling", particle=c["leaves_particle"], chance=c["leaf_chance"], wood=w)
-    block(f"{w}_sapling", "sapling", "BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)", tags=["saplings"], grower=f"ModTreeGrowers.{w.upper()}", wood=w)
+    block(f"{w}_sapling", "sapling", "BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)", tags=["saplings"], grower=c.get("grower", f"ModTreeGrowers.{w.upper()}"), wood=w)
     block(f"potted_{w}_sapling", "pot", "BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING)", plant=f"{w}_sapling", item=False,
           loot=f"pot:{w}_sapling")
 
@@ -385,3 +378,5 @@ __import__("caves").declare(block, item)
 __import__("sea_reefs").declare(block, item)
 # ---------------------------------------------------------------- W-sky: Sky Islands - vines, roots, sky trees, Driftfruit, Skyrind (tools/sky_islands.py)
 __import__("sky_islands").declare(block, item)
+# ---------------------------------------------------------------- W-land: Rocky Dunes rock, sand and plants; White Forest snow and flowers (tools/wland.py)
+__import__("wland").declare(block, item)

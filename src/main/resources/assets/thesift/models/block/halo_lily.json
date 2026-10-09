@@ -1,0 +1,161 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "stem": "thesift:block/halo_lily_stem",
+    "halo": "thesift:block/halo_lily_halo",
+    "bud": "thesift:block/halo_lily_bud",
+    "particle": "thesift:block/halo_lily_halo"
+  },
+  "elements": [
+    {
+      "from": [
+        3.2,
+        0,
+        8
+      ],
+      "to": [
+        12.8,
+        13,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3.2,
+            3,
+            12.8,
+            16
+          ],
+          "texture": "#stem"
+        },
+        "south": {
+          "uv": [
+            3.2,
+            3,
+            12.8,
+            16
+          ],
+          "texture": "#stem"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up"
+    },
+    {
+      "from": [
+        8,
+        0,
+        3.2
+      ],
+      "to": [
+        8,
+        13,
+        12.8
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            3.2,
+            3,
+            12.8,
+            16
+          ],
+          "texture": "#stem"
+        },
+        "east": {
+          "uv": [
+            3.2,
+            3,
+            12.8,
+            16
+          ],
+          "texture": "#stem"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up"
+    },
+    {
+      "from": [
+        1,
+        10,
+        1
+      ],
+      "to": [
+        15,
+        10,
+        15
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#halo"
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#halo"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10,
+        7
+      ],
+      "to": [
+        9,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bud"
+        },
+        "south": {
+          "texture": "#bud"
+        },
+        "east": {
+          "texture": "#bud"
+        },
+        "west": {
+          "texture": "#bud"
+        },
+        "up": {
+          "texture": "#bud"
+        },
+        "down": {
+          "texture": "#bud"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": "thesift:chime_sandstone",
+  "result": {
+    "id": "thesift:smooth_chime_sandstone"
+  }
+}

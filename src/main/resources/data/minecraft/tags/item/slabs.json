@@ -11,12 +11,14 @@
     "thesift:polished_hushslate_slab",
     "thesift:hushslate_brick_slab",
     "thesift:hushslate_tile_slab",
-    "thesift:dreamsandstone_slab",
-    "thesift:smooth_dreamsandstone_slab",
-    "thesift:cut_dreamsandstone_slab",
     "thesift:blush_brick_slab",
     "thesift:lullwood_slab",
     "thesift:wishwood_slab",
-    "thesift:blightwood_slab"
+    "thesift:blightwood_slab",
+    "thesift:white_lullwood_slab",
+    "thesift:chime_sandstone_slab",
+    "thesift:smooth_chime_sandstone_slab",
+    "thesift:cut_chime_sandstone_slab",
+    "thesift:dunestone_slab"
   ]
 }

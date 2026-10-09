@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "resonating=false": {
+      "model": "thesift:block/halo_lily"
+    },
+    "resonating=true": {
+      "model": "thesift:block/halo_lily"
+    }
+  }
+}

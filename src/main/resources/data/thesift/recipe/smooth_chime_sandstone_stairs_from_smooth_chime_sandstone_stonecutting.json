@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:smooth_chime_sandstone",
+  "result": {
+    "count": 1,
+    "id": "thesift:smooth_chime_sandstone_stairs"
+  }
+}

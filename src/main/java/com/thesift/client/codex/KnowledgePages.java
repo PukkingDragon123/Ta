@@ -64,7 +64,7 @@ final class KnowledgePages {
         KEYS.put("white_forest", new String[]{"biome:thesift:white_forest"});
         KEYS.put("sculk_swamp", new String[]{"biome:thesift:sculk_swamp"});
         KEYS.put("sculk_ocean", new String[]{"biome:thesift:deep_dark_ocean"});
-        KEYS.put("relics", new String[]{"item:thesift:suspicious_dreamsand", sift});
+        KEYS.put("relics", new String[]{"item:thesift:suspicious_chime_sand", sift});
         KEYS.put("sculk_castle", new String[]{"structure:thesift:sculk_castle"});
         KEYS.put("stage", new String[]{"structure:thesift:sculk_castle"});
         KEYS.put("caravan_colony", new String[]{"structure:thesift:caravan_colony"});

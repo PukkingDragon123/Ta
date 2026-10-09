@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "thesift:smooth_dreamsandstone",
-  "result": {
-    "count": 1,
-    "id": "thesift:smooth_dreamsandstone_stairs"
-  }
-}

@@ -291,7 +291,7 @@ def _surface(GW, rule):
         return {'type': 'minecraft:sequence', 'sequence': list(r)}
     mine = [
         cond(biome_is('magic_kelp_forest'), seq(cond('minecraft:on_floor', block('coral_sand')), cond('minecraft:under_floor', block('coral_sand')),
-                                                cond('minecraft:deep_under_floor', block('dreamsandstone')))),
+                                                cond('minecraft:deep_under_floor', block('chime_sandstone')))),
         # W1: the Sculk Ocean's floor rules live in tools/sculk_world.py (_surface)
     ]
     for r in rule['sequence']:

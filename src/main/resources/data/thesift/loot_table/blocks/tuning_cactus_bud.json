@@ -1,0 +1,44 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:tuning_cactus_bud",
+          "weight": 1
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:tuning_fruit",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "thesift:tuning_cactus_bud",
+        "state": {
+          "fruit": "true"
+        }
+      }
+    }
+  ],
+  "random_sequence": "thesift:blocks/tuning_cactus_bud"
+}

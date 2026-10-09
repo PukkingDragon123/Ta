@@ -479,15 +479,7 @@ MAP = {
     'blush_bricks': C('nether_bricks'),
     'cracked_blush_bricks': C('cracked_nether_bricks'),
     'chiseled_blush_bricks': C('chiseled_nether_bricks'),
-    # --- Dreamsand / sandstone
-    'dreamsand': C('sand'),
-    **{f'suspicious_dreamsand_{i}': C(f'suspicious_sand_{i}', acc=True) for i in range(4)},
-    'dreamsandstone': C('sandstone'),
-    'dreamsandstone_top': C('sandstone_top'),
-    'dreamsandstone_bottom': C('sandstone_bottom'),
-    'cut_dreamsandstone': C('cut_sandstone'),
-    'chiseled_dreamsandstone': C('chiseled_sandstone'),
-    'smooth_dreamsandstone': C('sandstone_top'),
+    # --- sand (W-land: the Dreamsand family is gone; Chime Sandstone and Dunestone are mapped in tools/wland_art.py)
     'coral_sand': C('red_sand', acc=True),
     'chime_sand': C('sand', acc=True),
     # --- soils & turf
@@ -636,7 +628,7 @@ def _edits(name, a):
         _note(a, 6, 5, (88, 226, 230), shade=dark)
     elif name == 'chiseled_blush_bricks':
         _note(a, 6, 5, glow, shade=dark)
-    elif name == 'chiseled_dreamsandstone':  # the creeper face is sanded off and a note carved instead
+    elif name == 'chiseled_chime_sandstone':  # the creeper face is sanded off and a note carved instead
         a[4:11, 3:13] = _clone(_ref('sandstone_top'), o)[4:11, 3:13]
         _note(a, 6, 5, glow, shade=dark)
     elif name in ('hushslate', 'cobbled_hushslate', 'hushslate_top'):

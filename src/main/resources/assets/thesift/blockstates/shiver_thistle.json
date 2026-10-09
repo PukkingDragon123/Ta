@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "resonating=false": {
+      "model": "thesift:block/shiver_thistle"
+    },
+    "resonating=true": {
+      "model": "thesift:block/shiver_thistle"
+    }
+  }
+}

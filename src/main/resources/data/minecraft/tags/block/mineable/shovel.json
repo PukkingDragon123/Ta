@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-    "thesift:dreamsand",
-    "thesift:suspicious_dreamsand",
     "thesift:sift_soil",
     "thesift:sift_grass_block",
     "thesift:coral_turf",
@@ -11,6 +9,9 @@
     "thesift:chime_sand",
     "thesift:sculk_mud",
     "thesift:copper_sand",
-    "thesift:sky_grass_block"
+    "thesift:sky_grass_block",
+    "thesift:suspicious_chime_sand",
+    "thesift:rainbow_snow",
+    "thesift:rainbow_snow_block"
   ]
 }

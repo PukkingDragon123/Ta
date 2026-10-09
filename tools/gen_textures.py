@@ -29,7 +29,6 @@ DREAM = ramp('#9c9682', '#b1ab96', '#c5c0aa', '#d7d3bf', '#e6e3d2', '#f3f1e5')
 DREAM_MORTAR = hx('#857f6c')
 HUSH = ramp('#152331', '#1c2e3f', '#243a4d', '#2e485c', '#3a586c', '#4b6c7e')
 HUSH_MORTAR = hx('#0e1822')
-SAND = ramp('#cf7fa4', '#dd95b6', '#e8a9c6', '#f1bdd4', '#f8d0e1', '#fde3ee')
 BLUSH = ramp('#7a2442', '#983457', '#b3496d', '#c96284', '#dc7e9b', '#eb9db4')
 BLUSH_MORTAR = hx('#4a1528')
 SOIL = ramp('#6a4252', '#7b4f5f', '#8d5e6d', '#9e6e7c', '#b0808c')
@@ -166,34 +165,7 @@ def stone_textures():
     out('block/cracked_hushslate_bricks', crack(M.bricks(HUSH[1:6], HUSH_MORTAR, 25), 26, HUSH_MORTAR, 3))
     out('block/hushslate_tiles', M.tiles(HUSH[1:6], HUSH_MORTAR, 27, 4))
     out('block/chiseled_hushslate', chiseled(HUSH, RUNE, 28, {'L': hx('#4fe8e0'), 'd': HUSH[0]}))
-    # sand & sandstone
-    out('block/dreamsand', M.grain(SAND[0:5], 31))
-    ss = M.stone(SAND[1:6], 32, light=3, dark=4, core=0.0)
-    for x in range(16):
-        ss.set(x, 0, SAND[5]); ss.set(x, 1, SAND[4]); ss.set(x, 2, SAND[2])
-        ss.set(x, 10, SAND[1]); ss.set(x, 11, SAND[2])
-        ss.set(x, 15, SAND[0])
-    out('block/dreamsandstone', ss)
-    out('block/dreamsandstone_top', M.stone(SAND[1:6], 33, light=4, dark=3, core=0.0))
-    out('block/dreamsandstone_bottom', crack(M.stone(SAND[0:5], 34, light=3, dark=5, core=0.0), 35, SAND[0], 2))
-    out('block/smooth_dreamsandstone', M.stone(SAND[1:6], 36, light=2, dark=2, core=0.0))
-    cut = M.stone(SAND[1:6], 37, light=2, dark=2, core=0.0)
-    for x in range(16):
-        cut.set(x, 0, SAND[5]); cut.set(x, 15, SAND[0]); cut.set(x, 7, SAND[1]); cut.set(x, 8, SAND[4])
-    out('block/cut_dreamsandstone', cut)
-    ch = M.polished(SAND[1:6], 38)
-    draw_map(ch, ['..........', '..hh..hh..', '.h..hh..h.', '.h..pp..h.', '..h.pp.h..', '...hppg...', '..h.pp.h..', '.h..pp..h.', '..hh..hh..',
-                  '..........'], {'h': SAND[0], 'p': hx('#c95b8f'), 'g': hx('#ffe89a')}, 3, 3)
-    out('block/chiseled_dreamsandstone', ch)
-    for i in range(4):
-        sus = M.grain(SAND[0:5], 31)
-        rnd = random.Random(40 + i)
-        for _ in range(2 + i * 2):
-            x, y = rnd.randrange(3, 13), rnd.randrange(3, 13)
-            sus.set(x, y, hx('#7fe8ff')); sus.set(x + 1, y, hx('#4fb9d6'))
-        for _ in range(i * 6):
-            sus.set(rnd.randrange(16), rnd.randrange(16), SAND[0])
-        out(f'block/suspicious_dreamsand_{i}', sus)
+    # (W-land: the old Dreamsand family is gone; Chime Sandstone and Dunestone are painted in tools/wland_art.py)
     # blush bricks
     out('block/blush_bricks', M.bricks(BLUSH[1:6], BLUSH_MORTAR, 41))
     out('block/cracked_blush_bricks', crack(M.bricks(BLUSH[1:6], BLUSH_MORTAR, 41), 42, BLUSH_MORTAR, 3))
@@ -1717,6 +1689,7 @@ def main():
     __import__('caves_art').textures(out)  # W-deep caves: crystal dripstone, cave jungle plants and acid, writhing sculk, tendrils, Grasper
     __import__('sea_reefs_art').textures(out)  # W-sea: Copper Sand, Trumpet Coral, Bubble Coral, Tube Seaweed, Algae, Rainbow Anemone
     __import__('sky_islands').textures(out)  # W-sky: Sky Islands blocks, Driftfruit, Skyrind, the swinging rope (tools/sky_art.py)
+    __import__('wland_art').textures(out)  # W-land: Rocky Dunes rock/sand/plants, White Lullwood, Rainbow Snow, frost flowers
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)
     need = os.path.join(ROOT, 'build/textures_needed.txt')

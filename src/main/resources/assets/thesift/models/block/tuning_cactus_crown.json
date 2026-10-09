@@ -1,0 +1,140 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "side": "thesift:block/tuning_cactus",
+    "bud": "thesift:block/tuning_cactus_bud",
+    "crown": "thesift:block/tuning_cactus_crown",
+    "fruit": "thesift:block/tuning_fruit_pod",
+    "particle": "thesift:block/tuning_cactus_bud"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        5
+      ],
+      "to": [
+        11,
+        9,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "down": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        7
+      ],
+      "to": [
+        12,
+        11,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crown"
+        },
+        "south": {
+          "texture": "#crown"
+        },
+        "east": {
+          "texture": "#crown"
+        },
+        "west": {
+          "texture": "#crown"
+        },
+        "up": {
+          "texture": "#crown"
+        },
+        "down": {
+          "texture": "#crown"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        11,
+        7
+      ],
+      "to": [
+        6,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crown"
+        },
+        "south": {
+          "texture": "#crown"
+        },
+        "east": {
+          "texture": "#crown"
+        },
+        "west": {
+          "texture": "#crown"
+        },
+        "up": {
+          "texture": "#crown"
+        },
+        "down": {
+          "texture": "#crown"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        11,
+        7
+      ],
+      "to": [
+        12,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crown"
+        },
+        "south": {
+          "texture": "#crown"
+        },
+        "east": {
+          "texture": "#crown"
+        },
+        "west": {
+          "texture": "#crown"
+        },
+        "up": {
+          "texture": "#crown"
+        },
+        "down": {
+          "texture": "#crown"
+        }
+      }
+    }
+  ]
+}

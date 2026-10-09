@@ -59,6 +59,7 @@ public class TheSiftClient {
         modBus.addListener(TheSiftClient::registerFluidModels);
         EchoerClient.register(modBus); // A2 Echoer: Soul Golems and Nibs
         SwifterClient.register(modBus); // A2 Swifter & White Forest: the Swifter, drifting fluff, the forest's white mist
+        WorldLandClient.register(modBus); // W-land: the rainbow snowflake
         CaveCreaturesClient.register(modBus); // A4 cave creatures: the Jailer and Sculklings
         SiftSnifferClient.register(modBus); // E1 Sniffer & rot: the Sift Sniffer
         com.thesift.client.bandtable.BandTableClient.register(modBus); // F2 Band Table: the animated table, its score screen, Sift books

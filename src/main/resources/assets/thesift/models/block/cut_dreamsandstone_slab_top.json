@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "bottom": "thesift:block/cut_dreamsandstone",
-    "side": "thesift:block/cut_dreamsandstone",
-    "top": "thesift:block/cut_dreamsandstone"
-  }
-}

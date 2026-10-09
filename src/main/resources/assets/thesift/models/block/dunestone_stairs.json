@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "thesift:block/dunestone",
+    "side": "thesift:block/dunestone",
+    "top": "thesift:block/dunestone"
+  }
+}

@@ -11,11 +11,13 @@
     "thesift:polished_hushslate_stairs",
     "thesift:hushslate_brick_stairs",
     "thesift:hushslate_tile_stairs",
-    "thesift:dreamsandstone_stairs",
-    "thesift:smooth_dreamsandstone_stairs",
     "thesift:blush_brick_stairs",
     "thesift:lullwood_stairs",
     "thesift:wishwood_stairs",
-    "thesift:blightwood_stairs"
+    "thesift:blightwood_stairs",
+    "thesift:white_lullwood_stairs",
+    "thesift:chime_sandstone_stairs",
+    "thesift:smooth_chime_sandstone_stairs",
+    "thesift:dunestone_stairs"
   ]
 }

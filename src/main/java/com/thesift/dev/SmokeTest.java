@@ -314,7 +314,7 @@ public final class SmokeTest {
             LootTable table = server.reloadableRegistries().getLootTable(block.getLootTable().get());
             String id = BuiltInRegistries.BLOCK.getKey(block).toString();
             boolean exempt = id.endsWith("portal") || id.endsWith("lingering_glow")
-                    || id.endsWith(":chrome") || id.endsWith(":sculk_water") || id.endsWith("suspicious_dreamsand") || id.endsWith("crumbling_dreamstone") || id.endsWith("sift_cake")
+                    || id.endsWith(":chrome") || id.endsWith(":sculk_water") || id.endsWith("suspicious_chime_sand") || id.endsWith("crumbling_dreamstone") || id.endsWith("sift_cake")
                     || id.endsWith("conductors_podium") || id.endsWith("encore_sigil") || id.endsWith("instrument_altar");
             if (!exempt) {
                 check(table != LootTable.EMPTY, "loot table for " + id);

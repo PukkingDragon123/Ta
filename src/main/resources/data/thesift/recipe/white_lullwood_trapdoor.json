@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "thesift:white_lullwood_planks"
+  },
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "result": {
+    "count": 2,
+    "id": "thesift:white_lullwood_trapdoor"
+  },
+  "group": "wooden_trapdoor"
+}

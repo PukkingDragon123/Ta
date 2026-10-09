@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": "thesift:dreamsandstone",
-  "result": {
-    "count": 1,
-    "id": "thesift:cut_dreamsandstone"
-  }
-}

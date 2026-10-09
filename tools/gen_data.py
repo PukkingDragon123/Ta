@@ -62,7 +62,7 @@ def entity_loot():
         pool([item('chrome_pearl')], condition={'type': 'minecraft:all_of', 'terms': [PLAYER_KILL, {
             'type': 'minecraft:random_chance_with_enchanted_bonus', 'enchanted_chance': {'type': 'minecraft:linear', 'base': 0.2, 'per_level_above_first': 0.05},
             'enchantment': 'minecraft:looting', 'unenchanted_chance': 0.15}]})])
-    table('entity', 'entities/sifter', [pool([item('dreamsand', count=(0, 2)), item('star_shard', 1)], condition=None),
+    table('entity', 'entities/sifter', [pool([item('chime_sand', count=(0, 2)), item('star_shard', 1)], condition=None),
                                         pool([item('glowing_slime_ball', count=(0, 1), extra=[LOOTING])]),
                                         # W1: what it swallowed in the dunes - now and then a lost Music Sheet
                                         pool([item('music_sheet_offering', 2), item('music_sheet_nib', 2), item('music_sheet_lullaby', 1)],
@@ -122,7 +122,7 @@ def chest_loot():
         pool([item('minecraft:golden_apple', 3), item('minecraft:cooked_beef', 8, (2, 5)), item('glowing_slime_ball', 8, (2, 6)),
               item('minecraft:arrow', 6, (4, 12)), item('chrome_pearl', 2), item('minecraft:empty', 4)], (2, 4)),
     ])
-    # W1: the old ruins crumbled into the ground; their relics are brushed out of buried Suspicious Dreamsand
+    # W1: the old ruins crumbled into the ground; their relics are brushed out of buried Suspicious Chime Sand
     # (worldgen/RelicCacheFeature in the dunes, plains, lake shores, kelp forest, swamp and sculk sea) - lost Music Sheets too
     table('archaeology', 'archaeology/sift_common', [pool([
         item('glowing_slime_ball', 3), item('siftite_dust', 2), item('minecraft:pitcher_pod', 2),

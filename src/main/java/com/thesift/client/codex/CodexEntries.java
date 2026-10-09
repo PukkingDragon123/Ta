@@ -201,6 +201,10 @@ public final class CodexEntries {
             if (e instanceof com.thesift.entity.Swifter s) s.codexPose(t);
         }));
         l.add(thing(PLACES, "white_forest", ModItems.WHITE_LULLWOOD_SAPLING));
+        // W-land: the Rocky Dunes (rock, sand and its two plants), Rainbow Snow and the White Forest's frost flowers
+        l.add(thing(PLACES, "rocky_dunes", ModItems.TUNING_CACTUS_BUD));
+        l.add(thing(PLACES, "rainbow_snow", ModItems.RAINBOW_SNOW));
+        l.add(thing(MAGIC, "frost_flowers", ModItems.HALO_LILY));
         // A4 cave creatures: the Jailer slams its cell down on the page; a Sculkling giggles and covers its ears
         l.add(mob(CREATURES, "jailer", com.thesift.registry.ModCaveCreatures.JAILER, (e, t) -> {
             if (e instanceof com.thesift.entity.cave.Jailer j && t % 80 == 10) j.slamAnimation.start(j.tickCount);
@@ -249,7 +253,7 @@ public final class CodexEntries {
         // W-sea: the reef that plays itself, and the coral garden at the bottom of the Chrome
         l.add(thing(PLACES, "brass_coral_reef", ModItems.BRASS_TRUMPET_CORAL_BELL));
         l.add(thing(PLACES, "chrome_coral_ocean", ModItems.ROSE_BUBBLE_CORAL_FAN));
-        l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_DREAMSAND));
+        l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_CHIME_SAND));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // W-deep caves: the normal caves and their crystal, the Cave Jungle, the Sculk Caves

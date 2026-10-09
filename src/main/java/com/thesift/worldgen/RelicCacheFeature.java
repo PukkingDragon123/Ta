@@ -21,7 +21,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 /**
  * W1 World &amp; terrain: a relic cache. The Sift's old ruins have crumbled away; what is left of
  * them lies a block or two under the sand and mud. A few {@code relic} blocks (Suspicious
- * Dreamsand) replace {@code hosts} ground just below the surface, each given its archaeology loot
+ * Chime Sand) replace {@code hosts} ground just below the surface, each given its archaeology loot
  * table (rarely the {@code rare} one), and a fallen {@code marker} block or two pokes out of the
  * ground above to give the spot away - brush them for the Sift's relics and lost music sheets.
  */

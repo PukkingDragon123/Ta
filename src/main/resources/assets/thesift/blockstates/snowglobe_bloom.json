@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "resonating=false": {
+      "model": "thesift:block/snowglobe_bloom"
+    },
+    "resonating=true": {
+      "model": "thesift:block/snowglobe_bloom"
+    }
+  }
+}

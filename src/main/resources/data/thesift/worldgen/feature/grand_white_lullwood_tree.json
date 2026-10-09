@@ -1,7 +1,7 @@
 {
-  "type": "thesift:sift_tree",
+  "type": "thesift:pale_tree",
   "trunk": {
-    "id": "thesift:lullwood_log",
+    "id": "thesift:white_lullwood_log",
     "properties": {
       "axis": "y"
     }
@@ -21,6 +21,6 @@
     }
   },
   "style": "grand",
-  "min_height": 11,
-  "max_height": 16
+  "min_height": 14,
+  "max_height": 19
 }

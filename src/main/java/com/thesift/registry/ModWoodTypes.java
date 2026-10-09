@@ -11,6 +11,9 @@ public final class ModWoodTypes {
     // W1 World & terrain: the Sculk Swamp's corrupted Blightwood
     public static final BlockSetType BLIGHTWOOD_SET = BlockSetType.register(new BlockSetType("thesift_blightwood"));
     public static final WoodType BLIGHTWOOD = WoodType.register(new WoodType("thesift_blightwood", BLIGHTWOOD_SET));
+    // W-land: the White Forest's pearl-barked White Lullwood
+    public static final BlockSetType WHITE_LULLWOOD_SET = BlockSetType.register(new BlockSetType("thesift_white_lullwood"));
+    public static final WoodType WHITE_LULLWOOD = WoodType.register(new WoodType("thesift_white_lullwood", WHITE_LULLWOOD_SET));
 
     private ModWoodTypes() {}
 }

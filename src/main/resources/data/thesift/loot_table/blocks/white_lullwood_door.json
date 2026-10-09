@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "thesift:white_lullwood_door",
+            "state": {
+              "half": "lower"
+            }
+          },
+          "name": "thesift:white_lullwood_door"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "thesift:blocks/white_lullwood_door"
+}

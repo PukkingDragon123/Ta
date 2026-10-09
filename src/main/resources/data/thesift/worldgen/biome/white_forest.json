@@ -95,19 +95,19 @@
           "particle": {
             "type": "thesift:white_fluff"
           },
-          "probability": 0.006
+          "probability": 0.004
+        },
+        {
+          "particle": {
+            "type": "thesift:rainbow_snowflake"
+          },
+          "probability": 0.008
         },
         {
           "particle": {
             "type": "thesift:sift_mist"
           },
           "probability": 0.0015
-        },
-        {
-          "particle": {
-            "type": "thesift:drifting_soul"
-          },
-          "probability": 0.0006
         },
         {
           "particle": {
@@ -163,12 +163,17 @@
     ],
     [
       "thesift:patch_glimmer_sprouts",
+      "thesift:patch_halo_lily",
+      "thesift:patch_snowglobe_bloom",
+      "thesift:patch_shiver_thistle",
       "thesift:trees_white_forest",
       "thesift:patch_white_forest_flowers",
       "thesift:swifter_den",
       "minecraft:patch_grass_forest"
     ],
-    []
+    [
+      "thesift:rainbow_snowfall"
+    ]
   ],
   "has_precipitation": false,
   "temperature": 0.35

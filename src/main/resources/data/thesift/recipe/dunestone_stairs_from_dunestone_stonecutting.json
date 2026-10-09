@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "thesift:dunestone",
+  "result": {
+    "count": 1,
+    "id": "thesift:dunestone_stairs"
+  }
+}

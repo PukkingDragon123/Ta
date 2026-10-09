@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "thesift:block/dreamsandstone",
-    "side": "thesift:block/dreamsandstone",
-    "top": "thesift:block/dreamsandstone"
-  }
-}

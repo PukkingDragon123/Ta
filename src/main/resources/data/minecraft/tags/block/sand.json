@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "thesift:dreamsand",
     "thesift:coral_sand",
+    "thesift:chime_sand",
     "thesift:copper_sand"
   ]
 }

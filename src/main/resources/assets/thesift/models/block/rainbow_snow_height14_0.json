@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/snow_height14",
+  "textures": {
+    "particle": "thesift:block/rainbow_snow_0",
+    "texture": "thesift:block/rainbow_snow_0"
+  }
+}

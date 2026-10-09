@@ -1,0 +1,32 @@
+{
+  "type": "thesift:rock_formation",
+  "style": "balanced",
+  "layers": [
+    {
+      "id": "thesift:dunestone"
+    },
+    {
+      "id": "thesift:dunestone"
+    },
+    {
+      "id": "thesift:banded_dunestone"
+    },
+    {
+      "id": "thesift:dunestone"
+    },
+    {
+      "id": "thesift:dreamstone"
+    },
+    {
+      "id": "thesift:dunestone"
+    },
+    {
+      "id": "thesift:chime_sandstone"
+    }
+  ],
+  "cap": {
+    "id": "thesift:dreamstone"
+  },
+  "min_height": 3,
+  "max_height": 7
+}

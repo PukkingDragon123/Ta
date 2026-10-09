@@ -141,9 +141,9 @@ public class Sifter extends PathfinderMob implements MusicListener, BandPlayer {
         return isSand(this.level().getBlockState(this.blockPosition().below()));
     }
 
-    /** Dreamsand or any sand: the dunes a Sifter lives in. */
+    /** Chime Sand or any sand: the dunes a Sifter lives in. */
     public static boolean isSand(BlockState state) {
-        return state.is(ModBlocks.DREAMSAND.get()) || state.is(BlockTags.SAND);
+        return state.is(ModBlocks.CHIME_SAND.get()) || state.is(BlockTags.SAND);
     }
 
     /** It wanders back to the sand wherever it can. */

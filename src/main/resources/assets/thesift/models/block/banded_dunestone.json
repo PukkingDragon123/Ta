@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "thesift:block/banded_dunestone_top",
+    "side": "thesift:block/banded_dunestone_side"
+  }
+}

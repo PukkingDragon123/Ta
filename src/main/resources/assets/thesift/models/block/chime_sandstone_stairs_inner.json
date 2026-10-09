@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "thesift:block/chime_sandstone",
+    "side": "thesift:block/chime_sandstone",
+    "top": "thesift:block/chime_sandstone"
+  }
+}

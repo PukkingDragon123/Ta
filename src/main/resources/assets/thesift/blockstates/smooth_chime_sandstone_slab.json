@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "thesift:block/smooth_chime_sandstone_slab"
+    },
+    "type=double": {
+      "model": "thesift:block/smooth_chime_sandstone"
+    },
+    "type=top": {
+      "model": "thesift:block/smooth_chime_sandstone_slab_top"
+    }
+  }
+}

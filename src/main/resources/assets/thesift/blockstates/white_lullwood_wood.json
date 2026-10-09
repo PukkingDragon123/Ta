@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "thesift:block/white_lullwood_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "thesift:block/white_lullwood_wood"
+    },
+    "axis=z": {
+      "model": "thesift:block/white_lullwood_wood",
+      "x": 90
+    }
+  }
+}

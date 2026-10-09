@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "thesift:block/white_lullwood_planks",
+    "side": "thesift:block/white_lullwood_planks",
+    "top": "thesift:block/white_lullwood_planks"
+  }
+}

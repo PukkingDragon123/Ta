@@ -194,7 +194,7 @@ FIELD_NOTES = {
     'soul_golem': 'Habitat: Echoer hearths|Temper: Helpful|Diet: Soul energy|Drops: Its core',
     'nib': 'Habitat: Flower meadows, Sound Garden|Temper: Shy|Diet: Nectar of light|Drops: Nib Dust and treasure (by song)',
     'slumbler': 'Habitat: Chrome Lakes|Temper: Sleepy, bites when woken|Diet: Chrome plankton|Drops: Thick Hide, Chrome Pearls',
-    'sifter': 'Habitat: Rocky Dunes, Deep Sift|Temper: Neutral, calls its neighbours|Diet: Sand it sifts|Drops: Dreamsand, Star Shards, lost sheets',
+    'sifter': 'Habitat: Rocky Dunes, Deep Sift|Temper: Neutral, calls its neighbours|Diet: Sand it sifts|Drops: Chime Sand, Star Shards, lost sheets',
     'stomper': 'Habitat: Plains and White Forest|Temper: Neutral giant|Diet: Chrome, Hummingblooms|Drops: Stomper Meat, Thick Hide',
     'sky_whale': 'Habitat: The skies over the islands|Temper: Gentle, rare|Diet: Giant sky fruit|Drops: Star Shards, Skysong Gems',
     'fanfare_eel': 'Habitat: Chrome Lakes|Temper: Hostile|Diet: Anything swimming|Drops: Eel meat, gold, copper',
@@ -223,7 +223,7 @@ PLACES = {
                     'Echoer drifts by with its chimes.'),
     'chrome_lakes': ('Chrome Lakes', 'Liquid rainbow', 'Lakes of shimmering Chrome where Slumblers nap half-submerged, Kazoo Fish '
                      'school and Fanfare Eels hunt. Chime Sand settles along the shores where Chrome meets flowing water.'),
-    'rocky_dunes': ('Rocky Dunes', 'The singing desert', 'Dunes of Dreamsand and rocky spires. Sifters, living bells, nap half-'
+    'rocky_dunes': ('Rocky Dunes', 'The singing desert', 'Dunes of Chime Sand and rocky spires. Sifters, living bells, nap half-'
                     'buried and ring when trodden on. Buried relics hide under suspicious sand: brush them out.'),
     'forest_mountains': ('Forest Mountains', 'Lullwood heights', 'Steep slopes under pale Lullwood forests. Sift Sniffers wander '
                          'the clearings; the views reach the floating islands.'),

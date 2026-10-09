@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": "thesift:block/white_lullwood_door_bottom",
+    "top": "thesift:block/white_lullwood_door_top"
+  }
+}

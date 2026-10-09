@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_uv_locked_z",
+  "textures": {
+    "end": "thesift:block/white_lullwood_log_top",
+    "side": "thesift:block/white_lullwood_log"
+  }
+}

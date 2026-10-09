@@ -217,11 +217,11 @@ def gen_block(b):
         else:
             copy_template('quartz_pillar', bid, token_tex('quartz_pillar', bid))
     elif k == 'sandstone':
-        copy_template('sandstone', bid, token_tex('sandstone', 'dreamsandstone'))
+        copy_template('sandstone', bid, token_tex('sandstone', 'chime_sandstone'))
     elif k == 'sandstone_cut':
-        copy_template('cut_sandstone', bid, token_tex('sandstone', 'dreamsandstone'))
+        copy_template('cut_sandstone', bid, token_tex('sandstone', 'chime_sandstone'))
     elif k == 'sandstone_chiseled':
-        copy_template('chiseled_sandstone', bid, token_tex('sandstone', 'dreamsandstone'))
+        copy_template('chiseled_sandstone', bid, token_tex('sandstone', 'chime_sandstone'))
     elif k == 'carpet':
         copy_template('moss_carpet', bid, exact_tex({'moss_block': tex}))
     elif kind in ('log', 'wood', 'fence', 'fence_gate', 'door', 'trapdoor', 'button', 'pressure_plate', 'leaves', 'sapling', 'pot') and b.get('wood'):
@@ -316,6 +316,8 @@ def gen_block(b):
         __import__('swifter').gen_den(sys.modules[__name__], bid)
     elif k == 'chime_pane':  # A3 Chrome: the Chime Glass Pane
         __import__('chrome').gen_block(sys.modules[__name__], b)
+    elif k.startswith('wland_'):  # W-land: the Tuning Cactus, Rainbow Snow and the frost flowers
+        __import__('wland').gen_block(sys.modules[__name__], b)
     elif k.startswith('w1_'):  # W1 World & terrain: Sculk Water, the Sculk Coral fans
         __import__('sculk_world').gen_block(sys.modules[__name__], b)
     elif k.startswith('wd_'):  # W-deep caves: pointed crystals, crystal clusters, cave plants, acid, sculk tendrils, the Sculk Grasper
@@ -606,8 +608,8 @@ def gen_recipes():
            ('cobbled_hushslate', 'polished_hushslate', 'square'), ('polished_hushslate', 'hushslate_bricks', 'square'),
            ('hushslate_bricks', 'hushslate_tiles', 'square'), ('hushslate_bricks', 'cracked_hushslate_bricks', 'smelt'),
            ('hushslate_bricks', 'chiseled_hushslate', 'chisel'),
-           ('dreamsand', 'dreamsandstone', 'square'), ('dreamsandstone', 'cut_dreamsandstone', 'square'),
-           ('dreamsandstone', 'smooth_dreamsandstone', 'smelt'), ('dreamsandstone', 'chiseled_dreamsandstone', 'chisel'),
+           ('chime_sand', 'chime_sandstone', 'square'), ('chime_sandstone', 'cut_chime_sandstone', 'square'),  # W-land: Chime Sandstone
+           ('chime_sandstone', 'smooth_chime_sandstone', 'smelt'), ('chime_sandstone', 'chiseled_chime_sandstone', 'chisel'),
            ('blush_bricks', 'cracked_blush_bricks', 'smelt'), ('blush_bricks', 'chiseled_blush_bricks', 'chisel')]
     for src, dst, how in fam:
         if how == 'square':
@@ -624,7 +626,7 @@ def gen_recipes():
             shaped(dst, ['#', '#'], {'#': src}, dst, 2)
             cutting(src, dst)
     shaped('mossy_dreamstone_bricks', ['#M'], {'#': 'dreamstone_bricks', 'M': 'lumen_moss_block'}, 'mossy_dreamstone_bricks')
-    shaped('blush_bricks', ['#S', 'S#'], {'#': 'dreamsand', 'S': 'minecraft:brick'}, 'blush_bricks', 4)
+    shaped('blush_bricks', ['#S', 'S#'], {'#': 'chime_sand', 'S': 'minecraft:brick'}, 'blush_bricks', 4)
     shaped('lumen_moss_carpet', ['##'], {'#': 'lumen_moss_block'}, 'lumen_moss_carpet', 3, category='misc')
     # woods
     for w in spec.WOODS:
@@ -1293,7 +1295,7 @@ def gen_misc_tags():
         tag('block', f'{NS}:sift_plantable', rl(b))
         tag('block', 'minecraft:sniffer_diggable_block', rl(b))
     tag('block', f'{NS}:sift_plantable', '#minecraft:dirt')
-    tag('block', f'{NS}:sift_plantable', rl('dreamsand'))
+    tag('block', f'{NS}:sift_plantable', rl('chime_sand'))
     tag('block', f'{NS}:portal_frame', 'minecraft:reinforced_deepslate')
     for b in ['hushslate', 'cobbled_hushslate', 'minecraft:sculk', 'minecraft:deepslate', 'lumen_moss_block']:
         tag('block', f'{NS}:deep_sift_ground', rl(b))
@@ -1306,7 +1308,7 @@ def gen_misc_tags():
     tag('block', 'minecraft:climbable', rl('glowbell_vine'))
     tag('block', 'minecraft:climbable', rl('glowbell_vine_plant'))
     tag('block', 'minecraft:bee_attractive', rl('dreambloom'))
-    tag('block', 'minecraft:enderman_holdable', rl('dreamsand'))
+    tag('block', 'minecraft:enderman_holdable', rl('chime_sand'))
     tag('block', 'minecraft:enderman_holdable', rl('sift_grass_block'))
     tag('block', 'minecraft:animals_spawnable_on', rl('sift_grass_block'))
     tag('block', 'minecraft:animals_spawnable_on', rl('coral_turf'))
@@ -1326,10 +1328,10 @@ def gen_misc_tags():
     for t, vt in [('sword', 'swords'), ('pickaxe', 'pickaxes'), ('axe', 'axes'), ('shovel', 'shovels'), ('hoe', 'hoes'), ('spear', 'spears')]:
         tag('item', f'minecraft:{vt}', rl(f'siftite_{t}'))
     for b in ['#minecraft:dirt', '#minecraft:sand', 'minecraft:gravel', 'minecraft:clay', 'minecraft:mud', 'minecraft:moss_block', 'minecraft:snow_block',
-              'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'dreamsand', 'suspicious_dreamsand', 'sift_soil', 'sift_grass_block',
+              'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'chime_sand', 'suspicious_chime_sand', 'sift_soil', 'sift_grass_block',
               'coral_turf', 'lumen_moss_block']:
         tag('block', f'{NS}:sniffer_mineable', rl(b))
-    for b in ['minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'suspicious_dreamsand', 'siftite_ore', 'deep_siftite_ore', 'minecraft:chest',
+    for b in ['minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'suspicious_chime_sand', 'siftite_ore', 'deep_siftite_ore', 'minecraft:chest',
               'minecraft:barrel', 'minecraft:decorated_pot', 'minecraft:diamond_ore', 'minecraft:deepslate_diamond_ore', 'minecraft:emerald_ore']:
         tag('block', f'{NS}:sniffer_treasure', rl(b))
     tag('item', 'minecraft:frog_food', rl('glowing_slime_ball')) if False else None
@@ -1406,6 +1408,7 @@ def generate():
     __import__('knowledge').item_models(sys.modules[__name__])  # F3 Knowledge and lore: 3D lore books and scrolls in the hand
     __import__('caves').assets(sys.modules[__name__])  # W-deep caves: crystal/speleothem tags, damage types, acid particles, recipes, text
     __import__('sky_islands').assets(sys.modules[__name__])  # W-sky: Sky Islands text, Codex, Sky Whale / Swinger food tags, recipes, loot
+    __import__('wland').assets(sys.modules[__name__])  # W-land: Rocky Dunes plants and rock, White Forest snow and flowers
 
 
 def finalize():

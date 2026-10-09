@@ -22,13 +22,7 @@ def declare(block, item):
     # the White Forest: snow-pale turf, white-leaved lullwood, puffball flowers
     block('white_turf', 'custom', 'BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.SNOW)',
           cls='SiftGrassBlock', model='grass_block', tags=['shovel', 'dirt'], loot='silk:sift_soil', tab='nature')
-    block('white_lullwood_leaves', 'leaves', 'BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_OAK_LEAVES).mapColor(MapColor.SNOW)',
-          tags=['hoe', 'leaves'], loot='leaves:white_lullwood_sapling', particle='ModSwifter.WHITE_FLUFF', chance='0.04F',
-          wood='white_lullwood', tab='nature')
-    block('white_lullwood_sapling', 'sapling', 'BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)', tags=['saplings'],
-          grower='ModSwifter.WHITE_LULLWOOD', wood='white_lullwood', tab='nature')
-    block('potted_white_lullwood_sapling', 'pot', 'BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING)',
-          plant='white_lullwood_sapling', item=False, loot='pot:white_lullwood_sapling', wood='white_lullwood')
+    # (W-land: White Lullwood's leaves, sapling and potted sapling are declared with its wood family, tools/wland.py WOODS)
     block('puffbloom', 'flower', 'BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)', effect='MobEffects.SLOW_FALLING', secs='6.0F', light=0,
           tags=['flowers', 'small_flowers'], cls='SiftFlowerBlock', tab='nature')
     block('potted_puffbloom', 'pot', 'BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY)', plant='puffbloom', item=False,
@@ -310,8 +304,9 @@ def assets(GA):
                                     'calm it, and the parents stand down. Drops Swifter Fluff.',
         f'codex.{NS}.white_forest.title': 'White Forest',
         f'codex.{NS}.white_forest.tagline': 'Pale trees, soft mist and drifting fluff',
-        f'codex.{NS}.white_forest.body': 'A cold, dreamy forest of White Lullwood, its ground snow-pale turf, its air full of soft white mist '
-                                         'and drifting fluff. Puffblooms nod between the trunks and little clouds sit on the ground like '
+        f'codex.{NS}.white_forest.body': 'A cold, dreamy forest of tall weeping White Lullwood with pearl bark, its ground dusted with '
+                                         'Rainbow Snow that keeps falling, its air full of soft white mist. Puffblooms, Halo Lilies, '
+                                         'Snowglobes and Shiver Thistles grow between the trunks and little clouds sit on the ground like '
                                          'bushes. White Bulbs, white Stompers and Harmoners wander here - and the Swifters, who weave '
                                          'their dens of fluff and twigs between the trees. Every den hides valuables, but its cubs are '
                                          'never far away... Four Swifter Fluff make two Clouds.',
@@ -358,20 +353,13 @@ def _surface(GW, rule):
 def world(GW):
     feature, placed, state, count, rarity, survive, BIOME = GW.feature, GW.placed, GW.state, GW.count, GW.rarity, GW.survive, GW.BIOME
     on_surface = [{'type': 'minecraft:in_square'}, {'type': 'minecraft:heightmap', 'heightmap': 'WORLD_SURFACE_WG'}, BIOME]
-    # --- white lullwood: the lullwood's pale trunk under clouds of white leaves
-    log = state('lullwood_log', axis='y')
-    leaves = state('white_lullwood_leaves', distance=7, persistent=False, waterlogged=False)
-    hanging = state('hanging_lullwood_leaves', tip=True)
-    feature('white_lullwood_tree', {'type': f'{NS}:sift_tree', 'trunk': log, 'leaves': leaves, 'hanging': hanging, 'style': 'puff',
-                                    'min_height': 5, 'max_height': 8})
-    feature('grand_white_lullwood_tree', {'type': f'{NS}:sift_tree', 'trunk': log, 'leaves': leaves, 'hanging': hanging, 'style': 'grand',
-                                          'min_height': 11, 'max_height': 16})
-
+    # --- white lullwood: tall weeping pale trees (their features are written by tools/wland.py)
+    # (W-land: white_lullwood_tree and grand_white_lullwood_tree are tall weeping pale trees now, defined in tools/wland.py)
     def tree(name):
         return {'feature': GW.rl(name), 'placement': [survive('white_lullwood_sapling')]}
     feature('trees_white_forest', {'type': 'minecraft:random_selector', 'default': tree('white_lullwood_tree'),
                                    'features': [{'chance': 0.22, 'feature': tree('grand_white_lullwood_tree')}]})
-    placed('trees_white_forest', 'trees_white_forest', [count(8), {'type': 'minecraft:in_square'},
+    placed('trees_white_forest', 'trees_white_forest', [count(6), {'type': 'minecraft:in_square'},
                                                         {'type': 'minecraft:surface_water_depth_filter', 'max_water_depth': 0},
                                                         {'type': 'minecraft:heightmap', 'heightmap': 'OCEAN_FLOOR'}, BIOME])
     # --- puffblooms (and a few soulpetals) in drifts between the trunks
@@ -389,10 +377,10 @@ def world(GW):
     GW.biome('white_forest', fog='#eaf2ff', sky='#c4e2ff', water='#d6efff', grass='#eef3fb', foliage='#f6f9ff', temp=0.35, down=0.7,
              spawns=GW.mobs(creature=[('swifter', 5, 1, 2), ('bulb', 12, 2, 4), ('stomper', 3, 1, 2), ('harmoner', 4, 1, 2), ('enchoer', 1, 1, 1)],
                             ambient=[('nib', 6, 2, 3)]),
-             parts=GW.particles(('white_fluff', 0.006), ('sift_mist', 0.0015), ('drifting_soul', 0.0006), ('star_sparkle', 0.0006)),
+             parts=GW.particles(('white_fluff', 0.004), ('rainbow_snowflake', 0.008), ('sift_mist', 0.0015), ('star_sparkle', 0.0006)),
              feats=[(4, 'cloud_bush')] + GW.COMMON_UNDERGROUND +
                    [(9, 'trees_white_forest'), (9, 'patch_white_forest_flowers'), (9, 'minecraft:patch_grass_forest'),
-                    (9, 'patch_glimmer_sprouts'), (9, 'swifter_den')])
+                    (9, 'patch_glimmer_sprouts'), (9, 'swifter_den')] + __import__('wland').WHITE_FOREST_FEATURES)  # W-land
 
     def ambience(b):
         b['attributes']['minecraft:audio/ambient_sounds']['additions'] = {'sound': f'{NS}:ambient.white_forest.additions', 'tick_chance': 0.012}

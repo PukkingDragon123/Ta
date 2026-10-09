@@ -84,7 +84,7 @@
       ],
       "modifier": "append"
     },
-    "minecraft:visual/fog_color": "#bdeee0",
+    "minecraft:visual/fog_color": "#e4dcec",
     "minecraft:visual/sky_color": "#5ed6c6",
     "minecraft:visual/water_fog_color": "#8ff0ff"
   },
@@ -109,6 +109,8 @@
     [
       "thesift:floating_islet",
       "thesift:dune_hoodoo",
+      "thesift:dune_arch",
+      "thesift:balanced_rock",
       "thesift:relic_cache_dunes"
     ],
     [],
@@ -129,7 +131,10 @@
       "thesift:ore_sculkite_mud",
       "thesift:ore_sculkite_deep"
     ],
-    [],
+    [
+      "thesift:patch_rattlethorn",
+      "thesift:tuning_cactus"
+    ],
     []
   ],
   "has_precipitation": false,

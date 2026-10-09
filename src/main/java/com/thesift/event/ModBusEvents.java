@@ -84,7 +84,7 @@ public final class ModBusEvents {
     }
 
     public static void addBlockEntityBlocks(BlockEntityTypeAddBlocksEvent event) {
-        event.modify(BlockEntityTypes.BRUSHABLE_BLOCK, ModBlocks.SUSPICIOUS_DREAMSAND.get());
+        event.modify(BlockEntityTypes.BRUSHABLE_BLOCK, ModBlocks.SUSPICIOUS_CHIME_SAND.get());
     }
 
     private static <T extends Mob> boolean checkSiftCreature(EntityType<T> type, ServerLevelAccessor level, EntitySpawnReason reason, BlockPos pos,

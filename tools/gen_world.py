@@ -110,24 +110,16 @@ def terrain_density():
 
     Copies of the vanilla offset -> depth -> sloped_cheese -> final_density chain (and the surface
     level estimate built from the offset) point at `thesift:sift/offset`, which is the vanilla offset plus:
-      * wind-carved dune crests (ridged noise) wherever the climate makes Rocky Dunes,
-      * flat-topped sandstone mesas rising out of those dunes.
+      * the Rocky Dunes' wind-carved dunes and great rock massifs (tools/wland.py),
+    and sift/final_density also takes the Rocky Dunes' spires, buttes and crags (tools/wland.py rock_formations).
     An offset change of 0.01 moves the surface by roughly 1.3 blocks.
     Returns the router entries to use.
     """
     dfs = os.path.join(VD, 'worldgen/density_function/overworld')
     temperature, humidity, continents = 'minecraft:overworld/temperature', 'minecraft:overworld/vegetation', 'minecraft:overworld/continents'
-    # 0..1 where the climate matches Rocky Dunes (hot, dry, inland), fading out towards other biomes and coasts
-    dunes_mask = _df('mul', left=_df('mul', left=_ramp(temperature, 0.25, 6.0), right=_ramp(_df('mul', left=humidity, right=-1.0), -0.15, 6.0)),
-                     right=_ramp(continents, -0.05, 5.0))
-    crest = _df('add', left=0.45, right=_df('mul', left=_df('abs', input=_df('noise', noise='minecraft:surface', xz_scale=1.25, y_scale=0.0)),
-                                               right=-1.0))
-    ripples = _df('noise', noise='minecraft:surface_secondary', xz_scale=5.0, y_scale=0.0)
-    mesa = _clamp01(_df('mul', left=_df('add', left=_df('noise', noise='minecraft:pillar_rareness', xz_scale=1.6, y_scale=0.0), right=-0.55),
-                         right=9.0))
-    shape = _df('add', left=_df('add', left=_df('mul', left=crest, right=0.075), right=_df('mul', left=ripples, right=0.0015)),
-                right=_df('mul', left=mesa, right=0.11))
-    offset = _df('add', left='minecraft:overworld/offset', right=_df('mul', left=dunes_mask, right=shape))
+    # W-land: the Rocky Dunes' dunes and massifs (tools/wland.py)
+    offset = _df('add', left='minecraft:overworld/offset',
+                 right=__import__('wland').offset_term(w, temperature, humidity, continents, 'minecraft:overworld/erosion'))
     # W1 World & terrain: the Sculk Swamp's soggy flats and the Sculk Ocean's trenches and ridges (tools/sculk_world.py)
     for term in __import__('sculk_world').offset_terms(_df, _ramp, _clamp01, temperature, humidity, continents, 'minecraft:overworld/erosion',
                                                        'minecraft:overworld/offset'):
@@ -138,6 +130,7 @@ def terrain_density():
     for ref, name in chain:
         src = json.load(open(os.path.join(dfs, name + '.json')))
         w(f'worldgen/density_function/sift/{name}', _swap(src, {f'minecraft:overworld/{ref}': f'{NS}:sift/{ref}'}))
+    __import__('wland').rock_formations(sys.modules[__name__])  # W-land: spires, buttes and crags (final_density = max(ground, rocks))
     return {'final_density': f'{NS}:sift/final_density', 'chunk_surface_level': f'{NS}:sift/chunk_surface_level'}
 
 
@@ -160,8 +153,7 @@ def noise_settings():
     grass = {'type': 'minecraft:block', 'result_state': state('sift_grass_block', snowy=False)}
     turf = {'type': 'minecraft:block', 'result_state': state('coral_turf', snowy=False)}
     soil = {'type': 'minecraft:block', 'result_state': state('sift_soil')}
-    sand = {'type': 'minecraft:block', 'result_state': state('dreamsand')}
-    sandstone = {'type': 'minecraft:block', 'result_state': state('dreamsandstone')}
+    sand = {'type': 'minecraft:block', 'result_state': state('chime_sand')}
     dreamstone = {'type': 'minecraft:block', 'result_state': state('dreamstone')}
     cobbled = {'type': 'minecraft:block', 'result_state': state('cobbled_dreamstone')}
     moss = {'type': 'minecraft:block', 'result_state': state('lumen_moss_block')}
@@ -178,18 +170,16 @@ def noise_settings():
     high = {'type': 'minecraft:y_above', 'add_stone_depth': True, 'anchor': {'absolute': 150}, 'surface_depth_multiplier': 0}
     noise_patch = {'type': 'minecraft:noise_threshold', 'max_threshold': 1.0, 'min_threshold': 0.25, 'noise': 'minecraft:surface'}
     surface = seq(
+        cond(biome_is('rocky_dunes'), __import__('wland').dunes_surface(state)),  # W-land: chime sand dunes, striped rock formations
         cond('minecraft:on_floor', seq(
-            cond(biome_is('rocky_dunes'), seq(cond('minecraft:on_ceiling', sandstone), cond({'type': 'minecraft:steep'}, sandstone), sand)),
             cond(biome_is('chrome_lakes'), seq(cond('minecraft:not_underwater', grass), sand)),
             cond(biome_is('sift_plains'), seq(cond('minecraft:not_underwater', turf), sand)),
             cond(biome_is('forest_mountains'), seq(cond(high, seq(cond(noise_patch, cobbled), dreamstone)), cond('minecraft:not_underwater', grass), sand)),
             cond('minecraft:not_underwater', grass),
             sand)),
         cond('minecraft:under_floor', seq(
-            cond(biome_is('rocky_dunes'), seq(cond('minecraft:on_ceiling', sandstone), sand)),
             cond(biome_is('chrome_lakes'), sand),
             soil)),
-        cond('minecraft:deep_under_floor', seq(cond(biome_is('rocky_dunes'), sandstone))),
     )
     underground = seq(
         cond(biome_is('deep_sift'), cond('minecraft:on_floor', cond({'type': 'minecraft:noise_threshold', 'max_threshold': 1.0, 'min_threshold': 0.1,
@@ -289,10 +279,7 @@ def features():
     placed('floating_islet', 'floating_islet', [rarity(10)] + ON_SURFACE)
     feature('dreamstone_spire', {'type': f'{NS}:spire', 'body': state('dreamstone'), 'band': state('blush_bricks'),
                                  'cap': state('sift_grass_block', snowy=False), 'min_height': 14, 'max_height': 34, 'radius': 3.5})
-    feature('dune_hoodoo', {'type': f'{NS}:spire', 'body': state('dreamsandstone'), 'band': state('blush_bricks'), 'min_height': 7,
-                            'max_height': 18, 'radius': 2.6})
     placed('dreamstone_spire', 'dreamstone_spire', [rarity(4)] + ON_SURFACE)
-    placed('dune_hoodoo', 'dune_hoodoo', [rarity(3)] + ON_SURFACE)
     # ground cover
     feature('blushgrass', {'type': 'minecraft:simple_block', 'to_place': state('blushgrass')})
     feature('tall_blushgrass', {'type': 'minecraft:simple_block', 'to_place': state('tall_blushgrass')})
@@ -345,15 +332,15 @@ def features():
     placed('chrome_pool_surface', 'chrome_pool', [rarity(24), {'type': 'minecraft:in_square'}, {'type': 'minecraft:heightmap', 'heightmap': 'WORLD_SURFACE_WG'},
                                                   BIOME])
     feature('chrome_spring', {'type': 'minecraft:spring_feature', 'state': state('chrome', falling=True),
-                              'valid_blocks': [rl('dreamstone'), rl('sift_soil'), rl('hushslate'), rl('dreamsandstone')]})
+                              'valid_blocks': [rl('dreamstone'), rl('sift_soil'), rl('hushslate'), rl('chime_sandstone')]})
     placed('chrome_spring', 'chrome_spring', [count(12), {'type': 'minecraft:in_square'},
                                               {'type': 'minecraft:height_range', 'height': {'type': 'minecraft:biased_to_bottom',
                                                                                             'max_inclusive': {'below_top': 8},
                                                                                             'min_inclusive': {'above_bottom': 8}, 'inner': 8}}, BIOME])
-    feature('disk_dreamsand', {'type': 'minecraft:disk', 'half_height': 2, 'radius': {'type': 'minecraft:uniform', 'max_inclusive': 6, 'min_inclusive': 2},
-                               'state_provider': {'type': 'minecraft:rule_based', 'fallback': state('dreamsand'), 'rules': []},
+    feature('disk_chime_sand', {'type': 'minecraft:disk', 'half_height': 2, 'radius': {'type': 'minecraft:uniform', 'max_inclusive': 6, 'min_inclusive': 2},
+                               'state_provider': {'type': 'minecraft:rule_based', 'fallback': state('chime_sand'), 'rules': []},
                                'target': {'type': 'minecraft:matching_blocks', 'blocks': [rl('sift_soil'), rl('sift_grass_block')]}})
-    placed('disk_dreamsand', 'disk_dreamsand', [count(3), {'type': 'minecraft:in_square'}, {'type': 'minecraft:heightmap', 'heightmap': 'OCEAN_FLOOR_WG'},
+    placed('disk_chime_sand', 'disk_chime_sand', [count(3), {'type': 'minecraft:in_square'}, {'type': 'minecraft:heightmap', 'heightmap': 'OCEAN_FLOOR_WG'},
                                                 {'type': 'minecraft:block_predicate_filter', 'predicate': {'type': 'minecraft:matching_fluids',
                                                                                                          'fluids': rl('chrome')}}, BIOME])
     feature('dream_boulder', {'type': 'minecraft:block_blob', 'can_place_on': {'type': 'minecraft:matching_blocks',
@@ -475,15 +462,15 @@ def biomes():
           feats=[(2, 'dreamstone_spire'), (2, 'floating_island'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_forest_mountains'), (9, 'patch_blushgrass'), (9, 'patch_sift_flowers'), (9, 'patch_glowcap_surface'),
                  (9, 'patch_glimmer_sprouts')])
-    biome('rocky_dunes', fog='#bdeee0', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
+    biome('rocky_dunes', fog='#e4dcec', sky='#5ed6c6', water='#8ff0ff', grass='#d9a6c4', foliage='#e0b0c8', temp=1.2, down=0.1,
           spawns=mobs(creature=[('bulb', 2, 1, 2), ('sift_sniffer', 2, 1, 1), ('sifter', 10, 1, 3)]),  # CR1: the Sifter is a neutral creature
           parts=particles(('dream_pollen', 0.003), ('glow_dust', 0.0015), ('wishing_star', 0.0002)),
-          feats=[(2, 'dune_hoodoo'), (2, 'floating_islet')] + COMMON_UNDERGROUND)  # CLEAN: no coral-fern scrub (W-land: spiky bush, alien cactus)
+          feats=[(2, 'floating_islet')] + COMMON_UNDERGROUND + __import__('wland').DUNES_FEATURES)  # W-land: rock formations, Rattlethorn, Tuning Cactus
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
           spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)],
                       water=[('fanfare_eel', 5, 1, 2), ('tubafish', 4, 1, 1)], water_ambient=[('kazoo_fish', 12, 3, 7)]),
           parts=particles(('chrome_bubble', 0.002), ('sift_mist', 0.0012), ('drifting_soul', 0.002), ('wishing_star', 0.00015)),
-          feats=[(2, 'floating_islet'), (6, 'disk_dreamsand')] + COMMON_UNDERGROUND +
+          feats=[(2, 'floating_islet'), (6, 'disk_chime_sand')] + COMMON_UNDERGROUND +
                 [(9, 'patch_chrome_reeds'), (9, 'patch_blushgrass'), (9, 'trees_sift_plains')])
     biome('wishing_grove', fog='#b4eee2', sky='#5ed6c6', water='#ffb8e6', grass='#f59ac6', foliage='#f9b3d4', temp=0.8, down=0.7,
           spawns=mobs(creature=[('bulb', 8, 2, 4), ('enchoer', 3, 1, 2), ('minecraft:allay', 2, 1, 2), ('harmoner', 8, 1, 3)]
@@ -523,10 +510,10 @@ def dimension_json():
 
 
 def carver_tags():
-    for b in ['dreamstone', 'hushslate', 'sift_soil', 'sift_grass_block', 'coral_turf', 'dreamsand', 'dreamsandstone', 'lumen_moss_block', 'cobbled_dreamstone',
+    for b in ['dreamstone', 'hushslate', 'sift_soil', 'sift_grass_block', 'coral_turf', 'lumen_moss_block', 'cobbled_dreamstone',
               'mossy_dreamstone_bricks']:
         GA.tag('block', 'minecraft:overworld_carver_replaceables', rl(b))
-    for b in ['dreamstone', 'hushslate', 'dreamsand', 'sift_soil']:
+    for b in ['dreamstone', 'hushslate', 'chime_sand', 'sift_soil']:
         GA.tag('block', 'minecraft:moss_replaceable', rl(b))
         GA.tag('block', 'minecraft:sculk_replaceable', rl(b))
         GA.tag('block', 'minecraft:sculk_replaceable_world_gen', rl(b))
@@ -539,6 +526,7 @@ def generate():
     dimension()
     noise_settings()
     features()
+    __import__('wland').world(sys.modules[__name__])  # W-land: rock formations, desert plants, White Forest trees, flowers and snow
     __import__('caravans').world(sys.modules[__name__])  # C: the Caravans Cavern
     __import__('materials').world(sys.modules[__name__])  # F1: Bauxite, Galena, Magnesite and Scukite in every Sift biome's caves
     __import__('caves').ores(sys.modules[__name__])  # W-deep: vanilla Copper ore in every Sift biome (joins COMMON_UNDERGROUND)

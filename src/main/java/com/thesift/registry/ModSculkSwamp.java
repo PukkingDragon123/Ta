@@ -60,7 +60,7 @@ public final class ModSculkSwamp {
     /** Dithered, noise-broken bands where two biomes' ground covers meet (worldgen/BiomeBlendFeature). */
     public static final DeferredHolder<MapCodec<? extends Feature>, MapCodec<BiomeBlendFeature>> BIOME_BLEND = FEATURE_TYPES.register("biome_blend",
             () -> BiomeBlendFeature.CODEC);
-    /** Suspicious Dreamsand buried just under the ground, each with its archaeology loot (worldgen/RelicCacheFeature). */
+    /** Suspicious Chime Sand buried just under the ground, each with its archaeology loot (worldgen/RelicCacheFeature). */
     public static final DeferredHolder<MapCodec<? extends Feature>, MapCodec<RelicCacheFeature>> RELIC_CACHE = FEATURE_TYPES.register("relic_cache",
             () -> RelicCacheFeature.CODEC);
 

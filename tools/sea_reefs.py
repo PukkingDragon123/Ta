@@ -338,7 +338,7 @@ def _features(GW):
                                         {'height': 1, 'provider': state('tube_seaweed', tip=True, waterlogged=True)}]})
     placed('patch_tube_seaweed', 'tube_seaweed', [noisy(90.0, 14), sq, floor, in_water, survive('tube_seaweed'), BIOME])
     feature('reef_algae', {'type': 'minecraft:multiface_growth', 'block': rl('algae'), 'can_be_placed_on': [
-        rl(b) for b in [trumpet_ids(m)[0] for m in METALS] + ['copper_sand', 'dreamstone', 'cobbled_dreamstone', 'dreamsand', 'coral_sand']],
+        rl(b) for b in [trumpet_ids(m)[0] for m in METALS] + ['copper_sand', 'dreamstone', 'cobbled_dreamstone', 'coral_sand']],
         'can_place_on_ceiling': True, 'can_place_on_floor': True, 'can_place_on_wall': True, 'chance_of_spreading': 0.75, 'search_range': 8})
     placed('reef_algae', 'reef_algae', [count(26), sq, floor, {'type': 'minecraft:offset', 'x': 0, 'y': {'type': 'minecraft:uniform', 'min_inclusive': 0,
                                                                                                           'max_inclusive': 4}, 'z': 0},
@@ -421,18 +421,18 @@ def _surface(GW, rule):
         # the reef: Copper Sand, pale sand drifts, rocky outcrops where the floor steepens
         cond(biome_is(REEF), seq(
             cond('minecraft:on_floor', seq(cond(steep, block('cobbled_dreamstone')),
-                                           cond(noise('minecraft:surface', 0.42), block('dreamsand')),
+                                           cond(noise('minecraft:surface', 0.42), block('chime_sand')),
                                            cond(noise('minecraft:gravel', -1.0, -0.7), block('cobbled_dreamstone')),
                                            block('copper_sand'))),
             cond('minecraft:under_floor', block('copper_sand')),
-            cond('minecraft:deep_under_floor', block('dreamsandstone')))),
+            cond('minecraft:deep_under_floor', block('chime_sandstone')))),
         # the Chrome garden: pale Chime Sand with drifts of Copper Sand
         cond(biome_is(CHROME_OCEAN), seq(
             cond('minecraft:on_floor', seq(cond(steep, block('dreamstone')),
                                            cond(noise('minecraft:surface', 0.38), block('copper_sand')),
                                            block('chime_sand'))),
             cond('minecraft:under_floor', block('chime_sand')),
-            cond('minecraft:deep_under_floor', block('dreamsandstone')))),
+            cond('minecraft:deep_under_floor', block('chime_sandstone')))),
     ]
     for r in rule['sequence']:
         if isinstance(r, dict) and r.get('type') == 'minecraft:condition' and r.get('if_true', {}).get('type') == 'minecraft:above_preliminary_surface':

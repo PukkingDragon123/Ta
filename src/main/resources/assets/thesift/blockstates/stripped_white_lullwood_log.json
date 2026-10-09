@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "thesift:block/stripped_white_lullwood_log_x"
+    },
+    "axis=y": {
+      "model": "thesift:block/stripped_white_lullwood_log_y"
+    },
+    "axis=z": {
+      "model": "thesift:block/stripped_white_lullwood_log_z"
+    }
+  }
+}

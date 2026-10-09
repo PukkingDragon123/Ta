@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "thesift:white_lullwood_planks"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:white_lullwood_button"
+  },
+  "group": "wooden_button"
+}

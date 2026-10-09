@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "thesift:block/cut_chime_sandstone",
+    "side": "thesift:block/cut_chime_sandstone",
+    "top": "thesift:block/cut_chime_sandstone"
+  }
+}

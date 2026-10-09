@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "thesift:white_lullwood_planks"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:white_lullwood_pressure_plate"
+  },
+  "group": "wooden_pressure_plate"
+}

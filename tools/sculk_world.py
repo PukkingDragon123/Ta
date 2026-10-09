@@ -147,7 +147,7 @@ def assets(GA):
                                         'drift in the trenches, and the blind Gobbler hunts by sound. Swim slowly.',
         f'codex.{NS}.relics.title': 'Buried Relics', f'codex.{NS}.relics.tagline': 'All that is left of the old ruins',
         f'codex.{NS}.relics.body': 'The Sift\'s old towers, temples and settlements have crumbled into the ground. Where a cracked brick '
-                                   'or two pokes out of the dunes, the shores or the swamp mud, there is Suspicious Dreamsand just '
+                                   'or two pokes out of the dunes, the shores or the swamp mud, there is Suspicious Chime Sand just '
                                    'below: brush it for glyph stones, seeds, Star Shards, lost Music Sheets and - rarely - '
                                    'a Siftite Upgrade Template or the Lullaby disc.',
     })
@@ -218,7 +218,7 @@ def _features(GW):
         pal(['sift_plains'], state('coral_turf', snowy=False), state('sift_soil')),
         pal(['white_forest'], state('white_turf', snowy=False), state('sift_soil')),
         pal(['forest_mountains', 'wishing_grove', 'chrome_lakes'], state('sift_grass_block', snowy=False), state('sift_soil')),
-        pal(['rocky_dunes'], state('dreamsand'), state('dreamsand')),
+        pal(['rocky_dunes'], state('chime_sand'), state('chime_sand')),
         pal(['sculk_swamp', 'deep_dark_ocean'], state('sculk_mud'), state('sculk_mud')),
         pal(['magic_kelp_forest'], state('coral_sand'), state('coral_sand')),
     ]})
@@ -236,8 +236,8 @@ def _features(GW):
         'type': 'minecraft:matching_blocks', 'blocks': [rl('sculk_mud'), 'minecraft:sculk']}})
     placed('swamp_boulder', 'swamp_boulder', [rarity(5), sq, hm('WORLD_SURFACE_WG'), BIOME])
     # buried relics: what is left of the Sift's old ruins (worldgen/RelicCacheFeature)
-    feature('relic_cache', {'type': f'{NS}:relic_cache', 'relic': state('suspicious_dreamsand'), 'rare_chance': 0.15,
-                            'hosts': [state('dreamsand'), state('sculk_mud'), state('sift_soil'), state('coral_sand')],
+    feature('relic_cache', {'type': f'{NS}:relic_cache', 'relic': state('suspicious_chime_sand'), 'rare_chance': 0.15,
+                            'hosts': [state('chime_sand'), state('sculk_mud'), state('sift_soil'), state('coral_sand')],
                             'common': f'{NS}:archaeology/sift_common', 'rare': f'{NS}:archaeology/sift_rare',
                             'marker': state('cracked_dreamstone_bricks')})
     placed('relic_cache', 'relic_cache', [rarity(14), sq, hm('WORLD_SURFACE_WG'), BIOME])

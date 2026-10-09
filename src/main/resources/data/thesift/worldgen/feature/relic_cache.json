@@ -1,12 +1,12 @@
 {
   "type": "thesift:relic_cache",
   "relic": {
-    "id": "thesift:suspicious_dreamsand"
+    "id": "thesift:suspicious_chime_sand"
   },
   "rare_chance": 0.15,
   "hosts": [
     {
-      "id": "thesift:dreamsand"
+      "id": "thesift:chime_sand"
     },
     {
       "id": "thesift:sculk_mud"

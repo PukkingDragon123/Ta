@@ -25,7 +25,7 @@ public class ChromeReedsBlock extends SugarCaneBlock {
         if (below.is(this)) {
             return true;
         }
-        if (!(SiftPlantBlock.isSiftSoil(below) || below.is(com.thesift.registry.ModBlocks.DREAMSAND.get()))) {
+        if (!(SiftPlantBlock.isSiftSoil(below) || below.is(com.thesift.registry.ModBlocks.CHIME_SAND.get()))) {
             return false;
         }
         BlockPos base = pos.below();

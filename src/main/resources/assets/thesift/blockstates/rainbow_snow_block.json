@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "thesift:block/rainbow_snow_block_0"
+      },
+      {
+        "model": "thesift:block/rainbow_snow_block_1"
+      },
+      {
+        "model": "thesift:block/rainbow_snow_block_2"
+      },
+      {
+        "model": "thesift:block/rainbow_snow_block_3"
+      }
+    ]
+  }
+}

@@ -5,7 +5,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "thesift:dreamsand",
+          "name": "thesift:chime_sand",
           "weight": 1,
           "modifier": {
             "type": "minecraft:set_count",

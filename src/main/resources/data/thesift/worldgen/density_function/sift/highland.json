@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:mul",
+    "left": "thesift:sift/rocky_dunes",
+    "right": {
+      "type": "minecraft:add",
+      "left": {
+        "type": "minecraft:mul",
+        "left": {
+          "type": "minecraft:square",
+          "input": "thesift:sift/massif"
+        },
+        "right": 0.4
+      },
+      "right": {
+        "type": "minecraft:mul",
+        "left": "thesift:sift/massif",
+        "right": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:square",
+            "input": {
+              "type": "minecraft:add",
+              "left": 1.0,
+              "right": {
+                "type": "minecraft:mul",
+                "left": {
+                  "type": "minecraft:abs",
+                  "input": {
+                    "type": "minecraft:noise",
+                    "noise": "thesift:massif_ridges",
+                    "xz_scale": 1.6,
+                    "y_scale": 0.0
+                  }
+                },
+                "right": -1.0
+              }
+            }
+          },
+          "right": 0.11
+        }
+      }
+    }
+  }
+}

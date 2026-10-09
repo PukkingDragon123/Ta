@@ -35,7 +35,7 @@ FRAMETIME = 3
 # ============================================================================ spec (registries)
 
 def declare(block, item):
-    block("chime_sand", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.QUARTZ)", cls="ChimeSandBlock", model="cube_all", tags=["shovel"], tab="nature")
+    block("chime_sand", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.QUARTZ)", cls="ChimeSandBlock", model="cube_all", tags=["shovel", "sand"], tab="nature")  # W-land: the dunes' sand
     block("chime_glass", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).sound(com.thesift.block.ChimeGlassBlock.SOUND)",
           cls="ChimeGlassBlock", model="glass", loot="silk")
     block("chime_glass_pane", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS_PANE).sound(com.thesift.block.ChimeGlassBlock.SOUND)",

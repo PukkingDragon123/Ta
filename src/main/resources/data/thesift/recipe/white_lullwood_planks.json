@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "#thesift:white_lullwood_logs"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thesift:white_lullwood_planks"
+  },
+  "group": "planks"
+}

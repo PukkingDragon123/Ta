@@ -1,0 +1,215 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "stem": "thesift:block/shiver_thistle_stem",
+    "head": "thesift:block/shiver_thistle_head",
+    "spikes": "thesift:block/shiver_thistle_spikes",
+    "particle": "thesift:block/shiver_thistle_head"
+  },
+  "elements": [
+    {
+      "from": [
+        2.4,
+        0,
+        8
+      ],
+      "to": [
+        13.6,
+        11,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.4,
+            5,
+            13.6,
+            16
+          ],
+          "texture": "#stem"
+        },
+        "south": {
+          "uv": [
+            2.4,
+            5,
+            13.6,
+            16
+          ],
+          "texture": "#stem"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up"
+    },
+    {
+      "from": [
+        8,
+        0,
+        2.4
+      ],
+      "to": [
+        8,
+        11,
+        13.6
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            2.4,
+            5,
+            13.6,
+            16
+          ],
+          "texture": "#stem"
+        },
+        "east": {
+          "uv": [
+            2.4,
+            5,
+            13.6,
+            16
+          ],
+          "texture": "#stem"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up"
+    },
+    {
+      "from": [
+        6,
+        9,
+        6
+      ],
+      "to": [
+        10,
+        13,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#head"
+        },
+        "south": {
+          "texture": "#head"
+        },
+        "east": {
+          "texture": "#head"
+        },
+        "west": {
+          "texture": "#head"
+        },
+        "up": {
+          "texture": "#head"
+        },
+        "down": {
+          "texture": "#head"
+        }
+      }
+    },
+    {
+      "from": [
+        2.0,
+        6,
+        8
+      ],
+      "to": [
+        14.0,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2.0,
+            0,
+            14.0,
+            10
+          ],
+          "texture": "#spikes"
+        },
+        "south": {
+          "uv": [
+            2.0,
+            0,
+            14.0,
+            10
+          ],
+          "texture": "#spikes"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up"
+    },
+    {
+      "from": [
+        8,
+        6,
+        2.0
+      ],
+      "to": [
+        8,
+        16,
+        14.0
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            2.0,
+            0,
+            14.0,
+            10
+          ],
+          "texture": "#spikes"
+        },
+        "east": {
+          "uv": [
+            2.0,
+            0,
+            14.0,
+            10
+          ],
+          "texture": "#spikes"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up"
+    }
+  ]
+}

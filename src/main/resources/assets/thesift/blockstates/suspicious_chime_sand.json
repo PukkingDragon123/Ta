@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "dusted=0": {
+      "model": "thesift:block/suspicious_chime_sand_0"
+    },
+    "dusted=1": {
+      "model": "thesift:block/suspicious_chime_sand_1"
+    },
+    "dusted=2": {
+      "model": "thesift:block/suspicious_chime_sand_2"
+    },
+    "dusted=3": {
+      "model": "thesift:block/suspicious_chime_sand_3"
+    }
+  }
+}

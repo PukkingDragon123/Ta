@@ -198,7 +198,7 @@ def sigil(boss):
 
 
 def suspicious(loot):
-    return B('suspicious_dreamsand', nbt={'id': 'minecraft:brushable_block', 'LootTable': rl(loot)}, dusted=0)
+    return B('suspicious_chime_sand', nbt={'id': 'minecraft:brushable_block', 'LootTable': rl(loot)}, dusted=0)
 
 
 def stairs(name, facing, half='bottom'):

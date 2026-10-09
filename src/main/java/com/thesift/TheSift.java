@@ -57,6 +57,7 @@ public class TheSift {
         com.thesift.registry.ModCaves.register(modBus); // W-deep caves: the Sculk Grasper, cave scrub worldgen, acid particles
         com.thesift.registry.ModSeaReefs.register(modBus); // W-sea: Brass Coral Reef & Chrome Coral Ocean: Trumpet Coral and reef features, sounds
         com.thesift.world.sky.SkyIslands.register(modBus); // W-sky: Sky Islands features, the swinging rope, swing packets
+        com.thesift.registry.ModWorldLand.register(modBus); // W-land: Rocky Dunes formations + Tuning Cactus, White Forest trees + Rainbow Snow
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
