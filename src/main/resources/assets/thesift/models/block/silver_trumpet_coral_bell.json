@@ -1,0 +1,137 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "thesift:block/silver_trumpet_coral_bell",
+    "pipe": "thesift:block/silver_trumpet_coral",
+    "bell": "thesift:block/silver_trumpet_coral_bell",
+    "mouth": "thesift:block/silver_trumpet_coral_bell_mouth"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pipe"
+        },
+        "south": {
+          "texture": "#pipe"
+        },
+        "east": {
+          "texture": "#pipe"
+        },
+        "west": {
+          "texture": "#pipe"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        4
+      ],
+      "to": [
+        12,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bell"
+        },
+        "south": {
+          "texture": "#bell"
+        },
+        "east": {
+          "texture": "#bell"
+        },
+        "west": {
+          "texture": "#bell"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        8,
+        3
+      ],
+      "to": [
+        13,
+        10,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bell"
+        },
+        "south": {
+          "texture": "#bell"
+        },
+        "east": {
+          "texture": "#bell"
+        },
+        "west": {
+          "texture": "#bell"
+        },
+        "down": {
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        10,
+        1
+      ],
+      "to": [
+        15,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bell"
+        },
+        "south": {
+          "texture": "#bell"
+        },
+        "east": {
+          "texture": "#bell"
+        },
+        "west": {
+          "texture": "#bell"
+        },
+        "down": {
+          "texture": "#pipe"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#mouth"
+        }
+      }
+    }
+  ]
+}

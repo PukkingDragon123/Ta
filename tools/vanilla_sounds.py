@@ -234,6 +234,18 @@ FILES = FILES | frozenset({
     'random/glass1', 'random/glass2', 'random/glass3',
 })
 
+# W-sea: Trumpet Coral's four voices, the Brass Coral Reef's and the Chrome Coral Ocean's music and ambience
+EVENTS = EVENTS | frozenset({'block.note_block.trumpet', 'block.note_block.trumpet_exposed', 'block.note_block.trumpet_weathered',
+                             'block.note_block.trumpet_oxidized'})
+FILES = FILES | frozenset({
+    'ambient/underwater/additions/animal2', 'ambient/underwater/additions/bubbles4', 'ambient/underwater/additions/bubbles5',
+    'ambient/underwater/additions/bubbles6', 'ambient/underwater/additions/crackles1', 'ambient/underwater/additions/crackles2',
+    'ambient/underwater/additions/driplets1', 'ambient/underwater/additions/driplets2', 'ambient/underwater/underwater_ambience',
+    'block/amethyst/resonate1', 'block/amethyst/shimmer', 'block/bubble_column/bubble2', 'music/game/water/axolotl',
+    'music/game/water/dragon_fish', 'music/game/water/shuniji', 'music/game/left_to_bloom', 'music/game/floating_dream',
+    'music/game/komorebi', 'music/game/infinite_amethyst',
+})
+
 def vanilla_names(sounds_json):
     """(events, files) defined by a vanilla sounds.json."""
     with open(sounds_json) as f:

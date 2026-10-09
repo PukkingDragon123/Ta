@@ -1,0 +1,36 @@
+{
+  "feature": "thesift:reef_algae",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 26
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "OCEAN_FLOOR_WG"
+    },
+    {
+      "type": "minecraft:offset",
+      "x": 0,
+      "y": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 0,
+        "max_inclusive": 4
+      },
+      "z": 0
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_fluids",
+        "fluids": "minecraft:water"
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -132,7 +132,11 @@
     },
     "minecraft:visual/fog_color": "#c7b8ff",
     "minecraft:visual/sky_color": "#86d8ff",
-    "minecraft:visual/water_fog_color": "#1fb8c4"
+    "minecraft:visual/water_fog_color": "#1fb8c4",
+    "minecraft:visual/water_fog_end_distance": {
+      "argument": 1.35,
+      "modifier": "multiply"
+    }
   },
   "carvers": [
     "minecraft:cave",
@@ -175,6 +179,7 @@
     ],
     [
       "thesift:glowkelp",
+      "thesift:reef_algae",
       "minecraft:sea_pickle",
       "minecraft:seagrass_warm",
       "minecraft:warm_ocean_vegetation"

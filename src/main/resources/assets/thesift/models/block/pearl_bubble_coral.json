@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "thesift:block/pearl_bubble_coral"
+  }
+}

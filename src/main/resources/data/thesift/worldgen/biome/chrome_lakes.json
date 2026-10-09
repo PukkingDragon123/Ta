@@ -127,6 +127,7 @@
   },
   "features": [
     [
+      "thesift:sea_flood",
       "thesift:biome_blend",
       "thesift:cave_scrub"
     ],

@@ -188,6 +188,9 @@ final class CreatureCheck {
             case "sift_caves" -> new Habitat(ModBlocks.DREAMSTONE.get(), hush, false, true);
             case "cave_jungle" -> new Habitat(ModBlocks.LUMEN_MOSS_BLOCK.get(), hush, false, true); // (its glowing moss is lit: tested on dark rock)
             case "sculk_caves" -> new Habitat(Blocks.SCULK, Blocks.SCULK, false, true);
+            // W-sea: the reef is real water over Copper Sand; the Chrome Coral Ocean is Chrome over Chime Sand
+            case "brass_coral_reef" -> new Habitat(ModBlocks.COPPER_SAND.get(), hush, true, false);
+            case "chrome_coral_ocean" -> new Habitat(ModBlocks.CHIME_SAND.get(), hush, false, false);
             // forest_mountains, chrome_lakes, wishing_grove (and any biome added later)
             default -> new Habitat(ModBlocks.SIFT_GRASS_BLOCK.get(), hush, false, false);
         };

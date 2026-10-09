@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:algae",
+    "thesift:algae"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:green_dye"
+  },
+  "group": "green_dye"
+}

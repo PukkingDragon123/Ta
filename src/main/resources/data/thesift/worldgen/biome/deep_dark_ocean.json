@@ -135,7 +135,7 @@
     "minecraft:visual/sky_color": "#2f5a66",
     "minecraft:visual/water_fog_color": "#041a1d",
     "minecraft:visual/water_fog_end_distance": {
-      "argument": 0.5,
+      "argument": 0.65,
       "modifier": "multiply"
     }
   },

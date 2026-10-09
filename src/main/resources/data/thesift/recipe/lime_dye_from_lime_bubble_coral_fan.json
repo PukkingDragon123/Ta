@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:lime_bubble_coral_fan"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:lime_dye"
+  },
+  "group": "lime_dye"
+}

@@ -461,6 +461,86 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SCULK_VEIN).noOcclusion().lightLevel(s -> s.getValue(com.thesift.block.SculkTendrilBlock.TIP) ? 6 : 2));
     public static final DeferredBlock<SculkGrasperBlock> SCULK_GRASPER = BLOCKS.registerBlock("sculk_grasper", SculkGrasperBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SCULK_CATALYST).noOcclusion().lightLevel(s -> s.getValue(com.thesift.block.SculkGrasperBlock.ACTIVE) ? 11 : 4));
+    public static final DeferredBlock<ColoredFallingBlock> COPPER_SAND = BLOCKS.registerBlock("copper_sand", p -> new ColoredFallingBlock(new ColorRGBA(0xC8703C), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).mapColor(MapColor.COLOR_ORANGE));
+    public static final DeferredBlock<TrumpetCoralBlock> BRASS_TRUMPET_CORAL_BLOCK = BLOCKS.registerBlock("brass_trumpet_coral_block", TrumpetCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.GOLD).sound(SoundType.COPPER));
+    public static final DeferredBlock<TrumpetCoralPipeBlock> BRASS_TRUMPET_CORAL = BLOCKS.registerBlock("brass_trumpet_coral", TrumpetCoralPipeBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.GOLD).sound(SoundType.COPPER).strength(0.8F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBellBlock> BRASS_TRUMPET_CORAL_BELL = BLOCKS.registerBlock("brass_trumpet_coral_bell", TrumpetCoralBellBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.GOLD).sound(SoundType.COPPER).strength(0.3F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBlock> SILVER_TRUMPET_CORAL_BLOCK = BLOCKS.registerBlock("silver_trumpet_coral_block", TrumpetCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.METAL).sound(SoundType.COPPER));
+    public static final DeferredBlock<TrumpetCoralPipeBlock> SILVER_TRUMPET_CORAL = BLOCKS.registerBlock("silver_trumpet_coral", TrumpetCoralPipeBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.METAL).sound(SoundType.COPPER).strength(0.8F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBellBlock> SILVER_TRUMPET_CORAL_BELL = BLOCKS.registerBlock("silver_trumpet_coral_bell", TrumpetCoralBellBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.METAL).sound(SoundType.COPPER).strength(0.3F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBlock> COPPER_TRUMPET_CORAL_BLOCK = BLOCKS.registerBlock("copper_trumpet_coral_block", TrumpetCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER));
+    public static final DeferredBlock<TrumpetCoralPipeBlock> COPPER_TRUMPET_CORAL = BLOCKS.registerBlock("copper_trumpet_coral", TrumpetCoralPipeBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(0.8F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBellBlock> COPPER_TRUMPET_CORAL_BELL = BLOCKS.registerBlock("copper_trumpet_coral_bell", TrumpetCoralBellBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER).strength(0.3F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBlock> VERDIGRIS_TRUMPET_CORAL_BLOCK = BLOCKS.registerBlock("verdigris_trumpet_coral_block", TrumpetCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.WARPED_STEM).sound(SoundType.COPPER));
+    public static final DeferredBlock<TrumpetCoralPipeBlock> VERDIGRIS_TRUMPET_CORAL = BLOCKS.registerBlock("verdigris_trumpet_coral", TrumpetCoralPipeBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL_BLOCK).mapColor(MapColor.WARPED_STEM).sound(SoundType.COPPER).strength(0.8F).noOcclusion());
+    public static final DeferredBlock<TrumpetCoralBellBlock> VERDIGRIS_TRUMPET_CORAL_BELL = BLOCKS.registerBlock("verdigris_trumpet_coral_bell", TrumpetCoralBellBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.WARPED_STEM).sound(SoundType.COPPER).strength(0.3F).noOcclusion());
+    public static final DeferredBlock<TubeSeaweedBlock> TUBE_SEAWEED = BLOCKS.registerBlock("tube_seaweed", TubeSeaweedBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.KELP_PLANT).mapColor(MapColor.PLANT));
+    public static final DeferredBlock<GlowLichenBlock> ALGAE = BLOCKS.registerBlock("algae", GlowLichenBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GLOW_LICHEN).mapColor(MapColor.PLANT).lightLevel(s -> 0));
+    public static final DeferredBlock<Block> ROSE_BUBBLE_CORAL_BLOCK = BLOCKS.registerBlock("rose_bubble_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL_BLOCK).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<BubbleCoralBlock> ROSE_BUBBLE_CORAL = BLOCKS.registerBlock("rose_bubble_coral", BubbleCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<BubbleCoralFanBlock> ROSE_BUBBLE_CORAL_FAN = BLOCKS.registerBlock("rose_bubble_coral_fan", BubbleCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<BubbleCoralWallFanBlock> ROSE_BUBBLE_CORAL_WALL_FAN = BLOCKS.registerBlock("rose_bubble_coral_wall_fan", BubbleCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_PINK));
+    public static final DeferredBlock<Block> AMBER_BUBBLE_CORAL_BLOCK = BLOCKS.registerBlock("amber_bubble_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL_BLOCK).mapColor(MapColor.COLOR_ORANGE));
+    public static final DeferredBlock<BubbleCoralBlock> AMBER_BUBBLE_CORAL = BLOCKS.registerBlock("amber_bubble_coral", BubbleCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_ORANGE));
+    public static final DeferredBlock<BubbleCoralFanBlock> AMBER_BUBBLE_CORAL_FAN = BLOCKS.registerBlock("amber_bubble_coral_fan", BubbleCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_ORANGE));
+    public static final DeferredBlock<BubbleCoralWallFanBlock> AMBER_BUBBLE_CORAL_WALL_FAN = BLOCKS.registerBlock("amber_bubble_coral_wall_fan", BubbleCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_ORANGE));
+    public static final DeferredBlock<Block> LIME_BUBBLE_CORAL_BLOCK = BLOCKS.registerBlock("lime_bubble_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL_BLOCK).mapColor(MapColor.COLOR_LIGHT_GREEN));
+    public static final DeferredBlock<BubbleCoralBlock> LIME_BUBBLE_CORAL = BLOCKS.registerBlock("lime_bubble_coral", BubbleCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_LIGHT_GREEN));
+    public static final DeferredBlock<BubbleCoralFanBlock> LIME_BUBBLE_CORAL_FAN = BLOCKS.registerBlock("lime_bubble_coral_fan", BubbleCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_LIGHT_GREEN));
+    public static final DeferredBlock<BubbleCoralWallFanBlock> LIME_BUBBLE_CORAL_WALL_FAN = BLOCKS.registerBlock("lime_bubble_coral_wall_fan", BubbleCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_LIGHT_GREEN));
+    public static final DeferredBlock<Block> AZURE_BUBBLE_CORAL_BLOCK = BLOCKS.registerBlock("azure_bubble_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE));
+    public static final DeferredBlock<BubbleCoralBlock> AZURE_BUBBLE_CORAL = BLOCKS.registerBlock("azure_bubble_coral", BubbleCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_LIGHT_BLUE));
+    public static final DeferredBlock<BubbleCoralFanBlock> AZURE_BUBBLE_CORAL_FAN = BLOCKS.registerBlock("azure_bubble_coral_fan", BubbleCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_LIGHT_BLUE));
+    public static final DeferredBlock<BubbleCoralWallFanBlock> AZURE_BUBBLE_CORAL_WALL_FAN = BLOCKS.registerBlock("azure_bubble_coral_wall_fan", BubbleCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_LIGHT_BLUE));
+    public static final DeferredBlock<Block> VIOLET_BUBBLE_CORAL_BLOCK = BLOCKS.registerBlock("violet_bubble_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL_BLOCK).mapColor(MapColor.COLOR_PURPLE));
+    public static final DeferredBlock<BubbleCoralBlock> VIOLET_BUBBLE_CORAL = BLOCKS.registerBlock("violet_bubble_coral", BubbleCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_PURPLE));
+    public static final DeferredBlock<BubbleCoralFanBlock> VIOLET_BUBBLE_CORAL_FAN = BLOCKS.registerBlock("violet_bubble_coral_fan", BubbleCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_PURPLE));
+    public static final DeferredBlock<BubbleCoralWallFanBlock> VIOLET_BUBBLE_CORAL_WALL_FAN = BLOCKS.registerBlock("violet_bubble_coral_wall_fan", BubbleCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_PURPLE));
+    public static final DeferredBlock<Block> PEARL_BUBBLE_CORAL_BLOCK = BLOCKS.registerBlock("pearl_bubble_coral_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL_BLOCK).mapColor(MapColor.QUARTZ));
+    public static final DeferredBlock<BubbleCoralBlock> PEARL_BUBBLE_CORAL = BLOCKS.registerBlock("pearl_bubble_coral", BubbleCoralBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.QUARTZ));
+    public static final DeferredBlock<BubbleCoralFanBlock> PEARL_BUBBLE_CORAL_FAN = BLOCKS.registerBlock("pearl_bubble_coral_fan", BubbleCoralFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.QUARTZ));
+    public static final DeferredBlock<BubbleCoralWallFanBlock> PEARL_BUBBLE_CORAL_WALL_FAN = BLOCKS.registerBlock("pearl_bubble_coral_wall_fan", BubbleCoralWallFanBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.QUARTZ));
+    public static final DeferredBlock<RainbowAnemoneBlock> RAINBOW_ANEMONE = BLOCKS.registerBlock("rainbow_anemone", RainbowAnemoneBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 10));
 
     private ModBlocks() {}
 }

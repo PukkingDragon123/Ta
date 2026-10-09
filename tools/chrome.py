@@ -203,7 +203,7 @@ def _ripple(x, y, t, n=16):
     return math.sin(k * (x + y) + t) + 0.6 * math.sin(k * (x - 2 * y) - t) + 0.35 * math.sin(k * (3 * x + y) + 2 * t)
 
 
-def _chrome_px(x, y, f, n=16, alpha=150):  # W1: more see-through (was 220)
+def _chrome_px(x, y, f, n=16, alpha=124):  # W-sea: clear Chrome, you see the coral gardens below (W1 had 150, was 220)
     t = f / FRAMES * math.tau
     w = _ripple(x, y, t, n)
     # liquid metal: silver ripples, a step brighter on every crest (8 tones, pixel-art banding)

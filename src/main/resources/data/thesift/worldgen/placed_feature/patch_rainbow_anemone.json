@@ -1,0 +1,58 @@
+{
+  "feature": "thesift:rainbow_anemone",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 4
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "OCEAN_FLOOR_WG"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_fluids",
+        "fluids": "thesift:chrome"
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:count",
+      "count": 18
+    },
+    {
+      "type": "minecraft:offset",
+      "x": {
+        "type": "minecraft:trapezoid",
+        "max": 4,
+        "min": -4,
+        "plateau": 0
+      },
+      "y": {
+        "type": "minecraft:trapezoid",
+        "max": 1,
+        "min": -1,
+        "plateau": 0
+      },
+      "z": {
+        "type": "minecraft:trapezoid",
+        "max": 4,
+        "min": -4,
+        "plateau": 0
+      }
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_fluids",
+        "fluids": "thesift:chrome"
+      }
+    }
+  ]
+}

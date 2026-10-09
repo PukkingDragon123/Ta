@@ -79,6 +79,28 @@
       "under": {
         "id": "thesift:coral_sand"
       }
+    },
+    {
+      "biomes": [
+        "thesift:brass_coral_reef"
+      ],
+      "top": {
+        "id": "thesift:copper_sand"
+      },
+      "under": {
+        "id": "thesift:copper_sand"
+      }
+    },
+    {
+      "biomes": [
+        "thesift:chrome_coral_ocean"
+      ],
+      "top": {
+        "id": "thesift:chime_sand"
+      },
+      "under": {
+        "id": "thesift:chime_sand"
+      }
     }
   ]
 }

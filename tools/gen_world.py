@@ -556,6 +556,7 @@ def generate():
     __import__('swifter').world(sys.modules[__name__])  # A2: the White Forest, white lullwood, cloud bushes, Swifter dens
     __import__('sculk_world').world(sys.modules[__name__])  # W1: Sculk Swamp, Sculk Ocean, soft biome edges, relic caches
     __import__('sculk_sea').world(sys.modules[__name__])  # CR3: Coral Organs on the Sculk Ocean floor, Sculk Fish spawns
+    __import__('sea_reefs').world(sys.modules[__name__])  # W-sea: Brass Coral Reef, Chrome Coral Ocean, water/Chrome blend, clearer seas
     __import__('caves').world(sys.modules[__name__])  # W-deep: cave biomes by depth, crystals, no grass in caves (after every biome)
     carver_tags()
     print(f'world ok: {len(FEATURES)} features, {len(PLACED)} placed')

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "thesift:block/lime_bubble_coral_wall_fan"
+    },
+    "facing=east": {
+      "model": "thesift:block/lime_bubble_coral_wall_fan",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "thesift:block/lime_bubble_coral_wall_fan",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "thesift:block/lime_bubble_coral_wall_fan",
+      "y": 270
+    }
+  }
+}

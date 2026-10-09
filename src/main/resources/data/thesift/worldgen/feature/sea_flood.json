@@ -1,8 +1,10 @@
 {
   "type": "thesift:sea_flood",
   "biomes": [
-    "thesift:magic_kelp_forest",
-    "thesift:deep_dark_ocean"
+    "thesift:brass_coral_reef",
+    "thesift:deep_dark_ocean",
+    "thesift:magic_kelp_forest"
   ],
-  "sea_level": 63
+  "sea_level": 63,
+  "blend": 12
 }

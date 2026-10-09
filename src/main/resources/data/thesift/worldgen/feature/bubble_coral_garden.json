@@ -1,0 +1,125 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:rose_bubble_coral",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:amber_bubble_coral",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:lime_bubble_coral",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:azure_bubble_coral",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:violet_bubble_coral",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:pearl_bubble_coral",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:rose_bubble_coral_fan",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:amber_bubble_coral_fan",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:lime_bubble_coral_fan",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:azure_bubble_coral_fan",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:violet_bubble_coral_fan",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:pearl_bubble_coral_fan",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 3
+      },
+      {
+        "data": {
+          "id": "thesift:rainbow_anemone",
+          "properties": {
+            "chromelogged": "true"
+          }
+        },
+        "weight": 4
+      }
+    ]
+  }
+}

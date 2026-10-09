@@ -210,6 +210,30 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> WRITHING_SCULK = ITEMS.registerSimpleBlockItem(ModBlocks.WRITHING_SCULK);
     public static final DeferredItem<BlockItem> SCULK_TENDRIL = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_TENDRIL);
     public static final DeferredItem<BlockItem> SCULK_GRASPER = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_GRASPER);
+    public static final DeferredItem<BlockItem> COPPER_SAND = ITEMS.registerSimpleBlockItem(ModBlocks.COPPER_SAND);
+    public static final DeferredItem<BlockItem> BRASS_TRUMPET_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.BRASS_TRUMPET_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> BRASS_TRUMPET_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.BRASS_TRUMPET_CORAL);
+    public static final DeferredItem<BlockItem> SILVER_TRUMPET_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SILVER_TRUMPET_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> SILVER_TRUMPET_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.SILVER_TRUMPET_CORAL);
+    public static final DeferredItem<BlockItem> COPPER_TRUMPET_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.COPPER_TRUMPET_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> COPPER_TRUMPET_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.COPPER_TRUMPET_CORAL);
+    public static final DeferredItem<BlockItem> VERDIGRIS_TRUMPET_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.VERDIGRIS_TRUMPET_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> VERDIGRIS_TRUMPET_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.VERDIGRIS_TRUMPET_CORAL);
+    public static final DeferredItem<BlockItem> TUBE_SEAWEED = ITEMS.registerSimpleBlockItem(ModBlocks.TUBE_SEAWEED);
+    public static final DeferredItem<BlockItem> ALGAE = ITEMS.registerSimpleBlockItem(ModBlocks.ALGAE);
+    public static final DeferredItem<BlockItem> ROSE_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.ROSE_BUBBLE_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> ROSE_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.ROSE_BUBBLE_CORAL);
+    public static final DeferredItem<BlockItem> AMBER_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.AMBER_BUBBLE_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> AMBER_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.AMBER_BUBBLE_CORAL);
+    public static final DeferredItem<BlockItem> LIME_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.LIME_BUBBLE_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> LIME_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.LIME_BUBBLE_CORAL);
+    public static final DeferredItem<BlockItem> AZURE_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.AZURE_BUBBLE_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> AZURE_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.AZURE_BUBBLE_CORAL);
+    public static final DeferredItem<BlockItem> VIOLET_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.VIOLET_BUBBLE_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> VIOLET_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.VIOLET_BUBBLE_CORAL);
+    public static final DeferredItem<BlockItem> PEARL_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PEARL_BUBBLE_CORAL_BLOCK);
+    public static final DeferredItem<BlockItem> PEARL_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.PEARL_BUBBLE_CORAL);
+    public static final DeferredItem<BlockItem> RAINBOW_ANEMONE = ITEMS.registerSimpleBlockItem(ModBlocks.RAINBOW_ANEMONE);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -358,6 +382,16 @@ public final class ModItems {
     public static final DeferredItem<Item> SOUL_PIECE = ITEMS.registerItem("soul_piece", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> SOUL_CHUNK = ITEMS.registerItem("soul_chunk", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
     public static final DeferredItem<Item> SIFTITE_DUST = ITEMS.registerItem("siftite_dust", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<BlockItem> BRASS_TRUMPET_CORAL_BELL = ITEMS.registerItem("brass_trumpet_coral_bell", p -> new BlockItem(ModBlocks.BRASS_TRUMPET_CORAL_BELL.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix().food(com.thesift.registry.ModSeaReefs.TRUMPET_BELL_FOOD, com.thesift.registry.ModSeaReefs.TRUMPET_BELL_CONSUMABLE));
+    public static final DeferredItem<BlockItem> SILVER_TRUMPET_CORAL_BELL = ITEMS.registerItem("silver_trumpet_coral_bell", p -> new BlockItem(ModBlocks.SILVER_TRUMPET_CORAL_BELL.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix().food(com.thesift.registry.ModSeaReefs.TRUMPET_BELL_FOOD, com.thesift.registry.ModSeaReefs.TRUMPET_BELL_CONSUMABLE));
+    public static final DeferredItem<BlockItem> COPPER_TRUMPET_CORAL_BELL = ITEMS.registerItem("copper_trumpet_coral_bell", p -> new BlockItem(ModBlocks.COPPER_TRUMPET_CORAL_BELL.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix().food(com.thesift.registry.ModSeaReefs.TRUMPET_BELL_FOOD, com.thesift.registry.ModSeaReefs.TRUMPET_BELL_CONSUMABLE));
+    public static final DeferredItem<BlockItem> VERDIGRIS_TRUMPET_CORAL_BELL = ITEMS.registerItem("verdigris_trumpet_coral_bell", p -> new BlockItem(ModBlocks.VERDIGRIS_TRUMPET_CORAL_BELL.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix().food(com.thesift.registry.ModSeaReefs.TRUMPET_BELL_FOOD, com.thesift.registry.ModSeaReefs.TRUMPET_BELL_CONSUMABLE));
+    public static final DeferredItem<StandingAndWallBlockItem> ROSE_BUBBLE_CORAL_FAN = ITEMS.registerItem("rose_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.ROSE_BUBBLE_CORAL_FAN.get(), ModBlocks.ROSE_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<StandingAndWallBlockItem> AMBER_BUBBLE_CORAL_FAN = ITEMS.registerItem("amber_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.AMBER_BUBBLE_CORAL_FAN.get(), ModBlocks.AMBER_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<StandingAndWallBlockItem> LIME_BUBBLE_CORAL_FAN = ITEMS.registerItem("lime_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.LIME_BUBBLE_CORAL_FAN.get(), ModBlocks.LIME_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<StandingAndWallBlockItem> AZURE_BUBBLE_CORAL_FAN = ITEMS.registerItem("azure_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.AZURE_BUBBLE_CORAL_FAN.get(), ModBlocks.AZURE_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<StandingAndWallBlockItem> VIOLET_BUBBLE_CORAL_FAN = ITEMS.registerItem("violet_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.VIOLET_BUBBLE_CORAL_FAN.get(), ModBlocks.VIOLET_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<StandingAndWallBlockItem> PEARL_BUBBLE_CORAL_FAN = ITEMS.registerItem("pearl_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.PEARL_BUBBLE_CORAL_FAN.get(), ModBlocks.PEARL_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
 
     private ModItems() {}
 }

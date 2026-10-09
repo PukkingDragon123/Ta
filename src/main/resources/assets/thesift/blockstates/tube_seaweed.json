@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "tip=false": {
+      "model": "thesift:block/tube_seaweed"
+    },
+    "tip=true": {
+      "model": "thesift:block/tube_seaweed_tip"
+    }
+  }
+}

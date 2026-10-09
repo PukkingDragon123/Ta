@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:violet_bubble_coral_fan"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:purple_dye"
+  },
+  "group": "purple_dye"
+}

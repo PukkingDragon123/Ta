@@ -1,0 +1,92 @@
+{
+  "type": "thesift:sift_reef",
+  "blocks": [
+    {
+      "id": "thesift:rose_bubble_coral_block"
+    },
+    {
+      "id": "thesift:amber_bubble_coral_block"
+    },
+    {
+      "id": "thesift:lime_bubble_coral_block"
+    },
+    {
+      "id": "thesift:azure_bubble_coral_block"
+    },
+    {
+      "id": "thesift:violet_bubble_coral_block"
+    },
+    {
+      "id": "thesift:pearl_bubble_coral_block"
+    }
+  ],
+  "tops": [
+    {
+      "id": "thesift:rose_bubble_coral"
+    },
+    {
+      "id": "thesift:amber_bubble_coral"
+    },
+    {
+      "id": "thesift:lime_bubble_coral"
+    },
+    {
+      "id": "thesift:azure_bubble_coral"
+    },
+    {
+      "id": "thesift:violet_bubble_coral"
+    },
+    {
+      "id": "thesift:pearl_bubble_coral"
+    },
+    {
+      "id": "thesift:rose_bubble_coral_fan"
+    },
+    {
+      "id": "thesift:amber_bubble_coral_fan"
+    },
+    {
+      "id": "thesift:lime_bubble_coral_fan"
+    },
+    {
+      "id": "thesift:azure_bubble_coral_fan"
+    },
+    {
+      "id": "thesift:violet_bubble_coral_fan"
+    },
+    {
+      "id": "thesift:pearl_bubble_coral_fan"
+    }
+  ],
+  "sides": [
+    {
+      "id": "thesift:rose_bubble_coral_wall_fan"
+    },
+    {
+      "id": "thesift:amber_bubble_coral_wall_fan"
+    },
+    {
+      "id": "thesift:lime_bubble_coral_wall_fan"
+    },
+    {
+      "id": "thesift:azure_bubble_coral_wall_fan"
+    },
+    {
+      "id": "thesift:violet_bubble_coral_wall_fan"
+    },
+    {
+      "id": "thesift:pearl_bubble_coral_wall_fan"
+    }
+  ],
+  "top_chance": 0.45,
+  "side_chance": 0.2,
+  "shapes": [
+    "tree",
+    "dome",
+    "spire",
+    "arch",
+    "cluster",
+    "tree",
+    "spire"
+  ]
+}

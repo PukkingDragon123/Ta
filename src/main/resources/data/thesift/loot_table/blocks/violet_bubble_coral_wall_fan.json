@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:violet_bubble_coral_fan"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "thesift:blocks/violet_bubble_coral_wall_fan"
+}

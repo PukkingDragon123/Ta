@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "cookingtime": 300,
+  "experience": 0.1,
+  "ingredient": "thesift:tube_seaweed",
+  "result": {
+    "id": "minecraft:dried_kelp"
+  }
+}

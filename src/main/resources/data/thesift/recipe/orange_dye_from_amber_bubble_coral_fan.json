@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:amber_bubble_coral_fan"
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:orange_dye"
+  },
+  "group": "orange_dye"
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.35,
+  "ingredient": "thesift:copper_sand",
+  "result": {
+    "id": "minecraft:copper_ingot"
+  }
+}

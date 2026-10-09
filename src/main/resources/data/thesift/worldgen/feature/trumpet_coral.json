@@ -1,0 +1,45 @@
+{
+  "type": "thesift:trumpet_coral",
+  "blocks": [
+    {
+      "id": "thesift:brass_trumpet_coral_block"
+    },
+    {
+      "id": "thesift:silver_trumpet_coral_block"
+    },
+    {
+      "id": "thesift:copper_trumpet_coral_block"
+    },
+    {
+      "id": "thesift:verdigris_trumpet_coral_block"
+    }
+  ],
+  "pipes": [
+    {
+      "id": "thesift:brass_trumpet_coral"
+    },
+    {
+      "id": "thesift:silver_trumpet_coral"
+    },
+    {
+      "id": "thesift:copper_trumpet_coral"
+    },
+    {
+      "id": "thesift:verdigris_trumpet_coral"
+    }
+  ],
+  "bells": [
+    {
+      "id": "thesift:brass_trumpet_coral_bell"
+    },
+    {
+      "id": "thesift:silver_trumpet_coral_bell"
+    },
+    {
+      "id": "thesift:copper_trumpet_coral_bell"
+    },
+    {
+      "id": "thesift:verdigris_trumpet_coral_bell"
+    }
+  ]
+}

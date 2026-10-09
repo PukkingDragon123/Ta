@@ -244,6 +244,9 @@ public final class CodexEntries {
         // W1 World & terrain: the Sculk Swamp and the Sculk Ocean; the old ruins live on as buried relics
         l.add(thing(PLACES, "sculk_swamp", ModItems.BLIGHTWOOD_SAPLING));
         l.add(thing(PLACES, "sculk_ocean", ModItems.SCULK_CORAL_FAN));
+        // W-sea: the reef that plays itself, and the coral garden at the bottom of the Chrome
+        l.add(thing(PLACES, "brass_coral_reef", ModItems.BRASS_TRUMPET_CORAL_BELL));
+        l.add(thing(PLACES, "chrome_coral_ocean", ModItems.ROSE_BUBBLE_CORAL_FAN));
         l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_DREAMSAND));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars

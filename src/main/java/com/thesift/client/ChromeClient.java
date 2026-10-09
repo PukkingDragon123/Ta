@@ -73,7 +73,8 @@ public final class ChromeClient {
 
         @Override
         public int colorInWorld(FluidState fluidState, BlockState blockState, BlockAndTintGetter level, BlockPos pos) {
-            return 0xFF000000 | hsv(tintHue(pos.getX(), pos.getY(), pos.getZ()), 0.45F, 1.0F);
+            // W-sea: each sea turns the rainbow towards its own look (green-copper in the Chrome Coral Ocean, the water's colour by a water sea)
+            return 0xFF000000 | SeaReefsClient.chromeTint(level, pos, hsv(tintHue(pos.getX(), pos.getY(), pos.getZ()), 0.45F, 1.0F));
         }
     };
 
@@ -157,6 +158,7 @@ public final class ChromeClient {
         float hue = tintHue(cam.x, cam.y, cam.z) + ((level.getGameTime() % 24000L) + partialTick) / HUE_LOOP;
         int rgb = hsv(hue, 0.3F, 0.98F); // W1: a lighter, paler haze
         color.set(((rgb >> 16) & 255) / 255.0F, ((rgb >> 8) & 255) / 255.0F, (rgb & 255) / 255.0F, 1.0F);
+        SeaReefsClient.chromeFogColor(color); // W-sea: eased towards the sea's own look
     }
 
     // ------------------------------------------------------------------ ripples

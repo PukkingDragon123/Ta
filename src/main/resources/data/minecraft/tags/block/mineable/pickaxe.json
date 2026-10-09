@@ -97,6 +97,20 @@
     "thesift:azure_crystal_cluster",
     "thesift:amber_crystal_dripstone",
     "thesift:pointed_amber_crystal",
-    "thesift:amber_crystal_cluster"
+    "thesift:amber_crystal_cluster",
+    "thesift:brass_trumpet_coral_block",
+    "thesift:brass_trumpet_coral",
+    "thesift:silver_trumpet_coral_block",
+    "thesift:silver_trumpet_coral",
+    "thesift:copper_trumpet_coral_block",
+    "thesift:copper_trumpet_coral",
+    "thesift:verdigris_trumpet_coral_block",
+    "thesift:verdigris_trumpet_coral",
+    "thesift:rose_bubble_coral_block",
+    "thesift:amber_bubble_coral_block",
+    "thesift:lime_bubble_coral_block",
+    "thesift:azure_bubble_coral_block",
+    "thesift:violet_bubble_coral_block",
+    "thesift:pearl_bubble_coral_block"
   ]
 }

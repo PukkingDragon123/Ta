@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipes": "thesift:orange_dye_from_amber_bubble_coral_fan"
+      }
+    },
+    "has_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "thesift:amber_bubble_coral_fan"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_0"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "thesift:orange_dye_from_amber_bubble_coral_fan"
+    ]
+  }
+}

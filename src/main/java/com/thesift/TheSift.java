@@ -55,6 +55,7 @@ public class TheSift {
         com.thesift.registry.ModSlumbler.register(modBus); // CR2: the Slumbler's Chrome spit, its eggs and its tadpoles
         com.thesift.registry.ModKnowledge.register(modBus); // F3 Knowledge & lore: discoveries, lore books/scrolls, the Mini Creator's quests
         com.thesift.registry.ModCaves.register(modBus); // W-deep caves: the Sculk Grasper, cave scrub worldgen, acid particles
+        com.thesift.registry.ModSeaReefs.register(modBus); // W-sea: Brass Coral Reef & Chrome Coral Ocean: Trumpet Coral and reef features, sounds
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);
