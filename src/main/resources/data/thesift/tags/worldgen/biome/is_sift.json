@@ -3,7 +3,6 @@
   "values": [
     "thesift:magic_kelp_forest",
     "thesift:deep_dark_ocean",
-    "thesift:sound_garden",
     "thesift:white_forest",
     "thesift:sculk_swamp",
     "thesift:brass_coral_reef",
@@ -17,6 +16,7 @@
     "thesift:sift_caves",
     "thesift:cave_jungle",
     "thesift:sculk_caves",
+    "thesift:sky_island",
     "thesift:caravans_cavern"
   ]
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:weighted",
+    "entries": [
+      {
+        "data": {
+          "id": "thesift:cirrus_grass"
+        },
+        "weight": 8
+      },
+      {
+        "data": {
+          "id": "thesift:tall_cirrus_grass",
+          "properties": {
+            "half": "lower"
+          }
+        },
+        "weight": 3
+      }
+    ]
+  }
+}

@@ -54,7 +54,7 @@ final class CodexFx {
         }
         THEMES.put("chrome_lakes", Theme.CHROME);
         THEMES.put("caravans_cavern", Theme.CHROME);
-        THEMES.put("sound_garden", Theme.MUSIC);
+        THEMES.put("sky_islands", Theme.MUSIC);
         THEMES.put("deep_sift", Theme.SCULK);
         THEMES.put("drum_pit", Theme.BOSS);
         for (String k : new String[]{"dictator", "thumper", "strummer", "stage", "encore_sigil", "ancient_cannon"}) {

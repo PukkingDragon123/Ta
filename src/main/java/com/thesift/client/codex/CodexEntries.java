@@ -176,6 +176,8 @@ public final class CodexEntries {
             if (e instanceof com.thesift.entity.Gobbler g && t % 70 == 10) g.lungeAnimation.start(g.tickCount);
         }));
         l.add(thing(PLACES, "sea_and_sky", ModItems.ROSE_GLOWKELP));
+        l.add(thing(PLACES, "sky_islands", ModItems.SKY_VINE)); // W-sky: the islands, their vines and how to swing
+        l.add(thing(ITEMS, "sky_fruit", ModItems.SKYRIND)); // W-sky: Driftfruit and Skyrind
         // CR3 Fish & Coral Organs: the Sculk Ocean's biting schools, and its living organs playing, aiming and firing on the page
         l.add(mob(CREATURES, "sculk_fish", com.thesift.registry.ModSculkSea.SCULK_FISH, (e, t) -> {
             fishColours(e, t);
@@ -313,7 +315,6 @@ public final class CodexEntries {
         l.add(thing(PLACES, "forest_mountains", ModItems.LULLWOOD_SAPLING));
         l.add(thing(PLACES, "chrome_lakes", ModItems.CHROME_REEDS));
         l.add(thing(PLACES, "rocky_dunes", ModItems.CHIME_SAND));
-        l.add(thing(PLACES, "sound_garden", ModItems.ECHO_ORCHID));
         l.add(thing(PLACES, "caravans_cavern", ModItems.MUSIC_CRYSTAL));
         l.add(thing(PLACES, "deep_sift", ModItems.HUSHSLATE));
         l.add(thing(PLACES, "drum_pit", ModItems.CANNONBALL));

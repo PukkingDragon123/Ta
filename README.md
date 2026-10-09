@@ -72,6 +72,10 @@ frame is broken mid-opening.
 * **Sculk Swamp**: low, sculk-rotted coastland of Sculk Mud and glowing teal **Sculk Water** (it slowly
   corrupts whatever wades in it), gnarled Blightwood trees and Sculk Parasites crawling out of the mud.
 * **Sculk Ocean**: cold, dark teal sea over trenches, ridges and pale pillars, with Sculk Coral reefs.
+* **Sky Islands**: giant floating islands of pale rock and cyan Sky Grass high above the land, joined by huge Sky Roots
+  and Sky Vines. Grab a vine (use it, or jump into it) and swing: lean forward to pump, sneak to slide down, jump to let
+  go and fly. Skypalms (their vines run from tree to tree), puffy Cloudpuff trees, Fluffbushes that catch your fall,
+  giant glowing Driftfruits at the ends of vines and bunches of Skyrinds, the sky bananas.
 
 Biome edges blend: ground covers fray into each other and woods thin out across a border.
 

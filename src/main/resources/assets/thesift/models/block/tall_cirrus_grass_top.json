@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/tinted_cross",
+  "textures": {
+    "cross": "thesift:block/tall_cirrus_grass_top"
+  }
+}

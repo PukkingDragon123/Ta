@@ -1,0 +1,34 @@
+{
+  "type": "thesift:sky_tree",
+  "style": "cloud",
+  "trunk": {
+    "id": "thesift:sky_root",
+    "properties": {
+      "axis": "y"
+    }
+  },
+  "leaves": {
+    "id": "thesift:cloudpuff_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "vine": {
+    "id": "thesift:sky_vine",
+    "properties": {
+      "north": "false",
+      "east": "false",
+      "south": "false",
+      "west": "false",
+      "up": "false",
+      "down": "false"
+    }
+  },
+  "fruit": {
+    "id": "thesift:driftfruit"
+  },
+  "min_height": 5,
+  "max_height": 9
+}

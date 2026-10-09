@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "thesift:block/sky_vine",
+    "vine": "thesift:block/sky_vine"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vine",
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#vine",
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#vine",
+          "uv": [
+            0,
+            5,
+            5,
+            11
+          ]
+        },
+        "east": {
+          "texture": "#vine",
+          "uv": [
+            11,
+            5,
+            16,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#vine",
+          "uv": [
+            5,
+            0,
+            11,
+            5
+          ]
+        },
+        "down": {
+          "texture": "#vine",
+          "uv": [
+            5,
+            11,
+            11,
+            16
+          ]
+        }
+      }
+    }
+  ],
+  "ambientocclusion": false
+}

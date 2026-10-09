@@ -420,36 +420,6 @@
           }
         },
         {
-          "biome": "thesift:sound_garden",
-          "parameters": {
-            "temperature": [
-              -1.0,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              1.0
-            ],
-            "continentalness": [
-              -1.0,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              -2.0,
-              -0.85
-            ],
-            "weirdness": [
-              -1.0,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
           "biome": "thesift:white_forest",
           "parameters": {
             "temperature": [
@@ -500,6 +470,36 @@
               1.0
             ],
             "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "thesift:sky_island",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.2,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              -2.0,
+              -0.85
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
             "offset": 0.0
           }
         },

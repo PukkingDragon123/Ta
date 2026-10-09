@@ -229,8 +229,6 @@ PLACES = {
                          'the clearings; the views reach the floating islands.'),
     'wishing_grove': ('Wishing Grove', 'Where wishes grow', 'Pink Wishwood trees over a carpet of blooms. Bulbs, Echoers, Harmoners '
                       'and allays gather here - it is the gentlest place in the Sift.'),
-    'sound_garden': ('Sound Garden', 'Flowers that listen', 'A meadow of musical flowers where the Nibs flutter. Play the Song of the '
-                     'Nibs here and watch them swirl into treasure.'),
     'caravans_cavern': ('Caravans Cavern', 'Crystal caves', 'Deep caves glittering with Music Crystals, Prism ore and the colonies of '
                         'the Caravans. Never break a colony\'s crystals while the soldiers are watching.'),
     'deep_sift': ('The Deep Sift', 'Below everything', 'Dark hushslate caves under the Sift where a few lost Sifters ring in the '

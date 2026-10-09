@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "snowy=false": [
+      {
+        "model": "thesift:block/sky_grass_block"
+      },
+      {
+        "model": "thesift:block/sky_grass_block",
+        "y": 90
+      },
+      {
+        "model": "thesift:block/sky_grass_block",
+        "y": 180
+      },
+      {
+        "model": "thesift:block/sky_grass_block",
+        "y": 270
+      }
+    ],
+    "snowy=true": {
+      "model": "thesift:block/sky_grass_block_snow"
+    }
+  }
+}

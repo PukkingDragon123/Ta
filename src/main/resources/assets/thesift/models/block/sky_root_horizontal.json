@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "thesift:block/sky_root_top",
+    "side": "thesift:block/sky_root_side"
+  }
+}

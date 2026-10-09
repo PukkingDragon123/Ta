@@ -1,0 +1,37 @@
+{
+  "type": "thesift:sky_tree",
+  "style": "skypalm",
+  "trunk": {
+    "id": "thesift:skypalm_log",
+    "properties": {
+      "axis": "y"
+    }
+  },
+  "leaves": {
+    "id": "thesift:skypalm_leaves",
+    "properties": {
+      "distance": "7",
+      "persistent": "false",
+      "waterlogged": "false"
+    }
+  },
+  "vine": {
+    "id": "thesift:sky_vine",
+    "properties": {
+      "north": "false",
+      "east": "false",
+      "south": "false",
+      "west": "false",
+      "up": "false",
+      "down": "false"
+    }
+  },
+  "fruit": {
+    "id": "thesift:skyrind_bunch",
+    "properties": {
+      "age": "3"
+    }
+  },
+  "min_height": 7,
+  "max_height": 13
+}

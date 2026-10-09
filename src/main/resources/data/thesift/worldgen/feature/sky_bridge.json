@@ -1,0 +1,26 @@
+{
+  "type": "thesift:sky_bridge",
+  "mode": "bridge",
+  "vine": {
+    "id": "thesift:sky_vine",
+    "properties": {
+      "north": "false",
+      "east": "false",
+      "south": "false",
+      "west": "false",
+      "up": "false",
+      "down": "false"
+    }
+  },
+  "root": {
+    "id": "thesift:sky_root",
+    "properties": {
+      "axis": "x"
+    }
+  },
+  "fruit": {
+    "id": "thesift:driftfruit"
+  },
+  "max_span": 44,
+  "fruit_chance": 0.3
+}

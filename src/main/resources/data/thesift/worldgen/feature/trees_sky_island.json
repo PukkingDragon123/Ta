@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:random_selector",
+  "default": {
+    "feature": "thesift:skypalm_tree",
+    "placement": [
+      {
+        "type": "minecraft:block_predicate_filter",
+        "predicate": {
+          "type": "minecraft:would_survive",
+          "state": "thesift:skypalm_sapling"
+        }
+      }
+    ]
+  },
+  "features": [
+    {
+      "chance": 0.42,
+      "feature": {
+        "feature": "thesift:cloud_tree",
+        "placement": [
+          {
+            "type": "minecraft:block_predicate_filter",
+            "predicate": {
+              "type": "minecraft:would_survive",
+              "state": "thesift:cloudpuff_sapling"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

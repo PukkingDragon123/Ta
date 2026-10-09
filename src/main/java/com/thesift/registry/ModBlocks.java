@@ -541,6 +541,32 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.QUARTZ));
     public static final DeferredBlock<RainbowAnemoneBlock> RAINBOW_ANEMONE = BLOCKS.registerBlock("rainbow_anemone", RainbowAnemoneBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BUBBLE_CORAL).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 10));
+    public static final DeferredBlock<com.thesift.world.sky.SkyGrassBlock> SKY_GRASS_BLOCK = BLOCKS.registerBlock("sky_grass_block", com.thesift.world.sky.SkyGrassBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<SiftPlantBlock> CIRRUS_GRASS = BLOCKS.registerBlock("cirrus_grass", SiftPlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<SiftDoublePlantBlock> TALL_CIRRUS_GRASS = BLOCKS.registerBlock("tall_cirrus_grass", SiftDoublePlantBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SHORT_GRASS).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<com.thesift.world.sky.FluffbushBlock> FLUFFBUSH = BLOCKS.registerBlock("fluffbush", com.thesift.world.sky.FluffbushBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AZALEA).mapColor(MapColor.SNOW).noCollision().sound(SoundType.WOOL));
+    public static final DeferredBlock<com.thesift.world.sky.SkyVineBlock> SKY_VINE = BLOCKS.registerBlock("sky_vine", com.thesift.world.sky.SkyVineBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_CYAN).noCollision().noOcclusion().strength(0.6F).sound(SoundType.VINE).ignitedByLava().randomTicks().pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
+    public static final DeferredBlock<RotatedPillarBlock> SKY_ROOT = BLOCKS.registerBlock("sky_root", RotatedPillarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.MANGROVE_LOG).mapColor(MapColor.TERRACOTTA_WHITE));
+    public static final DeferredBlock<RotatedPillarBlock> SKYPALM_LOG = BLOCKS.registerBlock("skypalm_log", RotatedPillarBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_LOG).mapColor(MapColor.COLOR_PURPLE));
+    public static final DeferredBlock<SiftLeavesBlock> SKYPALM_LEAVES = BLOCKS.registerBlock("skypalm_leaves", p -> new SiftLeavesBlock(0.02F, () -> ModParticles.LULLWOOD_LEAF.get(), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_LEAVES).mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<SiftSaplingBlock> SKYPALM_SAPLING = BLOCKS.registerBlock("skypalm_sapling", p -> new SiftSaplingBlock(com.thesift.world.sky.SkyIslands.SKYPALM, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
+    public static final DeferredBlock<SiftLeavesBlock> CLOUDPUFF_LEAVES = BLOCKS.registerBlock("cloudpuff_leaves", p -> new SiftLeavesBlock(0.04F, () -> ModSwifter.WHITE_FLUFF.get(), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CHERRY_LEAVES).mapColor(MapColor.SNOW));
+    public static final DeferredBlock<SiftSaplingBlock> CLOUDPUFF_SAPLING = BLOCKS.registerBlock("cloudpuff_sapling", p -> new SiftSaplingBlock(com.thesift.world.sky.SkyIslands.CLOUDPUFF, p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
+    public static final DeferredBlock<com.thesift.world.sky.DriftfruitBlock> DRIFTFRUIT = BLOCKS.registerBlock("driftfruit", com.thesift.world.sky.DriftfruitBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK).strength(1.0F).sound(SoundType.WOOD).lightLevel(s -> 7).noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
+    public static final DeferredBlock<com.thesift.world.sky.SkyrindBunchBlock> SKYRIND_BUNCH = BLOCKS.registerBlock("skyrind_bunch", com.thesift.world.sky.SkyrindBunchBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.COCOA).mapColor(MapColor.GOLD).noCollision());
 
     private ModBlocks() {}
 }

@@ -19,12 +19,6 @@
         "min_delay": 5000,
         "replace_current_music": true,
         "sound": "thesift:music.sound_garden"
-      },
-      "underwater": {
-        "max_delay": 15000,
-        "min_delay": 5000,
-        "replace_current_music": true,
-        "sound": "thesift:music.sound_garden"
       }
     },
     "minecraft:gameplay/natural_mob_spawns": {
@@ -86,15 +80,21 @@
       "argument": [
         {
           "particle": {
+            "type": "thesift:white_fluff"
+          },
+          "probability": 0.0025
+        },
+        {
+          "particle": {
             "type": "thesift:sift_note"
           },
-          "probability": 0.004
+          "probability": 0.003
         },
         {
           "particle": {
             "type": "thesift:sift_mist"
           },
-          "probability": 0.003
+          "probability": 0.002
         },
         {
           "particle": {
@@ -117,20 +117,16 @@
       ],
       "modifier": "append"
     },
-    "minecraft:visual/fog_color": "#f2eaff",
-    "minecraft:visual/sky_color": "#a8d8ff",
-    "minecraft:visual/water_fog_color": "#bfe8ff"
+    "minecraft:visual/fog_color": "#dcf7f3",
+    "minecraft:visual/sky_color": "#86e4ec",
+    "minecraft:visual/water_fog_color": "#bff3ff"
   },
-  "carvers": [
-    "minecraft:cave",
-    "minecraft:cave_extra_underground",
-    "minecraft:canyon"
-  ],
+  "carvers": [],
   "downfall": 0.6,
   "effects": {
-    "water_color": "#bfe8ff",
-    "grass_color": "#c8f0ff",
-    "foliage_color": "#d8f4ff"
+    "water_color": "#bff3ff",
+    "grass_color": "#a8f0e8",
+    "foliage_color": "#c8f8f0"
   },
   "features": [
     [],
@@ -139,14 +135,20 @@
       "thesift:cloud_puff"
     ],
     [],
-    [],
+    [
+      "thesift:sky_bridge",
+      "thesift:sky_dangle"
+    ],
     [],
     [],
     [],
     [],
     [
       "thesift:patch_chime_bell",
-      "thesift:patch_organ_reed"
+      "thesift:patch_organ_reed",
+      "thesift:trees_sky_island",
+      "thesift:patch_cirrus_grass",
+      "thesift:patch_fluffbush"
     ],
     []
   ],

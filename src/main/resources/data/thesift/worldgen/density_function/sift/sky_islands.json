@@ -1,0 +1,80 @@
+{
+  "type": "minecraft:interpolated",
+  "cell_size_xz": 4,
+  "cell_size_y": 8,
+  "input": {
+    "type": "minecraft:range_choice",
+    "input": {
+      "type": "minecraft:gradient",
+      "axis": "y",
+      "from_coordinate": -64,
+      "from_value": -64.0,
+      "to_coordinate": 320,
+      "to_value": 320.0
+    },
+    "min_inclusive": 96.0,
+    "max_exclusive": 300.0,
+    "when_in_range": {
+      "type": "minecraft:clamp",
+      "input": {
+        "type": "minecraft:min",
+        "left": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:min",
+            "left": {
+              "type": "minecraft:sub",
+              "left": "thesift:sift/sky_island_top",
+              "right": {
+                "type": "minecraft:gradient",
+                "axis": "y",
+                "from_coordinate": -64,
+                "from_value": -64.0,
+                "to_coordinate": 320,
+                "to_value": 320.0
+              }
+            },
+            "right": {
+              "type": "minecraft:add",
+              "left": {
+                "type": "minecraft:sub",
+                "left": {
+                  "type": "minecraft:gradient",
+                  "axis": "y",
+                  "from_coordinate": -64,
+                  "from_value": -64.0,
+                  "to_coordinate": 320,
+                  "to_value": 320.0
+                },
+                "right": "thesift:sift/sky_island_bottom"
+              },
+              "right": {
+                "type": "minecraft:mul",
+                "left": {
+                  "type": "minecraft:noise",
+                  "noise": "minecraft:ice",
+                  "xz_scale": 1.0,
+                  "y_scale": 1.5
+                },
+                "right": 4.0
+              }
+            }
+          },
+          "right": 0.15
+        },
+        "right": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:add",
+            "left": "thesift:sift/sky_island_mask",
+            "right": -0.05
+          },
+          "right": 8.0
+        }
+      },
+      "min": -1.0,
+      "max": 1.0
+    },
+    "when_out_of_range": -1.0
+  }
+}

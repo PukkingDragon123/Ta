@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "thesift:block/skypalm_log_top",
+    "side": "thesift:block/skypalm_log_side"
+  }
+}

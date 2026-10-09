@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "thesift:block/tall_cirrus_grass_bottom"
+    },
+    "half=upper": {
+      "model": "thesift:block/tall_cirrus_grass_top"
+    }
+  }
+}

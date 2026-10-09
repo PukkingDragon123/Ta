@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:sub",
+    "left": "thesift:sift/sky_island_top",
+    "right": {
+      "type": "minecraft:add",
+      "left": {
+        "type": "minecraft:add",
+        "left": 3.0,
+        "right": {
+          "type": "minecraft:mul",
+          "left": "thesift:sift/sky_island_mask",
+          "right": 18.0
+        }
+      },
+      "right": {
+        "type": "minecraft:add",
+        "left": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:square",
+            "input": "thesift:sift/sky_island_mask"
+          },
+          "right": 24.0
+        },
+        "right": {
+          "type": "minecraft:mul",
+          "left": {
+            "type": "minecraft:mul",
+            "left": "thesift:sift/sky_island_mask",
+            "right": {
+              "type": "minecraft:abs",
+              "input": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:iceberg_pillar",
+                "xz_scale": 2.6,
+                "y_scale": 0.0
+              }
+            }
+          },
+          "right": 20.0
+        }
+      }
+    }
+  }
+}

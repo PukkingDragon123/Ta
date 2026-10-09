@@ -1716,6 +1716,7 @@ def main():
     __import__('knowledge').textures(out)  # F3 Knowledge and lore: the Knowledge Book GUI, lore books/scrolls/pages, Music Sheet art
     __import__('caves_art').textures(out)  # W-deep caves: crystal dripstone, cave jungle plants and acid, writhing sculk, tendrils, Grasper
     __import__('sea_reefs_art').textures(out)  # W-sea: Copper Sand, Trumpet Coral, Bubble Coral, Tube Seaweed, Algae, Rainbow Anemone
+    __import__('sky_islands').textures(out)  # W-sky: Sky Islands blocks, Driftfruit, Skyrind, the swinging rope (tools/sky_art.py)
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)
     need = os.path.join(ROOT, 'build/textures_needed.txt')

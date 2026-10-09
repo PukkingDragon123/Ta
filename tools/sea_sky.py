@@ -1,5 +1,5 @@
-"""Sea & sky (agents F + W): the Magic Kelp Forest, the Deep Dark Ocean and the Sound Garden; the
-Gobbler; fish meat and sushi.
+"""Sea & sky (agents F + W): the Magic Kelp Forest, the Deep Dark Ocean and the sky flora (Chime Bells, Organ Reeds, cloud
+puffs; the sky biome itself is the Sky Island, tools/sky_islands.py); the Gobbler; fish meat and sushi.
 
 Hooks (one line each):
   * gen_assets.generate()  -> assets(GA): sounds, block models' text, recipes, tags, lang, Codex
@@ -14,7 +14,7 @@ import os
 NS = 'thesift'
 KELPS = ('rose', 'azure', 'amber')
 SEA_BIOMES = ('magic_kelp_forest', 'deep_dark_ocean')
-BIOMES = SEA_BIOMES + ('sound_garden',)
+BIOMES = SEA_BIOMES  # W-sky: the Sound Garden became the Sky Island biome (tools/sky_islands.py)
 
 
 def rl(x):
@@ -150,11 +150,10 @@ def assets(GA):
     LANG.update({
         f'entity.{NS}.gobbler': 'Gobbler',
         f'biome.{NS}.magic_kelp_forest': 'Magic Kelp Forest', f'biome.{NS}.deep_dark_ocean': 'Sculk Ocean',  # W1: renamed, id kept
-        f'biome.{NS}.sound_garden': 'Sound Garden',
         f'codex.{NS}.gobbler.title': 'Gobbler', f'codex.{NS}.gobbler.tagline': 'Hostile - blind, and very hungry',
         f'codex.{NS}.gobbler.body': 'A Warden-kin catfish of the Sculk Ocean: sculk skin threaded with glowing veins, a fanged mouth wider than you, soul-lantern lures on its whiskers and a ribcage of glowing souls. It has no eyes. It feels you - fast swimming, thrashing and music carry to it through the water, so swim slowly or sneak past. If it finds you it lunges, gulps you down and spits you out. Sneak to wriggle free. The Lullaby lulls it for two minutes. Drops fillets and a glowing sculk bladder.',
         f'codex.{NS}.sea_and_sky.title': 'Seas and Skies', f'codex.{NS}.sea_and_sky.tagline': 'Real water, and clouds you can walk on',
-        f'codex.{NS}.sea_and_sky.body': 'Only two seas in the Sift hold real water. The warm Magic Kelp Forest glows with rose, azure and amber glowkelp over coral-pink sand, full of Kazoo Fish and coral. The cold Sculk Ocean is dark teal water over trenches, ridges and glowing Sculk Coral reefs - mind the Gobblers. Far above the land is the Sound Garden: cloud islands where Chime Bells ring and Organ Reeds hum as you walk through them, and Sky Whales sing.',
+        f'codex.{NS}.sea_and_sky.body': 'Only two seas in the Sift hold real water. The warm Magic Kelp Forest glows with rose, azure and amber glowkelp over coral-pink sand, full of Kazoo Fish and coral. The cold Sculk Ocean is dark teal water over trenches, ridges and glowing Sculk Coral reefs - mind the Gobblers. Far above the land drift the Sky Islands, where Chime Bells ring and Organ Reeds hum as you walk through them, and Sky Whales sing.',
         f'codex.{NS}.sushi.title': 'Sushi', f'codex.{NS}.sushi.tagline': 'Raw fish, dried kelp, a strand of glowkelp',
         f'codex.{NS}.sushi.body': 'Every Sift fish has raw and cooked meat (fish killed by fire drop it cooked). Roll a raw fish with dried kelp and any glowkelp. Kazoo Fish Sushi: water breathing. Tubafish Sushi: night vision and resistance. Fanfare Eel Sushi: dolphin\'s grace. Gobbler Sushi (add the sculk bladder) cures Sculk Corruption. Set all four on a wooden slab for a Sushi Platter: a long, safe dive.',
     })
@@ -255,19 +254,12 @@ def _biomes(GW):
            feats=[(0, 'sea_flood')] + common + [(9, 'glowkelp'), (9, 'minecraft:warm_ocean_vegetation'), (9, 'minecraft:seagrass_warm'),
                                                  (9, 'minecraft:sea_pickle')])
     # W1: the Sculk Ocean (biome id kept: deep_dark_ocean) is built in tools/sculk_world.py (_ocean_biome)
-    _biome(GW, 'sound_garden', fog='#f2eaff', sky='#a8d8ff', water='#bfe8ff', water_fog='#bfe8ff', grass='#c8f0ff', foliage='#d8f4ff',
-           temp=0.6, down=0.6, music='music.sound_garden', loop='ambient.sound_garden.loop', additions='ambient.sound_garden.additions',
-           mood='ambient.sift.mood',
-           spawns=_spawns(creature=[('sky_whale', 6, 1, 1), ('harmoner', 8, 2, 3), ('bulb', 4, 1, 3), ('enchoer', 1, 1, 1)],
-                          ambient=[('nib', 12, 2, 4)]),
-           parts=[('sift_note', 0.004), ('sift_mist', 0.003), ('star_sparkle', 0.002), ('wishing_star', 0.0004), ('dream_pollen', 0.001)],
-           feats=[(2, 'cloud_puff'), (9, 'patch_chime_bell'), (9, 'patch_organ_reed')])
+    # W-sky: the Sound Garden is the Sky Island biome now (tools/sky_islands.py); its bells, reeds and cloud puffs are made above
 
 
 def _placement(dim):
-    """The two oceans split the Chrome seas by temperature; the Sound Garden is the sky itself, about a
-    hundred blocks above the ground (depth < -0.85), so the high floating islands turn into clouds.
-    Multi-noise placement blends neighbouring climates, so every edge is a gradual shore or a
+    """The two oceans split the Chrome seas by temperature (W-sky: the sky itself is the Sky Island, placed in
+    tools/sky_islands.py). Multi-noise placement blends neighbouring climates, so every edge is a gradual shore or a
     gradual rise."""
     pts = dim['generator']['biome_source']['biomes']
     F = [-1.0, 1.0]
@@ -281,12 +273,11 @@ def _placement(dim):
             p['parameters']['continentalness'] = [-0.455, -0.19]
     pts.append(pt('magic_kelp_forest', t=[0.1, 1.0], c=[-1.2, -0.19]))
     pts.append(pt('deep_dark_ocean', t=[-1.0, 0.1], c=[-1.2, -0.455]))
-    pts.append(pt('sound_garden', d=[-2.0, -0.85]))
     return dim
 
 
 def _surface(GW, rule):
-    """Coral-pink sand under the kelp, cloud through and through in the sky."""
+    """Coral-pink sand under the kelp (W-sky: the Sky Islands' ground is in tools/sky_islands.py)."""
     def biome_is(b):
         return {'type': 'minecraft:biome', 'biome_is': [rl(b)]}
 
@@ -299,7 +290,6 @@ def _surface(GW, rule):
     def seq(*r):
         return {'type': 'minecraft:sequence', 'sequence': list(r)}
     mine = [
-        cond(biome_is('sound_garden'), block('cloud_block')),
         cond(biome_is('magic_kelp_forest'), seq(cond('minecraft:on_floor', block('coral_sand')), cond('minecraft:under_floor', block('coral_sand')),
                                                 cond('minecraft:deep_under_floor', block('dreamsandstone')))),
         # W1: the Sculk Ocean's floor rules live in tools/sculk_world.py (_surface)

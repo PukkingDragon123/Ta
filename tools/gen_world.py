@@ -150,16 +150,8 @@ def noise_settings():
     ns['spawn_target'] = []
     ns['sea_level'] = 63
     ns['aquifers']['lava'] = -1.0
-    band = {'type': 'minecraft:mul',
-            'left': {'type': 'minecraft:gradient', 'axis': 'y', 'from_coordinate': 176, 'from_value': 0.0, 'to_coordinate': 196, 'to_value': 1.0},
-            'right': {'type': 'minecraft:gradient', 'axis': 'y', 'from_coordinate': 206, 'from_value': 1.0, 'to_coordinate': 232, 'to_value': 0.0}}
-    islands = {'type': 'minecraft:interpolated', 'cell_size_xz': 4, 'cell_size_y': 8, 'input': {
-        'type': 'minecraft:add',
-        'left': {'type': 'minecraft:mul', 'left': {'type': 'minecraft:add',
-                                                  'left': {'type': 'minecraft:noise', 'noise': 'minecraft:cave_cheese', 'xz_scale': 0.45, 'y_scale': 0.9},
-                                                  'right': -0.42},
-                 'right': band},
-        'right': {'type': 'minecraft:mul', 'left': {'type': 'minecraft:add', 'left': band, 'right': -1.0}, 'right': 1.5}}}
+    # W-sky: the giant Sky Islands are their own density function, thesift:sift/sky_islands (tools/sky_islands.py)
+    islands = __import__('sky_islands').density(sys.modules[__name__])
     router = terrain_density()
     ns['noise_router']['final_density'] = {'type': 'minecraft:max', 'left': router['final_density'], 'right': islands}
     ns['noise_router']['chunk_surface_level'] = router['chunk_surface_level']
@@ -556,6 +548,7 @@ def generate():
     __import__('swifter').world(sys.modules[__name__])  # A2: the White Forest, white lullwood, cloud bushes, Swifter dens
     __import__('sculk_world').world(sys.modules[__name__])  # W1: Sculk Swamp, Sculk Ocean, soft biome edges, relic caches
     __import__('sculk_sea').world(sys.modules[__name__])  # CR3: Coral Organs on the Sculk Ocean floor, Sculk Fish spawns
+    __import__('sky_islands').world(sys.modules[__name__])  # W-sky: Sky Island biome (was the Sound Garden), vines, roots, sky trees, fruit
     __import__('sea_reefs').world(sys.modules[__name__])  # W-sea: Brass Coral Reef, Chrome Coral Ocean, water/Chrome blend, clearer seas
     __import__('caves').world(sys.modules[__name__])  # W-deep: cave biomes by depth, crystals, no grass in caves (after every biome)
     carver_tags()

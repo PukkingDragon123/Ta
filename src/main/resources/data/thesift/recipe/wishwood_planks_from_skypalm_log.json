@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "thesift:skypalm_log"
+  ],
+  "result": {
+    "count": 4,
+    "id": "thesift:wishwood_planks"
+  },
+  "group": "planks"
+}

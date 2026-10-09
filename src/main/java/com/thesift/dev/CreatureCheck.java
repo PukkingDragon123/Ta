@@ -178,7 +178,7 @@ final class CreatureCheck {
             case "sift_plains" -> new Habitat(ModBlocks.CORAL_TURF.get(), hush, false, false);
             case "rocky_dunes" -> new Habitat(ModBlocks.DREAMSAND.get(), hush, false, false);
             case "white_forest" -> new Habitat(ModBlocks.WHITE_TURF.get(), hush, false, false);
-            case "sound_garden" -> new Habitat(ModBlocks.CLOUD_BLOCK.get(), hush, false, false);
+            case "sky_island" -> new Habitat(ModBlocks.SKY_GRASS_BLOCK.get(), hush, false, false); // W-sky (was the Sound Garden)
             case "magic_kelp_forest" -> new Habitat(ModBlocks.CORAL_SAND.get(), hush, true, false);
             case "deep_dark_ocean" -> new Habitat(hush, hush, true, false);
             case "deep_sift" -> new Habitat(ModBlocks.LUMEN_MOSS_BLOCK.get(), hush, false, true);

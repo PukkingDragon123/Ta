@@ -73,9 +73,12 @@ final class KnowledgePages {
         KEYS.put("chrome", new String[]{"biome:thesift:chrome_lakes", "item:thesift:chrome_bucket"});
         KEYS.put("siftite", new String[]{"item:thesift:siftite_ingot", "item:thesift:siftite_pickaxe"});
         KEYS.put("sushi", new String[]{"item:thesift:sushi_platter", "item:thesift:kazoo_fish_sushi", "item:thesift:tubafish_sushi"});
-        for (String b : new String[]{"sift_plains", "wishing_grove", "forest_mountains", "chrome_lakes", "rocky_dunes", "sound_garden", "caravans_cavern",
+        for (String b : new String[]{"sift_plains", "wishing_grove", "forest_mountains", "chrome_lakes", "rocky_dunes", "caravans_cavern",
                 "deep_sift"}) {
             KEYS.put(b, new String[]{"biome:thesift:" + b});
+        }
+        { // W-sky: the Sound Garden became the Sky Island biome; its page is "sky_islands"
+            KEYS.put("sky_islands", new String[]{"biome:thesift:sky_island"});
         }
         KEYS.put("drum_pit", new String[]{"structure:thesift:thumper_arena"});
     }

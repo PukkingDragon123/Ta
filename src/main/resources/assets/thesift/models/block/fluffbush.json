@@ -1,0 +1,7 @@
+{
+  "parent": "thesift:block/template_fluffbush",
+  "textures": {
+    "side": "thesift:block/fluffbush_side",
+    "top": "thesift:block/fluffbush_top"
+  }
+}

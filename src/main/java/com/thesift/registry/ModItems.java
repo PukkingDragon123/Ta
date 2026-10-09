@@ -234,6 +234,18 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> PEARL_BUBBLE_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PEARL_BUBBLE_CORAL_BLOCK);
     public static final DeferredItem<BlockItem> PEARL_BUBBLE_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.PEARL_BUBBLE_CORAL);
     public static final DeferredItem<BlockItem> RAINBOW_ANEMONE = ITEMS.registerSimpleBlockItem(ModBlocks.RAINBOW_ANEMONE);
+    public static final DeferredItem<BlockItem> SKY_GRASS_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SKY_GRASS_BLOCK);
+    public static final DeferredItem<BlockItem> CIRRUS_GRASS = ITEMS.registerSimpleBlockItem(ModBlocks.CIRRUS_GRASS);
+    public static final DeferredItem<DoubleHighBlockItem> TALL_CIRRUS_GRASS = ITEMS.registerItem("tall_cirrus_grass", p -> new DoubleHighBlockItem(ModBlocks.TALL_CIRRUS_GRASS.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<BlockItem> FLUFFBUSH = ITEMS.registerSimpleBlockItem(ModBlocks.FLUFFBUSH);
+    public static final DeferredItem<BlockItem> SKY_VINE = ITEMS.registerSimpleBlockItem(ModBlocks.SKY_VINE);
+    public static final DeferredItem<BlockItem> SKY_ROOT = ITEMS.registerSimpleBlockItem(ModBlocks.SKY_ROOT);
+    public static final DeferredItem<BlockItem> SKYPALM_LOG = ITEMS.registerSimpleBlockItem(ModBlocks.SKYPALM_LOG);
+    public static final DeferredItem<BlockItem> SKYPALM_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.SKYPALM_LEAVES);
+    public static final DeferredItem<BlockItem> SKYPALM_SAPLING = ITEMS.registerSimpleBlockItem(ModBlocks.SKYPALM_SAPLING);
+    public static final DeferredItem<BlockItem> CLOUDPUFF_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.CLOUDPUFF_LEAVES);
+    public static final DeferredItem<BlockItem> CLOUDPUFF_SAPLING = ITEMS.registerSimpleBlockItem(ModBlocks.CLOUDPUFF_SAPLING);
+    public static final DeferredItem<BlockItem> DRIFTFRUIT = ITEMS.registerSimpleBlockItem(ModBlocks.DRIFTFRUIT);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -392,6 +404,8 @@ public final class ModItems {
     public static final DeferredItem<StandingAndWallBlockItem> AZURE_BUBBLE_CORAL_FAN = ITEMS.registerItem("azure_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.AZURE_BUBBLE_CORAL_FAN.get(), ModBlocks.AZURE_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<StandingAndWallBlockItem> VIOLET_BUBBLE_CORAL_FAN = ITEMS.registerItem("violet_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.VIOLET_BUBBLE_CORAL_FAN.get(), ModBlocks.VIOLET_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<StandingAndWallBlockItem> PEARL_BUBBLE_CORAL_FAN = ITEMS.registerItem("pearl_bubble_coral_fan", p -> new StandingAndWallBlockItem(ModBlocks.PEARL_BUBBLE_CORAL_FAN.get(), ModBlocks.PEARL_BUBBLE_CORAL_WALL_FAN.get(), net.minecraft.core.Direction.DOWN, p), () -> new Item.Properties().useBlockDescriptionPrefix());
+    public static final DeferredItem<Item> SKYRIND = ITEMS.registerItem("skyrind", Item::new, () -> new Item.Properties().food(com.thesift.world.sky.SkyFoods.SKYRIND, com.thesift.world.sky.SkyFoods.SKYRIND_CONSUMABLE));
+    public static final DeferredItem<Item> DRIFTFRUIT_SLICE = ITEMS.registerItem("driftfruit_slice", Item::new, () -> new Item.Properties().food(com.thesift.world.sky.SkyFoods.DRIFTFRUIT_SLICE, com.thesift.world.sky.SkyFoods.DRIFTFRUIT_SLICE_CONSUMABLE));
 
     private ModItems() {}
 }
