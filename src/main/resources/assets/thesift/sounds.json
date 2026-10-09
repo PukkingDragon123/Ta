@@ -475,7 +475,7 @@
     ],
     "subtitle": "subtitles.thesift.item.guitar.strum"
   },
-  "item.conductors_baton.note": {
+  "item.conductors_staff.note": {
     "sounds": [
       {
         "name": "minecraft:entity.warden.sonic_boom",
@@ -490,7 +490,7 @@
         "pitch": 1.0
       }
     ],
-    "subtitle": "subtitles.thesift.item.conductors_baton.note"
+    "subtitle": "subtitles.thesift.item.conductors_staff.note"
   },
   "entity.harmoner.ambient": {
     "sounds": [
@@ -1133,32 +1133,6 @@
     ],
     "subtitle": "subtitles.thesift.block.chrome.splash"
   },
-  "block.harmony_stone.tone": {
-    "sounds": [
-      {
-        "name": "minecraft:block.note_block.chime",
-        "type": "event",
-        "volume": 1.0,
-        "pitch": 1.0
-      }
-    ],
-    "subtitle": "subtitles.thesift.block.harmony_stone.tone"
-  },
-  "block.harmony_seal.unlock": {
-    "sounds": [
-      {
-        "name": "minecraft:block/trial_spawner/ominous_activate",
-        "volume": 1.0,
-        "pitch": 1.4
-      },
-      {
-        "name": "minecraft:block/beacon/deactivate",
-        "volume": 1.0,
-        "pitch": 1.5
-      }
-    ],
-    "subtitle": "subtitles.thesift.block.harmony_seal.unlock"
-  },
   "block.soul_chime.ring": {
     "sounds": [
       {
@@ -1180,23 +1154,6 @@
       }
     ],
     "subtitle": "subtitles.thesift.block.soul_chime.ring"
-  },
-  "block.dream_snare.trigger": {
-    "sounds": [
-      {
-        "name": "minecraft:block.tripwire.click_on",
-        "type": "event",
-        "volume": 1.0,
-        "pitch": 0.6
-      },
-      {
-        "name": "minecraft:block.sculk_catalyst.bloom",
-        "type": "event",
-        "volume": 1.0,
-        "pitch": 1.4
-      }
-    ],
-    "subtitle": "subtitles.thesift.block.dream_snare.trigger"
   },
   "block.crumbling_dreamstone.crumble": {
     "sounds": [

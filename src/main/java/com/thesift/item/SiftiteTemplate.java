@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.SmithingTemplateItem;
 
-/** Smithing template that upgrades Netherite gear into Siftite gear. Found in buried relics (archaeology) and Sift structures. */
+/** Smithing template that upgrades Netherite tools and weapons into Siftite ones. Found in buried relics (archaeology) and Sift structures. */
 public class SiftiteTemplate extends SmithingTemplateItem {
     private static final ChatFormatting DESC = ChatFormatting.BLUE;
 
@@ -15,8 +15,7 @@ public class SiftiteTemplate extends SmithingTemplateItem {
                 Component.translatable("item.thesift.smithing_template.siftite_upgrade.ingredients").withStyle(DESC),
                 Component.translatable("item.thesift.smithing_template.siftite_upgrade.base_slot_description"),
                 Component.translatable("item.thesift.smithing_template.siftite_upgrade.additions_slot_description"),
-                List.of(slot("helmet"), slot("sword"), slot("chestplate"), slot("pickaxe"), slot("leggings"), slot("axe"), slot("boots"),
-                        slot("hoe"), slot("shovel"), slot("spear")),
+                List.of(slot("sword"), slot("pickaxe"), slot("axe"), slot("hoe"), slot("shovel"), slot("spear")),
                 List.of(Identifier.withDefaultNamespace("container/slot/ingot")),
                 properties);
     }

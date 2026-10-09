@@ -37,7 +37,6 @@ public final class ModTags {
         public static final TagKey<Item> SLUMBLER_FOOD = tag("slumbler_food");
         public static final TagKey<Item> SLINGSHOT_AMMO = tag("slingshot_ammo");
         public static final TagKey<Item> SIFTITE_TOOL_MATERIALS = tag("siftite_tool_materials");
-        public static final TagKey<Item> REPAIRS_SIFTITE_ARMOR = tag("repairs_siftite_armor");
         public static final TagKey<Item> ALTAR_FUEL = tag("altar_fuel");
 
         private static TagKey<Item> tag(String name) {

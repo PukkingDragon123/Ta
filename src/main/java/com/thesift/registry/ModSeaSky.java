@@ -28,7 +28,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * Sea & sky (agents F + W): the Gobbler, the worldgen of the Magic Kelp Forest, the Deep Dark Ocean
  * and the Sound Garden (real water for the two oceans, the Deep Dark Ocean's rock pillars), and
- * the Gobbler's ears: any music played nearby draws it, and the Tide Song lulls it.
+ * the Gobbler's ears: any music played nearby draws it, and the Lullaby lulls it (CLEAN: the Tide Song is gone).
  */
 public final class ModSeaSky {
     public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(TheSift.MODID);
@@ -42,9 +42,9 @@ public final class ModSeaSky {
     public static final DeferredHolder<MapCodec<? extends Feature>, MapCodec<JaggedPillarFeature>> JAGGED_PILLAR = FEATURE_TYPES.register(
             "jagged_pillar", () -> JaggedPillarFeature.CODEC);
 
-    /** How long the Tide Song keeps a Gobbler lulled (two minutes), and how far it carries. */
-    public static final int TIDE_CALM_TICKS = 2400;
-    public static final double TIDE_RADIUS = 48.0;
+    /** How long the Lullaby keeps a Gobbler lulled (two minutes), and how far it carries under water. */
+    public static final int LULL_TICKS = 2400;
+    public static final double LULL_RADIUS = 48.0;
 
     private ModSeaSky() {}
 
@@ -54,9 +54,9 @@ public final class ModSeaSky {
         bus.addListener(ModSeaSky::registerAttributes);
         bus.addListener(ModSeaSky::registerSpawnPlacements);
         SongEvents.listenSongs((level, player, at, song) -> {
-            if (song == Song.TIDE) {
-                for (Gobbler g : level.getEntitiesOfClass(Gobbler.class, new AABB(at, at).inflate(TIDE_RADIUS), Gobbler::isAlive)) {
-                    g.calm(TIDE_CALM_TICKS);
+            if (song == Song.LULLABY) {
+                for (Gobbler g : level.getEntitiesOfClass(Gobbler.class, new AABB(at, at).inflate(LULL_RADIUS), Gobbler::isAlive)) {
+                    g.calm(LULL_TICKS);
                 }
             }
         });

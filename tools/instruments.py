@@ -54,14 +54,9 @@ PRISM_RECIPES = {
 }
 
 # where they are found: chest table -> ([(item, weight)], chance of one turning up at all)
+# (CLEAN: the ruins, towers, temples, Echoer huts, shrines and wells these also stocked were removed in W1)
 LOOT = {
-    'chests/sift_ruins': ([('guitar', 3), ('crane_flute', 2), ('wind_chimes', 3), ('conga_drum', 2)], 0.12),
     'chests/drum_pit_armory': ([('conga_drum', 3), ('thunder_drums', 2)], 0.3),
-    'chests/tower_top': ([('star_lute', 3), ('glass_bells', 1)], 0.14),
-    'chests/temple_vault': ([('serbim_flute', 3), ('glass_bells', 2), ('star_lute', 1)], 0.16),
-    'chests/echoer_hut': ([('glass_bells', 3), ('wind_chimes', 2)], 0.18),
-    'chests/deep_shrine': ([('serbim_flute', 2), ('thunder_drums', 1), ('prism_flute', 1)], 0.12),
-    'chests/chrome_well': ([('glass_bells', 2), ('prism_chimes', 1)], 0.1),
     'chests/sculk_castle': ([('thunder_drums', 2), ('star_lute', 2), ('prism_harp', 1), ('prism_drum', 1), ('prism_flute', 1),
                              ('prism_chimes', 1)], 0.2),
 }
@@ -163,15 +158,15 @@ def lang():
         f'{c}.instruments.title': 'Instruments', f'{c}.instruments.tagline': 'Four ways to play',
         f'{c}.instruments.body': 'Use an instrument to play it. Strings: pick notes on a fretboard. Flutes: hold your breath, finger the holes. Drums: beat the pads in rhythm. Chimes: strike each as it swings past its mark. Instruments have no powers - better ones play more notes or in new ways. Prism ones play every note as a light.',
         f'{c}.star_lute.title': 'Star Lute', f'{c}.star_lute.tagline': 'Six strings and a star',
-        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings tuned a third apart reach every note of both octaves, and Shift (or the right mouse button) strums the whole chord on a note. Found high in Collapsed Towers and in temple vaults, or made from a Guitar with star shards, Serbim and Sculk String.',
+        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings tuned a third apart reach every note of both octaves, and Shift (or the right mouse button) strums the whole chord on a note. Found in the Sculk Castle, or made from a Guitar with star shards, Serbim and Sculk String.',
         f'{c}.serbim_flute.title': 'Serbim Flute', f'{c}.serbim_flute.tagline': 'Silver breath',
-        f'{c}.serbim_flute.body': 'A transverse flute of Serbim with a seventh hole and a longer breath. Hold Shift (or the right mouse button) while you blow to overblow it an octave higher - fifteen notes in all. Found in temple vaults and deep shrines, or made from a Crane Flute, Serbim and an Echo Shard.',
+        f'{c}.serbim_flute.body': 'A transverse flute of Serbim with a seventh hole and a longer breath. Hold Shift (or the right mouse button) while you blow to overblow it an octave higher - fifteen notes in all. Made from a Crane Flute, Serbim and an Echo Shard.',
         f'{c}.thunder_drums.title': 'Thunder Drums', f'{c}.thunder_drums.tagline': 'Four drums, eight voices',
         f'{c}.thunder_drums.body': 'Four lacquered drums, a low and a high stroke on each: eight pads on A S D F J K L ;. Hold a pad and it rolls. The drum pits keep them, and the castle; or hoop a Conga Drum with Thick Hide, Serbim and lullwood. Drum songs keep a rhythm - land each beat on the line.',
         f'{c}.glass_bells.title': 'Glass Bells', f'{c}.glass_bells.tagline': 'Ten chimes of chime glass',
-        f'{c}.glass_bells.body': 'Ten tubes of Chime Glass on a Serbim bar - two octaves. Hold Space and a gust sets them swinging wider and twice as fast: they pass their marks twice as often, but the moment to strike is shorter. Found in Echoer huts and temple vaults, or made from Wind Chimes, Chime Glass and Serbim.',
+        f'{c}.glass_bells.body': 'Ten tubes of Chime Glass on a Serbim bar - two octaves. Hold Space and a gust sets them swinging wider and twice as fast: they pass their marks twice as often, but the moment to strike is shorter. Made from Wind Chimes, Chime Glass and Serbim.',
         f'{c}.prism_chimes.title': 'Prism Chimes', f'{c}.prism_chimes.tagline': 'Bells of light',
-        f'{c}.prism_chimes.body': 'Glass Bells hung from a halo of prism gems. They play the Glass Bells\' way - and every chime rings in a colour of light: choose it with the keys 1-4 or the mouse wheel. Prism songs ask for their lights as well as their notes. Rarely found in Chrome Wells and the castle.',
+        f'{c}.prism_chimes.body': 'Glass Bells hung from a halo of prism gems. They play the Glass Bells\' way - and every chime rings in a colour of light: choose it with the keys 1-4 or the mouse wheel. Prism songs ask for their lights as well as their notes. Rarely found in the Sculk Castle.',
         f'{c}.wind_chimes.title': 'Wind Chimes', f'{c}.wind_chimes.tagline': "The Echoer's voice",
         f'{c}.wind_chimes.body': 'Seven tuned tubes on a stick crossbar, swinging in the wind - the long low ones slowly, the short high ones fast. A chime only rings true when you strike it as it swings past its mark below. The Offering and the Crystal Hymn are rung on chimes.',
     })

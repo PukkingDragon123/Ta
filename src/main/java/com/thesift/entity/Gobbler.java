@@ -33,7 +33,7 @@ import org.jspecify.annotations.Nullable;
  * It cannot see. It hunts by feel - fast swimming, thrashing and music all carry through the water
  * to its sensory pits, while anything that keeps still or sneaks goes unnoticed. When it has
  * found you it creeps closer, opens wide and lunges; caught, you are gulped down for a moment
- * (sneak to wriggle free) and spat back out. The Tide Song lulls it: a calm Gobbler drifts
+ * (sneak to wriggle free) and spat back out. The Lullaby lulls it: a calm Gobbler drifts
  * peacefully and ignores even the loudest swimmer.
  */
 public class Gobbler extends SiftFish implements Enemy {
@@ -79,7 +79,7 @@ public class Gobbler extends SiftFish implements Enemy {
         return this.entityData.get(CALM);
     }
 
-    /** The Tide Song: the Gobbler forgets its hunt, spits out whatever it holds and drifts, lulled. */
+    /** The Lullaby: the Gobbler forgets its hunt, spits out whatever it holds and drifts, lulled. */
     public void calm(int ticks) {
         if (!(this.level() instanceof ServerLevel server)) {
             return;

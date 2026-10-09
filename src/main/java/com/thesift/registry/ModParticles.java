@@ -42,7 +42,7 @@ public final class ModParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLIME_TRAIL = reg("slime_trail", false);
     /** Notes a guiding Harmoner leaves behind; xa/ya/za carry its colour. */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> GUIDE_NOTE = reg("guide_note", true);
-    /** Sleepy spores released by Dream Snares. */
+    /** Sleepy spores over whatever the Lullaby puts to sleep, and over napping Bulbs. */
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SLEEP_SPORE = reg("sleep_spore", false);
 
     /**

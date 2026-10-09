@@ -162,7 +162,6 @@ FLOWER = "BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY)"
 block("blushgrass", "custom", PLANT, cls="BlushgrassBlock", model="cross", tags=["replaceable_plants", "sword_efficient"], loot="grass")
 block("tall_blushgrass", "custom", PLANT, cls="SiftDoublePlantBlock", model="double_cross", tags=["replaceable_plants"], loot="double_grass",
       item_kind="double")
-block("coral_fern", "custom", PLANT, cls="SiftPlantBlock", model="cross", tags=["replaceable_plants"], loot="grass")
 block("coral_bush", "custom", PLANT, cls="SiftPlantBlock", model="cross", tags=["replaceable_plants", "sword_efficient"], loot="shears")
 block("coral_thicket", "custom", PLANT, cls="SiftDoublePlantBlock", model="double_cross", tags=["replaceable_plants"], loot="double_grass",
       item_kind="double")
@@ -178,7 +177,6 @@ for f, (eff, secs, col) in FLOWERS.items():
     block(f"potted_{f}", "pot", "BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_POPPY)" + (".lightLevel(s -> 7)" if f == "soulpetal" else ""), plant=f, item=False, loot=f"pot:{f}")
 # the Stomper's favourite flower (taming and breeding food)
 block("hummingbloom", "flower", FLOWER, effect="MobEffects.SPEED", secs="5.0F", light=0, tags=["flowers", "small_flowers"], cls="SiftFlowerBlock")
-block("drift_petals", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PINK_PETALS)", cls="DriftPetalsBlock", model="flowerbed", tags=["hoe"], loot="petals")
 block("echo_orchid", "custom", FLOWER + ".lightLevel(s -> 9)", cls="EchoOrchidBlock", model="cross", tags=["flowers", "small_flowers"])
 block("echo_orchid_crop", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.TORCHFLOWER_CROP)", cls="EchoOrchidCropBlock", model="crop3", item=False,
       loot="crop:echo_seed")
@@ -206,13 +204,7 @@ block("encore_sigil", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_PURPLE).s
       cls="EncoreSigilBlock", model="cube_column", tab="functional", loot="none", name="Encore Sigil")
 block("instrument_altar", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 8).noOcclusion()",
       cls="InstrumentAltarBlock", model="cube_column", tab="functional", loot="none", name="Instrument Altar")
-block("harmony_stone", "custom", STONE + f".mapColor({DREAM_COLOR}).strength(-1.0F, 3600000.0F)", cls="HarmonyStoneBlock", model="harmony",
-      tab="functional", loot="none")
-block("harmony_seal", "custom", STONE + ".mapColor(MapColor.COLOR_CYAN).strength(-1.0F, 3600000.0F).lightLevel(s -> 5)", cls="HarmonySealBlock",
-      model="cube_all", tab="functional", loot="none")
 block("glyph_stone", "custom", STONE + f".mapColor({DREAM_COLOR})", cls="GlyphStoneBlock", model="glyph", tags=["pickaxe"])
-block("dream_snare", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.TRIPWIRE).noCollision()", cls="DreamSnareBlock", model="snare",
-      tab="functional", loot="self")
 # the Thumper's arena: its tower cannons (see registry/ModSiege for the block entity and the cannonball)
 block("ancient_cannon", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_ORANGE).strength(5.0F, 6.0F).noOcclusion()",
       cls="AncientCannonBlock", model="cannon", tags=["pickaxe"], tab="functional")
@@ -250,19 +242,15 @@ item("chrome_bucket", cls="ChromeBucket", props="new Item.Properties().craftRema
 item("slingshot", cls="SlingshotItem", props="new Item.Properties().durability(384).enchantable(1)", model="slingshot")
 item("siftite_upgrade_smithing_template", cls="SiftiteTemplate", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
 item("star_shard", props="new Item.Properties().rarity(Rarity.RARE)")
-item("dream_journal_fragment")
 for t in ["sword", "pickaxe", "axe", "shovel", "hoe"]:
     item(f"siftite_{t}", cls=f"tool:{t}", model="handheld", tab="combat" if t == "sword" else "tools")
 item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
-for a in ["helmet", "chestplate", "leggings", "boots"]:
-    item(f"siftite_{a}", cls=f"armor:{a}", tab="combat", model="armor")
+# CLEAN: no basic Siftite armour set (SPEC 7) - Siftite stays a tool/weapon material
 for mob in ["bulb", "slumbler", "sifter", "enchoer", "harmoner", "dictator", "thumper", "strummer",
             "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 item("sculk_parasite_spawn_egg", cls="egg:sculk_parasite", tab="eggs", model="generated")
-item("conductors_baton", cls="BatonItem", props="new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant()",
-     model="handheld", tab="combat", name="Conductor's Baton")
 item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Staff")
 # the three instruments taken from the Conductor's great players
@@ -281,7 +269,7 @@ item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1)
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
 # --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments
 SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn", "aurora": "Aurora",
-               "whale": "Whale Song", "tide": "Tide Song", "lullaby": "Lullaby"}
+               "whale": "Whale Song", "lullaby": "Lullaby"}  # CLEAN: the Tide Song is gone
 for _s, _t in SONG_TITLES.items():
     item(f"music_sheet_{_s}", cls="MusicSheetItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name=f"Music Sheet: {_t}")
 item("prism_flute", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")

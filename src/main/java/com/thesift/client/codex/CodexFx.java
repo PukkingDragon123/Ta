@@ -39,7 +39,7 @@ final class CodexFx {
             THEMES.put(k, Theme.MUSIC); // M1 instrument play
         }
         for (String k : new String[]{"harmoner", "enchoer", "songs", "prism_instruments", "music", "music_crystal", "conga_drum", "crane_flute",
-                "guitar", "weaver_guitar", "vocals", "baton", "staff", "euphory_altar", "echoer_device",
+                "guitar", "weaver_guitar", "vocals", "staff", "euphory_altar", "echoer_device",
                 "kazoo_fish", "fanfare_eel", "tubafish", "nib", "soul_golem"}) {
             THEMES.put(k, Theme.MUSIC);
         }

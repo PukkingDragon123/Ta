@@ -16,7 +16,7 @@ public class SiftFishRenderState extends SiftRenderState {
     public final AnimationState snap = new AnimationState();
     public boolean aggressive;
     public final AnimationState bite = new AnimationState();
-    // the Gobbler: lunge (wind-up then strike), gulp, spit, the Tide Song's lull
+    // the Gobbler: lunge (wind-up then strike), gulp, spit, the Lullaby's lull
     public final AnimationState lunge = new AnimationState();
     public final AnimationState gulp = new AnimationState();
     public final AnimationState spit = new AnimationState();

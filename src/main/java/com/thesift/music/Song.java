@@ -30,9 +30,8 @@ public enum Song {
     CRYSTAL(new int[]{13, 17, 20, 17, 13, 8}, Instrument.Family.CHIMES),
     /** The whale song: Sky Whales answer it. */
     WHALE(new int[]{8, 6, 3, 6, 8, 13}, Instrument.Family.FLUTE),
-    /** The tide song: opens drowned vaults of the deep and calms the Gobbler. Drummed in its rolling rhythm. */
-    TIDE(new int[]{3, 8, 10, 8, 3, 1}, Instrument.Family.DRUM, new int[]{2, 1, 1, 2, 2, 4}, new int[0]),
-    /** The lullaby: puts nearby creatures to sleep, opens harmony seals. */
+    // CLEAN: the Tide Song is gone (SPEC 4); the Gobbler now answers the Lullaby
+    /** The lullaby: puts nearby creatures to sleep and lulls the Gobbler. */
     LULLABY(new int[]{13, 11, 10, 8, 10, 6}, Instrument.Family.STRINGS),
     /** M1: the Aurora, a Prism song - every note in its colour of light, on any Prism instrument. */
     AURORA(new int[]{6, 10, 13, 18, 15, 13}, null, new int[0], new int[]{0, 1, 2, 3, 2, 0});

@@ -267,32 +267,40 @@ final class SongTest {
             this.check.accept(ok, "songs: " + song.id() + " forgives a semitone off, a double tap and a stray note (heard " + this.heard + ")");
         }
 
-        // rhythm: the Tide Song on the Conga Drum
-        Song tide = Song.TIDE;
-        int[] tideNotes = tide.notes();
-        int[] none = new int[tideNotes.length];
-        double[] sloppy = onBeat(tide);
-        for (int i = 1; i < sloppy.length; i++) {
-            sloppy[i] += i % 2 == 0 ? 1.0 : -1.0;
+        // rhythm: every drum song in its rhythm on the Conga Drum (CLEAN: the Tide Song, the only one so far, is gone -
+        // the checks run again on whichever drum song comes next)
+        for (Song drum : Song.values()) {
+            if (!drum.rhythmic()) {
+                continue;
+            }
+            int[] drumNotes = drum.notes();
+            for (int i = 0; i < drumNotes.length; i++) {
+                drumNotes[i] = playable(Instrument.DRUM, drumNotes[i]);
+            }
+            int[] none = new int[drumNotes.length];
+            double[] sloppy = onBeat(drum);
+            for (int i = 1; i < sloppy.length; i++) {
+                sloppy[i] += i % 2 == 0 ? 1.0 : -1.0;
+            }
+            this.check.accept(this.performs(player, Instrument.DRUM, drum, drumNotes, none, sloppy),
+                    "songs: " + drum.id() + " forgives a beat a little early or late (heard " + this.heard + ")");
+            double[] late = onBeat(drum);
+            for (int i = 3; i < late.length; i++) {
+                late[i] += 8.0;
+            }
+            this.check.accept(this.performs(player, Instrument.DRUM, drum, drumNotes, none, late),
+                    "songs: " + drum.id() + " forgives one note off the beat (heard " + this.heard + ")");
+            double[] flat = new double[drumNotes.length];
+            for (int i = 0; i < flat.length; i++) {
+                flat[i] = 1000.0 + i * 20.0;
+            }
+            this.check.accept(!this.performs(player, Instrument.DRUM, drum, drumNotes, none, flat),
+                    "songs: " + drum.id() + " is not performed without its rhythm (heard " + this.heard + ")");
+            double[] together = new double[drumNotes.length];
+            java.util.Arrays.fill(together, 1000.0);
+            this.check.accept(!this.performs(player, Instrument.DRUM, drum, drumNotes, none, together),
+                    "songs: " + drum.id() + " is not performed with all its beats at once (heard " + this.heard + ")");
         }
-        this.check.accept(this.performs(player, Instrument.DRUM, tide, tideNotes, none, sloppy),
-                "songs: the Tide Song forgives a beat a little early or late (heard " + this.heard + ")");
-        double[] late = onBeat(tide);
-        for (int i = 3; i < late.length; i++) {
-            late[i] += 8.0;
-        }
-        this.check.accept(this.performs(player, Instrument.DRUM, tide, tideNotes, none, late),
-                "songs: the Tide Song forgives one note off the beat (heard " + this.heard + ")");
-        double[] flat = new double[tideNotes.length];
-        for (int i = 0; i < flat.length; i++) {
-            flat[i] = 1000.0 + i * 20.0;
-        }
-        this.check.accept(!this.performs(player, Instrument.DRUM, tide, tideNotes, none, flat),
-                "songs: the Tide Song is not performed without its rhythm (heard " + this.heard + ")");
-        double[] together = new double[tideNotes.length];
-        java.util.Arrays.fill(together, 1000.0);
-        this.check.accept(!this.performs(player, Instrument.DRUM, tide, tideNotes, none, together),
-                "songs: the Tide Song is not performed with all its beats at once (heard " + this.heard + ")");
 
         // lights: the Aurora on a Prism Flute
         Song aurora = Song.AURORA;

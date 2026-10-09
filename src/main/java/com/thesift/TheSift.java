@@ -40,7 +40,7 @@ public class TheSift {
         ModBlockEntities.BLOCK_ENTITIES.register(modBus);
         com.thesift.registry.ModSiege.register(modBus); // the Thumper's arena: ancient cannons, cannonballs
         com.thesift.registry.ModCaravans.register(modBus); // C: Caravans, music crystals, prism armour, song hooks
-        com.thesift.registry.ModSeaSky.register(modBus); // sea & sky: the Gobbler, ocean/cloud worldgen, Tide Song calming
+        com.thesift.registry.ModSeaSky.register(modBus); // sea & sky: the Gobbler, ocean/cloud worldgen, Lullaby calming
         com.thesift.registry.ModEchoer.register(modBus); // A2 Echoer: Soul Golems, Nibs, The Echoer device, the Echoer's hearth
         com.thesift.registry.ModSwifter.register(modBus); // A2 Swifter & White Forest: the Swifter, its dens, white lullwood, fluff
         com.thesift.registry.ModChrome.register(modBus); // A3 Chrome: Rainbow Daze, Chrome particles, Chime Sand reaction, note bursts
@@ -65,7 +65,7 @@ public class TheSift {
         com.thesift.music.SongTracker.init(); // songs (agent D): the song tracker + Lullaby/Whale effects
         com.thesift.music.band.Bands.register(modBus); // M2 band: creatures join your band, play along, follow; band registry
         com.thesift.music.InstrumentPlay.register(modBus); // M1 instrument play: notes from the play screens reach the server
-        com.thesift.item.SiftiteGear.register(); // H: Siftite knockback, swim speed and sound-proof armour
+        com.thesift.item.SiftiteGear.register(); // H: Siftite tool knockback (CLEAN: no Siftite armour)
         com.thesift.item.PrismGear.register(); // B4 gear: the Prism Sword reveals nearby monsters
         com.thesift.entity.CreatureLife.register(modBus); // A1 creatures: creatures hear notes, Stomper riders stomp
         com.thesift.entity.boss.BossStages.register(modBus); // B2 Thumper & cutscenes: boss stage cutscene payloads, viewers kept safe

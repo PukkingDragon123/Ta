@@ -1,13 +1,9 @@
 package com.thesift.music;
 
-import com.thesift.block.HarmonySealBlock;
 import com.thesift.entity.SkyWhale;
 import com.thesift.music.band.Bands;
-import com.thesift.registry.ModBlocks;
 import com.thesift.registry.ModEffects;
 import com.thesift.registry.ModParticles;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,12 +17,12 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * What the generic songs do wherever they are played. (Songs tied to one creature or block - the
- * offering, the Nibs, the golems, the crystals, the tide - are heard by those creatures and blocks
+ * offering, the Nibs, the golems, the crystals - are heard by those creatures and blocks
  * themselves through {@link SongEvents#listenSongs}.)
  *
  * <ul>
- *   <li>{@link Song#LULLABY}: hostile creatures nearby fall asleep where they stand, and any
- *   Harmony Seal close by dissolves as if its stones had been tuned.</li>
+ *   <li>{@link Song#LULLABY}: hostile creatures nearby fall asleep where they stand (and a
+ *   Gobbler is lulled, see ModSeaSky).</li>
  *   <li>{@link Song#WHALE}: the nearest Sky Whale hears it and comes to sing back.</li>
  *   <li>{@link Song#AURORA} (M1, a Prism song): a curtain of the four lights rises, the air around
  *   glows bright for half a minute, monsters nearby are outlined through walls and the players
@@ -38,7 +34,6 @@ import org.jspecify.annotations.Nullable;
 public final class SongEffects {
     public static final double LULLABY_RADIUS = 12.0;
     public static final int LULLABY_TICKS = 20 * 12;
-    public static final int SEAL_RADIUS = 10;
     public static final double WHALE_RADIUS = 96.0;
     public static final double AURORA_RADIUS = 32.0;
     public static final int AURORA_TICKS = 20 * 30;
@@ -67,7 +62,6 @@ public final class SongEffects {
         float power = Bands.power(player); // M2 band: a bigger band sings further and longer
         double radius = LULLABY_RADIUS * power;
         int sleep = Math.round(LULLABY_TICKS * power);
-        int sealRadius = Math.round(SEAL_RADIUS * power);
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(radius),
                 m -> m.isAlive() && m instanceof Enemy && m instanceof Mob && m.distanceToSqr(at) <= radius * radius)) {
             if (e instanceof com.thesift.entity.boss.MiniBoss || e instanceof com.thesift.entity.boss.Dictator || e instanceof net.minecraft.world.entity.boss.wither.WitherBoss || e instanceof net.minecraft.world.entity.boss.enderdragon.EnderDragon || e instanceof net.minecraft.world.entity.monster.warden.Warden) {
@@ -75,19 +69,6 @@ public final class SongEffects {
             }
             e.addEffect(new MobEffectInstance(ModEffects.ENTRANCED, sleep, 0, false, true), player);
             level.sendParticles(ModParticles.SLEEP_SPORE.get(), e.getX(), e.getY() + e.getBbHeight() + 0.2, e.getZ(), 6, 0.3, 0.2, 0.3, 0.01);
-        }
-        // Harmony Seals answer the lullaby as though their stones had been tuned
-        BlockPos c = BlockPos.containing(at);
-        List<BlockPos> seals = new ArrayList<>();
-        for (BlockPos p : BlockPos.betweenClosed(c.offset(-sealRadius, -sealRadius / 2, -sealRadius), c.offset(sealRadius, sealRadius / 2, sealRadius))) {
-            if (level.getBlockState(p).is(ModBlocks.HARMONY_SEAL.get())) {
-                seals.add(p.immutable());
-            }
-        }
-        for (BlockPos seal : seals) {
-            if (level.getBlockState(seal).is(ModBlocks.HARMONY_SEAL.get())) {
-                HarmonySealBlock.dissolve(level, seal);
-            }
         }
     }
 

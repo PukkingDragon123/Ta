@@ -79,7 +79,7 @@ public class SiftGrassBlock extends SpreadingSnowyBlock implements BonemealableB
             if (roll == 0) plant = ModBlocks.DREAMBLOOM.get().defaultBlockState();
             else if (roll == 1) plant = ModBlocks.LULLABY_BELL.get().defaultBlockState();
             else if (roll == 2) plant = ModBlocks.NEBULA_IRIS.get().defaultBlockState();
-            else if (roll < 5) plant = ModBlocks.CORAL_FERN.get().defaultBlockState();
+            else if (roll < 5) plant = ModBlocks.CORAL_BUSH.get().defaultBlockState();
             else plant = ModBlocks.BLUSHGRASS.get().defaultBlockState();
             if (plant.canSurvive(level, p)) {
                 level.setBlock(p, plant, Block.UPDATE_ALL);

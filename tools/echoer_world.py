@@ -263,7 +263,7 @@ def generate(GA):
     tag('item', f'{NS}:echoer_offerings', {'id': f'{NS}:prism_gem', 'required': False})
 
     book = D.item('minecraft:book', 8, extra=[D.ENCHANT])
-    sheets = [D.item(f'music_sheet_{s}', 3) for s in ('nib', 'golem', 'crystal', 'whale', 'tide', 'lullaby')]
+    sheets = [D.item(f'music_sheet_{s}', 3) for s in ('nib', 'golem', 'crystal', 'whale', 'lullaby')]
     D.table('gift', 'gameplay/echoer_reward', [D.pool(sheets + [
         book,
         D.item('minecraft:diamond', 6, count=(1, 2)),

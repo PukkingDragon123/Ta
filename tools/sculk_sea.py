@@ -101,8 +101,8 @@ def assets(GA):
         GD.pool([GD.item('minecraft:echo_shard', count=(1, 2), extra=[GD.LOOTING])]),
         GD.pool([GD.item('sculk_coral', count=(2, 4)), GD.item('sculk_coral_fan', count=(1, 3)), GD.item('sculk_coral_block', count=(1, 2))],
                 rolls=2),
-        GD.pool([GD.item('star_shard', weight=4, count=(1, 2)), GD.item('dream_journal_fragment', weight=3), GD.item('minecraft:gold_ingot', weight=3),
-                 GD.item('siftite_nugget', weight=2, count=(1, 3)), GD.item('music_sheet_tide', weight=2), GD.item('minecraft:nautilus_shell', weight=2)],
+        GD.pool([GD.item('star_shard', weight=4, count=(1, 2)), GD.item('minecraft:gold_ingot', weight=3),
+                 GD.item('siftite_nugget', weight=2, count=(1, 3)), GD.item('music_sheet_lullaby', weight=2), GD.item('minecraft:nautilus_shell', weight=2)],
                 condition={'type': 'minecraft:all_of', 'terms': [GD.PLAYER_KILL, GD.chance(0.75)]}),
     ])
     LANG.update({

@@ -1,8 +1,0 @@
-{
-  "type": "neoforge:add_table",
-  "condition": {
-    "type": "neoforge:loot_table_id",
-    "loot_table_id": "thesift:chests/chrome_well"
-  },
-  "table": "thesift:gameplay/instruments_chrome_well"
-}

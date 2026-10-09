@@ -152,7 +152,7 @@ def assets(GA):
         f'biome.{NS}.magic_kelp_forest': 'Magic Kelp Forest', f'biome.{NS}.deep_dark_ocean': 'Sculk Ocean',  # W1: renamed, id kept
         f'biome.{NS}.sound_garden': 'Sound Garden',
         f'codex.{NS}.gobbler.title': 'Gobbler', f'codex.{NS}.gobbler.tagline': 'Hostile - blind, and very hungry',
-        f'codex.{NS}.gobbler.body': 'A Warden-kin catfish of the Sculk Ocean: sculk skin threaded with glowing veins, a fanged mouth wider than you, soul-lantern lures on its whiskers and a ribcage of glowing souls. It has no eyes. It feels you - fast swimming, thrashing and music carry to it through the water, so swim slowly or sneak past. If it finds you it lunges, gulps you down and spits you out. Sneak to wriggle free. The Tide Song lulls it for two minutes. Drops fillets and a glowing sculk bladder.',
+        f'codex.{NS}.gobbler.body': 'A Warden-kin catfish of the Sculk Ocean: sculk skin threaded with glowing veins, a fanged mouth wider than you, soul-lantern lures on its whiskers and a ribcage of glowing souls. It has no eyes. It feels you - fast swimming, thrashing and music carry to it through the water, so swim slowly or sneak past. If it finds you it lunges, gulps you down and spits you out. Sneak to wriggle free. The Lullaby lulls it for two minutes. Drops fillets and a glowing sculk bladder.',
         f'codex.{NS}.sea_and_sky.title': 'Seas and Skies', f'codex.{NS}.sea_and_sky.tagline': 'Real water, and clouds you can walk on',
         f'codex.{NS}.sea_and_sky.body': 'Only two seas in the Sift hold real water. The warm Magic Kelp Forest glows with rose, azure and amber glowkelp over coral-pink sand, full of Kazoo Fish and coral. The cold Sculk Ocean is dark teal water over trenches, ridges and glowing Sculk Coral reefs - mind the Gobblers. Far above the land is the Sound Garden: cloud islands where Chime Bells ring and Organ Reeds hum as you walk through them, and Sky Whales sing.',
         f'codex.{NS}.sushi.title': 'Sushi', f'codex.{NS}.sushi.tagline': 'Raw fish, dried kelp, a strand of glowkelp',
@@ -322,6 +322,6 @@ def world(GW):
         GD.pool([GD.item('sculk_bladder', extra=[GD.LOOTING])], condition=GD.chance(0.65)),
         GD.pool([GD.item('minecraft:bone', count=(0, 2), extra=[GD.LOOTING])]),
         GD.pool([GD.item('minecraft:echo_shard')], condition={'type': 'minecraft:all_of', 'terms': [GD.PLAYER_KILL, GD.chance(0.12)]}),
-        # W1: swallowed with some drowned traveller - the Tide Song's sheet
-        GD.pool([GD.item('music_sheet_tide')], condition={'type': 'minecraft:all_of', 'terms': [GD.PLAYER_KILL, GD.chance(0.15)]}),
+        # W1: swallowed with some drowned traveller - a sheet (CLEAN: the Lullaby that lulls it; the Tide Song is gone)
+        GD.pool([GD.item('music_sheet_lullaby')], condition={'type': 'minecraft:all_of', 'terms': [GD.PLAYER_KILL, GD.chance(0.15)]}),
     ])

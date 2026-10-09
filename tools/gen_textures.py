@@ -397,20 +397,11 @@ def woods():
 
 def flora():
     for name, data in (('lullaby_bell', S.LULLABY_BELL), ('dreambloom', S.DREAMBLOOM), ('soulpetal', S.SOULPETAL), ('nebula_iris', S.NEBULA_IRIS),
-                       ('echo_orchid', S.ECHO_ORCHID), ('glowcap', S.GLOWCAP), ('blushgrass', S.BLUSHGRASS), ('coral_fern', S.CORAL_FERN),
+                       ('echo_orchid', S.ECHO_ORCHID), ('glowcap', S.GLOWCAP), ('blushgrass', S.BLUSHGRASS),
                        ('glimmer_sprouts', S.GLIMMER_SPROUTS), ('tall_blushgrass_top', S.TALL_BLUSHGRASS_TOP),
-                       ('tall_blushgrass_bottom', S.TALL_BLUSHGRASS_BOTTOM), ('chrome_reeds', S.CHROME_REEDS), ('drift_petals', S.DRIFT_PETALS),
-                       ('drift_petals_stem', S.DRIFT_PETALS_STEM), ('dream_snare', S.DREAM_SNARE), ('coral_bush', S.CORAL_BUSH),
+                       ('tall_blushgrass_bottom', S.TALL_BLUSHGRASS_BOTTOM), ('chrome_reeds', S.CHROME_REEDS), ('coral_bush', S.CORAL_BUSH),
                        ('coral_thicket_top', S.CORAL_THICKET_TOP), ('coral_thicket_bottom', S.CORAL_THICKET_BOTTOM)):
         out(f'block/{name}', sprite(data), CUTOUT)
-    spent = sprite(S.DREAM_SNARE)
-    for y in range(16):
-        for x in range(16):
-            c = spent.get(x, y)
-            if c[3]:
-                spent.set(x, y, with_alpha(darken(c, 0.45), 160))
-    out('block/dream_snare_spent', spent, CUTOUT)
-    out('item/drift_petals', sprite(S.DRIFT_PETALS))
     # glowbell vines
     vine = sprite(S.GLOWBELL_VINE)
     out('block/glowbell_vine', vine, CUTOUT)
@@ -480,28 +471,6 @@ def functional():
                 c = lerp(c, hx('#ffffff'), max(0.0, 0.35 - r * 0.04) + (0.25 if math.sin(r * 2 - t * 3) > 0.92 else 0))
                 px[x, y + f * 16] = (c[0], c[1], c[2], 190)
     out('block/sift_portal', p, {'animation': {'frametime': 2}, 'texture': {'mipmap_strategy': 'mean'}})
-    # harmony stones: each tone has its own crystal colour
-    tones = [hx('#7fe8ff'), hx('#ff9fd8'), hx('#ffe07a'), hx('#b9a6ff')]
-    for i, c in enumerate(tones):
-        h = polished(DREAM, 120 + i)
-        notes = [['....cc....', '...c..c...', '...c..c...', '....cc....'],
-                 ['...cccc...', '..c....c..', '...cccc...', '..........'],
-                 ['.c......c.', '..c....c..', '...c..c...', '....cc....'],
-                 ['....c.....', '....cc....', '....c.c...', '..ccc.....']][i]
-        draw_map(h, ['..........'] * 3 + notes + ['..........'] * 3, {'c': c}, 3, 3)
-        for x in range(4, 12):
-            h.set(x, 12, darken(c, 0.3))
-        out(f'block/harmony_stone_{i}', h)
-    seal = Tex()
-    for y in range(16):
-        for x in range(16):
-            v = (math.sin(x * 0.8) + math.sin(y * 0.8)) * 0.25 + 0.5
-            seal.set(x, y, lerp(hx('#1f6f80'), hx('#7fe8ff'), v * 0.6))
-            if (x + y) % 8 == 0 or (x - y) % 8 == 0:
-                seal.set(x, y, hx('#c8fff6'))
-    for i in range(16):
-        seal.set(i, 0, HUSH[2]); seal.set(0, i, HUSH[2]); seal.set(i, 15, HUSH[0]); seal.set(15, i, HUSH[0])
-    out('block/harmony_seal', seal)
     glyphs = [
         ['..L..', '.L.L.', 'L...L', '.L.L.', '..L..'], ['LLLLL', '..L..', '.L.L.', 'L...L', '.....'], ['L...L', '.L.L.', '..L..', '..L..', '..L..'],
         ['.LLL.', 'L...L', 'L.L.L', 'L...L', '.LLL.'], ['L.L.L', '.L.L.', 'L.L.L', '.L.L.', 'L.L.L'], ['..L..', '..L..', 'LLLLL', '..L..', '..L..'],
@@ -632,7 +601,6 @@ def items():
     out('item/thick_hide', pal_sprite(S.HIDE, {'d': hx('#33485e'), 'm': hx('#5b7f99'), 'l': hx('#86abc2'), 's': hx('#6a90a8')}))
     out('item/star_shard', pal_sprite(S.STAR_SHARD, {'W': hx('#fffbe0'), 'l': hx('#ffe89a'), 'm': hx('#f2c65a'),
                                                        'd': hx('#c48a2c'), 'o': hx('#6e4a16')}))
-    out('item/dream_journal_fragment', pal_sprite(S.JOURNAL, {'p': hx('#b89a7a'), 'P': hx('#f0e2c8'), 'i': hx('#6f5fb0')}))
     out('item/dream_stew', pal_sprite(S.STEW, {'S': hx('#c9a6f0'), 'y': hx('#ffe07a'), 'p': hx('#ff9fd8'), 'c': hx('#7fe3e6'), 'b': hx('#8a5a3a'),
                                               'B': hx('#6a4028')}))
     out('item/glowcap_skewer', pal_sprite(S.SKEWER, {'c': hx('#37c9d6'), 'C': hx('#8ff3f0'), 'W': hx('#e8fffb'), 'd': hx('#1f8f9e'),
@@ -667,8 +635,6 @@ def items():
     for t, fn in MI.TOOLS.items():
         out(f'item/siftite_{t}', glint(MI.shade(fn(), gear), 2))
     out('item/siftite_spear_in_hand', glint(MI.shade(MI.spear(), gear), 2))
-    for a, rows in MI.ARMOR.items():
-        out(f'item/siftite_{a}', glint(MI.shade(MI.mask(rows), gear), 1))
     # slingshot + pulling frames
     base_keys = {'h': hx('#8a6a4a'), 'w': hx('#6fe2dc')}
     out('item/slingshot', pal_sprite(S.SLINGSHOT, base_keys))
@@ -1324,25 +1290,6 @@ def dictator_things():
     draw_map(top, ['..........', '.bbbbbbbb.', '.b......b.', '.b.tttt.b.', '.b.t..t.b.', '.b.tttt.b.', '.b..tt..b.', '.b......b.', '.bbbbbbbb.',
                    '..........'], {'b': brass, 't': teal}, 3, 3)
     out('block/conductors_podium_top', top)
-    # the Conductor's Baton: a long white baton, a dark grip with a brass ferrule, a glowing sculk tip
-    out('item/conductors_baton', pal_sprite([
-        '..............gG',
-        '.............wgg',
-        '............ww..',
-        '...........wl...',
-        '..........wl....',
-        '.........wl.....',
-        '........wl......',
-        '.......wl.......',
-        '......wl........',
-        '.....bB.........',
-        '....dd..........',
-        '...dD...........',
-        '..dD............',
-        '.dD.............',
-        'dd..............',
-        '................',
-    ], {'w': hx('#f4f0e5'), 'l': hx('#c9c2b0'), 'g': teal_d, 'G': teal, 'b': brass, 'B': brass_l, 'd': hx('#141e2c'), 'D': hx('#2b3a52')}))
 
 
 # ================================================================== the Sift Codex
@@ -1462,47 +1409,6 @@ def codex():
 
 
 # ================================================================== sniffer saddle
-
-
-# ================================================================== armor layers
-
-
-def armor_layers():
-    from modelkit import Cube
-    pal = SIFTITE
-
-    def paint(img, cube):
-        px = img.load()
-        for face, (fx, fy, fw, fh) in cube.faces().items():
-            for y in range(fh):
-                for x in range(fw):
-                    edge = x == 0 or y == 0 or x == fw - 1 or y == fh - 1
-                    c = pal[1] if edge else pal[3 if (x + y) % 5 else 4]
-                    if not edge and (x * 2 + y) % 9 == 0:
-                        c = SIFTITE_PINK
-                    px[fx + x, fy + y] = c
-
-    def cube(uv, size):
-        c = Cube((0, 0, 0), size)
-        c.uv = uv
-        return c
-
-    hum = Image.new('RGBA', (64, 32))
-    paint(hum, cube((0, 0), (8, 8, 8)))       # helmet
-    paint(hum, cube((16, 16), (8, 12, 4)))    # chest
-    paint(hum, cube((40, 16), (4, 12, 4)))    # arms
-    paint(hum, cube((0, 16), (4, 12, 4)))     # boots (legs region)
-    hp = hum.load()
-    for (x, y) in ((8 + 1, 8 + 2), (8 + 2, 8 + 2), (8 + 5, 8 + 2), (8 + 6, 8 + 2)):
-        hp[x, y] = (0, 0, 0, 0)  # visor eye slits
-    for y in range(8 + 4, 8 + 8):
-        for x in range(8 + 2, 8 + 6):
-            hp[x, y] = (0, 0, 0, 0)  # open face
-    out('entity/equipment/humanoid/siftite', hum)
-    leg = Image.new('RGBA', (64, 32))
-    paint(leg, cube((16, 16), (8, 12, 4)))
-    paint(leg, cube((0, 16), (4, 12, 4)))
-    out('entity/equipment/humanoid_leggings/siftite', leg)
 
 
 # ================================================================== particles & effects
@@ -1765,8 +1671,8 @@ def logo():
 
 def hd_items():
     """Every item sprite, hand-drawn at 16x in the vanilla style (tools/items16.py), with the
-    Siftite gear written as animated strips; plus the worn Siftite armour, the mob effect icons
-    and the flower sprites drawn alongside them."""
+    Siftite tools written as animated strips; plus the mob effect icons and the flower sprites
+    drawn alongside them."""
     import items16
     anims = items16.item_animations()
     for name, img in items16.all_items().items():
@@ -1774,8 +1680,6 @@ def hd_items():
             out(f'item/{name}', img)
     for name, (frames, frametime) in anims.items():
         out(f'item/{name}', strip(frames), {'animation': {'frametime': frametime, 'interpolate': False}})
-    for name, img in items16.armor_layers().items():
-        out(name, img)
     for name, img in items16.effect_icons().items():
         out(f'mob_effect/{name}', img)
     for name, img in items16.flower_textures().items():
@@ -1927,7 +1831,6 @@ def main():
     flora()
     functional()
     items()
-    armor_layers()
     dictator_things()
     stage_things()
     codex()

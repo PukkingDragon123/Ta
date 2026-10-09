@@ -253,8 +253,6 @@ def gen_block(b):
             item_generated(bid, f'block/{tex}')
     elif k == 'double_cross':
         copy_template('peony' if 'lily' in bid else 'tall_grass', bid, token_tex('peony' if 'lily' in bid else 'tall_grass', bid))
-    elif k == 'flowerbed':
-        copy_template('pink_petals', bid, token_tex('pink_petals', bid))
     elif k in ('crop4', 'crop3'):
         n = 4 if k == 'crop4' else 3
         for i in range(n):
@@ -278,22 +276,11 @@ def gen_block(b):
         item_block(bid)
     elif k == 'portal':
         copy_template('nether_portal', bid, token_tex('nether_portal', bid), item=False)
-    elif k == 'harmony':
-        for i in range(4):
-            block_model(f'{bid}_{i}', 'minecraft:block/cube_all', {'all': f'block/{bid}_{i}'})
-        write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': {f'tone={i}': {'model': f'{NS}:block/{bid}_{i}'} for i in range(4)}})
-        item_block(bid, f'{bid}_0')
     elif k == 'glyph':
         for i in range(8):
             block_model(f'{bid}_{i}', 'minecraft:block/cube_column', {'end': 'block/polished_dreamstone', 'side': f'block/{bid}_{i}'})
         write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': {f'glyph={i}': {'model': f'{NS}:block/{bid}_{i}'} for i in range(8)}})
         item_block(bid, f'{bid}_0')
-    elif k == 'snare':
-        block_model(bid, 'minecraft:block/carpet', {'wool': f'block/{bid}'})
-        block_model(bid + '_spent', 'minecraft:block/carpet', {'wool': f'block/{bid}_spent'})
-        write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': {
-            'spent=false': {'model': f'{NS}:block/{bid}'}, 'spent=true': {'model': f'{NS}:block/{bid}_spent'}}})
-        item_generated(bid, f'block/{bid}')
     elif k == 'cake':
         copy_template('cake', bid, token_tex('cake', bid))
     elif k == 'lantern':
@@ -441,8 +428,6 @@ def gen_loot(b):
         loot(bid, 'cobweb', {'cobweb': bid, 'string': lk[4:]})
     elif lk == 'double_grass':
         loot(bid, 'tall_grass', {'tall_grass': bid, 'short_grass': bid, 'wheat_seeds': 'blushgrass'})
-    elif lk == 'petals':
-        loot(bid, 'pink_petals', {'pink_petals': bid})
     elif lk == 'double_flower':
         loot(bid, 'peony', {'peony': bid})
     elif lk.startswith('crop:'):
@@ -683,7 +668,7 @@ def gen_recipes():
     shapeless('siftite_nugget', ['siftite_ingot'], 'siftite_nugget', 9)
     shaped('siftite_upgrade_smithing_template', ['#S#', '#C#', '###'], {'#': 'serbim_ingot', 'C': 'dreamstone', 'S': 'siftite_upgrade_smithing_template'},
            'siftite_upgrade_smithing_template', 2, 'misc')
-    for t in ['sword', 'pickaxe', 'axe', 'shovel', 'hoe', 'spear', 'helmet', 'chestplate', 'leggings', 'boots']:
+    for t in ['sword', 'pickaxe', 'axe', 'shovel', 'hoe', 'spear']:  # CLEAN: no Siftite armour
         write(os.path.join(D, 'recipe', f'siftite_{t}_smithing.json'),
               {'type': 'minecraft:smithing_transform', 'addition': f'#{NS}:siftite_tool_materials', 'base': f'minecraft:netherite_{t}',
                'result': {'id': f'{NS}:siftite_{t}'}, 'template': f'{NS}:siftite_upgrade_smithing_template'})
@@ -702,7 +687,6 @@ def gen_recipes():
     shaped('soul_chime', [' I ', 'NGN', 'N N'], {'I': 'minecraft:iron_chain', 'N': 'serbim_ingot', 'G': 'soulpetal'}, 'soul_chime', 1, 'decorations')
     shapeless('dream_stew', ['minecraft:bowl', 'glowcap', 'minecraft:pitcher_pod', 'lullaby_bell'], 'dream_stew', 1, 'food')
     shaped('glowcap_skewer', ['  G', ' G ', '#  '], {'G': 'glowcap', '#': 'minecraft:stick'}, 'glowcap_skewer', 1, 'food')
-    shaped('dream_snare', ['S S', ' P ', 'S S'], {'S': 'minecraft:string', 'P': 'glimmer_sprouts'}, 'dream_snare', 2, 'redstone')
     for f in spec.FLOWERS:
         shapeless(f'{f}_dye', [f], {'lullaby_bell': 'minecraft:cyan_dye', 'dreambloom': 'minecraft:pink_dye', 'soulpetal': 'minecraft:white_dye',
                                     'nebula_iris': 'minecraft:purple_dye'}[f], 1, 'misc', 'dye')
@@ -721,13 +705,6 @@ def gen_particles():
         write(os.path.join(A, 'particles', p + '.json'), {'textures': texs})
         for t in texs:
             TEXTURES.add('particle/' + t.split(':')[1])
-
-
-def gen_equipment():
-    write(os.path.join(A, 'equipment', 'siftite.json'), {'layers': {
-        'humanoid': [{'texture': f'{NS}:siftite'}], 'humanoid_leggings': [{'texture': f'{NS}:siftite'}]}})
-    TEXTURES.add('entity/equipment/humanoid/siftite')
-    TEXTURES.add('entity/equipment/humanoid_leggings/siftite')
 
 
 def gen_lang():
@@ -752,7 +729,7 @@ def gen_lang():
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
         # CR1: the Sifter's Codex page comes from tools/sifter.py
         f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
-        f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite gear. Tools beat Netherite and knock foes flying. Armour: no Deafening, softer sonic booms, helmet breathes water, legs and boots swim fast, full set halves Sculk Corruption.',
+        f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite tools and weapons. They outdig and outhit Netherite and knock foes flying. Siftite is never forged into armour.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
@@ -761,8 +738,6 @@ def gen_lang():
         f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the Sculk Castle. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
         f'codex.{NS}.sift_cake.title': 'Sift Cake', f'codex.{NS}.sift_cake.tagline': 'A treat from the plains',
         f'codex.{NS}.sift_cake.body': 'Baked from Glowing Slime Balls and Sift produce. Each slice restores a little hunger and leaves you glowing softly for a moment.',
-        f'codex.{NS}.baton.title': "Conductor's Baton", f'codex.{NS}.baton.tagline': 'Taken from the Dictator',
-        f'codex.{NS}.baton.body': 'Strikes as hard as a sword. Use it to flick a single sonic note down the line you point at, hurting the first creature in its way. It needs a moment to recover between notes.',
         f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
         f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes: cyan light floods the place, the world bends towards the gate, a blinding flash - and the portal opens with a shockwave. Look into it: it is a window onto the Sift\'s own sky, clouds and stars drifting deep behind the frame.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
@@ -772,7 +747,7 @@ def gen_lang():
         f'codex.{NS}.euphory_altar.title': 'Euphory Altar', f'codex.{NS}.euphory_altar.tagline': 'Enchanting by music',
         f'codex.{NS}.euphory_altar.body': 'Set an item on the altar, surround it with Sift Drums and feed it a Chrome Pearl. The drums play themselves, the rings spin up and the item comes out enchanted beyond what a table can do.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',
-        f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Sculklings flee with their ears covered. Soul Chimes ring when powered; Dream Snares lull whatever steps in them to sleep.',
+        f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Sculklings flee with their ears covered. Soul Chimes ring when powered.',
         f'codex.{NS}.flora.title': 'Coral Flora', f'codex.{NS}.flora.tagline': 'The pink plains',
         f'codex.{NS}.flora.body': 'Coral Bushes and tall Coral Thickets grow thick across the salmon Coral Turf of the Sift Plains, under pale weeping Lullwood trees.',
         f'codex.{NS}.dictator.title': 'The Conductor', f'codex.{NS}.dictator.tagline': 'Three movements, each more godlike',
@@ -841,9 +816,9 @@ def gen_lang():
         f'biome.{NS}.sift_plains': 'Sift Plains', f'biome.{NS}.forest_mountains': 'Forest Mountains', f'biome.{NS}.rocky_dunes': 'Rocky Dunes',
         f'biome.{NS}.chrome_lakes': 'Chrome Lakes', f'biome.{NS}.deep_sift': 'Deep Sift', f'biome.{NS}.wishing_grove': 'Wishing Grove',
         f'fluid_type.{NS}.chrome': 'Chrome',
-        f'item.{NS}.smithing_template.siftite_upgrade.applies_to': 'Netherite Equipment',
+        f'item.{NS}.smithing_template.siftite_upgrade.applies_to': 'Netherite Tools',
         f'item.{NS}.smithing_template.siftite_upgrade.ingredients': 'Siftite Ingot',
-        f'item.{NS}.smithing_template.siftite_upgrade.base_slot_description': 'Add netherite armor, weapon, or tool',
+        f'item.{NS}.smithing_template.siftite_upgrade.base_slot_description': 'Add netherite weapon or tool',
         f'item.{NS}.smithing_template.siftite_upgrade.additions_slot_description': 'Add Siftite Ingot',
         f'upgrade.{NS}.siftite_upgrade': 'Siftite Upgrade',
         f'item.{NS}.music_disc_lullaby.desc': 'Sift - Lullaby of the Deep',
@@ -920,7 +895,7 @@ SUBTITLES = {
     'item.conga_drum.boom': 'Conga Drum booms',
     'item.crane_flute.play': 'Flute plays',
     'item.guitar.strum': 'Guitar strums',
-    'item.conductors_baton.note': 'Baton strikes a note',
+    'item.conductors_staff.note': 'Staff strikes a note',  # CLEAN: was the (removed) Baton's note
     'entity.harmoner.ambient': 'Harmoner chirps',
     'entity.harmoner.sing': 'Harmoner sings',
     'entity.harmoner.hurt': 'Harmoner hurts',
@@ -963,10 +938,7 @@ SUBTITLES = {
     'event.gate.swell': 'The gate hums awake',
     'block.chrome.ambient': 'Chrome shimmers',
     'block.chrome.splash': 'Chrome splashes',
-    'block.harmony_stone.tone': 'Harmony Stone rings',
-    'block.harmony_seal.unlock': 'Harmony Seal unlocks',
     'block.soul_chime.ring': 'Soul Chime rings',
-    'block.dream_snare.trigger': 'Dream Snare springs',
     'block.crumbling_dreamstone.crumble': 'Dreamstone crumbles',
     'item.slingshot.shoot': 'Slingshot fires',
     'item.slingshot.pull': 'Slingshot stretches',
@@ -1025,7 +997,7 @@ SOUNDS = {
     'item.conga_drum.boom': [('block/note_block/basedrum', 1.0, 0.5), ('event:entity.generic.explode', 0.7, 0.8)],
     'item.crane_flute.play': [('block/note_block/flute', 1.0, 1.0)],
     'item.guitar.strum': [('block/note_block/guitar', 1.0, 1.0), ('block/note_block/harp', 0.7, 1.0)],
-    'item.conductors_baton.note': [('event:entity.warden.sonic_boom', 0.6, 1.8), ('block/note_block/bell', 1.0, 1.0)],
+    'item.conductors_staff.note': [('event:entity.warden.sonic_boom', 0.6, 1.8), ('block/note_block/bell', 1.0, 1.0)],
     'entity.harmoner.ambient': [('mob/parrot/idle1', 0.7, 1.3), ('mob/parrot/idle2', 0.7, 1.4), ('mob/parrot/idle3', 0.7, 1.2)],
     'entity.harmoner.sing': [('block/note_block/flute', 0.9, 1.0)],
     'entity.harmoner.hurt': [('mob/parrot/hurt1', 0.8, 1.3), ('mob/parrot/hurt2', 0.8, 1.3)],
@@ -1069,10 +1041,7 @@ SOUNDS = {
     'event.gate.swell': [('event:block.portal.trigger', 0.7, 1.2)],
     'block.chrome.ambient': [('liquid/water', 0.3, 1.6), ('block/amethyst/resonate1', 0.2, 1.8)],
     'block.chrome.splash': [('liquid/splash', 0.8, 1.4), ('liquid/splash2', 0.8, 1.5)],
-    'block.harmony_stone.tone': [('block/note_block/chime', 1.0, 1.0)],
-    'block.harmony_seal.unlock': [('block/trial_spawner/ominous_activate', 1.0, 1.4), ('block/beacon/deactivate', 1.0, 1.5)],
     'block.soul_chime.ring': [('block/bell/resonate', 0.7, 1.6), ('block/note_block/chime', 0.8, 1.2), ('block/note_block/chime', 0.8, 1.5)],
-    'block.dream_snare.trigger': [('event:block.tripwire.click_on', 1.0, 0.6), ('event:block.sculk_catalyst.bloom', 1.0, 1.4)],
     'block.crumbling_dreamstone.crumble': [('block/pointed_dripstone/drip_lava1', 1.0, 0.6), ('dig/stone1', 1.0, 0.7)],
     'item.slingshot.shoot': [('random/bow', 1.0, 1.4), ('mob/slime/small1', 0.8, 1.6)],
     'item.slingshot.pull': [('item/crossbow/loading_start', 0.8, 1.5)],
@@ -1366,7 +1335,6 @@ def gen_misc_tags():
     tag('block', 'minecraft:mineable/hoe', rl('hanging_lullwood_leaves'))
     tag('block', 'minecraft:mineable/axe', rl('sift_drum'))
     tag('block', 'minecraft:dampens_vibrations', rl('lumen_moss_carpet'))
-    tag('block', 'minecraft:inside_step_sound_blocks', rl('drift_petals'))
     # items
     tag('item', f'{NS}:bulb_food', 'minecraft:pitcher_pod')
     for seed in ('echo_seed', 'minecraft:wheat_seeds', 'minecraft:melon_seeds', 'minecraft:pumpkin_seeds', 'minecraft:beetroot_seeds',
@@ -1376,13 +1344,9 @@ def gen_misc_tags():
         tag('item', f'{NS}:slumbler_food', rl(i))
     tag('item', f'{NS}:slingshot_ammo', rl('glowing_slime_ball'))
     tag('item', f'{NS}:siftite_tool_materials', rl('siftite_ingot'))
-    tag('item', f'{NS}:repairs_siftite_armor', rl('siftite_ingot'))
     tag('item', f'{NS}:altar_fuel', rl('chrome_pearl'))
     for t, vt in [('sword', 'swords'), ('pickaxe', 'pickaxes'), ('axe', 'axes'), ('shovel', 'shovels'), ('hoe', 'hoes'), ('spear', 'spears')]:
         tag('item', f'minecraft:{vt}', rl(f'siftite_{t}'))
-    for a, vt in [('helmet', 'head_armor'), ('chestplate', 'chest_armor'), ('leggings', 'leg_armor'), ('boots', 'foot_armor')]:
-        tag('item', f'minecraft:{vt}', rl(f'siftite_{a}'))
-        tag('item', 'minecraft:trimmable_armor', rl(f'siftite_{a}'))
     for b in ['#minecraft:dirt', '#minecraft:sand', 'minecraft:gravel', 'minecraft:clay', 'minecraft:mud', 'minecraft:moss_block', 'minecraft:snow_block',
               'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'dreamsand', 'suspicious_dreamsand', 'sift_soil', 'sift_grass_block',
               'coral_turf', 'lumen_moss_block']:
@@ -1439,7 +1403,6 @@ def generate():
         gen_item(i)
     gen_recipes()
     gen_particles()
-    gen_equipment()
     __import__('caravans').sounds(sys.modules[__name__])  # C: Caravans and music crystals
     gen_sounds()
     gen_misc_tags()

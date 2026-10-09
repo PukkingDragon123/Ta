@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/flowerbed_3",
-  "textures": {
-    "flowerbed": "thesift:block/drift_petals",
-    "stem": "thesift:block/drift_petals_stem"
-  }
-}

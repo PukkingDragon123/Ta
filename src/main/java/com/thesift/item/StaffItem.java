@@ -94,7 +94,7 @@ public class StaffItem extends Item {
                 server.sendParticles(ModParticles.STAR_SPARKLE.get(), p.x, p.y, p.z, 2, 0.1, 0.1, 0.1, 0.0);
             }
         }
-        server.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.BATON_NOTE.get(), SoundSource.PLAYERS, 1.2F, 1.3F);
+        server.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.STAFF_NOTE.get(), SoundSource.PLAYERS, 1.2F, 1.3F);
         server.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 1.5F, 0.8F);
         for (LivingEntity e : hits) {
             e.addEffect(new MobEffectInstance(ModEffects.ENTRANCED, ENTRANCE_TICKS, 0, false, true), player);

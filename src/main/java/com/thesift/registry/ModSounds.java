@@ -98,7 +98,7 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CONGA_DRUM_BOOM = reg("item.conga_drum.boom");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRANE_FLUTE_PLAY = reg("item.crane_flute.play");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUITAR_STRUM = reg("item.guitar.strum");
-    public static final DeferredHolder<SoundEvent, SoundEvent> BATON_NOTE = reg("item.conductors_baton.note");
+    public static final DeferredHolder<SoundEvent, SoundEvent> STAFF_NOTE = reg("item.conductors_staff.note"); // CLEAN: was the Baton's note
     // ---- Music & blocks
     public static final DeferredHolder<SoundEvent, SoundEvent> DRUM_LOW = reg("block.sift_drum.low");
     public static final DeferredHolder<SoundEvent, SoundEvent> DRUM_MID = reg("block.sift_drum.mid");
@@ -118,10 +118,7 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> GATE_SWELL = reg("event.gate.swell");
     public static final DeferredHolder<SoundEvent, SoundEvent> CHROME_AMBIENT = reg("block.chrome.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> CHROME_SPLASH = reg("block.chrome.splash");
-    public static final DeferredHolder<SoundEvent, SoundEvent> HARMONY_TONE = reg("block.harmony_stone.tone");
-    public static final DeferredHolder<SoundEvent, SoundEvent> HARMONY_UNLOCK = reg("block.harmony_seal.unlock");
     public static final DeferredHolder<SoundEvent, SoundEvent> CHIME_RING = reg("block.soul_chime.ring");
-    public static final DeferredHolder<SoundEvent, SoundEvent> SNARE_TRIGGER = reg("block.dream_snare.trigger");
     public static final DeferredHolder<SoundEvent, SoundEvent> CRUMBLE = reg("block.crumbling_dreamstone.crumble");
     public static final DeferredHolder<SoundEvent, SoundEvent> SLINGSHOT_SHOOT = reg("item.slingshot.shoot");
     public static final DeferredHolder<SoundEvent, SoundEvent> SLINGSHOT_PULL = reg("item.slingshot.pull");

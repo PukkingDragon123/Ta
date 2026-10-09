@@ -5,54 +5,28 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 import gen_assets as GA  # noqa: E402
-from structlib import AIR, B, Build, chest, sigil, spawner, stairs, suspicious  # noqa: E402
+from structlib import AIR, B, Build, chest, sigil, stairs  # noqa: E402
 
 NS = 'thesift'
 OUT = os.path.join(GA.RES, 'data', NS, 'structure')
 D = os.path.join(GA.RES, 'data', NS, 'worldgen')
 
 # ------------------------------------------------------------------ palette
-BLUSH = B('blush_bricks')
-BLUSH_CR = B('cracked_blush_bricks')
-BLUSH_CH = B('chiseled_blush_bricks')
 DS_BR = B('dreamstone_bricks')
 DS_CR = B('cracked_dreamstone_bricks')
-DS_MOSS = B('mossy_dreamstone_bricks')
 DS_POL = B('polished_dreamstone')
 DS_TILE = B('dreamstone_tiles')
-DS_CH = B('chiseled_dreamstone')
-DS = B('dreamstone')
-DS_COB = B('cobbled_dreamstone')
 PILLAR = B('dreamstone_pillar', axis='y')
-LULL_PL = B('lullwood_planks')
-WISH_PL = B('wishwood_planks')
 HUSH_BR = B('hushslate_bricks')
 HUSH_CR = B('cracked_hushslate_bricks')
 HUSH_TILE = B('hushslate_tiles')
 HUSH_POL = B('polished_hushslate')
 HUSH_CH = B('chiseled_hushslate')
-SANDSTONE = B('dreamsandstone')
-CUT_SS = B('cut_dreamsandstone')
-SAND = B('dreamsand')
-CHROME = B('chrome', level=0)
-GLASS = B('chrome_glass')
-MOSS_CARPET = B('lumen_moss_carpet')
-HANG = B('hanging_lullwood_leaves', tip='false')
 LANTERN = B('bulb_lantern', hanging='false', waterlogged='false')
-LANTERN_H = B('bulb_lantern', hanging='true', waterlogged='false')
-CHIME = B('soul_chime', powered='false')
 DRUM = B('sift_drum', hit='0', core='false', powered='false')
-ALTAR = B('euphory_altar')
-SNARE = B('dream_snare', spent='false')
 CRUMBLE = B('crumbling_dreamstone')
-SEAL = B('harmony_seal')
-FRAME = B('minecraft:reinforced_deepslate')  # an ancient gate: the way home can't be mined for frames
-KEYSTONE = B('sift_gate_frame')
 SENSOR = B('minecraft:sculk_sensor', power=0, sculk_sensor_phase='inactive', waterlogged='false')
 SCULK = B('minecraft:sculk')
-FLOWERS = [B('lullaby_bell', resonating='false'), B('dreambloom', resonating='false'), B('soulpetal', resonating='false'),
-           B('nebula_iris', resonating='false'), B('blushgrass'), B('blushgrass'), B('coral_fern'), B('glimmer_sprouts')]
-TONE_PEDESTAL = [B('minecraft:light_blue_concrete'), B('minecraft:pink_concrete'), B('minecraft:yellow_concrete'), B('minecraft:purple_concrete')]
 
 
 # W1 World & terrain: the towers, temples, wells, altars, stone instruments, bridges, buried settlements, statues,

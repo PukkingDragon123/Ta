@@ -140,12 +140,10 @@ quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
 ### Gear
 * **Serbim**: an extremely rare ore, small veins buried deep. **4 Serbim Ingots + 4 Echo Shards
   around a Netherite Ingot = 2 Siftite Ingots.**
-* **Siftite** armor and tools: upgrade **netherite** gear with Siftite at a smithing table, using the
+* **Siftite** tools and weapons: upgrade **netherite** tools with Siftite at a smithing table, using the
   **Siftite Upgrade Smithing Template** found in Sift structures (one template plus serbim and
   dreamstone duplicates it). Curved, sung-into-shape tools that beat Netherite on durability,
-  speed and damage and hit with heavy knockback. Patterned armour with glowing echo inlays: any
-  piece keeps you from being Deafened, each piece takes an eighth off sonic damage, the helmet
-  breathes under water, leggings and boots swim faster, and the full set halves Sculk Corruption.
+  speed and damage and hit with heavy knockback. There is no Siftite armour.
 * **Sift gardening**: Echo Seeds grow only in the dark (faster on sculk). Vanilla Pitcher Plants grow
   wild in the plains and groves.
 * **Pitcher Planter**: pot a Pitcher Pod in it and it grows anywhere, through four stages, then
@@ -169,7 +167,7 @@ table's limit.
 ### Structures
 The Thumper's Drum Pit, the Sculk Castle and the Caravan colonies. The Sift's older towers, temples
 and settlements have crumbled into the ground: their relics lie buried as suspicious dreamsand in
-the dunes, plains, lake shores and seas (templates, music sheets, Dream Journal fragments), and here
+the dunes, plains, lake shores and seas (templates, music sheets, glyph stones), and here
 and there an Echoer still keeps its hearth.
 
 ---

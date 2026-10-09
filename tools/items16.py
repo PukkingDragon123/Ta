@@ -179,16 +179,6 @@ NOTE, NOTE_HI, NOTE_LO = PINK[2], PINK[3], PINK[1]
 QUAVERS = [(5, 10, 'p'), (6, 10, 'p'), (5, 11, 'P'), (6, 11, 'P'), (6, 9, 'p'), (6, 8, 'P'), (6, 7, 'p'), (7, 8, 'P'),
            (7, 7, 'p'), (8, 7, 'P'), (8, 6, 'p'), (9, 7, 'P'), (9, 6, 'p'), (10, 7, 'P'), (10, 6, 'p'), (10, 8, 'p'),
            (10, 9, 'p'), (9, 10, 'p'), (10, 10, 'p'), (9, 11, 'P'), (10, 11, 'P')]
-_Q = {(x, y) for x, y, _ in QUAVERS}
-
-
-def _row(y, x0, x1, skip=()):
-    return [(x, y) for x in range(x0, x1 + 1) if (x, y) not in skip]
-
-
-def _note(x, y):
-    """A crotchet: a two-pixel head at (x, y) with its stem rising from the right."""
-    return [(x, y, 'p'), (x + 1, y, 'p'), (x + 1, y - 1, 'P'), (x + 1, y - 2, 'P')]
 
 
 # per item: lines = engraved staff lines (the light runs along them in list order), glows = light
@@ -206,17 +196,7 @@ MUSIC = {
     'hoe': dict(glows=[[(7, 2), (8, 2), (9, 2), (10, 3), (11, 4), (12, 5)]], notes=[(8, 2), (11, 5)]),
     'spear': dict(lines=[[(10, 6), (11, 5), (12, 4), (13, 3), (14, 2)]], notes=[(10, 4), (12, 2)]),
     'spear_in_hand': dict(lines=[[(6, 5), (5, 4), (4, 3), (3, 2), (2, 1)]], notes=[(2, 3), (4, 5)]),
-    # two staff lines around the helmet's brow, notes sitting between them
-    'helmet': dict(lines=[_row(4, 5, 10), _row(6, 4, 11)], notes=[(6, 5), (9, 5)]),
-    # three faint staff lines across the breastplate, beamed quavers on them, a note on each shoulder
-    'chestplate': dict(lines=[_row(8, 4, 11, _Q), _row(10, 4, 11, _Q), _row(12, 4, 11, _Q)], quavers=True,
-                       notes=[(3, 4), (12, 4)], engrave=S_RAMP[2]),
-    # a staff around the waist, a crotchet on each leg
-    'leggings': dict(lines=[_row(3, 4, 10), _row(5, 4, 11)],
-                     glows=[[(4, 6), (4, 7), (4, 8), (4, 9), (4, 10), (4, 11)], [(10, 7), (10, 8), (10, 9), (10, 10), (10, 11)]],
-                     notes=[(6, 4), (9, 4), _note(4, 10), _note(10, 10)]),
-    'boots': dict(glows=[[(4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (3, 9), (2, 10)], [(10, 4), (10, 5), (10, 6), (10, 7), (10, 8), (11, 9), (12, 10)]],
-                  notes=[_note(4, 8), _note(10, 8)]),
+    # CLEAN: no Siftite armour (SPEC 7)
 }
 
 
@@ -293,15 +273,6 @@ def item_animations():
 
 def tools():
     return {k: v[0][0] for k, v in item_animations().items()}
-
-
-# ---------------------------------------------------------------------------- worn armour
-
-def armor_layers():
-    """The worn Siftite armour (static: entity textures cannot animate), drawn in gear_art: a
-    feathered helm with a halo circlet, wing-pattern pauldrons, folded wings down the back."""
-    import gear_art  # B4 gear
-    return gear_art.siftite_layers()
 
 
 # ============================================================================ materials
@@ -650,29 +621,6 @@ def bulb_lantern():
     return grid(rows, pal)
 
 
-def dream_journal_fragment():
-    """A torn page from a dream journal, with violet writing and a doodled star."""
-    rows = [
-        '................',
-        '................',
-        '....555555554...',
-        '...55iiiiI5543..',
-        '...5555555554...',
-        '...5iiiIi5ii43..',
-        '..55555555554...',
-        '...5iiIii55543..',
-        '...555555p5544..',
-        '...5iiiipPp43...',
-        '...4555555p543..',
-        '...44555544433..',
-        '....33..3333....',
-        '.........33.....',
-        '................',
-        '................',
-    ]
-    pal = ramp('2345', ['#b89a6c', '#d6bc8c', '#ecd8b0', '#fbf0d6'], '#5a3c34')
-    pal.update({'i': ('#6a54b0', '#5a3c34'), 'I': ('#9a86e0', '#5a3c34'), 'p': ('#f29bd6', '#5a3c34'), 'P': ('#ffffff', '#5a3c34')})
-    return grid(rows, pal, ol=True)
 
 
 def sift_codex():
@@ -750,29 +698,6 @@ def soul_chime():
     return grid(rows, pal, ol=True, no_ol='k')
 
 
-def drift_petals():
-    """Like vanilla pink petals: little four-petal blossoms on teal stems."""
-    rows = [
-        '................',
-        '...........w....',
-        '..........wyP...',
-        '....w......P....',
-        '...wyP.....s....',
-        '....P......s....',
-        '....s.....s.....',
-        '.....s..w.......',
-        '.......wyP......',
-        '........P...w...',
-        '........s..wyP..',
-        '...w....s...P...',
-        '..wyP...s...s...',
-        '...P.........s..',
-        '...s............',
-        '................',
-    ]
-    o = '#8a2a5a'
-    pal = {'w': ('#ffe0f0', o), 'P': ('#e98fc0', o), 'y': ('#ffe89a', o), 's': '#3f9d80'}
-    return grid(rows, pal, ol=True, no_ol='s')
 
 
 def glowbell_vine():
@@ -888,29 +813,6 @@ def slingshot(pull):
     return img
 
 
-def conductors_baton():
-    """The Conductor's dark baton: an ebony shaft, plum grip, gold ferrule and a glowing tip."""
-    rows = [
-        '................',
-        '................',
-        '.............g..',
-        '............S...',
-        '...........s....',
-        '..........S.....',
-        '.........s......',
-        '........S.......',
-        '.......s........',
-        '......S.........',
-        '.....G..........',
-        '...hG...........',
-        '..hhH...........',
-        '..hH............',
-        '................',
-        '................',
-    ]
-    pal = {'s': ('#3a3456', '#110d20'), 'S': ('#5a5280', '#110d20'), 'G': (GOLD[3], '#3a1c12'),
-           'h': ('#3a1a3a', '#120812'), 'H': ('#5e2a56', '#120812'), 'g': (GLOW[2], '#0a3a40'), 'w': GLOW[4]}
-    return grid(rows, pal, ol=True, no_ol='w')
 
 
 def conductors_staff():
@@ -1491,8 +1393,8 @@ def all_items():
     for f in (siftite_ingot, serbim_ingot, siftite_nugget, raw_serbim, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
               warden_core, thick_hide):
         out[f.__name__] = f()
-    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, dream_journal_fragment, sift_codex,
-              music_disc_lullaby, soul_chime, drift_petals, glowbell_vine, siftite_upgrade_smithing_template, conductors_baton):
+    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, sift_codex,
+              music_disc_lullaby, soul_chime, glowbell_vine, siftite_upgrade_smithing_template):
         out[f.__name__] = f()
     out['lullwood_door'] = door(('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea'), '#24353e', '#4a6470', '#2a2450')
     out['wishwood_door'] = door(('#c9738f', '#d98aa4', '#e6a0b8', '#f0b6ca'), '#4a1f38', '#8a4a6a', '#4a1f38')

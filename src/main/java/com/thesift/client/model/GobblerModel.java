@@ -12,7 +12,7 @@ import net.minecraft.util.Mth;
  * every breath (wide open when it hunts, lunges or gulps); the sculk sensor spines on its back sway
  * and sweep back as it speeds up, and shiver like the Warden's tendrils while it listens. The lunge
  * has a long wind-up (head reared, body drawn back, mouth gaping, gills flared), a snap forward and a
- * slow settle; the gulp bulges its cheeks; the spit throws the jaw open. Lulled by the Tide Song
+ * slow settle; the gulp bulges its cheeks; the spit throws the jaw open. Lulled by the Lullaby
  * everything slows and droops. The glow pulse itself is the renderer's (SiftFishRenderState.glowPulse).
  */
 public class GobblerModel extends EntityModel<SiftFishRenderState> {

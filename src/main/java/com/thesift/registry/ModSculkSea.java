@@ -104,7 +104,7 @@ public final class ModSculkSea {
                 .instrument("chattering_teeth").colour(0x3FF5E6).register();
         BandRegistry.voice(CORAL_ORGAN, SoundEvents.NOTE_BLOCK_FLUTE).transpose(-12).volume(1.4F)
                 .layer(SoundEvents.NOTE_BLOCK_DIDGERIDOO, 0.5F)
-                .songs(Song.TIDE).temper(BandVoice.Temper.HOSTILE)
+                .songs(Song.LULLABY).temper(BandVoice.Temper.HOSTILE) // CLEAN: was the Tide Song
                 .instrument("coral_organ").colour(0x2FB8B0).register();
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.util.Mth;
 /**
  * The Gobbler: the music-fish renderer, scaled up. Its veins, photophores and lantern lures glow on
  * their own layer with a slow double heartbeat - quicker and brighter while it hunts, a dim drowse
- * when the Tide Song lulls it, and a flare of light through the whole body as it lunges.
+ * when the Lullaby lulls it, and a flare of light through the whole body as it lunges.
  */
 public class GobblerRenderer extends SiftFishRenderer<Gobbler, GobblerModel> {
     private static final float TWO_PI = (float) (Math.PI * 2.0);

@@ -32,17 +32,17 @@ import net.minecraft.world.entity.player.Player;
  *   <tr><td>Bulb</td><td>pling bells, an octave up</td><td>chimes, strings; Nibs' Song, Lullaby</td><td>eager</td></tr>
  *   <tr><td>Harmoner</td><td>piccolo (flute, an octave up)</td><td>flute, chimes</td><td>eager</td></tr>
  *   <tr><td>Nib</td><td>wisp bells (bell, an octave up)</td><td>flute, chimes</td><td>eager, flies</td></tr>
- *   <tr><td>Kazoo Fish</td><td>kazoo (bit)</td><td>flute; Tide Song</td><td>eager, swims</td></tr>
+ *   <tr><td>Kazoo Fish</td><td>kazoo (bit)</td><td>flute; Whale Song</td><td>eager, swims</td></tr>
  *   <tr><td>Stomper</td><td>thunder drums (bass drum + bass, low)</td><td>drum; Golem Hymn</td><td>shy</td></tr>
  *   <tr><td>Slumbler</td><td>snore drone (didgeridoo, low, every second note)</td><td>strings; Lullaby</td><td>shy</td></tr>
  *   <tr><td>Echoer</td><td>wind chimes a fifth above through its speakers, amethyst shimmer</td><td>chimes; Golem Hymn</td><td>shy, flies</td></tr>
  *   <tr><td>Sifter</td><td>dune bell (its own clapper on the lip)</td><td>chimes</td><td>shy</td></tr>
  *   <tr><td>Swifter</td><td>banjo yips</td><td>strings, drum</td><td>shy</td></tr>
- *   <tr><td>Tubafish</td><td>tuba (trumpet, low)</td><td>drum, flute; Tide Song</td><td>shy, swims</td></tr>
+ *   <tr><td>Tubafish</td><td>tuba (trumpet, low)</td><td>drum, flute; Whale Song</td><td>shy, swims</td></tr>
  *   <tr><td>Sky Whale</td><td>whale song (low flute + ghastly coo, every second note)</td><td>flute; Whale Song</td><td>shy, flies</td></tr>
  *   <tr><td>Soul Golem</td><td>soul vibraphone (iron xylophone)</td><td>drum; Golem Hymn</td><td>loyal (owned golems only)</td></tr>
  *   <tr><td>Caravan, Jailer, Sculkling, Fanfare Eel, Gobbler</td><td>crystal xylophone, jailer's bell, sculk clicks,
- *   fanfare horn, deep bass</td><td>crystal; any; strings; flute; Tide Song</td><td>hostile: never join</td></tr>
+ *   fanfare horn, deep bass</td><td>crystal; any; strings; flute; Lullaby</td><td>hostile: never join</td></tr>
  * </table>
  *
  * (The bosses and their summons play in the Conductor's orchestra,
@@ -68,7 +68,7 @@ final class BandVoices {
                 .movement(BandVoice.Movement.FLY).instrument("wisp_bells").colour(0xD9B8FF)
                 .when(m -> ((Nib) m).getState() == Nib.FLYING).register();
         BandRegistry.voice(ModEntities.KAZOO_FISH, SoundEvents.NOTE_BLOCK_BIT).volume(0.7F)
-                .families(Family.FLUTE).songs(Song.TIDE)
+                .families(Family.FLUTE).songs(Song.WHALE) // CLEAN: was the Tide Song
                 .movement(BandVoice.Movement.SWIM).instrument("kazoo").colour(0xFF9A5A).register();
 
         // ---- shy: wild ones need two songs, tamed ones come at once
@@ -97,7 +97,7 @@ final class BandVoices {
                 .when(m -> !((Swifter) m).isNapping() && !((Swifter) m).isAngry()).register();
         BandRegistry.voice(ModEntities.TUBAFISH, SoundEvents.NOTE_BLOCK_TRUMPET).transpose(-12).volume(1.1F)
                 .layer(SoundEvents.NOTE_BLOCK_BASS, 0.4F)
-                .families(Family.DRUM, Family.FLUTE).songs(Song.TIDE)
+                .families(Family.DRUM, Family.FLUTE).songs(Song.WHALE) // CLEAN: was the Tide Song
                 .temper(BandVoice.Temper.SHY).movement(BandVoice.Movement.SWIM).instrument("tuba").colour(0x5AA9E6).register();
         BandRegistry.voice(ModEntities.SKY_WHALE, SoundEvents.NOTE_BLOCK_FLUTE).transpose(-12).every(2).volume(3.0F)
                 .layer(SoundEvents.HAPPY_GHAST_AMBIENT, 0.5F)
@@ -125,7 +125,7 @@ final class BandVoices {
                 .instrument("fanfare_horn").colour(0xFFC23A).register();
         BandRegistry.voice(ModSeaSky.GOBBLER, SoundEvents.NOTE_BLOCK_BASS).transpose(-12).volume(1.3F)
                 .layer(SoundEvents.WARDEN_HEARTBEAT, 0.6F)
-                .songs(Song.TIDE).temper(BandVoice.Temper.HOSTILE).movement(BandVoice.Movement.SWIM)
+                .songs(Song.LULLABY).temper(BandVoice.Temper.HOSTILE).movement(BandVoice.Movement.SWIM) // CLEAN: was the Tide Song
                 .instrument("deep_bass").colour(0x3E6F8F).register();
     }
 

@@ -466,7 +466,6 @@ MAP = {
     'dreamstone_pillar_side': C('purpur_pillar_side'),
     'dreamstone_pillar_top': C('purpur_pillar_top'),
     **{f'glyph_stone_{i}': C('smooth_stone', acc=True) for i in range(8)},
-    **{f'harmony_stone_{i}': C('chiseled_tuff', acc=True) for i in range(4)},
     # --- Hushslate (deepslate family)
     'hushslate': C('deepslate'),
     'hushslate_top': C('deepslate_top'),
@@ -476,7 +475,6 @@ MAP = {
     'hushslate_tiles': C('deepslate_tiles'),
     'polished_hushslate': C('polished_deepslate'),
     'chiseled_hushslate': C('chiseled_deepslate'),
-    'harmony_seal': M('polished_deepslate'),
     # --- Blush bricks (nether brick family)
     'blush_bricks': C('nether_bricks'),
     'cracked_blush_bricks': C('cracked_nether_bricks'),
@@ -544,10 +542,6 @@ MAP = {
     'lullaby_bell': C('lily_of_the_valley', seg='plant'),
     'chime_bell': C('closed_eyeblossom', seg='plant'),
     'chime_bell_ringing': C('open_eyeblossom', seg='plant'),
-    'drift_petals': C('pink_petals', seg='plant'),
-    'drift_petals_stem': C('pink_petals_stem'),
-    'dream_snare': C('cobweb'),
-    'dream_snare_spent': C('cobweb'),
     'musical_cobweb': C('cobweb'),
     'glowbell_vine': C('cave_vines', seg='plant'),
     'glowbell_vine_lit': C('cave_vines_lit', seg='plant'),
@@ -555,7 +549,6 @@ MAP = {
     'glowbell_vine_plant_lit': C('cave_vines_plant_lit', seg='plant'),
     # --- sea & coral flora
     'coral_bush': C('brain_coral'),
-    'coral_fern': C('fire_coral'),
     'coral_thicket_top': C('bubble_coral'),
     'coral_thicket_bottom': C('horn_coral'),
     'abyss_anemone': C('tube_coral', allpal=True),
@@ -657,8 +650,6 @@ def _edits(name, a):
         _glints(a, [(3, 11), (12, 4)], Pal(o[mo][:, :3]).top(0.999))
     elif name == 'musical_cobweb':
         _note(a, 9, 2, glow)
-    elif name in ('dream_snare',):
-        _glints(a, [(7, 7), (8, 8), (7, 8), (8, 7)], glow)
     elif name == 'prism_block':
         _iridesce(a, 0.55)
     return a

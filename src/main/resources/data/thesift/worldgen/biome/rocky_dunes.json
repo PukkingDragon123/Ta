@@ -121,9 +121,7 @@
     [
       "thesift:chrome_spring"
     ],
-    [
-      "thesift:patch_dune_scrub"
-    ],
+    [],
     []
   ],
   "has_precipitation": false,

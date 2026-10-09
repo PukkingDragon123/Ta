@@ -135,7 +135,6 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> HANGING_LULLWOOD_LEAVES = ITEMS.registerSimpleBlockItem(ModBlocks.HANGING_LULLWOOD_LEAVES);
     public static final DeferredItem<BlockItem> BLUSHGRASS = ITEMS.registerSimpleBlockItem(ModBlocks.BLUSHGRASS);
     public static final DeferredItem<DoubleHighBlockItem> TALL_BLUSHGRASS = ITEMS.registerItem("tall_blushgrass", p -> new DoubleHighBlockItem(ModBlocks.TALL_BLUSHGRASS.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
-    public static final DeferredItem<BlockItem> CORAL_FERN = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_FERN);
     public static final DeferredItem<BlockItem> CORAL_BUSH = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_BUSH);
     public static final DeferredItem<DoubleHighBlockItem> CORAL_THICKET = ITEMS.registerItem("coral_thicket", p -> new DoubleHighBlockItem(ModBlocks.CORAL_THICKET.get(), p), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredItem<BlockItem> GLIMMER_SPROUTS = ITEMS.registerSimpleBlockItem(ModBlocks.GLIMMER_SPROUTS);
@@ -144,7 +143,6 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> SOULPETAL = ITEMS.registerSimpleBlockItem(ModBlocks.SOULPETAL);
     public static final DeferredItem<BlockItem> NEBULA_IRIS = ITEMS.registerSimpleBlockItem(ModBlocks.NEBULA_IRIS);
     public static final DeferredItem<BlockItem> HUMMINGBLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.HUMMINGBLOOM);
-    public static final DeferredItem<BlockItem> DRIFT_PETALS = ITEMS.registerSimpleBlockItem(ModBlocks.DRIFT_PETALS);
     public static final DeferredItem<BlockItem> ECHO_ORCHID = ITEMS.registerSimpleBlockItem(ModBlocks.ECHO_ORCHID);
     public static final DeferredItem<BlockItem> CHROME_REEDS = ITEMS.registerSimpleBlockItem(ModBlocks.CHROME_REEDS);
     public static final DeferredItem<BlockItem> GLOWCAP = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWCAP);
@@ -155,10 +153,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CONDUCTORS_PODIUM = ITEMS.registerSimpleBlockItem(ModBlocks.CONDUCTORS_PODIUM);
     public static final DeferredItem<BlockItem> ENCORE_SIGIL = ITEMS.registerSimpleBlockItem(ModBlocks.ENCORE_SIGIL);
     public static final DeferredItem<BlockItem> INSTRUMENT_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.INSTRUMENT_ALTAR);
-    public static final DeferredItem<BlockItem> HARMONY_STONE = ITEMS.registerSimpleBlockItem(ModBlocks.HARMONY_STONE);
-    public static final DeferredItem<BlockItem> HARMONY_SEAL = ITEMS.registerSimpleBlockItem(ModBlocks.HARMONY_SEAL);
     public static final DeferredItem<BlockItem> GLYPH_STONE = ITEMS.registerSimpleBlockItem(ModBlocks.GLYPH_STONE);
-    public static final DeferredItem<BlockItem> DREAM_SNARE = ITEMS.registerSimpleBlockItem(ModBlocks.DREAM_SNARE);
     public static final DeferredItem<BlockItem> ANCIENT_CANNON = ITEMS.registerSimpleBlockItem(ModBlocks.ANCIENT_CANNON);
     public static final DeferredItem<BlockItem> CRUMBLING_DREAMSTONE = ITEMS.registerSimpleBlockItem(ModBlocks.CRUMBLING_DREAMSTONE);
     public static final DeferredItem<BlockItem> SIFT_CAKE = ITEMS.registerSimpleBlockItem("sift_cake", ModBlocks.SIFT_CAKE, p -> p.stacksTo(1));
@@ -208,17 +203,12 @@ public final class ModItems {
     public static final DeferredItem<SlingshotItem> SLINGSHOT = ITEMS.registerItem("slingshot", SlingshotItem::new, () -> new Item.Properties().durability(384).enchantable(1));
     public static final DeferredItem<SiftiteTemplate> SIFTITE_UPGRADE_SMITHING_TEMPLATE = ITEMS.registerItem("siftite_upgrade_smithing_template", SiftiteTemplate::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> STAR_SHARD = ITEMS.registerItem("star_shard", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
-    public static final DeferredItem<Item> DREAM_JOURNAL_FRAGMENT = ITEMS.registerItem("dream_journal_fragment", Item::new, () -> new Item.Properties());
     public static final DeferredItem<Item> SIFTITE_SWORD = ITEMS.registerItem("siftite_sword", Item::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 3.0F, -2.4F));
     public static final DeferredItem<Item> SIFTITE_PICKAXE = ITEMS.registerItem("siftite_pickaxe", Item::new, () -> new Item.Properties().pickaxe(ModMaterials.SIFTITE_TOOL, 1.0F, -2.8F));
     public static final DeferredItem<Item> SIFTITE_AXE = ITEMS.registerItem("siftite_axe", Item::new, () -> new Item.Properties().axe(ModMaterials.SIFTITE_TOOL, 5.5F, -3.0F));
     public static final DeferredItem<Item> SIFTITE_SHOVEL = ITEMS.registerItem("siftite_shovel", Item::new, () -> new Item.Properties().shovel(ModMaterials.SIFTITE_TOOL, 1.5F, -3.0F));
     public static final DeferredItem<Item> SIFTITE_HOE = ITEMS.registerItem("siftite_hoe", Item::new, () -> new Item.Properties().hoe(ModMaterials.SIFTITE_TOOL, -3.0F, 0.0F));
     public static final DeferredItem<Item> SIFTITE_SPEAR = ITEMS.registerItem("siftite_spear", Item::new, () -> new Item.Properties().spear(ModMaterials.SIFTITE_TOOL, 0.8F, 0.9F, 0.6F, 4.5F, 11.0F, 8.5F, 4.9F, 13.0F, 4.4F));
-    public static final DeferredItem<Item> SIFTITE_HELMET = ITEMS.registerItem("siftite_helmet", Item::new, () -> new Item.Properties().humanoidArmor(ModMaterials.SIFTITE_ARMOR, ArmorType.HELMET));
-    public static final DeferredItem<Item> SIFTITE_CHESTPLATE = ITEMS.registerItem("siftite_chestplate", Item::new, () -> new Item.Properties().humanoidArmor(ModMaterials.SIFTITE_ARMOR, ArmorType.CHESTPLATE));
-    public static final DeferredItem<Item> SIFTITE_LEGGINGS = ITEMS.registerItem("siftite_leggings", Item::new, () -> new Item.Properties().humanoidArmor(ModMaterials.SIFTITE_ARMOR, ArmorType.LEGGINGS));
-    public static final DeferredItem<Item> SIFTITE_BOOTS = ITEMS.registerItem("siftite_boots", Item::new, () -> new Item.Properties().humanoidArmor(ModMaterials.SIFTITE_ARMOR, ArmorType.BOOTS));
     public static final DeferredItem<SpawnEggItem> BULB_SPAWN_EGG = ITEMS.registerItem("bulb_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.BULB.get()));
     public static final DeferredItem<SpawnEggItem> SLUMBLER_SPAWN_EGG = ITEMS.registerItem("slumbler_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SLUMBLER.get()));
     public static final DeferredItem<SpawnEggItem> SIFTER_SPAWN_EGG = ITEMS.registerItem("sifter_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SIFTER.get()));
@@ -234,7 +224,6 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> TUBAFISH_SPAWN_EGG = ITEMS.registerItem("tubafish_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.TUBAFISH.get()));
     public static final DeferredItem<SpawnEggItem> SKY_WHALE_SPAWN_EGG = ITEMS.registerItem("sky_whale_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SKY_WHALE.get()));
     public static final DeferredItem<SpawnEggItem> SCULK_PARASITE_SPAWN_EGG = ITEMS.registerItem("sculk_parasite_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.SCULK_PARASITE.get()));
-    public static final DeferredItem<BatonItem> CONDUCTORS_BATON = ITEMS.registerItem("conductors_baton", BatonItem::new, () -> new Item.Properties().sword(ModMaterials.SIFTITE_TOOL, 5.0F, -2.0F).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<StaffItem> CONDUCTORS_STAFF = ITEMS.registerItem("conductors_staff", StaffItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
     public static final DeferredItem<SiftInstrumentItem> CONGA_DRUM = ITEMS.registerItem("conga_drum", p -> new SiftInstrumentItem(com.thesift.music.Instrument.DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> CANNONBALL = ITEMS.registerItem("cannonball", Item::new, () -> new Item.Properties().stacksTo(16));
@@ -250,7 +239,6 @@ public final class ModItems {
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_CRYSTAL = ITEMS.registerItem("music_sheet_crystal", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_AURORA = ITEMS.registerItem("music_sheet_aurora", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_WHALE = ITEMS.registerItem("music_sheet_whale", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
-    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_TIDE = ITEMS.registerItem("music_sheet_tide", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_LULLABY = ITEMS.registerItem("music_sheet_lullaby", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<SiftInstrumentItem> PRISM_FLUTE = ITEMS.registerItem("prism_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftInstrumentItem> PRISM_HARP = ITEMS.registerItem("prism_harp", p -> new SiftInstrumentItem(com.thesift.music.Instrument.HARP, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));

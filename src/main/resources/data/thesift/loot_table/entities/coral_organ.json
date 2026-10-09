@@ -91,11 +91,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:dream_journal_fragment",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:gold_ingot",
           "weight": 3
         },
@@ -114,7 +109,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:music_sheet_tide",
+          "name": "thesift:music_sheet_lullaby",
           "weight": 2
         },
         {

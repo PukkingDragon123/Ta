@@ -108,48 +108,6 @@ def spear():
     return s.render()
 
 
-# ----------------------------------------------------------------------------- armour
-
-def helmet():
-    s = Sprite()
-    m = ellipse(16, 17, 12.5, 12) & (rect(0, 0, 32, 25))
-    m &= ~rect(9, 16, 23, 32)
-    m |= rect(3.5, 16, 9, 25) | rect(23, 16, 28.5, 25)
-    s.add(m, SIFTITE, 'dome')
-    s.add(capsule(16, 5.5, 16, 14, 1.6), SIFT_PINK, 'dome', gloss=1.3)
-    s.add(rect(3.5, 23, 9, 25.5) | rect(23, 23, 28.5, 25.5), GOLD, 'bevel', depth=1)
-    return s.render()
-
-
-def chestplate():
-    s = Sprite()
-    m = poly([(4, 7), (11, 4), (16, 7), (21, 4), (28, 7), (28.5, 14), (24.5, 15), (24.5, 28), (7.5, 28), (7.5, 15), (3.5, 14)])
-    m &= ~ellipse(16, 4, 4.5, 4.5)
-    s.add(m, SIFTITE, 'bevel', depth=3)
-    s.add(rect(7.5, 22, 24.5, 25), GOLD, 'bevel', depth=1)
-    s.add(ellipse(16, 15, 2.6, 2.6), SIFT_PINK, 'dome', gloss=1.6)
-    s.add(capsule(10, 9, 13, 18, 0.8), '#c8fbff', 'flat', gloss=0, outline=False)
-    return s.render()
-
-
-def leggings():
-    s = Sprite()
-    m = rect(7, 5, 25, 11) | rect(7, 11, 15, 28) | rect(17, 11, 25, 28)
-    s.add(m, SIFTITE, 'bevel', depth=2.5)
-    s.add(rect(7, 5, 25, 8), GOLD, 'bevel', depth=1)
-    s.add(ellipse(16, 6.5, 1.5, 1.5), SIFT_PINK, 'dome', gloss=1.5)
-    return s.render()
-
-
-def boots():
-    s = Sprite()
-    left = poly([(4, 9), (13, 9), (13, 21), (15.5, 24), (15.5, 28), (3, 28), (3, 23), (4, 21)])
-    right = poly([(19, 9), (28, 9), (28, 21), (29, 23), (29, 28), (16.5, 28), (16.5, 24), (19, 21)])
-    s.add(left | right, SIFTITE, 'bevel', depth=2.5)
-    s.add(rect(3, 25.5, 15.5, 28) | rect(16.5, 25.5, 29, 28), GOLD, 'bevel', depth=1)
-    return s.render()
-
-
 # ----------------------------------------------------------------------------- materials
 
 def ingot(mat, streak=None):
@@ -278,13 +236,6 @@ def bucket(fill=None):
     return s.render()
 
 
-def journal():
-    s = Sprite()
-    s.add(poly([(6, 4), (24, 3), (27, 9), (25, 14), (27, 19), (25, 28), (7, 29), (5, 22), (7, 16), (5, 10)]), '#f3e2bc', 'bevel', depth=2.5, gloss=0)
-    s.add(from_rows(['##########', '', '#########', '', '#######', '', '##########', '', '######'], 10, 9), '#7a64b8', 'flat', gloss=0, outline=False)
-    return s.render()
-
-
 def codex():
     s = Sprite()
     s.add(rrect(6, 3, 28, 29, 2.5), '#1f3f78', 'bevel', depth=2.5)
@@ -310,13 +261,6 @@ def chime():
     for (x, l) in ((8, 18), (13, 23), (19, 20), (24, 15)):
         s.add(capsule(x, 7, x, 7 + l, 1.3), '#9fdcf2', 'dome', gloss=1.2)
     s.add(ellipse(16, 27, 2.5, 2.5), GLOW, 'dome', gloss=1.5)
-    return s.render()
-
-
-def petals():
-    s = Sprite()
-    for (x, y, a) in ((10, 11, 30), (21, 9, -20), (13, 21, -60), (23, 20, 45), (17, 15, 0)):
-        s.add(ellipse(x, y, 4.2, 2.6, a), '#ff9ccc', 'dome', gloss=1.0)
     return s.render()
 
 
@@ -360,15 +304,6 @@ def slingshot(pull):
     band = t.render()
     img.alpha_composite(band)
     return img
-
-
-def baton():
-    s = Sprite()
-    s.add(capsule(5, 27, 26, 6, 1.0), BONE, 'dome', gloss=0.8)
-    s.add(capsule(5, 27, 9, 23, 1.9), '#2a3550', 'dome', gloss=0.4)
-    s.add(ellipse(10, 22, 1.8, 1.8), GOLD, 'dome')
-    s.add(ellipse(26, 6, 1.5, 1.5), GLOW, 'dome', gloss=1.4)
-    return s.render()
 
 
 def staff():
@@ -444,15 +379,14 @@ def all_items():
     out = {
         'siftite_sword': sword(), 'siftite_pickaxe': pickaxe(), 'siftite_axe': axe(), 'siftite_shovel': shovel(), 'siftite_hoe': hoe(),
         'siftite_spear': spear(), 'siftite_spear_in_hand': spear(),
-        'siftite_helmet': helmet(), 'siftite_chestplate': chestplate(), 'siftite_leggings': leggings(), 'siftite_boots': boots(),
         'siftite_ingot': ingot(SIFTITE, SIFT_PINK), 'serbim_ingot': ingot(SERBIM), 'siftite_nugget': nugget(), 'raw_serbim': raw_serbim(),
         'chrome_pearl': pearl(), 'glowing_slime_ball': slime_ball(), 'star_shard': star_shard(), 'echo_seed': echo_seed(),
         'warden_core': warden_core(), 'thick_hide': hide(), 'sift_cake': cake(), 'dream_stew': stew(),
-        'glowcap_skewer': skewer(), 'bulb_lantern': lantern(), 'chrome_bucket': bucket(CHROME), 'dream_journal_fragment': journal(),
-        'sift_codex': codex(), 'music_disc_lullaby': disc(), 'soul_chime': chime(), 'drift_petals': petals(), 'glowbell_vine': glowbell(),
+        'glowcap_skewer': skewer(), 'bulb_lantern': lantern(), 'chrome_bucket': bucket(CHROME),
+        'sift_codex': codex(), 'music_disc_lullaby': disc(), 'soul_chime': chime(), 'glowbell_vine': glowbell(),
         'lullwood_door': door('#b1a9d4', '#8f86c0'), 'wishwood_door': door('#e6a0b8', '#c9738f'), 'siftite_upgrade_smithing_template': template(),
         'slingshot': slingshot(-1), 'slingshot_pulling_0': slingshot(0), 'slingshot_pulling_1': slingshot(1), 'slingshot_pulling_2': slingshot(2),
-        'conductors_baton': baton(), 'conductors_staff': staff(),
+        'conductors_staff': staff(),
     }
     for mob, (b, sp, e) in EGGS.items():
         out[f'{mob}_spawn_egg'] = egg(b, sp, e.get('face'), e.get('keys'), e.get('top'))

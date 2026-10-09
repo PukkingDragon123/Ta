@@ -1,20 +1,6 @@
 {
   "type": "minecraft:simple_block",
   "to_place": {
-    "type": "minecraft:weighted",
-    "entries": [
-      {
-        "data": {
-          "id": "thesift:coral_bush"
-        },
-        "weight": 6
-      },
-      {
-        "data": {
-          "id": "thesift:coral_fern"
-        },
-        "weight": 1
-      }
-    ]
+    "id": "thesift:coral_bush"
   }
 }

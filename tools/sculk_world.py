@@ -148,7 +148,7 @@ def assets(GA):
         f'codex.{NS}.relics.title': 'Buried Relics', f'codex.{NS}.relics.tagline': 'All that is left of the old ruins',
         f'codex.{NS}.relics.body': 'The Sift\'s old towers, temples and settlements have crumbled into the ground. Where a cracked brick '
                                    'or two pokes out of the dunes, the shores or the swamp mud, there is Suspicious Dreamsand just '
-                                   'below: brush it for Dream Journal Fragments, seeds, Star Shards, lost Music Sheets and - rarely - '
+                                   'below: brush it for glyph stones, seeds, Star Shards, lost Music Sheets and - rarely - '
                                    'a Siftite Upgrade Template or the Lullaby disc.',
     })
 

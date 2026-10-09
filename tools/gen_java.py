@@ -122,9 +122,6 @@ def item_entry(i):
         }[t]
         ctor = "Item::new"
         return "Item", f"ITEMS.registerItem(\"{id}\", {ctor}, () -> new Item.Properties().{spec})"
-    if cls.startswith("armor:"):
-        a = cls.split(":")[1].upper()
-        return "Item", f"ITEMS.registerItem(\"{id}\", Item::new, () -> new Item.Properties().humanoidArmor(ModMaterials.SIFTITE_ARMOR, ArmorType.{a}))"
     if cls.startswith("egg:"):
         m = const(cls.split(":")[1])
         return "SpawnEggItem", f"ITEMS.registerItem(\"{id}\", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModEntities.{m}.get()))"
@@ -176,7 +173,7 @@ def gen_tabs():
             continue
         tab = b.get("tab", "blocks")
         if tab == "blocks" and (b["kind"] in nature_kinds or b.get("cls") in (
-                "BlushgrassBlock", "SiftDoublePlantBlock", "SiftPlantBlock", "DriftPetalsBlock", "EchoOrchidBlock",  # W1: ChoirLilyBlock removed
+                "BlushgrassBlock", "SiftDoublePlantBlock", "SiftPlantBlock", "EchoOrchidBlock",  # W1: ChoirLilyBlock removed
                 "ChromeReedsBlock", "GlowcapBlock", "GlowbellVineBlock", "HangingLullwoodLeavesBlock", "SiftGrassBlock", "LumenMossBlock")
                 or b["id"] in ("sift_soil", "dreamsand", "serbim_ore", "deep_serbim_ore", "hushslate", "dreamstone", "lumen_moss_carpet")):
             tab = "nature"

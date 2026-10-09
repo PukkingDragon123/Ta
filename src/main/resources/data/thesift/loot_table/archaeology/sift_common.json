@@ -10,11 +10,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:dream_journal_fragment",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
           "name": "thesift:raw_serbim",
           "weight": 2
         },

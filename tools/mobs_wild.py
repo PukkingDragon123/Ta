@@ -344,7 +344,8 @@ STOMPER_GARDEN = [('dreambloom', 0, -8, -1.5, 9, 11), ('hummingbloom', -5.5, -8,
                   # CR1: tufts of the Sift's pink blushgrass all over its back
                   ('blushgrass', -3.5, -8, -6.5, 7, 7), ('blushgrass', 6.5, -6, 6.5, 7, 6), ('blushgrass', -6.5, -6, 10.5, 6, 6),
                   ('blushgrass', 2.5, -6, -11, 6, 5)]
-STOMPER_SHOULDERS = [('coral_fern', -13.5, -15, 8, 8), ('dreambloom', 13.5, -14, 7, 8), ('lullaby_bell', -13.5, 15, 7, 8),
+STOMPER_SHOULDERS = [('coral_bush', -13.5, -15, 8, 8),  # CLEAN: the coral fern is gone
+                     ('dreambloom', 13.5, -14, 7, 8), ('lullaby_bell', -13.5, 15, 7, 8),
                      ('glimmer_sprouts', 13.5, 14, 7, 7)]
 STOMPER_BROW = [('hummingbloom', -7, -6, 7, 8), ('glimmer_sprouts', 8, -4, 7, 7)]
 _GLOWING = ('glimmer_sprouts', 'echo_orchid')

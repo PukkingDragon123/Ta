@@ -184,7 +184,6 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "chrome", ModItems.CHROME_BUCKET));
         l.add(thing(ITEMS, "warden_core", ModItems.WARDEN_CORE));
         l.add(thing(ITEMS, "sift_cake", ModItems.SIFT_CAKE));
-        l.add(thing(ITEMS, "baton", ModItems.CONDUCTORS_BATON));
         l.add(thing(ITEMS, "staff", ModItems.CONDUCTORS_STAFF));
         // songs & instruments (agent D)
         l.add(thing(ITEMS, "songs", ModItems.MUSIC_SHEET_LULLABY));
@@ -203,7 +202,7 @@ public final class CodexEntries {
         // W1 World & terrain: the Sculk Swamp and the Sculk Ocean; the old ruins live on as buried relics
         l.add(thing(PLACES, "sculk_swamp", ModItems.BLIGHTWOOD_SAPLING));
         l.add(thing(PLACES, "sculk_ocean", ModItems.SCULK_CORAL_FAN));
-        l.add(thing(PLACES, "relics", ModItems.DREAM_JOURNAL_FRAGMENT));
+        l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_DREAMSAND));
         l.add(thing(PLACES, "sculk_castle", ModItems.CONDUCTORS_PODIUM));
         l.add(thing(PLACES, "caravan_colony", ModItems.PRISM_BLOCK)); // C
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars

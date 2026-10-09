@@ -111,7 +111,7 @@ final class BandTest {
         p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.GUITAR.get()));
         p.getInventory().add(new ItemStack(ModItems.MUSIC_SHEET_WHALE.get()));
         p.getInventory().add(new ItemStack(ModItems.MUSIC_SHEET_LULLABY.get()));
-        p.getInventory().add(new ItemStack(ModItems.MUSIC_SHEET_TIDE.get()));
+        p.getInventory().add(new ItemStack(ModItems.MUSIC_SHEET_GOLEM.get())); // CLEAN: the Tide Song is gone; the Golem Hymn is drummed instead
 
         Mob b = this.spawn(ModEntities.BULB.get(), X + 3.5, y, Z + 0.5);
         Mob sifter = this.spawn(ModEntities.SIFTER.get(), X - 4.5, y, Z + 0.5);
@@ -135,10 +135,10 @@ final class BandTest {
         this.check.accept(Bands.isMember(p, b), "band: a compatible song (the Lullaby on the guitar) recruits a nearby Bulb");
 
         // drums: the tamed Stomper comes at once, the wild one only the second time, the Sifter (a bell) not at all
-        this.perform(p, Instrument.DRUM, Song.TIDE);
+        this.perform(p, Instrument.DRUM, Song.GOLEM);
         this.check.accept(Bands.isMember(p, baby), "band: a tamed Stomper joins its owner's band at the first drum song");
         this.check.accept(!Bands.isMember(p, w), "band: a wild (shy) Stomper only listens to the first drum song");
-        this.perform(p, Instrument.DRUM, Song.TIDE);
+        this.perform(p, Instrument.DRUM, Song.GOLEM);
         this.check.accept(Bands.isMember(p, w), "band: the wild Stomper joins at the second drum song");
         this.check.accept(!Bands.isMember(p, sifter), "band: a Sifter (a bell, called by chimes) does not join a drum song");
 

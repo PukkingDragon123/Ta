@@ -25,11 +25,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:music_sheet_tide",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
           "name": "thesift:music_sheet_lullaby",
           "weight": 3
         },

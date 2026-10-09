@@ -1,14 +1,14 @@
-"""B4 gear art: the angelic Siftite gear and the Seraphim Prism gear, hand-drawn at 16x16 in the
+"""B4 gear art: the angelic Siftite tools and the Seraphim Prism gear, hand-drawn at 16x16 in the
 items16.py style (rows of characters, one per pixel, outlined by items16.grid), plus the worn
-armour layers to match and fresh silhouettes for the newer instruments and weapons.
+Prism armour layers to match and fresh silhouettes for the newer instruments and weapons.
 
 Siftite = the angel: white-gold and pale-cyan metal, feathered wing blades, halo rings.
 Prism   = the Seraphim: six wings, many eyes, a radiant rainbow of hexagonal gem facets.
 
 items16.music_frames() takes the Siftite icons from siftite_icon() (they keep their travelling
-glint animation); items16.armor_layers() takes the worn Siftite layers from siftite_layers();
-gen_textures.main() calls textures(out) last, which writes the Prism gear, the prism tools and
-the reworked instruments over any older drawings of the same names.
+glint animation; Siftite is tools only, no armour); gen_textures.main() calls textures(out) last,
+which writes the Prism gear, the prism tools and the reworked instruments over any older drawings
+of the same names.
 """
 from __future__ import annotations
 
@@ -197,82 +197,6 @@ SIFTITE_ROWS = {
         'Ii..............',
         'Y...............',
     ],
-    # the feathered helm: a gold-browed dome, a wing sweeping up from each temple, a halo above
-    'helmet': [
-        '....hhhhhhhh....',
-        '...h........h...',
-        '....hhhhhhhh....',
-        'F....555554....F',
-        'fF..54444443..Ff',
-        'efF5443333332Ffe',
-        '.efyyyyyyyyyyfe.',
-        '..eg3cG..Gc3ge..',
-        '..eg32....23ge..',
-        '...g2......2g...',
-        '...G1......1G...',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-    ],
-    # wing-pattern pauldrons, a sun-halo with a sky gem on the breast, feather scales below
-    'chestplate': [
-        '................',
-        '.FFf5......5fFF.',
-        'FffFe4....4eFffF',
-        'feFfe54..45efFef',
-        'e.ef443yy344fe.e',
-        '...e43y..y34e...',
-        '....3y.cC.y3....',
-        '....3y.CC.y3....',
-        '....43y..y34....',
-        '....4F3yy3F4....',
-        '....FfF33FfF....',
-        '....efeFFefe....',
-        '....eFfeefFe....',
-        '....3efFFfe3....',
-        '....g2eeee2g....',
-        '................',
-    ],
-    # a gold belt with a sky gem, feather tassets over each thigh
-    'leggings': [
-        '................',
-        '................',
-        '...gyyyccyyyg...',
-        '...G5443344gG...',
-        '...FFf43.4fFF...',
-        '...Ffe3...eFf...',
-        '...fe43...3ef...',
-        '...e443...344...',
-        '...4443...344...',
-        '...4F3.....F4...',
-        '...Ff3.....Ff...',
-        '...fe2.....fe...',
-        '...e22.....e2...',
-        '...222.....22...',
-        '................',
-        '................',
-    ],
-    # winged boots: a small gold-rooted wing flaring back from each heel
-    'boots': [
-        '................',
-        '................',
-        '................',
-        '................',
-        'F..............F',
-        'fF............Ff',
-        'efF5443..5443Ffe',
-        '.efy443..544yfe.',
-        '..eg433..543ge..',
-        '...4433..5433...',
-        '...4F33..5F33...',
-        '..54433..544333.',
-        '..44333..443333.',
-        '..22222..222222.',
-        '................',
-        '................',
-    ],
 }
 
 
@@ -282,7 +206,7 @@ def _fit(rows):
 
 
 def siftite_icon(name):
-    """(base image, glint paths) for a Siftite tool or armour icon. The glint runs over the
+    """(base image, glint paths) for a Siftite tool icon. The glint runs over the
     halo and the brightest edge pixels, from the handle (bottom left) out to the tip."""
     if name == 'spear_in_hand':
         img = _spear_in_hand(siftite_icon('spear')[0], SIFT)
@@ -300,9 +224,7 @@ def _glint_paths(img, name):
             c = px[x, y]
             if c[3] and c[0] > 236 and c[1] > 236 and c[2] > 200:
                 bright.append((x, y))
-    if name in ('helmet', 'chestplate', 'leggings', 'boots'):
-        bright.sort(key=lambda p: (p[0] + p[1] * 0.4))  # a sweep from left to right
-    elif name == 'spear_in_hand':
+    if name == 'spear_in_hand':
         bright.sort(key=lambda p: (p[0] + p[1]))
     else:
         bright.sort(key=lambda p: (p[0] - p[1]))  # from the handle out to the tip
@@ -338,32 +260,6 @@ def _put(px, x, y, c):
     px[x, y] = I.rgba(c)
 
 
-def _feathers(px, rect, ramp, out, rows=None, x_off=0, flip=False, y0=0):
-    """Overlapping feather scales: each row of feathers hangs a little over the one below, with
-    rounded tips (light top-left, dark rim bottom-right) and a quill line down each one."""
-    fx, fy, fw, fh = rect
-    lo, mid, hi = ramp
-    rows = rows or range(y0, fh)
-    for y in rows:
-        band = (y - y0) // 3
-        sy = (y - y0) % 3
-        for x in range(fw):
-            k = (x + x_off + (2 if band % 2 else 0)) % 4
-            if flip:
-                k = 3 - k
-            if sy == 2 and k in (0, 3):
-                c = out  # the gap between two feather tips
-            elif sy == 2:
-                c = lo
-            elif k == 1 and sy == 0:
-                c = hi
-            elif k == 3:
-                c = lo
-            else:
-                c = mid
-            _put(px, fx + x, fy + y, c)
-
-
 def _plate(px, rect, top, body, bottom, trim=None):
     fx, fy, fw, fh = rect
     for y in range(fh):
@@ -377,157 +273,6 @@ def _plate(px, rect, top, body, bottom, trim=None):
     if trim:
         for x in range(fw):
             _put(px, fx + x, fy + fh - 1, trim)
-
-
-SW = {'ol': '#2e2b5c', 'lo': '#9a98c8', 'mid': '#dcdff4', 'hi': '#ffffff',
-      'm_lo': '#6f9fd6', 'm': '#a6d8f0', 'm_hi': '#d8f6fd',
-      'g_lo': '#a6622a', 'g': '#e3a73c', 'g_hi': '#ffe48a', 'gem': '#7ff4ff', 'gem_lo': '#25a6d0'}
-
-
-def _wing(px, ox, oy, w, h, c, mirror=False):
-    """A folded wing painted onto a face: a gold-rooted arm of coverts along the top, long flight
-    feathers hanging below, each tip stepping lower toward the wing's far end."""
-    for x in range(w):
-        xx = w - 1 - x if mirror else x
-        reach = 2 + (h - 3) * (x + 1) // w  # how far this feather hangs
-        for y in range(h):
-            X, Y = ox + xx, oy + y
-            if y == 0:
-                c2 = c['g'] if x < 2 else c['hi']
-            elif y == 1:
-                c2 = c['mid'] if x % 2 else c['hi']
-            elif y <= reach:
-                c2 = c['lo'] if (x % 2 == 1) else (c['mid'] if y < reach else c['lo'])
-                if y == reach:
-                    c2 = c['ol'] if x % 2 else c['lo']
-            else:
-                continue
-            _put(px, X, Y, c2)
-
-
-def siftite_layers():
-    """The worn Siftite armour: a feathered helm with wings at the temples and a halo circlet,
-    wing-pattern pauldrons, a sun-halo breastplate, folded angel wings painted down the back,
-    feather tassets and winged boots."""
-    c = SW
-    hum = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
-    hp = hum.load()
-    # --- helmet: pale-cyan dome, gold brow band, a wing on each temple, a feather crest on top
-    head = _faces(0, 0, 8, 8, 8)
-    for k, r in head.items():
-        _plate(hp, r, c['m_hi'], c['m'], c['m_lo'])
-    fx, fy, fw, fh = head['north']
-    for x in range(fw):
-        _put(hp, fx + x, fy + 2, c['g_hi'] if x % 3 else c['g'])
-        _put(hp, fx + x, fy + 3, c['g_lo'])
-    _put(hp, fx + 3, fy + 2, c['gem'])
-    _put(hp, fx + 4, fy + 2, c['gem_lo'])
-    for (x, y) in ((1, 4), (2, 4), (5, 4), (6, 4)):
-        hp[fx + x, fy + y] = (0, 0, 0, 0)  # visor eye slits
-    for y in range(5, 8):
-        for x in range(2, 6):
-            hp[fx + x, fy + y] = (0, 0, 0, 0)  # open face
-    for side in ('west', 'east'):
-        sx, sy, sw, sh = head[side]
-        _wing(hp, sx, sy + 1, sw, 6, c, mirror=(side == 'west'))
-        for y in range(sh):
-            _put(hp, sx + (sw - 1 if side == 'west' else 0), sy + y, c['g'] if y < 4 else c['g_lo'])
-    ux, uy, uw, uh = head['up']
-    for y in range(uh):  # a crest of feathers from brow to nape
-        _put(hp, ux + 3, uy + y, c['hi'] if y % 2 else c['mid'])
-        _put(hp, ux + 4, uy + y, c['mid'] if y % 2 else c['lo'])
-    bx, by, bw, bh = head['south']
-    _feathers(hp, (bx, by + 3, bw, bh - 3), (c['lo'], c['mid'], c['hi']), c['ol'])
-    # the halo: a gold circlet on the hat layer's crown, floating just clear of the helm
-    hx, hy, hw, hh = _faces(32, 0, 8, 8, 8)['up']
-    for y in range(hh):
-        for x in range(hw):
-            ring = (x in (0, 7) and 1 < y < 6) or (y in (0, 7) and 1 < x < 6) or (x, y) in ((1, 1), (6, 1), (1, 6), (6, 6))
-            if ring:
-                _put(hp, hx + x, hy + y, c['g_hi'] if (x + y) % 3 else c['g'])
-    # --- breastplate
-    body = _faces(16, 16, 8, 12, 4)
-    for k, r in body.items():
-        _plate(hp, r, c['m_hi'], c['m'], c['m_lo'])
-    nx, ny, nw, nh = body['north']
-    # the sun-halo on the breast with its sky gem
-    for (x, y) in ((2, 1), (3, 1), (4, 1), (5, 1), (1, 2), (6, 2), (1, 3), (6, 3), (1, 4), (6, 4), (2, 5), (3, 5), (4, 5), (5, 5)):
-        _put(hp, nx + x, ny + y, c['g_hi'] if y < 3 else c['g'])
-    for (x, y, col) in ((3, 3, c['gem']), (4, 3, c['gem']), (3, 4, c['gem_lo']), (4, 4, c['gem_lo']), (3, 2, c['hi']), (4, 2, c['m_hi'])):
-        _put(hp, nx + x, ny + y, col)
-    _feathers(hp, (nx + 1, ny + 7, nw - 2, 4), (c['lo'], c['mid'], c['hi']), c['ol'])
-    for x in range(nw):
-        _put(hp, nx + x, ny + nh - 1, c['g'] if x % 2 else c['g_lo'])
-    # folded angel wings down the back, either side of the spine
-    sx, sy, sw, sh = body['south']
-    _wing(hp, sx, sy + 1, 4, 10, c, mirror=True)
-    _wing(hp, sx + 4, sy + 1, 4, 10, c)
-    for y in range(sh):
-        _put(hp, sx + 3, sy + y, c['g_lo'] if y > 0 else c['g'])
-        _put(hp, sx + 4, sy + y, c['g'] if y > 0 else c['g_hi'])
-    for side in ('west', 'east'):
-        r = body[side]
-        _feathers(hp, (r[0], r[1] + 6, r[2], 6), (c['lo'], c['mid'], c['hi']), c['ol'])
-    # --- arms: feather-scale pauldrons with a gold rim, pale vambraces below
-    arm = _faces(40, 16, 4, 12, 4)
-    for k, r in arm.items():
-        _plate(hp, r, c['m_hi'], c['m'], c['m_lo'])
-        if k in ('up', 'down'):
-            continue
-        _feathers(hp, (r[0], r[1], r[2], 5), (c['lo'], c['mid'], c['hi']), c['ol'], x_off=1)
-        for x in range(r[2]):
-            _put(hp, r[0] + x, r[1] + 5, c['g'] if x % 2 else c['g_hi'])
-        for x in range(r[2]):
-            _put(hp, r[0] + x, r[1] + 10, c['g_lo'])
-    ux, uy, uw, uh = arm['up']
-    _feathers(hp, (ux, uy, uw, uh), (c['lo'], c['mid'], c['hi']), c['ol'])
-    # --- boots (on the legs of this layer): pale greaves, gold cuff, a little wing at each heel
-    leg = _faces(0, 16, 4, 12, 4)
-    for k, r in leg.items():
-        if k in ('up',):
-            continue
-        rx, ry, rw, rh = r
-        top = 0 if k == 'down' else 6
-        for y in range(top, rh):
-            for x in range(rw):
-                col = c['m_hi'] if (y == top or x == 0) else c['m_lo'] if (y == rh - 1 or x == rw - 1) else c['m']
-                _put(hp, rx + x, ry + y, col)
-        if k != 'down':
-            for x in range(rw):
-                _put(hp, rx + x, ry + 6, c['g_hi'] if x % 2 else c['g'])
-        if k in ('west', 'east'):
-            for (x, y, col) in ((0, 7, c['hi']), (1, 7, c['hi']), (2, 7, c['mid']), (0, 8, c['mid']), (1, 8, c['lo']), (0, 9, c['lo'])):
-                _put(hp, rx + (x if k == 'east' else rw - 1 - x), ry + y, col)
-    # --- leggings layer: belt with its gem, feather tassets over the thighs
-    lg = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
-    lp = lg.load()
-    for k, r in _faces(16, 16, 8, 12, 4).items():
-        rx, ry, rw, rh = r
-        if k in ('up', 'down'):
-            _plate(lp, r, c['m_hi'], c['m'], c['m_lo'])
-            continue
-        for y in range(rh):
-            for x in range(rw):
-                if y >= 7:
-                    col = c['g_hi'] if y == 7 else c['g'] if y == 8 else c['m'] if y < rh - 1 else c['m_lo']
-                    _put(lp, rx + x, ry + y, col)
-        if k == 'north':
-            _put(lp, rx + 3, ry + 8, c['gem'])
-            _put(lp, rx + 4, ry + 8, c['gem_lo'])
-    for k, r in _faces(0, 16, 4, 12, 4).items():
-        rx, ry, rw, rh = r
-        if k in ('up', 'down'):
-            _plate(lp, r, c['m_hi'], c['m'], c['m_lo'])
-            continue
-        for y in range(rh):
-            for x in range(rw):
-                col = c['m_hi'] if (y == 0 or x == 0) else c['m_lo'] if x == rw - 1 else c['m']
-                _put(lp, rx + x, ry + y, col)
-        _feathers(lp, (rx, ry, rw, 6), (c['lo'], c['mid'], c['hi']), c['ol'], x_off=1)
-        for x in range(rw):
-            _put(lp, rx + x, ry + 6, c['g'])
-            _put(lp, rx + x, ry + 9, c['g_lo'] if x % 2 else c['g'])
-    return {'entity/equipment/humanoid/siftite': hum, 'entity/equipment/humanoid_leggings/siftite': lg}
 
 
 # ============================================================================ Prism (Seraphim) icons
