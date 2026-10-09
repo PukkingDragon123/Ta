@@ -14,6 +14,7 @@ import random
 
 import numpy as np
 from PIL import Image
+import zlib
 
 VANILLA = os.environ.get('MC_TEX', '/home/user/ref/mc-tex/assets/minecraft/textures')
 CUTOUT = {'texture': {'mipmap_strategy': 'strict_cutout'}}
@@ -142,7 +143,7 @@ def pointed_crystal(color, part):
     """One piece of a pointed crystal (part like 'down_tip'): vanilla pointed dripstone's silhouette, cut as a crystal."""
     ramp = CRYSTALS[color]
     a = gmap(_load(f'block/pointed_dripstone_{part}'), ramp, lo=0.12, hi=0.92)
-    return _facets(a, ramp, hash((color, part)) & 0xffff, glints=2 if 'tip' in part else 3)
+    return _facets(a, ramp, zlib.crc32(f'{color}/{part}'.encode()) & 0xffff, glints=2 if 'tip' in part else 3)
 
 
 def crystal_cluster(color):
