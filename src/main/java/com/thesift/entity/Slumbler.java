@@ -50,8 +50,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Slumbler: a huge, wide-mouthed Chrome salamander whose back is a carved wooden instrument, in
- * rainbow scales. Sleepy and peaceful unless you hit it - then it lumbers after you with a crushing
+ * Slumbler: a big, soft amphibian of the Sift swamps and Chrome lakes that sits up like a toad
+ * (S2 remake: tools/slumbler.py, SlumblerModel). Sleepy and peaceful unless you hit it - then it lumbers after you with a crushing
  * bite and spits gobs of Chrome that leave you dizzy (Rainbow Daze). It glides through Chrome, yawns
  * enormous yawns, gulps Chrome plankton from the shallows, nuzzles other Slumblers, hums along to
  * music, shakes itself dry when it climbs out - and it sleeps a great deal, napping half-submerged in
@@ -100,6 +100,11 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
     private int wetTicks;
     private int dryTicks;
     private int shakeTicks;
+    /** S2 client: how far asleep and how far afloat it is, eased so the model blends between poses. */
+    private float sleepAmount;
+    private float sleepAmountO;
+    private float swimAmount;
+    private float swimAmountO;
 
     public Slumbler(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -160,6 +165,12 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
     }
 
     private void setSlumbering(boolean sleeping) {
+        if (!sleeping && this.isSlumbering() && this.level() instanceof ServerLevel server) {
+            // S2: waking in its own time, it stretches into a huge yawn (a startled wake skips it, see hurtServer)
+            server.broadcastEntityEvent(this, EVENT_YAWN);
+            this.playSound(ModSounds.SLUMBLER_YAWN.get(), 1.0F, 0.75F + this.random.nextFloat() * 0.15F);
+            this.yawnCooldown = Math.max(this.yawnCooldown, 200);
+        }
         this.entityData.set(SLEEPING, sleeping);
     }
 
@@ -168,6 +179,28 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
         super.onSyncedDataUpdated(accessor);
         if (SLEEPING.equals(accessor)) {
             this.sleepAnimation.animateWhen(this.isSlumbering(), this.tickCount);
+        }
+    }
+
+    /** S2 client: 0 awake .. 1 asleep, eased over about a second. */
+    public float getSleepAmount(float partialTicks) {
+        return Mth.lerp(partialTicks, this.sleepAmountO, this.sleepAmount);
+    }
+
+    /** S2 client: 0 on the ground or wading .. 1 afloat and swimming, eased over half a second. */
+    public float getSwimAmount(float partialTicks) {
+        return Mth.lerp(partialTicks, this.swimAmountO, this.swimAmount);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.level().isClientSide()) {
+            this.sleepAmountO = this.sleepAmount;
+            this.sleepAmount = Mth.approach(this.sleepAmount, this.isSlumbering() ? 1.0F : 0.0F, this.tickCount < 3 ? 1.0F : 0.05F);
+            this.swimAmountO = this.swimAmount;
+            boolean afloat = this.isInFluidType() && !this.onGround() && !this.isSlumbering();
+            this.swimAmount = Mth.approach(this.swimAmount, afloat ? 1.0F : 0.0F, 0.1F);
         }
     }
 
@@ -181,6 +214,7 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
         if (this.isSlumbering()) {
+            this.entityData.set(SLEEPING, false); // S2: startled awake - no yawn
             this.wake(600);
         }
         this.inLove = 0;
@@ -266,7 +300,7 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
     // ------------------------------------------------------------------ the Chrome spit
 
     private Vec3 mouth() {
-        return this.position().add(Vec3.directionFromRotation(0.0F, this.yBodyRot).scale(1.6)).add(0.0, 0.7, 0.0);
+        return this.position().add(Vec3.directionFromRotation(0.0F, this.yBodyRot).scale(1.3)).add(0.0, 1.2, 0.0); // S2: its mouth, sitting up
     }
 
     /** A gob of Chrome lobbed at the target: it splashes, hurts a little and leaves it dizzy. */
@@ -316,7 +350,7 @@ public class Slumbler extends PathfinderMob implements MusicListener, Resting {
             // napping in the Chrome, bubbles rise from its nostrils
             if (this.isSlumbering() && this.isInFluidType() && this.tickCount % 12 == 0) {
                 Vec3 nose = this.position().add(Vec3.directionFromRotation(0.0F, this.yBodyRot).scale(1.4));
-                server.sendParticles(ModParticles.CHROME_BUBBLE.get(), nose.x, this.getY() + 0.6, nose.z, 2, 0.1, 0.05, 0.1, 0.01);
+                server.sendParticles(ModParticles.CHROME_BUBBLE.get(), nose.x, this.getY() + 1.0, nose.z, 2, 0.1, 0.05, 0.1, 0.01);
             }
             if (!this.isSlumbering() && this.getTarget() == null && --this.yawnCooldown <= 0) {
                 this.yawnCooldown = 300 + this.random.nextInt(500);

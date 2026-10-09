@@ -23,7 +23,7 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<Bulb>> BULB = ENTITIES.registerEntityType("bulb", Bulb::new, MobCategory.CREATURE,
             b -> b.sized(0.4F, 0.42F).eyeHeight(0.18F).clientTrackingRange(8)); // A1: the little 1:1 Bulb
     public static final DeferredHolder<EntityType<?>, EntityType<Slumbler>> SLUMBLER = ENTITIES.registerEntityType("slumbler", Slumbler::new,
-            MobCategory.CREATURE, b -> b.sized(1.7F, 0.95F).eyeHeight(0.7F).clientTrackingRange(10));
+            MobCategory.CREATURE, b -> b.sized(1.5F, 1.6F).eyeHeight(1.45F).clientTrackingRange(10)); // S2: the remade Slumbler sits up like a toad
     public static final DeferredHolder<EntityType<?>, EntityType<Sifter>> SIFTER = ENTITIES.registerEntityType("sifter", Sifter::new, MobCategory.CREATURE,
             b -> b.sized(0.9F, 1.25F).eyeHeight(1.0F).clientTrackingRange(8)); // CR1: a neutral living bell (eyes on its shoulder)
     public static final DeferredHolder<EntityType<?>, EntityType<Enchoer>> ENCHOER = ENTITIES.registerEntityType("enchoer", Enchoer::new,

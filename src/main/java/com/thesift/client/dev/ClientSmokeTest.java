@@ -338,7 +338,9 @@ public final class ClientSmokeTest {
         scene("mob_lineup", 60, ClientSmokeTest::mobStage);
         // the stage runs east (+x) to west; looking south, east is on the left of the picture
         scene("mob_closeup_bulb", 40, c -> c.camera(-8.5, STAGE_Y + 1.6, STAGE_Z + 2.5, -8.5, STAGE_Y + 0.5, STAGE_Z + 6.0));
-        scene("mob_closeup_slumbler", 40, c -> c.camera(1.5, STAGE_Y + 2.2, STAGE_Z + 1.5, 1.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
+        // S2: the remade Slumbler sits up (1.6 tall): a higher three-quarter view; its tadpole in a little tank of its own
+        scene("mob_closeup_slumbler", 40, c -> c.camera(3.4, STAGE_Y + 2.9, STAGE_Z + 1.8, 1.5, STAGE_Y + 0.9, STAGE_Z + 6.5));
+        scene("mob_closeup_slumbler_tadpole", 40, ClientSmokeTest::tadpoleTank);
         scene("mob_closeup_sifter", 40, c -> c.camera(6.5, STAGE_Y + 1.8, STAGE_Z + 2.8, 6.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
         scene("mob_closeup_enchoer", 40, c -> c.camera(10.5, STAGE_Y + 2.6, STAGE_Z + 1.5, 10.5, STAGE_Y + 1.6, STAGE_Z + 6.5));
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
@@ -489,6 +491,17 @@ public final class ClientSmokeTest {
         c.spawn(ModEntities.SIFTER.get(), 6.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.spawn(ModEntities.ENCHOER.get(), 10.5, STAGE_Y, STAGE_Z + 6.5, face, false);
         c.camera(2.5, STAGE_Y + 4.5, STAGE_Z - 9.5, 2.5, STAGE_Y + 1.0, STAGE_Z + 6.5);
+    }
+
+    /** S2: a Slumbler tadpole in a small glass tank of water west of the stage, seen from above and in front. */
+    private static void tadpoleTank(Ctx c) {
+        int x0 = -24, z0 = STAGE_Z;
+        c.fill(x0 - 1, STAGE_Y - 1, z0 - 1, x0 + 3, STAGE_Y - 1, z0 + 3, Blocks.SAND.defaultBlockState());
+        c.fill(x0 - 1, STAGE_Y, z0 - 1, x0 + 3, STAGE_Y + 1, z0 + 3, Blocks.GLASS.defaultBlockState());
+        c.fill(x0, STAGE_Y, z0, x0 + 2, STAGE_Y + 1, z0 + 2, Blocks.WATER.defaultBlockState());
+        c.fill(x0 - 1, STAGE_Y + 2, z0 - 1, x0 + 3, STAGE_Y + 4, z0 + 3, Blocks.AIR.defaultBlockState());
+        c.spawn(com.thesift.registry.ModSlumbler.SLUMBLER_TADPOLE.get(), x0 + 1.5, STAGE_Y + 0.5, z0 + 1.5, 200.0F, false);
+        c.camera(x0 + 2.6, STAGE_Y + 2.7, z0 - 0.4, x0 + 1.5, STAGE_Y + 0.6, z0 + 1.5);
     }
 
     private static void livePen(Ctx c) {

@@ -1,349 +1,278 @@
 package com.thesift.client.model;
 
+import com.thesift.client.Expression;
 import com.thesift.client.renderer.state.SlumblerRenderState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * Slumbler (geometry in tools/slumbler.py): a big, sleepy salamander whose back is a carved wooden
- * instrument, in rainbow scales.
+ * S2: the Slumbler (geometry and hand-painted texture in tools/slumbler.py), a big sleepy amphibian
+ * sitting up like a toad. Every pose blends in and out (sleep and swimming are smoothed amounts from
+ * the entity, the one-shot moves use envelopes), so nothing snaps.
  *
  * <ul>
- *   <li>always: the frilled gills flutter (a quick shiver over a slow breath), the fins along the
- *   tail ripple in a wave from root to tip, the leg fins fan, the string whiskers sway a beat
- *   behind the head</li>
- *   <li>walk: a sprawling lizard gait, diagonal legs together, the body and tail swinging</li>
- *   <li>swim (in Chrome): legs folded back, the whole body and tail undulating, gills and whiskers
- *   streaming back</li>
- *   <li>nap: head down, eyes shut, gills rising and falling with slow breaths, whiskers draped on the
- *   ground, tail curled; afloat in the shallows, legs drift out</li>
- *   <li>spit: it rears and draws a breath, gills puffed, then whips its head forward and spits a gob
- *   of Chrome, jaw wide</li>
- *   <li>laying eggs: it settles low and still, the tail lifts and quivers, and it rises again</li>
- *   <li>yawn, bite, gulp, nuzzle and hum, a wet shake after leaving the Chrome, a flinch when hurt and
- *   a slow roll belly-up when it dies</li>
+ *   <li>always: slow breaths swell the chest and the throat pouch, the frilled gills rise and fall
+ *   with them and drift, the heavy lids sit half down</li>
+ *   <li>sleep: it settles forward onto its folded hands, haunches spread, tail curled closer, eyes
+ *   shut, gills drooping, breathing slower and deeper; afloat in Chrome it sinks to the chin</li>
+ *   <li>wake: it yawns hugely (the yawn also plays now and then while awake)</li>
+ *   <li>walk: a heavy waddle tied to limbSwing - diagonal limbs together, hands and feet lifting, the
+ *   body rolling and bobbing, the tail swinging a beat behind</li>
+ *   <li>swim: the chest levels out, arms and feet sweep back, the tail straightens and drives, gills
+ *   stream back</li>
+ *   <li>spit: it rears back, cheeks puffing and throat swelling, then whips forward, jaw open</li>
+ *   <li>eat (gulp), bite, hum, nuzzle, wet shake, laying eggs, a flinch when hurt, a slump on death</li>
  * </ul>
+ * The Python mirror used for the animation strips is kept in step by hand.
  */
 public class SlumblerModel extends EntityModel<SlumblerRenderState> {
     private static final String[] SIDES = {"left", "right"};
+    /** The tail's resting curl (tools/slumbler.py), straightened out while it swims. */
+    private static final float[] CURL = {0.25F, 0.35F, 0.4F};
     private final ModelPart body;
+    private final ModelPart chest;
     private final ModelPart head;
     private final ModelPart jaw;
-    private final ModelPart leftEyelid;
-    private final ModelPart rightEyelid;
-    private final ModelPart[][] gills = new ModelPart[2][3];
-    private final ModelPart[][] whiskers = new ModelPart[2][2];
-    private final ModelPart[][] whiskerTips = new ModelPart[2][2];
-    private final ModelPart[] legs = new ModelPart[4];
-    private final ModelPart[] feet = new ModelPart[4];
-    private final ModelPart[] legFins = new ModelPart[4];
+    private final ModelPart throat;
     private final ModelPart[] tail = new ModelPart[3];
-    private final ModelPart[] tailFins = new ModelPart[3];
-    private final ModelPart[] keels = new ModelPart[3];
-    private final ModelPart scroll;
+    private final ModelPart[] cheeks = new ModelPart[2];
+    private final ModelPart[] lids = new ModelPart[2];
+    private final ModelPart[][] gills = new ModelPart[2][3];
+    private final ModelPart[] arms = new ModelPart[2];
+    private final ModelPart[] forearms = new ModelPart[2];
+    private final ModelPart[] hands = new ModelPart[2];
+    private final ModelPart[] legs = new ModelPart[2];
+    private final ModelPart[] feet = new ModelPart[2];
 
     public SlumblerModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.head = this.body.getChild("head");
+        this.chest = this.body.getChild("chest");
+        this.head = this.chest.getChild("head");
         this.jaw = this.head.getChild("jaw");
-        this.leftEyelid = this.head.getChild("left_eye").getChild("left_eyelid");
-        this.rightEyelid = this.head.getChild("right_eye").getChild("right_eyelid");
-        for (int s = 0; s < 2; s++) {
-            for (int i = 0; i < 3; i++) {
-                this.gills[s][i] = this.head.getChild(SIDES[s] + "_gill_" + i);
-            }
-            for (int i = 0; i < 2; i++) {
-                this.whiskers[s][i] = this.head.getChild(SIDES[s] + "_whisker_" + i);
-                this.whiskerTips[s][i] = this.whiskers[s][i].getChild(SIDES[s] + "_whisker_tip_" + i);
-            }
-        }
-        String[] legNames = {"left_front", "right_front", "left_hind", "right_hind"};
-        for (int i = 0; i < 4; i++) {
-            this.legs[i] = this.body.getChild(legNames[i] + "_leg");
-            this.feet[i] = this.legs[i].getChild(legNames[i] + "_foot");
-            this.legFins[i] = this.legs[i].getChild(legNames[i] + "_fin");
-        }
+        this.throat = this.jaw.getChild("throat");
         this.tail[0] = this.body.getChild("tail1");
         this.tail[1] = this.tail[0].getChild("tail2");
         this.tail[2] = this.tail[1].getChild("tail3");
-        for (int i = 0; i < 3; i++) {
-            this.tailFins[i] = this.tail[i].getChild("tail_fin_" + i);
-            this.keels[i] = this.tail[i].getChild("tail_keel_" + i);
+        for (int k = 0; k < 2; k++) {
+            String side = SIDES[k];
+            this.cheeks[k] = this.head.getChild(side + "_cheek");
+            this.lids[k] = this.head.getChild(side + "_eye").getChild(side + "_eyelid");
+            for (int i = 0; i < 3; i++) {
+                this.gills[k][i] = this.head.getChild(side + "_gill_" + i);
+            }
+            this.arms[k] = this.chest.getChild(side + "_arm");
+            this.forearms[k] = this.arms[k].getChild(side + "_forearm");
+            this.hands[k] = this.forearms[k].getChild(side + "_hand");
+            this.legs[k] = this.body.getChild(side + "_leg");
+            this.feet[k] = this.legs[k].getChild(side + "_foot");
         }
-        this.scroll = this.tail[2].getChild("scroll");
     }
 
     @Override
     public void setupAnim(SlumblerRenderState s) {
         super.setupAnim(s);
         float age = s.ageInTicks + s.seed;
-        float walk = Math.min(1.0F, s.walkAnimationSpeed * 1.6F);
-        float pos = s.walkAnimationPos * 0.55F;
-        boolean swimming = s.inChrome && !s.sleeping;
+        float sleep = s.sleep;
+        float awake = 1.0F - sleep;
+        float swim = s.swim * awake;
+        float walk = Math.min(1.0F, s.walkAnimationSpeed * 1.5F) * awake * (1.0F - swim);
+        float c = s.walkAnimationPos * 0.6662F;
+        float sw = Mth.sin(c);
+        float cw = Mth.cos(c);
+        boolean angry = s.expression == Expression.ANGRY;
 
-        // --- always alive: gills shiver over a slow breath, fins ripple root to tip, whiskers sway behind the head
-        float breath = Mth.sin(age * (s.sleeping ? 0.05F : 0.08F));
-        for (int side = 0; side < 2; side++) {
-            float sx = side == 0 ? 1.0F : -1.0F;
-            for (int i = 0; i < 3; i++) {
-                float flutter = Mth.sin(age * (s.sleeping ? 0.12F : 0.42F) + i * 1.3F + side * 0.7F);
-                this.gills[side][i].xRot += flutter * (s.sleeping ? 0.04F : 0.1F) + breath * 0.06F;
-                this.gills[side][i].zRot += (Mth.sin(age * 0.23F + i * 0.9F) * 0.07F + breath * 0.08F) * sx;
-                this.gills[side][i].yRot += Mth.sin(age * 0.11F + i) * 0.05F * sx;
-            }
-            for (int i = 0; i < 2; i++) {
-                float ph = age * 0.06F + i * 1.1F + side * 0.4F;
-                this.whiskers[side][i].yRot += Mth.sin(ph) * 0.1F * sx;
-                this.whiskers[side][i].xRot += Mth.sin(ph * 0.8F + 0.5F) * 0.06F;
-                this.whiskerTips[side][i].yRot += Mth.sin(ph - 0.9F) * 0.16F * sx;
-                this.whiskerTips[side][i].xRot += Mth.sin(ph * 0.8F - 0.4F) * 0.1F;
-            }
+        // --- breathing: slow and deep asleep; the throat pouch swells on every breath
+        float br = Mth.sin(age * Mth.lerp(sleep, 0.1F, 0.05F));
+        float swell = 1.0F + 0.012F * br * (1.0F + sleep);
+        this.chest.xScale = swell;
+        this.chest.zScale = swell;
+        this.throat.yScale = 1.0F + 0.18F * Math.max(0.0F, br) * (1.0F + sleep);
+        float gillFlare = 0.1F * br * (0.6F + 0.6F * sleep);
+        float lid = Mth.lerp(sleep, angry ? 0.5F : 0.8F, 1.5F);
+        if (s.expression == Expression.BLINK) {
+            lid = 1.5F;
         }
-        float ripple = swimming ? 0.32F : 0.16F;
+
+        // --- sleep: settles forward, chin over its folded hands, haunches spread, tail curled closer
+        this.chest.xRot += 0.5F * sleep + br * 0.015F * sleep;
+        this.head.xRot -= 0.38F * sleep;
+        this.body.y += 1.2F * sleep + (s.inChrome ? 2.5F * sleep : 0.0F);
+        for (int k = 0; k < 2; k++) {
+            float sx = k == 0 ? 1.0F : -1.0F;
+            this.arms[k].xRot -= 0.25F * sleep;
+            this.arms[k].zRot -= sx * 0.2F * sleep;
+            this.forearms[k].xRot -= 0.75F * sleep;
+            this.hands[k].xRot += 0.5F * sleep;
+            this.legs[k].zRot -= sx * 0.12F * sleep;
+            this.feet[k].zRot += sx * 0.12F * sleep;
+        }
         for (int i = 0; i < 3; i++) {
-            this.tailFins[i].zRot = Mth.sin(age * ripple - i * 0.9F) * (0.1F + 0.04F * i);
-            this.keels[i].zRot = Mth.sin(age * ripple - i * 0.9F + Mth.PI) * (0.08F + 0.03F * i);
-        }
-        for (int i = 0; i < 4; i++) {
-            this.legFins[i].xRot += Mth.sin(age * 0.25F + i * 1.7F) * 0.14F;
+            this.tail[i].yRot += 0.12F * sleep;
         }
 
-        // --- the sprawling lizard gait: diagonal legs move together, body and tail swing
-        float sw = Mth.sin(pos);
-        float cw = Mth.cos(pos);
-        this.body.yRot = sw * 0.12F * walk;
-        this.body.zRot = cw * 0.04F * walk;
-        for (int i = 0; i < 4; i++) {
-            float phase = (i == 0 || i == 3) ? 0.0F : Mth.PI;
-            float sgn = i % 2 == 0 ? 1.0F : -1.0F;
-            this.legs[i].yRot = Mth.sin(pos + phase) * 0.55F * walk * sgn;
-            this.legs[i].zRot = -sgn * Math.max(0.0F, Mth.cos(pos + phase)) * 0.35F * walk;
-            this.feet[i].zRot = sgn * Math.max(0.0F, Mth.cos(pos + phase)) * 0.3F * walk;
+        // --- the waddle: diagonal limbs together, the heavy body rolling and bobbing, the tail swinging behind
+        for (int k = 0; k < 2; k++) {
+            float ph = k == 0 ? sw : -sw;
+            this.arms[k].xRot -= ph * 0.5F * walk;
+            this.forearms[k].xRot += Math.max(0.0F, ph) * 0.45F * walk;
+            this.hands[k].xRot -= Math.max(0.0F, ph) * 0.3F * walk;
+            this.legs[k].xRot += ph * 0.3F * walk;
+            this.feet[k].xRot += Math.max(0.0F, -ph) * 0.35F * walk;
+            this.feet[k].y -= Math.max(0.0F, -ph) * 1.2F * walk;
         }
-        float tailSwing = 0.08F + walk * 0.25F;
+        this.body.zRot += cw * 0.07F * walk;
+        this.body.yRot += sw * 0.05F * walk;
+        this.body.y -= Math.abs(cw) * 0.8F * walk;
+        this.head.zRot -= cw * 0.05F * walk;
+        this.head.xRot += Math.abs(sw) * 0.05F * walk;
         for (int i = 0; i < 3; i++) {
-            this.tail[i].yRot = Mth.sin(pos - 0.9F * (i + 1)) * tailSwing * walk + Mth.sin(age * 0.05F - i * 0.7F) * 0.08F;
-            this.tail[i].xRot = Mth.sin(age * 0.07F - i) * 0.02F;
-        }
-        this.scroll.yRot = this.tail[2].yRot * 0.5F;
-
-        // --- swimming in Chrome: legs folded back, the body and tail undulate, gills and whiskers stream back
-        if (swimming) {
-            float t = age * 0.22F + s.walkAnimationPos * 0.4F;
-            float amp = 0.5F + 0.5F * walk;
-            this.body.yRot = Mth.sin(t) * 0.1F * amp;
-            this.body.zRot = Mth.sin(t + 0.6F) * 0.05F;
-            for (int i = 0; i < 3; i++) {
-                this.tail[i].yRot = Mth.sin(t - (i + 1) * 0.9F) * (0.22F + 0.1F * i) * amp;
-            }
-            for (int i = 0; i < 4; i++) {
-                float sgn = i % 2 == 0 ? 1.0F : -1.0F;
-                boolean front = i < 2;
-                this.legs[i].yRot = (front ? -0.9F : 0.8F) * sgn + Mth.sin(t + i) * 0.08F;
-                this.legs[i].zRot = -sgn * 0.12F;
-                this.feet[i].zRot = sgn * 1.1F;
-            }
-            for (int side = 0; side < 2; side++) {
-                float sx = side == 0 ? 1.0F : -1.0F;
-                for (int i = 0; i < 3; i++) {
-                    this.gills[side][i].yRot -= 0.45F * sx;
-                }
-                for (int i = 0; i < 2; i++) {
-                    this.whiskers[side][i].xRot -= 0.45F;
-                    this.whiskers[side][i].yRot -= 0.25F * sx;
-                }
-            }
-            this.head.yRot -= this.body.yRot * 0.6F;
+            this.tail[i].yRot -= Mth.sin(c - 0.7F * (i + 1)) * (0.12F + 0.06F * i) * walk;
+            this.tail[i].yRot += Mth.sin(age * 0.04F - i * 0.6F) * 0.05F * awake;
         }
 
-        // --- head look
-        this.head.yRot += s.yRot * Anim.DEG * 0.5F;
-        this.head.xRot = s.xRot * Anim.DEG * 0.4F;
+        // --- swimming: the body levels out, limbs sweep back, the tail straightens and drives
+        float t = age * 0.2F + s.walkAnimationPos * 0.3F;
+        this.chest.xRot += 0.5F * swim;
+        this.head.xRot -= 0.45F * swim;
+        this.body.yRot += Mth.sin(t) * 0.07F * swim;
+        for (int k = 0; k < 2; k++) {
+            this.arms[k].xRot += (0.95F + Mth.sin(t + k * Mth.PI) * 0.25F) * swim;
+            this.forearms[k].xRot += 0.5F * swim;
+            this.legs[k].xRot += 0.35F * swim;
+            this.feet[k].xRot += (-0.8F + Mth.sin(t + 1.0F + k * Mth.PI) * 0.2F) * swim;
+        }
+        for (int i = 0; i < 3; i++) {
+            this.tail[i].yRot += (Mth.sin(t - (i + 1) * 0.9F) * (0.25F + 0.1F * i) - CURL[i]) * swim;
+        }
+        float gillSweep = 0.45F * swim;
 
-        // --- napping: head down, eyes shut, slow breaths, whiskers draped, tail curled
-        if (s.sleeping) {
-            this.head.xRot = 0.14F;
-            this.head.yRot = 0.0F;
-            for (int i = 0; i < 4; i++) {
-                float sgn = i % 2 == 0 ? 1.0F : -1.0F;
-                this.legs[i].zRot = -sgn * 0.45F;
-                this.feet[i].zRot = sgn * 0.9F;
-            }
-            this.body.y += 2.5F;
-            for (int i = 0; i < 3; i++) {
-                this.tail[i].yRot = 0.35F + Mth.sin(age * 0.03F - i) * 0.03F;
-            }
-            for (int side = 0; side < 2; side++) {
-                for (int i = 0; i < 2; i++) {
-                    this.whiskers[side][i].xRot += 0.35F;
-                    this.whiskerTips[side][i].xRot += 0.5F;
-                }
-            }
-            this.body.yScale = 1.0F + breath * 0.02F;
-            if (s.inChrome) {
-                // half-submerged in the shallows: legs float out, the tail drifts, chin on the surface
-                this.body.y += 3.0F;
-                this.head.xRot = -0.1F + breath * 0.03F;
-                for (int i = 0; i < 4; i++) {
-                    float sgn = i % 2 == 0 ? 1.0F : -1.0F;
-                    this.legs[i].zRot = -sgn * 0.15F;
-                    this.legs[i].yRot = sgn * (i < 2 ? 0.7F : -0.5F);
-                }
-                for (int i = 0; i < 3; i++) {
-                    this.tail[i].yRot = Mth.sin(age * 0.03F - i * 0.8F) * 0.2F;
-                }
+        // --- head look, clamped, never while asleep
+        this.head.yRot += Mth.clamp(s.yRot, -35.0F, 35.0F) * Anim.DEG * 0.8F * awake;
+        this.head.xRot += Mth.clamp(s.xRot, -25.0F, 25.0F) * Anim.DEG * 0.5F * awake;
+
+        float jawOpen = 0.0F;
+        float cheek = 0.0F;
+        // --- yawn (2.4 s, also on waking): head back, jaw wide, arms reaching, gills flared, eyes squeezed
+        float yawn = Anim.seconds(s.yawn, s.ageInTicks);
+        if (yawn >= 0.0F && yawn < 2.5F) {
+            float o = Anim.envelope(yawn, 0.1F, 0.7F, 0.6F, 0.8F);
+            jawOpen = Math.max(jawOpen, 0.85F * o);
+            this.head.xRot -= 0.45F * o;
+            this.chest.xRot -= 0.08F * o;
+            this.throat.yScale += 0.35F * o;
+            gillFlare += 0.35F * o;
+            lid = Mth.lerp(o, lid, 1.4F);
+            for (int k = 0; k < 2; k++) {
+                this.arms[k].xRot -= 0.2F * o * awake;
             }
         }
-
-        // --- gulping plankton (2.2 s): the head dips into the Chrome, the jaw scoops, a big swallow
+        // --- spit (1.1 s, the gob leaves at 0.6 s): rear back, cheeks puff, throat swells ... whip forward
+        float spit = Anim.seconds(s.spit, s.ageInTicks);
+        if (spit >= 0.0F && spit < 1.2F) {
+            float draw = Anim.envelope(spit, 0.0F, 0.45F, 0.1F, 0.08F);
+            float whip = Anim.envelope(spit, 0.55F, 0.07F, 0.1F, 0.35F);
+            jawOpen = Math.max(jawOpen, Anim.envelope(spit, 0.55F, 0.05F, 0.12F, 0.25F) * 0.7F);
+            this.head.xRot += -draw * 0.35F + whip * 0.3F;
+            this.chest.xRot += -draw * 0.12F + whip * 0.1F;
+            cheek = Math.max(cheek, draw);
+            this.throat.yScale += 0.9F * draw;
+            gillFlare += 0.4F * draw;
+        }
+        // --- eat (2.2 s): the head dips, the jaw scoops, a big swallow down the throat
         float gulp = Anim.seconds(s.gulp, s.ageInTicks);
-        float gulpOpen = 0.0F;
         if (gulp >= 0.0F && gulp < 2.3F) {
             float dip = Anim.envelope(gulp, 0.0F, 0.4F, 0.9F, 0.6F);
-            gulpOpen = Anim.envelope(gulp, 0.3F, 0.2F, 0.3F, 0.15F);
             float swallow = Anim.envelope(gulp, 1.15F, 0.12F, 0.1F, 0.4F);
-            this.head.xRot += 0.5F * dip;
-            this.body.xRot = 0.08F * dip;
-            this.flareGills(0.35F * swallow);
-            this.body.xScale = 1.0F + 0.05F * swallow;
+            jawOpen = Math.max(jawOpen, Anim.envelope(gulp, 0.3F, 0.2F, 0.3F, 0.15F) * 0.6F);
+            this.chest.xRot += 0.3F * dip;
+            this.head.xRot += 0.25F * dip;
+            this.throat.yScale += 0.8F * swallow;
+            gillFlare += 0.3F * swallow;
         }
-
-        // --- nuzzle: a slow sideways rub of the snout
+        // --- bite (0.45 s): a lunge and a snap
+        float bite = Anim.seconds(s.bite, s.ageInTicks);
+        if (bite >= 0.0F && bite < 0.5F) {
+            float o = Anim.envelope(bite, 0.0F, 0.12F, 0.05F, 0.15F);
+            jawOpen = Math.max(jawOpen, 0.75F * o);
+            this.chest.xRot += 0.15F * o;
+            this.head.xRot -= 0.1F * o;
+        }
+        // --- humming along to music (1.6 s): the head sways, the jaw hums, the throat trembles with the note
+        float hum = Anim.seconds(s.hum, s.ageInTicks);
+        if (hum >= 0.0F && hum < 1.6F) {
+            float e = Anim.envelope(hum, 0.0F, 0.2F, 0.8F, 0.5F);
+            jawOpen = Math.max(jawOpen, 0.25F * e + Mth.sin(hum * 12.0F) * 0.04F * e);
+            this.head.zRot += Mth.sin(hum * 3.5F) * 0.12F * e;
+            this.throat.yScale += 0.3F * e * (0.5F + 0.5F * Mth.sin(hum * 20.0F));
+            gillFlare += 0.3F * e;
+        }
+        // --- nuzzle (2 s): a slow sideways rub of the snout
         float nuzzle = Anim.seconds(s.nuzzle, s.ageInTicks);
         if (nuzzle >= 0.0F && nuzzle < 2.0F) {
             float e = Anim.envelope(nuzzle, 0.0F, 0.3F, 1.2F, 0.4F);
             this.head.yRot += Mth.sin(nuzzle * 4.0F) * 0.3F * e;
-            this.head.zRot = Mth.sin(nuzzle * 4.0F) * 0.15F * e;
-            for (int i = 0; i < 3; i++) {
-                this.tail[i].yRot += Mth.sin(nuzzle * 5.0F - i) * 0.3F * e;
-            }
+            this.head.zRot += Mth.sin(nuzzle * 4.0F) * 0.12F * e;
         }
-
-        // --- humming along to music: the head sways, the jaw half-opens, the gills fan and the fins quiver with the note
-        float hum = Anim.seconds(s.hum, s.ageInTicks);
-        float humOpen = 0.0F;
-        if (hum >= 0.0F && hum < 1.6F) {
-            float e = Anim.envelope(hum, 0.0F, 0.2F, 0.8F, 0.5F);
-            humOpen = 0.3F * e + Mth.sin(hum * 12.0F) * 0.04F * e;
-            this.head.zRot += Mth.sin(hum * 3.5F) * 0.12F * e;
-            this.head.xRot -= 0.15F * e;
-            this.flareGills(0.4F * e);
-            for (int i = 0; i < 3; i++) {
-                this.tailFins[i].zRot += Mth.sin(hum * 18.0F - i) * 0.08F * e;
-            }
-        }
-
-        // --- the wet shake after climbing out of the Chrome: a shudder from head to tail, fast and dying away
+        // --- the wet shake after climbing out of the Chrome (1.2 s)
         float shake = Anim.seconds(s.shake, s.ageInTicks);
         if (shake >= 0.0F && shake < 1.2F) {
             float e = Anim.envelope(shake, 0.0F, 0.08F, 0.5F, 0.6F);
             float w = Mth.sin(shake * 34.0F) * e;
-            this.body.zRot += w * 0.22F;
-            this.head.zRot -= w * 0.3F;
+            this.body.zRot += w * 0.12F;
+            this.head.zRot -= w * 0.25F;
             for (int i = 0; i < 3; i++) {
                 this.tail[i].yRot += Mth.sin(shake * 34.0F - (i + 1) * 0.8F) * 0.3F * e;
             }
-            for (int side = 0; side < 2; side++) {
-                for (int i = 0; i < 2; i++) {
-                    this.whiskerTips[side][i].yRot += w * 0.6F;
-                }
-                for (int i = 0; i < 3; i++) {
-                    this.gills[side][i].xRot += w * 0.35F;
-                }
-            }
+            gillFlare += w * 0.4F;
         }
-
-        // --- spit: rear back and draw a breath (gills puffed) ... whip the head forward, jaw wide, and spit
-        float spit = Anim.seconds(s.spit, s.ageInTicks);
-        float spitOpen = 0.0F;
-        if (spit >= 0.0F && spit < 1.1F) {
-            float draw = Anim.envelope(spit, 0.0F, 0.45F, 0.1F, 0.08F);
-            float whip = Anim.envelope(spit, 0.55F, 0.07F, 0.1F, 0.35F);
-            spitOpen = Anim.envelope(spit, 0.55F, 0.05F, 0.12F, 0.25F);
-            this.head.xRot += -draw * 0.35F + whip * 0.25F;
-            this.body.xRot -= draw * 0.06F;
-            this.body.z += draw * 0.8F - whip * 1.2F;
-            this.flareGills(0.6F * draw);
-            this.body.xScale *= 1.0F + 0.03F * draw;
-        }
-
-        // --- laying eggs: it settles low and still, the tail lifts and quivers, then it rises again
+        // --- laying eggs (2.5 s): it settles low, the tail lifts and quivers
         float lay = Anim.seconds(s.lay, s.ageInTicks);
         if (lay >= 0.0F && lay < 2.5F) {
             float low = Anim.envelope(lay, 0.0F, 0.4F, 1.4F, 0.6F);
             float quiver = Mth.sin(lay * 30.0F) * Anim.envelope(lay, 0.5F, 0.2F, 0.9F, 0.3F);
-            this.body.y += low * 2.0F;
-            this.head.xRot += low * 0.2F;
+            this.body.y += low * 1.5F;
             for (int i = 0; i < 3; i++) {
                 this.tail[i].xRot += low * 0.12F;
                 this.tail[i].yRot += quiver * 0.06F * (i + 1);
             }
-            this.flareGills(0.3F * low);
         }
-
-        // --- yawn: a slow, huge stretch (2.4 s); bite: a quick snap (0.45 s)
-        float yawn = Anim.seconds(s.yawn, s.ageInTicks);
-        float yawnOpen = yawn >= 0 ? Anim.envelope(yawn, 0.1F, 0.7F, 0.6F, 0.8F) : 0.0F;
-        float bite = Anim.seconds(s.bite, s.ageInTicks);
-        float biteOpen = bite >= 0 ? Anim.envelope(bite, 0.0F, 0.12F, 0.05F, 0.15F) : 0.0F;
-        float open = Math.max(Math.max(yawnOpen * 0.95F, biteOpen * 0.75F), Math.max(Math.max(gulpOpen * 0.7F, humOpen), spitOpen * 0.8F));
-        this.jaw.xRot += open;
-        this.head.xRot -= yawnOpen * 0.35F - biteOpen * 0.2F;
-        this.flareGills(0.45F * yawnOpen);
-        this.body.zScale = 1.0F + yawnOpen * 0.04F;
-        for (int side = 0; side < 2; side++) {
-            for (int i = 0; i < 2; i++) {
-                this.whiskers[side][i].xRot -= yawnOpen * 0.3F;
-            }
+        // --- hurt: a flinch that eases out over the red flash (no snapping)
+        if (s.hurtTicks >= 0.0F && s.dying <= 0.0F) {
+            float h = Mth.clamp(s.hurtTicks / 10.0F, 0.0F, 1.0F);
+            float k = Mth.sin(h * Mth.PI) * (1.0F - 0.4F * h);
+            this.head.xRot -= 0.3F * k;
+            this.chest.xRot -= 0.1F * k;
+            jawOpen = Math.max(jawOpen, 0.35F * k);
+            gillFlare += 0.5F * k;
+            lid = Mth.lerp(k, lid, 1.4F);
         }
-
-        // --- hurt: the head jerks up, the body flinches and the tail whips
-        if (s.hasRedOverlay) {
-            this.head.xRot -= 0.3F;
-            this.jaw.xRot += 0.35F;
-            this.body.yScale *= 0.92F;
-            this.body.xScale *= 1.05F;
-            for (int i = 0; i < 3; i++) {
-                this.tail[i].yRot += 0.35F * (i + 1) * Mth.sin(age * 1.4F);
-            }
-            this.flareGills(0.5F);
-        }
-
-        // --- death: rolls belly-up, legs stiff in the air, jaw lolling open
+        // --- death: it slumps forward onto its side, jaw slack, gills drooping (the renderer then pops it)
         float roll = Anim.smooth(s.dying / 14.0F);
         if (roll > 0.0F) {
-            this.body.zRot = roll * Mth.PI;
-            this.body.y += roll * 5.0F;
-            this.jaw.xRot = Math.max(this.jaw.xRot, roll * 0.5F);
-            for (int i = 0; i < 4; i++) {
-                float sgn = i % 2 == 0 ? 1.0F : -1.0F;
-                this.legs[i].yRot *= 1.0F - roll;
-                this.legs[i].zRot = -sgn * 0.2F * roll + Mth.sin(age * 1.8F + i) * 0.08F * (1.0F - roll);
-                this.feet[i].zRot = sgn * 0.15F * roll;
-            }
-            for (int i = 0; i < 3; i++) {
-                this.tail[i].yRot *= 1.0F - roll;
-                this.tail[i].xRot = -0.15F * roll;
-            }
+            this.chest.xRot += 0.5F * roll;
+            this.head.xRot -= 0.2F * roll;
+            this.body.zRot += 0.3F * roll;
+            jawOpen = Math.max(jawOpen, 0.45F * roll);
+            lid = Mth.lerp(roll, lid, 1.5F);
+            this.arms[0].zRot += 0.35F * roll;
+            this.arms[1].zRot -= 0.35F * roll;
+            gillFlare -= 0.4F * roll;
         }
 
-        boolean eyesShut = s.sleeping || yawnOpen > 0.55F || s.expression == com.thesift.client.Expression.BLINK || roll > 0.6F;
-        this.leftEyelid.visible = eyesShut;
-        this.rightEyelid.visible = eyesShut;
-    }
-
-    /** Fans the frilled gills out from the head. */
-    private void flareGills(float amount) {
-        if (amount == 0.0F) {
-            return;
-        }
-        for (int side = 0; side < 2; side++) {
-            float sx = side == 0 ? 1.0F : -1.0F;
+        this.jaw.xRot += jawOpen;
+        for (int k = 0; k < 2; k++) {
+            float sx = k == 0 ? 1.0F : -1.0F;
+            this.cheeks[k].xScale = 1.0F + 0.9F * cheek;
+            this.cheeks[k].zScale = 1.0F + 0.25F * cheek;
+            this.lids[k].yScale = lid;
+            this.lids[k].zRot = angry ? -sx * 0.3F * awake : 0.0F;
             for (int i = 0; i < 3; i++) {
-                this.gills[side][i].yRot += amount * 0.5F * sx;
-                this.gills[side][i].zRot += amount * (i - 1) * 0.5F * sx;
+                ModelPart g = this.gills[k][i];
+                g.yRot += sx * (gillFlare + Mth.sin(age * 0.11F + i * 1.3F) * 0.05F - gillSweep);
+                g.zRot += sx * (Mth.sin(age * 0.13F + i * 1.1F + k) * 0.06F + 0.28F * sleep + 0.35F * roll);
+                g.xRot += Mth.sin(age * 0.17F + i) * 0.04F;
             }
         }
     }
