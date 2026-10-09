@@ -83,7 +83,7 @@ public class BandTableScreen extends Screen {
         return (this.height - H) / 2;
     }
 
-    private @Nullable HolderLookup.Provider registries() {
+    private HolderLookup.@Nullable Provider registries() {
         return this.minecraft == null || this.minecraft.level == null ? null : this.minecraft.level.registryAccess();
     }
 
