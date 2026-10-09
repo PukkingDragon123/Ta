@@ -346,6 +346,7 @@ public final class ClientSmokeTest {
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
         scene("mob_closeup_sniffer", 40, c -> c.camera(-0.5, STAGE_Y + 3.4, STAGE_Z + 3.2, -3.5, STAGE_Y + 1.2, STAGE_Z + 8.5));
         scene("mob_closeup_dictator", 40, c -> c.camera(20.0, STAGE_Y + 2.8, STAGE_Z - 3.0, 20.0, STAGE_Y + 2.0, STAGE_Z + 5.5));
+        scene("mob_closeup_stomper", 60, ClientSmokeTest::stomperStage); // S1: the Stomper elephant and a Stompling
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -502,6 +503,24 @@ public final class ClientSmokeTest {
         c.fill(x0 - 1, STAGE_Y + 2, z0 - 1, x0 + 3, STAGE_Y + 4, z0 + 3, Blocks.AIR.defaultBlockState());
         c.spawn(com.thesift.registry.ModSlumbler.SLUMBLER_TADPOLE.get(), x0 + 1.5, STAGE_Y + 0.5, z0 + 1.5, 200.0F, false);
         c.camera(x0 + 2.6, STAGE_Y + 2.7, z0 - 0.4, x0 + 1.5, STAGE_Y + 0.6, z0 + 1.5);
+    }
+
+    /** S1: the Stomper elephant and a Stompling on a patch of Sift Plains turf, three-quarters from the front. */
+    private static void stomperStage(Ctx c) {
+        c.run("gamemode spectator @a");
+        floor(c, -48, STAGE_Z - 6, -28, STAGE_Z + 12);
+        c.fill(-48, STAGE_Y - 1, STAGE_Z - 6, -28, STAGE_Y - 1, STAGE_Z + 12, ModBlocks.CORAL_TURF.get().defaultBlockState());
+        Block[] plants = plantsFor(c);
+        for (int x = -48; x <= -28; x++) {
+            if (plants.length > 0 && Math.floorMod(x * 5, 3) != 0) {
+                c.set(x, STAGE_Y, STAGE_Z + 11, plants[Math.floorMod(x, plants.length)].defaultBlockState());
+            }
+        }
+        c.spawn(ModEntities.STOMPER.get(), -38.5, STAGE_Y, STAGE_Z + 5.5, 180.0F, false);
+        if (c.spawn(ModEntities.STOMPER.get(), -34.0, STAGE_Y, STAGE_Z + 2.5, 150.0F, false) instanceof net.minecraft.world.entity.AgeableMob baby) {
+            baby.setAge(-24000);
+        }
+        c.camera(-33.0, STAGE_Y + 3.0, STAGE_Z - 1.5, -38.0, STAGE_Y + 1.7, STAGE_Z + 5.0);
     }
 
     private static void livePen(Ctx c) {

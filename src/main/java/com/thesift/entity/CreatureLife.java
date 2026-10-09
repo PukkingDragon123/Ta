@@ -31,6 +31,7 @@ public final class CreatureLife {
     public static void register(IEventBus modBus) {
         modBus.addListener(CreatureLife::registerPayloads);
         SongEvents.listenNotes(CreatureLife::onNote);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(Stomper::onDismount); // S1: a Stomper's trunk holds its victim fast
     }
 
     private static void registerPayloads(RegisterPayloadHandlersEvent event) {

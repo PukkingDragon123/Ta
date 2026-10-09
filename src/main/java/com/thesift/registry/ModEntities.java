@@ -55,7 +55,7 @@ public final class ModEntities {
 
     // ---- the wild creatures
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.Stomper>> STOMPER = ENTITIES.registerEntityType("stomper",
-            com.thesift.entity.Stomper::new, MobCategory.CREATURE, b -> b.sized(2.3F, 2.3F).eyeHeight(1.5F).clientTrackingRange(10));
+            com.thesift.entity.Stomper::new, MobCategory.CREATURE, b -> b.sized(2.4F, 3.4F).eyeHeight(2.4F).clientTrackingRange(10)); // S1: the tall elephant
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.FanfareEel>> FANFARE_EEL = ENTITIES.registerEntityType(
             "fanfare_eel", com.thesift.entity.FanfareEel::new, MobCategory.WATER_CREATURE,
             b -> b.sized(0.7F, 0.5F).eyeHeight(0.3F).clientTrackingRange(8));

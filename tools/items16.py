@@ -1192,18 +1192,6 @@ def spawn_eggs():
     }, {'s': ('#f2e2c0', '#5a3a2a'), 'G': ('#f0c040', '#5a3410'), 'g': ('#b88a2a', '#5a3410'), 'r': ('#d03a3a', '#4a1018'),
         'R': ('#902030', '#4a1018'), 'l': ('#fff4e0', '#4a1018'), 'E': '#0e1a10', 'h': '#ffffff', 'm': '#0e2a16',
         'f': '#4a9a3a', 'c': '#d8d08a'})
-    E['stomper'] = egg(['#3a4a6a', '#566a8c', '#7890b0', '#a0b4cc'], '#1a2238', {
-        4: '.....y....y.....',
-        5: '..ff........ff..',
-        6: '..fyE......Eyf..',
-        7: '..f..........f..',
-        8: '.......Tt.......',
-        9: '.......Tt.......',
-        10: '......kTtk......',
-        11: '.....k.Tr.k.....',
-        12: '.....k.Tt.k.....',
-        13: '........Tt......',
-    }, {'y': '#ffd66b', 'E': '#141828', 'f': '#566a8c', 'T': '#4a5a7c', 't': '#2a3654', 'r': '#1e2842', 'k': '#f4f0e5'})
     E['fanfare_eel'] = egg(['#8a3a10', '#c05a18', '#e88a2a', '#ffb85a'], '#3a1608', {
         0: '.......f........',
         1: '......ff........',
@@ -1358,6 +1346,7 @@ def all_items():
     out.update(__import__('sculk_sea').item_sprites())  # CR3 Fish & Coral Organs: fish meats, sushi, fish buckets, eggs (replaces older art)
     out.update(__import__('slumbler').items())  # CR2: Slumbler gill, tadpole bucket, Slumbler and tadpole eggs (replace older art)
     out.update(__import__('sky_whale').items())  # CR2: a Sky Whale egg that matches the whale
+    out.update(__import__('stomper').items())  # S1 Stomper remake: the elephant's spawn egg (tools/stomper.py)
     out['slingshot'] = slingshot(-1)
     for i in range(3):
         out[f'slingshot_pulling_{i}'] = slingshot(i)

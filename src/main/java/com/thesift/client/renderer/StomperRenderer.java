@@ -1,6 +1,5 @@
 package com.thesift.client.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.thesift.client.Expression;
 import com.thesift.client.model.ModModelLayers;
 import com.thesift.client.model.StomperModel;
@@ -13,8 +12,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
+/** S1 the Stomper elephant (and its Stompling young, drawn at half size). */
 public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState, StomperModel> {
-    /** The Sift's pink-and-cyan coat and the White Forest's snowy one (index = Stomper.getCoat()). */
+    /** The Sift's teal-and-crimson coat and the White Forest's frosted one (index = Stomper.getCoat()). */
     private static final String[] COATS = {"stomper", "stomper_white"};
     private static final ExpressionTextures TEXTURES = new ExpressionTextures("stomper", COATS, Expression.BLINK, Expression.HAPPY, Expression.ANGRY,
             Expression.HURT, Expression.DEAD);
@@ -22,10 +22,10 @@ public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState
             Expression.HAPPY, Expression.ANGRY, Expression.HURT, Expression.DEAD);
 
     public StomperRenderer(EntityRendererProvider.Context context) {
-        super(context, new StomperModel(context.bakeLayer(ModModelLayers.STOMPER)), 1.3F);
-        // glowing eyes, sculk veins and sprouts; the spiracles shine brighter with the Chrome it has stored
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(s.coat, s.expression), (s, age) -> 0.5F + 0.5F * s.chrome * (0.7F + 0.3F * Mth.sin(age * 0.12F)), this.model,
-                RenderTypes::entityTranslucentEmissive, false));
+        super(context, new StomperModel(context.bakeLayer(ModModelLayers.STOMPER)), 1.4F);
+        // the glowing buds in its garden
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(s.coat, s.expression), (s, age) -> 0.75F + 0.25F * Mth.sin(age * 0.1F),
+                this.model, RenderTypes::entityTranslucentEmissive, false));
     }
 
     @Override
@@ -33,9 +33,10 @@ public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState
         return TEXTURES.get(state.coat, state.expression);
     }
 
+    /** A heavy animal: hits barely squash it, and it topples rather than bounces when it dies. */
     @Override
     protected float bounciness() {
-        return 0.45F;
+        return 0.2F;
     }
 
     @Override
@@ -43,21 +44,21 @@ public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState
         boolean spraying = entity.sprayAnimation.isStarted() && entity.sprayAnimation.getTimeInMillis(entity.tickCount) < 2600;
         boolean drinking = entity.drinkAnimation.isStarted() && entity.drinkAnimation.getTimeInMillis(entity.tickCount) < 3000;
         boolean nap = entity.isInSittingPose() && Math.floorMod(entity.tickCount + entity.getId() * 97, 1600) > 1100;
-        return Expression.pick(entity, entity.isAggressive() || spraying, entity.isDancing() || drinking, nap);
+        return Expression.pick(entity, entity.isAggressive() || spraying || entity.getGrabPhase() != 0, entity.isDancing() || drinking, nap);
     }
 
     @Override
-    protected void scale(StomperRenderState state, PoseStack poseStack) {
+    protected void scale(StomperRenderState state, com.mojang.blaze3d.vertex.PoseStack poseStack) {
         super.scale(state, poseStack);
         if (state.isBaby) {
             poseStack.scale(0.5F, 0.5F, 0.5F);
         }
     }
 
-    /** The head and trunk reach well past the hitbox. */
+    /** The trunk reaches far past the hitbox, and high above it with a victim in its grip. */
     @Override
     protected AABB getBoundingBoxForCulling(Stomper entity, float partialTicks) {
-        return super.getBoundingBoxForCulling(entity, partialTicks).inflate(1.2, 0.5, 1.2);
+        return super.getBoundingBoxForCulling(entity, partialTicks).inflate(2.5, 2.5, 2.5);
     }
 
     @Override
@@ -82,7 +83,10 @@ public class StomperRenderer extends SiftMobRenderer<Stomper, StomperRenderState
         state.puff.copyFrom(entity.puffAnimation);
         state.slap.copyFrom(entity.slapAnimation);
         state.drum.copyFrom(entity.drumAnimation);
-        state.drumBeats = entity.drumBeats;
         state.ridden = entity.isVehicle();
+        state.grabPhase = entity.getGrabPhase();
+        state.grabTime = entity.getGrabTime(partialTicks);
+        state.roll = entity.getRoll(partialTicks);
+        state.rollAngle = entity.getRollAngle(partialTicks);
     }
 }
