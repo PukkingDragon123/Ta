@@ -143,7 +143,7 @@ def assets(GA):
         f'codex.{NS}.sculk_ocean.body': 'The Sift\'s cold sea, its water stained the dark teal of the sculk below. Its floor of Sculk Mud is '
                                         'cut by deep trenches and long ridges, with huge sculk-crusted pillars rising to the surface. '
                                         'Reefs of glowing Sculk Coral - blocks, branches and fans - light the gloom, and glowing motes '
-                                        'hang in the water. Kazoo Fish, Fanfare Eels and Tubafish school over the reefs, glow squid '
+                                        'hang in the water. Kazoo Fish and Fanfare Eels school over the reefs, glow squid '
                                         'drift in the trenches, and the blind Gobbler hunts by sound. Swim slowly.',
         f'codex.{NS}.relics.title': 'Buried Relics', f'codex.{NS}.relics.tagline': 'All that is left of the old ruins',
         f'codex.{NS}.relics.body': 'The Sift\'s old towers, temples and settlements have crumbled into the ground. Where a cracked brick '
@@ -371,7 +371,7 @@ def _ocean_biome(GW):
     sea._biome(GW, 'deep_dark_ocean', fog='#24434a', sky='#2f5a66', water='#0d5a63', water_fog='#041a1d', grass='#2f8f9e', foliage='#37a9b5',
                temp=0.3, down=0.5, music='music.deep_dark_ocean', loop='ambient.deep_dark_ocean.loop', additions='ambient.deep_dark_ocean.additions',
                mood='ambient.deep_dark_ocean.mood',
-               spawns=sea._spawns(water_creature=[('gobbler', 3, 1, 1), ('fanfare_eel', 5, 1, 2), ('tubafish', 4, 1, 2)],
+               spawns=sea._spawns(water_creature=[('gobbler', 3, 1, 1), ('fanfare_eel', 6, 1, 2)],
                                   water_ambient=[('kazoo_fish', 8, 3, 6)], underground_water_creature=[('minecraft:glow_squid', 10, 2, 4)]),
                parts=[('drifting_soul', 0.0015), ('glow_dust', 0.004), ('minecraft:sculk_soul', 0.0005), ('minecraft:glow', 0.0012),
                       ('minecraft:underwater', 0.003)],

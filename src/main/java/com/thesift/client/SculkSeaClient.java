@@ -34,7 +34,7 @@ public final class SculkSeaClient {
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModSculkSea.SCULK_FISH.get(), c -> new SiftFishRenderer<>(c, new SculkFishModel(c.bakeLayer(SCULK_FISH)),
-                "sculk_fish", SCULK_FISH_VARIANTS, 0.25F, 0.42F, Expression.BLINK, Expression.ANGRY, Expression.HURT, Expression.DEAD));
+                "sculk_fish", SCULK_FISH_VARIANTS, 0.25F, 1.0F)); // S2: real size, hand-painted (tools/waterfolk.py)
         event.registerEntityRenderer(ModSculkSea.CORAL_ORGAN.get(), c -> new CoralOrganRenderer(c, new CoralOrganModel(c.bakeLayer(CORAL_ORGAN))));
         event.registerEntityRenderer(ModSculkSea.CORAL_HOOK.get(), CoralHookRenderer::new);
     }

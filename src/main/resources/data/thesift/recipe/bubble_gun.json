@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "T": "thesift:tuba_bubble",
+    "T": "thesift:chrome_pearl",
     "C": "minecraft:copper_ingot",
     "G": "minecraft:gold_ingot"
   },

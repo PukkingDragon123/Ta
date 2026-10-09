@@ -16,7 +16,7 @@ public class GobblerRenderer extends SiftFishRenderer<Gobbler, GobblerModel> {
     private static final float TWO_PI = (float) (Math.PI * 2.0);
 
     public GobblerRenderer(EntityRendererProvider.Context context, GobblerModel model) {
-        super(context, model, "gobbler", 1.0F, 1.55F);
+        super(context, model, "gobbler", 1.0F, 1.0F); // S2: built at its real size (tools/waterfolk.py)
     }
 
     @Override

@@ -6,122 +6,83 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * Fanfare Eel (CR3: hand-drawn sprites extruded into a rounded body, built at twice vanilla scale - see
- * tools/fish_art.py): a travelling wave runs down its five segments (faster and wider when it darts in), the
- * glowing frills ripple along its back, the trumpet bell flares on every bite, and out of the liquid it
- * thrashes on its side.
+ * S2: the Fanfare Eel (geometry and hand-painted variants in tools/waterfolk.py). It swims with an S-wave
+ * running from the head down its five overlapping segments into the tail fin - longer and quicker the harder
+ * it swims, the head steadying against it - while the scalloped crest ripples along its back and the
+ * pectorals paddle. Its trumpet-bell mouth breathes; on the hunt the crest stands up. The bite: the head
+ * lunges and the bell flares wide with the blast. Out of the water it writhes in big slow coils; hurt, it
+ * kinks; dying, it rolls belly-up.
  */
 public class FanfareEelModel extends EntityModel<SiftFishRenderState> {
+    private static final int SEGMENTS = 5;
     private final ModelPart head;
     private final ModelPart bell;
-    private final ModelPart pipe;
-    private final ModelPart crest;
-    private final ModelPart leftFin;
-    private final ModelPart rightFin;
-    private final ModelPart[] segments = new ModelPart[5];
-    private final ModelPart[] bellFins = new ModelPart[4];
-    private final ModelPart[] frills = new ModelPart[5];
     private final ModelPart tailFin;
-    private final ModelPart leftGill;
-    private final ModelPart rightGill;
-    private final ModelPart leftWhisker;
-    private final ModelPart rightWhisker;
+    private final ModelPart[] segments = new ModelPart[SEGMENTS];
+    private final ModelPart[] frills = new ModelPart[SEGMENTS];
+    private final ModelPart[] fins = new ModelPart[2];
 
     public FanfareEelModel(ModelPart root) {
         super(root);
         this.head = root.getChild("head");
-        this.pipe = this.head.getChild("pipe");
-        this.bell = this.pipe.getChild("bell");
-        this.crest = this.head.getChild("crest");
-        this.leftFin = this.head.getChild("left_fin");
-        this.rightFin = this.head.getChild("right_fin");
-        for (int i = 0; i < 4; i++) {
-            this.bellFins[i] = this.bell.getChild("bell_fin_" + i).getChild("bell_fin_" + i + "_blade");
+        this.bell = this.head.getChild("pipe").getChild("bell");
+        this.fins[0] = this.head.getChild("left_fin");
+        this.fins[1] = this.head.getChild("right_fin");
+        ModelPart prev = this.head;
+        for (int i = 0; i < SEGMENTS; i++) {
+            this.segments[i] = prev.getChild("segment_" + i);
+            this.frills[i] = this.segments[i].getChild("frill_" + i);
+            prev = this.segments[i];
         }
-        ModelPart p = this.head;
-        for (int i = 0; i < 5; i++) {
-            p = p.getChild("segment_" + i);
-            this.segments[i] = p;
-            this.frills[i] = p.getChild("frill_" + i);
-        }
-        this.tailFin = this.segments[4].getChild("tail_fin");
-        this.leftGill = this.head.getChild("left_gill");
-        this.rightGill = this.head.getChild("right_gill");
-        this.leftWhisker = this.pipe.getChild("left_whisker");
-        this.rightWhisker = this.pipe.getChild("right_whisker");
+        this.tailFin = prev.getChild("tail_fin");
     }
 
     @Override
     public void setupAnim(SiftFishRenderState s) {
         super.setupAnim(s);
         float age = s.ageInTicks + s.seed;
-        float effort = s.effort;
-        float speed = 0.25F + effort * 0.45F;
-        float amp = 0.12F + effort * 0.22F;
-        this.head.yRot = Mth.sin(age * speed + 0.9F) * amp * 0.35F;
+        float e = s.inLiquid ? s.effort : 1.0F;
+        float hunt = s.aggressive ? 1.0F : 0.0F;
+        float t = s.inLiquid ? age * (0.22F + 0.3F * e) : s.ageInTicks * 0.35F;
+        float amp = s.inLiquid ? 0.18F + 0.22F * e : 0.5F;
         this.head.xRot = s.xRot * Anim.DEG;
-        // an anguilliform wave: it starts small behind the head and grows down the body, with a
-        // gentle vertical ripple on top so the eel never looks like a stiff zigzag
-        for (int i = 0; i < 5; i++) {
-            this.segments[i].yRot = Mth.sin(age * speed - i * 0.85F) * amp * (0.55F + i * 0.22F);
-            this.segments[i].xRot = Mth.sin(age * speed * 0.5F - i * 0.6F) * 0.04F;
+        this.head.yRot = Mth.sin(t + 0.6F) * amp * 0.35F;
+        for (int i = 0; i < SEGMENTS; i++) {
+            this.segments[i].yRot = Mth.sin(t - i * 0.85F) * amp * (0.6F + 0.15F * i);
+            this.segments[i].xRot = Mth.sin(t * 0.5F - i * 0.7F) * 0.03F;
+            this.frills[i].zRot = Mth.sin(t * 2.0F - i * 1.1F) * 0.12F;
+            this.frills[i].yScale = 1.0F + 0.35F * hunt;
         }
-        this.tailFin.yRot = Mth.sin(age * speed - 5.0F * 0.85F) * amp * 1.2F;
-        float breath = Math.max(0.0F, Mth.sin(age * 0.3F));
-        this.leftGill.yRot = 0.5F + breath * 0.35F;
-        this.rightGill.yRot = -0.5F - breath * 0.35F;
-        // the bone whiskers trail behind and stream back when it speeds up
-        this.leftWhisker.yRot = 0.6F + Mth.sin(age * 0.2F) * 0.15F + effort * 0.4F;
-        this.rightWhisker.yRot = -0.6F - Mth.sin(age * 0.2F + 1.0F) * 0.15F - effort * 0.4F;
-        this.leftWhisker.xRot = 0.5F - effort * 0.3F;
-        this.rightWhisker.xRot = 0.5F - effort * 0.3F;
-        this.leftFin.zRot += Mth.sin(age * 0.6F) * 0.3F;
-        this.rightFin.zRot -= Mth.sin(age * 0.6F) * 0.3F;
-        this.crest.yRot = Mth.sin(age * speed) * 0.1F;
-        // the frills ripple down the back, a beat behind the body's wave
-        for (int i = 0; i < 5; i++) {
-            this.frills[i].zRot = Mth.sin(age * speed - i * 0.85F - 0.6F) * (0.1F + effort * 0.15F);
-            this.frills[i].xRot = effort * 0.3F;
+        this.tailFin.yRot = Mth.sin(t - SEGMENTS * 0.85F) * amp * 1.4F;
+        for (int k = 0; k < 2; k++) {
+            float sx = k == 0 ? 1.0F : -1.0F;
+            this.fins[k].zRot += sx * Mth.sin(age * 0.4F + k) * 0.3F;
+            this.fins[k].yRot += sx * 0.3F * e;
         }
-        // the glowing bell fins ripple like a flower opening and closing
-        for (int i = 0; i < 4; i++) {
-            this.bellFins[i].xRot += Mth.sin(age * 0.18F + i * 1.6F) * 0.12F - effort * 0.15F;
-        }
+        // the trumpet bell breathes
+        float breathe = 1.0F + Mth.sin(age * 0.15F) * 0.03F;
+        this.bell.xScale = breathe;
+        this.bell.yScale = breathe;
+        // the bite (0.6 s): the head lunges and the bell flares with the blast
         float bite = Anim.seconds(s.bite, s.ageInTicks);
         if (bite >= 0.0F && bite < 0.6F) {
-            float lunge = Anim.envelope(bite, 0.0F, 0.06F, 0.05F, 0.3F);
-            float flare = Anim.backOut(Math.min(1.0F, bite / 0.12F)) * (1.0F - Anim.smooth((bite - 0.15F) / 0.4F));
-            this.head.z -= 5.0F * lunge;
-            this.pipe.z -= 3.0F * lunge;
-            this.bell.xScale += 0.6F * flare;
-            this.bell.yScale += 0.6F * flare;
-            this.bell.zScale = 1.0F + 0.8F * flare;
-            for (int i = 0; i < 4; i++) {
-                this.bellFins[i].xRot -= 0.9F * flare;
-            }
-            for (int i = 0; i < 5; i++) {
-                this.segments[i].yRot *= 1.0F - lunge * 0.6F;
-            }
+            float lunge = Anim.envelope(bite, 0.0F, 0.08F, 0.1F, 0.35F);
+            float flare = Anim.envelope(bite, 0.05F, 0.06F, 0.12F, 0.3F);
+            this.head.z -= 2.5F * lunge;
+            this.head.xRot -= 0.15F * lunge;
+            this.bell.xScale += 0.35F * flare;
+            this.bell.yScale += 0.35F * flare;
+            this.segments[0].yRot *= 1.0F - lunge;
         }
-        if (!s.inLiquid) {
-            // stranded: thrashing on its side
-            this.head.zRot = (float) Math.PI * 0.5F;
-            this.head.y += 4.0F;
-            for (int i = 0; i < 5; i++) {
-                this.segments[i].yRot = Mth.sin(s.ageInTicks * 0.9F - i) * 0.5F;
-            }
-        }
-        if (s.hasRedOverlay) {
-            for (int i = 0; i < 5; i++) {
-                this.segments[i].yRot += Mth.sin(s.ageInTicks * 2.5F - i) * 0.3F;
+        if (s.hurtTicks >= 0.0F && s.dying <= 0.0F) {
+            float k = Mth.sin(Mth.clamp(s.hurtTicks / 10.0F, 0.0F, 1.0F) * Mth.PI);
+            for (int i = 0; i < SEGMENTS; i++) {
+                this.segments[i].yRot += 0.25F * k * (i % 2 == 0 ? 1.0F : -1.0F);
             }
         }
         float die = Anim.smooth(s.dying / 12.0F);
         if (die > 0.0F) {
-            this.head.zRot = (float) Math.PI * die;
-            for (int i = 0; i < 5; i++) {
-                this.segments[i].yRot *= 1.0F - die;
-            }
+            this.head.zRot = Mth.PI * die;
         }
     }
 }

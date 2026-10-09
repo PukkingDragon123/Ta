@@ -62,9 +62,6 @@ public final class ModChrome {
         if (type == ModEntities.KAZOO_FISH.get()) {
             return new ItemStack(ModItems.CHROME_KAZOO_FISH_BUCKET.get());
         }
-        if (type == ModEntities.TUBAFISH.get()) {
-            return new ItemStack(ModItems.CHROME_TUBAFISH_BUCKET.get());
-        }
         if (type == ModEntities.FANFARE_EEL.get()) {
             return new ItemStack(ModItems.CHROME_FANFARE_EEL_BUCKET.get());
         }

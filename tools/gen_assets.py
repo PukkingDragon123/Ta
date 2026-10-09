@@ -715,7 +715,7 @@ def gen_lang():
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
-        f'codex.{NS}.chrome.body': 'A thick, shimmering liquid rainbow. Waves of colour roll across every lake, rings spread behind anything that swims or wades, and the surface bursts into colour when music plays nearby. It no longer heals: a soak leaves you Rainbow Dazed, the world swaying and turning through the colours until it wears off. It is thick like quicksand - hold Shift to rise. Where Chrome meets flowing water it settles into Chime Sand, which tinkles underfoot and smelts into Chime Glass: every block rings its own note, so a wall of it plays like a xylophone. Scoop Kazoo Fish, Tubafish and Fanfare Eels up in a Chrome Bucket to carry them home.',
+        f'codex.{NS}.chrome.body': 'A thick, shimmering liquid rainbow. Waves of colour roll across every lake, rings spread behind anything that swims or wades, and the surface bursts into colour when music plays nearby. It no longer heals: a soak leaves you Rainbow Dazed, the world swaying and turning through the colours until it wears off. It is thick like quicksand - hold Shift to rise. Where Chrome meets flowing water it settles into Chime Sand, which tinkles underfoot and smelts into Chime Glass: every block rings its own note, so a wall of it plays like a xylophone. Scoop Kazoo Fish and Fanfare Eels up in a Chrome Bucket to carry them home.',
         f'codex.{NS}.warden_core.title': 'Warden Core', f'codex.{NS}.warden_core.tagline': 'The heart of the ritual',
         f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the Sculk Castle. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
         f'codex.{NS}.sift_cake.title': 'Sift Cake', f'codex.{NS}.sift_cake.tagline': 'A treat from the plains',
@@ -1055,12 +1055,6 @@ SOUNDS.update({
     'entity.kazoo_fish.hurt': [('mob/pufferfish/hurt1', 0.8, 1.6), ('block/note_block/didgeridoo', 0.4, 2.0)],
     'entity.kazoo_fish.death': [('mob/pufferfish/death1', 0.8, 1.6), ('mob/pufferfish/death2', 0.8, 1.6)],
     'entity.kazoo_fish.flop': [('mob/pufferfish/flop1', 0.6, 1.4), ('mob/pufferfish/flop2', 0.6, 1.4)],
-    'entity.tubafish.ambient': [('block/note_block/bass', 0.6, 0.5), ('block/note_block/didgeridoo', 0.5, 0.5), ('block/bubble_column/bubble1', 0.5, 0.6)],
-    'entity.tubafish.puff': [('mob/pufferfish/blow_up1', 1.0, 0.6), ('block/note_block/didgeridoo', 1.0, 0.5), ('mob/pufferfish/blow_up2', 1.0, 0.55)],
-    'entity.tubafish.deflate': [('mob/pufferfish/blow_out1', 1.0, 0.6), ('mob/pufferfish/blow_out2', 1.0, 0.6)],
-    'entity.tubafish.hurt': [('mob/pufferfish/hurt1', 1.0, 0.6), ('mob/pufferfish/hurt2', 1.0, 0.6)],
-    'entity.tubafish.death': [('mob/pufferfish/death1', 1.0, 0.55), ('block/note_block/bass', 1.0, 0.5)],
-    'entity.tubafish.flop': [('mob/pufferfish/flop3', 0.8, 0.6), ('mob/pufferfish/flop4', 0.8, 0.6)],
     'item.bubble_gun.shoot': [('block/bubble_column/bubble1', 1.0, 1.2), ('mob/pufferfish/blow_out2', 0.6, 1.6), ('block/bubble_column/bubble3', 1.0, 1.3)],
     'entity.bubble.pop': [('block/bubble_column/bubble2', 1.0, 1.4), ('random/pop', 0.8, 1.2)],
     'entity.sky_whale.ambient': [('item/goat_horn/call1', 0.9, 0.5), ('item/goat_horn/call4', 0.9, 0.45), ('mob/happy_ghast/ambient3', 1.0, 0.5)],
@@ -1080,8 +1074,6 @@ SUBTITLES.update({
     'entity.fanfare_eel.death': 'Fanfare Eel dies', 'entity.fanfare_eel.flop': 'Fanfare Eel flops',
     'entity.kazoo_fish.ambient': 'Kazoo Fish buzzes', 'entity.kazoo_fish.hurt': 'Kazoo Fish hurts', 'entity.kazoo_fish.death': 'Kazoo Fish dies',
     'entity.kazoo_fish.flop': 'Kazoo Fish flops',
-    'entity.tubafish.ambient': 'Tubafish burbles', 'entity.tubafish.puff': 'Tubafish blasts and swells', 'entity.tubafish.deflate': 'Tubafish deflates',
-    'entity.tubafish.hurt': 'Tubafish hurts', 'entity.tubafish.death': 'Tubafish dies', 'entity.tubafish.flop': 'Tubafish flops',
     'item.bubble_gun.shoot': 'Bubble Gun blows', 'entity.bubble.pop': 'Bubble pops',
     'entity.sky_whale.ambient': 'Sky Whale sings', 'entity.sky_whale.song': 'Sky Whale answers', 'entity.sky_whale.moo': 'Sky Whale moos',
     'entity.sky_whale.hurt': 'Sky Whale hurts', 'entity.sky_whale.death': 'Sky Whale dies', 'entity.sky_whale.spit': 'Sky Whale spits out a gem',
@@ -1097,7 +1089,7 @@ def gen_wild_creatures():
     smelt('cooked_kazoo_fish', 'kazoo_fish', 'cooked_kazoo_fish', 0.35, 200, ('smelting', 'smoking'))
     smelt('cooked_kazoo_fish_campfire', 'kazoo_fish', 'cooked_kazoo_fish', 0.35, 1200, ('campfire_cooking',))
     # gear
-    shaped('bubble_gun', [' TT', 'GCT', 'G  '], {'T': 'tuba_bubble', 'C': 'minecraft:copper_ingot', 'G': 'minecraft:gold_ingot'}, 'bubble_gun', 1,
+    shaped('bubble_gun', [' TT', 'GCT', 'G  '], {'T': 'chrome_pearl', 'C': 'minecraft:copper_ingot', 'G': 'minecraft:gold_ingot'}, 'bubble_gun', 1,
            'equipment')
     shaped('enchanted_golden_apple_from_skysong_gem', ['GGG', 'GAG', 'GSG'], {'G': 'minecraft:gold_block', 'A': 'minecraft:apple', 'S': 'skysong_gem'},
            'minecraft:enchanted_golden_apple', 1, 'misc')
@@ -1114,13 +1106,13 @@ def gen_wild_creatures():
     for e in ['stomper', 'sky_whale']:
         tag('entity_type', f'{NS}:music_lovers', rl(e))
     tag('entity_type', 'minecraft:fall_damage_immune', rl('sky_whale'))
-    for e in ['fanfare_eel', 'kazoo_fish', 'tubafish']:
+    for e in ['fanfare_eel', 'kazoo_fish']:
         tag('entity_type', 'minecraft:aquatic', rl(e))
         tag('entity_type', f'{NS}:chrome_dwellers', rl(e))
     # names, messages and the Codex
     LANG.update({
         f'entity.{NS}.stomper': 'Stomper', f'entity.{NS}.fanfare_eel': 'Fanfare Eel', f'entity.{NS}.kazoo_fish': 'Kazoo Fish',
-        f'entity.{NS}.tubafish': 'Tubafish', f'entity.{NS}.sky_whale': 'Sky Whale', f'entity.{NS}.bubble': 'Bubble',
+        f'entity.{NS}.sky_whale': 'Sky Whale', f'entity.{NS}.bubble': 'Bubble',
         f'message.{NS}.stomper.tamed': 'The little Stomper trumpets and nuzzles you with its trunk. It is yours now!',
         f'message.{NS}.sky_whale.heard': 'Far above, something vast hears your song...',
         f'message.{NS}.sky_whale.gem': 'The Sky Whale sings back - and spits out a glittering Skysong Gem!',
@@ -1130,13 +1122,11 @@ def gen_wild_creatures():
         f'codex.{NS}.sky_whale.title': 'Sky Whale', f'codex.{NS}.sky_whale.tagline': 'Rare - the singer in the clouds',
         f'codex.{NS}.sky_whale.body': "A whale of the sky, as long as a house: a deep periwinkle back freckled with glowing stars, a pale grooved throat that swells when it sings, long white flippers and great notched flukes that row it slowly through the clouds, a blowhole puffing cloud. If you spot one, you're lucky. Play the crane flute up at the sky with a tamed Harmoner beside you and the whale glides down, sings to you and spits out a Skysong Gem - one a day per whale.",
         f'codex.{NS}.fanfare_eel.title': 'Fanfare Eel', f'codex.{NS}.fanfare_eel.tagline': 'Hostile - brass with teeth',
-        f'codex.{NS}.fanfare_eel.body': 'A long sculk eel with pale bone ribs, a glowing line and frills down its back and a golden trumpet bell for a mouth, ringed with glowing fins. It hunts anything swimming in the Chrome lakes - fish and visitors alike - and every bite comes with a blast of sound. Most glow cyan; some are violet with silver bells, a few smoulder like embers. Fight it from the shore if you can.',
+        f'codex.{NS}.fanfare_eel.body': 'A long eel of overlapping scaly segments under a scalloped crest, with a brass trumpet bell for a mouth. It hunts anything swimming in the Sift\'s waters - fish and visitors alike - and every bite comes with a blast of sound. It wears the colours of its waters: moss green over gold in the plains and Chrome Lakes, violet and pink among the Magic Kelp, sculk-dark with a line of cyan lights in the Sculk Ocean. Fight it from the shore if you can.',
         f'codex.{NS}.kazoo_fish.title': 'Kazoo Fish', f'codex.{NS}.kazoo_fish.tagline': 'Small, silly, delicious',
-        f'codex.{NS}.kazoo_fish.body': 'Chubby schooling fish with a kazoo for a nose, a tuft of moss with a glowing sprout on top, fins like living coral and googly eyes that never quite agree. Each school wears its own colours: reef teal, sunset gold, lagoon blue, mint - and, rarely, a midnight blue whose freckles glow. Schools follow a leader and buzz little tunes; scare one and they all scatter. Scoop one up in a bucket of water or Chrome to keep it.',
-        f'codex.{NS}.tubafish.title': 'Tubafish', f'codex.{NS}.tubafish.tagline': 'Do not poke the tuba',
-        f'codex.{NS}.tubafish.body': 'A huge, round pufferfish freckled with glowing spots, pouting, with a little tuba growing out of its back, its bell crowned by a waving anemone. Most are periwinkle; some lilac with a silver tuba, some sea-foam, a rare few sunrise peach. Get too close and it blasts a low note, swells up with its coral spikes out and blows a storm of bubbles - and touching it then stings. Drops Tuba Bubbles, which make a Bubble Gun.',
+        f'codex.{NS}.kazoo_fish.body': 'Chunky little schooling fish with a brass kazoo for a snout, a sail of a dorsal fin and saddle stripes. Each school wears the colours of its waters: reef teal with coral fins in the plains, rose and gold among the Magic Kelp, sky blue and lilac in the Chrome Lakes, mint in the shallows - and in the Sculk Ocean a near-black midnight with a row of glowing lights. Schools follow a leader and buzz little tunes; scare one and they all scatter. Scoop one up in a bucket of water or Chrome to keep it.',
         f'codex.{NS}.bubble_gun.title': 'Bubble Gun', f'codex.{NS}.bubble_gun.tagline': 'Up you go!',
-        f'codex.{NS}.bubble_gun.body': 'Built from Tuba Bubbles, copper and gold. Each squeeze blows a big wobbly bubble that pops on whatever it hits, stinging a little and lifting it gently into the air. No ammo needed, just a breath between shots.',
+        f'codex.{NS}.bubble_gun.body': 'Built from Chrome Pearls, copper and gold. Each squeeze blows a big wobbly bubble that pops on whatever it hits, stinging a little and lifting it gently into the air. No ammo needed, just a breath between shots.',
         f'codex.{NS}.skysong_gem.title': 'Skysong Gem', f'codex.{NS}.skysong_gem.tagline': 'A gift from the clouds',
         f'codex.{NS}.skysong_gem.body': 'Spat out by a Sky Whale that answered your song. Set one below an apple in a ring of gold blocks to craft an Enchanted Golden Apple.',
     })

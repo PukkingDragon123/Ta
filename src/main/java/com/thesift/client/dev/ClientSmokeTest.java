@@ -341,6 +341,13 @@ public final class ClientSmokeTest {
         // S2: the remade Slumbler sits up (1.6 tall): a higher three-quarter view; its tadpole in a little tank of its own
         scene("mob_closeup_slumbler", 40, c -> c.camera(3.4, STAGE_Y + 2.9, STAGE_Z + 1.8, 1.5, STAGE_Y + 0.9, STAGE_Z + 6.5));
         scene("mob_closeup_slumbler_tadpole", 40, ClientSmokeTest::tadpoleTank);
+        // S2 water creatures: each in a glass tank of its own west of the stage; the Cypole on a pad of swamp grass
+        scene("mob_closeup_kazoo_fish", 40, c -> tank(c, ModEntities.KAZOO_FISH.get(), -30, 3, 2));
+        scene("mob_closeup_fanfare_eel", 40, c -> tank(c, ModEntities.FANFARE_EEL.get(), -37, 4, 2));
+        scene("mob_closeup_sculk_fish", 40, c -> tank(c, com.thesift.registry.ModSculkSea.SCULK_FISH.get(), -43, 3, 2));
+        scene("mob_closeup_gobbler", 40, c -> tank(c, com.thesift.registry.ModSeaSky.GOBBLER.get(), -53, 7, 3));
+        scene("mob_closeup_coral_organ", 40, c -> tank(c, com.thesift.registry.ModSculkSea.CORAL_ORGAN.get(), -61, 5, 3));
+        scene("mob_closeup_cypole", 40, ClientSmokeTest::cypolePad);
         scene("mob_closeup_sifter", 40, c -> c.camera(6.5, STAGE_Y + 1.8, STAGE_Z + 2.8, 6.5, STAGE_Y + 0.6, STAGE_Z + 6.5));
         scene("mob_closeup_enchoer", 40, c -> c.camera(10.5, STAGE_Y + 2.6, STAGE_Z + 1.5, 10.5, STAGE_Y + 1.6, STAGE_Z + 6.5));
         scene("mob_closeup_harmoners", 40, c -> c.camera(0.0, STAGE_Y + 1.5, STAGE_Z + 0.2, 0.0, STAGE_Y + 0.5, STAGE_Z + 3.0));
@@ -496,13 +503,29 @@ public final class ClientSmokeTest {
 
     /** S2: a Slumbler tadpole in a small glass tank of water west of the stage, seen from above and in front. */
     private static void tadpoleTank(Ctx c) {
-        int x0 = -24, z0 = STAGE_Z;
-        c.fill(x0 - 1, STAGE_Y - 1, z0 - 1, x0 + 3, STAGE_Y - 1, z0 + 3, Blocks.SAND.defaultBlockState());
-        c.fill(x0 - 1, STAGE_Y, z0 - 1, x0 + 3, STAGE_Y + 1, z0 + 3, Blocks.GLASS.defaultBlockState());
-        c.fill(x0, STAGE_Y, z0, x0 + 2, STAGE_Y + 1, z0 + 2, Blocks.WATER.defaultBlockState());
-        c.fill(x0 - 1, STAGE_Y + 2, z0 - 1, x0 + 3, STAGE_Y + 4, z0 + 3, Blocks.AIR.defaultBlockState());
-        c.spawn(com.thesift.registry.ModSlumbler.SLUMBLER_TADPOLE.get(), x0 + 1.5, STAGE_Y + 0.5, z0 + 1.5, 200.0F, false);
-        c.camera(x0 + 2.6, STAGE_Y + 2.7, z0 - 0.4, x0 + 1.5, STAGE_Y + 0.6, z0 + 1.5);
+        tank(c, com.thesift.registry.ModSlumbler.SLUMBLER_TADPOLE.get(), -24, 3, 2);
+    }
+
+    /** S2: a water creature (no AI) in a glass tank of water (size x size, depth deep) west of the stage, seen from above and in front. */
+    private static void tank(Ctx c, net.minecraft.world.entity.EntityType<?> type, int x0, int size, int depth) {
+        int z0 = STAGE_Z;
+        c.fill(x0 - 1, STAGE_Y - 1, z0 - 1, x0 + size, STAGE_Y - 1, z0 + size, Blocks.SAND.defaultBlockState());
+        c.fill(x0 - 1, STAGE_Y, z0 - 1, x0 + size, STAGE_Y + depth - 1, z0 + size, Blocks.GLASS.defaultBlockState());
+        c.fill(x0, STAGE_Y, z0, x0 + size - 1, STAGE_Y + depth - 1, z0 + size - 1, Blocks.WATER.defaultBlockState());
+        c.fill(x0 - 1, STAGE_Y + depth, z0 - 1, x0 + size, STAGE_Y + depth + 3, z0 + size, Blocks.AIR.defaultBlockState());
+        double mid = size / 2.0;
+        c.spawn(type, x0 + mid, STAGE_Y + (depth > 2 ? 0.6 : 0.4), z0 + mid, 200.0F, false);
+        c.camera(x0 + mid + size * 0.55 + 0.6, STAGE_Y + depth + 0.7 + size * 0.3, z0 - 0.4 - size * 0.25, x0 + mid, STAGE_Y + depth * 0.4,
+                z0 + mid);
+    }
+
+    /** S2: a Cypole squatting on a pad of swamp grass, seen from the front. */
+    private static void cypolePad(Ctx c) {
+        int x0 = -68, z0 = STAGE_Z;
+        c.fill(x0 - 2, STAGE_Y - 1, z0 - 2, x0 + 2, STAGE_Y - 1, z0 + 2, Blocks.MOSS_BLOCK.defaultBlockState());
+        c.fill(x0 - 2, STAGE_Y, z0 - 2, x0 + 2, STAGE_Y + 3, z0 + 2, Blocks.AIR.defaultBlockState());
+        c.spawn(com.thesift.registry.ModCaveCreatures.CYPOLE.get(), x0 + 0.5, STAGE_Y, z0 + 0.5, 200.0F, false);
+        c.camera(x0 + 2.4, STAGE_Y + 1.9, z0 - 1.6, x0 + 0.5, STAGE_Y + 0.5, z0 + 0.5);
     }
 
     /** S1: the Stomper elephant and a Stompling on a patch of Sift Plains turf, three-quarters from the front. */

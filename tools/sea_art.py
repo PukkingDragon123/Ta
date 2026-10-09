@@ -50,20 +50,9 @@ def sculk_bladder():
     return I.grid(BLADDER, pal, ol=True)
 
 
-def gobbler_egg():
-    o = '#03141a'
-    return I.egg(['#07222a', '#0f3a40', '#1a5560', '#25646a'], o, {
-        4: '.....g.g..g.....',
-        5: '....b.......b...',
-        7: '...g..bbbb..g...',
-        9: '....ssSSSss.....',
-        10: '....sSSSSSs.....',
-        12: '...b.g....g.b...',
-    }, pal={'g': (I.GLOW[2], o), 'b': (I.BONE[3], o), 's': (I.GLOW[1], o), 'S': (I.GLOW[3], o)}, ring='water')
-
-
 def items():
-    return {'sculk_bladder': sculk_bladder(), 'gobbler_spawn_egg': gobbler_egg()}
+    # S2: the Gobbler's egg is drawn with the other water creatures' (tools/fish_items.py)
+    return {'sculk_bladder': sculk_bladder(), 'gobbler_spawn_egg': __import__('fish_items').gobbler_egg()}
 
 
 # ============================================================================ blocks

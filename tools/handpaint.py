@@ -25,6 +25,11 @@ Per-cube / per-face spec keys:
   decal      rows of characters drawn crisp on the face; keys maps char -> '#rrggbb'; '_' cuts a hole;
              at=(x, y) texel offset, or anchor 'top'/'bottom'/'center' (default top-left)
   opacity    alpha of the painted texels (translucent jelly)
+  glow       True: the whole face also goes on the emissive layer
+  lights     fn(ctx) -> bool mask of texels repainted from the material's light ramp and made emissive (only
+             when the material has a light ramp, so one variant can glow where the others do not)
+  glow_keys  decal characters that glow
+  marks      [(fn(ctx) -> bool mask, ramp or material ramp name, step)]: stripes and patches in another ramp
   mirror     True draws the decal mirrored (for the right-hand side of a symmetric pair)
 """
 import math
@@ -55,7 +60,7 @@ class Material:
     """
 
     def __init__(self, ramps, base=0.55, contrast=1.0, noise=0.09, cell=2.2, mottle=(3.0, 0.58), mottle2=(2.4, 0.72), belly=None,
-                 gloss=None, gloss_rate=0.06, spots=None, speck=None, ao=1.0, rim=1.0, sym=True, flat=False, back=None, back2=None):
+                 gloss=None, gloss_rate=0.06, spots=None, speck=None, ao=1.0, rim=1.0, sym=True, flat=False, back=None, back2=None, light=None):
         self.ramps = [r if isinstance(r, np.ndarray) else ramp(*r) for r in ramps]
         self.base, self.contrast, self.noise, self.cell = base, contrast, noise, cell
         self.mottle, self.mottle2 = mottle, mottle2
@@ -69,6 +74,7 @@ class Material:
         self.ao, self.rim, self.sym, self.flat = ao, rim, sym, flat
         self.back = None if back is None else ramp(*back)
         self.back2 = None if back2 is None else ramp(*back2)
+        self.light = None if light is None else ramp(*light)
 
 
 # ---------------------------------------------------------------- 3D noise
@@ -191,10 +197,12 @@ def _smooth(t):
     return t * t * (3 - 2 * t)
 
 
-def paint(model, materials, seed=1):
-    """Paints the packed model's atlas (RGBA, tex_w x tex_h)."""
+def paint(model, materials, seed=1, glow_out=None):
+    """Paints the packed model's atlas (RGBA, tex_w x tex_h). glow_out, if a list, receives the emissive
+    layer (only the glowing texels) as its one element."""
     W, H = model.tex_w, model.tex_h
     img = np.zeros((H, W, 4), np.uint8)
+    glow = np.zeros((H, W, 4), np.uint8)
     sc = _Scene(model)
     for ci, cube in enumerate(model.cubes()):
         rects = cube.faces()
@@ -210,11 +218,19 @@ def paint(model, materials, seed=1):
             wp = sc.world(cube, loc)
             M, _ = sc.frames[id(cube)]
             wn = M @ np.array(_GEO[face][1], float)
-            rgb, alpha = _paint_face(sc, cube, face, fw, fh, loc, wp, wn, mat, spec, seed + ci * 7)
+            rgb, alpha, lit = _paint_face(sc, cube, face, fw, fh, loc, wp, wn, mat, spec, seed + ci * 7)
             if 'decal' in spec:
-                _decal(rgb, alpha, spec, fw, fh)
-            img[fy:fy + fh, fx:fx + fw, :3] = np.clip(np.round(rgb), 0, 255).astype(np.uint8)
+                _decal(rgb, alpha, spec, fw, fh, lit)
+            px = np.clip(np.round(rgb), 0, 255).astype(np.uint8)
+            img[fy:fy + fh, fx:fx + fw, :3] = px
             img[fy:fy + fh, fx:fx + fw, 3] = np.where(alpha > 0, spec.get('opacity', 255), 0).astype(np.uint8)
+            lit &= alpha > 0
+            if lit.any():
+                region = glow[fy:fy + fh, fx:fx + fw]
+                region[lit, :3] = px[lit]
+                region[lit, 3] = 255
+    if glow_out is not None:
+        glow_out.append(Image.fromarray(glow, 'RGBA'))
     return Image.fromarray(img, 'RGBA')
 
 
@@ -313,20 +329,38 @@ def _paint_face(sc, cube, face, fw, fh, loc, wp, wn, mat, spec, seed):
                 edge = bel & ~np.roll(bel, 1, 0)
                 edge[0] = False
                 rgb[edge] = rgb[edge] * 0.84
+    # marks: extra painted patterns, each (fn(ctx) -> bool mask, ramp, step): stripes, bands, saddles
+    for fn, rp, step in spec.get('marks', ()):
+        mk = fn(dict(loc=loc, wp=wp, ii=ii, jj=jj, fw=fw, fh=fh, face=face, L=L))
+        if mk is not None and mk.any():
+            rr = getattr(mat, rp) if isinstance(rp, str) else rp if isinstance(rp, np.ndarray) else ramp(*rp)
+            if rr is None:
+                continue
+            rgb[mk] = rr[np.clip(idx[mk] + step, 0, len(rr) - 1)]
     # wet highlights: lone bright texels on lit tops and top rows
     if mat.gloss is not None and not plane:
         h = _hash3(ii + int(wp[0, 0, 0] * 7), jj + int(wp[0, 0, 2] * 5), np.full_like(ii, seed), 133)
         lit = (L > 0.7) & ((face == 'up') | (vertical & (jj == 0)))
         g = lit & (h < mat.gloss_rate)
         rgb[g] = mat.gloss
+    lit = np.zeros((fh, fw), bool)
+    if spec.get('glow'):
+        lit[:] = True
+    if spec.get('lights') is not None and mat.light is not None:
+        m = spec['lights'](dict(loc=loc, wp=wp, ii=ii, jj=jj, fw=fw, fh=fh, face=face, L=L))
+        if m is not None and m.any():
+            lr = mat.light if mat.light is not None else mat.ramps[0][-3:]
+            li = np.clip(np.round((L - 0.35) * len(lr)), 0, len(lr) - 1).astype(int)
+            rgb[m] = lr[li[m]]
+            lit |= m
     alpha = np.full((fh, fw), 255, np.uint8)
     if 'shape' in spec:
         keep = spec['shape'](loc[..., 0], loc[..., 1], loc[..., 2])
         alpha = np.where(keep, 255, 0).astype(np.uint8)
-    return rgb, alpha
+    return rgb, alpha, lit
 
 
-def _decal(rgb, alpha, spec, fw, fh):
+def _decal(rgb, alpha, spec, fw, fh, lit=None):
     rows = spec['decal']
     if spec.get('mirror'):
         rows = [r[::-1] for r in rows]
@@ -357,6 +391,8 @@ def _decal(rgb, alpha, spec, fw, fh):
             else:
                 rgb[y, x] = hx(c)
             alpha[y, x] = 255
+            if lit is not None:
+                lit[y, x] = ch in spec.get('glow_keys', '')
 
 
 def pack(model):
@@ -390,9 +426,18 @@ def pack(model):
         c.uv = (x, y)
 
 
-def use(model, materials, name, seed=1):
-    """Makes modelkit.render_textures paint this model by hand (one texture, no emissive layer) and
-    packs its UVs with the skyline packer."""
-    model.render_textures = lambda s=seed: {name: (paint(model, materials, seed), None)}
+def use(model, materials, name, seed=1, variants=None, glow_layer=False):
+    """Makes modelkit.render_textures paint this model by hand and packs its UVs with the L-shape
+    packer. variants: {texture name: materials} for colour variants (default: just `name`);
+    glow_layer: always write an emissive layer (empty where nothing glows), for renderers that draw one."""
+    def render(s=seed):
+        out = {}
+        for vname, mats in (variants or {name: materials}).items():
+            g = []
+            img = paint(model, mats, seed, g)
+            has = g[0].getbbox() is not None
+            out[vname] = (img, g[0] if (has or glow_layer) else None)
+        return out
+    model.render_textures = render
     model.pack = lambda: pack(model)
     return model

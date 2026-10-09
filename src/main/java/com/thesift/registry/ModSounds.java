@@ -163,12 +163,6 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_HURT = reg("entity.kazoo_fish.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_DEATH = reg("entity.kazoo_fish.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> KAZOO_FISH_FLOP = reg("entity.kazoo_fish.flop");
-    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_AMBIENT = reg("entity.tubafish.ambient");
-    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_PUFF = reg("entity.tubafish.puff");
-    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_DEFLATE = reg("entity.tubafish.deflate");
-    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_HURT = reg("entity.tubafish.hurt");
-    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_DEATH = reg("entity.tubafish.death");
-    public static final DeferredHolder<SoundEvent, SoundEvent> TUBAFISH_FLOP = reg("entity.tubafish.flop");
     public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLE_GUN_SHOOT = reg("item.bubble_gun.shoot");
     public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLE_POP = reg("entity.bubble.pop");
     // ---- Sky Whale

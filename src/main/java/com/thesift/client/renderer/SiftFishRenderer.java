@@ -6,7 +6,6 @@ import com.thesift.client.renderer.state.SiftFishRenderState;
 import com.thesift.entity.FanfareEel;
 import com.thesift.entity.SculkFish;
 import com.thesift.entity.SiftFish;
-import com.thesift.entity.Tubafish;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
@@ -43,7 +42,7 @@ public class SiftFishRenderer<T extends SiftFish, M extends EntityModel<SiftFish
 
     @Override
     protected Expression expression(T entity, SiftFishRenderState state) {
-        boolean angry = entity.isAggressive() || (entity instanceof Tubafish t && t.isPuffed());
+        boolean angry = entity.isAggressive();
         if (entity instanceof SculkFish) {
             return Expression.pick(entity, angry, false, false);
         }
@@ -70,7 +69,6 @@ public class SiftFishRenderer<T extends SiftFish, M extends EntityModel<SiftFish
         state.effort = Mth.lerp(partialTicks, entity.effortO, entity.effort);
         state.inLiquid = entity.inLiquid();
         state.seed = (entity.getId() * 37) % 101;
-        state.puff = entity instanceof Tubafish t ? Mth.lerp(partialTicks, t.puffO, t.puff) : 0.0F;
         state.variant = entity.getVariant();
         state.aggressive = entity.isAggressive();
         if (entity instanceof SculkFish sculk) {

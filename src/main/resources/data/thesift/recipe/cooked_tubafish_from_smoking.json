@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smoking",
-  "cookingtime": 100,
-  "experience": 0.35,
-  "ingredient": "thesift:tubafish",
-  "result": {
-    "id": "thesift:cooked_tubafish"
-  }
-}

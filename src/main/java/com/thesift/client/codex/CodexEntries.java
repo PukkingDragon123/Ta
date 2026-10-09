@@ -143,15 +143,6 @@ public final class CodexEntries {
             fishColours(e, t); // CR3: the fish show off their colour variants on the page
         }));
         l.add(mob(CREATURES, "kazoo_fish", ModEntities.KAZOO_FISH, CodexEntries::fishColours));
-        l.add(mob(CREATURES, "tubafish", ModEntities.TUBAFISH, (e, t) -> {
-            fishColours(e, t);
-            if (e instanceof com.thesift.entity.Tubafish f) {
-                // puff up and down on the page
-                f.puffO = f.puff;
-                float target = (t / 60) % 2 == 1 ? 1.0F : 0.0F;
-                f.puff += (target - f.puff) * (target > f.puff ? 0.35F : 0.06F);
-            }
-        }));
         // C: the Caravans, tapping out the Crystal Hymn on the page
         l.add(mob(CREATURES, "caravan", com.thesift.registry.ModCaravans.CARAVAN, (e, t) -> {
             if (e instanceof com.thesift.entity.caravan.Caravan c && t % 16 == 4) c.tapAnimation.start(c.tickCount);

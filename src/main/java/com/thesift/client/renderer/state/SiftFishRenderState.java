@@ -7,8 +7,6 @@ public class SiftFishRenderState extends SiftRenderState {
     /** Swim effort 0..1: how hard the tail beats. */
     public float effort;
     public boolean inLiquid;
-    /** Tubafish swell, 0 deflated .. 1 puffed. */
-    public float puff;
     public float seed;
     /** CR3: which colour variant the fish is painted in. */
     public int variant;

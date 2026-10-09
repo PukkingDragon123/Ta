@@ -48,7 +48,6 @@ public final class ModBusEvents {
         event.put(ModEntities.STOMPER.get(), com.thesift.entity.Stomper.createAttributes().build());
         event.put(ModEntities.FANFARE_EEL.get(), com.thesift.entity.FanfareEel.createAttributes().build());
         event.put(ModEntities.KAZOO_FISH.get(), com.thesift.entity.KazooFish.createAttributes().build());
-        event.put(ModEntities.TUBAFISH.get(), com.thesift.entity.Tubafish.createAttributes().build());
         event.put(ModEntities.SKY_WHALE.get(), com.thesift.entity.SkyWhale.createAttributes().build());
     }
 
@@ -76,8 +75,6 @@ public final class ModBusEvents {
         event.register(ModEntities.FANFARE_EEL.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.OCEAN_FLOOR,
                 ModBusEvents::checkSiftFish, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.KAZOO_FISH.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.OCEAN_FLOOR,
-                ModBusEvents::checkSiftFish, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntities.TUBAFISH.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.OCEAN_FLOOR,
                 ModBusEvents::checkSiftFish, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.SKY_WHALE.get(), SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSkyWhale, RegisterSpawnPlacementsEvent.Operation.REPLACE);

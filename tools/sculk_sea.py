@@ -1,11 +1,11 @@
-"""CR3 Fish & Coral Organs: the remade music fish (their art is in tools/fish_art.py), the new Sculk Fish and the
+"""CR3 Fish & Coral Organs: the music fish (S2: remade in tools/waterfolk.py), the Sculk Fish and the
 Sculk Coral Organ - spec (spawn eggs, plain water buckets for the music fish), sounds, text, loot, tags, spawns,
 worldgen, and the item art: every fish's raw and cooked meat, every sushi and the platter, the fish buckets
 (water and Chrome), the new spawn eggs and the organ's barb.
 
 Hooked in from one line each: spec.py (declare), gen_assets.py (assets; its sound check reads ModSculkSea.java),
 gen_world.py (world), gen_textures.py (textures), items16.py (item_sprites), chrome.py (bucket_fish); the fish
-and organ models come from tools/fish_art.py through mobs_wild.py.
+and organ models come from tools/waterfolk.py through mobs_wild.py.
 Java: registry/ModSculkSea, entity/SculkFish, entity/CoralOrgan, entity/CoralHook, worldgen/CoralOrganFeature,
 client/SculkSeaClient and its models and renderers; SiftFish keeps the colour variants and buckets.
 """
@@ -18,8 +18,8 @@ import os
 from PIL import Image
 
 NS = 'thesift'
-MUSIC_FISH = ('kazoo_fish', 'tubafish', 'fanfare_eel')
-NAMES = {'kazoo_fish': 'Kazoo Fish', 'tubafish': 'Tubafish', 'fanfare_eel': 'Fanfare Eel'}
+MUSIC_FISH = ('kazoo_fish', 'fanfare_eel')
+NAMES = {'kazoo_fish': 'Kazoo Fish', 'fanfare_eel': 'Fanfare Eel'}
 
 
 def rl(x):

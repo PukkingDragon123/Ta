@@ -451,7 +451,7 @@ def biomes():
     biome('sift_plains', fog='#aef0e2', sky='#5ed6c6', water='#7fe8ff', grass='#63d6c6', foliage='#6fe2dc', temp=0.7, down=0.6,
           spawns=mobs(creature=[('bulb', 12, 2, 4), ('sift_sniffer', 3, 1, 2), ('enchoer', 1, 1, 1), ('harmoner', 6, 1, 3)]
                       + [('stomper', 2, 1, 3), ('sky_whale', 1, 1, 1)],
-                      water=[('fanfare_eel', 2, 1, 1), ('tubafish', 2, 1, 1)], water_ambient=[('kazoo_fish', 8, 3, 6)]),
+                      water=[('fanfare_eel', 3, 1, 1)], water_ambient=[('kazoo_fish', 8, 3, 6)]),
           parts=particles(*DREAMY_PARTICLES),
           feats=[(1, 'chrome_pool_surface'), (2, 'floating_island'), (2, 'floating_islet'), (4, 'dream_boulder')] + COMMON_UNDERGROUND +
                 [(9, 'trees_sift_plains'), (9, 'patch_coral_thicket'), (9, 'patch_coral_bush'), (9, 'patch_sift_flowers'),
@@ -468,7 +468,7 @@ def biomes():
           feats=[(2, 'floating_islet')] + COMMON_UNDERGROUND + __import__('wland').DUNES_FEATURES)  # W-land: rock formations, Rattlethorn, Tuning Cactus
     biome('chrome_lakes', fog='#a8eee6', sky='#5ed6c6', water='#9ff5ff', grass='#7fe0d0', foliage='#86e9e2', temp=0.6, down=0.9,
           spawns=mobs(creature=[('slumbler', 10, 1, 2), ('bulb', 3, 1, 2)],
-                      water=[('fanfare_eel', 5, 1, 2), ('tubafish', 4, 1, 1)], water_ambient=[('kazoo_fish', 12, 3, 7)]),
+                      water=[('fanfare_eel', 6, 1, 2)], water_ambient=[('kazoo_fish', 12, 3, 7)]),
           parts=particles(('chrome_bubble', 0.002), ('sift_mist', 0.0012), ('drifting_soul', 0.002), ('wishing_star', 0.00015)),
           feats=[(2, 'floating_islet'), (6, 'disk_chime_sand')] + COMMON_UNDERGROUND +
                 [(9, 'patch_chrome_reeds'), (9, 'patch_blushgrass'), (9, 'trees_sift_plains')])

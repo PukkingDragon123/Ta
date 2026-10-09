@@ -137,9 +137,6 @@ public final class ModSculkSea {
         if (type == ModEntities.KAZOO_FISH.get()) {
             return new ItemStack(ModItems.KAZOO_FISH_BUCKET.get());
         }
-        if (type == ModEntities.TUBAFISH.get()) {
-            return new ItemStack(ModItems.TUBAFISH_BUCKET.get());
-        }
         if (type == ModEntities.FANFARE_EEL.get()) {
             return new ItemStack(ModItems.FANFARE_EEL_BUCKET.get());
         }

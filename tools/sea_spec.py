@@ -6,9 +6,9 @@ Called once from the end of spec.py; the Java side lives in registry/ModSeaSky +
 
 KELPS = ('rose', 'azure', 'amber')
 # fish -> (raw item, cooked item); kazoo_fish / cooked_kazoo_fish already exist in spec.py
-FISH = {'kazoo_fish': ('kazoo_fish', 'cooked_kazoo_fish'), 'tubafish': ('tubafish', 'cooked_tubafish'),
+FISH = {'kazoo_fish': ('kazoo_fish', 'cooked_kazoo_fish'),
         'fanfare_eel': ('fanfare_eel', 'cooked_fanfare_eel'), 'gobbler': ('gobbler_fillet', 'cooked_gobbler_fillet')}
-SUSHI = ('kazoo_fish_sushi', 'tubafish_sushi', 'fanfare_eel_sushi', 'gobbler_sushi')
+SUSHI = ('kazoo_fish_sushi', 'fanfare_eel_sushi', 'gobbler_sushi')
 
 
 def declare(block, item):
@@ -28,8 +28,6 @@ def declare(block, item):
     block("organ_reed", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.PEONY).mapColor(MapColor.COLOR_PURPLE).lightLevel(s -> 4)",
           cls="OrganReedBlock", model="sea_reed", loot="double_flower", item_kind="double", tab="nature")
 
-    item("tubafish", props="new Item.Properties().food(ModSeaFoods.TUBAFISH)", name="Raw Tubafish")
-    item("cooked_tubafish", props="new Item.Properties().food(ModSeaFoods.COOKED_TUBAFISH)")
     item("fanfare_eel", props="new Item.Properties().food(ModSeaFoods.FANFARE_EEL)", name="Raw Fanfare Eel")
     item("cooked_fanfare_eel", props="new Item.Properties().food(ModSeaFoods.COOKED_FANFARE_EEL)")
     item("gobbler_fillet", props="new Item.Properties().food(ModSeaFoods.GOBBLER_FILLET)", name="Raw Gobbler Fillet")

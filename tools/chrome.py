@@ -21,9 +21,9 @@ import numpy as np
 from PIL import Image
 
 NS = 'thesift'
-FISH = ('kazoo_fish', 'tubafish', 'fanfare_eel')
-FISH_NAMES = {'kazoo_fish': 'Kazoo Fish', 'tubafish': 'Tubafish', 'fanfare_eel': 'Fanfare Eel'}
-FISH_FOOD = {'kazoo_fish': 'ModFoods.KAZOO_FISH', 'tubafish': 'ModSeaFoods.TUBAFISH', 'fanfare_eel': 'ModSeaFoods.FANFARE_EEL'}
+FISH = ('kazoo_fish', 'fanfare_eel')
+FISH_NAMES = {'kazoo_fish': 'Kazoo Fish', 'fanfare_eel': 'Fanfare Eel'}
+FISH_FOOD = {'kazoo_fish': 'ModFoods.KAZOO_FISH', 'fanfare_eel': 'ModSeaFoods.FANFARE_EEL'}
 VANILLA = os.environ.get('MC_TEX', '/home/user/ref/mc-tex/assets/minecraft/textures')
 
 # one loop of the fluid's colour: 40 frames x 3 ticks = 6 seconds (ChromeClient.TINT_* and the fog

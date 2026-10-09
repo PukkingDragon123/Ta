@@ -47,7 +47,17 @@ public class KazooFish extends SiftFish {
 
     @Override
     protected int[] variantWeights() {
-        return new int[]{30, 20, 20, 20, 6};
+        // S2: each school wears its waters' colours - reef teal, sunset (kelp), lagoon (Chrome), mint, midnight (sculk)
+        if (this.inBiome("magic_kelp_forest") || this.inBiome("brass_coral_reef")) {
+            return new int[]{6, 30, 4, 4, 0};
+        }
+        if (this.inBiome("chrome_lakes") || this.inBiome("chrome_coral_ocean")) {
+            return new int[]{6, 2, 30, 6, 0};
+        }
+        if (this.inBiome("deep_dark_ocean")) {
+            return new int[]{2, 0, 2, 0, 30};
+        }
+        return new int[]{30, 4, 6, 20, 2};
     }
 
     @Override

@@ -72,7 +72,7 @@ final class KnowledgePages {
         KEYS.put("flora", new String[]{"biome:thesift:sift_plains", "item:thesift:coral_bush"});
         KEYS.put("chrome", new String[]{"biome:thesift:chrome_lakes", "item:thesift:chrome_bucket"});
         KEYS.put("siftite", new String[]{"item:thesift:siftite_ingot", "item:thesift:siftite_pickaxe"});
-        KEYS.put("sushi", new String[]{"item:thesift:sushi_platter", "item:thesift:kazoo_fish_sushi", "item:thesift:tubafish_sushi"});
+        KEYS.put("sushi", new String[]{"item:thesift:sushi_platter", "item:thesift:kazoo_fish_sushi", "item:thesift:fanfare_eel_sushi"});
         for (String b : new String[]{"sift_plains", "wishing_grove", "forest_mountains", "chrome_lakes", "rocky_dunes", "caravans_cavern",
                 "deep_sift"}) {
             KEYS.put(b, new String[]{"biome:thesift:" + b});

@@ -62,8 +62,6 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.KazooFish>> KAZOO_FISH = ENTITIES.registerEntityType(
             "kazoo_fish", com.thesift.entity.KazooFish::new, MobCategory.WATER_AMBIENT,
             b -> b.sized(0.45F, 0.4F).eyeHeight(0.25F).clientTrackingRange(4));
-    public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.Tubafish>> TUBAFISH = ENTITIES.registerEntityType("tubafish",
-            com.thesift.entity.Tubafish::new, MobCategory.WATER_CREATURE, b -> b.sized(1.0F, 1.0F).eyeHeight(0.55F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.SkyWhale>> SKY_WHALE = ENTITIES.registerEntityType("sky_whale",
             com.thesift.entity.SkyWhale::new, MobCategory.CREATURE, b -> b.sized(4.0F, 3.0F).eyeHeight(1.8F).clientTrackingRange(16));
     public static final DeferredHolder<EntityType<?>, EntityType<com.thesift.entity.BubbleEntity>> BUBBLE = ENTITIES.registerEntityType("bubble",

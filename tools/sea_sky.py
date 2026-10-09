@@ -114,7 +114,7 @@ def assets(GA):
     GA.STREAM.update(STREAM)
     shaped, shapeless, smelt, tag, LANG = GA.shaped, GA.shapeless, GA.smelt, GA.tag, GA.LANG
     # --- cooking: every fish has raw and cooked meat
-    for raw, cooked in (('tubafish', 'cooked_tubafish'), ('fanfare_eel', 'cooked_fanfare_eel'), ('gobbler_fillet', 'cooked_gobbler_fillet')):
+    for raw, cooked in (('fanfare_eel', 'cooked_fanfare_eel'), ('gobbler_fillet', 'cooked_gobbler_fillet')):
         smelt(cooked, raw, cooked, 0.35, 200, ('smelting', 'smoking'))
         smelt(f'{cooked}_campfire', raw, cooked, 0.35, 600, ('campfire_cooking',))
         for t in (raw, cooked):
@@ -125,10 +125,10 @@ def assets(GA):
         tag('item', f'{NS}:glowkelp', rl(f'{k}_glowkelp'))
         tag('block', f'{NS}:glowkelp', rl(f'{k}_glowkelp'))
         tag('block', 'minecraft:sword_efficient', rl(f'{k}_glowkelp'))
-    for fish in ('kazoo_fish', 'tubafish', 'fanfare_eel'):
+    for fish in ('kazoo_fish', 'fanfare_eel'):
         shapeless(f'{fish}_sushi', [fish, 'minecraft:dried_kelp', f'#{NS}:glowkelp'], f'{fish}_sushi', 2, 'food')
     shapeless('gobbler_sushi', ['gobbler_fillet', 'sculk_bladder', 'minecraft:dried_kelp', f'#{NS}:glowkelp'], 'gobbler_sushi', 3, 'food')
-    shapeless('sushi_platter', ['kazoo_fish_sushi', 'tubafish_sushi', 'fanfare_eel_sushi', 'gobbler_sushi', '#minecraft:wooden_slabs'],
+    shapeless('sushi_platter', ['kazoo_fish_sushi', 'fanfare_eel_sushi', 'gobbler_sushi', '#minecraft:wooden_slabs'],
               'sushi_platter', 1, 'food')
     # --- dyes from the new plants
     for src, dye in (('rose_glowkelp', 'pink'), ('azure_glowkelp', 'light_blue'), ('amber_glowkelp', 'orange'), ('chime_bell', 'cyan'),
@@ -155,7 +155,7 @@ def assets(GA):
         f'codex.{NS}.sea_and_sky.title': 'Seas and Skies', f'codex.{NS}.sea_and_sky.tagline': 'Real water, and clouds you can walk on',
         f'codex.{NS}.sea_and_sky.body': 'Only two seas in the Sift hold real water. The warm Magic Kelp Forest glows with rose, azure and amber glowkelp over coral-pink sand, full of Kazoo Fish and coral. The cold Sculk Ocean is dark teal water over trenches, ridges and glowing Sculk Coral reefs - mind the Gobblers. Far above the land drift the Sky Islands, where Chime Bells ring and Organ Reeds hum as you walk through them, and Sky Whales sing.',
         f'codex.{NS}.sushi.title': 'Sushi', f'codex.{NS}.sushi.tagline': 'Raw fish, dried kelp, a strand of glowkelp',
-        f'codex.{NS}.sushi.body': 'Every Sift fish has raw and cooked meat (fish killed by fire drop it cooked). Roll a raw fish with dried kelp and any glowkelp. Kazoo Fish Sushi: water breathing. Tubafish Sushi: night vision and resistance. Fanfare Eel Sushi: dolphin\'s grace. Gobbler Sushi (add the sculk bladder) cures Sculk Corruption. Set all four on a wooden slab for a Sushi Platter: a long, safe dive.',
+        f'codex.{NS}.sushi.body': 'Every Sift fish has raw and cooked meat (fish killed by fire drop it cooked). Roll a raw fish with dried kelp and any glowkelp. Kazoo Fish Sushi: water breathing. Fanfare Eel Sushi: dolphin\'s grace. Gobbler Sushi (add the sculk bladder) cures Sculk Corruption. Set all four on a wooden slab for a Sushi Platter: a long, safe dive.',
     })
 
 
@@ -248,7 +248,7 @@ def _biomes(GW):
            temp=0.8, down=0.8, music='music.magic_kelp_forest', loop='ambient.magic_kelp_forest.loop',
            additions='ambient.magic_kelp_forest.additions', mood='ambient.sift.mood',
            spawns=_spawns(water_ambient=[('kazoo_fish', 16, 4, 8), ('minecraft:tropical_fish', 10, 4, 8)],
-                          water_creature=[('tubafish', 5, 1, 2), ('fanfare_eel', 2, 1, 1), ('minecraft:dolphin', 1, 1, 2)],
+                          water_creature=[('fanfare_eel', 4, 1, 1), ('minecraft:dolphin', 1, 1, 2)],
                           creature=[('bulb', 3, 1, 3), ('slumbler', 2, 1, 1)]),
            parts=[('chrome_bubble', 0.004), ('glow_dust', 0.003), ('sift_note', 0.0008), ('star_sparkle', 0.0015)],
            feats=[(0, 'sea_flood')] + common + [(9, 'glowkelp'), (9, 'minecraft:warm_ocean_vegetation'), (9, 'minecraft:seagrass_warm'),

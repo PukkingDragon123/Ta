@@ -64,7 +64,11 @@ public class SculkFish extends SiftFish implements Enemy {
 
     @Override
     protected int[] variantWeights() {
-        return new int[]{60, 25, 10};
+        // S2: bone-pale in the swamp's Sculk Water, sculk teal in the ocean, black-violet down deep
+        if (this.inBiome("sculk_swamp")) {
+            return new int[]{6, 30, 0};
+        }
+        return this.getY() < 30 ? new int[]{20, 2, 30} : new int[]{60, 6, 14};
     }
 
     @Override

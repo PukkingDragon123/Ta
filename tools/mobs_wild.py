@@ -189,11 +189,6 @@ def sky_whale() -> Model:
 
 
 # =========================================================================== FISH
-# CR3 Fish & Coral Organs: the music fish are hand-drawn sprites extruded into rounded bodies (tools/fish_art.py)
-from fish_art import fanfare_eel, kazoo_fish, tubafish  # noqa: E402
-
-
-ALL = {'stomper': stomper, 'sky_whale': sky_whale, 'fanfare_eel': fanfare_eel, 'kazoo_fish': kazoo_fish, 'tubafish': tubafish}
-ALL['gobbler'] = __import__('gobbler').gobbler  # sea & sky (F): the blind deep-sea catfish, tools/gobbler.py
-ALL['sculk_fish'] = __import__('fish_art').sculk_fish  # CR3: the Sculk Ocean's biting schools
-ALL['coral_organ'] = __import__('fish_art').coral_organ  # CR3: the living Sculk Coral Organ
+ALL = {'stomper': stomper, 'sky_whale': sky_whale}
+# S2: the water creatures (Kazoo Fish, Fanfare Eel, Sculk Fish, Gobbler, Sculk Coral Organ), hand-painted in tools/waterfolk.py
+ALL.update({k: v for k, v in __import__('waterfolk').MODELS.items() if k != 'cypole'})

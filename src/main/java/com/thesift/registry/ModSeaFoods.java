@@ -14,15 +14,12 @@ import net.minecraft.world.item.consume_effects.RemoveStatusEffectsConsumeEffect
  * kelp and glowkelp. Each sushi lends a little of its fish to you:
  * <ul>
  *   <li>Kazoo Fish Sushi: breathe underwater.</li>
- *   <li>Tubafish Sushi: see in the dark, and toughen up like a puffed Tubafish.</li>
  *   <li>Fanfare Eel Sushi: glide through the water like an eel.</li>
  *   <li>Gobbler Sushi (with its glowing sculk bladder): cures Sculk Corruption and lets you see in the dark.</li>
  *   <li>Sushi Platter: all of it at once, for a long dive.</li>
  * </ul>
  */
 public final class ModSeaFoods {
-    public static final FoodProperties TUBAFISH = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build();
-    public static final FoodProperties COOKED_TUBAFISH = new FoodProperties.Builder().nutrition(6).saturationModifier(0.7F).build();
     public static final FoodProperties FANFARE_EEL = new FoodProperties.Builder().nutrition(2).saturationModifier(0.2F).build();
     public static final FoodProperties COOKED_FANFARE_EEL = new FoodProperties.Builder().nutrition(6).saturationModifier(0.8F).build();
     public static final FoodProperties GOBBLER_FILLET = new FoodProperties.Builder().nutrition(3).saturationModifier(0.2F).build();
@@ -31,13 +28,6 @@ public final class ModSeaFoods {
     public static final FoodProperties KAZOO_FISH_SUSHI = new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build();
     public static final Consumable KAZOO_FISH_SUSHI_CONSUMABLE = Consumables.defaultFood().consumeSeconds(1.0F)
             .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.WATER_BREATHING, 1800, 0))))
-            .build();
-
-    public static final FoodProperties TUBAFISH_SUSHI = new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build();
-    public static final Consumable TUBAFISH_SUSHI_CONSUMABLE = Consumables.defaultFood().consumeSeconds(1.0F)
-            .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
-                    new MobEffectInstance(MobEffects.NIGHT_VISION, 2400, 0),
-                    new MobEffectInstance(MobEffects.RESISTANCE, 600, 0))))
             .build();
 
     public static final FoodProperties FANFARE_EEL_SUSHI = new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build();

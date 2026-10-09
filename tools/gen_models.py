@@ -46,13 +46,11 @@ POSES.update({
     'sky_whale': {'rest': Pose(), 'sing': Pose(jaw={'rot': (0.55, 0, 0)}, head={'rot': (-0.2, 0, 0)}, left_flipper={'rot': (0, 0, -0.6)},
                                                right_flipper={'rot': (0, 0, 0.6)}, tail1={'rot': (0.2, 0, 0)}, tail2={'rot': (0.25, 0, 0)})},
     # CR3 Fish & Coral Organs: the sprite-built fish (twice vanilla scale) and the Sculk Coral Organ
-    'tubafish': {'rest': Pose(**{f'spike_{i}': {'scale': (0.35, 0.35, 0.35)} for i in range(13)}),
-                 'puffed': Pose(body={'scale': (1.6, 1.6, 1.6)}, **{f'spike_{i}': {'scale': (1.5, 1.5, 1.5)} for i in range(13)})},
     'fanfare_eel': {'rest': Pose(), 'swim': Pose(**{f'segment_{i}': {'rot': (0, 0.35 * (1 if i % 2 else -1), 0)} for i in range(5)})},
     'sculk_fish': {'rest': Pose(jaw={'rot': (0.12, 0, 0)}), 'bite': Pose(jaw={'rot': (0.9, 0, 0)}, body={'pos': (0, 0, -2)})},
     'coral_organ': {'rest': Pose(), 'aim': Pose(launcher={'rot': (-0.6, 0.5, 0)}, **{f'pipe_{i}': {'scale': (1.1, 1.08, 1.1)} for i in (1, 3)})},
 })
-WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 4.5, 'kazoo_fish': 9, 'tubafish': 6, 'sculk_fish': 9, 'coral_organ': 6}
+WILD_SCALE = {'stomper': 4.5, 'sky_whale': 3.2, 'fanfare_eel': 4.5, 'kazoo_fish': 9, 'sculk_fish': 9, 'coral_organ': 6}
 
 
 PREVIEW_SCALE = {'enchoer': 5, 'soul_golem': 16, 'nib': 30, 'slumbler': 7, 'dictator': 5, 'harmoner': 14, 'thumper': 4, 'strummer': 4,

@@ -239,7 +239,7 @@ item("siftite_spear", cls="tool:spear", model="spear", tab="combat")
 for mob in ["bulb", "slumbler", "sifter", "enchoer", "harmoner", "dictator", "thumper", "strummer",
             "strumling"]:
     item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
-for mob in ["stomper", "fanfare_eel", "kazoo_fish", "tubafish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
+for mob in ["stomper", "fanfare_eel", "kazoo_fish", "sky_whale"]: item(f"{mob}_spawn_egg", cls=f"egg:{mob}", tab="eggs", model="generated")
 item("sculk_parasite_spawn_egg", cls="egg:sculk_parasite", tab="eggs", model="generated")
 item("conductors_staff", cls="StaffItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()",
      model="handheld", tab="combat", name="Conductor's Staff")

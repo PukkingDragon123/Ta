@@ -38,7 +38,6 @@ import net.minecraft.world.entity.player.Player;
  *   <tr><td>Echoer</td><td>wind chimes a fifth above through its speakers, amethyst shimmer</td><td>chimes; Golem Hymn</td><td>shy, flies</td></tr>
  *   <tr><td>Sifter</td><td>dune bell (its own clapper on the lip)</td><td>chimes</td><td>shy</td></tr>
  *   <tr><td>Swifter</td><td>banjo yips</td><td>strings, drum</td><td>shy</td></tr>
- *   <tr><td>Tubafish</td><td>tuba (trumpet, low)</td><td>drum, flute; Whale Song</td><td>shy, swims</td></tr>
  *   <tr><td>Sky Whale</td><td>whale song (low flute + ghastly coo, every second note)</td><td>flute; Whale Song</td><td>shy, flies</td></tr>
  *   <tr><td>Soul Golem</td><td>soul vibraphone (iron xylophone)</td><td>drum; Golem Hymn</td><td>loyal (owned golems only)</td></tr>
  *   <tr><td>Caravan, Jailer, Sculkling, Fanfare Eel, Gobbler</td><td>crystal xylophone, jailer's bell, sculk clicks,
@@ -95,10 +94,6 @@ final class BandVoices {
                 .families(Family.STRINGS, Family.DRUM)
                 .temper(BandVoice.Temper.SHY).instrument("banjo").colour(0xF2F2F2)
                 .when(m -> !((Swifter) m).isNapping() && !((Swifter) m).isAngry()).register();
-        BandRegistry.voice(ModEntities.TUBAFISH, SoundEvents.NOTE_BLOCK_TRUMPET).transpose(-12).volume(1.1F)
-                .layer(SoundEvents.NOTE_BLOCK_BASS, 0.4F)
-                .families(Family.DRUM, Family.FLUTE).songs(Song.WHALE) // CLEAN: was the Tide Song
-                .temper(BandVoice.Temper.SHY).movement(BandVoice.Movement.SWIM).instrument("tuba").colour(0x5AA9E6).register();
         BandRegistry.voice(ModEntities.SKY_WHALE, SoundEvents.NOTE_BLOCK_FLUTE).transpose(-12).every(2).volume(3.0F)
                 .layer(SoundEvents.HAPPY_GHAST_AMBIENT, 0.5F)
                 .families(Family.FLUTE).songs(Song.WHALE)

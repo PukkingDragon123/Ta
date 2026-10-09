@@ -53,7 +53,14 @@ public class FanfareEel extends SiftFish implements Enemy {
 
     @Override
     protected int[] variantWeights() {
-        return new int[]{50, 35, 12};
+        // S2: moss green over gold in the plains and lakes, violet among the kelp, sculk-dark in the Sculk Ocean
+        if (this.inBiome("magic_kelp_forest") || this.inBiome("brass_coral_reef")) {
+            return new int[]{4, 30, 0};
+        }
+        if (this.inBiome("deep_dark_ocean")) {
+            return new int[]{2, 0, 30};
+        }
+        return new int[]{30, 6, 2};
     }
 
     @Override
@@ -72,7 +79,7 @@ public class FanfareEel extends SiftFish implements Enemy {
         if (e instanceof Player p) {
             return !p.isCreative() && !p.isSpectator();
         }
-        return e instanceof KazooFish || (e instanceof Tubafish t && !t.isPuffed());
+        return e instanceof KazooFish;
     }
 
     @Override

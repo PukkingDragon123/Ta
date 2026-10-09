@@ -135,6 +135,12 @@ public abstract class SiftFish extends PathfinderMob implements Bucketable {
         return new int[]{1};
     }
 
+    /** S2: whether this fish stands in the given Sift biome (each school wears the colours of its waters). */
+    protected boolean inBiome(String id) {
+        return this.level().getBiome(this.blockPosition()).is(net.minecraft.resources.ResourceKey.create(
+                net.minecraft.core.registries.Registries.BIOME, com.thesift.TheSift.id(id)));
+    }
+
     public int getVariant() {
         return Mth.clamp(this.entityData.get(VARIANT), 0, this.variantCount() - 1);
     }

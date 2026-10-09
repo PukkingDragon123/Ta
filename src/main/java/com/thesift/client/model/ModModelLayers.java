@@ -20,7 +20,6 @@ public final class ModModelLayers {
     public static final ModelLayerLocation STOMPER = layer("stomper");
     public static final ModelLayerLocation FANFARE_EEL = layer("fanfare_eel");
     public static final ModelLayerLocation KAZOO_FISH = layer("kazoo_fish");
-    public static final ModelLayerLocation TUBAFISH = layer("tubafish");
     public static final ModelLayerLocation SKY_WHALE = layer("sky_whale");
     public static final ModelLayerLocation CARAVAN = layer("caravan"); // C: the Caravans
 

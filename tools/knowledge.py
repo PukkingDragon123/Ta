@@ -199,7 +199,6 @@ FIELD_NOTES = {
     'sky_whale': 'Habitat: The skies over the islands|Temper: Gentle, rare|Diet: Giant sky fruit|Drops: Star Shards, Skysong Gems',
     'fanfare_eel': 'Habitat: Chrome Lakes|Temper: Hostile|Diet: Anything swimming|Drops: Eel meat, gold, copper',
     'kazoo_fish': 'Habitat: Chrome Lakes, seas|Temper: Skittish schools|Diet: Plankton|Drops: Kazoo Fish',
-    'tubafish': 'Habitat: Chrome Lakes, seas|Temper: Defensive, stings when puffed|Diet: Plankton|Drops: Tubafish, Tuba Bubbles',
     'caravan': 'Habitat: Caravans Cavern|Temper: Territorial swarm|Diet: Raw ore|Drops: Crystal shards',
     'gobbler': 'Habitat: Sculk Ocean|Temper: Hostile, blind|Diet: Whatever it finds|Drops: Gobbler Fillet, Sculk Bladder',
     'sculk_fish': 'Habitat: Sculk Ocean, Sculk Water|Temper: Hostile schools|Diet: Anything that moves|Drops: Sculk fish',

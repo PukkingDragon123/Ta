@@ -74,53 +74,20 @@ def _kazoo_shape(u, v):
 def kazoo_fish(cooked=False):
     g = _canvas()
     _body(g, _kazoo_shape)
-    if not cooked:
-        _put(g, [(9, 8), (10, 6), (7, 9), (11, 8)], 's')  # coral freckles
-    _put(g, [(4, 10)], 'W')
-    _put(g, [(5, 10)], 'e')  # the googly eye
-    _put(g, [(3, 10)], 'c')  # the kazoo's cap
+    # two saddle stripes across the body, a one-texel eye with a gold iris, the kazoo's cap
+    for x, y in ((8, 8), (9, 7), (10, 6), (11, 5), (6, 10), (7, 9)):
+        if g[y][x] in 'Tdw':
+            g[y][x] = 's'
+    _put(g, [(4, 10)], 'i')
+    _put(g, [(5, 10)], 'e')
+    _put(g, [(3, 10)], 'c')
     if cooked:
         pal = {'K': '#c89068', 'k': '#a8704a', 'c': '#d8b060', 'd': '#7a4a2a', 'T': '#b07a48', 'w': '#e0b88a', 'f': '#a0623a', 'F': '#c88a58',
-               's': '#8a5434', 'W': '#f0e0c8', 'e': '#2a1810'}
-    else:
-        pal = {'K': '#ffb0bb', 'k': '#f87d8d', 'c': ('#fff4a8', '#8a6a20'), 'd': '#1f8f96', 'T': '#3fd0c4', 'w': '#d2fff0', 'f': '#f87d8d',
-               'F': '#ffc8d0', 's': '#ff6f8c', 'W': '#ffffff', 'e': '#101820'}
-    return I.grid(_rows(g), pal, ol=True)
-
-
-def _tuba_shape(u, v):
-    r = math.hypot(u + 0.6, v * 1.05)
-    if r <= 5.4:
-        if v < -2.6:
-            return 'd'
-        if v > 1.9:
-            return 'w'
-        return 'B'
-    if 4.8 < u <= 8.0 and abs(v) <= 1.0 + (u - 4.8) * 0.75 and r > 5.0:  # a stubby fan tail
-        return 'F' if u > 7.2 else 'f'
-    if -7.4 <= u < -5.4 and abs(v - 0.6) <= 1.0:  # pouting lips
-        return 'L'
-    return None
-
-
-def tubafish(cooked=False):
-    g = _canvas()
-    _body(g, _tuba_shape, 7.0, 8.5)
-    # the tuba on its back (up-left) and the bell
-    _put(g, [(4, 3), (5, 4), (3, 2), (4, 2), (2, 2), (3, 1), (2, 1), (4, 1)], 'G')
-    _put(g, [(3, 2)], 'g')
-    # coral spikes round its outline
-    _put(g, [(1, 7), (8, 2), (13, 9), (9, 14), (2, 12)], 'p')
-    if not cooked:
-        _put(g, [(6, 7), (8, 8), (9, 6), (6, 10), (10, 9), (7, 5)], 's')  # glowing freckles
-    _put(g, [(4, 8), (5, 8)], 'W')
-    _put(g, [(4, 9)], 'e')
-    if cooked:
-        pal = {'d': '#7a4a2a', 'B': '#b07a48', 'w': '#e8c49a', 'f': '#a0623a', 'F': '#c88a58', 'L': '#c07850', 'G': '#c09040', 'g': '#5a3a1a',
-               'p': '#9a5a3a', 's': '#d8a868', 'W': '#f0e0c8', 'e': '#2a1810'}
-    else:
-        pal = {'d': '#4f74c2', 'B': '#78a5e3', 'w': '#ffe6ef', 'f': '#ffb0c4', 'F': '#fff0f4', 'L': ('#f59ab8', '#8a3a5a'), 'G': ('#f2d27a', '#7a5a20'),
-               'g': '#1a1030', 'p': ('#f37d84', '#8a2a3a'), 's': '#5ff8ff', 'W': '#ffffff', 'e': '#1a1420'}
+               's': '#8a5434', 'i': '#e0b070', 'e': '#2a1810'}
+    else:  # S2: the reef-teal Kazoo Fish of the Sift Plains (tools/waterfolk.py)
+        pal = {'K': ('#ecc866', '#6e4618'), 'k': ('#b9842c', '#6e4618'), 'c': ('#fbe9a6', '#6e4618'), 'd': ('#1b5570', '#0c2a3e'),
+               'T': ('#2f948f', '#0e3a45'), 'w': ('#d9e4d3', '#6f7f7a'), 'f': ('#e0738c', '#6e2a47'), 'F': ('#f8bcc4', '#6e2a47'),
+               's': ('#123d57', '#0c2a3e'), 'i': '#e8b03a', 'e': '#0d0b16'}
     return I.grid(_rows(g), pal, ol=True)
 
 
@@ -152,8 +119,8 @@ def fanfare_eel(cooked=False):
     if cooked:
         pal = {'G': '#c89a50', 'g': '#8a6030', 'd': '#4a2e1c', 'b': '#7a5034', 'r': '#d8c09a', 'l': '#e0a860', 'f': '#a07040', 'e': '#1a100a'}
     else:
-        pal = {'G': ('#f2d27a', '#6a4a10'), 'g': '#1a1030', 'd': '#0f2430', 'b': '#1a3a4a', 'r': '#b3ab96', 'l': '#3ff5e6',
-               'f': ('#3fd8d0', '#0a3a3a'), 'e': '#3ff5e6'}
+        pal = {'G': ('#ecc866', '#6e4618'), 'g': '#1c0610', 'd': ('#1f4426', '#0f2414'), 'b': ('#3d723a', '#16301c'), 'r': ('#c8b42c', '#5a5414'),
+               'l': ('#e0cc4a', '#5a5414'), 'f': ('#548c52', '#16301c'), 'e': '#e8b03a'}
     return I.grid(_rows(g), pal, ol=True, no_ol='')
 
 
@@ -235,35 +202,9 @@ def kazoo_fish_sushi():
     top = [(4, 6, 's'), (8, 7, 's'), (10, 6, 's'), (2, 8, 'U'), (12, 8, 'U')]
     tail = [(12, 5, 'f'), (13, 4, 'F'), (13, 5, 'f'), (14, 3, 'F'), (14, 4, 'f'), (12, 6, 'f'), (13, 6, 'F')]
     extra = [(0, 11, 'p'), (1, 12, 'p'), (0, 12, 'P')]
-    pal = {'T': ('#3fd0c4', '#0f5a5a'), 'S': ('#d2fff0', '#3a7a70'), 'U': ('#1f8f96', '#0f5a5a'), 's': ('#ff6f8c', '#0f5a5a'),
-           'f': ('#f87d8d', '#7a2a3a'), 'F': ('#ffc8d0', '#7a2a3a'), 'p': ('#ff9aa8', '#7a2a3a'), 'P': ('#ffd0d8', '#7a2a3a')}
+    pal = {'T': ('#2f948f', '#0e3a45'), 'S': ('#d9e4d3', '#6f7f7a'), 'U': ('#1b5570', '#0c2a3e'), 's': ('#123d57', '#0c2a3e'),
+           'f': ('#e0738c', '#6e2a47'), 'F': ('#f8bcc4', '#6e2a47'), 'p': ('#f096a6', '#6e2a47'), 'P': ('#fde0e2', '#6e2a47')}
     return _nigiri(top, pal, tail, extra)
-
-
-def tubafish_sushi():
-    """Tubafish gunkan: a roll wrapped in nori, heaped with pale puffer flesh freckled with its glowing cyan
-    spots, a tiny brass tuba-bell of a garnish on top."""
-    rows = [
-        '................',
-        '................',
-        '.......Gg.......',
-        '......GGG.......',
-        '....wwswwswW....',
-        '...wWswwwwswW...',
-        '...kKkkkkkkkk...',
-        '...kKkkkkkkkk...',
-        '...kKkkkkkkkk...',
-        '...kKkkkkkkkk...',
-        '...kkkkkkkkkk...',
-        '....kkkkkkkk....',
-        '................',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = dict(NORI)
-    pal.update({'w': ('#ffe6ef', '#7a4a6a'), 'W': ('#fff6fa', '#7a4a6a'), 's': '#5ff8ff', 'G': ('#f2d27a', '#6a4a10'), 'g': '#1a1030'})
-    return I.grid(rows, pal, ol=True, no_ol='s')
 
 
 def fanfare_eel_sushi():
@@ -304,7 +245,7 @@ def gobbler_sushi():
 
 
 def sushi_platter():
-    """All four on a wooden board: kazoo nigiri, a tubafish gunkan, eel nigiri and a gobbler roll."""
+    """All of them on a wooden board: kazoo nigiri, a heap of pickled ginger, eel nigiri and a gobbler roll."""
     rows = [
         '................',
         '................',
@@ -313,9 +254,9 @@ def sushi_platter():
         '................',
         '................',
         '..F.......Gg....',
-        '.TsT.wsw.LLL.kkk',
-        '.rrr.kkk.rKr.kSk',
-        '.qrq.kkk.rKr.kkk',
+        '.TsT..p..LLL.kkk',
+        '.rrr.pPp.rKr.kSk',
+        '.qrq.ppp.rKr.kkk',
         'WWWWWWWWWWWWWWWW',
         'VVVVVVVVVVVVVVVV',
         'VVVVVVVVVVVVVVVV',
@@ -325,7 +266,8 @@ def sushi_platter():
     ]
     pal = dict(RICE)
     pal.update(NORI)
-    pal.update({'T': ('#3fd0c4', '#0f5a5a'), 's': '#ff6f8c', 'F': ('#f87d8d', '#7a2a3a'), 'w': ('#ffe6ef', '#7a4a6a'),
+    pal.update({'T': ('#2f948f', '#0e3a45'), 's': '#123d57', 'F': ('#e0738c', '#6e2a47'), 'p': ('#f096a6', '#6e2a47'),
+                'P': ('#fde0e2', '#6e2a47'),
                 'G': ('#f2d27a', '#6a4a10'), 'g': '#1a1030', 'L': ('#5a3a24', '#1a0e08'), 'S': '#3ff5e6',
                 'W': ('#b18a52', '#2a1a16'), 'V': ('#8f6a36', '#2a1a16'), 'd': ('#4d3220', '#2a1a16')})
     return I.grid(rows, pal, ol=True, no_ol='sS')
@@ -343,18 +285,9 @@ BUCKET_FISH = {
         '.....wwwwww.....',
         '................',
         '................',
-    ], {'k': '#f87d8d', 'K': '#ffb0bb', 'c': ('#fff4a8', '#8a6a20'), 'd': '#1f8f96', 'T': '#3fd0c4', 'w': '#d2fff0', 's': '#ff6f8c',
-        'F': '#ffc8d0', 'f': '#f87d8d', 'W': '#ffffff', 'e': '#101820'}),
-    'tubafish': ([
-        '......GgG.......',
-        '..p..dBBBd..p...',
-        '.LLdBWBsBBBd....',
-        '.LLBBeBBBsBBFf..',
-        '..wwwwwwwwwwF...',
-        '................',
-        '................',
-    ], {'G': ('#f2d27a', '#6a4a10'), 'g': '#1a1030', 'p': ('#f37d84', '#8a2a3a'), 'd': '#4f74c2', 'B': '#78a5e3', 'L': '#f59ab8',
-        'W': '#ffffff', 'e': '#1a1420', 's': '#5ff8ff', 'w': '#ffe6ef', 'F': '#fff0f4', 'f': '#ffb0c4'}),
+    ], {'k': ('#b9842c', '#6e4618'), 'K': ('#ecc866', '#6e4618'), 'c': ('#fbe9a6', '#6e4618'), 'd': ('#1b5570', '#0c2a3e'),
+        'T': ('#2f948f', '#0e3a45'), 'w': ('#d9e4d3', '#6f7f7a'), 's': ('#123d57', '#0c2a3e'), 'F': ('#f8bcc4', '#6e2a47'),
+        'f': ('#e0738c', '#6e2a47'), 'W': '#e8b03a', 'e': '#0d0b16'}),
     'fanfare_eel': ([
         '.GGg............',
         'GDDGddbbbb......',
@@ -363,8 +296,8 @@ BUCKET_FISH = {
         '.........dbbbf..',
         '................',
         '................',
-    ], {'G': ('#f2d27a', '#6a4a10'), 'g': '#b8923a', 'D': '#0a1a22', 'd': '#0f2430', 'b': '#1a3a4a', 'r': '#b3ab96', 'l': '#3ff5e6',
-        'f': ('#3fd8d0', '#0a3a3a')}),
+    ], {'G': ('#ecc866', '#6e4618'), 'g': ('#b9842c', '#6e4618'), 'D': '#1c0610', 'd': ('#1f4426', '#0f2414'), 'b': ('#3d723a', '#16301c'),
+        'r': ('#c8b42c', '#5a5414'), 'l': ('#e0cc4a', '#5a5414'), 'f': ('#548c52', '#16301c')}),
 }
 
 WATER_BUCKET = [
@@ -418,35 +351,9 @@ def water_bucket(fish):
 # ============================================================================ spawn eggs
 
 def eggs():
-    E = {}
-    E['sculk_fish_spawn_egg'] = I.egg(['#06161d', '#0b2532', '#123a48', '#1b5462'], '#020a0e', {
-        2: '.....t...t......',
-        3: '......t.t.......',
-        5: '.....gE..Eg.....',
-        6: '......g..g......',
-        8: '...s........s...',
-        9: '....wtwtwtw.....',
-        10: '.....jjjjj......',
-        12: '...s...s...s....',
-    }, {'t': ('#d6fffb', '#020a0e'), 'g': ('#3ff5e6', '#020a0e'), 'E': ('#9ffcff', '#020a0e'), 's': ('#3ff5e6', '#020a0e'),
-        'w': ('#e3ddcc', '#020a0e'), 'j': ('#0b2430', '#020a0e')}, no_ol='tgEs', ring='water')
-    E['coral_organ_spawn_egg'] = I.egg(['#082a35', '#0c3b47', '#114d58', '#18626b'], '#03141a', {
-        1: '.......R........',
-        2: '.....R.P.R......',
-        3: '.....P.P.P......',
-        4: '...R.P.P.P.R....',
-        5: '...P.P.P.P.P....',
-        6: '...P.M.M.M.P....',
-        7: '...M.h.h.h.M....',
-        8: '...h.......h....',
-        10: '....oHHHHo......',
-        12: '..p...p...p.p...',
-    }, {'R': ('#7ff7ea', '#03141a'), 'P': ('#23787e', '#03141a'), 'M': ('#e3ddcc', '#03141a'), 'h': ('#020a0e', '#03141a'),
-        'H': ('#e3ddcc', '#03141a'), 'o': ('#5ff8ff', '#03141a'), 'p': ('#54ecde', '#03141a')}, no_ol='Rop')
-    return E
+    """S2: every water creature's spawn egg (see the S2 section below)."""
+    return s2_sprites()
 
-
-# ============================================================================ the Coral Organ's barb (entity texture)
 
 def barb():
     """The hook, side on, pointing right (+u): a bone shank, a curved barbed point, a glowing sculk knot at its eye."""
@@ -477,13 +384,168 @@ def barb():
 
 def sprites():
     out = {
-        'kazoo_fish': kazoo_fish(), 'cooked_kazoo_fish': kazoo_fish(True), 'tubafish': tubafish(), 'cooked_tubafish': tubafish(True),
+        'kazoo_fish': kazoo_fish(), 'cooked_kazoo_fish': kazoo_fish(True),
         'fanfare_eel': fanfare_eel(), 'cooked_fanfare_eel': fanfare_eel(True), 'gobbler_fillet': gobbler_fillet(),
         'cooked_gobbler_fillet': gobbler_fillet(True),
-        'kazoo_fish_sushi': kazoo_fish_sushi(), 'tubafish_sushi': tubafish_sushi(), 'fanfare_eel_sushi': fanfare_eel_sushi(),
+        'kazoo_fish_sushi': kazoo_fish_sushi(), 'fanfare_eel_sushi': fanfare_eel_sushi(),
         'gobbler_sushi': gobbler_sushi(), 'sushi_platter': sushi_platter(),
     }
     for f in BUCKET_FISH:
         out[f'{f}_bucket'] = water_bucket(f)
     out.update(eggs())
     return out
+
+
+# ============================================================================ S2: spawn eggs in vanilla's per-mob style
+
+def _egg(half_rows, pal, body='b', lit='c', dark='d', **kw):
+    """A per-mob spawn egg like vanilla 1.21.5+: the creature's own silhouette and colours, drawn symmetric
+    (left halves mirrored), then lit from the top left."""
+    import slumbler as SL
+    rows = SL._mirror(half_rows)
+    rows = SL._shade(rows, body, lit, dark, **kw)
+    return SL._sprite(rows, pal)
+
+
+def kazoo_egg():
+    """The Kazoo Fish: teal with blue-teal saddles, a coral sail and coral fins, gold eyes, the brass kazoo."""
+    return _egg([
+        '........',
+        '......fF',
+        '.....fFF',
+        '....abbb',
+        '...abbbs',
+        '..abbbbs',
+        'f.abIbbs',
+        'ffabPbbs',
+        '.fabbbbb',
+        '..akkkkk',
+        '...akkkK',
+        '...akkKK',
+        '....akKh',
+        '.....aKK',
+        '......aa',
+        '........',
+    ], {'a': '#0a2a34', 'b': '#2f948f', 'c': '#7dd3c3', 'd': '#1e7477', 's': '#1b5570', 'f': '#c25475', 'F': '#f096a6', 'I': '#e8b03a',
+        'P': '#0d0b16', 'k': '#d9e4d3', 'K': '#d6a640', 'h': '#3a2008'}, x_lit=6, y_lit=7, x_dark=11, y_dark=9)
+
+
+def eel_egg():
+    """The Fanfare Eel: a coiled green-and-gold eel round the egg, its brass trumpet bell facing out."""
+    return _egg([
+        '........',
+        '.....ccc',
+        '....cbbb',
+        '...cbgbb',
+        '..abbbgg',
+        '..abbIbb',
+        '..abbPbb',
+        '..abggbb',
+        '..agggbg',
+        '..abbbgg',
+        '...abbbb',
+        '...aRRRR',
+        '...aRrrr',
+        '....aRrr',
+        '.....aRR',
+        '......aa',
+    ], {'a': '#0f2414', 'b': '#3d723a', 'c': '#73a858', 'd': '#2c5a30', 'g': '#c8b42c', 'I': '#e8b03a', 'P': '#0d0b16', 'R': '#d6a640',
+        'r': '#4a1a10'}, x_lit=6, y_lit=6, x_dark=11, y_dark=10)
+
+
+def sculk_fish_egg():
+    """The Sculk Fish: sculk-dark, glowing eyes and flank lights, two tendrils, a jaw of bone fangs."""
+    return _egg([
+        '........',
+        '....g...',
+        '.....t..',
+        '....abbb',
+        '...abbbb',
+        '..abbbbb',
+        '..abGgbb',
+        '..abbbbb',
+        '.abbbbbb',
+        '.ablblbl',
+        '..abbbbb',
+        '..aWmWmm',
+        '...abbbb',
+        '....abbb',
+        '.....aaa',
+        '........',
+    ], {'a': '#020a0e', 'b': '#173e46', 'c': '#2b626a', 'd': '#0c232a', 'g': '#7ff6f0', 't': '#1a545a', 'G': '#7ff6f0', 'l': '#29dfeb',
+        'W': '#ddd3c0', 'm': '#330b1c'}, x_lit=6, y_lit=7, x_dark=11, y_dark=10)
+
+
+def gobbler_egg():
+    """The Gobbler: an eyeless dark head, glowing pits, a wide jaw of bone fangs and long barbels."""
+    return _egg([
+        '........',
+        '........',
+        '....abbb',
+        '...abbpb',
+        '..abbbbb',
+        '..abpbbb',
+        '.abbbbbp',
+        '.aWmWmWm',
+        '.ammmmmm',
+        '.aWmWmWm',
+        't.abbbbb',
+        't.akkkkk',
+        '.t.akkkk',
+        '.t..akkk',
+        '.....aaa',
+        '........',
+    ], {'a': '#03141a', 'b': '#1e464e', 'c': '#366c72', 'd': '#10282f', 'p': '#29dfeb', 'W': '#ddd3c0', 'm': '#330b1c', 'k': '#647a7a',
+        't': '#285c64'}, x_lit=6, y_lit=6, x_dark=11, y_dark=9)
+
+
+def organ_egg():
+    """The Sculk Coral Organ: three pipes with dark mouths and glowing rings over a coral mound."""
+    return _egg([
+        '........',
+        '......bb',
+        '...bb.bb',
+        '...bb.bb',
+        '...hh.hh',
+        '...gg.bb',
+        '...bb.gg',
+        '..abb.bb',
+        '..abbhbb',
+        '..agbbgb',
+        '..abbbbb',
+        '.arrrrrr',
+        '.arrRrrr',
+        '..arrrrr',
+        '...aaaaa',
+        '........',
+    ], {'a': '#03141a', 'b': '#1d5a64', 'c': '#36848a', 'd': '#154852', 'h': '#04080a', 'g': '#29dfeb', 'r': '#18363e', 'R': '#2c565c'},
+        x_lit=6, y_lit=8, x_dark=11, y_dark=10)
+
+
+def cypole_egg():
+    """The Cypole: a squat swamp-teal frog, its one great golden eye on top, brass plates by its pale throat."""
+    return _egg([
+        '........',
+        '......aa',
+        '.....aII',
+        '.....aIP',
+        '....abbb',
+        '...abbbb',
+        '..abbbbb',
+        '.aBbbbbb',
+        '.aBBkkkk',
+        '.aBBkkkk',
+        '..aBkkkk',
+        '..abbbbb',
+        '.wwabbbb',
+        '.wwwaaaa',
+        '........',
+        '........',
+    ], {'a': '#071514', 'b': '#2f5c54', 'c': '#50867a', 'd': '#1b3836', 'I': '#e8b03a', 'P': '#0d0b16', 'k': '#b4c0b0', 'B': '#d6a640',
+        'w': '#244944'}, x_lit=6, y_lit=6, x_dark=11, y_dark=10)
+
+
+def s2_sprites():
+    """S2: the eggs and the remade fish meats, sushi and buckets (they override the older art of the same names)."""
+    return {'kazoo_fish_spawn_egg': kazoo_egg(), 'fanfare_eel_spawn_egg': eel_egg(), 'sculk_fish_spawn_egg': sculk_fish_egg(),
+            'gobbler_spawn_egg': gobbler_egg(), 'coral_organ_spawn_egg': organ_egg(), 'cypole_spawn_egg': cypole_egg()}
