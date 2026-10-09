@@ -1410,6 +1410,7 @@ def all_items():
     out.update(__import__('caravans').items())  # C: prism gem and armour, Caravan egg
     out.update(__import__('sea_art').items())  # sea & sky: fish meats, sculk bladder, sushi, Gobbler egg
     out.update(__import__('echoer_world').item_sprites())  # A2 Echoer: Soul Golem Core, Nib Dust, eggs
+    out.update(__import__('sift_sniffer').item_sprites())  # E1 Sniffer & rot: the Sift Sniffer spawn egg
     out.update(__import__('swifter_art').item_sprites())  # A2 Swifter & White Forest: Swifter Fluff, Swifter egg
     out.update(__import__('cave_creatures').items())  # A4 cave creatures: Jailer and Sculkling eggs
     out.update(__import__('sculk_sea').item_sprites())  # CR3 Fish & Coral Organs: fish meats, sushi, fish buckets, eggs (replaces older art)

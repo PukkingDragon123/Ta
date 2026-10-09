@@ -10,4 +10,6 @@ public class SiftRenderState extends LivingEntityRenderState {
     public float hurtTicks = -1.0F;
     /** Death progress in ticks (0..20); the body bounces and pops instead of tipping over. */
     public float dying;
+    /** E1: how far it has rotted outside the Sift (0 healthy - 1 fully rotten). */
+    public float rot;
 }

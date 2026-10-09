@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:dreambloom",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:hummingbloom",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:lullaby_bell",
+          "weight": 1
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.6
+      }
+    }
+  ],
+  "random_sequence": "thesift:entities/sift_sniffer"
+}

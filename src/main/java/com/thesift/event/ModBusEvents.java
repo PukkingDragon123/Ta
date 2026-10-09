@@ -55,7 +55,7 @@ public final class ModBusEvents {
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntities.BULB.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        // vanilla Sniffers roam the Sift and dig up its seeds (the Sift Sniffer was retired)
+        // vanilla (Zombified) Sniffers no longer spawn in the Sift - one brought in blooms into a Sift Sniffer (E1, SiftRot)
         event.register(net.minecraft.world.entity.EntityTypes.SNIFFER, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 ModBusEvents::checkSiftCreature, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         // S1 spawning: the Wishing Grove's Allays (vanilla never spawns them naturally, so they had no rules and

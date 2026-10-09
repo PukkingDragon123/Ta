@@ -103,6 +103,7 @@ final class MechanicsTest {
         this.checkTrades();
         this.checkHarmoners();
         this.checkSniffer();
+        this.checkRot(); // E1 Sniffer & rot
         this.startDictator();
         this.songTest = SongTest.start(this.sift, this.check); // C4 songs: every song through the real tracker + the Echoer's reward
         this.bandTest = BandTest.start(this.sift, this.check); // M2 band: compatible songs recruit, others do not; play-along; leaving
@@ -185,6 +186,63 @@ final class MechanicsTest {
         TheSift.LOGGER.info("SMOKE: a Sniffer digging in The Sift found {}", dug);
         check(siftSeed, "sniffer: vanilla Sniffers dig up Sift seeds in The Sift");
         s.discard();
+    }
+
+    /**
+     * E1 Sniffer &amp; rot: a Zombified (vanilla) Sniffer blooms into a Sift Sniffer in the Sift; a Sift creature in the
+     * Overworld rots (lifeless, no band) and heals again back in the Sift; a Sift Sniffer rots all the way into a
+     * Zombified Sniffer; a Sift Sniffer digs up something from its loot table.
+     */
+    private void checkRot() {
+        int y = this.sift.getHeight(Heightmap.Types.MOTION_BLOCKING, 4, -20) + 1;
+        net.minecraft.world.entity.animal.sniffer.Sniffer zombified = EntityTypes.SNIFFER.create(this.sift, EntitySpawnReason.COMMAND);
+        if (zombified == null) {
+            check(false, "rot: sniffer created");
+            return;
+        }
+        zombified.snapTo(4.5, y, -19.5, 0.0F, 0.0F);
+        this.sift.addFreshEntity(zombified);
+        com.thesift.entity.SiftRot.step(zombified, this.sift);
+        List<com.thesift.entity.SiftSniffer> bloomed = this.sift.getEntitiesOfClass(com.thesift.entity.SiftSniffer.class,
+                zombified.getBoundingBox().inflate(3.0));
+        check(zombified.isRemoved() && !bloomed.isEmpty(), "rot: a Zombified Sniffer turns into a Sift Sniffer in the Sift");
+        for (com.thesift.entity.SiftSniffer s : bloomed) {
+            List<ItemStack> dug = new ArrayList<>();
+            s.dropFromGiftLootTable(this.sift, com.thesift.registry.ModSiftSniffer.DIGGING_LOOT, (l, stack) -> dug.add(stack));
+            check(!dug.isEmpty(), "rot: a Sift Sniffer digs something up");
+            s.discard();
+        }
+        // a Bulb in the Overworld rots, stops playing music, then heals at home
+        com.thesift.entity.Bulb bulb = ModEntities.BULB.get().create(this.overworld, EntitySpawnReason.COMMAND);
+        if (bulb == null) {
+            check(false, "rot: bulb created");
+            return;
+        }
+        bulb.snapTo(0.5, 200.0, 0.5, 0.0F, 0.0F);
+        for (int i = 0; i < com.thesift.entity.SiftRot.ROTTEN; i++) {
+            com.thesift.entity.SiftRot.step(bulb, this.overworld);
+        }
+        TheSift.LOGGER.info("SMOKE: a Bulb two minutes in the Overworld has rot {}", com.thesift.entity.SiftRot.rot(bulb));
+        check(com.thesift.entity.SiftRot.isRotten(bulb), "rot: a Sift creature rots outside the Sift");
+        int rotten = com.thesift.entity.SiftRot.rot(bulb);
+        for (int i = 0; i < 10; i++) {
+            com.thesift.entity.SiftRot.step(bulb, this.sift);
+        }
+        check(com.thesift.entity.SiftRot.rot(bulb) < rotten, "rot: a rotting creature heals in the Sift");
+        bulb.discard();
+        // a Sift Sniffer at the end of its rot becomes a Zombified Sniffer
+        com.thesift.entity.SiftSniffer sniffer = com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get().create(this.overworld, EntitySpawnReason.COMMAND);
+        if (sniffer == null) {
+            check(false, "rot: sift sniffer created");
+            return;
+        }
+        sniffer.snapTo(0.5, 200.0, 0.5, 0.0F, 0.0F);
+        sniffer.setData(com.thesift.registry.ModSiftSniffer.ROT, com.thesift.entity.SiftRot.FULL - 1);
+        com.thesift.entity.SiftRot.step(sniffer, this.overworld);
+        check(sniffer.isRemoved(), "rot: a Sift Sniffer rots into a Zombified Sniffer outside the Sift");
+        for (Entity e : this.overworld.getEntitiesOfClass(net.minecraft.world.entity.animal.sniffer.Sniffer.class, sniffer.getBoundingBox().inflate(3.0))) {
+            e.discard();
+        }
     }
 
     /** A2 Echoer: the Echoer no longer trades - its ceremony reward table must give something. */

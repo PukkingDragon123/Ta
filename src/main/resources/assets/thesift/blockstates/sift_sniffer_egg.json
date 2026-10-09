@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "hatch=0": {
+      "model": "thesift:block/sift_sniffer_egg"
+    },
+    "hatch=1": {
+      "model": "thesift:block/sift_sniffer_egg_slightly_cracked"
+    },
+    "hatch=2": {
+      "model": "thesift:block/sift_sniffer_egg_very_cracked"
+    }
+  }
+}

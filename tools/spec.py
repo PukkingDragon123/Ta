@@ -339,6 +339,8 @@ for _d in ITEMS:
 __import__("sculk_bloom").declare(block, item)
 # ---------------------------------------------------------------- A2 Swifter & White Forest (tools/swifter.py)
 __import__("swifter").declare(block, item)
+# ---------------------------------------------------------------- E1 Sniffer & rot (tools/sift_sniffer.py)
+__import__("sift_sniffer").declare(block, item)
 # ---------------------------------------------------------------- A3 Chrome: Chime Sand/Glass, Chrome fish buckets (tools/chrome.py)
 __import__("chrome").declare(block, item)
 # ---------------------------------------------------------------- A4 cave creatures: the Jailer and Sculklings (spawn eggs)

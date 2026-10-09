@@ -169,6 +169,52 @@ FILES = FILES | frozenset({
     'item/trident/throw1', 'item/trident/throw2', 'mob/evocation_illager/fangs', 'mob/warden/tendril_clicks_1', 'random/break',
 })
 
+# E1 Sniffer & rot: the Sift Sniffer, its egg and the rot's groan
+FILES = FILES | frozenset({
+    'mob/chicken/plop',
+    'mob/goat/impact1',
+    'mob/goat/impact2',
+    'mob/goat/pre_ram1',
+    'mob/goat/pre_ram2',
+    'mob/goat/pre_ram3',
+    'mob/goat/pre_ram4',
+    'mob/sniffer/death1',
+    'mob/sniffer/death2',
+    'mob/sniffer/eat1',
+    'mob/sniffer/eat2',
+    'mob/sniffer/eat3',
+    'mob/sniffer/happy4',
+    'mob/sniffer/happy5',
+    'mob/sniffer/hurt1',
+    'mob/sniffer/hurt2',
+    'mob/sniffer/hurt3',
+    'mob/sniffer/idle1',
+    'mob/sniffer/idle2',
+    'mob/sniffer/idle4',
+    'mob/sniffer/idle5',
+    'mob/sniffer/idle6',
+    'mob/sniffer/longdig1',
+    'mob/sniffer/longdig2',
+    'mob/sniffer/scenting1',
+    'mob/sniffer/scenting2',
+    'mob/sniffer/scenting3',
+    'mob/sniffer/sniffing1',
+    'mob/sniffer/sniffing2',
+    'mob/sniffer/sniffing3',
+    'mob/sniffer/step3',
+    'mob/sniffer/step4',
+    'mob/sniffer/step5',
+    'mob/sniffer/step6',
+    'mob/turtle/egg/egg_break2',
+    'mob/turtle/egg/egg_crack2',
+    'mob/turtle/egg/egg_crack3',
+    'mob/turtle/egg/egg_crack4',
+    'mob/turtle/egg/egg_crack5',
+    'mob/zombie/say1',
+    'mob/zombie/say2',
+    'mob/zombie/say3',
+})
+
 
 def vanilla_names(sounds_json):
     """(events, files) defined by a vanilla sounds.json."""

@@ -347,7 +347,8 @@ final class CreatureCheck {
                 ModEntities.ENCHOER.get(), ModCaveCreatures.JAILER.get(), // CR1: the Echoer flies now, so it pens in the middle row
                 ModCaveCreatures.SCULKLING.get(), ModEntities.FANFARE_EEL.get(), ModEntities.KAZOO_FISH.get(), ModEntities.TUBAFISH.get(),
                 ModSeaSky.GOBBLER.get(), ModSculkSea.SCULK_FISH.get(), // CR3: the Coral Organ is rooted, so it has no pen
-                ModCaveCreatures.CYPOLE.get()); // CR4: the Cypole
+                ModCaveCreatures.CYPOLE.get(), // CR4: the Cypole
+                com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get()); // E1: the Sift Sniffer
     }
 
     private static boolean swims(EntityType<?> type) {

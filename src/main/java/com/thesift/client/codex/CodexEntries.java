@@ -77,7 +77,7 @@ public final class CodexEntries {
                 h.singAnimation.start(h.tickCount);
             }
         }));
-        l.add(mob(CREATURES, "sniffer", () -> net.minecraft.world.entity.EntityTypes.SNIFFER, (e, t) -> { }));
+        l.add(mob(CREATURES, "sniffer", com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER, (e, t) -> { })); // E1: the Sift Sniffer
         l.add(mob(CREATURES, "enchoer", ModEntities.ENCHOER, (e, t) -> {
             if (e instanceof com.thesift.entity.Enchoer en) {
                 // CR1: the speaker-bat beats its wings on the page, and every few seconds its drill whirrs round

@@ -187,7 +187,8 @@ public final class Bands {
         }
         Band band = bandOf(player);
         List<Mob> near = level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(OWNED_RECRUIT_RADIUS),
-                m -> m.isAlive() && BandRegistry.voiceOf(m.getType()) != null);
+                m -> m.isAlive() && BandRegistry.voiceOf(m.getType()) != null
+                        && !com.thesift.entity.SiftRot.isRotten(m)); // E1: a rotten creature plays no music
         near.sort(Comparator.comparingDouble(m -> m.distanceToSqr(player)));
         List<Band.Member> joined = new ArrayList<>();
         for (Mob mob : near) {

@@ -5,6 +5,12 @@ import com.mojang.math.Axis;
 import com.thesift.client.Expression;
 import com.thesift.client.renderer.state.SiftRenderState;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.Mth;
@@ -25,6 +31,7 @@ public abstract class SiftMobRenderer<T extends Mob, S extends SiftRenderState, 
 
     protected SiftMobRenderer(EntityRendererProvider.Context context, M model, float shadow) {
         super(context, model, shadow);
+        this.addLayer(new RotLayer()); // E1: the rot outside the Sift
     }
 
     /** How much the body squashes and hops: 1 for small springy mobs, less for heavy ones. */
@@ -43,6 +50,42 @@ public abstract class SiftMobRenderer<T extends Mob, S extends SiftRenderState, 
         state.dying = state.deathTime;
         state.hurtTicks = entity.hurtTime > 0 ? 10.0F - entity.hurtTime + partialTicks : -1.0F;
         state.expression = this.expression(entity, state);
+        state.rot = com.thesift.entity.SiftRot.amount(entity); // E1
+    }
+
+    /** E1: a rotting creature's colours sour towards a dull, sickly olive. */
+    @Override
+    protected int getModelTint(S state) {
+        int tint = super.getModelTint(state);
+        if (state.rot <= 0.0F) {
+            return tint;
+        }
+        float k = state.rot * 0.6F;
+        return ARGB.multiply(tint, ARGB.color(255, (int) (255 - 95 * k), (int) (255 - 80 * k), (int) (255 - 135 * k)));
+    }
+
+    /**
+     * E1: the rot itself - blotches of raw red and dark green (the texture's {@code _rot} twin, see
+     * {@link RotTextures}) fading in over the creature as it rots.
+     */
+    private final class RotLayer extends RenderLayer<S, M> {
+        RotLayer() {
+            super(SiftMobRenderer.this);
+        }
+
+        @Override
+        public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, S state, float yRot, float xRot) {
+            if (state.rot < 0.04F || state.isInvisible) {
+                return;
+            }
+            Identifier tex = RotTextures.of(SiftMobRenderer.this.getTextureLocation(state));
+            if (tex == null) {
+                return;
+            }
+            int alpha = (int) (Math.min(1.0F, state.rot * 1.3F) * 255.0F);
+            collector.order(1).submitModel(this.getParentModel(), state, poseStack, RenderTypes.entityTranslucent(tex), light,
+                    LivingEntityRenderer.getOverlayCoords(state, 0.0F), ARGB.color(alpha, 255, 255, 255), null, state.outlineColor);
+        }
     }
 
     @Override

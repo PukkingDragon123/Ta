@@ -306,6 +306,8 @@ def gen_block(b):
     elif k in ('echoer_device', 'echoer_hut_heart'):
         import echoer_world  # A2 Echoer: The Echoer device and the hut's hearthstone
         echoer_world.gen_block(sys.modules[__name__], bid, k)
+    elif k == 'sift_sniffer_egg':  # E1 Sniffer & rot: the fluffy egg
+        __import__('sift_sniffer').gen_egg(sys.modules[__name__], bid)
     elif k == 'swifter_den':  # A2 Swifter: the den, a nest of fluff and twigs
         __import__('swifter').gen_den(sys.modules[__name__], bid)
     elif k == 'chime_pane':  # A3 Chrome: the Chime Glass Pane
@@ -722,8 +724,6 @@ def gen_lang():
         f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Pods make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
         f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose, Gold and Coral - the Drum Pit, where the Thumper sleeps. Azure and Jade - a Caravan colony deep below. Violet and the rare Night - the Sculk Castle.',
-        f'codex.{NS}.sniffer.title': 'Sniffer', f'codex.{NS}.sniffer.tagline': 'The Sift remembers its seeds',
-        f'codex.{NS}.sniffer.body': 'Ordinary Sniffers wander the Sift\'s plains and forests. Wherever one digs here it turns up the dimension\'s own ancient seeds as well as its usual finds: Echo Seeds, Pitcher Pods and Torchflower seeds. Breed them with torchflower seeds, or bring a Sniffer egg through the gate yourself.',
         # A2 Echoer: the Echoer's codex page is in tools/echoer_world.py
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Chrome lake salamander',
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
@@ -1231,6 +1231,9 @@ def check_sounds():
         # CR3 Fish & Coral Organs: the Sculk Fish, Coral Organ and hook sounds are registered in ModSculkSea.java
         with open(os.path.join(os.path.dirname(java), 'ModSculkSea.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # E1 Sniffer & rot: the Sift Sniffer, its egg and the rot's groan are registered in ModSiftSniffer.java
+        with open(os.path.join(os.path.dirname(java), 'ModSiftSniffer.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
         for ev in sorted(set(SOUNDS) - registered):
@@ -1392,6 +1395,7 @@ def flush_tags():
 def generate():
     __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
     __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
+    __import__('sift_sniffer').assets(sys.modules[__name__])  # E1 Sniffer & rot: sounds, loot, the Zombified Sniffer's name, codex
     __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
     __import__('sculk_world').assets(sys.modules[__name__])  # W1 World & terrain: swamp sounds, recipes, loot, tags, text (before gen_sounds)
     __import__('sculk_sea').assets(sys.modules[__name__])  # CR3 Fish & Coral Organs: sounds, loot, tags, text (before gen_sounds)

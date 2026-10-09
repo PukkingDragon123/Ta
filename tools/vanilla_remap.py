@@ -612,6 +612,12 @@ MAP = {
     'swifter_den_fluff': M('white_wool'),
     'swifter_den_side': M('oak_log', 'stripped_oak_log'),
     'swifter_den_top': M('coarse_dirt', 'white_wool'),
+    # E1 Sniffer & rot: the Sift Sniffer's fluffy egg (the vanilla Sniffer egg's shell, re-themed pink)
+    'sift_sniffer_egg_shell_0': M('sniffer_egg_not_cracked_north'),
+    'sift_sniffer_egg_shell_1': M('sniffer_egg_slightly_cracked_north'),
+    'sift_sniffer_egg_shell_2': M('sniffer_egg_very_cracked_north'),
+    'sift_sniffer_egg_fluff': M('white_wool'),
+    'sift_sniffer_egg_sprout': M('torchflower_crop_stage1'),
     'sift_cake_side': M('cake_side'),
     'sift_cake_top': M('cake_top'),
     'sift_cake_bottom': M('cake_bottom'),

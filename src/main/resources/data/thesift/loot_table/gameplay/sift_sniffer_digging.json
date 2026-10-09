@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:torchflower_seeds",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:pitcher_pod",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:echo_seed",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:sculk_bloom",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "thesift:gameplay/sift_sniffer_digging"
+}

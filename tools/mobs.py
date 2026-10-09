@@ -590,3 +590,4 @@ import echoer  # noqa: E402
 ALL.update(echoer.ALL)
 ALL.update(__import__('swifter').MODELS)  # A2 Swifter & White Forest: the Swifter and its cubs (tools/swifter.py)
 ALL.update(__import__('cave_creatures').MODELS)  # A4 cave creatures: the Jailer and Sculklings (tools/cave_creatures.py)
+ALL.update(__import__('sift_sniffer').MODELS)  # E1 Sniffer & rot: the Sift Sniffer (tools/sift_sniffer.py)

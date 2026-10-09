@@ -470,14 +470,19 @@ def _creature(name):
         d.ellipse((40, 8, 43, 10), fill=(255, 255, 255, 255))
         d.line((43, 3, 43, 9), fill=(255, 255, 255, 255))
     elif name == 'sniffer':
-        s.add(E(22, 28, 16, 11), '#a8402c')
-        s.add(E(22, 19, 12, 5), '#5a8a3a')                               # mossy back
-        s.add(C(36, 28, 44, 32, 3.6), '#c05038')                         # the long nose
+        # E1: the Sift Sniffer - a white fluffy body, a pink back with its flower garden, a pink trumpet nose
         for x in (12, 18, 26, 32):
-            s.add(C(x, 36, x, 42, 2.2), '#7a2c20')
+            s.add(C(x, 36, x, 42, 2.4), '#f1dce6')
+        s.add(E(22, 28, 16, 11), '#fbf3f6')
+        s.add(E(22, 20, 12, 5), '#f3a6c3')                               # the pink back
+        s.add(E(35, 26, 7, 7), '#f3a6c3')                                # the head
+        s.add(C(40, 29, 45, 31, 2.8), '#ec8fb2')                         # the trumpet nose
         img = s.render()
-        _px(img, [(34, 25), (35, 25)], (20, 10, 10, 255))
-        _px(img, [(14, 17), (20, 15), (27, 16)], (240, 100, 140, 255))
+        _px(img, [(36, 24), (37, 24), (36, 25)], (58, 35, 64, 255))
+        _px(img, [(36, 24)], (255, 255, 255, 255))
+        _px(img, [(34, 28), (35, 28)], (255, 156, 192, 255))
+        _px(img, [(14, 15), (20, 13), (27, 14), (31, 16)], (255, 120, 170, 255))
+        _px(img, [(17, 14), (24, 13)], (255, 236, 120, 255))
     elif name == 'enchoer':
         # CR1: the speaker-bat - wings spread, a woofer in its chest, tweeter ears and a brass drill snout
         for sx in (-1, 1):

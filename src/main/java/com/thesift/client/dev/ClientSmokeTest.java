@@ -474,8 +474,8 @@ public final class ClientSmokeTest {
         if (baby instanceof net.minecraft.world.entity.AgeableMob ageable) {
             ageable.setAge(-24000);
         }
-        // a vanilla Sniffer, the Sift's seed digger
-        c.spawn(net.minecraft.world.entity.EntityTypes.SNIFFER, -3.5, STAGE_Y, STAGE_Z + 8.5, face, false);
+        // E1: the Sift Sniffer, the Sift's seed digger
+        c.spawn(com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get(), -3.5, STAGE_Y, STAGE_Z + 8.5, face, false);
         // the Dictator and his orchestra, at the far end of the stage
         c.spawn(ModEntities.DICTATOR.get(), 19.5, STAGE_Y, STAGE_Z + 7.0, face, false);
         c.spawn(ModEntities.SCULK_HARMONER.get(), 21.5, STAGE_Y + 2.5, STAGE_Z + 6.0, face, false);
