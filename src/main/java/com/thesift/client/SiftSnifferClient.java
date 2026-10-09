@@ -8,9 +8,10 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-/** E1 Sniffer &amp; rot, client side: the Sift Sniffer's model and renderer (the rot itself is drawn by every Sift mob renderer). */
+/** E1 Sniffer &amp; rot, client side: the Sift Sniffer's models (grown and Snifflet) and renderer (the rot itself is drawn by every Sift mob renderer). */
 public final class SiftSnifferClient {
     public static final ModelLayerLocation SIFT_SNIFFER = new ModelLayerLocation(TheSift.id("sift_sniffer"), "main");
+    public static final ModelLayerLocation SIFT_SNIFFER_BABY = new ModelLayerLocation(TheSift.id("sift_sniffer_baby"), "main");
 
     private SiftSnifferClient() {
     }
@@ -22,6 +23,7 @@ public final class SiftSnifferClient {
 
     private static void layers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(SIFT_SNIFFER, ModelGeometry::sift_sniffer);
+        event.registerLayerDefinition(SIFT_SNIFFER_BABY, ModelGeometry::sift_sniffer_baby);
     }
 
     private static void renderers(EntityRenderersEvent.RegisterRenderers event) {

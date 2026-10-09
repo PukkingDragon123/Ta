@@ -604,12 +604,6 @@ MAP = {
     'swifter_den_fluff': M('white_wool'),
     'swifter_den_side': M('oak_log', 'stripped_oak_log'),
     'swifter_den_top': M('coarse_dirt', 'white_wool'),
-    # E1 Sniffer & rot: the Sift Sniffer's fluffy egg (the vanilla Sniffer egg's shell, re-themed pink)
-    'sift_sniffer_egg_shell_0': M('sniffer_egg_not_cracked_north'),
-    'sift_sniffer_egg_shell_1': M('sniffer_egg_slightly_cracked_north'),
-    'sift_sniffer_egg_shell_2': M('sniffer_egg_very_cracked_north'),
-    'sift_sniffer_egg_fluff': M('white_wool'),
-    'sift_sniffer_egg_sprout': M('torchflower_crop_stage1'),
     'sift_cake_side': M('cake_side'),
     'sift_cake_top': M('cake_top'),
     'sift_cake_bottom': M('cake_bottom'),
@@ -622,6 +616,9 @@ MAP = {
     'sift_drum_glow': ('half', None, {}),
 }
 SKIP = {'glow_particle'}  # a particle sprite that only lives in block/
+# E1 Sniffer & rot: the Sift Sniffer egg's faces are vanilla's Sniffer egg faces re-themed already (tools/sift_sniffer.py)
+SKIP |= {f'sift_sniffer_egg_{s}_{f}' for s in ('not_cracked', 'slightly_cracked', 'very_cracked')
+         for f in ('north', 'east', 'south', 'west', 'top', 'bottom')}
 
 
 def _edits(name, a):

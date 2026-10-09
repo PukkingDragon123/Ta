@@ -30,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class SiftSnifferEggBlock extends Block {
     public static final IntegerProperty HATCH = IntegerProperty.create("hatch", 0, 2);
-    private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 15.0, 15.0);
+    private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 2.0, 15.0, 16.0, 14.0);  // vanilla's Sniffer egg
     private static final TagKey<Block> HATCH_BOOST = TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("sniffer_egg_hatch_boost"));
     private static final int REGULAR_HATCH_TICKS = 24000;
     private static final int BOOSTED_HATCH_TICKS = 12000;
