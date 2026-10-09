@@ -50,7 +50,7 @@ public final class ModSculkSea {
             MobCategory.WATER_AMBIENT, b -> b.sized(0.5F, 0.45F).eyeHeight(0.25F).clientTrackingRange(6).notInPeaceful());
     /** Rooted and persistent: placed by worldgen, never spawned naturally, so it takes no room in any mob cap. */
     public static final DeferredHolder<EntityType<?>, EntityType<CoralOrgan>> CORAL_ORGAN = ENTITIES.registerEntityType("coral_organ",
-            CoralOrgan::new, MobCategory.MISC, b -> b.sized(1.4F, 2.0F).eyeHeight(1.1F).clientTrackingRange(10).notInPeaceful());
+            CoralOrgan::new, MobCategory.MONSTER, b -> b.sized(1.4F, 2.0F).eyeHeight(1.1F).clientTrackingRange(10).notInPeaceful()); // WATER: hostile
     public static final DeferredHolder<EntityType<?>, EntityType<CoralHook>> CORAL_HOOK = ENTITIES.registerEntityType("coral_hook", CoralHook::new,
             MobCategory.MISC, b -> b.sized(0.9F, 0.9F).clientTrackingRange(10).updateInterval(1).noSummon().fireImmune());
 

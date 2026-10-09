@@ -71,7 +71,7 @@ SUBTITLES = {
     'entity.sculk_fish.death': 'Sculk Fish dies', 'entity.sculk_fish.flop': 'Sculk Fish flops',
     'entity.coral_organ.pipe': 'Coral Organ plays', 'entity.coral_organ.reed': 'Coral Organ drones', 'entity.coral_organ.drone': 'Coral Organ hums',
     'entity.coral_organ.charge': 'Coral Organ shrieks', 'entity.coral_organ.fire': 'Coral Organ fires a hook', 'entity.coral_organ.reel': 'Line reels in',
-    'entity.coral_organ.clamp': 'Coral Organ clamps', 'entity.coral_organ.hurt': 'Coral Organ cracks', 'entity.coral_organ.death': 'Coral Organ crumbles',
+    'entity.coral_organ.clamp': 'Coral Organ bites', 'entity.coral_organ.hurt': 'Coral Organ cracks', 'entity.coral_organ.death': 'Coral Organ crumbles',
     'entity.coral_hook.hit': 'Hook bites', 'entity.coral_hook.strain': 'Line strains', 'entity.coral_hook.snap': 'Line snaps',
 }
 
@@ -96,9 +96,11 @@ def assets(GA):
         GD.pool([GD.item('minecraft:bone_meal', count=(0, 2), extra=[GD.LOOTING])]),
         GD.pool([GD.item('minecraft:sculk_vein', extra=[GD.LOOTING])], condition=GD.chance(0.35)),
     ])
-    # the Coral Organ: its voice crystals, its coral, and something it dragged down before you
+    # the Coral Organ: its voice crystals, its teeth and glowing eyes (WATER), its coral, and something it swallowed before you
     GD.table('entity', 'entities/coral_organ', [
         GD.pool([GD.item('minecraft:echo_shard', count=(1, 2), extra=[GD.LOOTING])]),
+        GD.pool([GD.item('minecraft:bone', count=(1, 3), extra=[GD.LOOTING])]),
+        GD.pool([GD.item('minecraft:glow_ink_sac', count=(0, 2), extra=[GD.LOOTING])]),
         GD.pool([GD.item('sculk_coral', count=(2, 4)), GD.item('sculk_coral_fan', count=(1, 3)), GD.item('sculk_coral_block', count=(1, 2))],
                 rolls=2),
         GD.pool([GD.item('star_shard', weight=4, count=(1, 2)), GD.item('minecraft:gold_ingot', weight=3),
@@ -119,12 +121,12 @@ def assets(GA):
                                        'only noticed up close. Once one fish finds you the whole school turns at once - each darts in, '
                                        'bites and circles back. Some glow cyan, some bone-pale, a few abyss-violet.',
         f'codex.{NS}.coral_organ.title': 'Sculk Coral Organ',
-        f'codex.{NS}.coral_organ.tagline': 'Hostile - it plays, then it fishes',
-        f'codex.{NS}.coral_organ.body': 'A living reef of sculk coral grown into organ pipes, rooted on the Sculk Ocean floor. Its eerie chords '
-                                        'carry far through the water. It harpoons anyone swimming in its reach - or floating on the surface '
-                                        'above - with a bone hook on a glowing line, and drags them down to its pipes to drown. Hit the line '
-                                        'to break it (whatever you swing at, you strike the line) or destroy the organ. Inside it lie echo '
-                                        'shards, coral and whatever it dragged down before you.',
+        f'codex.{NS}.coral_organ.tagline': 'Hostile - a mouth that sings',
+        f'codex.{NS}.coral_organ.body': 'A living thing of sculk flesh and coral, rooted on the Sculk Ocean floor: a giant mouth under a dome '
+                                        'of a dozen glowing eyes, organ pipes growing from its back. Its eerie chords carry far. Every eye '
+                                        'follows what swims by; when you come close they all fix on you and the mouth creaks open - swim '
+                                        'away now. Then it sucks you towards its teeth and bites. Further off it hooks swimmers on a glowing '
+                                        'line and reels them in (hit the line to break it). Inside it: echo shards, teeth, glowing eyes, coral.',
     })
 
 

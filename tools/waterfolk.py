@@ -437,7 +437,6 @@ def gobbler() -> Model:
 ROCK = ('#081418', '#0d1e24', '#122a30', '#18363e', '#20444c', '#2c565c', '#3c6c70')
 PIPE = ('#0b2a30', '#0f3840', '#154852', '#1d5a64', '#286e76', '#36848a', '#4c9ea0')
 CORAL = ('#0c3a40', '#104c52', '#166066', '#1e767a', '#2a8e90', '#3ca8a6', '#58c4be')
-SAC = ('#0a3a40', '#0f4c52', '#156066', '#1e787c', '#2c9292', '#44b0aa', '#6cd0c6')
 
 
 def _rings(c):
@@ -456,38 +455,76 @@ def _pipe_mouth(w):
 
 
 def coral_organ() -> Model:
-    """A living reef of sculk coral grown into organ pipes (CoralOrganModel animates it): a stepped mound of
-    dark coral rock, five pipes of different heights with dark mouths, pale rims and glowing rings, a glowing
-    bladder at the front, the bone harpoon horn that aims and fires, tendrils and little coral fans."""
+    """The Sculk Coral Organ, a living thing (CoralOrganModel animates it; part names are its contract): a fleshy
+    sculk-coral body rooted on a stony footing on the Sculk Ocean floor, split across the front by a GIANT mouth -
+    the upper body ('head') lifts back like a clam's lid to bare rows of bone teeth, a red maw and a tongue; the
+    lower body ('body') is the toothed bowl of the jaw. A dozen eyes of every size stare out of the head, each with
+    its own glowing slit iris ('pupil_<i>') that slides to track prey and a fleshy lid ('lid_<i>') that blinks. Its
+    organ pipes ('pipe_<i>') still grow from its back and sound its chords; tendrils and coral fans sway round the
+    footing. Glowing veins and pores light its flesh."""
     m = Model('coral_organ', (128, 128), {}, {'coral_organ': {}}, res=2)
     R = dict(mat='rock', back=-1)
+    F = dict(mat='flesh', back=-99, lights=_flesh_lights)
     base = m.part('base', pivot=(0, 24, 0))
     base.cube((-10, -3, -9), (20, 3, 18), **R)
-    base.cube((-8, -6, -7), (16, 3, 14), **R)
-    base.cube((-5, -8, -4), (10, 2, 9), **R)
-    for i, (x, z, w, h) in enumerate(((-6, 2, 4, 16), (-2.5, 3, 4, 24), (1.5, 2, 5, 30), (6, 1, 4, 20), (-4, -2, 3, 12))):
-        p = base.part(f'pipe_{i}', pivot=(x, -6, z), rot=((0.05, -0.03, 0.04, -0.05, 0.06)[i], 0, (0.07, 0.03, -0.02, -0.08, 0.05)[i]))
-        p.cube((-w / 2 - 0.5, -3, -w / 2 - 0.5), (w + 1, 3, w + 1), mat='rock', back=-99, faces={'up': dict(skip=True)})
+    for i, (x, z, w, d) in enumerate(((-11, -4, 3, 5), (9, 2, 3, 6), (-5, 8.5, 7, 2), (2, -10.5, 6, 2))):
+        base.cube((x, -2, z), (w, 2, d), **R)  # roots spreading over the sea floor
+    body = base.part('body', pivot=(0, -3, 0))
+    # the toothed bowl of the jaw; its top is the floor of the maw
+    lip = ['RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR', 'rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr']
+    side_lip = ['R' * 32, 'r' * 32]
+    body.cube((-9, -7, -8), (18, 7, 16), **F, faces={'up': dict(mat='maw', lights=None, decal=_maw_floor(36, 32), keys=MAW_KEYS),
+                                                      'north': dict(decal=lip, keys=MAW_KEYS),
+                                                      'east': dict(decal=side_lip, keys=MAW_KEYS), 'west': dict(decal=side_lip, keys=MAW_KEYS)})
+    body.cube((-8, -1, -7), (16, 1.5, 14), **F)
+    for x in range(-8, 9, 2):
+        body.cube((x - 0.5, -9, -7.7), (1, 2, 1), mat='bone', ao=0)  # the lower teeth, hidden while the mouth is shut
+    for z in range(-5, 7, 3):
+        for sx in (1, -1):
+            body.cube((sx * 8 - 0.5, -8.5, z - 0.5), (1, 1.5, 1), mat='bone', ao=0)
+    for x in (-4.5, 3.5):
+        body.cube((x, -9.5, -8.9), (1, 2.5, 1), mat='bone', ao=0)  # two tusks jutting up in front of the upper lip
+    tongue = body.part('tongue', pivot=(0, -7.2, 5))
+    tongue.cube((-3.5, -1, -11), (7, 1.2, 11), mat='tongue', faces={'up': dict(decal=_tongue_groove(14, 22), keys=MAW_KEYS)})
+    # the upper body: the lid of the mouth, the dome of eyes and the organ pipes
+    head = body.part('head', pivot=(0, -7, 7))
+    head.cube((-9, -10, -15), (18, 10, 15), **F, faces={'down': dict(mat='maw', lights=None, decal=_palate(36, 30), keys=MAW_KEYS),
+                                                         'north': dict(decal=['.' * 36] * 18 + ['r' * 36, 'R' * 36], keys=MAW_KEYS),
+                                                         'east': dict(decal=['.' * 30] * 18 + ['r' * 30, 'R' * 30], keys=MAW_KEYS),
+                                                         'west': dict(decal=['.' * 30] * 18 + ['r' * 30, 'R' * 30], keys=MAW_KEYS)})
+    head.cube((-7.5, -13, -13), (15, 3, 12), **F)
+    head.cube((-5, -15, -10), (10, 2, 8), **F)
+    for x in range(-7, 8, 2):
+        head.cube((x - 0.5, 0, -14.6), (1, 2, 1), mat='bone', ao=0)  # the upper teeth
+    for z in range(-12, 0, 3):
+        for sx in (1, -1):
+            head.cube((sx * 8 - 0.5, 0, z), (1, 1.5, 1), mat='bone', ao=0)
+    for x in (-6.5, 5.5):
+        head.cube((x, -0.5, -16.2), (1, 3.5, 1), mat='bone', ao=0)  # two great fangs hanging over the lower lip
+    for i, (x, y, z, s, rx, ry) in enumerate(ORGAN_EYES):
+        eye = head.part(f'eye_{i}', pivot=(x, y, z), rot=(rx, ry, 0))
+        eye.cube((-s / 2, -s / 2, -s / 2), (s, s, s), mat='sclera', back=99)
+        n = s * 0.8
+        pupil = eye.part(f'pupil_{i}', pivot=(0, 0, -s / 2 - 0.04))
+        tex = int(math.ceil(n)) * 2
+        pupil.cube((-n / 2, -n / 2, 0), (n, n, 0), mat='sclera', faces={'north': dict(decal=_slit_eye(tex), keys=EYE_KEYS, glow_keys='Gg'),
+                                                                         'south': dict(skip=True)})
+        lid = eye.part(f'lid_{i}', pivot=(0, -s / 2 - 0.2, 0))  # CoralOrganModel scales it down over the eye to blink
+        lid.cube((-s / 2 - 0.2, 0, -s / 2 - 0.2), (s + 0.4, s + 0.4, s + 0.4), **F, faces={
+            'north': dict(decal=['l' * 12], keys=MAW_KEYS, at='bottom'), 'down': dict(decal=['l' * 12] * 12, keys=MAW_KEYS)})
+    for i, (x, z, w, h) in enumerate(((-4.5, -4, 3, 9), (-1.5, -2.5, 3, 13), (2, -3.5, 4, 16), (5, -5, 3, 11), (-6, -7, 2, 7))):
+        p = head.part(f'pipe_{i}', pivot=(x, -13 if abs(x) > 4 else -15, z), rot=((0.08, -0.05, 0.04, -0.07, 0.1)[i], 0, (0.12, 0.04, -0.03, -0.12, 0.2)[i]))
+        p.cube((-w / 2 - 0.5, -2, -w / 2 - 0.5), (w + 1, 2, w + 1), **F, faces={'up': dict(skip=True)})
         p.cube((-w / 2, -h, -w / 2), (w, h, w), mat='pipe', lights=_rings, back=-h + 1,
                faces={'north': dict(decal=_pipe_mouth(w), keys=dict(EYE, L='#cfe8e2', l='#8fb4b0', D='#0a1418', K='#020406'), at=(0, 2 * (h // 3))),
                       'up': dict(decal=_disc(2 * w, [(w - 1.6, 'K'), (w - 0.9, 'D')]), keys=dict(EYE, D='#0a1418', K='#020406'), at=(0, 0))})
         p.cube((-w / 2 - 0.5, -h - 1, -w / 2 - 0.5), (w + 1, 1, w + 1), mat='bone', faces={'up': dict(skip=True)})
-    sac = base.part('sac', pivot=(0, -4, -7))
-    sac.cube((-3, -3, -3), (6, 5, 5), mat='sac', lights=lambda c: AK._hash3(c['ii'], c['jj'], np.full_like(c['ii'], len(c['face'])), 9) < 0.12)
-    launcher = base.part('launcher', pivot=(0, -9, -3))
-    launcher.cube((-2.5, -2.5, -2.5), (5, 5, 5), mat='rock', back=-1)
-    launcher.cube((-2, -2, -7), (4, 4, 5), mat='bone')
-    launcher.cube((-1.5, -1.5, -10), (3, 3, 3), mat='bone', light=0.05)
-    launcher.cube((-1, -1, -12), (2, 2, 2), mat='bone', light=0.1, faces={'north': dict(decal=_disc(4, [(0.9, 'K'), (1.6, 'D')]), keys=dict(EYE, D='#0a1418', K='#020406'))})
-    launcher.cube((-0.5, -3, -9), (1, 1, 3), mat='bone', light=0.12)
-    launcher.cube((-2.5, -0.5, -5), (1, 1, 2), mat='bone', light=0.08)
-    launcher.cube((1.5, -0.5, -5), (1, 1, 2), mat='bone', light=0.08)
-    for i, (x, z, ry) in enumerate(((-9, -5, 0.6), (9, -5, -0.6), (-9, 6, 2.4), (9, 6, -2.4))):
+    for i, (x, z, ry) in enumerate(((-10, -6, 0.6), (10, -6, -0.6), (-10, 6, 2.4), (10, 6, -2.4))):
         t = base.part(f'tendril_{i}', pivot=(x, -2, z), rot=(0, ry, 0))
         t.cube((0, -9, 0), (0, 9, 2), mat='coral', no_occlude=True, lights=lambda c: c['loc'][..., 1] < -7,
-               shape=lambda lx, ly, lz: (np.floor(-ly) % 3 != 2) | ((lz - lz.min()) < 1))
-    for i, (x, z, h) in enumerate(((-8, -7, 5), (7, -6, 4), (-9, 3, 6), (9, 4, 5), (-3, 7, 4), (4, 7, 6))):
-        c = base.part(f'coral_{i}', pivot=(x, -3 if abs(x) > 8 else -6, z), rot=(0, 0.6 * i, 0))
+               shape=lambda lx, ly, lz: (np.floor(-ly * 2) % 3 != 2) | ((lz - lz.min()) < 1))
+    for i, (x, z, h) in enumerate(((-9, -8, 5), (8, -8, 4), (-11, 3, 6), (11, 4, 5), (-4, 9, 4), (5, 9, 6))):
+        c = base.part(f'coral_{i}', pivot=(x, -3, z), rot=(0, 0.6 * i, 0))
         fan = dict(mat='coral', no_occlude=True, lights=lambda c: c['loc'][..., 1] < -3.5,
                    shape=lambda lx, ly, lz: (np.abs(lx + lz) < 0.8 + (-ly) * 0.45) & (((-ly + lx + lz) % 1.0 < 0.5) | ((-ly - lx - lz) % 1.0 < 0.5)))
         c.cube((-2, -h, 0), (4, h, 0), **fan)
@@ -496,12 +533,93 @@ def coral_organ() -> Model:
     mats = {
         'rock': M([ROCK, PIPE], base=0.5, noise=0.1, cell=2.0, mottle=(2.6, 0.62), back=ROCK, light=dim, spots=(None, 2.4, 0.76, 2), pores=0.06,
                   material='stone'),
+        'flesh': M([FLESH, CRUST], base=0.52, noise=0.09, cell=1.8, mottle=(2.4, 0.66), back=FLESH, light=ABYSS_LIGHT, gloss='#bff2ee',
+                   gloss_rate=0.035, pores=0.04, spots=(BRUISE, 2.2, 0.74, 0), material='skin'),
+        'maw': M([MAW], base=0.48, noise=0.06, cell=1.5, mottle=None, rim=0.4, ao=0.8, gloss='#f2b8c0', gloss_rate=0.05, material='skin'),
+        'tongue': M([TONGUE], base=0.55, noise=0.05, cell=1.5, mottle=None, rim=0.3, gloss='#ffd8d8', gloss_rate=0.06, material='skin'),
+        'sclera': M([SCLERA], base=0.62, noise=0.04, cell=1.4, mottle=None, rim=0.6, ao=0.5, gloss='#ffffff', gloss_rate=0.08, material='jelly',
+                    mnoise=0.4),
         'pipe': M([PIPE, ROCK], base=0.55, noise=0.08, cell=1.8, mottle=(2.2, 0.72), back=PIPE, light=dim, pores=0.04, material='stone'),
-        'bone': M([BONE], base=0.56, noise=0.05, cell=1.6, rim=0.7, ao=0.4, material='bone'),
+        'bone': M([BONE], base=0.6, noise=0.05, cell=1.6, rim=0.7, ao=0.4, material='bone'),
         'coral': M([CORAL], base=0.55, noise=0.05, cell=1.4, rim=0.0, ao=0.0, mottle=None, light=ABYSS_LIGHT, material='plant'),
-        'sac': M([SAC], base=0.6, noise=0.05, cell=1.6, rim=1.0, ao=0.2, mottle=None, light=ABYSS_LIGHT, gloss='#e6fffb', gloss_rate=0.1, material='jelly'),
     }
     return AK.finish(m, {'coral_organ': mats})
+
+
+FLESH = ('#0c1720', '#13222e', '#1b2f3d', '#253d4c', '#31505e', '#406572', '#567e88')
+CRUST = ('#0e2c30', '#143a3e', '#1c4c4e', '#266060', '#337674', '#468e8a', '#62aaa2')  # stony coral crusting the flesh
+BRUISE = ('#1e1430', '#2a1c42', '#382654', '#483268', '#5a407c', '#6e5292', '#8a6aac')  # violet blotches
+MAW = ('#1a0410', '#2e0818', '#4a0f24', '#681a32', '#872842', '#a63c54', '#c45a6a')
+SCLERA = ('#5e5c48', '#7c7a60', '#9c987a', '#bab496', '#d4ceb0', '#e8e4ca', '#f8f6e6')
+MAW_KEYS = {'R': '#7a1c30', 'r': '#3a0814', 'D': '#120208', 'T': '#4a0f24', 'l': 0.6, 'v': '#5a1428'}
+EYE_KEYS = {'G': '#7ff6f0', 'g': '#1fb6c2', 'P': '#04080a', 'H': '#f4fffc', 'o': '#062a30'}
+# the eyes: (x, y, z on the head, size, pitch, yaw) - a big one in the middle of its face, the rest all over
+ORGAN_EYES = ((0, -6, -15, 4, 0.0, 0.0), (-5.5, -4.5, -15, 3, 0.0, 0.15), (5.5, -5, -15, 3, 0.0, -0.2), (-3, -9.5, -14, 2, -0.5, 0.1),
+              (3.5, -9, -14.5, 2, -0.4, -0.15), (9, -6, -10, 3, 0.0, -0.95), (-9, -4.5, -11, 3, 0.0, 0.9), (9, -3, -4, 2, 0.0, -1.45),
+              (-9, -7.5, -5, 2, -0.1, 1.45), (-3.5, -12.5, -12.5, 2, -0.6, 0.1), (3.5, -13, -9, 3, -0.95, -0.3), (-1.5, -15, -6, 2, -1.35, 0.0))
+
+
+def _flesh_lights(c):
+    """Glowing veins wandering over the flesh, and a scatter of glowing pores."""
+    if c['face'] == 'down':
+        return None
+    v = AK.fbm(c['wp'] * np.array([1.0, 1.4, 1.0]), 4.5, 307, 2)
+    wp = np.floor(c['wp'] * 2 + 0.5).astype(np.int64)
+    return (np.abs(v - 0.5) < 0.012) | (AK._hash3(wp[..., 0], wp[..., 1], wp[..., 2], 41) < 0.008)
+
+
+def _maw_floor(w, h):
+    """The floor of the maw: ridged red flesh round a dark gullet at the back."""
+    rows = []
+    for y in range(h):
+        row = ''
+        for x in range(w):
+            gx, gy = (x - w / 2 + 0.5) / (w * 0.22), (y - h * 0.22) / (h * 0.16)
+            if gx * gx + gy * gy < 1.0:
+                row += 'D'
+            elif gx * gx + gy * gy < 1.6:
+                row += 'r'
+            elif y % 4 == 3 and 2 < x < w - 3:
+                row += 'v'
+            else:
+                row += '.'
+        rows.append(row)
+    return rows
+
+
+def _palate(w, h):
+    """The roof of the maw: ridges across it and a dark groove down the middle."""
+    return [''.join('r' if abs(x - w / 2 + 0.5) < 1 else ('v' if y % 4 == 1 else '.') for x in range(w)) for y in range(h)]
+
+
+def _tongue_groove(w, h):
+    return [''.join('T' if abs(x - w / 2 + 0.5) < 1 and y > 2 else '.' for x in range(w)) for y in range(h)]
+
+
+def _slit_eye(n):
+    """An n x n round glowing eye: a pale rim, a cyan iris (bright inside, deeper outside), a black slit of a
+    pupil and a white glint; outside the circle cut away."""
+    c = (n - 1) / 2
+    rows = []
+    for y in range(n):
+        row = ''
+        for x in range(n):
+            dx, dy = x - c, y - c
+            r = math.hypot(dx, dy)
+            if r > n / 2 + 0.1:
+                row += '_'
+            elif abs(dx) < 0.6 and abs(dy) < n * 0.36:
+                row += 'P'
+            elif r > n / 2 - 0.45:
+                row += 'o'
+            elif x == int(c - n * 0.22) and y == int(c - n * 0.22):
+                row += 'H'
+            elif r < n * 0.3:
+                row += 'G'
+            else:
+                row += 'g'
+        rows.append(row)
+    return rows
 
 
 # ================================================================ the Cypole

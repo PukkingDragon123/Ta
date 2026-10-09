@@ -100,6 +100,7 @@ final class MechanicsTest {
         BandTableTest.run(this.sift, this.check); // F2 Band Table: a played song enchants; sloppy playing weakens it; the band requirement
         KnowledgeTest.run(this.sift, this.check); // F3 Knowledge & lore: unlocks saved/loaded/kept on death, lore, the Mini Creator
         SkyTest.run(this.sift, this.check); // W-sky: the islands float, ropes swing, vines/fruit/bunches work, bridges and sky trees build
+        CoralOrganTest.run(this.sift, this.check); // WATER: the coral organ is hostile, gapes (telegraph) and bites
         this.checkTrades();
         this.checkHarmoners();
         this.checkSniffer();

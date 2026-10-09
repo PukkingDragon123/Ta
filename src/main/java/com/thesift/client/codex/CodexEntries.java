@@ -176,12 +176,12 @@ public final class CodexEntries {
         }));
         l.add(mob(CREATURES, "coral_organ", com.thesift.registry.ModSculkSea.CORAL_ORGAN, (e, t) -> {
             if (e instanceof com.thesift.entity.CoralOrgan o) {
-                switch (t % 140) {
+                switch (t % 140) { // WATER: the living organ sings, then gapes and bites
                     case 10 -> o.chordAnimation.start(o.tickCount);
-                    case 70 -> o.chargeAnimation.start(o.tickCount);
-                    case 98 -> {
-                        o.chargeAnimation.stop();
-                        o.fireAnimation.start(o.tickCount);
+                    case 60 -> o.gapeAnimation.start(o.tickCount);
+                    case 110 -> {
+                        o.gapeAnimation.stop();
+                        o.biteAnimation.start(o.tickCount);
                     }
                     default -> { }
                 }

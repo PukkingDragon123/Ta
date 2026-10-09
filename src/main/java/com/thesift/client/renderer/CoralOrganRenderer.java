@@ -15,9 +15,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * CR3 Fish &amp; Coral Organs: the Sculk Coral Organ. Its glowing rims, polyps and veins shine on their own
- * layer, brightening with every chord and blazing while it charges a shot; the horn's aim comes from the
- * target the organ syncs ({@link CoralOrgan#aimTarget()}).
+ * CR3 Fish &amp; Coral Organs (WATER remake): the Sculk Coral Organ. Its glowing eyes, veins, pores and pipe rings
+ * shine on their own layer, brightening with every chord and blazing while its mouth gapes or it draws its hooked
+ * line. Its eyes follow the prey the organ syncs ({@link CoralOrgan#aimTarget()}), or else the nearest player.
  */
 public class CoralOrganRenderer extends SiftMobRenderer<CoralOrgan, CoralOrganRenderState, CoralOrganModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/coral_organ/coral_organ.png");
@@ -33,6 +33,10 @@ public class CoralOrganRenderer extends SiftMobRenderer<CoralOrgan, CoralOrganRe
         float chord = Anim.seconds(s.chord, s.ageInTicks);
         if (chord >= 0.0F && chord < 2.2F) {
             g = Math.max(g, 0.55F + 0.45F * Anim.envelope(chord, 0.0F, 0.1F, 0.8F, 1.0F));
+        }
+        float gape = Anim.seconds(s.gape, s.ageInTicks);
+        if (gape >= 0.0F) {
+            g = Math.max(g, 0.7F + 0.3F * Anim.smooth(gape) * (0.8F + 0.2F * Mth.sin(s.ageInTicks * 1.4F)));
         }
         float charge = Anim.seconds(s.charge, s.ageInTicks);
         if (charge >= 0.0F && charge < 1.5F) {
@@ -68,11 +72,17 @@ public class CoralOrganRenderer extends SiftMobRenderer<CoralOrgan, CoralOrganRe
         state.charge.copyFrom(entity.chargeAnimation);
         state.fire.copyFrom(entity.fireAnimation);
         state.clamp.copyFrom(entity.clampAnimation);
+        state.gape.copyFrom(entity.gapeAnimation);
+        state.bite.copyFrom(entity.biteAnimation);
         state.seed = (entity.getId() * 37) % 101;
         Entity target = entity.aimTarget();
         state.aiming = target != null;
+        if (target == null) {
+            target = entity.level().getNearestPlayer(entity, 16.0);
+        }
+        state.watching = target != null;
         if (target != null) {
-            Vec3 mouth = entity.getPosition(partialTicks).add(0.0, 0.62, 0.0);
+            Vec3 mouth = entity.getPosition(partialTicks).add(0.0, 1.1, 0.0);
             Vec3 to = target.getPosition(partialTicks).add(0.0, target.getBbHeight() * 0.5, 0.0).subtract(mouth);
             float want = (float) (Mth.atan2(to.z, to.x) * Mth.RAD_TO_DEG) - 90.0F;
             float body = Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);

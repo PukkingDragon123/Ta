@@ -33,25 +33,36 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * CR3 Fish &amp; Coral Organs - the Sculk Coral Organ: a living reef of sculk coral grown into organ pipes,
- * rooted on the Sculk Ocean floor (worldgen places it, see CoralOrganFeature). Every so often it plays an
- * eerie chord - its pipes swelling and glowing, notes drifting up - loudest when someone is near. Swimmers in
- * its reach, and anyone on or at the water's surface above it, it harpoons: its bone horn turns, charges with
- * a rising shriek and fires a hooked line (a {@link CoralHook}) that drags its catch down to the pipes and
- * holds it there to drown, clamping it every few seconds. To escape, break the line (hit it - the hooked one
- * strikes the line whatever they aim at, friends can cut it too) or destroy the organ. It never moves, but
- * slowly turns to face what it hunts; when nothing else is about it hooks the odd fish for a snack.
- * Destroyed, it leaves echo shards, sculk coral and whatever it dragged down before you.
+ * CR3 Fish &amp; Coral Organs, WATER remake - the Sculk Coral Organ: a living organism of sculk flesh and coral,
+ * rooted on the Sculk Ocean floor (worldgen places it, see CoralOrganFeature), its organ pipes growing from its
+ * back. It is a GIANT mouth under a dome of a dozen eyes that blink and track on their own (CoralOrganModel).
+ * Every so often it plays an eerie chord - its pipes swelling, notes drifting up. Hostile: it watches everything
+ * that swims by, and when prey comes within {@link #SUCK_RANGE} its eyes fix on it and the mouth creaks open with
+ * a shriek and a chord (the telegraph, {@link #GAPE_TICKS}); then it sucks - a current pulls the prey towards the
+ * teeth while the reeds drone - and the moment it is in reach the mouth slams shut in a lunging bite. Prey
+ * further off (players, out to {@link #RANGE}, swimming or at the surface) it still harpoons with its hooked line
+ * (a {@link CoralHook}) and reels in to be chewed. Every attack has a cooldown. It never moves, but slowly turns to
+ * face what it hunts; between meals it snaps up fish. Destroyed, it leaves echo shards, teeth, glowing eyes,
+ * sculk coral and whatever it swallowed before you.
  */
 public class CoralOrgan extends Mob implements Enemy {
     private static final byte EVENT_CHORD = -97;
     private static final byte EVENT_CHARGE = -98;
     private static final byte EVENT_FIRE = -99;
     private static final byte EVENT_CLAMP = -100;
+    private static final byte EVENT_GAPE = -96;
+    private static final byte EVENT_BITE = -95;
     private static final EntityDataAccessor<Integer> AIM = SynchedEntityData.defineId(CoralOrgan.class, EntityDataSerializers.INT);
     /** How far the horn reaches (the hook flies a little further). */
     public static final double RANGE = 26.0;
     private static final int CHARGE_TICKS = 26;
+    /** WATER: prey this close (from the mouth) is sucked in and bitten instead of harpooned. */
+    public static final double SUCK_RANGE = 10.0;
+    /** The telegraph: the mouth creaks open and the eyes fix on the prey this long before the pull starts. */
+    public static final int GAPE_TICKS = 20;
+    private static final int SUCK_TICKS = 50;
+    private static final double BITE_REACH = 2.8;
+    private static final float BITE_DAMAGE = 7.0F;
     private static final double HOOK_SPEED = 1.15;
     /** Eerie chord shapes, in semitones above the root: diminished, half-diminished, minor 7th, a cluster, augmented, tritone. */
     private static final int[][] CHORDS = {{0, 3, 6}, {0, 3, 6, 10}, {0, 3, 7, 10}, {0, 1, 7}, {0, 4, 8}, {0, 6, 11}, {0, 3, 6, 9}};
@@ -60,6 +71,9 @@ public class CoralOrgan extends Mob implements Enemy {
     public final AnimationState chargeAnimation = new AnimationState();
     public final AnimationState fireAnimation = new AnimationState();
     public final AnimationState clampAnimation = new AnimationState();
+    public final AnimationState gapeAnimation = new AnimationState();
+    public final AnimationState biteAnimation = new AnimationState();
+    private int gape = -1;
     private @Nullable CoralHook hook;
     private @Nullable LivingEntity aim;
     private int targetCheck;
@@ -185,10 +199,10 @@ public class CoralOrgan extends Mob implements Enemy {
                 best = p;
             }
         }
-        if (best == null && this.random.nextInt(30) == 0) {
-            // nobody about: a fish will do
-            for (LivingEntity f : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(12.0),
-                    e -> (e instanceof KazooFish || e instanceof net.minecraft.world.entity.animal.fish.AbstractFish) && this.canHook(e))) {
+        if (best == null && this.random.nextInt(4) == 0) {
+            // nobody about: anything else swimming close by will do (never its own sculk kin)
+            for (LivingEntity f : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(SUCK_RANGE),
+                    e -> e instanceof Mob && !(e instanceof Enemy) && this.canHook(e) && this.mouth().distanceTo(e.getBoundingBox().getCenter()) <= SUCK_RANGE)) {
                 best = f;
                 break;
             }
@@ -224,6 +238,8 @@ public class CoralOrgan extends Mob implements Enemy {
             }
         } else if (this.charge >= 0) {
             this.charging(server);
+        } else if (this.gape >= 0) {
+            this.gaping(server);
         } else {
             if (this.cooldown > 0) {
                 this.cooldown--;
@@ -233,9 +249,13 @@ public class CoralOrgan extends Mob implements Enemy {
                 this.aim = server.getDifficulty() == Difficulty.PEACEFUL ? null : this.findTarget();
                 this.setAim(this.aim);
                 if (this.aim != null && this.cooldown <= 0) {
-                    this.charge = 0;
-                    server.broadcastEntityEvent(this, EVENT_CHARGE);
-                    this.playSound(ModSculkSea.ORGAN_CHARGE.get(), 2.0F, 0.85F + this.random.nextFloat() * 0.2F);
+                    if (this.mouth().distanceTo(this.aim.getBoundingBox().getCenter()) <= SUCK_RANGE) {
+                        this.startGape(server);
+                    } else if (this.aim instanceof Player) {
+                        this.charge = 0;
+                        server.broadcastEntityEvent(this, EVENT_CHARGE);
+                        this.playSound(ModSculkSea.ORGAN_CHARGE.get(), 2.0F, 0.85F + this.random.nextFloat() * 0.2F);
+                    }
                 }
             }
         }
@@ -277,6 +297,80 @@ public class CoralOrgan extends Mob implements Enemy {
             this.charge = -1;
             this.fire(level, this.aim);
         }
+    }
+
+    // ------------------------------------------------------------------ WATER: the giant mouth
+
+    /** True while the mouth is open for a bite (the telegraph and the pull). */
+    public boolean isGaping() {
+        return this.gape >= 0;
+    }
+
+    private void startGape(ServerLevel level) {
+        this.gape = 0;
+        level.broadcastEntityEvent(this, EVENT_GAPE);
+        // a low shriek and a chord as the mouth creaks open
+        this.playSound(ModSculkSea.ORGAN_CHARGE.get(), 2.2F, 0.6F + this.random.nextFloat() * 0.1F);
+        this.startChord(level, false);
+    }
+
+    private void gaping(ServerLevel level) {
+        LivingEntity t = this.aim;
+        Vec3 m = this.mouth();
+        if (t == null || !t.isAlive() || !this.canHook(t) || m.distanceTo(t.getBoundingBox().getCenter()) > SUCK_RANGE + 3.0) {
+            this.snap(level, null);
+            return;
+        }
+        this.gape++;
+        Vec3 c = t.getBoundingBox().getCenter();
+        double d = m.distanceTo(c);
+        if (this.gape < GAPE_TICKS) {
+            if (this.gape % 4 == 0) {
+                level.sendParticles(ParticleTypes.SCULK_CHARGE_POP, m.x, m.y, m.z, 2, 0.4, 0.2, 0.4, 0.01);
+            }
+            return;
+        }
+        if (d <= BITE_REACH) {
+            this.snap(level, t);
+            return;
+        }
+        // the pull: a current into the mouth, stronger the closer the prey gets
+        Vec3 dir = m.subtract(c).normalize();
+        Vec3 pull = dir.scale(0.05 + 0.06 * (1.0 - Math.min(1.0, d / SUCK_RANGE)));
+        t.push(pull.x, pull.y, pull.z);
+        if (this.gape % 3 == 0) {
+            level.sendParticles(ParticleTypes.BUBBLE, c.x + (this.random.nextDouble() - 0.5), c.y, c.z + (this.random.nextDouble() - 0.5), 0, dir.x, dir.y,
+                    dir.z, 0.6);
+        }
+        if (this.gape % 12 == 0) {
+            // the reeds drone while it sucks
+            level.playSound(null, m.x, m.y, m.z, ModSculkSea.ORGAN_REED.get(), SoundSource.HOSTILE, 1.8F, 0.5F + this.random.nextFloat() * 0.05F);
+        }
+        if (this.gape >= GAPE_TICKS + SUCK_TICKS) {
+            this.snap(level, null);
+        }
+    }
+
+    /** The mouth slams shut - a lunging bite if the prey is in reach (null: it closes on empty water). */
+    private void snap(ServerLevel level, @Nullable LivingEntity prey) {
+        this.gape = -1;
+        level.broadcastEntityEvent(this, EVENT_BITE);
+        Vec3 m = this.mouth();
+        if (prey == null) {
+            this.playSound(ModSculkSea.ORGAN_CLAMP.get(), 1.2F, 0.7F);
+            this.cooldown = 40 + this.random.nextInt(30);
+            return;
+        }
+        this.playSound(ModSculkSea.ORGAN_CLAMP.get(), 2.2F, 0.55F + this.random.nextFloat() * 0.15F);
+        boolean bitten = prey.hurtServer(level, this.damageSources().mobAttack(this), BITE_DAMAGE);
+        if (bitten && prey.isAlive()) {
+            // it spits what it could not swallow back out, a little way
+            Vec3 away = prey.getBoundingBox().getCenter().subtract(m).normalize();
+            prey.push(away.x * 0.5, 0.15, away.z * 0.5);
+        }
+        level.sendParticles(ParticleTypes.SCULK_SOUL, m.x, m.y, m.z, 4, 0.3, 0.2, 0.3, 0.02);
+        this.startChord(level, true);
+        this.cooldown = 50 + this.random.nextInt(30);
     }
 
     private void fire(ServerLevel level, LivingEntity target) {
@@ -376,6 +470,14 @@ public class CoralOrgan extends Mob implements Enemy {
                 this.fireAnimation.start(this.tickCount);
             }
             case EVENT_CLAMP -> this.clampAnimation.start(this.tickCount);
+            case EVENT_GAPE -> {
+                this.biteAnimation.stop();
+                this.gapeAnimation.start(this.tickCount);
+            }
+            case EVENT_BITE -> {
+                this.gapeAnimation.stop();
+                this.biteAnimation.start(this.tickCount);
+            }
             default -> super.handleEntityEvent(id);
         }
     }

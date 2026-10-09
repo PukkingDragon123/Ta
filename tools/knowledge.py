@@ -202,7 +202,7 @@ FIELD_NOTES = {
     'caravan': 'Habitat: Caravans Cavern|Temper: Territorial swarm|Diet: Raw ore|Drops: Crystal shards',
     'gobbler': 'Habitat: Sculk Ocean|Temper: Hostile, blind|Diet: Whatever it finds|Drops: Gobbler Fillet, Sculk Bladder',
     'sculk_fish': 'Habitat: Sculk Ocean, Sculk Water|Temper: Hostile schools|Diet: Anything that moves|Drops: Sculk fish',
-    'coral_organ': 'Habitat: Sculk Ocean floor|Temper: Hostile, never moves|Diet: Drowned swimmers|Drops: Echo shards',
+    'coral_organ': 'Habitat: Sculk Ocean floor|Temper: Hostile, rooted - all eyes and mouth|Diet: Anything that swims near|Drops: Echo shards, teeth, glowing eyes',
     'swifter': 'Habitat: White Forest|Temper: Neutral, defends its family|Diet: Bulbs, alien chickens|Drops: Swifter Fluff',
     'jailer': 'Habitat: Deep caves|Temper: Hostile, blind|Diet: Souls|Drops: Sculkite',
     'sculkling': 'Habitat: Dark caves|Temper: Hostile packs, thieves|Diet: Shiny things|Drops: What it stole',
