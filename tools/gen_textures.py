@@ -12,7 +12,6 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(__file__))
-import hdblocks as HB  # noqa: E402
 import hditems as HI  # noqa: E402
 import mcitems as MI  # noqa: E402
 import mctex as M  # noqa: E402
@@ -391,10 +390,7 @@ def flora():
 
 
 def functional():
-    # the Sift Drum: a 3D drum painted at 32x onto a sheet (tools/hdblocks.py)
-    sheet, glow = HB.drum_sheets()
-    out('block/sift_drum', sheet)
-    out('block/sift_drum_glow', glow, CUTOUT)
+    # (the Sift Drum's 16x textures are painted with its model in tools/blockart.py)
     # portal: 16 animated frames of swirling cyan/pink soul energy
     frames = 16
     p = Image.new('RGBA', (16, 16 * frames))
@@ -1691,6 +1687,7 @@ def main():
     __import__('sky_islands').textures(out)  # W-sky: Sky Islands blocks, Driftfruit, Skyrind, the swinging rope (tools/sky_art.py)
     __import__('wland_art').textures(out)  # W-land: Rocky Dunes rock/sand/plants, White Lullwood, Rainbow Snow, frost flowers
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
+    __import__('blockart').paint(TEX)  # Block art: every Sift block in Mojang's 16x style on Sift ramps, and the 16x Sift Drum (after C1)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):

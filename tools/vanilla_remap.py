@@ -414,22 +414,6 @@ def _anim_mat(name, ref, w=0.5):
     return np.concatenate([_mat(f, [fr[(i * len(fr)) // len(fo)]], w) for i, f in enumerate(fo)], 0)
 
 
-def _half(a):
-    """64px sheet -> 32px (vanilla texel density: one pixel per 1/16 block for the drum's UV layout).
-    Each 2x2 block is averaged over its opaque pixels and snapped back to the sheet's own colours."""
-    h, w = a.shape[0] // 2, a.shape[1] // 2
-    q = a.reshape(h, 2, w, 2, 4).transpose(0, 2, 1, 3, 4).reshape(h, w, 4, 4)
-    op = (q[..., 3] > 0)[..., None]
-    n = op.sum(2)
-    avg = (q[..., :3] * op).sum(2) / np.maximum(n, 1)
-    cols = np.unique(a[a[..., 3] > 0][:, :3], axis=0)
-    near = cols[np.argmin(((avg[:, :, None, :] - cols[None, None]) ** 2).sum(-1), axis=-1)]
-    out = np.zeros((h, w, 4))
-    out[..., :3] = near
-    out[..., 3] = np.where(n[..., 0] >= 2, q[..., 3].max(-1), 0)
-    return out
-
-
 def _prism(name, ref):
     """Prism block: amethyst cloned in the gem's pale body colour, then a diagonal rainbow shimmer."""
     o = _old(name)
@@ -604,13 +588,13 @@ MAP = {
     'soul_chime_core_lit': M('sea_lantern'),
     'soul_chime_tube': M('iron_block'),
     'soul_chime_wood': C('cherry_planks'),
-    'sift_drum': ('drum', 'note_block', {}),
-    'sift_drum_glow': ('half', None, {}),
 }
 SKIP = {'glow_particle'}  # a particle sprite that only lives in block/
 # E1 Sniffer & rot: the Sift Sniffer egg's faces are vanilla's Sniffer egg faces re-themed already (tools/sift_sniffer.py)
 SKIP |= {f'sift_sniffer_egg_{s}_{f}' for s in ('not_cracked', 'slightly_cracked', 'very_cracked')
          for f in ('north', 'east', 'south', 'west', 'top', 'bottom')}
+# Block art: the Sift Drum is a 16x Mojang-style model painted in tools/blockart.py (the 32x drum sheet is gone)
+SKIP |= {'sift_drum_' + p for p in ('side', 'side_core', 'head', 'head_struck', 'hoop', 'base', 'glow', 'head_glow')}
 
 
 def _edits(name, a):
@@ -667,9 +651,5 @@ def remap(tex_root):
             a = ref(n, *kw)
         elif kind == 'anim_mat':
             a = _anim_mat(n, ref)
-        elif kind == 'drum':
-            a = _mat(_half(old), [_ref(ref)], w=0.3)
-        elif kind == 'half':
-            a = _half(old)
         a = _edits(n, a)
         Image.fromarray(np.clip(np.round(a), 0, 255).astype(np.uint8), 'RGBA').save(os.path.join(block, n + '.png'))

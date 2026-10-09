@@ -354,12 +354,12 @@ def faces(side, top, bottom, uv_side=None, uv_top=None):
 
 
 def gen_drum(bid):
-    import hdblocks as HB
+    import blockart as BA  # the 16x Mojang-style drum model (the old 32x sheet model is gone)
     variants = {}
     for hit in (0, 1, 2):
         for core in (False, True):
             name = bid + ('' if hit == 0 else f'_hit{hit}') + ('_core' if core else '')
-            m = HB.drum_model(hit, core, NS, bid)
+            m = BA.drum_model(hit, core, NS, bid)
             note_textures(m)
             write(os.path.join(A, 'models/block', name + '.json'), m)
             variants[f'hit={hit},core={str(core).lower()}'] = {'model': f'{NS}:block/{name}'}
