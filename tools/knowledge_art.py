@@ -1,11 +1,10 @@
-"""F3 Knowledge & lore: every texture of the Knowledge Book, the Lore Books and Scrolls and the Music Sheet art.
+"""F3 Knowledge & lore: every texture of the Knowledge Book and Lore screens, the placed Lore Books and the Music Sheet art.
 
-  textures/gui/knowledge_book.png 512x512 (layout in KB below; client/knowledge/KnowledgeBookScreen.java)
-  textures/gui/lore_pages.png 1024x256: one 192x232 reading page per origin at (200 * i, 0)
-  textures/gui/lore_rollers.png 256x96: the scroll rollers, 208x16 per origin at (0, 16 * i)
+  textures/gui/knowledge_book.png 256x256 and textures/gui/lore_pages.png 1024x512: vanilla's book-screen layout (see
+  "the book screens" below; client/codex/KnowledgeBookScreen.java, client/knowledge/LoreScreen.java)
   textures/gui/sheets/<song>.png 176x112: each song's sheet - staff, notes and ink diagrams of its instrument and creature
-  block/<origin>_lore_book_{cover,side,trim}, block/lore_book_pages, item/<origin>_lore_{book,scroll}, item/<origin>_lore_scroll_3d,
-  item/knowledge_book, item/mini_creator_spawn_egg
+  block/<origin>_lore_book_{cover,side,trim,pages}: the placed Lore Book (an open book, like the one on a
+  lectern); item/mini_creator_spawn_egg. The book and scroll item sprites are drawn in tools/itemart.py.
 
 Pixel art in the vanilla manner: flat base tones with clustered noise, a lit top-left, no outlines on the GUI art.
 """
@@ -91,16 +90,140 @@ def draw_rows(img, x0, y0, rows, pal):
                 put(img, x0 + i, y0 + j, pal[ch])
 
 
-# ============================================================================ the Knowledge Book GUI
+# ============================================================================ the book screens (vanilla book layout)
+#
+# textures/gui/knowledge_book.png 256x256, read by client/codex/KnowledgeBookScreen (and LoreScreen for the arrows):
+#   (0, 0) 192x192 .... the book, open at one page as in vanilla's book screen: text at (36, 32), 114 wide
+#   (192, 14i) 22x14 .. chapter tab i;  (214, 14i) its raised (open or hovered) state
+#   (0, 192) 23x13 .... next page; (23, 192) hovered; (46, 192) previous page; (69, 192) hovered
+#   (92 + 10i, 192) ... 9x9 marks: sealed, done, known, star, more above, more below
+#   (152, 192) 18x18 .. recipe slot;  (172, 192) 22x15 recipe arrow
+#   (0, 206) 100x5 .... rule;  (0, 212) 102x7 progress frame;  (0, 220) 100x5 progress fill
+#   (104 + 13i, 206) .. 12x12 chapter emblem i (drawn large on the chapter's first page)
+# textures/gui/lore_pages.png 1024x512, read by client/knowledge/LoreScreen:
+#   (192o, 0) the origin's book page, (192o, 192) its scroll sheet, (0, 384 + 12o) 176x12 its scroll roller
 
-BW, BH = 312, 196
-LEATHER = [hx('#1a2238'), hx('#202a44'), hx('#243050'), hx('#2a375a'), hx('#313f66')]
+INK = hx('#3a2614')
 GOLD = hx('#d9a72c')
 GOLD_L = hx('#f2cc5a')
 GOLD_D = hx('#9a7015')
-GOLD_S = hx('#6a4c12')
-PAPER = [hx('#e2d0a8'), hx('#e9d9b4'), hx('#eee0bd'), hx('#f2e6c6'), hx('#f5eacd')]
-INK = hx('#3a2a18')
+BOOK_STYLE = {   # leather dark -> light (5), paper dark -> light (4), trim
+    'knowledge': (['#0c1230', '#18224c', '#1e2a5c', '#24326a', '#33447e'], ['#b8a682', '#d6c8a6', '#e8dcbc', '#f0e6c8'], '#d9a72c'),
+    'creator': (['#6a5a3a', '#bfb498', '#d8cfba', '#e6dfcc', '#f4efe2'], ['#c8bca0', '#e6dcc4', '#f2ead6', '#f8f2e4'], '#d9a72c'),
+    'pillager': (['#24120a', '#4a2a18', '#5a3420', '#6a3e26', '#8a5634'], ['#a8885a', '#c6a06c', '#d2ae7a', '#dcbb8a'], '#c7713f'),
+    'cultist': (['#040e10', '#0e1c20', '#142629', '#1a3034', '#24424a'], ['#8a968c', '#a8b2a6', '#b4bdb0', '#c0c8ba'], '#2fb8b0'),
+    'ocean': (['#3a4a5a', '#7a8a9a', '#8a9aa6', '#9cacb6', '#c0ccd2'], ['#b8c8cc', '#d6e2e6', '#e2ecee', '#edf4f4'], '#e8707a'),
+    'soul': (['#04081c', '#0e1438', '#121838', '#161e44', '#22306a'], ['#141a3c', '#18204a', '#1c2554', '#212b5e'], '#5ff0ff'),
+}
+PAGE_EMBLEM = {  # 7x7, centred between the page arrows
+    'knowledge': ['...#...', '..#.#..', '.#.#.#.', '#.###.#', '.#.#.#.', '..#.#..', '...#...'],
+    'creator': ['...#...', '.#.#.#.', '..###..', '###.###', '..###..', '.#.#.#.', '...#...'],
+    'pillager': ['.#####.', '#.....#', '#.#.#.#', '#..#..#', '#.#.#.#', '#.....#', '.#####.'],
+    'cultist': ['...#...', '..#.#..', '.#...#.', '#..#..#', '.#...#.', '..#.#..', '...#...'],
+    'ocean': ['.#####.', '#.#.#.#', '#.#.#.#', '.#.#.#.', '..###..', '...#...', '.......'],
+    'soul': ['#.....#', '.#...#.', '..#.#..', '...#...', '..#.#..', '.#...#.', '#.....#'],
+}
+
+
+def _book_page(img, x0, y0, style, seed):
+    """A book open at one page, in vanilla's book-screen layout (192x192 at x0, y0): the cover round the page, the
+    binding's shadow in the gutter, the page block's edge on the right, a small emblem at the foot of the page."""
+    leather, paper, trim = BOOK_STYLE[style]
+    L = [hx(c) for c in leather]
+    P = [hx(c) for c in paper]
+    cx0, cy0, cw, ch = 18, 0, 152, 184
+    cov = material(cw, ch, L[1:4], seed, cell=3, grain=0.06)
+    cp = cov.load()
+    for y in range(ch):
+        for x in range(cw):
+            corner = (x < 2 or x > cw - 4) and (y < 2 or y > ch - 4)
+            if corner and (min(x, cw - 1 - x) + min(y, ch - 1 - y)) < 2:
+                cp[x, y] = (0, 0, 0, 0)
+                continue
+            e = min(x, y, cw - 1 - x, ch - 1 - y)
+            if e == 0:
+                cp[x, y] = L[0]
+            elif e == 1:
+                cp[x, y] = L[4] if (x <= 1 or y <= 1) else L[1]
+    img.alpha_composite(cov, (x0 + cx0, y0 + cy0))
+    if style == 'knowledge':
+        # gilt corners on the cover's outer edge
+        for (cx, cy, fx, fy) in ((cx0 + cw - 2, 1, -1, 1), (cx0 + cw - 2, ch - 2, -1, -1)):
+            for i in range(7):
+                put(img, x0 + cx + fx * i, y0 + cy, GOLD if i else GOLD_L)
+                put(img, x0 + cx, y0 + cy + fy * i, GOLD if i else GOLD_L)
+                put(img, x0 + cx + fx * i, y0 + cy + fy, GOLD_D)
+                put(img, x0 + cx + fx, y0 + cy + fy * i, GOLD_D)
+    # the edges of the pages under this one
+    for y in range(7, 176):
+        for x in range(162, 167):
+            put(img, x0 + x, y0 + y, P[1] if (x + (y // 40)) % 2 else P[3])
+    # the page: flat paper, the binding's shade on its left, a darker foot and fore-edge
+    pw, ph = 138, 172
+    page = Image.new('RGBA', (pw, ph))
+    pp = page.load()
+    rnd = random.Random(seed)
+    for y in range(ph):
+        for x in range(pw):
+            c = P[2] if rnd.random() < 0.035 else P[3]
+            if x < 8:
+                c = darken(c, 0.035 * (8 - x))
+            if y >= ph - 2 or x >= pw - 1:
+                c = darken(c, 0.08)
+            pp[x, y] = c
+    img.alpha_composite(page, (x0 + 24, y0 + 5))
+    t = hx(trim)
+    draw_rows(img, x0 + 88, y0 + 161, PAGE_EMBLEM[style], {'#': mix(t, P[2], 0.35)})
+
+
+def _scroll_page(img, x0, y0, style, seed):
+    """A scroll's sheet, unrolled to the same text area as a book page; its rollers are drawn over its ends."""
+    leather, paper, trim = BOOK_STYLE[style]
+    P = [hx(c) for c in paper]
+    rnd = random.Random(seed)
+    pw, ph = 148, 170
+    page = Image.new('RGBA', (pw, ph))
+    pp = page.load()
+    for y in range(ph):
+        for x in range(pw):
+            pp[x, y] = P[2] if rnd.random() < 0.05 else P[3]
+    left = [rnd.choice((0, 0, 1)) for _ in range(ph)]
+    right = [rnd.choice((0, 0, 1)) for _ in range(ph)]
+    for y in range(ph):
+        for x in range(pw):
+            if x < left[y] or x >= pw - right[y]:
+                pp[x, y] = (0, 0, 0, 0)
+                continue
+            e = min(x - left[y], pw - 1 - right[y] - x)
+            if e < 3:
+                pp[x, y] = darken(pp[x, y], 0.07 * (3 - e)) if style != 'soul' else lighten(pp[x, y], 0.05 * (3 - e))
+    img.alpha_composite(page, (x0 + 20, y0 + 12))
+    draw_rows(img, x0 + 88, y0 + 161, PAGE_EMBLEM[style], {'#': mix(hx(trim), P[2], 0.35)})
+
+
+def _roller(img, x0, y0, style):
+    """The rod a scroll is wound on (176x12): a turned body with a knob at each end."""
+    rod = {'creator': ('#f2ead6', '#d9a72c'), 'pillager': ('#7a4e2c', '#c7713f'), 'cultist': ('#d8d2c0', '#1f8a8a'),
+           'ocean': ('#c0ccd4', '#e8707a'), 'soul': ('#24306a', '#5ff0ff')}[style]
+    body, knob = hx(rod[0]), hx(rod[1])
+    for x in range(8, 168):
+        for y in range(2, 10):
+            t = (y - 2) / 7.0
+            c = lighten(body, 0.25) if t < 0.2 else (body if t < 0.7 else darken(body, 0.3))
+            put(img, x0 + x, y0 + y, c)
+        put(img, x0 + x, y0 + 1, darken(body, 0.55))
+        put(img, x0 + x, y0 + 10, darken(body, 0.55))
+    for kx in (0, 168):
+        for x in range(8):
+            for y in range(12):
+                if (x in (0, 7)) and (y in (0, 11)):
+                    continue
+                t = y / 11.0
+                c = lighten(knob, 0.3) if t < 0.25 else (knob if t < 0.7 else darken(knob, 0.3))
+                if x in (0, 7) or y in (0, 11):
+                    c = darken(knob, 0.55)
+                put(img, x0 + kx + x, y0 + y, c)
+
 
 # chapter ribbons, in CodexEntries chapter order: creatures, items(recipes), places, magic(machines), dictator(heralds), songs,
 # enchantments, lore, guide
@@ -136,333 +259,102 @@ SMALL = {  # 9x9 marks
 }
 
 
-def _book_spread(img):
-    W, H = BW, BH
-    cover = material(W, H, LEATHER, 11, cell=4)
-    cp = cover.load()
-    px = img.load()
-    for y in range(H):
-        for x in range(W):
-            # rounded corners
-            cx = min(x, W - 1 - x)
-            cy = min(y, H - 1 - y)
-            if cx + cy < 2:
+ARROW = ['..............##.......', '..............#o#......', '..............#oo#.....', '..............#ooo#....',
+         '###############oooo#...', '#oooooooooooooooooooo#.', '#ooooooooooooooooooooo#', '#oooooooooooooooooooo#.',
+         '###############oooo#...', '..............#ooo#....', '..............#oo#.....', '..............#o#......',
+         '..............##.......']
+
+
+def _arrow(img, x0, y0, hover, back):
+    fill, edge, lit = ((hx('#f2d27a'), hx('#5a4010'), hx('#fff0b8')) if hover else (hx('#cbb68c'), hx('#4a3820'), hx('#ebdfbc')))
+    for y, row in enumerate(ARROW):
+        for x, ch in enumerate(row):
+            if ch == '.':
                 continue
-            c = cp[x, y]
-            if cx == 0 or cy == 0:
-                c = hx('#0e1424')
-            elif cx == 1 or cy == 1:
-                c = lighten(c, 0.12) if (x < W // 2 and y < H // 2) else darken(c, 0.25)
-            px[x, y] = c
-    # gold tooling: a fine line inset round the cover
-    for x in range(4, W - 4):
-        for y in (4, H - 5):
-            px[x, y] = GOLD_D if (x // 2) % 3 else GOLD
-    for y in range(4, H - 4):
-        for x in (4, W - 5):
-            px[x, y] = GOLD_D if (y // 2) % 3 else GOLD
-    # the page block: stacked page edges, then the two pages
-    x0, y0, x1, y1 = 9, 8, W - 10, H - 9
-    paper = material(W, H, PAPER, 23, cell=3, grain=0.05)
-    pp = paper.load()
-    mid = W // 2
-    for y in range(y0, y1 + 1):
-        for x in range(x0, x1 + 1):
-            edge = (y > y1 - 3) or (x < x0 + 2) or (x > x1 - 2)
-            if edge:
-                px[x, y] = PAPER[0] if (y + x // 7) % 2 == 0 else PAPER[2]
+            c = edge if ch == '#' else (lit if y <= 5 else (fill if y < 8 else darken(fill, 0.15)))
+            put(img, x0 + (22 - x if back else x), y0 + y, c)
+
+
+def _tab(img, x0, y0, ch, raised):
+    """A chapter's ribbon tab (22x14) with a notched end, its emblem on the part that shows past the cover."""
+    col = hx(RIBBON_COLOURS[ch])
+    if raised:
+        col = lighten(col, 0.18)
+
+    def inside(x, y):
+        return 0 <= x < 22 and 0 <= y < 14 and not (x >= 19 and abs(y - 6.5) < (x - 18.5))
+    for y in range(14):
+        for x in range(22):
+            if not inside(x, y):
                 continue
-            c = pp[x, y]
-            d = abs(x + 0.5 - mid)
-            # the pages curve into the gutter and darken towards their outer edges
-            if d < 2:
-                c = darken(PAPER[0], 0.35)
-            elif d < 4:
-                c = darken(c, 0.22)
-            elif d < 8:
-                c = darken(c, 0.12)
-            elif d < 12:
-                c = darken(c, 0.05)
-            out = min(x - x0, x1 - x)
-            if out < 4:
-                c = darken(c, 0.06 * (4 - out))
-            if y < y0 + 2:
-                c = darken(c, 0.08)
-            px[x, y] = c
-    # foxing: a few faint age spots
-    rnd = random.Random(5)
-    for _ in range(26):
-        sx, sy = rnd.randrange(x0 + 6, x1 - 6), rnd.randrange(y0 + 6, y1 - 8)
-        if abs(sx - mid) < 10:
-            continue
-        for dx, dy in ((0, 0), (1, 0), (0, 1)):
-            px[sx + dx, sy + dy] = mix(px[sx + dx, sy + dy], PAPER[0], 0.55)
-    # gold corner caps with a rivet
-    for (cx, cy, fx, fy) in ((0, 0, 1, 1), (W - 1, 0, -1, 1), (0, H - 1, 1, -1), (W - 1, H - 1, -1, -1)):
-        for i in range(12):
-            for j in range(12 - i):
-                if i + j < 2:
-                    continue
-                c = GOLD_L if (i == 1 or j == 1) else (GOLD if i + j < 8 else GOLD_D)
-                if i + j == 11:
-                    c = GOLD_S
-                px[cx + fx * i, cy + fy * j] = c
-        px[cx + fx * 4, cy + fy * 4] = GOLD_S
-        px[cx + fx * 3, cy + fy * 3] = GOLD_L
-
-
-def _ribbons(img):
-    """9 ribbons 22x26 at (24 * i, 200); the selected versions (lighter, with a gold tip) at (24 * i, 228)."""
-    for row, sel in ((200, False), (228, True)):
-        for i, (key, col) in enumerate(zip(ICON_ORDER, RIBBON_COLOURS)):
-            base = hx(col)
-            if sel:
-                base = lighten(base, 0.12)
-            x0 = i * 24
-            tones = [darken(base, 0.18), darken(base, 0.08), base, lighten(base, 0.08)]
-            cloth = material(22, 26, tones, 31 + i, cell=2, grain=0.05)
-            cp = cloth.load()
-            for y in range(26):
-                for x in range(22):
-                    if y < 2 and (x < 2 - y or x > 19 + y):
-                        continue
-                    c = cp[x, y]
-                    if x in (0, 21) or y == 0:
-                        c = darken(base, 0.45)
-                    elif x == 1 or y == 1:
-                        c = lighten(base, 0.2)
-                    elif x == 20:
-                        c = darken(base, 0.25)
-                    # woven texture: faint horizontal threads
-                    elif y % 3 == 0:
-                        c = darken(c, 0.06)
-                    put(img, x0 + x, row + y, c)
-            if sel:
-                for x in range(3, 19):
-                    put(img, x0 + x, row + 2, GOLD_L if x % 2 else GOLD)
-            icon = ICONS[key]
-            ink = hx('#f6efdc') if key != 'guide' else hx('#4a3a20')
-            shadow = darken(base, 0.5) if key != 'guide' else hx('#b8a882')
-            for j, r in enumerate(icon):
-                for k, ch in enumerate(r):
-                    if ch == '#':
-                        put(img, x0 + 5 + k + 1, row + 5 + j + 1, shadow)
-            for j, r in enumerate(icon):
-                for k, ch in enumerate(r):
-                    if ch == '#':
-                        put(img, x0 + 5 + k, row + 5 + j, ink)
-
-
-def _arrows(img):
-    """Page arrows 18x10: next (0, 256), previous (20, 256); hover versions 12 rows lower."""
-    arrow = ['.......#..........', '.......##.........', '########o#........', '#oooooooo##.......', '#ooooooooo##......',
-             '#oooooooo##.......', '########o#........', '.......##.........', '.......#..........', '..................']
-    for row, hover in ((256, False), (268, True)):
-        body = GOLD_L if hover else GOLD
-        edge = GOLD_D if not hover else GOLD
-        for j, line in enumerate(arrow):
-            for i, ch in enumerate(line):
-                if ch == '.':
-                    continue
-                c = edge if ch == '#' else body
-                if ch == 'o' and j == 3:
-                    c = lighten(body, 0.3)
-                put(img, i, row + j, c)
-                put(img, 20 + 17 - i, row + j, c)
-
-
-def _small_icons(img):
-    """9x9 marks at (44 + 10 * i, 256) in SMALL order; then a 120x7 gold divider at (0, 282) and a progress bar
-    (frame 102x7 at (0, 292), fill 100x5 at (0, 300))."""
-    pal = {'#': hx('#5a3e1c'), 'o': hx('#c9a24a')}
-    for i, key in enumerate(SMALL):
-        rows = SMALL[key]
-        c = {'lock': None, 'check': hx('#3f8a3a'), 'bullet': hx('#8a5a20'), 'star': hx('#c9952a'), 'up': hx('#6a4a24'),
-             'down': hx('#6a4a24')}[key]
-        p = dict(pal) if c is None else {'#': c}
-        draw_rows(img, 44 + 10 * i, 256, rows, p)
-    # the divider: a fine gold-ink rule with a diamond and two dots in the middle
-    for x in range(120):
-        d = abs(x - 59.5)
-        if d < 4:
-            continue
-        a = 1.0 if d < 40 else max(0.0, 1.0 - (d - 40) / 20)
-        put(img, x, 285, mix(hx('#f1e4c2'), hx('#9a7228'), a))
-    draw_rows(img, 56, 282, ['...#...', '..#o#..', '.#ooo#.', '..#o#..', '...#...'], {'#': hx('#9a7228'), 'o': hx('#e2b84a')})
-    for x in (50, 69):
-        put(img, x, 284, hx('#9a7228'))
-        put(img, x, 286, hx('#9a7228'))
-    # progress bar
-    for x in range(102):
-        for y in range(7):
-            edge = x in (0, 101) or y in (0, 6)
-            put(img, x, 292 + y, hx('#6a4c22') if edge else hx('#d8c49a'))
-    for x in range(100):
-        for y in range(5):
-            put(img, x, 300 + y, [hx('#f2cc5a'), hx('#e2b84a'), hx('#d9a72c'), hx('#b8861e'), hx('#9a7015')][y])
-    # a recipe slot 18x18 at (128, 256) and the recipe arrow 22x15 at (148, 256)
-    for y in range(18):
-        for x in range(18):
-            c = hx('#d8c49a')
-            if x == 0 or y == 0:
-                c = hx('#8a7048')
-            elif x == 17 or y == 17:
-                c = hx('#fbf3dc')
-            put(img, 128 + x, 256 + y, c)
-    ar = ['.............#........', '.............##.......', '.............###......', '#############o###.....',
-          '#ooooooooooooooo###...', '#oooooooooooooooo###..', '#ooooooooooooooooo###.', '#oooooooooooooooooo###',
-          '#ooooooooooooooooo###.', '#oooooooooooooooo###..', '#ooooooooooooooo###...', '#############o###.....',
-          '.............###......', '.............##.......', '.............#........']
-    draw_rows(img, 148, 256, ar, {'#': hx('#7a5a2c'), 'o': hx('#c9a86a')})
+            edge = not all(inside(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            c = darken(col, 0.55) if edge else (lighten(col, 0.15) if y <= 2 else (col if y < 11 else darken(col, 0.15)))
+            put(img, x0 + x, y0 + y, c)
+    icon = ICONS[ICON_ORDER[ch]]
+    pale = lighten(col, 0.7)
+    for y, row in enumerate(icon):
+        for x, c_ in enumerate(row):
+            if c_ == '#':
+                put(img, x0 + 5 + x, y0 + 1 + y, pale)
 
 
 def book_gui(out):
-    img = Image.new('RGBA', (512, 512), (0, 0, 0, 0))
-    _book_spread(img)
-    _ribbons(img)
-    _arrows(img)
-    _small_icons(img)
+    img = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
+    _book_page(img, 0, 0, 'knowledge', 77)
+    for ch in range(9):
+        _tab(img, 192, 14 * ch, ch, False)
+        _tab(img, 214, 14 * ch, ch, True)
+    _arrow(img, 0, 192, False, False)
+    _arrow(img, 23, 192, True, False)
+    _arrow(img, 46, 192, False, True)
+    _arrow(img, 69, 192, True, True)
+    marks = {'lock': (hx('#a8302a'), hx('#e0605a')), 'check': (hx('#3f7a3a'), hx('#3f7a3a')), 'bullet': (INK, INK),
+             'star': (GOLD, GOLD_L), 'up': (INK, INK), 'down': (INK, INK)}
+    for i, (k, rows) in enumerate(SMALL.items()):
+        draw_rows(img, 92 + 10 * i, 192, rows, {'#': marks[k][0], 'o': marks[k][1]})
+    # the recipe slot (vanilla's, in ink on paper) and the recipe arrow
+    for y in range(18):
+        for x in range(18):
+            c = hx('#d8ccac')
+            if x == 0 or y == 0:
+                c = hx('#8a7a5a')
+            elif x == 17 or y == 17:
+                c = hx('#fbf4e0')
+            put(img, 152 + x, 192 + y, c)
+    craft = ['..........#...........', '..........##..........', '..........###.........', '..........####........',
+             '#################.....', '##################....', '###################...', '##################....',
+             '#################.....', '..........####........', '..........###.........', '..........##..........',
+             '..........#...........', '......................', '......................']
+    draw_rows(img, 172, 192, craft, {'#': hx('#8a7a5a')})
+    for x in range(100):                      # the rule: a gold line with a lozenge
+        put(img, x, 208, GOLD if 6 < x < 94 else GOLD_D)
+    draw_rows(img, 46, 206, ['...#...', '.#####.', '...#...'], {'#': GOLD_D})
+    put(img, 49, 207, GOLD_L)
+    for y in range(7):                        # progress frame and fill
+        for x in range(102):
+            e = x in (0, 101) or y in (0, 6)
+            put(img, x, 212 + y, INK if e else hx('#c8b896'))
+    for y in range(5):
+        for x in range(100):
+            put(img, x, 220 + y, GOLD_L if y == 0 else (GOLD if y < 4 else GOLD_D))
+    for ch in range(9):
+        icon = ICONS[ICON_ORDER[ch]]
+        col = darken(hx(RIBBON_COLOURS[ch]), 0.2)
+        for y, row in enumerate(icon):
+            for x, c_ in enumerate(row):
+                if c_ == '#':
+                    put(img, 104 + 13 * ch + x, 206 + y, col)
     out('gui/knowledge_book', img)
 
 
-# ============================================================================ lore pages and rollers
-
-PAGE_W, PAGE_H = 192, 232
-PAGE_STYLE = {
-    'creator': dict(paper=['#e6dcc4', '#efe6d0', '#f5eedc', '#faf5e8'], border='#c99a2c', border_d='#8a6616', accent='#e9c25a'),
-    'pillager': dict(paper=['#b8925e', '#c6a06c', '#d2ae7a', '#dcbb8a'], border='#5e3a1e', border_d='#3a2412', accent='#c7713f'),
-    'cultist': dict(paper=['#9aa49a', '#a8b2a6', '#b4bdb0', '#c0c8ba'], border='#1f4f52', border_d='#0f2e30', accent='#3fd8d0'),
-    'ocean': dict(paper=['#c8d8dc', '#d6e2e6', '#e2ecee', '#edf4f4'], border='#8a9ca8', border_d='#5a6a78', accent='#e8707a'),
-    'soul': dict(paper=['#141a3c', '#18204a', '#1c2554', '#212b5e'], border='#3f8fd8', border_d='#1f4a8a', accent='#5ff0ff'),
-}
-
-
-def _page(o, seed):
-    st = PAGE_STYLE[o]
-    tones = [hx(c) for c in st['paper']]
-    img = material(PAGE_W, PAGE_H, tones, seed, cell=6, grain=0.08)
-    px = img.load()
-    W, H = PAGE_W, PAGE_H
-    rnd = random.Random(seed)
-    # darker, worn edges
-    for y in range(H):
-        for x in range(W):
-            e = min(x, y, W - 1 - x, H - 1 - y)
-            if e < 5:
-                px[x, y] = darken(px[x, y], 0.06 * (5 - e)) if o != 'soul' else lighten(px[x, y], 0.03 * (5 - e))
-    b, bd, acc = hx(st['border']), hx(st['border_d']), hx(st['accent'])
-    if o == 'creator':
-        # a double gold rule and a gold sun in each corner
-        for x in range(8, W - 8):
-            for y in (8, 11, H - 12, H - 9):
-                px[x, y] = b if y in (8, H - 9) else bd
-        for y in range(8, H - 8):
-            for x in (8, 11, W - 12, W - 9):
-                px[x, y] = b if x in (8, W - 9) else bd
-        sun = ['...#...', '.#.#.#.', '..###..', '###o###', '..###..', '.#.#.#.', '...#...']
-        for cx, cy in ((3, 3), (W - 10, 3), (3, H - 10), (W - 10, H - 10)):
-            draw_rows(img, cx, cy, sun, {'#': b, 'o': acc})
-    elif o == 'pillager':
-        # burnt, stained edges, a stitched binding on the left and copper rivets
-        for _ in range(9):
-            cx, cy, r = rnd.randrange(W), rnd.randrange(H), rnd.uniform(6, 16)
-            for y in range(int(cy - r), int(cy + r)):
-                for x in range(int(cx - r), int(cx + r)):
-                    if 0 <= x < W and 0 <= y < H and math.hypot(x - cx, y - cy) < r and rnd.random() < 0.85:
-                        px[x, y] = darken(px[x, y], 0.08)
-        for y in range(H):
-            for x in range(W):
-                e = min(x, y, W - 1 - x, H - 1 - y)
-                jag = (x * 7 + y * 13) % 5
-                if e < 2 + jag // 2:
-                    px[x, y] = darken(px[x, y], 0.45) if e > jag // 3 else (0, 0, 0, 0)
-        for y in range(10, H - 10, 6):
-            px[6, y] = bd
-            px[6, y + 1] = bd
-            px[7, y + 2] = b
-        for cx, cy in ((12, 12), (W - 14, 12), (12, H - 14), (W - 14, H - 14)):
-            draw_rows(img, cx, cy, ['.oo.', 'oOOo', 'oOoo', '.oo.'], {'o': hx('#8a4a24'), 'O': hx('#e39a6a')})
-    elif o == 'cultist':
-        # Sculk creeping in from the corners, veined and specked with glowing points
-        seeds = [(0, 0), (W, 0), (0, H), (W, H), (W // 2, H)]
-        n = value_noise(W, H, 9, seed + 5)
-        for y in range(H):
-            for x in range(W):
-                d = min(math.hypot(x - sx, y - sy) for sx, sy in seeds)
-                v = d / 60.0 - n[y][x] * 0.6
-                if v < 0.12:
-                    px[x, y] = hx('#0c2a30') if (x + y) % 3 else hx('#123a40')
-                    if rnd.random() < 0.03:
-                        px[x, y] = acc
-                elif v < 0.2:
-                    px[x, y] = mix(px[x, y], hx('#0f3a40'), 0.6)
-        for _ in range(14):
-            x, y = rnd.randrange(W), rnd.randrange(H)
-            for i in range(rnd.randrange(8, 24)):
-                x += rnd.choice((-1, 0, 1))
-                y += rnd.choice((-1, 0, 1))
-                if 0 <= x < W and 0 <= y < H:
-                    px[x, y] = mix(px[x, y], hx('#1f5a5e'), 0.5)
-    elif o == 'ocean':
-        # coral at the corners, a clam shell at the head of the page, a silver rule
-        for x in range(10, W - 10):
-            px[x, 22] = b
-            px[x, H - 12] = b
-        clam = ['....######....', '..##.#..#.##..', '.#..#.##.#..#.', '#..#..##..#..#', '#.#...##...#.#', '##....##....##',
-                '.############.', '..#..####..#..']
-        draw_rows(img, W // 2 - 7, 6, clam, {'#': hx('#b89a8a'), '.': hx('#f0dcd0')})
-        coral = ['..#...#.', '..#..#..', '#.#.#...', '.###..#.', '..#..#..', '..####..', '...#....', '...#....']
-        for cx, cy, flip in ((6, H - 16, False), (W - 14, H - 16, True), (6, 26, False), (W - 14, 26, True)):
-            rows = [r[::-1] for r in coral] if flip else coral
-            draw_rows(img, cx, cy, rows, {'#': acc})
-    elif o == 'soul':
-        # star dust and a glowing border of runes
-        for _ in range(110):
-            x, y = rnd.randrange(W), rnd.randrange(H)
-            px[x, y] = mix(px[x, y], hx('#8fd8ff'), rnd.uniform(0.3, 0.8))
-        runes = ['#.#', '.#.', '#.#'], ['###', '#..', '###'], ['#.#', '###', '#.#'], ['.#.', '###', '.#.'], ['##.', '.##', '##.']
-        i = 0
-        for x in range(10, W - 12, 6):
-            for y in (6, H - 9):
-                draw_rows(img, x, y, runes[i % 5], {'#': acc if i % 3 else b})
-                i += 1
-        for y in range(14, H - 14, 6):
-            for x in (5, W - 8):
-                draw_rows(img, x, y, runes[i % 5], {'#': acc if i % 3 else b})
-                i += 1
-    return img
-
 
 def lore_pages(out):
-    sheet = Image.new('RGBA', (1024, 256), (0, 0, 0, 0))
+    sheet = Image.new('RGBA', (1024, 512), (0, 0, 0, 0))
     for i, o in enumerate(ORIGINS):
-        sheet.paste(_page(o, 101 + i * 17), (200 * i, 0))
+        _book_page(sheet, 192 * i, 0, o, 101 + i * 17)
+        _scroll_page(sheet, 192 * i, 192, o, 201 + i * 17)
+        _roller(sheet, 0, 384 + 12 * i, o)
     out('gui/lore_pages', sheet)
-    # the rollers a scroll's sheet is wound on
-    rollers = Image.new('RGBA', (256, 96), (0, 0, 0, 0))
-    rod = {'creator': ('#f2ead6', '#d9a72c'), 'pillager': ('#7a4e2c', '#c7713f'), 'cultist': ('#d8d2c0', '#1f8a8a'),
-           'ocean': ('#c0ccd4', '#f0d8c8'), 'soul': ('#24306a', '#5ff0ff')}
-    for i, o in enumerate(ORIGINS):
-        body, knob = hx(rod[o][0]), hx(rod[o][1])
-        y0 = i * 16
-        for x in range(10, 198):
-            for y in range(4, 12):
-                t = (y - 4) / 7.0
-                c = lighten(body, 0.25) if t < 0.2 else (body if t < 0.65 else darken(body, 0.25))
-                if (x * 3 + y) % 17 == 0:
-                    c = darken(c, 0.08)
-                put(rollers, x, y0 + y, c)
-        for x0 in (0, 198):
-            for x in range(10):
-                for y in range(1, 15):
-                    if (x in (0, 9) and y in (1, 14)):
-                        continue
-                    t = (y - 1) / 13.0
-                    c = lighten(knob, 0.3) if t < 0.25 else (knob if t < 0.7 else darken(knob, 0.3))
-                    if x == 0 or x == 9:
-                        c = darken(c, 0.2)
-                    put(rollers, x0 + x, y0 + y, c)
-    out('gui/lore_rollers', rollers)
 
 
 # ============================================================================ the Lore Books (block + item) and Scrolls
@@ -506,186 +398,48 @@ def _cover(o):
 
 
 def _side(o):
-    tones, trim, trim_l, trim_d = COVERS[o]
-    img = material(16, 16, [hx(c) for c in tones], 400 + ORIGINS.index(o), cell=2, grain=0.1)
+    """The page block's edges (an open book's sides): fine stacked lines of its paper."""
+    leather, paper, trim = BOOK_STYLE[o]
+    P = [hx(c) for c in paper]
+    img = Image.new('RGBA', (16, 16))
     px = img.load()
-    for x in range(16):
-        px[x, 0] = darken(px[x, 0], 0.3)
-        px[x, 15] = darken(px[x, 15], 0.3)
-    for y in (4, 11):          # raised bands on the spine
+    for y in range(16):
         for x in range(16):
-            px[x, y] = hx(trim)
-            px[x, y + 1] = hx(trim_d)
+            px[x, y] = P[3] if y % 2 else (P[1] if (x // 5 + y // 4) % 3 == 0 else P[2])
     return img
 
 
 def _trim(o):
-    tones, trim, trim_l, trim_d = COVERS[o]
-    return material(16, 16, [hx(trim_d), hx(trim), hx(trim), hx(trim_l)], 500 + ORIGINS.index(o), cell=2, grain=0.1)
-
-
-def _pages_tex():
+    """The ribbon marking the page."""
+    leather, paper, trim = BOOK_STYLE[o]
+    t = hx(trim)
     img = Image.new('RGBA', (16, 16))
     px = img.load()
-    rnd = random.Random(9)
     for y in range(16):
         for x in range(16):
-            c = hx('#efe4c6') if y % 2 else hx('#e2d3ae')
-            if rnd.random() < 0.08:
-                c = hx('#d6c39a')
-            px[x, y] = c
+            px[x, y] = lighten(t, 0.2) if x % 4 == 0 else (t if x % 4 < 3 else darken(t, 0.25))
     return img
 
 
-def _book_item(o):
-    """The tome lying at an angle, vanilla book style: cover, gilt edge, pages."""
-    tones, trim, trim_l, trim_d = COVERS[o]
-    rows = [
-        '................',
-        '....cccccccccc..',
-        '...cCCCCCCCCCcp.',
-        '..cCCttCCCCttCpP',
-        '..cCtCCCCCCCtcpP',
-        '.cCCCCCeeeCCCcpP',
-        '.cCCCCeEEEeCCcpP',
-        '.cCCCCeEEEeCCcpP',
-        '.cCCCCCeeeCCCcpP',
-        'cCtCCCCCCCCCtcpP',
-        'cCCttCCCCCCttcpP',
-        'ccccccccccccccpP',
-        '.ppppppppppppppP',
-        '..PPPPPPPPPPPPP.',
-        '................',
-        '................',
-    ]
-    c0, c1, c2, c3 = (hx(c) for c in tones)
-    pal = {'c': darken(c0, 0.3), 'C': c2, 't': hx(trim), 'e': hx(trim), 'E': hx(trim_l), 'p': hx('#efe4c6'), 'P': hx('#bfae88')}
-    img = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
-    for y, r in enumerate(rows):
-        for x, ch in enumerate(r[:16]):
-            if ch in pal:
-                col = pal[ch]
-                if ch == 'C' and (x + y * 3) % 7 == 0:
-                    col = c3
-                if ch == 'C' and (x * 5 + y) % 9 == 0:
-                    col = c1
-                img.putpixel((x, y), col)
-    if o == 'cultist':
-        for x, y in ((9, 9), (10, 10), (11, 9), (10, 11), (12, 10)):
-            img.putpixel((x, y), hx('#0c3a3e'))
-        img.putpixel((10, 10), hx('#4ff0e6'))
-    if o == 'soul':
-        for x, y in ((3, 6), (12, 4), (4, 10)):
-            img.putpixel((x, y), hx('#5ff0ff'))
-    return img
-
-
-SCROLL_ROD = {'creator': ('#f2ead6', '#d9a72c', '#9a7015'), 'pillager': ('#8a5634', '#c7713f', '#5a3420'),
-              'cultist': ('#d8d2c0', '#1f8a8a', '#0c3a3e'), 'ocean': ('#c0ccd4', '#f0d8c8', '#8a9aa6'),
-              'soul': ('#2a3870', '#5ff0ff', '#121838')}
-SCROLL_PAPER = {'creator': '#f5eedc', 'pillager': '#d2ae7a', 'cultist': '#b4bdb0', 'ocean': '#e2ecee', 'soul': '#1c2554'}
-
-
-def _scroll_item(o):
-    """A Lore Scroll held open between its two rollers, a few lines of writing, the seal on the lower roll."""
-    rod, knob, knob_d = (hx(c) for c in SCROLL_ROD[o])
-    paper = hx(SCROLL_PAPER[o])
-    ink = hx('#5a4630') if o != 'soul' else hx('#7fdcff')
-    seal = {'creator': '#c03a3a', 'pillager': '#7a2a1a', 'cultist': '#1f8a8a', 'ocean': '#e8707a', 'soul': '#5ff0ff'}[o]
-    rows = [
-        '................',
-        '.K............K.',
-        '.KRRRRRRRRRRRRK.',
-        '.Krrrrrrrrrrrrk.',
-        '..PPPPPPPPPPPS..',
-        '..PIIIIIIIIPPS..',
-        '..PPPPPPPPPPPS..',
-        '..PIIIIIIPPPPS..',
-        '..PPPPPPPPPPPS..',
-        '..PIIIIIIIIIPS..',
-        '..PPPPPPPPPPPS..',
-        '..PIIIIIPPPPPS..',
-        '..PPPPPPPPPWWS..',
-        '.KRRRRRRRRRWwRK.',
-        '.Krrrrrrrrrrrrk.',
-        '.k............k.',
-    ]
-    pal = {'K': knob, 'k': knob_d, 'R': lighten(rod, 0.15), 'r': darken(rod, 0.2), 'P': paper, 'S': darken(paper, 0.18),
-           'I': ink, 'W': hx(seal), 'w': lighten(hx(seal), 0.3)}
-    img = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
-    for y, r in enumerate(rows):
-        for x, ch in enumerate(r):
-            if ch in pal:
-                c = pal[ch]
-                if ch == 'P' and (x * 5 + y * 3) % 11 == 0:
-                    c = darken(paper, 0.07)
-                img.putpixel((x, y), c)
-    return img
-
-
-def _scroll_3d(o):
-    """32x32 zones (in 16-unit uv): roll [0,0,16,2], knob [0,2,2,4], sheet [0,4,12,16], seal [12,4,14,6]."""
-    rod, knob, knob_d = (hx(c) for c in SCROLL_ROD[o])
-    paper = hx(SCROLL_PAPER[o])
-    ink = hx('#4a3a28') if o != 'soul' else hx('#8fe8ff')
-    img = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
+def _pages_tex(o):
+    """The open pages seen from above: two pages either side of the gutter, written in lines of ink."""
+    leather, paper, trim = BOOK_STYLE[o]
+    P = [hx(c) for c in paper]
+    ink = hx('#cfe8ff') if o == 'soul' else hx('#3a2a18')
+    img = Image.new('RGBA', (16, 16))
     px = img.load()
-    for y in range(0, 4):
-        for x in range(32):
-            c = paper if y in (1, 2) else darken(paper, 0.15)
-            if x % 9 == 0:
-                c = darken(c, 0.1)
+    rnd = random.Random(31 + ORIGINS.index(o))
+    for y in range(16):
+        for x in range(16):
+            c = P[2] if rnd.random() < 0.06 else P[3]
+            if x in (7, 8):
+                c = darken(c, 0.12 if x == 8 else 0.06)
             px[x, y] = c
-    for y in range(4, 8):
-        for x in range(4):
-            px[x, y] = knob if y in (5, 6) else knob_d
-    for y in range(8, 32):
-        for x in range(24):
-            c = paper if (x * 3 + y) % 11 else darken(paper, 0.05)
-            px[x, y] = c
-    for y in range(11, 30, 3):
-        for x in range(3, 21):
-            if (x * 5 + y * 3) % 6:
-                px[x, y] = ink
-    seal = {'creator': '#c03a3a', 'pillager': '#7a2a1a', 'cultist': '#1f8a8a', 'ocean': '#e8707a', 'soul': '#5ff0ff'}[o]
-    for y in range(8, 12):
-        for x in range(24, 28):
-            px[x, y] = lighten(hx(seal), 0.2) if (x, y) == (25, 9) else hx(seal)
-    return img
-
-
-def _knowledge_item():
-    """The Knowledge Book: a thick navy tome with gilt corners, a gold clasp and a gold sift star."""
-    rows = [
-        '................',
-        '..cccccccccccc..',
-        '.cLLLLLLLLLLLLp.',
-        '.cLggLLLLLLggLpP',
-        '.cLgLLLLLLLLgLpP',
-        '.cLLLLLsLLLLLLpP',
-        '.cLLLLsSsLLLLGpP',
-        '.cLLLsSWSsLLLGpP',
-        '.cLLLLsSsLLLLGpP',
-        '.cLLLLLsLLLLLLpP',
-        '.cLgLLLLLLLLgLpP',
-        '.cLggLLLLLLggLpP',
-        '.cccccccccccccpP',
-        '..pppppppppppppP',
-        '...PPPPPPPPPPPP.',
-        '................',
-    ]
-    pal = {'c': hx('#121a2c'), 'L': hx('#2a375a'), 'g': hx('#d9a72c'), 'G': hx('#f2cc5a'), 's': hx('#d9a72c'), 'S': hx('#f2cc5a'),
-           'W': hx('#fff2c0'), 'p': hx('#efe4c6'), 'P': hx('#bfae88')}
-    img = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
-    for y, r in enumerate(rows):
-        for x, ch in enumerate(r):
-            if ch in pal:
-                col = pal[ch]
-                if ch == 'L' and (x * 3 + y * 5) % 7 == 0:
-                    col = hx('#313f66')
-                if ch == 'L' and (x + y * 2) % 9 == 0:
-                    col = hx('#243050')
-                img.putpixel((x, y), col)
+    for y in range(3, 14, 2):
+        for x0, x1 in ((2, 6), (10, 14)):
+            end = x1 - (1 if rnd.random() < 0.35 else 0)
+            for x in range(x0, end + 1):
+                px[x, y] = mix(px[x, y], ink, 0.3)
     return img
 
 
@@ -886,10 +640,6 @@ def textures(out):
         out(f'block/{o}_lore_book_cover', _cover(o))
         out(f'block/{o}_lore_book_side', _side(o))
         out(f'block/{o}_lore_book_trim', _trim(o))
-        out(f'item/{o}_lore_book', _book_item(o))
-        out(f'item/{o}_lore_scroll', _scroll_item(o))
-        out(f'item/{o}_lore_scroll_3d', _scroll_3d(o))
-    out('block/lore_book_pages', _pages_tex())
-    out('item/knowledge_book', _knowledge_item())
+        out(f'block/{o}_lore_book_pages', _pages_tex(o))
     out('item/mini_creator_spawn_egg', __import__('mini_creator').spawn_egg())
     sheets(out, gen_textures.TEX)

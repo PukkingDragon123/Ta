@@ -12,7 +12,6 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(__file__))
-import hditems as HI  # noqa: E402
 import mctex as M  # noqa: E402
 import sprites as S  # noqa: E402
 from texlib import (Tex, bricks, cobbled, darken, draw_map, fbm, hx, iridescent, lerp, lighten, polished, quantize, ramp,  # noqa: E402
@@ -344,8 +343,6 @@ def woods():
         out(f'block/{w}_door_top', door(wood, bark, seed + 4, True), CUTOUT)
         out(f'block/{w}_door_bottom', door(wood, bark, seed + 4, False), CUTOUT)
         out(f'block/{w}_trapdoor', trapdoor(wood, bark, seed + 5), CUTOUT)
-        ditem = pal_sprite(S.DOOR_ITEM, {'d': bark[0], 'l': wood[3], 'm': wood[1], 'w': with_alpha(hx('#e8fbff'), 200), 'k': hx('#ffe89a')})
-        out(f'item/{w}_door', ditem)
     out('block/lullwood_sapling', sprite(S.LULLWOOD_SAPLING), CUTOUT)
     out('block/wishwood_sapling', sprite(S.WISHWOOD_SAPLING), CUTOUT)
     out('block/hanging_lullwood_leaves', sprite(S.HANGING_LEAVES), CUTOUT)
@@ -452,8 +449,6 @@ def functional():
         for x in range(11, 14):
             lan.set(x, y, hx('#6a7fb0') if y % 2 else hx('#8ea3d6'))
     out('block/bulb_lantern', lan, CUTOUT)
-    out('item/bulb_lantern', pal_sprite(S.LANTERN_ITEM, {'d': body_c[0], 'm': body_c[1], 'g': hx('#9ff5f0'), 'G': hx('#fff7c2'),
-                                                        'W': hx('#ffffff')}))
     # glowing slime block
     sl = Tex()
     for y in range(16):
@@ -493,98 +488,6 @@ def functional():
     __import__('echoer_world').block_textures(out)  # A2 Echoer: The Echoer device, the hut's hearthstone
     # the Chrome fluid's textures are painted by tools/chrome.py (A3 Chrome)
 
-
-# ================================================================== items
-
-
-def metal_keys(pal):
-    return {'L': pal[-1], 'l': pal[-2], 'm': pal[-3], 'd': pal[0], 'M': pal[-1]}
-
-
-def tool_keys(mat, handle='#6f4a2e'):
-    return {'M': mat[-1], 'm': mat[-3], 'd': mat[0], 'h': hx(handle)}
-
-
-def items():
-    sift_keys = metal_keys(SIFTITE)
-    sift_keys['m'] = SIFTITE_PINK
-    out('item/siftite_ingot', pal_sprite(S.INGOT, sift_keys))
-    out('item/siftite_nugget', pal_sprite(S.NUGGET, metal_keys(SIFTITE)))
-    pearl = pal_sprite(S.PEARL, {'d': hx('#8c6fb8'), 'm': hx('#d7b8f0'), 'l': hx('#f5e6ff'), 'W': hx('#ffffff')})
-    for y in range(16):
-        for x in range(16):
-            c = pearl.get(x, y)
-            if c[3] and c[:3] not in ((255, 255, 255),):
-                pearl.set(x, y, lerp(c, iridescent(x, y), 0.35))
-    out('item/chrome_pearl', pearl)
-    out('item/glowing_slime_ball', pal_sprite(S.SLIME_BALL, {'d': hx('#3fb88f'), 'm': hx('#8ff7c8'), 'l': hx('#e8ff9a'), 'W': hx('#ffffff')}))
-    out('item/thick_hide', pal_sprite(S.HIDE, {'d': hx('#33485e'), 'm': hx('#5b7f99'), 'l': hx('#86abc2'), 's': hx('#6a90a8')}))
-    out('item/star_shard', pal_sprite(S.STAR_SHARD, {'W': hx('#fffbe0'), 'l': hx('#ffe89a'), 'm': hx('#f2c65a'),
-                                                       'd': hx('#c48a2c'), 'o': hx('#6e4a16')}))
-    out('item/dream_stew', pal_sprite(S.STEW, {'S': hx('#c9a6f0'), 'y': hx('#ffe07a'), 'p': hx('#ff9fd8'), 'c': hx('#7fe3e6'), 'b': hx('#8a5a3a'),
-                                              'B': hx('#6a4028')}))
-    out('item/glowcap_skewer', pal_sprite(S.SKEWER, {'c': hx('#37c9d6'), 'C': hx('#8ff3f0'), 'W': hx('#e8fffb'), 'd': hx('#1f8f9e'),
-                                                    's': hx('#b8864f')}))
-    out('item/echo_seed', pal_sprite(S.SEED, {'l': hx('#3b7fe0'), 'L': hx('#b8fbff')}))
-    out('item/warden_core', pal_sprite(S.WARDEN_CORE, {'d': hx('#062028'), 's': hx('#0f3945'), 'S': hx('#1a5a66'), 'g': hx('#1ec8c8'),
-                                                      'G': hx('#5ff5f0'), 'W': hx('#e8fffe')}))
-    bucket = pal_sprite(S.BUCKET, {'d': hx('#3a3a44'), 'L': hx('#e8e8f0'), 'l': hx('#b4b4c4'), 'm': hx('#8c8c9c'), 'C': hx('#7fe8ff')})
-    for x in range(3, 13):
-        for y in (5, 6):
-            bucket.set(x, y, iridescent(x, y, 1.0, 0.8))
-    out('item/chrome_bucket', bucket)
-    out('item/music_disc_lullaby', pal_sprite(S.DISC, {'d': hx('#101828'), 'm': hx('#26304a'), 'c': hx('#3a4870'), 'p': hx('#7fe8ff'),
-                                                      'P': hx('#ff9fd8')}))
-    out('item/sift_cake', pal_sprite(S.CAKE_ITEM, {'W': hx('#fff0fa'), 'w': hx('#ffd6ec'), 's': hx('#7fe3e6'), 'p': hx('#f0a9cb'),
-                                                  'P': hx('#7fe3e6'), 'g': hx('#fff7c2'), 'd': hx('#c77fa6')}))
-    # RR: no Siftite tools any more (Siftite is a material only)
-    # slingshot + pulling frames
-    base_keys = {'h': hx('#8a6a4a'), 'w': hx('#6fe2dc')}
-    out('item/slingshot', pal_sprite(S.SLINGSHOT, base_keys))
-    for i in range(3):
-        rows = [list(r) for r in S.SLINGSHOT]
-        # pull the band back towards the bottom-right as the draw increases
-        for y in range(16):
-            for x in range(16):
-                if rows[y][x] == 'w':
-                    rows[y][x] = '.'
-        py = 7 + i * 2
-        px_ = 6 + i
-        for (sx, sy) in ((2, 4), (10, 4)):
-            steps = max(abs(px_ - sx), abs(py - sy))
-            for s in range(steps + 1):
-                xx = round(sx + (px_ - sx) * s / steps)
-                yy = round(sy + (py - sy) * s / steps)
-                if rows[yy][xx] == '.':
-                    rows[yy][xx] = 'w'
-        rows[py][px_] = 'g'
-        out(f'item/slingshot_pulling_{i}', pal_sprite([''.join(r) for r in rows], dict(base_keys, g=hx('#e8ff9a'))))
-    eggs = {'bulb': ('#78a5e3', '#63c6df'), 'slumbler': ('#8fd0dc', '#6d8fd3'), 'sifter': ('#1fa3c1', '#f2cd98'),
-            'enchoer': ('#a3dcc5', '#efe2b2'), 'harmoner': ('#e8577f', '#ffd23f'),
-            'dictator': ('#141e2c', '#e6e1d3')}
-    # modern-style portrait eggs at 32x: each egg wears its mob's face (and ears, antlers, crests)
-    E = {
-        'bulb': dict(face=['EEEE....EEEE', 'EEEE....EEEE', '.....MM.....', '.....MM.....'],
-                     top=['.ee....ee.', 'eiie..eiie', 'eiie..eiie', 'eiie..eiie', 'eiie..eiie', '.ee....ee.'],
-                     keys={'E': '#2f2777', 'M': '#4a3a9f', 'e': '#78a5e3', 'i': '#63c6df'}),
-        'slumbler': dict(face=['iiii....iiii', 'iEhi....iEhi', 'iEii....iEii', 'iiii....iiii', '............', 'mmmmmmmmmmmm', '.t.t.t.t.t.t'],
-                         keys={'i': '#ffd66b', 'E': '#1a1d38', 'h': '#ffffff', 'm': '#d9577f', 't': '#fff8ec'}),
-        'sifter': dict(face=['.ee......ee.', '.ee......ee.', '............', 'tTtTtTtTtTtT', 'mmmmmmmmmmmm', 'TtTtTtTtTtTt'],
-                       keys={'e': '#d9f6ff', 't': '#eaf7ff', 'T': '#17328c', 'm': '#17328c'}),
-        'enchoer': dict(face=['.ffffffff.', 'ffbffffbff', 'feefffeeff', 'ffffnnffff', 'ffffnnffff', 'fffmmmmfff', '.ffffffff.'],
-                        top=['a.a......a.a', 'aaa......aaa', '.aaa....aaa.', '..aa....aa..'],
-                        keys={'f': '#d5dfd4', 'b': '#4d6870', 'e': '#3a5059', 'n': '#aebdb4', 'm': '#6a807b', 'a': '#efe2b2'}),
-        'harmoner': dict(face=['e........e', 'e........e', '...bbbb...', '...bbbb...', '....BB....'],
-                         top=['.t..t..t.', '.c..c..c.', '..c.c.c..', '...ccc...'],
-                         keys={'e': '#1a1830', 'b': '#ffd23f', 'B': '#c99a1f', 't': '#ff8a3d', 'c': '#ffd86b'}),
-        'dictator': dict(face=['.mmmmmmmm.', 'mEEmmmmEEm', 'mEgmmmmgEm', 'mmmmmmmmmm', 'mmmsmmsmmm', 'mmmvvvvmmm', '.mmmmmmmm.'],
-                         top=['...g....', 'g..h..g.', 'h..h..h.', 'h.hh.hh.'],
-                         keys={'m': '#e6e1d3', 'E': '#04080c', 'g': '#2ef2e2', 's': '#b9b2a0', 'v': '#04080c', 'h': '#141e2c'}),
-    }
-    for i, (mob, (b, s)) in enumerate(eggs.items()):
-        e = E[mob]
-        keys = {k: hx(v) for k, v in e['keys'].items()}
-        out(f'item/{mob}_spawn_egg', HI.egg(hx(b), hx(s), e.get('face'), keys, e.get('top'), seed=i))
 
 
 # ================================================================== Sculk Corruption overlays
@@ -1419,11 +1322,21 @@ def hd_items():
         out(f'block/{name}', img)
 
 
+def _overlay(img, rows, keys, x0, y0):
+    """Paints rows of characters (keys: char -> rgb) onto img at (x0, y0)."""
+    px = img.load()
+    for j, row in enumerate(rows):
+        for i, ch in enumerate(row):
+            if ch not in '. ' and 0 <= x0 + i < img.size[0] and 0 <= y0 + j < img.size[1]:
+                c = keys[ch]
+                px[x0 + i, y0 + j] = c if len(c) == 4 else (*c, 255)
+    return img
+
+
 def boss_bar():
     """The Dictator's health bar (2x texels): a sculk-steel frame with gold trim and phase ticks,
     a glowing fill strip, an empty track, and a devil-head emblem."""
     import rpgsprite as RS
-    import rpgitems as RI
     t = Image.new('RGBA', (512, 64), (0, 0, 0, 0))
     d = ImageDraw.Draw(t)
     # frame plate 428 x 44
@@ -1459,7 +1372,7 @@ def boss_bar():
     sp.add(RS.capsule(9, 11, 3, 4, 2.0) | RS.capsule(3, 4, 6, 1, 1.4) | RS.capsule(23, 11, 29, 4, 2.0) | RS.capsule(29, 4, 26, 1, 1.4), '#e3ddcc', 'dome')
     sp.add(RS.ellipse(16, 18, 10, 12), '#5a1a30', 'dome')
     head = sp.render()
-    RI.overlay(head, ['bbb....bbb', '.eee..eee.', '.eEe..eEe.', '..........', '....nn....', '..........', 'mmmmmmmmmm', 'mfmfmmfmfm', '.mmmmmmmm.'],
+    _overlay(head, ['bbb....bbb', '.eee..eee.', '.eEe..eEe.', '..........', '....nn....', '..........', 'mmmmmmmmmm', 'mfmfmmfmfm', '.mmmmmmmm.'],
                {'b': (23, 8, 16), 'e': (4, 8, 12), 'E': (46, 242, 226), 'n': (4, 8, 12), 'm': (4, 8, 12), 'f': (244, 240, 229)}, 11, 12)
     t.alpha_composite(head, (448, 0))
     out('gui/conductor_bar', t)
@@ -1563,7 +1476,6 @@ def main():
     woods()
     flora()
     functional()
-    items()
     particles()
     nebula()
     logo()
@@ -1597,6 +1509,7 @@ def main():
     __import__('sea_reefs_art').textures(out)  # W-sea: Copper Sand, Trumpet Coral, Bubble Coral, Tube Seaweed, Algae, Rainbow Anemone
     __import__('sky_islands').textures(out)  # W-sky: Sky Islands blocks, Driftfruit, Skyrind, the swinging rope (tools/sky_art.py)
     __import__('wland_art').textures(out)  # W-land: Rocky Dunes rock/sand/plants, White Lullwood, Rainbow Snow, frost flowers
+    __import__('itemart').textures(out)  # I1 items: every Sift item sprite in the vanilla manner, the worn Prism armour
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     __import__('blockart').paint(TEX)  # Block art: every Sift block in Mojang's 16x style on Sift ramps, and the 16x Sift Drum (after C1)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)

@@ -1366,7 +1366,7 @@ def generate():
     __import__('band').assets(sys.modules[__name__])  # M2 band: band panel text, creature instrument names, Codex page
     __import__('sifter').assets(sys.modules[__name__])  # CR1: bell and echo ring particles, the living bell's Codex page
     __import__('band_table').assets(sys.modules[__name__])  # F2 Band Table: Sift enchantments, their books, recipe, sheet loot, text
-    __import__('knowledge').item_models(sys.modules[__name__])  # F3 Knowledge and lore: 3D lore books and scrolls in the hand
+    __import__('knowledge').item_models(sys.modules[__name__])  # F3 Knowledge and lore: the open Lore Book in the hand
     __import__('caves').assets(sys.modules[__name__])  # W-deep caves: crystal/speleothem tags, damage types, acid particles, recipes, text
     __import__('sky_islands').assets(sys.modules[__name__])  # W-sky: Sky Islands text, Codex, Sky Whale / Swinger food tags, recipes, loot
     __import__('wland').assets(sys.modules[__name__])  # W-land: Rocky Dunes plants and rock, White Forest snow and flowers

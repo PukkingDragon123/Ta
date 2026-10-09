@@ -171,87 +171,6 @@ def item_animations():
 
 # ============================================================================ materials
 
-INGOT = [
-    '................',
-    '................',
-    '..........OO....',
-    '.......OOO442...',
-    '....OOO4555542..',
-    '.OOO45555555542.',
-    'Ow5555555555ww52',
-    'O4w555555www524o',
-    'O44w55www532234o',
-    'O444ww532222444o',
-    'O344532222443oo.',
-    '.O34532233ooo...',
-    '..O3431ooo......',
-    '...OOoo.........',
-    '................',
-    '................',
-]
-
-
-def siftite_ingot():
-    """The vanilla ingot shape in siftite."""
-    rows = list(INGOT)
-    # an inlaid streak of pink sift running along the top face, brightest where it meets the light
-    rows[5] = '.OOO455555qq542.'
-    rows[6] = 'Ow55555ppp55ww52'
-    rows[7] = 'O4w55PP55www524o'
-    pal = {'o': S_OUT, 'O': S_OUT2, '1': S_RAMP[0], '2': S_RAMP[1], '3': S_RAMP[2], '4': S_RAMP[3], '5': S_RAMP[4], 'w': S_RAMP[5],
-           'p': PINK[2], 'P': PINK[1], 'q': PINK[3]}
-    return grid(rows, pal)
-
-
-def siftite_nugget():
-    """A siftite nugget with a pink inclusion."""
-    rows = [
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '......4554......',
-        '.....45ww543....',
-        '.....4w5p432....',
-        '.....455qP32....',
-        '......443221....',
-        '.......3321.....',
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = ramp('12345w', S_RAMP[:6], S_OUT)
-    pal.update({'p': (PINK[2], S_OUT), 'P': (PINK[1], S_OUT), 'q': (PINK[3], S_OUT)})
-    return grid(rows, pal, ol=True)
-
-
-def chrome_pearl():
-    """A glossy pearl of liquid chrome with pink and cyan reflections."""
-    rows = [
-        '................',
-        '................',
-        '................',
-        '......4554......',
-        '....45ww5443....',
-        '....5ww55443....',
-        '...45w5554432...',
-        '...4555544332...',
-        '...45544433c2...',
-        '...3444333c21...',
-        '....33322c1p....',
-        '....c3221ppp....',
-        '......1pp1......',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = ramp('12345', ['#4b3f9e', '#6a62cf', '#8f93ee', '#b4b6ff', '#dcd6ff'], '#221a5a')
-    pal.update({'w': (WHITE, '#221a5a'), 'p': ('#ffc6ee', '#221a5a'), 'c': ('#a8f2ff', '#221a5a')})
-    return grid(rows, pal, ol=True)
-
 
 def glowing_slime_ball():
     """The vanilla slime ball, lime and glowing from its core."""
@@ -276,56 +195,6 @@ def glowing_slime_ball():
     pal = {'a': '#2c5a1e', 'b': '#4a8424', 'c': '#78b42c', 'd': '#94cc36', 'e': '#b2e048', 'f': '#cbee5e', 'g': '#e2f98a',
            'h': '#f6ffc8', 'i': WHITE, 'y': '#fbffb0', 'Y': WHITE}
     return grid(rows, pal)
-
-
-def star_shard():
-    """A golden shard of a fallen star, with sparkles."""
-    rows = [
-        '...w.....bbbbb..',
-        '..wWw...bffffa..',
-        '...w...bdffgea..',
-        '......bfddgeca..',
-        '.....befdebcca..',
-        '....bdefecbca...',
-        '...bddegbcba....',
-        '..bcccfdbca.....',
-        '..abcdcdba......',
-        '..aaabcda.......',
-        '..aabaca.....w..',
-        '...aacb.....wWw.',
-        '....bb.......w..',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = {'a': '#6a2a24', 'b': '#a5501e', 'c': '#d98a26', 'd': '#f2b53a', 'e': '#ffd85e', 'f': '#fff0a0', 'g': WHITE,
-           'w': '#fff2a8', 'W': WHITE}
-    return grid(rows, pal)
-
-
-def echo_seed():
-    """Three sculk seeds, each split by a glowing seam."""
-    rows = [
-        '................',
-        '................',
-        '...........43...',
-        '..........4g3...',
-        '..........3g2...',
-        '..........21....',
-        '....43..........',
-        '...4g3..........',
-        '...3g2..........',
-        '...21....43.....',
-        '........4w3.....',
-        '........3g2.....',
-        '........21......',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = ramp('1234', ['#0f3340', '#1b5a68', '#2a8090', '#3fa8b0'], '#06161e')
-    pal.update({'g': (GLOW[2], '#06161e'), 'w': (GLOW[3], '#06161e')})
-    return grid(rows, pal, ol=True)
 
 
 def warden_core():
@@ -379,135 +248,6 @@ def thick_hide():
 
 # ============================================================================ food, tools of the trade, blocks
 
-def sift_cake():
-    # vanilla cake proportions: pink frosting, lavender dream-sponge, cyan and gold sprinkles
-    rows = [
-        '................',
-        '....mmmmmmmm....',
-        '..mmnoooooonmm..',
-        '.mnppepggppppnm.',
-        'mnpepoglkgpeppnm',
-        'moppopmkgmpopkom',
-        'mnppkonmmoopponm',
-        'mnooppppppkponnm',
-        'bnoooooononnnnmb',
-        'bdnooooonnnnnmba',
-        'bcfnooonnnonfcba',
-        'bdiifnfifcncffba',
-        '.bdjijijihhffca.',
-        '..bbijjjijfcaa..',
-        '....aaaaaaaa....',
-        '................',
-    ]
-    pal = {'m': '#d77fb4', 'n': '#f2aad2', 'o': '#ffc8e6', 'p': '#ffe6f4',
-           'e': '#2a8fb0', 'g': '#3fd0ef', 'k': '#ffd65a', 'l': '#ffffff',
-           'a': '#2e1a44', 'b': '#4f3270', 'c': '#6a4890', 'd': '#7a58a0', 'f': '#8c6ab4', 'h': '#9a78c0', 'i': '#a886cc', 'j': '#b898d8'}
-    return grid(rows, pal)
-
-
-def dream_stew():
-    """A vanilla stew bowl of violet dream stew with bright bits floating in it."""
-    rows = [
-        '................',
-        '................',
-        '................',
-        '................',
-        '................',
-        '.....dddddd.....',
-        '...ddhiyhhkdd...',
-        '..dijjujjiwiha..',
-        '..deehikiihuea..',
-        '..dgfeeeeeefca..',
-        '...bggggggfca...',
-        '....aafggfaa....',
-        '......aaaa......',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = {'a': '#22140e', 'b': '#3a2414', 'c': '#4a2e18', 'd': '#52341c', 'e': '#5e3c20', 'f': '#734a26', 'g': '#8f5e32',
-           'h': '#7c52c8', 'i': '#9a72e2', 'j': '#bc9af2', 'y': '#ffe07a', 'k': '#ff8ac0', 'u': '#8ff0ff', 'w': '#ffffff'}
-    return grid(rows, pal)
-
-
-def glowcap_skewer():
-    """Three glowcap mushrooms threaded on a stick through their stems: domed caps with pale
-    spots over frilled gills."""
-    rows = [
-        '................',
-        '...........554s.',
-        '..........5w543.',
-        '..........uUuUu.',
-        '...........s....',
-        '.......554s.....',
-        '......5w543.....',
-        '......uUuUu.....',
-        '.......s........',
-        '...554s.........',
-        '..5w543.........',
-        '..uUuUu.........',
-        '...s............',
-        '..s.............',
-        '.S..............',
-        '................',
-    ]
-    pal = ramp('345', ['#1f9a8a', '#33c8a8', '#5af0c8'], '#0c3a3a')
-    pal.update({'w': ('#ffffff', '#0c3a3a'), 'u': ('#d8fff0', '#0c3a3a'), 'U': ('#8ad8c0', '#0c3a3a'),
-                's': ('#c8a070', '#4a2c1c'), 'S': ('#9a7044', '#4a2c1c')})
-    return grid(rows, pal, ol=True)
-
-
-def bulb_lantern():
-    """The vanilla lantern, glowing Bulb-blue."""
-    rows = [
-        '................',
-        '........a.......',
-        '.......ac.......',
-        '.......ca.......',
-        '.......a........',
-        '......acca......',
-        '......dbbd......',
-        '.....acccca.....',
-        '.....beffeb.....',
-        '.....dfgifd.....',
-        '.....dgihgd.....',
-        '.....dghggd.....',
-        '.....bfggfb.....',
-        '.....acccca.....',
-        '................',
-        '................',
-    ]
-    pal = {'a': '#1c2240', 'c': '#3a4670', 'b': '#3a2f62', 'd': '#54468a',
-           'e': '#2a7fc8', 'f': '#45b4ec', 'g': '#8ff0ff', 'h': '#d0fcff', 'i': '#ffffff'}
-    return grid(rows, pal)
-
-
-
-
-def music_disc_lullaby():
-    """A vanilla music disc: midnight vinyl with a pink label."""
-    rows = [
-        '................',
-        '................',
-        '................',
-        '.....bbbbb......',
-        '..bbbeeeeebbb...',
-        '.beewefeffeeeb..',
-        'beeffegggeefeeb.',
-        'befeegdcdgeefeb.',
-        'beefeegggeffeeb.',
-        'bceeeffefeeeecb.',
-        '.accceeeeeccca..',
-        '..aaacccccaaa...',
-        '.....aaaaa......',
-        '................',
-        '................',
-        '................',
-    ]
-    pal = {'a': '#0c0a1a', 'b': '#1a1630', 'c': '#201c3a', 'e': '#322e58', 'f': '#4a467c', 'w': '#8a86c0',
-           'g': '#f59ad0', 'd': '#9a3a78'}
-    return grid(rows, pal)
-
 
 def soul_chime():
     """A wind chime: a wooden bar hung with soul-glass tubes."""
@@ -532,98 +272,6 @@ def soul_chime():
     pal = {'B': (WOOD[4], WOOD[0]), 'b': (WOOD[2], WOOD[0]), 'k': '#c8b4a0',
            'T': ('#c8f4ff', '#163a5a'), 't': ('#6fb8e0', '#163a5a'), 'g': ('#3ff5e6', '#163a5a'), 'e': ('#2a7aa8', '#163a5a')}
     return grid(rows, pal, ol=True, no_ol='k')
-
-
-
-
-def glowbell_vine():
-    """A teal vine hung with glowing yellow bells."""
-    rows = [
-        '.......v........',
-        '.......v........',
-        '........v.......',
-        '........vLL.....',
-        '.......v.LLl....',
-        '...45..v........',
-        '..4w54v.........',
-        '..4554..........',
-        '..3443..V.......',
-        '...gg....V......',
-        '.........v..45..',
-        '........v..4w54.',
-        '........v.V4554.',
-        '.........V.3443.',
-        '............gg..',
-        '................',
-    ]
-    pal = ramp('345', ['#d8962a', '#ffd04a', '#ffe98a'], '#6a3a1a')
-    pal.update({'w': ('#ffffff', '#6a3a1a'), 'g': ('#fff6c0', '#6a3a1a'), 'v': '#3fb5a0', 'V': '#2a8a7a',
-                'L': ('#5ac8a0', '#143a30'), 'l': ('#3a9a80', '#143a30')})
-    return grid(rows, pal, ol=True, no_ol='vV')
-
-
-def door(wood, window, twig, out):
-    """A vanilla-style door item: a twig-latticed window over planks, gold handle."""
-    rows = [
-        '................',
-        '...OOOOOOOOOO...',
-        '...OffffffefO...',
-        '...OfkkkbkkdO...',
-        '...OfkbkbkkdO...',
-        '...OfkkbbkbdO...',
-        '...OfkkkbbkdO...',
-        '...OfkkkbkkdO...',
-        '...OeeeeeeedO...',
-        '...OggggggYdO...',
-        '...OeeeeeeGdO...',
-        '...OccccccccO...',
-        '...OgggggggdO...',
-        '...OeeeeeeedO...',
-        '...OccccccccO...',
-        '...OOOOOOOOOO...',
-    ]
-    c, d, e, g = wood
-    pal = {'O': out, 'f': g, 'g': g, 'e': e, 'd': d, 'c': c, 'k': window, 'b': twig, 'Y': GOLD[4], 'G': GOLD[2]}
-    return grid(rows, pal)
-
-
-def slingshot(pull):
-    """A forked branch with siftite-capped tips; the band pulls back a glowing slime ball."""
-    rows = [
-        '................',
-        '................',
-        '.........c......',
-        '........A.......',
-        '........A.......',
-        '.......A........',
-        '.......A........',
-        '.......A......c.',
-        '.......JJ...aa..',
-        '.......hJaaa....',
-        '......H.........',
-        '.....h..........',
-        '....H...........',
-        '...g............',
-        '..g.............',
-        '................',
-    ]
-    pal = {'a': (WOOD[2], WOOD[0]), 'A': (WOOD[4], WOOD[0]), 'J': (WOOD[3], WOOD[0]), 'h': (WOOD[2], WOOD[0]),
-           'H': (WOOD[3], WOOD[0]), 'g': ('#5e2a56', '#24101c'), 'c': (S_RAMP[3], S_OUT)}
-    img = grid(rows, pal, ol=True)
-    band = {-1: '10,3 11,4 12,5 13,6', 0: '9,3 10,4 13,7 12,6', 1: '9,3 9,4 9,5 13,7 12,7 11,7',
-            2: '9,3 9,4 8,5 8,6 13,7 12,7 11,8 10,8'}[pull]
-    px = img.load()
-    for tok in band.split():
-        x, y = map(int, tok.split(','))
-        px[x, y] = rgba('#f0d0b0')
-    ball = {0: (10, 5), 1: (9, 6), 2: (8, 7)}.get(pull)
-    if ball:
-        x, y = ball
-        for (dx, dy), c in (((0, 0), '#f2ffb0'), ((1, 0), '#cbee5e'), ((0, 1), '#94cc36'), ((1, 1), '#5a9a2a')):
-            px[x + dx, y + dy] = rgba(c)
-    return img
-
-
 
 
 def conductors_staff():
@@ -680,7 +328,6 @@ def conga_drum():
            'G': '#8fbf5a', 'g': '#5e9a40', 'h': '#3e6a32', 'b': '#7a4e2a'}
     pal = {k: (v, '#1e2416') for k, v in pal.items()}
     return grid(rows, pal, ol=True)
-
 
 
 def crane_flute():
@@ -797,31 +444,6 @@ def stomper_meat():
     return grid(rows, pal)
 
 
-def stomper_steak():
-    """The cooked cut: seared brown with grill marks, the rind toasted to bronze-blue."""
-    rows = [
-        '................',
-        '................',
-        '................',
-        '.........rrrr...',
-        '........rRRRRr..',
-        '.......rRgfhgRc.',
-        '......rRhkdgkdb.',
-        '....rrRdikdgfda.',
-        '...rRRghdkhfeba.',
-        '...rRfdkhdiefa..',
-        '..rRgkdihfdbba..',
-        '..rRigkdfgeba...',
-        '...rihhgebba....',
-        '...aadbbbaa.....',
-        '.....aaaa.......',
-        '................',
-    ]
-    pal = {'a': '#22100c', 'b': '#3f2116', 'c': '#4e2719', 'd': '#5a3020', 'e': '#6e3a26', 'f': '#7c4632', 'g': '#8e543a',
-           'h': '#a06644', 'i': '#b47a52', 'k': '#2e140e', 'r': '#3a3e7a', 'R': '#7a80c0'}
-    return grid(rows, pal)
-
-
 def stomper_egg():
     """A big Stomper egg, pale grey-blue with chrome speckles."""
     tones = ['#7a8aa8', '#a0b0c8', '#c4d2e2', '#e2ecf6']
@@ -836,29 +458,6 @@ def stomper_egg():
     }, {'C': CHROME[3], 'c': CHROME[1]})
 
 
-def skysong_gem():
-    """A faceted sky-blue gem with a golden core, sparkling."""
-    rows = [
-        '..S.............',
-        '.SWS............',
-        '..S.............',
-        '.....5ww554.....',
-        '....55w55443....',
-        '...4555YY4433...',
-        '...4455Yy4332...',
-        '....4445y332....',
-        '.....445332.....',
-        '......4532......',
-        '.......42.......',
-        '.............S..',
-        '............SWS.',
-        '.............S..',
-        '................',
-        '................',
-    ]
-    pal = ramp('2345', ['#2a6ad0', '#3f9ae8', '#6ec8f8', '#b8ecff'], '#142a6a')
-    pal.update({'w': ('#ffffff', '#142a6a'), 'Y': ('#ffe27a', '#142a6a'), 'y': ('#ffb03a', '#142a6a'), 'S': '#fff6c8', 'W': '#ffffff'})
-    return grid(rows, pal, ol=True, no_ol='SW')
 
 
 # ============================================================================ spawn eggs
@@ -1102,16 +701,10 @@ def hummingbloom():
 
 def all_items():
     out = {}
-    for f in (siftite_ingot, siftite_nugget, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
-              warden_core, thick_hide):
+    # I1 items: the materials, food, books, Prism gear, slingshot, discs, lanterns and doors are drawn in tools/itemart.py
+    for f in (glowing_slime_ball, warden_core, thick_hide, soul_chime):
         out[f.__name__] = f()
-    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern,
-              music_disc_lullaby, soul_chime, glowbell_vine):
-        out[f.__name__] = f()
-    out['lullwood_door'] = door(('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea'), '#24353e', '#4a6470', '#2a2450')
-    out['wishwood_door'] = door(('#c9738f', '#d98aa4', '#e6a0b8', '#f0b6ca'), '#4a1f38', '#8a4a6a', '#4a1f38')
-    for f in (conductors_staff, conga_drum, crane_flute, magic_strings, guitar, stomper_meat, stomper_steak, stomper_egg,
-              skysong_gem):
+    for f in (conductors_staff, conga_drum, crane_flute, magic_strings, guitar, stomper_meat, stomper_egg):
         out[f.__name__] = f()
     out.update(spawn_eggs())
     out.update(__import__('songs').art())  # songs & instruments (agent D)
@@ -1129,9 +722,6 @@ def all_items():
     out.update(__import__('slumbler').items())  # CR2: Slumbler gill, tadpole bucket, Slumbler and tadpole eggs (replace older art)
     out.update(__import__('sky_whale').items())  # CR2: a Sky Whale egg that matches the whale
     out.update(__import__('stomper').items())  # S1 Stomper remake: the elephant's spawn egg (tools/stomper.py)
-    out['slingshot'] = slingshot(-1)
-    for i in range(3):
-        out[f'slingshot_pulling_{i}'] = slingshot(i)
     return out
 
 

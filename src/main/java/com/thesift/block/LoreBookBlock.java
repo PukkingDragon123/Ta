@@ -25,13 +25,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 /**
- * F3: a Lore Book set down as a decoration - a thick tome lying on its side, dressed in its origin's colours (the
+ * F3: a Lore Book set down as a decoration - lying open like the book on a lectern, dressed in its origin's colours (the
  * Creator's white and gold, Pillager leather and copper, the cult's Sculk, the Tide-Keepers' silver and coral, the
  * Soul Dimension's glowing blue). It keeps its text: open it to read, break it to pick it up again.
  */
 public class LoreBookBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE = Block.box(1.5, 0.0, 1.5, 14.5, 5.5, 14.5);
+    private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 3.0, 15.0);
 
     public LoreBookBlock(BlockBehaviour.Properties properties) {
         super(properties);

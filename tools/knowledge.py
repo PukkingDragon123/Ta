@@ -301,39 +301,40 @@ def declare(block, item):
 
 
 def gen_book_block(GA, b):
-    """A placed Lore Book: a thick tome lying on its side, its cover, clasp and ornament in its origin's style.
-    Facing north/east/south/west; the item uses the same model in the hand (a flat sprite in the GUI)."""
+    """A placed Lore Book: an open book lying on its covers like the book on a lectern - two page blocks rising to the
+    gutter, its leather showing round them, a ribbon over the right-hand page. Facing north/east/south/west; the item
+    uses the same model in the hand (its flat sprite in the GUI)."""
     bid = b['id']
     o = bid[:-len('_lore_book')]
-    tex = {'cover': f'{NS}:block/{o}_lore_book_cover', 'side': f'{NS}:block/{o}_lore_book_side', 'pages': f'{NS}:block/lore_book_pages',
+    tex = {'cover': f'{NS}:block/{o}_lore_book_cover', 'side': f'{NS}:block/{o}_lore_book_side', 'pages': f'{NS}:block/{o}_lore_book_pages',
            'trim': f'{NS}:block/{o}_lore_book_trim', 'particle': f'{NS}:block/{o}_lore_book_cover'}
 
-    def box(frm, to, faces, rot=None):
+    def box(frm, to, faces):
         x0, y0, z0 = frm
         x1, y1, z1 = to
-        uv = {'north': [x0, 16 - y1, x1, 16 - y0], 'south': [16 - x1, 16 - y1, 16 - x0, 16 - y0],
+        uv = {'north': [16 - x1, 16 - y1, 16 - x0, 16 - y0], 'south': [x0, 16 - y1, x1, 16 - y0],
               'west': [z0, 16 - y1, z1, 16 - y0], 'east': [16 - z1, 16 - y1, 16 - z0, 16 - y0],
               'up': [x0, z0, x1, z1], 'down': [x0, 16 - z1, x1, 16 - z0]}
         e = {'from': list(frm), 'to': list(to), 'faces': {}}
         for f, t in faces.items():
             e['faces'][f] = {'texture': t, 'uv': [max(0.0, min(16.0, v)) for v in uv[f]]}
-        if rot:
-            e['rotation'] = rot
         return e
-    all6 = ('north', 'south', 'east', 'west', 'up', 'down')
+    sides = ('north', 'south', 'east', 'west')
+
+    def stack(frm, to):
+        faces = {f: '#side' for f in sides}
+        faces['up'] = '#pages'
+        return box(frm, to, faces)
     els = [
-        # back cover, page block, front cover (the book lies flat, spine to the west)
-        box([2, 0, 2], [14, 1, 14], {f: '#cover' if f in ('up', 'down') else '#side' for f in all6}),
-        box([2.5, 1, 2.5], [13.5, 4, 13.5], {'north': '#pages', 'south': '#pages', 'east': '#pages', 'up': '#pages', 'down': '#pages', 'west': '#side'}),
-        box([2, 4, 2], [14, 5, 14], {f: '#cover' if f in ('up', 'down') else '#side' for f in all6}),
-        box([1.5, 0, 2], [2.5, 5, 14], {f: '#side' for f in all6}),                                       # the rounded spine
-        box([13.5, 1.5, 7], [14.5, 3.5, 9], {f: '#trim' for f in all6}),                                  # the clasp
-        box([6, 5, 6], [10, 5.5, 10], {f: '#trim' for f in all6}),                                        # the raised emblem
-        box([10, 0.5, 13.5], [11, 3, 14.5], {'north': '#trim', 'south': '#trim', 'east': '#trim', 'west': '#trim'}),  # a ribbon
+        box([1, 0, 2.5], [15, 0.75, 13.5], {**{f: '#cover' for f in sides}, 'up': '#cover', 'down': '#cover'}),   # the open covers
+        stack([1.75, 0.75, 3], [5, 2, 13]),                                                                      # left pages, outer
+        stack([5, 0.75, 3], [7.75, 2.5, 13]),                                                                    # left pages, by the gutter
+        stack([8.25, 0.75, 3], [11, 2.5, 13]),                                                                   # right pages, by the gutter
+        stack([11, 0.75, 3], [14.25, 2, 13]),                                                                    # right pages, outer
+        box([7.75, 0.75, 3], [8.25, 1.75, 13], {'up': '#side', 'north': '#side', 'south': '#side'}),              # the gutter
+        box([9.5, 2.5, 6], [10.25, 2.6, 13], {'up': '#trim', 'south': '#trim'}),                                  # the ribbon on the page
+        box([9.5, 0.4, 13], [10.25, 2.6, 13.1], {'south': '#trim', 'north': '#trim'}),                            # and hanging over its edge
     ]
-    for corner in ((2, 2), (12.5, 2), (2, 12.5), (12.5, 12.5)):                                          # corner fittings
-        x, z = corner
-        els.append(box([x, 5, z], [x + 1.5, 5.25, z + 1.5], {f: '#trim' for f in all6}))
     model = {'parent': 'minecraft:block/block', 'textures': tex, 'elements': els,
              'display': {
                  'gui': {'rotation': [30, 225, 0], 'translation': [0, 2, 0], 'scale': [0.85, 0.85, 0.85]},
@@ -349,41 +350,6 @@ def gen_book_block(GA, b):
     variants = {f'facing={f}': {'model': f'{NS}:block/{bid}', **({'y': r} if r else {})}
                 for f, r in (('north', 0), ('east', 90), ('south', 180), ('west', 270))}
     GA.write(os.path.join(GA.A, 'blockstates', bid + '.json'), {'variants': variants})
-
-
-def _scroll_model(o):
-    """A Lore Scroll in the hand: a rolled sheet on a wooden rod with knobbed ends, a length of written sheet hanging
-    from it and a wax seal, its rod, knobs and seal in its origin's style."""
-    t = f'{NS}:item/{o}_lore_scroll_3d'
-
-    def box(frm, to, uv_by_face, rot=None):
-        e = {'from': frm, 'to': to, 'faces': {f: {'texture': '#s', 'uv': uv} for f, uv in uv_by_face.items()}}
-        if rot:
-            e['rotation'] = rot
-        return e
-    roll = [0, 0, 16, 2]
-    knob = [0, 2, 2, 4]
-    sheet = [0, 4, 12, 16]
-    seal = [12, 4, 14, 6]
-    rolls = {f: roll for f in ('north', 'south', 'up', 'down')}
-    rolls.update({'east': knob, 'west': knob})
-    els = [
-        box([1, 13, 7], [15, 15, 9], rolls),                                                  # the rolled top
-        box([0, 12.5, 6.5], [1, 15.5, 9.5], {f: knob for f in ('north', 'south', 'east', 'west', 'up', 'down')}),
-        box([15, 12.5, 6.5], [16, 15.5, 9.5], {f: knob for f in ('north', 'south', 'east', 'west', 'up', 'down')}),
-        box([2, 1, 7.9], [14, 13, 8.1], {'north': sheet, 'south': sheet}),                     # the hanging sheet
-        box([1.5, 0, 7], [14.5, 2, 9], rolls),                                                # the rolled bottom
-        box([6.5, 3, 7.6], [9.5, 6, 7.9], {'north': seal, 'south': seal, 'east': seal, 'west': seal}),  # the wax seal
-    ]
-    return {'textures': {'s': t, 'particle': t}, 'gui_light': 'front', 'elements': els,
-            'display': {
-                'thirdperson_righthand': {'rotation': [0, 90, -35], 'translation': [0, 1.25, -1], 'scale': [0.7, 0.7, 0.7]},
-                'thirdperson_lefthand': {'rotation': [0, -90, 35], 'translation': [0, 1.25, -1], 'scale': [0.7, 0.7, 0.7]},
-                'firstperson_righthand': {'rotation': [0, -90, 25], 'translation': [1.13, 3.2, 1.13], 'scale': [0.6, 0.6, 0.6]},
-                'firstperson_lefthand': {'rotation': [0, 90, -25], 'translation': [1.13, 3.2, 1.13], 'scale': [0.6, 0.6, 0.6]},
-                'ground': {'rotation': [0, 0, 0], 'translation': [0, 2, 0], 'scale': [0.5, 0.5, 0.5]},
-                'fixed': {'rotation': [0, 180, 0], 'translation': [0, 0, 0], 'scale': [0.75, 0.75, 0.75]},
-                'head': {'rotation': [0, 180, 0], 'translation': [0, 13, 7], 'scale': [0.8, 0.8, 0.8]}}}
 
 
 def _select(GA, iid, held):
@@ -406,13 +372,10 @@ def relic_entries(which):
 
 
 def item_models(GA):
-    """The 3D in-hand models (a flat sprite in the GUI); runs after the standard item models are written."""
+    """The Lore Books' open-book model in the hand (a flat sprite in the GUI); runs after the standard item models are
+    written. The Lore Scrolls keep their flat sprite everywhere."""
     for o in ORIGINS:
         _select(GA, f'{o}_lore_book', f'{NS}:block/{o}_lore_book')
-        m = _scroll_model(o)
-        GA.note_textures(m)
-        GA.write(os.path.join(GA.A, 'models/item', f'{o}_lore_scroll_in_hand.json'), m)
-        _select(GA, f'{o}_lore_scroll', f'{NS}:item/{o}_lore_scroll_in_hand')
 
 
 def assets(GA):

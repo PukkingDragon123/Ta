@@ -27,16 +27,16 @@ import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
 
 /**
- * F3: the Knowledge Book's pages, in reading order. Each chapter opens with a contents spread; then come its pages:
+ * F3: the Knowledge Book's pages, in reading order. Each chapter opens with a title page and its contents; then come its pages:
  * the written entries ({@link CodexEntries}), a page per song, per Sift enchantment, per piece of lore and per Mini
- * Creator goal, and (in Items and Recipes) every Sift recipe you know, four to a spread.
+ * Creator goal, and (in Items and Recipes) every Sift recipe you know, two to a page.
  *
  * <p>A page is discovered when any of its knowledge keys is ({@link Knowledge}); some pages are known from the start.
  */
 final class KnowledgePages {
     enum Kind { CONTENTS, ENTRY, SONG, ENCHANT, LORE, QUEST, RECIPES }
 
-    /** One spread of the book. {@code keys} empty: always known. */
+    /** One page of the book (shown on one or more leaves). {@code keys} empty: always known. */
     record Page(Kind kind, int chapter, @Nullable CodexEntry entry, @Nullable Song song, @Nullable Holder<Enchantment> enchant,
             @Nullable Lore lore, @Nullable Quest quest, List<RecipeDisplayEntry> recipes, String[] keys) {
         String id() {
@@ -177,8 +177,8 @@ final class KnowledgePages {
                 }
                 case CodexEntries.ITEMS -> {
                     List<RecipeDisplayEntry> known = knownRecipes();
-                    for (int i = 0; i < known.size(); i += 4) {
-                        pages.add(new Page(Kind.RECIPES, chapter, null, null, null, null, null, known.subList(i, Math.min(known.size(), i + 4)),
+                    for (int i = 0; i < known.size(); i += 2) {
+                        pages.add(new Page(Kind.RECIPES, chapter, null, null, null, null, null, known.subList(i, Math.min(known.size(), i + 2)),
                                 new String[0]));
                     }
                     if (known.isEmpty()) {
