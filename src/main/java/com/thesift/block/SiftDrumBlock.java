@@ -40,7 +40,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * The Sift Drum: a hide-and-lullwood drum. Hitting it (either mouse button, or a redstone pulse)
  * plays a beat whose tone depends on the block beneath, sends a resonance pulse through the world,
- * sets off sculk sensors like a note block does and powers any Euphory Altar nearby. Slotting a
+ * and sets off sculk sensors like a note block does. Slotting a
  * Warden Core into a drum next to a portal frame and sculk sensors starts the rhythm ritual that
  * opens the way to The Sift.
  *

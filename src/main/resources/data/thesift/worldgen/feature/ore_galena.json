@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 0.2,
+  "size": 6,
+  "targets": [
+    {
+      "state": {
+        "id": "thesift:galena_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:dreamstone"
+      }
+    },
+    {
+      "state": {
+        "id": "thesift:deep_galena_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:hushslate"
+      }
+    }
+  ]
+}

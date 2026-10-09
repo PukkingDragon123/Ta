@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "I": "thesift:serbim_ingot",
+    "I": "minecraft:iron_ingot",
     "F": "thesift:crane_flute",
     "E": "minecraft:echo_shard"
   },

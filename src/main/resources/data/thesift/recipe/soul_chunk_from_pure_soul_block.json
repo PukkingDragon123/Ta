@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:pure_soul_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "thesift:soul_chunk"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:ore",
+  "discard_chance_on_air_exposure": 0.1,
+  "size": 7,
+  "targets": [
+    {
+      "state": {
+        "id": "thesift:bauxite_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:dreamstone"
+      }
+    },
+    {
+      "state": {
+        "id": "thesift:deep_bauxite_ore"
+      },
+      "target": {
+        "predicate_type": "minecraft:block_match",
+        "block": "thesift:hushslate"
+      }
+    }
+  ]
+}

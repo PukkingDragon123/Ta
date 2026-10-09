@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    "thesift:siftite_dust",
+    "thesift:raw_sculkite",
+    "thesift:galena",
+    "thesift:soul_chunk",
     "minecraft:gold_ingot",
     "minecraft:gold_nugget",
     "minecraft:raw_gold",
@@ -17,8 +21,6 @@
     "minecraft:clock",
     "thesift:siftite_ingot",
     "thesift:siftite_nugget",
-    "thesift:serbim_ingot",
-    "thesift:raw_serbim",
     "thesift:chrome_pearl",
     "thesift:skysong_gem",
     "thesift:star_shard",

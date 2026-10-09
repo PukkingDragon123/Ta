@@ -1,10 +1,10 @@
 {
   "replace": false,
   "values": [
+    "thesift:siftite_ore",
+    "thesift:deep_siftite_ore",
     "thesift:siftite_block",
     "thesift:sift_gate_frame",
-    "thesift:prism_ore",
-    "thesift:deep_prism_ore",
     "thesift:prism_block"
   ]
 }

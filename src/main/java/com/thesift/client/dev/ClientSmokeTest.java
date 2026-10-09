@@ -305,7 +305,7 @@ public final class ClientSmokeTest {
 
     /** With -Dthesift.clientsmoke.quick=true only these scenes run (used for the second, Vulkan, pass). */
     private static final java.util.Set<String> QUICK = java.util.Set.of("arrival_east", "overview", "mob_lineup", "mob_closeup_bulb", "blocks_1",
-            "chrome_pool", "in_chrome", "portal", "altar", "creative_items");
+            "chrome_pool", "in_chrome", "portal", "europhy", "creative_items");
 
     private static void buildScenes() {
         scene("arrival_east", 160, c -> {
@@ -357,7 +357,7 @@ public final class ClientSmokeTest {
             target = new Vec3(40.5, STAGE_Y - 3, 0.5);
         });
         scene("portal", 80, ClientSmokeTest::portalStage);
-        scene("altar", 60, ClientSmokeTest::altarStage);
+        scene("europhy", 60, ClientSmokeTest::europhyStage);
         scene("drums", 40, ClientSmokeTest::drumStage);
         scene("bosses", 60, ClientSmokeTest::bossStage);
         scene("bosses_close", 40, c -> c.camera(-118.5, STAGE_Y + 4.5, -9.0, -120.5, STAGE_Y + 2.0, 0.5));
@@ -647,15 +647,24 @@ public final class ClientSmokeTest {
         c.camera(x0 + 12.0, STAGE_Y + 7.0, z0 - 12.0, x0, STAGE_Y + 1.5, z0);
     }
 
-    private static void altarStage(Ctx c) {
+    /** F1: two Europhy Tables - one loaded with Siftite Dust and Copper and played until it forms, one idle with a Siftite Ingot on its hub. */
+    private static void europhyStage(Ctx c) {
         int x0 = -60, z0 = 0;
         floor(c, x0 - 7, z0 - 7, x0 + 7, z0 + 7);
-        c.set(x0, STAGE_Y, z0, ModBlocks.EUPHORY_ALTAR.get().defaultBlockState());
-        BlockState drum = ModBlocks.SIFT_DRUM.get().defaultBlockState();
-        for (int i = 0; i < 6; i++) {
-            double a = i * Math.PI / 3.0;
-            c.set(x0 + (int) Math.round(Math.cos(a) * 3), STAGE_Y, z0 + (int) Math.round(Math.sin(a) * 3), drum);
+        c.set(x0, STAGE_Y, z0, ModBlocks.EUROPHY_TABLE.get().defaultBlockState());
+        c.set(x0 + 2, STAGE_Y, z0 + 1, ModBlocks.EUROPHY_TABLE.get().defaultBlockState());
+        BlockPos at = new BlockPos(x0, STAGE_Y, z0);
+        if (c.sift().getBlockEntity(at) instanceof com.thesift.block.entity.EurophyTableBlockEntity t) {
+            t.getItems().setItem(0, new net.minecraft.world.item.ItemStack(com.thesift.registry.ModItems.SIFTITE_DUST.get(), 4));
+            t.getItems().setItem(1, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.COPPER_INGOT));
+            for (int p : new int[]{6, 8, 10, 13, 15, 18, 20, 22}) {
+                com.thesift.music.SongEvents.note(c.sift(), null, net.minecraft.world.phys.Vec3.atCenterOf(at), p);
+            }
         }
-        c.camera(x0 + 0.5, STAGE_Y + 4.5, z0 - 6.5, x0 + 0.5, STAGE_Y + 0.5, z0 + 0.5);
+        if (c.sift().getBlockEntity(at.offset(2, 0, 1)) instanceof com.thesift.block.entity.EurophyTableBlockEntity idle) {
+            idle.getItems().setItem(com.thesift.block.entity.EurophyTableBlockEntity.OUTPUT,
+                    new net.minecraft.world.item.ItemStack(com.thesift.registry.ModItems.SIFTITE_INGOT.get()));
+        }
+        c.camera(x0 + 1.5, STAGE_Y + 3.0, z0 - 4.0, x0 + 1.0, STAGE_Y + 0.8, z0 + 0.5);
     }
 }

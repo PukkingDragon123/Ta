@@ -16,7 +16,6 @@ import com.thesift.entity.boss.Strummer;
 import com.thesift.client.renderer.boss.DictatorRenderer;
 import com.thesift.client.renderer.boss.MinionRenderer;
 import com.thesift.client.renderer.EnchoerRenderer;
-import com.thesift.client.renderer.EuphoryAltarRenderer;
 import com.thesift.client.renderer.SifterRenderer;
 import com.thesift.client.renderer.SlumblerRenderer;
 import com.thesift.client.sky.SiftSkyRenderer;
@@ -87,6 +86,7 @@ public class TheSiftClient {
         SculkSeaClient.register(modBus); // CR3 Fish & Coral Organs: the Sculk Fish, the Sculk Coral Organ and its hooked line
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
+        EurophyClient.register(modBus); // F1: the Europhy Table's clockwork, renderer and screen
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }
@@ -132,7 +132,6 @@ public class TheSiftClient {
         event.registerEntityRenderer(ModEntities.SIFTER.get(), SifterRenderer::new);
         event.registerEntityRenderer(ModEntities.ENCHOER.get(), EnchoerRenderer::new);
         event.registerEntityRenderer(ModEntities.GLOWBALL.get(), ctx -> new ThrownItemRenderer<>(ctx, 1.0F, true));
-        event.registerBlockEntityRenderer(ModBlockEntities.EUPHORY_ALTAR.get(), EuphoryAltarRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.INSTRUMENT_ALTAR.get(), com.thesift.client.renderer.InstrumentAltarRenderer::new);
         // the wild creatures
         event.registerEntityRenderer(ModEntities.STOMPER.get(), com.thesift.client.renderer.StomperRenderer::new);

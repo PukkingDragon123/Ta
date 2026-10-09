@@ -47,7 +47,7 @@ def declare(block, item):
     item("jailer_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaveCreatures.JAILER.get())", tab="eggs")
     item("sculkling_spawn_egg", cls="SpawnEggItem", props="new Item.Properties().spawnEgg(ModCaveCreatures.SCULKLING.get())", tab="eggs")
     # CR4: the Jailer's drop, a raw material (echo gear, Stomper armour)
-    item("sculkite", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
+    item("sculkite", props="new Item.Properties().rarity(Rarity.UNCOMMON)", name="Scukite")  # F1: shown as "Scukite" (id kept)
     __import__('cypole').declare(block, item)  # CR4: the Cypole's spawn egg
 
 
@@ -556,7 +556,7 @@ def sounds(GA):
 SHINIES = ['minecraft:gold_ingot', 'minecraft:gold_nugget', 'minecraft:raw_gold', 'minecraft:iron_ingot', 'minecraft:copper_ingot',
            'minecraft:diamond', 'minecraft:emerald', 'minecraft:amethyst_shard', 'minecraft:lapis_lazuli', 'minecraft:quartz',
            'minecraft:netherite_ingot', 'minecraft:echo_shard', 'minecraft:golden_apple', 'minecraft:clock',
-           'siftite_ingot', 'siftite_nugget', 'serbim_ingot', 'raw_serbim', 'chrome_pearl', 'skysong_gem', 'star_shard', 'prism_gem']
+           'siftite_ingot', 'siftite_nugget', 'siftite_dust', 'chrome_pearl', 'skysong_gem', 'star_shard', 'prism_gem']
 
 
 def data(GA):
@@ -597,13 +597,14 @@ def lang():
                                     'Its grip beats with its heart: at each thump the bars glow and loosen - only then do blows (or a '
                                     'struggle: sneak) bend them. It squeezes harder each time, and bars left alone grow back. It kicks '
                                     'away rescuers; a friend can still break the bars from outside. Break free and it guards you, '
-                                    'regrows its cell in moments and slams again: run! Drops Sculkite.'),
-        f'item.{NS}.sculkite': 'Sculkite',
-        f'codex.{NS}.sculkite.title': 'Sculkite', f'codex.{NS}.sculkite.tagline': 'The Jailer\'s dark crystal',
+                                    'regrows its cell in moments and slams again: run! Drops Scukite.'),
+        f'item.{NS}.sculkite': 'Scukite',
+        f'codex.{NS}.sculkite.title': 'Scukite', f'codex.{NS}.sculkite.tagline': 'The dark crystal of the sculk',
         f'codex.{NS}.sculkite.body': ('A dark crystal of sculk, cold to the touch and humming at a pitch only the sculk can hear. Jailers '
-                                      'grow the bars of their cells from it: it studs every cell, and a fallen Jailer leaves a few '
-                                      'shards behind. Smiths of the Sift work it into echo gear and into armour for Stompers - never '
-                                      'into armour for people, whom its hum drives to distraction.'),
+                                      'grow the bars of their cells from it and leave a few shards behind; rarely it grows wild as '
+                                      'Scukite Ore in the mud of the Sculk Swamp and in the Deep Sift\'s sculk - smelt the raw '
+                                      'crystal. Smiths of the Sift work it into echo gear, ammunition, creature gear and the Vine '
+                                      'Bola - never into armour for people, whom its hum drives to distraction.'),
         f'codex.{NS}.sculkling.title': 'Sculkling', f'codex.{NS}.sculkling.tagline': 'Hostile - giggling cave goblins',
         f'codex.{NS}.sculkling.body': 'Small blind sculk goblins with giant bat ears, skittering through dark caves in packs of three to five. They hear everything except a player who sneaks. Hear you, and they screech, swarm and scratch - and one may snatch something shiny from your pockets (gold, gems, ingots) and run, giggling. Kill the thief to get it back. Their ears cannot bear music: play a note and they cover them and flee.',
     })

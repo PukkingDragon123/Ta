@@ -59,21 +59,29 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:raw_serbim",
+          "name": "thesift:siftite_dust",
           "weight": 4,
           "modifier": {
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
               "min": 1,
-              "max": 2
+              "max": 3
             }
           }
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:serbim_ingot",
-          "weight": 2
+          "name": "minecraft:copper_ingot",
+          "weight": 4,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 5
+            }
+          }
         },
         {
           "type": "minecraft:item",

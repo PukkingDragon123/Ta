@@ -289,8 +289,8 @@ def gen_block(b):
         copy_template('slime_block', bid, token_tex('slime_block', bid))
     elif k == 'drum':
         gen_drum(bid)
-    elif k == 'altar':
-        gen_altar(bid)
+    elif k == 'europhy':  # F1: the Europhy Table's plinth (its clockwork is a block entity model)
+        __import__('materials').gen_block(sys.modules[__name__], bid)
     elif k == 'chime':
         gen_chime(bid)
     elif k == 'planter':  # H: the potted pitcher
@@ -352,22 +352,6 @@ def gen_drum(bid):
             write(os.path.join(A, 'models/block', name + '.json'), m)
             variants[f'hit={hit},core={str(core).lower()}'] = {'model': f'{NS}:block/{name}'}
     write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': variants})
-    item_block(bid)
-
-
-def gen_altar(bid):
-    m = {'parent': 'minecraft:block/block', 'textures': {'particle': f'{NS}:block/{bid}_side', 'top': f'{NS}:block/{bid}_top',
-                                                            'side': f'{NS}:block/{bid}_side', 'bottom': f'{NS}:block/{bid}_bottom',
-                                                            'gem': f'{NS}:block/{bid}_gem'},
-         'elements': [
-             el([0, 0, 0], [16, 4, 16], faces('#side', '#bottom', '#bottom', uv_side=[0, 12, 16, 16])),
-             el([3, 4, 3], [13, 9, 13], faces('#side', '#top', '#bottom', uv_side=[3, 7, 13, 12])),
-             el([1, 9, 1], [15, 12, 15], faces('#side', '#top', '#bottom', uv_side=[1, 0, 15, 3])),
-             el([6, 12, 6], [10, 13, 10], faces('#gem', '#gem', '#gem'), shade=False),
-         ]}
-    note_textures(m)
-    write(os.path.join(A, 'models/block', bid + '.json'), m)
-    simple_state(bid)
     item_block(bid)
 
 
@@ -478,7 +462,7 @@ TAG_MAP = {
     'sword_efficient': [('block', 'minecraft:sword_efficient')],
     'beacon': [('block', 'minecraft:beacon_base_blocks')],
     'sift_stone': [('block', f'{NS}:sift_stone')],
-    'serbim_ores': [('block', f'{NS}:serbim_ores'), ('item', f'{NS}:serbim_ores')],
+    'siftite_ores': [('block', f'{NS}:siftite_ores'), ('item', f'{NS}:siftite_ores')],
     'portal_frame': [('block', f'{NS}:portal_frame')],
 }
 
@@ -646,10 +630,7 @@ def gen_recipes():
         shaped(f'{w}_trapdoor', ['###', '###'], {'#': p}, f'{w}_trapdoor', 2, 'redstone', 'wooden_trapdoor')
         shapeless(f'{w}_button', [p], f'{w}_button', 1, 'redstone', 'wooden_button')
         shaped(f'{w}_pressure_plate', ['##'], {'#': p}, f'{w}_pressure_plate', 1, 'redstone', 'wooden_pressure_plate')
-    # metals
-    smelt('serbim_ingot', 'raw_serbim', 'serbim_ingot', 0.9, 200, ('smelting', 'blasting'))
-    smelt('serbim_ingot_ore', f'#serbim_ores', 'serbim_ingot', 0.9, 200, ('smelting', 'blasting'))
-    shaped('serbim_block', ['###', '###', '###'], {'#': 'serbim_ingot'}, 'serbim_block')
+    # metals (F1: Siftite Ingots come only from the Europhy Table now - Siftite Dust + Copper, see tools/materials.py)
     # the instruments of the Conductor's three great players
     # the Crane Flute is carved, not looted: a bone bored for the notes, an amethyst reed, an echo shard to sing through
     shaped('crane_flute', ['  E', ' A ', 'B  '], {'E': 'minecraft:echo_shard', 'A': 'minecraft:amethyst_shard', 'B': 'minecraft:bone'}, 'crane_flute',
@@ -658,17 +639,11 @@ def gen_recipes():
     shaped('cannonball', ['NIN', 'GCG', 'NIN'], {'N': 'minecraft:iron_nugget', 'I': 'minecraft:iron_ingot', 'G': 'minecraft:gunpowder',
                                                'C': 'cobbled_dreamstone'}, 'cannonball', count=4, category='equipment')
     shaped('guitar', ['  S', 'PS ', 'PP '], {'S': 'sculk_string', 'P': '#minecraft:planks'}, 'guitar', category='equipment')
-    shapeless('serbim_ingot_from_block', ['serbim_block'], 'serbim_ingot', 9)
-    shaped('raw_serbim_block', ['###', '###', '###'], {'#': 'raw_serbim'}, 'raw_serbim_block')
-    shapeless('raw_serbim_from_block', ['raw_serbim_block'], 'raw_serbim', 9)
-    # Siftite: 4 Serbim + 4 Echo Shards around a Netherite Ingot = 2 Siftite (H: costlier than Netherite itself)
-    shaped('siftite_ingot', ['SES', 'ENE', 'SES'], {'S': 'serbim_ingot', 'E': 'minecraft:echo_shard', 'N': 'minecraft:netherite_ingot'}, 'siftite_ingot', 2,
-           'misc')
     shaped('siftite_block', ['###', '###', '###'], {'#': 'siftite_ingot'}, 'siftite_block')
     shapeless('siftite_ingot_from_block', ['siftite_block'], 'siftite_ingot', 9)
     shaped('siftite_ingot_from_nuggets', ['###', '###', '###'], {'#': 'siftite_nugget'}, 'siftite_ingot', 1, 'misc')
     shapeless('siftite_nugget', ['siftite_ingot'], 'siftite_nugget', 9)
-    shaped('siftite_upgrade_smithing_template', ['#S#', '#C#', '###'], {'#': 'serbim_ingot', 'C': 'dreamstone', 'S': 'siftite_upgrade_smithing_template'},
+    shaped('siftite_upgrade_smithing_template', ['#S#', '#C#', '###'], {'#': 'siftite_dust', 'C': 'dreamstone', 'S': 'siftite_upgrade_smithing_template'},
            'siftite_upgrade_smithing_template', 2, 'misc')
     for t in ['sword', 'pickaxe', 'axe', 'shovel', 'hoe', 'spear']:  # CLEAN: no Siftite armour
         write(os.path.join(D, 'recipe', f'siftite_{t}_smithing.json'),
@@ -681,12 +656,11 @@ def gen_recipes():
     shaped('glowing_slime_block', ['###', '###', '###'], {'#': 'glowing_slime_ball'}, 'glowing_slime_block', 1, 'redstone')
     shapeless('glowing_slime_ball_from_block', ['glowing_slime_block'], 'glowing_slime_ball', 9)
     shaped('chrome_glass', [' # ', '#C#', ' # '], {'#': 'minecraft:glass', 'C': 'chrome_bucket'}, 'chrome_glass', 4)
-    shaped('sift_drum', ['HHH', 'W W', 'WSW'], {'H': 'thick_hide', 'W': 'lullwood_planks', 'S': 'serbim_ingot'}, 'sift_drum', 1, 'redstone')
+    shaped('sift_drum', ['HHH', 'W W', 'WSW'], {'H': 'thick_hide', 'W': 'lullwood_planks', 'S': 'minecraft:copper_ingot'}, 'sift_drum', 1, 'redstone')
     # the first drum has to be built in the Overworld: echo shards come from the Ancient City the portal is opened in
     shaped('sift_drum_from_overworld', ['LLL', 'PEP', 'PNP'], {'L': 'minecraft:leather', 'P': '#minecraft:planks', 'E': 'minecraft:echo_shard',
                                                              'N': 'minecraft:note_block'}, 'sift_drum', 1, 'redstone')
-    shaped('euphory_altar', [' P ', 'SDS', 'DDD'], {'P': 'chrome_pearl', 'S': 'siftite_ingot', 'D': 'polished_dreamstone'}, 'euphory_altar', 1, 'misc')
-    shaped('soul_chime', [' I ', 'NGN', 'N N'], {'I': 'minecraft:iron_chain', 'N': 'serbim_ingot', 'G': 'soulpetal'}, 'soul_chime', 1, 'decorations')
+    shaped('soul_chime', [' I ', 'NGN', 'N N'], {'I': 'minecraft:iron_chain', 'N': 'minecraft:copper_ingot', 'G': 'soulpetal'}, 'soul_chime', 1, 'decorations')
     shapeless('dream_stew', ['minecraft:bowl', 'glowcap', 'minecraft:pitcher_pod', 'lullaby_bell'], 'dream_stew', 1, 'food')
     shaped('glowcap_skewer', ['  G', ' G ', '#  '], {'G': 'glowcap', '#': 'minecraft:stick'}, 'glowcap_skewer', 1, 'food')
     for f in spec.FLOWERS:
@@ -729,7 +703,7 @@ def gen_lang():
         f'codex.{NS}.slumbler.body': 'Huge, wide-mouthed and mostly asleep. Slumblers gulp Chrome plankton from the shallows, nuzzle each other, hum along to music and wade into shallow Chrome to nap half-submerged. They drop Thick Hide - and sometimes a Chrome Pearl. Let sleeping Slumblers lie: they bite.',
         # CR1: the Sifter's Codex page comes from tools/sifter.py
         f'codex.{NS}.siftite.title': 'Siftite Gear', f'codex.{NS}.siftite.tagline': "The Sift's finest metal",
-        f'codex.{NS}.siftite.body': 'Serbim is very rare, deep down. 4 Serbim Ingots and 4 Echo Shards round a Netherite Ingot make 2 Siftite; the Siftite template upgrades Netherite tools and weapons. They outdig and outhit Netherite and knock foes flying. Siftite is never forged into armour.',
+        f'codex.{NS}.siftite.body': 'Siftite Ore lies rare and deep and needs a diamond pickaxe; it breaks into Siftite Dust. In the Europhy Table, 4 Siftite Dust and a Copper Ingot played into shape make a Siftite Ingot. With the Siftite template (Siftite Dust duplicates it) Siftite upgrades Netherite tools and weapons: they outdig and outhit Netherite and knock foes flying. Siftite is never forged into armour.',
         f'codex.{NS}.slingshot.title': 'Slingshot', f'codex.{NS}.slingshot.tagline': 'Glowing slime, at speed',
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
@@ -744,8 +718,6 @@ def gen_lang():
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage, and its three empty altars.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
         f'codex.{NS}.sift_drum.body': 'Left- or right-click to play a beat; hold for a drum roll. Sneak and left-click to break it. Stone beneath booms low, wood thumps, anything else taps high. Redstone plays it too. Every beat ripples out to altars and Sift creatures and sets off Sculk Sensors, like a note block.',
-        f'codex.{NS}.euphory_altar.title': 'Euphory Altar', f'codex.{NS}.euphory_altar.tagline': 'Enchanting by music',
-        f'codex.{NS}.euphory_altar.body': 'Set an item on the altar, surround it with Sift Drums and feed it a Chrome Pearl. The drums play themselves, the rings spin up and the item comes out enchanted beyond what a table can do.',
         f'codex.{NS}.music.title': 'Music & Chimes', f'codex.{NS}.music.tagline': 'The Sift listens',
         f'codex.{NS}.music.body': 'Many Sift creatures react to music: Bulbs dance, Echoers hum, Harmoners sing along and Sculklings flee with their ears covered. Soul Chimes ring when powered.',
         f'codex.{NS}.flora.title': 'Coral Flora', f'codex.{NS}.flora.tagline': 'The pink plains',
@@ -838,8 +810,6 @@ def gen_lang():
         f'message.{NS}.drum.waiting': 'The drum falls quiet. Strike it when you are ready to play.',
         f'title.{NS}.awakening': 'The Sift Awakens',
         f'title.{NS}.awakening.sub': 'The way is open',
-        f'message.{NS}.altar.need_drums': 'The altar needs at least two Sift Drums around it.',
-        f'message.{NS}.altar.need_levels': 'You need more experience to perform the ritual.',
     })
     import echoer_world  # A2 Echoer: the Echoer, Soul Golems, Nibs, The Echoer device, the Echoer's hearth
     LANG.update(echoer_world.lang())
@@ -925,9 +895,6 @@ SUBTITLES = {
     'block.sift_drum.mid': 'Sift Drum beats',
     'block.sift_drum.high': 'Sift Drum taps',
     'block.sift_drum.boom': 'Sift Drum booms',
-    'block.euphory_altar.charge': 'Euphory Altar charges',
-    'block.euphory_altar.enchant': 'Euphory Altar enchants',
-    'block.euphory_altar.hum': 'Euphory Altar hums',
     'block.sift_portal.ambient': 'Sift Portal whispers',
     'block.sift_portal.activate': 'Sift Portal awakens',
     'block.sift_portal.travel': 'Sift Portal noise fades',
@@ -1027,9 +994,6 @@ SOUNDS = {
     'block.sift_drum.mid': [('block/note_block/basedrum', 1.0, 1.0), ('block/note_block/hat', 0.3, 0.8)],
     'block.sift_drum.high': [('block/note_block/snare', 1.0, 1.0)],
     'block.sift_drum.boom': [('block/note_block/basedrum', 1.0, 0.5), ('random/explode1', 0.3, 1.8)],
-    'block.euphory_altar.charge': [('block/beacon/activate', 1.0, 1.4), ('block/amethyst/resonate1', 1.0, 1.2)],
-    'block.euphory_altar.enchant': [('block/enchantment_table/enchant1', 1.0, 0.8), ('block/beacon/power1', 1.0, 1.5)],
-    'block.euphory_altar.hum': [('block/beacon/ambient', 0.8, 1.2), ('block/amethyst/resonate2', 0.6, 1.3)],
     'block.sift_portal.ambient': [('event:block.portal.ambient', 0.4, 1.6), ('block/amethyst/resonate3', 0.3, 1.4)],
     'block.sift_portal.activate': [('block/end_portal/endportal', 1.0, 1.2), ('block/beacon/activate', 1.0, 0.8)],
     'block.sift_portal.travel': [('event:block.portal.travel', 0.8, 1.5)],
@@ -1347,14 +1311,13 @@ def gen_misc_tags():
         tag('item', f'{NS}:slumbler_food', rl(i))
     tag('item', f'{NS}:slingshot_ammo', rl('glowing_slime_ball'))
     tag('item', f'{NS}:siftite_tool_materials', rl('siftite_ingot'))
-    tag('item', f'{NS}:altar_fuel', rl('chrome_pearl'))
     for t, vt in [('sword', 'swords'), ('pickaxe', 'pickaxes'), ('axe', 'axes'), ('shovel', 'shovels'), ('hoe', 'hoes'), ('spear', 'spears')]:
         tag('item', f'minecraft:{vt}', rl(f'siftite_{t}'))
     for b in ['#minecraft:dirt', '#minecraft:sand', 'minecraft:gravel', 'minecraft:clay', 'minecraft:mud', 'minecraft:moss_block', 'minecraft:snow_block',
               'minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'dreamsand', 'suspicious_dreamsand', 'sift_soil', 'sift_grass_block',
               'coral_turf', 'lumen_moss_block']:
         tag('block', f'{NS}:sniffer_mineable', rl(b))
-    for b in ['minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'suspicious_dreamsand', 'serbim_ore', 'deep_serbim_ore', 'minecraft:chest',
+    for b in ['minecraft:suspicious_sand', 'minecraft:suspicious_gravel', 'suspicious_dreamsand', 'siftite_ore', 'deep_siftite_ore', 'minecraft:chest',
               'minecraft:barrel', 'minecraft:decorated_pot', 'minecraft:diamond_ore', 'minecraft:deepslate_diamond_ore', 'minecraft:emerald_ore']:
         tag('block', f'{NS}:sniffer_treasure', rl(b))
     tag('item', 'minecraft:frog_food', rl('glowing_slime_ball')) if False else None
@@ -1393,6 +1356,7 @@ def flush_tags():
 
 
 def generate():
+    __import__('materials').assets(sys.modules[__name__])  # F1 Materials & Europhy Table: ore tag kinds, sounds, fuel, recipes, loot, text (first)
     __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
     __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
     __import__('sift_sniffer').assets(sys.modules[__name__])  # E1 Sniffer & rot: sounds, loot, the Zombified Sniffer's name, codex

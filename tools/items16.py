@@ -309,14 +309,6 @@ def siftite_ingot():
     return grid(rows, pal)
 
 
-def serbim_ingot():
-    """The vanilla ingot shape in deep serbim blue."""
-    rows = list(INGOT)
-    rows[4] = '....OOO45555w2..'
-    pal = {'o': '#0c1638', 'O': '#16306a', '1': '#1f4a8a', '2': '#2a64aa', '3': '#3a86c8', '4': '#4aa6e0', '5': '#6ec4f0', 'w': '#c4ecff'}
-    return grid(rows, pal)
-
-
 def siftite_nugget():
     """A siftite nugget with a pink inclusion."""
     rows = [
@@ -340,31 +332,6 @@ def siftite_nugget():
     pal = ramp('12345w', S_RAMP[:6], S_OUT)
     pal.update({'p': (PINK[2], S_OUT), 'P': (PINK[1], S_OUT), 'q': (PINK[3], S_OUT)})
     return grid(rows, pal, ol=True)
-
-
-def raw_serbim():
-    """Raw ore in the vanilla raw-metal shape, with serbim crystal flecks."""
-    rows = [
-        '................',
-        '..bbbbb.........',
-        '.beggfebbb......',
-        '.bghghgfgebbb...',
-        'bfhhhghghggfeb..',
-        'bfefhhggfgXfefeb',
-        'afddfeddcxXedeb.',
-        'aecdedddcbxcddb.',
-        'aecceddcbbbbbca.',
-        'adcccbXbbghfdda.',
-        'addccbxXfffgedca',
-        '.adcccaadffecbba',
-        '..aaaa..adddcbba',
-        '.........addbba.',
-        '..........aaaa..',
-        '................',
-    ]
-    pal = {'a': '#141a3c', 'b': '#22306a', 'c': '#34508e', 'd': '#4a6eb0', 'e': '#6a92cc', 'f': '#8cb2e0', 'g': '#b0d0f0',
-           'h': '#dcecff', 'x': '#3fd0ff', 'X': '#c8f8ff'}
-    return grid(rows, pal)
 
 
 def chrome_pearl():
@@ -1390,7 +1357,7 @@ def hummingbloom():
 def all_items():
     out = {}
     out.update(tools())
-    for f in (siftite_ingot, serbim_ingot, siftite_nugget, raw_serbim, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
+    for f in (siftite_ingot, siftite_nugget, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
               warden_core, thick_hide):
         out[f.__name__] = f()
     for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, sift_codex,

@@ -1,9 +1,13 @@
 {
   "replace": false,
   "values": [
-    "thesift:serbim_ore",
-    "thesift:deep_serbim_ore",
-    "thesift:raw_serbim_block",
-    "thesift:serbim_block"
+    "thesift:prism_ore",
+    "thesift:deep_prism_ore",
+    "thesift:sculkite_ore",
+    "thesift:sculkite_block",
+    "thesift:bauxite_ore",
+    "thesift:deep_bauxite_ore",
+    "thesift:galena_ore",
+    "thesift:deep_galena_ore"
   ]
 }

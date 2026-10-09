@@ -151,14 +151,10 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_BLOCK).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 6));
     public static final DeferredBlock<CarpetBlock> LUMEN_MOSS_CARPET = BLOCKS.registerBlock("lumen_moss_carpet", CarpetBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_CARPET).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4));
-    public static final DeferredBlock<DropExperienceBlock> SERBIM_ORE = BLOCKS.registerBlock("serbim_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+    public static final DeferredBlock<DropExperienceBlock> SIFTITE_ORE = BLOCKS.registerBlock("siftite_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_BLUE).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
-    public static final DeferredBlock<DropExperienceBlock> DEEP_SERBIM_ORE = BLOCKS.registerBlock("deep_serbim_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+    public static final DeferredBlock<DropExperienceBlock> DEEP_SIFTITE_ORE = BLOCKS.registerBlock("deep_siftite_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_CYAN).strength(4.5F, 3.0F).requiresCorrectToolForDrops());
-    public static final DeferredBlock<Block> RAW_SERBIM_BLOCK = BLOCKS.registerBlock("raw_serbim_block", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.RAW_IRON_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE));
-    public static final DeferredBlock<Block> SERBIM_BLOCK = BLOCKS.registerBlock("serbim_block", Block::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE));
     public static final DeferredBlock<Block> SIFTITE_BLOCK = BLOCKS.registerBlock("siftite_block", Block::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK).mapColor(MapColor.COLOR_CYAN));
     public static final DeferredBlock<TransparentBlock> CHROME_GLASS = BLOCKS.registerBlock("chrome_glass", TransparentBlock::new,
@@ -303,8 +299,6 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES_PLANT).mapColor(MapColor.COLOR_CYAN));
     public static final DeferredBlock<SiftDrumBlock> SIFT_DRUM = BLOCKS.registerBlock("sift_drum", SiftDrumBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).noOcclusion());
-    public static final DeferredBlock<EuphoryAltarBlock> EUPHORY_ALTAR = BLOCKS.registerBlock("euphory_altar", EuphoryAltarBlock::new,
-            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.ENCHANTING_TABLE).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9).noOcclusion());
     public static final DeferredBlock<SiftGateFrameBlock> SIFT_GATE_FRAME = BLOCKS.registerBlock("sift_gate_frame", SiftGateFrameBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).mapColor(MapColor.COLOR_CYAN).strength(30.0F, 1200.0F).requiresCorrectToolForDrops().lightLevel(s -> 3));
     public static final DeferredBlock<SiftPortalBlock> SIFT_PORTAL = BLOCKS.registerBlock("sift_portal", SiftPortalBlock::new,
@@ -403,6 +397,24 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4));
     public static final DeferredBlock<BaseCoralWallFanBlock> SCULK_CORAL_WALL_FAN = BLOCKS.registerBlock("sculk_coral_wall_fan", BaseCoralWallFanBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.TUBE_CORAL).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 4));
+    public static final DeferredBlock<DropExperienceBlock> SCULKITE_ORE = BLOCKS.registerBlock("sculkite_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_CYAN).sound(SoundType.SCULK).strength(4.0F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> 3));
+    public static final DeferredBlock<Block> SCULKITE_BLOCK = BLOCKS.registerBlock("sculkite_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_BLOCK).mapColor(MapColor.COLOR_CYAN).strength(5.0F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> 5));
+    public static final DeferredBlock<BauxiteOreBlock> BAUXITE_ORE = BLOCKS.registerBlock("bauxite_ore", BauxiteOreBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.TERRACOTTA_ORANGE).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<BauxiteOreBlock> DEEP_BAUXITE_ORE = BLOCKS.registerBlock("deep_bauxite_ore", BauxiteOreBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.TERRACOTTA_ORANGE).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<Block> MAGNESITE = BLOCKS.registerBlock("magnesite", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CALCITE).mapColor(MapColor.TERRACOTTA_WHITE).strength(1.5F, 6.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<DropExperienceBlock> GALENA_ORE = BLOCKS.registerBlock("galena_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.COLOR_GRAY).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<DropExperienceBlock> DEEP_GALENA_ORE = BLOCKS.registerBlock("deep_galena_ore", p -> new DropExperienceBlock(UniformInt.of(1, 4), p),
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_GRAY).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
+    public static final DeferredBlock<Block> PURE_SOUL_BLOCK = BLOCKS.registerBlock("pure_soul_block", Block::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SEA_LANTERN).mapColor(MapColor.COLOR_BLUE).strength(2.0F, 6.0F).lightLevel(s -> 12));
+    public static final DeferredBlock<EurophyTableBlock> EUROPHY_TABLE = BLOCKS.registerBlock("europhy_table", EurophyTableBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CALCITE).mapColor(MapColor.TERRACOTTA_WHITE).strength(3.0F, 6.0F).requiresCorrectToolForDrops().lightLevel(s -> 6).noOcclusion());
 
     private ModBlocks() {}
 }

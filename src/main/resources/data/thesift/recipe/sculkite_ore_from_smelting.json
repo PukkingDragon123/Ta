@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": "#thesift:sculkite_ores",
+  "result": {
+    "id": "thesift:sculkite"
+  }
+}

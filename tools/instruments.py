@@ -5,7 +5,7 @@ in versions found or crafted further into the Sift - more notes, a new way to pl
 the Prism versions, whose every note is a colour of light:
 
   strings: Guitar -> Star Lute (six strings, chords) -> Prism Harp (a string a note, lit)
-  flute:   Crane Flute -> Serbim Flute (seventh hole, overblowing) -> Prism Flute (lit)
+  flute:   Crane Flute -> Silver Flute (seventh hole, overblowing) -> Prism Flute (lit)
   drum:    Conga Drum -> Thunder Drums (eight pads, rolls) -> Prism Drum (lit)
   chimes:  Wind Chimes -> Glass Bells (ten chimes, the gust) -> Prism Chimes (lit)
 
@@ -23,7 +23,7 @@ NS = 'thesift'
 # item id -> (music.Instrument constant, name, rarity, item model)
 NEW = {
     'star_lute': ('LUTE', 'Star Lute', 'RARE', 'handheld'),
-    'serbim_flute': ('SERBIM_FLUTE', 'Serbim Flute', 'RARE', 'handheld'),
+    'serbim_flute': ('SERBIM_FLUTE', 'Silver Flute', 'RARE', 'handheld'),  # F1: the Serbim metal is retired (id kept); made of iron now
     'thunder_drums': ('THUNDER_DRUMS', 'Thunder Drums', 'RARE', 'handheld'),
     'glass_bells': ('GLASS_BELLS', 'Glass Bells', 'RARE', 'generated'),
     'prism_chimes': ('PRISM_CHIMES', 'Prism Chimes', 'EPIC', 'generated'),
@@ -39,11 +39,11 @@ ALL = ['guitar', 'star_lute', 'prism_harp', 'crane_flute', 'serbim_flute', 'pris
 # recipes: the plain ones from common things, each upgrade from the one below and rare Sift materials
 RECIPES = {
     'conga_drum': (['LSL', 'P P', 'PPP'], {'L': 'minecraft:leather', 'S': 'minecraft:string', 'P': '#minecraft:planks'}),
-    'star_lute': ([' S ', 'TGT', 'ISI'], {'S': 'star_shard', 'T': 'sculk_string', 'G': 'guitar', 'I': 'serbim_ingot'}),
-    'serbim_flute': ([' I ', 'IFI', ' E '], {'I': 'serbim_ingot', 'F': 'crane_flute', 'E': 'minecraft:echo_shard'}),
-    'thunder_drums': (['HHH', 'IDI', 'WSW'], {'H': 'thick_hide', 'I': 'serbim_ingot', 'D': 'conga_drum', 'W': 'lullwood_planks',
+    'star_lute': ([' S ', 'TGT', 'ISI'], {'S': 'star_shard', 'T': 'sculk_string', 'G': 'guitar', 'I': 'minecraft:iron_ingot'}),
+    'serbim_flute': ([' I ', 'IFI', ' E '], {'I': 'minecraft:iron_ingot', 'F': 'crane_flute', 'E': 'minecraft:echo_shard'}),
+    'thunder_drums': (['HHH', 'IDI', 'WSW'], {'H': 'thick_hide', 'I': 'minecraft:iron_ingot', 'D': 'conga_drum', 'W': 'lullwood_planks',
                                               'S': 'star_shard'}),
-    'glass_bells': (['ISI', 'GWG', 'G G'], {'I': 'serbim_ingot', 'S': 'star_shard', 'G': 'chime_glass', 'W': 'wind_chimes'}),
+    'glass_bells': (['ISI', 'GWG', 'G G'], {'I': 'minecraft:iron_ingot', 'S': 'star_shard', 'G': 'chime_glass', 'W': 'wind_chimes'}),
 }
 # the Prism versions: the upgraded instrument ringed with prism gems (skipped while the gem is missing)
 PRISM_RECIPES = {
@@ -158,13 +158,13 @@ def lang():
         f'{c}.instruments.title': 'Instruments', f'{c}.instruments.tagline': 'Four ways to play',
         f'{c}.instruments.body': 'Use an instrument to play it. Strings: pick notes on a fretboard. Flutes: hold your breath, finger the holes. Drums: beat the pads in rhythm. Chimes: strike each as it swings past its mark. Instruments have no powers - better ones play more notes or in new ways. Prism ones play every note as a light.',
         f'{c}.star_lute.title': 'Star Lute', f'{c}.star_lute.tagline': 'Six strings and a star',
-        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings tuned a third apart reach every note of both octaves, and Shift (or the right mouse button) strums the whole chord on a note. Found in the Sculk Castle, or made from a Guitar with star shards, Serbim and Sculk String.',
-        f'{c}.serbim_flute.title': 'Serbim Flute', f'{c}.serbim_flute.tagline': 'Silver breath',
-        f'{c}.serbim_flute.body': 'A transverse flute of Serbim with a seventh hole and a longer breath. Hold Shift (or the right mouse button) while you blow to overblow it an octave higher - fifteen notes in all. Made from a Crane Flute, Serbim and an Echo Shard.',
+        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings tuned a third apart reach every note of both octaves, and Shift (or the right mouse button) strums the whole chord on a note. Found in the Sculk Castle, or made from a Guitar with star shards, Iron and Sculk String.',
+        f'{c}.serbim_flute.title': 'Silver Flute', f'{c}.serbim_flute.tagline': 'Silver breath',
+        f'{c}.serbim_flute.body': 'A transverse flute of bright iron with a seventh hole and a longer breath. Hold Shift (or the right mouse button) while you blow to overblow it an octave higher - fifteen notes in all. Made from a Crane Flute, Iron and an Echo Shard.',
         f'{c}.thunder_drums.title': 'Thunder Drums', f'{c}.thunder_drums.tagline': 'Four drums, eight voices',
-        f'{c}.thunder_drums.body': 'Four lacquered drums, a low and a high stroke on each: eight pads on A S D F J K L ;. Hold a pad and it rolls. The drum pits keep them, and the castle; or hoop a Conga Drum with Thick Hide, Serbim and lullwood. Drum songs keep a rhythm - land each beat on the line.',
+        f'{c}.thunder_drums.body': 'Four lacquered drums, a low and a high stroke on each: eight pads on A S D F J K L ;. Hold a pad and it rolls. The drum pits keep them, and the castle; or hoop a Conga Drum with Thick Hide, Iron and lullwood. Drum songs keep a rhythm - land each beat on the line.',
         f'{c}.glass_bells.title': 'Glass Bells', f'{c}.glass_bells.tagline': 'Ten chimes of chime glass',
-        f'{c}.glass_bells.body': 'Ten tubes of Chime Glass on a Serbim bar - two octaves. Hold Space and a gust sets them swinging wider and twice as fast: they pass their marks twice as often, but the moment to strike is shorter. Made from Wind Chimes, Chime Glass and Serbim.',
+        f'{c}.glass_bells.body': 'Ten tubes of Chime Glass on an iron bar - two octaves. Hold Space and a gust sets them swinging wider and twice as fast: they pass their marks twice as often, but the moment to strike is shorter. Made from Wind Chimes, Chime Glass and Iron.',
         f'{c}.prism_chimes.title': 'Prism Chimes', f'{c}.prism_chimes.tagline': 'Bells of light',
         f'{c}.prism_chimes.body': 'Glass Bells hung from a halo of prism gems. They play the Glass Bells\' way - and every chime rings in a colour of light: choose it with the keys 1-4 or the mouse wheel. Prism songs ask for their lights as well as their notes. Rarely found in the Sculk Castle.',
         f'{c}.wind_chimes.title': 'Wind Chimes', f'{c}.wind_chimes.tagline': "The Echoer's voice",
@@ -210,7 +210,7 @@ def star_lute():
 
 
 def serbim_flute():
-    """A transverse flute of Serbim on the diagonal: a pale-blue silver tube lit along its top edge
+    """A transverse flute of bright iron on the diagonal: a pale-blue silver tube lit along its top edge
     and shaded under, two bright joint rings, key cups standing along its side, the lip plate and
     its dark embouchure hole near the head, a crown cap - and a cyan glint at the foot."""
     c = [['.'] * 16 for _ in range(16)]
@@ -275,7 +275,7 @@ def thunder_drums():
 
 
 def glass_bells():
-    """Glass Bells: a Serbim bar on a ring hook and three bells of Chime Glass hung from it at
+    """Glass Bells: an iron bar on a ring hook and three bells of Chime Glass hung from it at
     different heights - each lit cyan through, with a white glint and a dark clapper."""
     rows = [
         '.......kk.......',

@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": "thesift:serbim_ingot",
+    "#": "thesift:siftite_dust",
     "C": "thesift:dreamstone",
     "S": "thesift:siftite_upgrade_smithing_template"
   },

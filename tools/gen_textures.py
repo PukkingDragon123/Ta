@@ -235,17 +235,7 @@ def soils():
     for _ in range(5):
         moss.set(rnd.randrange(16), rnd.randrange(16), hx('#c8fff6'))
     out('block/lumen_moss_block', moss)
-    # ores
-    for name, base, seed in (('serbim_ore', M.stone(DREAM[0:5], 61), 61), ('deep_serbim_ore', M.stone(HUSH[0:5], 62), 62)):
-        out(f'block/{name}', M.ore(base, [SERBIM[0], SERBIM[2], SERBIM[3], SERBIM[5]], seed, outline=None))
-    rb = M.cobbled(SERBIM[0:5], SERBIM[0], 63)
-    out('block/raw_serbim_block', rb)
-    sb = M.polished(SERBIM[1:6], 65)
-    for x in range(3, 13):
-        sb.set(x, 5, SERBIM[4]); sb.set(x, 10, SERBIM[2])
-    for (x, y) in ((3, 3), (12, 3), (3, 12), (12, 12)):
-        sb.set(x, y, SERBIM[0])
-    out('block/serbim_block', sb)
+    # ores: the Siftite, Bauxite, Galena and Scukite ores are seeded by tools/materials.py (F1)
     sf = M.polished(SIFTITE, 66)
     for i in range(3, 13):
         sf.set(i, i, SIFTITE[4])
@@ -433,28 +423,6 @@ def functional():
     sheet, glow = HB.drum_sheets()
     out('block/sift_drum', sheet)
     out('block/sift_drum_glow', glow, CUTOUT)
-    # euphory altar
-    at = polished(DREAM, 101)
-    for y in range(16):
-        for x in range(16):
-            d = math.hypot(x - 7.5, y - 7.5)
-            if 4 < d < 5:
-                at.set(x, y, hx('#ffd97a'))
-            elif d < 1.5:
-                at.set(x, y, hx('#ff9fd6'))
-    out('block/euphory_altar_top', at)
-    side = bricks(DREAM[1:], DREAM_MORTAR, 102, rows=4)
-    for x in range(16):
-        side.set(x, 0, hx('#ffd97a')); side.set(x, 4, hx('#d9a94a'))
-        if x % 3 == 1:
-            side.set(x, 8, hx('#7fe8ff'))
-    out('block/euphory_altar_side', side)
-    out('block/euphory_altar_bottom', stone(DREAM[:4], 103))
-    gem = Tex()
-    for y in range(16):
-        for x in range(16):
-            gem.set(x, y, iridescent(x, y, 0.5, 0.6))
-    out('block/euphory_altar_gem', gem)
     # portal: 16 animated frames of swirling cyan/pink soul energy
     frames = 16
     p = Image.new('RGBA', (16, 16 * frames))
@@ -583,13 +551,10 @@ def tool_keys(mat, handle='#6f4a2e'):
 
 
 def items():
-    SERB_I = SERBIM[1:]
-    out('item/serbim_ingot', pal_sprite(S.INGOT, metal_keys(SERB_I)))
     sift_keys = metal_keys(SIFTITE)
     sift_keys['m'] = SIFTITE_PINK
     out('item/siftite_ingot', pal_sprite(S.INGOT, sift_keys))
     out('item/siftite_nugget', pal_sprite(S.NUGGET, metal_keys(SIFTITE)))
-    out('item/raw_serbim', pal_sprite(S.RAW_CHUNK, {'L': SERBIM[4], 'l': SERBIM[2], 'g': SERBIM[5], 'd': SERBIM[0]}))
     pearl = pal_sprite(S.PEARL, {'d': hx('#8c6fb8'), 'm': hx('#d7b8f0'), 'l': hx('#f5e6ff'), 'W': hx('#ffffff')})
     for y in range(16):
         for x in range(16):
@@ -1859,6 +1824,7 @@ def main():
     __import__('sifter').textures(out)  # CR1: the bell-ring and echolocation-ring particles
     __import__('sculk_sea').textures(out)  # CR3 Fish & Coral Organs: the Coral Organ's barb
     __import__('sift_sniffer').textures(out)  # E1 Sniffer & rot: the fluffy egg
+    __import__('materials').textures(out)  # F1 Materials & Europhy Table: ore seeds, materials, the table's plinth, item sprites, GUI
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)
     need = os.path.join(ROOT, 'build/textures_needed.txt')

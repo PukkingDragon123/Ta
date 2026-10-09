@@ -81,10 +81,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> CORAL_TURF = ITEMS.registerSimpleBlockItem(ModBlocks.CORAL_TURF);
     public static final DeferredItem<BlockItem> LUMEN_MOSS_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.LUMEN_MOSS_BLOCK);
     public static final DeferredItem<BlockItem> LUMEN_MOSS_CARPET = ITEMS.registerSimpleBlockItem(ModBlocks.LUMEN_MOSS_CARPET);
-    public static final DeferredItem<BlockItem> SERBIM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.SERBIM_ORE);
-    public static final DeferredItem<BlockItem> DEEP_SERBIM_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_SERBIM_ORE);
-    public static final DeferredItem<BlockItem> RAW_SERBIM_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.RAW_SERBIM_BLOCK);
-    public static final DeferredItem<BlockItem> SERBIM_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SERBIM_BLOCK);
+    public static final DeferredItem<BlockItem> SIFTITE_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.SIFTITE_ORE);
+    public static final DeferredItem<BlockItem> DEEP_SIFTITE_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_SIFTITE_ORE);
     public static final DeferredItem<BlockItem> SIFTITE_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SIFTITE_BLOCK);
     public static final DeferredItem<BlockItem> CHROME_GLASS = ITEMS.registerSimpleBlockItem(ModBlocks.CHROME_GLASS);
     public static final DeferredItem<BlockItem> LULLWOOD_LOG = ITEMS.registerSimpleBlockItem(ModBlocks.LULLWOOD_LOG);
@@ -148,7 +146,6 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> GLOWCAP = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWCAP);
     public static final DeferredItem<BlockItem> GLOWBELL_VINE = ITEMS.registerSimpleBlockItem(ModBlocks.GLOWBELL_VINE);
     public static final DeferredItem<BlockItem> SIFT_DRUM = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_DRUM);
-    public static final DeferredItem<BlockItem> EUPHORY_ALTAR = ITEMS.registerSimpleBlockItem(ModBlocks.EUPHORY_ALTAR);
     public static final DeferredItem<BlockItem> SIFT_GATE_FRAME = ITEMS.registerSimpleBlockItem(ModBlocks.SIFT_GATE_FRAME);
     public static final DeferredItem<BlockItem> CONDUCTORS_PODIUM = ITEMS.registerSimpleBlockItem(ModBlocks.CONDUCTORS_PODIUM);
     public static final DeferredItem<BlockItem> ENCORE_SIGIL = ITEMS.registerSimpleBlockItem(ModBlocks.ENCORE_SIGIL);
@@ -187,13 +184,20 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> SCULK_MUD = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_MUD);
     public static final DeferredItem<BlockItem> SCULK_CORAL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_CORAL_BLOCK);
     public static final DeferredItem<BlockItem> SCULK_CORAL = ITEMS.registerSimpleBlockItem(ModBlocks.SCULK_CORAL);
+    public static final DeferredItem<BlockItem> SCULKITE_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.SCULKITE_ORE);
+    public static final DeferredItem<BlockItem> SCULKITE_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.SCULKITE_BLOCK);
+    public static final DeferredItem<BlockItem> BAUXITE_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.BAUXITE_ORE);
+    public static final DeferredItem<BlockItem> DEEP_BAUXITE_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_BAUXITE_ORE);
+    public static final DeferredItem<BlockItem> MAGNESITE = ITEMS.registerSimpleBlockItem(ModBlocks.MAGNESITE);
+    public static final DeferredItem<BlockItem> GALENA_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.GALENA_ORE);
+    public static final DeferredItem<BlockItem> DEEP_GALENA_ORE = ITEMS.registerSimpleBlockItem(ModBlocks.DEEP_GALENA_ORE);
+    public static final DeferredItem<BlockItem> PURE_SOUL_BLOCK = ITEMS.registerSimpleBlockItem(ModBlocks.PURE_SOUL_BLOCK);
+    public static final DeferredItem<BlockItem> EUROPHY_TABLE = ITEMS.registerSimpleBlockItem(ModBlocks.EUROPHY_TABLE);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
     public static final DeferredItem<Item> THICK_HIDE = ITEMS.registerItem("thick_hide", Item::new, () -> new Item.Properties());
     public static final DeferredItem<Item> CHROME_PEARL = ITEMS.registerItem("chrome_pearl", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
-    public static final DeferredItem<Item> RAW_SERBIM = ITEMS.registerItem("raw_serbim", Item::new, () -> new Item.Properties());
-    public static final DeferredItem<Item> SERBIM_INGOT = ITEMS.registerItem("serbim_ingot", Item::new, () -> new Item.Properties());
     public static final DeferredItem<Item> SIFTITE_INGOT = ITEMS.registerItem("siftite_ingot", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> SIFTITE_NUGGET = ITEMS.registerItem("siftite_nugget", Item::new, () -> new Item.Properties());
     public static final DeferredItem<WardenCoreItem> WARDEN_CORE = ITEMS.registerItem("warden_core", WardenCoreItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
@@ -307,6 +311,14 @@ public final class ModItems {
     public static final DeferredItem<MobBucketItem> FANFARE_EEL_BUCKET = ITEMS.registerItem("fanfare_eel_bucket", p -> new MobBucketItem(ModEntities.FANFARE_EEL.get(), net.minecraft.world.level.material.Fluids.WATER, net.minecraft.sounds.SoundEvents.BUCKET_EMPTY_FISH, p), () -> new Item.Properties().stacksTo(1).component(net.minecraft.core.component.DataComponents.BUCKET_ENTITY_DATA, net.minecraft.world.item.component.CustomData.EMPTY));
     public static final DeferredItem<SpawnEggItem> SCULK_FISH_SPAWN_EGG = ITEMS.registerItem("sculk_fish_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSculkSea.SCULK_FISH.get()));
     public static final DeferredItem<SpawnEggItem> CORAL_ORGAN_SPAWN_EGG = ITEMS.registerItem("coral_organ_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModSculkSea.CORAL_ORGAN.get()));
+    public static final DeferredItem<Item> RAW_SCULKITE = ITEMS.registerItem("raw_sculkite", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> BAUXITE = ITEMS.registerItem("bauxite", Item::new, () -> new Item.Properties().cookingFuel(ModEurophy.BAUXITE_BURN_TIME));
+    public static final DeferredItem<Item> STABLE_BAUXITE = ITEMS.registerItem("stable_bauxite", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON).cookingFuel(ModEurophy.STABLE_BAUXITE_BURN_TIME));
+    public static final DeferredItem<Item> GALENA = ITEMS.registerItem("galena", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<Item> SOUL_DUST = ITEMS.registerItem("soul_dust", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<Item> SOUL_PIECE = ITEMS.registerItem("soul_piece", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> SOUL_CHUNK = ITEMS.registerItem("soul_chunk", Item::new, () -> new Item.Properties().rarity(Rarity.RARE));
+    public static final DeferredItem<Item> SIFTITE_DUST = ITEMS.registerItem("siftite_dust", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
 
     private ModItems() {}
 }

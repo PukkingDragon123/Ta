@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "H": "thesift:thick_hide",
-    "I": "thesift:serbim_ingot",
+    "I": "minecraft:iron_ingot",
     "D": "thesift:conga_drum",
     "W": "thesift:lullwood_planks",
     "S": "thesift:star_shard"

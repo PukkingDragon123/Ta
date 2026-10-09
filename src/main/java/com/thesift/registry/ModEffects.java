@@ -15,7 +15,7 @@ public final class ModEffects {
     /** Wardens (and anything else that hunts by sound) lose their hearing. */
     public static final DeferredHolder<MobEffect, MobEffect> DEAFENED = EFFECTS.register("deafened",
             () -> new DeafenedEffect(MobEffectCategory.NEUTRAL, 0x7FE8E0));
-    /** A dreamy high from Sift Cake and the Euphory Altar. */
+    /** A dreamy high from Sift Cake and the Europhy Table. */
     public static final DeferredHolder<MobEffect, MobEffect> EUPHORIA = EFFECTS.register("euphoria",
             () -> new EuphoriaEffect(MobEffectCategory.BENEFICIAL, 0xF59AD0));
 

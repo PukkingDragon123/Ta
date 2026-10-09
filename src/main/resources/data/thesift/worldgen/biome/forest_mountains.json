@@ -135,13 +135,18 @@
     ],
     [],
     [
-      "thesift:ore_serbim",
+      "thesift:ore_siftite",
       "thesift:ore_hushslate_blob",
-      "thesift:ore_prism_deep"
+      "thesift:ore_prism_deep",
+      "thesift:ore_bauxite",
+      "thesift:ore_galena",
+      "thesift:ore_magnesite"
     ],
     [],
     [
-      "thesift:chrome_spring"
+      "thesift:chrome_spring",
+      "thesift:ore_sculkite_mud",
+      "thesift:ore_sculkite_deep"
     ],
     [
       "thesift:echoer_hearth",

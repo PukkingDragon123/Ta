@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "thesift:prism_gem",
+    "C": "minecraft:copper_ingot",
+    "M": "thesift:magnesite"
+  },
+  "pattern": [
+    " P ",
+    "CPC",
+    "MMM"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:europhy_table"
+  }
+}

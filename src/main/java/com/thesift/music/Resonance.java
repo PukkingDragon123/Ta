@@ -18,7 +18,7 @@ import net.minecraft.world.phys.AABB;
 
 /**
  * Music physically affects the Sift. Every drum hit, note block, jukebox beat, instrument note and
- * Euphory Altar ritual calls {@link #pulse}: a visible ring rolls outwards, plants bloom and grow,
+ * Europhy Table calls {@link #pulse}: a visible ring rolls outwards, plants bloom and grow,
  * Chrome ripples and sparkles, leaves shake loose and music-loving mobs react.
  */
 public final class Resonance {

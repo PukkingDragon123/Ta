@@ -138,10 +138,14 @@ A shifting, translucent cyan pearl liquid. It **heals** whatever soaks in it, bu
 quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
 
 ### Gear
-* **Serbim**: an extremely rare ore, small veins buried deep. **4 Serbim Ingots + 4 Echo Shards
-  around a Netherite Ingot = 2 Siftite Ingots.**
+* **Materials**: vanilla **Copper**; **Prism** gems (iron pickaxe, all through the Sift caves); **Siftite Ore**
+  (diamond pickaxe, rare) drops **Siftite Dust** - 4 Dust and a Copper Ingot become a **Siftite Ingot** in the
+  **Europhy Table**; **Scukite** grows rarely in sculk (Raw Scukite smelts into Scukite); **Bauxite** explodes when
+  mined unless you or the ore are in Chrome - a strong fuel, and Stable Bauxite (Europhy Table, with Nib Dust
+  and a living Nib nearby) burns twice as long; **Magnesite** and **Galena** seams; Soul Dust, Pieces, Chunks
+  and Pure Soul Blocks (9 to 1, both ways).
 * **Siftite** tools and weapons: upgrade **netherite** tools with Siftite at a smithing table, using the
-  **Siftite Upgrade Smithing Template** found in Sift structures (one template plus serbim and
+  **Siftite Upgrade Smithing Template** found in Sift structures (one template plus Siftite Dust and
   dreamstone duplicates it). Curved, sung-into-shape tools that beat Netherite on durability,
   speed and damage and hit with heavy knockback. There is no Siftite armour.
 * **Sift gardening**: Echo Seeds grow only in the dark (faster on sculk). Vanilla Pitcher Plants grow
@@ -159,10 +163,10 @@ quicksand: you slowly sink. **Hold Shift to rise.** Collect it with a bucket.
 Music physically changes The Sift. Drums, note blocks and jukeboxes send out resonance pulses
 that make plants grow, flowers sing, particles dance and creatures react.
 
-The **Euphory Altar** is a mechanical enchanting altar powered by drums. Place an unenchanted item
-or a book on it, ring it with **two or more Sift Drums** (up to 4 blocks away), then use a
-**Chrome Pearl** on it. The more drums, the stronger the enchantment, well beyond an enchanting
-table's limit.
+The **Europhy Table** is a clockwork crafting machine (Magnesite, Copper and Prism). Set the ingredients on
+its four arms, then play music nearby: every new note winds it up, a whole song fills it at once, and the
+output forms in the centre. It makes Siftite Ingots and Stable Bauxite, and - as the old Euphory Altar did -
+enchants an item laid beside a Chrome Pearl, better the more varied your tune.
 
 ### Structures
 The Thumper's Drum Pit, the Sculk Castle and the Caravan colonies. The Sift's older towers, temples

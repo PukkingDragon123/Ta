@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "thesift:siftite_ingot",
-    "thesift:serbim_ingot",
+    "thesift:siftite_dust",
     {
       "id": "thesift:prism_gem",
       "required": false

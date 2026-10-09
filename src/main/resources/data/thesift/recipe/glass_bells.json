@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "I": "thesift:serbim_ingot",
+    "I": "minecraft:iron_ingot",
     "S": "thesift:star_shard",
     "G": "thesift:chime_glass",
     "W": "thesift:wind_chimes"

@@ -64,7 +64,7 @@ public final class ModEchoer {
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_FLAP = reg("entity.enchoer.flap");
     public static final DeferredHolder<SoundEvent, SoundEvent> ENCHOER_DRILL = reg("entity.enchoer.drill");
 
-    /** What the Echoer accepts as an offering (siftite and serbim ingots, prism gems). */
+    /** What the Echoer accepts as an offering (siftite ingots and dust, prism gems). */
     public static final TagKey<Item> ECHOER_OFFERINGS = TagKey.create(Registries.ITEM, TheSift.id("echoer_offerings"));
     public static final ResourceKey<LootTable> ECHOER_REWARD = loot("gameplay/echoer_reward");
     public static final ResourceKey<LootTable> GOLEM_DIG_LOOT = loot("gameplay/soul_golem_dig");

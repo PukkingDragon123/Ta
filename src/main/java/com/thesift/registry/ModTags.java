@@ -17,7 +17,7 @@ public final class ModTags {
         /** Blocks Glowcaps and glowbells grow on in the Deep Sift. */
         public static final TagKey<Block> DEEP_SIFT_GROUND = tag("deep_sift_ground");
         public static final TagKey<Block> SIFT_STONE = tag("sift_stone");
-        public static final TagKey<Block> SERBIM_ORES = tag("serbim_ores");
+        public static final TagKey<Block> SIFTITE_ORES = tag("siftite_ores");
         public static final TagKey<Block> INCORRECT_FOR_SIFTITE_TOOL = tag("incorrect_for_siftite_tool");
         public static final TagKey<Block> RESONANT = tag("resonant");
         /** Soft ground a ridden Sniffer ploughs straight through. */
@@ -37,7 +37,6 @@ public final class ModTags {
         public static final TagKey<Item> SLUMBLER_FOOD = tag("slumbler_food");
         public static final TagKey<Item> SLINGSHOT_AMMO = tag("slingshot_ammo");
         public static final TagKey<Item> SIFTITE_TOOL_MATERIALS = tag("siftite_tool_materials");
-        public static final TagKey<Item> ALTAR_FUEL = tag("altar_fuel");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, TheSift.id(name));

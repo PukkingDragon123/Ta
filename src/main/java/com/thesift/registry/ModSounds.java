@@ -104,9 +104,13 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> DRUM_MID = reg("block.sift_drum.mid");
     public static final DeferredHolder<SoundEvent, SoundEvent> DRUM_HIGH = reg("block.sift_drum.high");
     public static final DeferredHolder<SoundEvent, SoundEvent> DRUM_BOOM = reg("block.sift_drum.boom");
-    public static final DeferredHolder<SoundEvent, SoundEvent> ALTAR_CHARGE = reg("block.euphory_altar.charge");
-    public static final DeferredHolder<SoundEvent, SoundEvent> ALTAR_ENCHANT = reg("block.euphory_altar.enchant");
-    public static final DeferredHolder<SoundEvent, SoundEvent> ALTAR_HUM = reg("block.euphory_altar.hum");
+    // F1: the Europhy Table (replaces the Euphory Altar) and Bauxite (tools/materials.py)
+    public static final DeferredHolder<SoundEvent, SoundEvent> EUROPHY_CHARGE = reg("block.europhy_table.charge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> EUROPHY_CRAFT = reg("block.europhy_table.craft");
+    public static final DeferredHolder<SoundEvent, SoundEvent> EUROPHY_HUM = reg("block.europhy_table.hum");
+    public static final DeferredHolder<SoundEvent, SoundEvent> EUROPHY_NOTE = reg("block.europhy_table.note");
+    public static final DeferredHolder<SoundEvent, SoundEvent> EUROPHY_FIZZLE = reg("block.europhy_table.fizzle");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BAUXITE_HISS = reg("block.bauxite.hiss");
     public static final DeferredHolder<SoundEvent, SoundEvent> PORTAL_AMBIENT = reg("block.sift_portal.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> PORTAL_ACTIVATE = reg("block.sift_portal.activate");
     public static final DeferredHolder<SoundEvent, SoundEvent> PORTAL_TRAVEL = reg("block.sift_portal.travel");

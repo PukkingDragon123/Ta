@@ -180,6 +180,11 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "prism", ModItems.PRISM_GEM)); // C
         l.add(thing(ITEMS, "skysong_gem", ModItems.SKYSONG_GEM));
         l.add(thing(ITEMS, "siftite", ModItems.SIFTITE_PICKAXE));
+        // F1 Materials: Bauxite, Magnesite, Galena and the soul materials
+        l.add(thing(ITEMS, "bauxite", ModItems.BAUXITE));
+        l.add(thing(ITEMS, "magnesite", ModItems.MAGNESITE));
+        l.add(thing(ITEMS, "galena", ModItems.GALENA));
+        l.add(thing(ITEMS, "soul_materials", ModItems.SOUL_CHUNK));
         l.add(thing(ITEMS, "slingshot", ModItems.SLINGSHOT));
         l.add(thing(ITEMS, "chrome", ModItems.CHROME_BUCKET));
         l.add(thing(ITEMS, "warden_core", ModItems.WARDEN_CORE));
@@ -208,7 +213,7 @@ public final class CodexEntries {
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
-        l.add(thing(MAGIC, "euphory_altar", ModItems.EUPHORY_ALTAR));
+        l.add(thing(MAGIC, "europhy_table", ModItems.EUROPHY_TABLE)); // F1: crafting by music (replaces the Euphory Altar)
         l.add(thing(MAGIC, "echoer_device", ModItems.ECHOER_DEVICE)); // A2 Echoer
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));
         l.add(thing(MAGIC, "music_crystal", ModItems.MUSIC_CRYSTAL)); // C

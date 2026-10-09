@@ -2,7 +2,6 @@ package com.thesift.dev;
 
 import com.thesift.TheSift;
 import com.thesift.block.SiftDrumBlock;
-import com.thesift.block.entity.EuphoryAltarBlockEntity;
 import com.thesift.block.entity.SiftDrumBlockEntity;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
@@ -27,7 +26,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
@@ -35,7 +33,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,7 +69,7 @@ final class MechanicsTest {
     private @Nullable UUID pig;
     private int pigTicks;
 
-    private @Nullable EuphoryAltarBlockEntity altar;
+    private @Nullable EurophyTest europhy; // F1 Materials & Europhy Table
     private @Nullable Warden warden;
     private @Nullable Mob soaker;
     private float soakerStartHealth;
@@ -99,7 +96,7 @@ final class MechanicsTest {
         this.startGlowball();
         this.startChromeSoak();
         ChromeTest.run(this.sift, this.check); // A3 Chrome: chime sand, chrome fish bucket
-        this.startAltar();
+        this.europhy = EurophyTest.start(this.sift, this.check); // F1: a Europhy craft by music, Bauxite's Chrome rule
         this.checkTrades();
         this.checkHarmoners();
         this.checkSniffer();
@@ -263,43 +260,6 @@ final class MechanicsTest {
         e.discard();
     }
 
-    private void startAltar() {
-        int x = 22, z = 12;
-        int y = this.sift.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) + 3;
-        for (BlockPos p : BlockPos.betweenClosed(x - 4, y - 1, z - 4, x + 4, y - 1, z + 4)) {
-            this.sift.setBlock(p, ModBlocks.POLISHED_DREAMSTONE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
-        }
-        for (BlockPos p : BlockPos.betweenClosed(x - 4, y, z - 4, x + 4, y + 3, z + 4)) {
-            this.sift.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-        }
-        BlockPos altarPos = new BlockPos(x, y, z);
-        this.sift.setBlock(altarPos, ModBlocks.EUPHORY_ALTAR.get().defaultBlockState(), Block.UPDATE_ALL);
-        for (int i = 0; i < 6; i++) {
-            double a = i * Math.PI / 3.0;
-            this.sift.setBlock(altarPos.offset((int) Math.round(Math.cos(a) * 3), 0, (int) Math.round(Math.sin(a) * 3)),
-                    ModBlocks.SIFT_DRUM.get().defaultBlockState(), Block.UPDATE_ALL);
-        }
-        if (!(this.sift.getBlockEntity(altarPos) instanceof EuphoryAltarBlockEntity a)) {
-            check(false, "altar: block entity");
-            return;
-        }
-        FakePlayer enchanter = FakePlayerFactory.getMinecraft(this.sift);
-        enchanter.getAbilities().instabuild = true;
-        a.use(enchanter, InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD));
-        check(a.getItem().is(Items.DIAMOND_SWORD), "altar: sword placed on the altar");
-        a.use(enchanter, InteractionHand.MAIN_HAND, new ItemStack(ModItems.CHROME_PEARL.get()));
-        check(a.isRitualActive(), "altar: a chrome pearl starts the drum ritual");
-        this.altar = a;
-    }
-
-    private void checkAltar() {
-        EuphoryAltarBlockEntity a = this.altar;
-        if (a == null) return;
-        ItemStack out = a.getItem();
-        TheSift.LOGGER.info("SMOKE: altar finished: active={} item={} enchantments={}", a.isRitualActive(), out, out.getEnchantments());
-        check(!a.isRitualActive() && out.isEnchanted(), "altar: the sword comes out enchanted");
-    }
-
     private void startRitual() {
         Optional<StructureTemplate> city = this.overworld.getStructureTemplateManager()
                 .get(Identifier.withDefaultNamespace("ancient_city/city_center/city_center_1"));
@@ -431,8 +391,8 @@ final class MechanicsTest {
             this.checkChromeSoak();
             this.checkDictator();
         }
-        if (this.ticks == 320) {
-            this.checkAltar();
+        if (this.europhy != null) {
+            this.europhy.tick(this.ticks); // F1: play the tune at 40, check the ingot at 320
         }
         if (this.ticks == 260 && this.songTest != null) {
             this.songTest.finish(); // C4 songs

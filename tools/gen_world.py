@@ -369,11 +369,11 @@ def features():
                               'state': state('cobbled_dreamstone')})
     placed('dream_boulder', 'dream_boulder', [rarity(3)] + ON_SURFACE)
     # ores
-    # Serbim (Siftite) ore is extremely rare: small, always buried, and only in one chunk in three
-    feature('ore_serbim', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 1.0, 'size': 3, 'targets': [
-        {'state': state('serbim_ore'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('dreamstone')}},
-        {'state': state('deep_serbim_ore'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('hushslate')}}]})
-    placed('ore_serbim', 'ore_serbim', [rarity(3), {'type': 'minecraft:in_square'}, {'type': 'minecraft:height_range', 'height': {
+    # Siftite ore (F1: was Serbim) is rare: small, always buried, and only in one chunk in three
+    feature('ore_siftite', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 1.0, 'size': 3, 'targets': [
+        {'state': state('siftite_ore'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('dreamstone')}},
+        {'state': state('deep_siftite_ore'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('hushslate')}}]})
+    placed('ore_siftite', 'ore_siftite', [rarity(3), {'type': 'minecraft:in_square'}, {'type': 'minecraft:height_range', 'height': {
         'type': 'minecraft:trapezoid', 'max_inclusive': {'absolute': 16}, 'min_inclusive': {'absolute': -64}}}, BIOME])
     feature('ore_hushslate_blob', {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': 0.0, 'size': 48, 'targets': [
         {'state': state('hushslate', axis='y'), 'target': {'predicate_type': 'minecraft:block_match', 'block': rl('dreamstone')}}]})
@@ -464,7 +464,7 @@ def biome(name, *, fog, sky, water, grass, foliage, temp, down, spawns, parts, f
     })
 
 
-COMMON_UNDERGROUND = [(6, 'ore_serbim'), (6, 'ore_hushslate_blob'), (8, 'chrome_spring')]
+COMMON_UNDERGROUND = [(6, 'ore_siftite'), (6, 'ore_hushslate_blob'), (8, 'chrome_spring')]
 DREAMY_PARTICLES = [('drifting_soul', 0.0008), ('dream_pollen', 0.0012), ('glow_dust', 0.0008), ('sift_mist', 0.0003), ('wishing_star', 0.00005)]
 
 
@@ -548,6 +548,7 @@ def generate():
     noise_settings()
     features()
     __import__('caravans').world(sys.modules[__name__])  # C: the Caravans Cavern
+    __import__('materials').world(sys.modules[__name__])  # F1: Bauxite, Galena, Magnesite and Scukite in every Sift biome's caves
     biomes()
     dimension_json()
     __import__('sea_sky').world(sys.modules[__name__])  # sea & sky: kelp forest, deep dark ocean, sound garden

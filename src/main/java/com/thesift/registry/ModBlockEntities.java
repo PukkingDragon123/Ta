@@ -2,7 +2,6 @@ package com.thesift.registry;
 
 import com.thesift.TheSift;
 import com.thesift.block.entity.ConductorsPodiumBlockEntity;
-import com.thesift.block.entity.EuphoryAltarBlockEntity;
 import com.thesift.block.entity.SiftDrumBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,8 +13,7 @@ public final class ModBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SiftDrumBlockEntity>> SIFT_DRUM = BLOCK_ENTITIES.register("sift_drum",
             () -> new BlockEntityType<>(SiftDrumBlockEntity::new, ModBlocks.SIFT_DRUM.get()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EuphoryAltarBlockEntity>> EUPHORY_ALTAR = BLOCK_ENTITIES.register("euphory_altar",
-            () -> new BlockEntityType<>(EuphoryAltarBlockEntity::new, ModBlocks.EUPHORY_ALTAR.get()));
+    // F1: the Euphory Altar is gone - the Europhy Table (registry/ModEurophy) took over its ritual
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.thesift.block.entity.EncoreSigilBlockEntity>> ENCORE_SIGIL = BLOCK_ENTITIES.register(
             "encore_sigil", () -> new BlockEntityType<>(com.thesift.block.entity.EncoreSigilBlockEntity::new, ModBlocks.ENCORE_SIGIL.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.thesift.block.entity.InstrumentAltarBlockEntity>> INSTRUMENT_ALTAR = BLOCK_ENTITIES.register(

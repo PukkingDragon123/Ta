@@ -108,12 +108,12 @@ block("lumen_moss_carpet", "carpet", "BlockBehaviour.Properties.ofFullCopy(Block
       tex="lumen_moss_block", tags=["hoe"])
 
 # ---------------------------------------------------------------- ores & metals
-block("serbim_ore", "ore", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(3.0F, 3.0F).requiresCorrectToolForDrops()",
-      tags=["pickaxe", "needs_iron", "serbim_ores"], loot="ore:raw_serbim")
-block("deep_serbim_ore", "ore", DEEP + ".mapColor(MapColor.COLOR_CYAN).strength(4.5F, 3.0F).requiresCorrectToolForDrops()",
-      tags=["pickaxe", "needs_iron", "serbim_ores"], loot="ore:raw_serbim")
-block("raw_serbim_block", "cube", "BlockBehaviour.Properties.ofFullCopy(Blocks.RAW_IRON_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE)", tags=["pickaxe", "needs_iron"])
-block("serbim_block", "cube", "BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_LIGHT_BLUE)", tags=["pickaxe", "needs_iron", "beacon"])
+# F1 Materials: the old Serbim ore is the Siftite Ore now - it drops Siftite Dust (loot in tools/materials.py), and
+# Siftite Ingots are made from the dust and Copper in the Europhy Table; the Serbim metal is retired
+block("siftite_ore", "ore", STONE + ".mapColor(MapColor.COLOR_LIGHT_BLUE).strength(3.0F, 3.0F).requiresCorrectToolForDrops()",
+      tags=["pickaxe", "needs_diamond", "siftite_ores"], loot="none")
+block("deep_siftite_ore", "ore", DEEP + ".mapColor(MapColor.COLOR_CYAN).strength(4.5F, 3.0F).requiresCorrectToolForDrops()",
+      tags=["pickaxe", "needs_diamond", "siftite_ores"], loot="none")
 block("siftite_block", "cube", "BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK).mapColor(MapColor.COLOR_CYAN)", tags=["pickaxe", "needs_diamond", "beacon"])
 block("chrome_glass", "glass", "BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 3)",
       tags=["glass"], loot="silk")
@@ -192,8 +192,7 @@ block("glowbell_vine_plant", "custom", "BlockBehaviour.Properties.ofFullCopy(Blo
 # ---------------------------------------------------------------- functional & decorative
 block("sift_drum", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).noOcclusion()", cls="SiftDrumBlock",
       model="drum", tags=["axe"], tab="functional")
-block("euphory_altar", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.ENCHANTING_TABLE).mapColor(MapColor.COLOR_CYAN).lightLevel(s -> 9).noOcclusion()",
-      cls="EuphoryAltarBlock", model="altar", tags=["pickaxe"], tab="functional")
+# F1: the Euphory Altar is gone - the Europhy Table (tools/materials.py) took over its ritual
 block("sift_gate_frame", "custom", DEEP_BRICK + ".mapColor(MapColor.COLOR_CYAN).strength(30.0F, 1200.0F).requiresCorrectToolForDrops().lightLevel(s -> 3)",
       cls="SiftGateFrameBlock", model="cube_column", tags=["pickaxe", "needs_diamond", "portal_frame"], tab="functional")
 block("sift_portal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL).lightLevel(s -> 12)", cls="SiftPortalBlock", model="portal",
@@ -230,8 +229,6 @@ block("chrome", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).ma
 item("glowing_slime_ball", cls="GlowingSlimeBallItem", props="new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE)")
 item("thick_hide")
 item("chrome_pearl", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
-item("raw_serbim")
-item("serbim_ingot")
 item("siftite_ingot", props="new Item.Properties().rarity(Rarity.UNCOMMON)")
 item("siftite_nugget")
 item("warden_core", cls="WardenCoreItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()")
@@ -298,10 +295,11 @@ for soup in ("lullaby_soup", "echo_chowder", "chrome_bisque"):
     item(soup, props=f"new Item.Properties().stacksTo(1).food(ModSoups.{C}, ModSoups.{C}_CONSUMABLE).usingConvertsTo(Items.BOWL)")
 
 # ---------------------------------------------------------------- C: the Caravans Cavern (tools/caravans.py, registry/ModCaravans)
+# F1 Materials: Prism is the early/mid crystal - an iron pickaxe will do
 block("prism_ore", "ore", STONE + ".mapColor(MapColor.COLOR_MAGENTA).strength(3.0F, 3.0F).requiresCorrectToolForDrops()",
-      tags=["pickaxe", "needs_diamond"], loot="ore:prism_gem")
+      tags=["pickaxe", "needs_iron"], loot="ore:prism_gem")
 block("deep_prism_ore", "ore", DEEP + ".mapColor(MapColor.COLOR_MAGENTA).strength(4.5F, 3.0F).requiresCorrectToolForDrops()",
-      tags=["pickaxe", "needs_diamond"], loot="ore:prism_gem")
+      tags=["pickaxe", "needs_iron"], loot="ore:prism_gem")
 block("prism_block", "cube", "BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).mapColor(MapColor.COLOR_MAGENTA).lightLevel(s -> 4)",
       tags=["pickaxe", "needs_diamond", "beacon"])
 block("music_crystal", "custom", "BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_PURPLE).strength(1.5F)"
@@ -351,3 +349,5 @@ __import__("instruments").declare(block, item)
 __import__("sculk_world").declare(block, item)
 # ---------------------------------------------------------------- CR3 Fish & Coral Organs: fish buckets, Sculk Fish / Coral Organ eggs (tools/sculk_sea.py)
 __import__("sculk_sea").declare(block, item)
+# ---------------------------------------------------------------- F1 Materials & Europhy Table (tools/materials.py)
+__import__("materials").declare(block, item)

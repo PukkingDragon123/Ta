@@ -5,7 +5,7 @@
     "S": "thesift:star_shard",
     "T": "thesift:sculk_string",
     "G": "thesift:guitar",
-    "I": "thesift:serbim_ingot"
+    "I": "minecraft:iron_ingot"
   },
   "pattern": [
     " S ",

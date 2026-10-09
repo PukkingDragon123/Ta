@@ -1,6 +1,13 @@
 {
   "replace": false,
   "values": [
+    "thesift:siftite_ore",
+    "thesift:deep_siftite_ore",
+    "thesift:galena_ore",
+    "thesift:deep_galena_ore",
+    "thesift:bauxite_ore",
+    "thesift:deep_bauxite_ore",
+    "thesift:sculkite_ore",
     "thesift:prism_ore",
     "thesift:deep_prism_ore"
   ]

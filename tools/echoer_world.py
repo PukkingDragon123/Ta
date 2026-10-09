@@ -258,7 +258,7 @@ def generate(GA):
     import gen_data as D
     tag, rl = GA.tag, GA.rl
     # --- the Echoer's offerings (the prism gem comes from the Caravans' cavern, if it is there)
-    for i in ('siftite_ingot', 'serbim_ingot'):
+    for i in ('siftite_ingot', 'siftite_dust'):
         tag('item', f'{NS}:echoer_offerings', rl(i))
     tag('item', f'{NS}:echoer_offerings', {'id': f'{NS}:prism_gem', 'required': False})
 
@@ -278,7 +278,7 @@ def generate(GA):
     D.table('gift', 'gameplay/soul_golem_dig', [D.pool([
         D.item('minecraft:gold_nugget', 10, count=(2, 5)), D.item('minecraft:lapis_lazuli', 8, count=(2, 4)),
         D.item('minecraft:amethyst_shard', 8, count=(1, 3)), D.item('minecraft:quartz', 6, count=(1, 3)),
-        D.item('minecraft:emerald', 6), D.item('star_shard', 3), D.item('raw_serbim', 3), D.item('chrome_pearl', 2),
+        D.item('minecraft:emerald', 6), D.item('star_shard', 3), D.item('siftite_dust', 3), D.item('chrome_pearl', 2), D.item('soul_dust', 8, count=(1, 3)),
         D.item('minecraft:diamond', 1)])])
     D.table('gift', 'gameplay/nib_transform', [D.pool([
         D.item('nib_dust', 60, count=(1, 2)), D.item('minecraft:gold_nugget', 12, count=(2, 4)), D.item('minecraft:gold_ingot', 5),

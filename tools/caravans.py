@@ -354,8 +354,8 @@ def generate():
                          'modifier': [{'type': 'minecraft:copy_state', 'block': f'{NS}:music_crystal', 'properties': ['color']}]}]}]})
     GD.table('chest', 'gameplay/frozen_crystal', [GD.pool([
         GD.item('prism_gem', 3), GD.item('minecraft:diamond', 6), GD.item('minecraft:emerald', 6), GD.item('minecraft:gold_ingot', 8, (1, 3)),
-        GD.item('minecraft:lapis_lazuli', 6, (2, 6)), GD.item('minecraft:amethyst_shard', 8, (2, 5)), GD.item('raw_serbim', 4, (1, 2)),
-        GD.item('serbim_ingot', 2), GD.item('star_shard', 3), GD.item('skysong_gem', 1), GD.item('music_sheet_crystal', 2),
+        GD.item('minecraft:lapis_lazuli', 6, (2, 6)), GD.item('minecraft:amethyst_shard', 8, (2, 5)), GD.item('siftite_dust', 4, (1, 3)),
+        GD.item('minecraft:copper_ingot', 4, (2, 5)), GD.item('star_shard', 3), GD.item('skysong_gem', 1), GD.item('music_sheet_crystal', 2),
         GD.item('music_sheet_golem', 1), GD.item('music_sheet_lullaby', 1),  # W1: songs once kept in the ruins' vaults
         GD.item('minecraft:music_disc_otherside', 1), GD.item('minecraft:echo_shard', 2)])])
     GD.table('entity', 'entities/caravan', [
@@ -387,7 +387,7 @@ def generate():
     GA.tag('worldgen/biome', f'{NS}:is_sift', f'{NS}:caravans_cavern')
     # what Caravan workers dig out: natural ore only, embedded in natural rock
     for o in ['#minecraft:coal_ores', '#minecraft:iron_ores', '#minecraft:copper_ores', '#minecraft:gold_ores', '#minecraft:redstone_ores',
-              '#minecraft:lapis_ores', '#minecraft:diamond_ores', '#minecraft:emerald_ores', f'{NS}:serbim_ore', f'{NS}:deep_serbim_ore',
+              '#minecraft:lapis_ores', '#minecraft:diamond_ores', '#minecraft:emerald_ores', f'{NS}:siftite_ore', f'{NS}:deep_siftite_ore',
               f'{NS}:prism_ore', f'{NS}:deep_prism_ore', 'minecraft:nether_quartz_ore', 'minecraft:amethyst_cluster']:
         GA.tag('block', f'{NS}:caravan_minable', o)
     for r in ['#minecraft:base_stone_overworld', f'#{NS}:sift_stone', 'minecraft:calcite', 'minecraft:amethyst_block', 'minecraft:budding_amethyst',
@@ -418,10 +418,10 @@ def lang(GA):
                                           'Break one to set the treasure free - but Caravans swarm anyone who breaks their crystals, unless '
                                           'the Crystal Hymn has calmed them first.',
         f'codex.{NS}.prism.title': 'Prism', f'codex.{NS}.prism.tagline': 'The rainbow gem',
-        f'codex.{NS}.prism.body': 'Hexagonal rainbow gems that need a diamond pickaxe. Prism Ore is very rare: veins of it run through the '
-                                  'Caravans Cavern, and a few lone gems hide in the deepest Sift. Prism armour is a little tougher than '
-                                  'diamond and drinks in music: wear two pieces or more and every note played near you heals you, '
-                                  'the full set twice as fast. Prism also inlays the gem instruments.',
+        f'codex.{NS}.prism.body': 'Hexagonal rainbow gems, the first treasure of the Sift: an iron pickaxe frees them. Small veins of Prism '
+                                  'Ore run all through the Sift\'s caves and rich ones through the Caravans Cavern. Prism armour is a '
+                                  'little tougher than diamond and drinks in music: wear two pieces or more and every note played near '
+                                  'you heals you, the full set twice as fast. Prism also inlays the gem instruments and the Europhy Table.',
         f'codex.{NS}.caravan_colony.title': 'Caravan Colony', f'codex.{NS}.caravan_colony.tagline': 'A mound of song',
         f'codex.{NS}.caravan_colony.body': 'Deep in the Caravans Cavern stand crystal-studded mounds tunnelled through by Caravans. At the '
                                            'heart lies the queen chamber: one great crystal and the colony\'s frozen treasures. The '
@@ -446,14 +446,14 @@ def world(GW):
         return feature(name, {'type': 'minecraft:ore', 'discard_chance_on_air_exposure': air, 'size': size, 'targets': [
             {'state': st(s), 'target': {'predicate_type': 'minecraft:block_match', 'block': GW.rl(b)}} for b, s in pairs]})
 
-    # Prism: lone, buried gems through all the deep Sift (very rare), and real veins in the cavern
-    ore('ore_prism_deep', 2, [('dreamstone', 'prism_ore'), ('hushslate', 'deep_prism_ore')], air=1.0)
-    placed('ore_prism_deep', 'ore_prism_deep', [rarity(7), sq, height(-64, -16, 'trapezoid'), BIOME])
+    # Prism (F1: the early/mid crystal): small veins all through the Sift's caves, and rich veins in the cavern
+    ore('ore_prism_deep', 4, [('dreamstone', 'prism_ore'), ('hushslate', 'deep_prism_ore')], air=0.4)
+    placed('ore_prism_deep', 'ore_prism_deep', [count(3), sq, height(-48, 64, 'trapezoid'), BIOME])
     GW.COMMON_UNDERGROUND.append((6, 'ore_prism_deep'))
     ore('ore_prism_cavern', 4, [('dreamstone', 'prism_ore'), ('hushslate', 'deep_prism_ore')], air=0.3)
     placed('ore_prism_cavern', 'ore_prism_cavern', [count(2), sq, height(-64, 40), BIOME])
-    ore('ore_serbim_cavern', 4, [('dreamstone', 'serbim_ore'), ('hushslate', 'deep_serbim_ore')], air=0.5)
-    placed('ore_serbim_cavern', 'ore_serbim_cavern', [rarity(2), sq, height(-64, 40), BIOME])
+    ore('ore_siftite_cavern', 4, [('dreamstone', 'siftite_ore'), ('hushslate', 'deep_siftite_ore')], air=0.5)
+    placed('ore_siftite_cavern', 'ore_siftite_cavern', [rarity(2), sq, height(-64, 40), BIOME])
     for name, n, size, a, b in (('diamond', 3, 6, 'diamond_ore', 'deepslate_diamond_ore'), ('emerald', 4, 3, 'emerald_ore', 'deepslate_emerald_ore'),
                                 ('gold', 4, 8, 'gold_ore', 'deepslate_gold_ore'), ('lapis', 3, 7, 'lapis_ore', 'deepslate_lapis_ore'),
                                 ('redstone', 3, 7, 'redstone_ore', 'deepslate_redstone_ore')):
@@ -496,7 +496,7 @@ def world(GW):
              spawns=GW.mobs(monster=[('caravan', 40, 2, 4)]),
              parts=GW.particles(('glow_dust', 0.008), ('star_sparkle', 0.004), ('sift_note', 0.0008)),
              music=f'{NS}:music.deep_sift', ambient_loop=f'{NS}:ambient.deep_sift.loop',
-             feats=GW.COMMON_UNDERGROUND + [(2, 'crystal_geode'), (6, 'ore_prism_cavern'), (6, 'ore_serbim_cavern'), (6, 'ore_diamond_cavern'),
+             feats=GW.COMMON_UNDERGROUND + [(2, 'crystal_geode'), (6, 'ore_prism_cavern'), (6, 'ore_siftite_cavern'), (6, 'ore_diamond_cavern'),
                                             (6, 'ore_emerald_cavern'), (6, 'ore_gold_cavern'), (6, 'ore_lapis_cavern'), (6, 'ore_redstone_cavern'),
                                             (9, 'crystal_patch_floor'), (9, 'crystal_patch_ceiling'), (9, 'cavern_glow_lichen')])
 
@@ -556,7 +556,7 @@ def colony(seed):
                 for y in (2, 3, 4):
                     b.set(x, y, z, AIR)
         # an ore pile waiting to be grown into crystal
-        for (ox, oz), blk in zip(((0, 0), (1, 0), (0, 1), (-1, 0)), ('minecraft:raw_gold_block', 'minecraft:raw_copper_block', 'raw_serbim_block',
+        for (ox, oz), blk in zip(((0, 0), (1, 0), (0, 1), (-1, 0)), ('minecraft:raw_gold_block', 'minecraft:raw_copper_block', 'minecraft:raw_iron_block',
                                                                        'minecraft:amethyst_block')):
             b.set(gx + ox, 2, gz + oz, B(blk))
         b.set(gx, 3, gz, crystal(rnd.choice(cols), 'up'))

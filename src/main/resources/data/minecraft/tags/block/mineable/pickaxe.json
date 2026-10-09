@@ -62,12 +62,9 @@
     "thesift:blush_brick_wall",
     "thesift:cracked_blush_bricks",
     "thesift:chiseled_blush_bricks",
-    "thesift:serbim_ore",
-    "thesift:deep_serbim_ore",
-    "thesift:raw_serbim_block",
-    "thesift:serbim_block",
+    "thesift:siftite_ore",
+    "thesift:deep_siftite_ore",
     "thesift:siftite_block",
-    "thesift:euphory_altar",
     "thesift:sift_gate_frame",
     "thesift:glyph_stone",
     "thesift:ancient_cannon",
@@ -80,6 +77,15 @@
     "thesift:prism_block",
     "thesift:music_crystal",
     "thesift:echoer_device",
-    "thesift:sculk_coral_block"
+    "thesift:sculk_coral_block",
+    "thesift:sculkite_ore",
+    "thesift:sculkite_block",
+    "thesift:bauxite_ore",
+    "thesift:deep_bauxite_ore",
+    "thesift:magnesite",
+    "thesift:galena_ore",
+    "thesift:deep_galena_ore",
+    "thesift:pure_soul_block",
+    "thesift:europhy_table"
   ]
 }

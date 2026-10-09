@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "thesift:soul_piece"
+  ],
+  "result": {
+    "count": 9,
+    "id": "thesift:soul_dust"
+  }
+}

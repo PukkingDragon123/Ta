@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "thesift:serbim_block",
     "thesift:siftite_block",
-    "thesift:prism_block"
+    "thesift:prism_block",
+    "thesift:sculkite_block"
   ]
 }

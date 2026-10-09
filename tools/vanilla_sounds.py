@@ -63,6 +63,7 @@ EVENTS = EVENTS | frozenset({
 
 # Vanilla sound files (assets/minecraft/sounds/<name>.ogg) used directly.
 FILES = frozenset({
+    'random/fizz', 'random/fuse',  # F1: the Europhy Table fizzling, Bauxite's hiss
     'ambient/cave/cave11', 'ambient/cave/cave13', 'ambient/cave/cave7', 'ambient/cave/cave9', 'ambient/nether/soulsand_valley/wind1',
     'ambient/underwater/additions/animal1', 'ambient/underwater/additions/bass_whale1', 'ambient/underwater/additions/bass_whale2',
     'ambient/underwater/additions/bubbles1', 'ambient/underwater/additions/bubbles2', 'ambient/underwater/additions/bubbles3',
