@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:cultist_lore_book",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "cultist_deal"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:cultist_lore_scroll",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "cultist_heralds"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:soul_lore_book",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "soul_sculk"
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.35
+      }
+    }
+  ],
+  "random_sequence": "thesift:gameplay/lore/minecraft_ancient_city"
+}

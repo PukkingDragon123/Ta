@@ -129,9 +129,18 @@ raining notes and flooding the stage with sound (stand in a lit circle). Beat hi
 **Conductor's Staff**. The **Crane Flute** is crafted from a bone, an amethyst shard and an echo
 shard.
 
-### The Sift Codex
-A field guide in the creative Items tab. Its pages show every creature alive and animated, plus
-the items, places, music and the boss fight, with the page flipping as you turn it.
+### The Knowledge Book, lore and the Mini Creator
+The **Knowledge Book** (a book, an ink sac and a gold nugget) writes itself as you play: creatures you meet
+(alive on their page, with field notes), songs and their sheet art, Sift enchantments, lore, places, the items
+you hold and every Sift recipe you know. Undiscovered pages stay sealed in glyphs; creative shows everything.
+**Lore Books** and **Lore Scrolls** tell the story of the Creator, the Rifts, the Pillagers, the Sculk and the
+Heralds. Find them in Sift relics and chests and in Overworld outposts, mansions, libraries, temples, ancient
+cities and shipwrecks; each origin has its own look (Creator, Pillager, cultist, Tide-Keeper, Soul). Sneak-use a
+book on a block to set it down. Much of the old writing is in the enchanting-table script: every piece you read
+deciphers more, and the words morph into English with a Sculk whisper. **Music Sheets** show their notes and
+ink diagrams of their instrument and creature. On your first steps in the Sift the **Mini Creator**, a small
+platypus in the Creator's white and gold, appears with your first goals (an instrument, a sheet, a song, the
+Europhy Table, the lore, the Heralds); talk to him to hear your goal again.
 
 ### Chrome
 A shifting, translucent cyan pearl liquid. It **heals** whatever soaks in it, but it is thick like

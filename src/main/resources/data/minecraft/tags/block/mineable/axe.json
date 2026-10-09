@@ -41,6 +41,11 @@
     "thesift:blightwood_button",
     "thesift:blightwood_pressure_plate",
     "thesift:sift_drum",
+    "thesift:creator_lore_book",
+    "thesift:pillager_lore_book",
+    "thesift:cultist_lore_book",
+    "thesift:ocean_lore_book",
+    "thesift:soul_lore_book",
     "thesift:band_table"
   ]
 }

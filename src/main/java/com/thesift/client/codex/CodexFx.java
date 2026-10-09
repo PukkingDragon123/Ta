@@ -15,17 +15,16 @@ import net.minecraft.util.Mth;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Codex's page effects and specimen plates. Each page has a theme picked from its key: Sculk pages grow veins in from the
+ * The Knowledge Book's page effects. Each page has a theme picked from its key: Sculk pages grow veins in from the
  * corners that throb to a heartbeat while souls drift up; music pages float notes that bob to a beat over a soft melody; Chrome
- * pages shimmer in rainbow light and twinkle; sky pages drift clouds behind the subject; boss pages smoulder with embers. Creature
- * pages also show a framed pixel-art plate of the creature (textures/gui/codex_portraits.png, made by tools/ui_art.py).
+ * pages shimmer in rainbow light and twinkle; sky pages drift clouds behind the subject; boss pages smoulder with embers.
+ * (F3: the old pixel-art creature plates are gone - the Knowledge Book describes its creatures in words instead.)
  *
  * <p>All coordinates are relative to the book's top-left corner. Effects sit behind the text and fade in after a page turn.
  */
 final class CodexFx {
     enum Theme { NONE, SCULK, MUSIC, CHROME, SKY, BOSS }
 
-    static final Identifier PORTRAITS = TheSift.id("textures/gui/codex_portraits.png");
     static final Identifier FX = TheSift.id("textures/gui/codex_fx.png");
 
     private static final Map<String, Theme> THEMES = new java.util.HashMap<>();
@@ -49,48 +48,22 @@ final class CodexFx {
         for (String k : new String[]{"sky_whale", "sea_and_sky", "portal", "white_forest", "swifter", "bulb", "stomper"}) {
             THEMES.put(k, Theme.SKY);
         }
+        // F3 Knowledge and lore: the Mini Creator and the new Places pages
+        for (String k : new String[]{"mini_creator", "sift_plains", "wishing_grove", "forest_mountains"}) {
+            THEMES.put(k, Theme.SKY);
+        }
+        THEMES.put("chrome_lakes", Theme.CHROME);
+        THEMES.put("caravans_cavern", Theme.CHROME);
+        THEMES.put("sound_garden", Theme.MUSIC);
+        THEMES.put("deep_sift", Theme.SCULK);
+        THEMES.put("drum_pit", Theme.BOSS);
         for (String k : new String[]{"dictator", "thumper", "strummer", "stage", "encore_sigil", "ancient_cannon"}) {
             THEMES.put(k, Theme.BOSS);
         }
     }
 
-    /** Plate index in the portrait atlas (same order as PORTRAITS in tools/ui_art.py). */
-    private static final List<String> PLATES = List.of("bulb", "bulb_white", "harmoner", "sniffer", "enchoer", "soul_golem", "nib", "slumbler",
-            "sifter", "stomper", "sky_whale", "fanfare_eel", "kazoo_fish", "tubafish", "caravan", "gobbler", "swifter", "jailer",
-            "sculkling", "dictator", "thumper", "strummer", "strumling", "sculk_parasite");
-
     static Theme theme(String key) {
         return THEMES.getOrDefault(key, Theme.NONE);
-    }
-
-    static boolean hasPlate(String key) {
-        return PLATES.contains(key);
-    }
-
-    // ------------------------------------------------------------------ specimen plate
-
-    /** The creature's framed plate, 48x48, at (x, y). The Bulb's plate turns over to show its White Forest cousin now and then. */
-    static void plate(GuiGraphicsExtractor g, String key, int x, int y, int age, float a, Theme theme) {
-        int i = PLATES.indexOf(key);
-        if (i < 0) {
-            return;
-        }
-        if (i == 0 && (age / 80) % 2 == 1) {
-            i = 1;
-        }
-        g.fill(x + 2, y + 2, x + 50, y + 50, 0x40000000);
-        g.blit(RenderPipelines.GUI_TEXTURED, PORTRAITS, x, y, (i % 10) * 48, (i / 10) * 48, 48, 48, 512, 256);
-        if (theme == Theme.CHROME) {
-            // a rainbow running round the frame
-            float hue = (age + a) * 0.02F;
-            for (int k = 0; k < 48; k += 4) {
-                int c = 0xB0000000 | hsv(hue + k / 48.0F) & 0xFFFFFF;
-                g.fill(x + k, y, x + k + 4, y + 1, c);
-                g.fill(x + 47 - k - 3, y + 47, x + 47 - k + 1, y + 48, c);
-                g.fill(x, y + 47 - k - 3, x + 1, y + 47 - k + 1, c);
-                g.fill(x + 47, y + k, x + 48, y + k + 4, c);
-            }
-        }
     }
 
     // ------------------------------------------------------------------ particles

@@ -1,0 +1,59 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:cultist_lore_scroll",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "cultist_heralds"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:cultist_lore_scroll",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "cultist_conductor"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:soul_lore_book",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "soul_sculk"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:soul_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "soul_creator"
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.6
+      }
+    }
+  ],
+  "random_sequence": "thesift:gameplay/lore/thesift_sculk_castle"
+}

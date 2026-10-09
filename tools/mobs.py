@@ -473,3 +473,4 @@ ALL.update(__import__('cave_creatures').MODELS)  # A4 cave creatures: the Jailer
 ALL.update(__import__('sift_sniffer').MODELS)  # E1 Sniffer & rot: the Sift Sniffer (tools/sift_sniffer.py)
 ALL.update(__import__('materials').MODELS)  # F1: the Europhy Table's clockwork (tools/materials.py)
 ALL.update(__import__('band_table').MODELS)  # F2 Band Table: the Music Band Table (tools/band_table.py)
+ALL.update(__import__('mini_creator').MODELS)  # F3 Knowledge and lore: the Mini Creator (tools/mini_creator.py)

@@ -64,6 +64,11 @@ EVENTS = EVENTS | frozenset({
 # Vanilla sound files (assets/minecraft/sounds/<name>.ogg) used directly.
 FILES = frozenset({
     'random/fizz', 'random/fuse',  # F1: the Europhy Table fizzling, Bauxite's hiss
+    # F3 Knowledge and lore: whispers, pages, the Mini Creator
+    'ambient/nether/soulsand_valley/voices1', 'ambient/nether/soulsand_valley/voices3', 'ambient/nether/soulsand_valley/voices5',
+    'block/chiseled_bookshelf/pickup1', 'block/chiseled_bookshelf/pickup2', 'block/end_portal/eyeplace1', 'block/end_portal/eyeplace2',
+    'block/end_portal/eyeplace3', 'block/sculk/spread3', 'item/book/open_flip1', 'item/book/open_flip2', 'mob/armadillo/ambient1',
+    'mob/armadillo/ambient2', 'mob/frog/idle5', 'mob/frog/step1', 'mob/frog/step2', 'mob/frog/step3',
     'ambient/cave/cave11', 'ambient/cave/cave13', 'ambient/cave/cave7', 'ambient/cave/cave9', 'ambient/nether/soulsand_valley/wind1',
     'ambient/underwater/additions/animal1', 'ambient/underwater/additions/bass_whale1', 'ambient/underwater/additions/bass_whale2',
     'ambient/underwater/additions/bubbles1', 'ambient/underwater/additions/bubbles2', 'ambient/underwater/additions/bubbles3',

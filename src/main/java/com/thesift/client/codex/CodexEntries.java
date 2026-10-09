@@ -18,14 +18,26 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
-/** Every page of the Sift Codex, grouped by ribbon. */
+/**
+ * Every written page of the Knowledge Book (it grew out of the Sift Codex), grouped by chapter ribbon. The Songs,
+ * Enchantments, Lore and Guide chapters (F3) are built from the songs, the enchantment registry, the lore and the
+ * Mini Creator's quests themselves (see KnowledgePages); the Items chapter also lists every recipe you know.
+ */
 public final class CodexEntries {
     public static final int CREATURES = 0;
     public static final int ITEMS = 1;
     public static final int PLACES = 2;
     public static final int MAGIC = 3;
     public static final int DICTATOR = 4;
-    public static final String[] CATEGORY_KEYS = {"creatures", "items", "places", "magic", "dictator"};
+    // F3 Knowledge and lore: the chapters built by KnowledgePages
+    public static final int SONGS = 5;
+    public static final int ENCHANTMENTS = 6;
+    public static final int LORE = 7;
+    public static final int GUIDE = 8;
+    /** Lang keys {@code knowledge.thesift.chapter.<key>} by chapter. */
+    public static final String[] CATEGORY_KEYS = {"creatures", "recipes", "structures", "machines", "heralds", "songs", "enchantments", "lore", "guide"};
+    /** The order of the ribbons along the top of the book. */
+    public static final int[] ORDER = {CREATURES, SONGS, ENCHANTMENTS, LORE, PLACES, ITEMS, MAGIC, DICTATOR, GUIDE};
 
     private static List<CodexEntry> entries;
 
@@ -282,6 +294,21 @@ public final class CodexEntries {
         l.add(thing(DICTATOR, "weaver_guitar", ModItems.WEAVER_GUITAR));
         l.add(thing(DICTATOR, "musical_cobweb", ModItems.MUSICAL_COBWEB));
         l.add(thing(DICTATOR, "vocals", () -> Items.SCULK_SHRIEKER));
+        // F3 Knowledge and lore: the Mini Creator, and the lands of the Sift
+        l.add(mob(CREATURES, "mini_creator", com.thesift.registry.ModKnowledge.MINI_CREATOR, (e, t) -> {
+            if (e instanceof com.thesift.entity.MiniCreator m && t % 120 == 30) {
+                ((t / 120) % 2 == 0 ? m.talkAnimation : m.celebrateAnimation).start(m.tickCount);
+            }
+        }));
+        l.add(thing(PLACES, "sift_plains", ModItems.CORAL_TURF));
+        l.add(thing(PLACES, "wishing_grove", ModItems.WISHWOOD_SAPLING));
+        l.add(thing(PLACES, "forest_mountains", ModItems.LULLWOOD_SAPLING));
+        l.add(thing(PLACES, "chrome_lakes", ModItems.CHROME_REEDS));
+        l.add(thing(PLACES, "rocky_dunes", ModItems.CHIME_SAND));
+        l.add(thing(PLACES, "sound_garden", ModItems.ECHO_ORCHID));
+        l.add(thing(PLACES, "caravans_cavern", ModItems.MUSIC_CRYSTAL));
+        l.add(thing(PLACES, "deep_sift", ModItems.HUSHSLATE));
+        l.add(thing(PLACES, "drum_pit", ModItems.CANNONBALL));
         return l;
     }
 }

@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pillager_lore_book",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "pillager_camp"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pillager_lore_scroll",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "pillager_stranded"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pillager_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "pillager_rift"
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.4
+      }
+    }
+  ],
+  "random_sequence": "thesift:gameplay/lore/thesift_drum_pit_armory"
+}

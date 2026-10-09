@@ -53,6 +53,7 @@ public class TheSift {
         com.thesift.registry.ModSculkSea.register(modBus); // CR3 Fish & Coral Organs: Sculk Fish, Sculk Coral Organs and their hooks, fish buckets
         com.thesift.registry.ModBandTable.register(modBus); // F2 Band Table: the Music Band Table, its score, the Sift enchantments' effects
         com.thesift.registry.ModSlumbler.register(modBus); // CR2: the Slumbler's Chrome spit, its eggs and its tadpoles
+        com.thesift.registry.ModKnowledge.register(modBus); // F3 Knowledge & lore: discoveries, lore books/scrolls, the Mini Creator's quests
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

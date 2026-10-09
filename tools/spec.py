@@ -262,7 +262,7 @@ item("weaver_guitar", cls="WeaverGuitarItem", props="new Item.Properties().stack
 for _d in ITEMS:
     if _d["id"] in ("strummer_spawn_egg", "strumling_spawn_egg"):
         _d["name"] = {"strummer_spawn_egg": "Weaver Spawn Egg", "strumling_spawn_egg": "Sculk Spider Spawn Egg"}[_d["id"]]
-item("sift_codex", cls="SiftCodexItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name="Sift Codex")
+__import__("knowledge").declare(block, item)  # F3 Knowledge and lore: the Knowledge Book, Lore Books/Scrolls, the Mini Creator egg
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
 # --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments
 SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn", "aurora": "Aurora",

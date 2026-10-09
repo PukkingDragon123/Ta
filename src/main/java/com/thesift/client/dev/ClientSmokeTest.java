@@ -374,13 +374,11 @@ public final class ClientSmokeTest {
             c.run("effect clear @a");
             c.camera(307.5, 178, -186.0, 307.5, 145, -236.5);
         });
-        // the Sift Codex, opened at a few spreads (live, animated creatures on the left pages)
-        int[][] codexPages = {{1, 0}, {2, 0}, {24, 0}, {25, 0}, {19, 0}, {20, 0}, {13, 0}};
-        String[] codexNames = {"harmoner", "sniffer", "dictator", "thumper", "castle", "drum", "staff"};
-        for (int i = 0; i < codexPages.length; i++) {
-            int page = codexPages[i][0];
-            SCENES.add(new Scene("codex_" + codexNames[i], 50, c -> target = null,
-                    () -> Minecraft.getInstance().gui.setScreen(new com.thesift.client.codex.SiftCodexScreen(page))));
+        // F3: the Knowledge Book, opened at a few spreads (contents, live creatures, a song sheet, lore, the guide's goals)
+        String[] codexPages = {"contents_0", "harmoner", "mini_creator", "song_whale", "lore_creator_rifts", "quest_arrival", "dictator", "staff"};
+        for (String page : codexPages) {
+            SCENES.add(new Scene("codex_" + page, 50, c -> target = null,
+                    () -> Minecraft.getInstance().gui.setScreen(new com.thesift.client.codex.KnowledgeBookScreen(page))));
         }
         SCENES.add(new Scene("creative_blocks", 30, c -> {
             c.run("gamemode creative @a");

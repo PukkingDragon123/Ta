@@ -310,6 +310,8 @@ def gen_block(b):
         __import__('sift_sniffer').gen_egg(sys.modules[__name__], bid)
     elif k == 'band_table':  # F2 Band Table: the table's still body, from its model
         __import__('band_table').gen_block(sys.modules[__name__], bid)
+    elif k == 'lore_book':  # F3 Knowledge and lore: a placed Lore Book
+        __import__('knowledge').gen_book_block(sys.modules[__name__], b)
     elif k == 'swifter_den':  # A2 Swifter: the den, a nest of fluff and twigs
         __import__('swifter').gen_den(sys.modules[__name__], bid)
     elif k == 'chime_pane':  # A3 Chrome: the Chime Glass Pane
@@ -691,11 +693,7 @@ def gen_lang():
         f'entity.{NS}.bulb': 'Bulb', f'entity.{NS}.slumbler': 'Slumbler', f'entity.{NS}.sifter': 'Sifter', f'entity.{NS}.enchoer': 'Echoer',
         f'entity.{NS}.glowball': 'Glowball',
         f'entity.{NS}.harmoner': 'Harmoner', f'entity.{NS}.sculk_harmoner': 'Sculk Harmoner',
-        f'codex.{NS}.chapter.creatures': 'Creatures',
-        f'codex.{NS}.chapter.items': 'Items & Gear',
-        f'codex.{NS}.chapter.places': 'Places',
-        f'codex.{NS}.chapter.magic': 'Music & Magic',
-        f'codex.{NS}.chapter.dictator': 'The Dictator',
+        # F3: the chapter names are knowledge.thesift.chapter.* (tools/knowledge.py)
         f'codex.{NS}.bulb.title': 'Bulb', f'codex.{NS}.bulb.tagline': 'Squishy jelly bunny',
         f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Pods make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
@@ -1197,6 +1195,9 @@ def check_sounds():
         # CR3 Fish & Coral Organs: the Sculk Fish, Coral Organ and hook sounds are registered in ModSculkSea.java
         with open(os.path.join(os.path.dirname(java), 'ModSculkSea.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # F3 Knowledge and lore: reading, deciphering and the Mini Creator's sounds are registered in ModKnowledge.java
+        with open(os.path.join(os.path.dirname(java), 'ModKnowledge.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         # E1 Sniffer & rot: the Sift Sniffer, its egg and the rot's groan are registered in ModSiftSniffer.java
         with open(os.path.join(os.path.dirname(java), 'ModSiftSniffer.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
@@ -1362,6 +1363,7 @@ def generate():
     __import__('sea_sky').assets(sys.modules[__name__])  # sea & sky: sounds, recipes, tags, text (before gen_sounds)
     __import__('swifter').assets(sys.modules[__name__])  # A2 Swifter & White Forest: sounds, recipes, tags, loot, text
     __import__('sift_sniffer').assets(sys.modules[__name__])  # E1 Sniffer & rot: sounds, loot, the Zombified Sniffer's name, codex
+    __import__('knowledge').assets(sys.modules[__name__])  # F3 Knowledge and lore: sounds, lore loot, item models, recipe, text
     __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
     __import__('sculk_world').assets(sys.modules[__name__])  # W1 World & terrain: swamp sounds, recipes, loot, tags, text (before gen_sounds)
     __import__('sculk_sea').assets(sys.modules[__name__])  # CR3 Fish & Coral Organs: sounds, loot, tags, text (before gen_sounds)
@@ -1391,9 +1393,11 @@ def generate():
     __import__('band').assets(sys.modules[__name__])  # M2 band: band panel text, creature instrument names, Codex page
     __import__('sifter').assets(sys.modules[__name__])  # CR1: bell and echo ring particles, the living bell's Codex page
     __import__('band_table').assets(sys.modules[__name__])  # F2 Band Table: Sift enchantments, their books, recipe, sheet loot, text
+    __import__('knowledge').item_models(sys.modules[__name__])  # F3 Knowledge and lore: 3D lore books and scrolls in the hand
 
 
 def finalize():
+    __import__('knowledge').recipe_advancements(sys.modules[__name__])  # F3: the recipe book learns every Sift recipe
     flush_tags()
     gen_lang()
     os.makedirs(os.path.join(ROOT, 'build'), exist_ok=True)

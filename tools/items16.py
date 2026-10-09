@@ -590,31 +590,6 @@ def bulb_lantern():
 
 
 
-def sift_codex():
-    # the vanilla book, bound in midnight-blue leather with gold bands and a glowing sift eye
-    rows = [
-        '................',
-        '........bbb.....',
-        '......bbdfeb....',
-        '....bbdfffGfb...',
-        '..bbdfffGfrfGb..',
-        'bbdefffGfrRrfeb.',
-        'bdeffGffGfrfGfcb',
-        'bbdfGffffGfGccg.',
-        'bbidffffffGchih.',
-        'adjideffcchiihbc',
-        '.adjidcchiihbcaa',
-        '..adjihiihbcaa..',
-        '...adjihccaa....',
-        '....adccaa......',
-        '.....aaa........',
-        '................',
-    ]
-    pal = {'a': '#0a0e2a', 'b': '#18204a', 'c': '#1e2a62', 'd': '#263678', 'e': '#2c4088', 'f': '#344ea0',
-           'g': '#7a6a5a', 'h': '#c8b894', 'i': '#e6dcc0', 'j': '#fbf4e0', 'G': GOLD[3], 'r': GLOW[1], 'R': GLOW[3]}
-    return grid(rows, pal)
-
-
 def music_disc_lullaby():
     """A vanilla music disc: midnight vinyl with a pink label."""
     rows = [
@@ -1360,7 +1335,7 @@ def all_items():
     for f in (siftite_ingot, siftite_nugget, chrome_pearl, glowing_slime_ball, star_shard, echo_seed,
               warden_core, thick_hide):
         out[f.__name__] = f()
-    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern, sift_codex,
+    for f in (sift_cake, dream_stew, glowcap_skewer, bulb_lantern,
               music_disc_lullaby, soul_chime, glowbell_vine, siftite_upgrade_smithing_template):
         out[f.__name__] = f()
     out['lullwood_door'] = door(('#9f97c6', '#b1a9d4', '#c2bbe0', '#d3cdea'), '#24353e', '#4a6470', '#2a2450')

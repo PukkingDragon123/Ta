@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:ocean_lore_scroll",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "ocean_reef"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:ocean_lore_book",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "ocean_octopus"
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.35
+      }
+    }
+  ],
+  "random_sequence": "thesift:gameplay/lore/minecraft_shipwreck_treasure"
+}

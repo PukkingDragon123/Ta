@@ -52,6 +52,16 @@ public class MusicSheetItem extends Item {
         return InteractionResult.SUCCESS;
     }
 
+    /** F3 Knowledge &amp; lore: the sheet's own artwork - its notes and ink diagrams of its instrument and creature. */
+    @Override
+    public java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent> getTooltipImage(ItemStack stack) {
+        return java.util.Optional.of(new SheetArt(this.song()));
+    }
+
+    /** F3: the tooltip image of a Music Sheet (drawn by client/knowledge/SheetTooltip). */
+    public record SheetArt(Song song) implements net.minecraft.world.inventory.tooltip.TooltipComponent {
+    }
+
     @Override
     @Deprecated
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {

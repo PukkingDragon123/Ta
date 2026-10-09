@@ -98,6 +98,7 @@ final class MechanicsTest {
         ChromeTest.run(this.sift, this.check); // A3 Chrome: chime sand, chrome fish bucket
         this.europhy = EurophyTest.start(this.sift, this.check); // F1: a Europhy craft by music, Bauxite's Chrome rule
         BandTableTest.run(this.sift, this.check); // F2 Band Table: a played song enchants; sloppy playing weakens it; the band requirement
+        KnowledgeTest.run(this.sift, this.check); // F3 Knowledge & lore: unlocks saved/loaded/kept on death, lore, the Mini Creator
         this.checkTrades();
         this.checkHarmoners();
         this.checkSniffer();

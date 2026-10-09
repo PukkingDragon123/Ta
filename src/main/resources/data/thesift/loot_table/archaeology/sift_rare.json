@@ -57,6 +57,39 @@
           "type": "minecraft:item",
           "name": "thesift:sift_gate_frame",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:creator_lore_book",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "creator_rifts"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:creator_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "creator_kin"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:ocean_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "ocean_reef"
+            }
+          }
         }
       ],
       "rolls": 1

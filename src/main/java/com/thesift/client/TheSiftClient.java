@@ -89,6 +89,7 @@ public class TheSiftClient {
         com.thesift.client.gate.GateAwakeningFx.register(modBus); // B1 Portal & sky FX: staged gate opening, portal sky window, sky FX
         com.thesift.client.particle.RingParticle.register(modBus); // CR1: bell rings and echolocation pings
         EurophyClient.register(modBus); // F1: the Europhy Table's clockwork, renderer and screen
+        com.thesift.client.knowledge.KnowledgeClient.register(modBus); // F3 Knowledge & lore: Mini Creator, lore reading, sheet art tooltips
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }

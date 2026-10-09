@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:creator_lore_book",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "creator_rifts"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:creator_lore_book",
+          "weight": 2,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "creator_hall"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:creator_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "creator_kin"
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.5
+      }
+    }
+  ],
+  "random_sequence": "thesift:gameplay/lore/minecraft_stronghold_library"
+}

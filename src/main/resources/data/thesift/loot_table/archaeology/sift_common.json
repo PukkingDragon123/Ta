@@ -67,6 +67,28 @@
           "type": "minecraft:item",
           "name": "thesift:music_sheet_lullaby",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:creator_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "creator_songs"
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pillager_lore_scroll",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_components",
+            "components": {
+              "thesift:lore": "pillager_stranded"
+            }
+          }
         }
       ],
       "rolls": 1

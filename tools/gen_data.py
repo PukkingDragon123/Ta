@@ -127,11 +127,13 @@ def chest_loot():
     table('archaeology', 'archaeology/sift_common', [pool([
         item('glowing_slime_ball', 3), item('siftite_dust', 2), item('minecraft:pitcher_pod', 2),
         item('echo_seed', 2), item('minecraft:pink_dye', 1), item('minecraft:light_blue_dye', 1), item('blush_bricks', 2), item('minecraft:brick', 1),
-        item('glyph_stone', 1), item('chrome_pearl', 1), item('music_sheet_offering', 2), item('music_sheet_nib', 1), item('music_sheet_lullaby', 1)])])
+        item('glyph_stone', 1), item('chrome_pearl', 1), item('music_sheet_offering', 2), item('music_sheet_nib', 1), item('music_sheet_lullaby', 1),
+        *__import__('knowledge').relic_entries('common')])])  # F3: lore brushed out of the relics
     table('archaeology', 'archaeology/sift_rare', [pool([
         item('chrome_pearl', 3), item('star_shard', 3), item('music_disc_lullaby', 1), item('siftite_upgrade_smithing_template', 2),
         item('siftite_nugget', 3), item('music_sheet_offering', 1), item('music_sheet_golem', 1), item('music_sheet_crystal', 1),
-        item('music_sheet_whale', 1), item('music_sheet_lullaby', 1), item('sift_gate_frame', 1)])])
+        item('music_sheet_whale', 1), item('music_sheet_lullaby', 1), item('sift_gate_frame', 1),
+        *__import__('knowledge').relic_entries('rare')])])  # F3: lore brushed out of the relics
 
 
 def sniffer_and_modifiers():

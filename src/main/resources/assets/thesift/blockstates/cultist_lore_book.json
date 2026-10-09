@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "thesift:block/cultist_lore_book"
+    },
+    "facing=east": {
+      "model": "thesift:block/cultist_lore_book",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "thesift:block/cultist_lore_book",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "thesift:block/cultist_lore_book",
+      "y": 270
+    }
+  }
+}

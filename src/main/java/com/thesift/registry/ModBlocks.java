@@ -329,6 +329,16 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.of().replaceable().noCollision().noLootTable().noOcclusion().instabreak().lightLevel(s -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
     public static final DeferredBlock<ChromeLiquidBlock> CHROME = BLOCKS.registerBlock("chrome", ChromeLiquidBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(s -> 8));
+    public static final DeferredBlock<LoreBookBlock> CREATOR_LORE_BOOK = BLOCKS.registerBlock("creator_lore_book", LoreBookBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.SNOW));
+    public static final DeferredBlock<LoreBookBlock> PILLAGER_LORE_BOOK = BLOCKS.registerBlock("pillager_lore_book", LoreBookBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.COLOR_BROWN));
+    public static final DeferredBlock<LoreBookBlock> CULTIST_LORE_BOOK = BLOCKS.registerBlock("cultist_lore_book", LoreBookBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.COLOR_CYAN));
+    public static final DeferredBlock<LoreBookBlock> OCEAN_LORE_BOOK = BLOCKS.registerBlock("ocean_lore_book", LoreBookBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.METAL));
+    public static final DeferredBlock<LoreBookBlock> SOUL_LORE_BOOK = BLOCKS.registerBlock("soul_lore_book", LoreBookBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.COLOR_BLUE));
     public static final DeferredBlock<BandTableBlock> BAND_TABLE = BLOCKS.registerBlock("band_table", BandTableBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).strength(2.5F).lightLevel(s -> 6).noOcclusion());
     public static final DeferredBlock<PitcherPlanterBlock> PITCHER_PLANTER = BLOCKS.registerBlock("pitcher_planter", PitcherPlanterBlock::new,
