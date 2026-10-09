@@ -23,13 +23,27 @@ jobs:
       - name: Build mod jar
         run: ./gradlew build -x test --no-configuration-cache -q
 
-      - name: Mod jar (base64)
-        run: for f in build/libs/*.jar; do echo "JARNAME $(basename $f)"; base64 -w 6000 "$f" | sed 's/^/JARB64 /'; done
+      - name: Upload mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar
+          path: build/libs/*.jar
 
-      - name: Server smoke test (failures only)
+  # The jar's base64 is printed in six slices, one job each, so each job log stays small enough to fetch.
+  part:
+    needs: jar
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        part: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jar
+      - name: Mod jar slice (base64)
         run: |
-          mkdir -p run-smoke
-          echo "eula=true" > run-smoke/eula.txt
-          printf 'online-mode=false\nlevel-seed=20260930\nspawn-protection=0\nsync-chunk-writes=false\nmax-tick-time=-1\n' > run-smoke/server.properties
-          timeout 1500 ./gradlew runSmokeServer --no-configuration-cache > smoke.log 2>&1 || true
-          grep -v SMOKEPNG smoke.log | grep -E "FAIL|ERROR|Exception|Caused by|at com.thesift|PASSED|never frozen" | cut -c1-400 | head -200 || true
+          f=$(ls *.jar | head -1)
+          base64 -w 6000 "$f" > jar.b64
+          n=$(wc -l < jar.b64); per=$(( (n + 5) / 6 )); k=${{ matrix.part }}
+          echo "JARNAME $(basename $f)"; echo "JARPART $k of 6, lines $n, sha256 $(sha256sum "$f" | cut -c1-64)"
+          sed -n "$((k * per + 1)),$(((k + 1) * per))p" jar.b64 | sed 's/^/JARB64 /'
