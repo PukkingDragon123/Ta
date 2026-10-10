@@ -3,7 +3,7 @@ the cell.
 
 It goes on four limbs like a great ape: digitigrade hind legs under a heavy pelvis hung with a ring of bone keys,
 a spine arching forward from the hips into an enormous hollow ribcage - six ribs a side over a backbone of
-vertebrae studded with dark Sculkite crystal, front and back arches and floor rails of old bone - and at the front
+vertebrae studded with dark Sculkite crystal, the ribs curving in under until the two sides all but meet - and at the front
 of it massive shoulders, long arms knuckling on bone claws, and a low-hung, eyeless skull with a bone mask full of
 sensory pits, a heavy jaw and two great curling sensory tendrils. Inside the ribcage hangs its heart, a sac of
 soul light; chains hang from its backbone, and a bone padlock bars the front. Glowing sculk veins run through all of
@@ -29,6 +29,8 @@ CAGE_TOP = -12.8
 CAGE_H = 32
 HALF = 9.5
 RIB_Z = (-8.75, -5.25, -1.75, 1.75, 5.25, 8.75)
+# the ribs that carry a chain (chain_0..3): left front, right front, left back, right back
+CHAIN_RIBS = (0, 6, 5, 11)
 
 PAL = {
     'flesh': '#0b2a33', 'flesh_l': '#164553', 'flesh_d': '#05151b',
@@ -263,7 +265,8 @@ def jailer() -> Model:
                                                                         glow=bool(k % 2)))
 
     # ================================================================ the ribcage (the cell), shoulders, arms and head
-    cage = m.part('cage', pivot=(0, CAGE_TOP, -CAGE_FWD))
+    # the ribcage hangs from the hips (a child of 'body'), so the torso pivots from them as one creature
+    cage = body.part('cage', pivot=(0, CAGE_TOP - 2, -CAGE_FWD - 4))
     # the backbone along the roof: vertebrae, Sculkite crystals and bone spikes along the top
     cage.cube((-2.5, -3, -11), (5, 4, 22), **mc('bone'), faces={
         'up': dict(color='bone', pattern='mc', clusters=0.1, hd=True, map=_vertebrae(10, 44, 60), keys=BONE_KEYS, glow_keys='n', map_material=True),
@@ -277,19 +280,8 @@ def jailer() -> Model:
         cr.cube((-1, -3.5 - k % 2, -1), (2, 3.5 + k % 2, 2), **mc('crystal', clusters=0.0, rim=False), faces={
             'up': mc('crystal_l', clusters=0.0, rim=False, glow=True)})
         cr.cube((-0.5, -5 - k % 2, -0.5), (1, 1.5, 1), **mc('crystal_g', clusters=0.0, rim=False, glow=True))
-    # the keel along the bottom (its breastbone, which never breaks): the ribs close on it, and the bone padlock
-    # that locks the cell hangs from its front end
-    cage.cube((-1.25, CAGE_H - 1.5, -10.5), (2.5, 1.5, 21), **mc('rib'), faces={
-        'up': dict(color='rib', pattern='mc', clusters=0.1, hd=True, map=_vertebrae(5, 42, 77, every=7), keys=RIB_KEYS, glow_keys='n', map_material=True),
-        'east': bone(21, 1.5, 78, color='rib', keys=RIB_KEYS, creep=0.0), 'west': bone(21, 1.5, 79, color='rib', keys=RIB_KEYS, creep=0.0)})
-    lock = cage.part('lock', pivot=(0, CAGE_H - 1.5, -11))
-    lock.cube((-1, -2.5, -0.25), (2, 2.5, 0.5), **mc('chain_d', clusters=0.0, rim=False))
-    lock.cube((-2, -6.5, -1), (4, 4, 1.5), **mc('bone'), faces={
-        'north': dict(mc('bone', clusters=0.1), hd=True, map=['hhhhhhhh', 'h......c', '...gg...', '...gg...', '....g...', '....g...', 'c......c', 'cccccccc'],
-                      keys={'h': 'bone_l', 'c': 'bone_d', 'g': 'soul'}, glow_keys='g')})
-    lock.cube((-1.25, -8.5, -0.5), (2.5, 2, 0.5), **mc('chain_d', clusters=0.0, rim=False))
     # the ribs: the twelve loose bars, each in three pieces - out from the backbone, down and bowed out, and
-    # curving in under to the keel - sloping back a little, bound with sculk and lit by its veins
+    # curving in under until the two sides all but meet - sloping back a little, bound with sculk and lit by its veins
     for i in range(12):
         sx = 1 if i < 6 else -1
         z = RIB_Z[i % 6]
@@ -303,6 +295,22 @@ def jailer() -> Model:
         mid.cube((-0.5, 0, -0.5), (1, 26, 1), **mc('rib'), faces=ribface(1, 26, 140 + i * 5))
         low = mid.part(f'bar_{i}_low', pivot=(0, 25.5, 0), rot=(-0.1, 0, 1.33 * sx))
         low.cube((-0.5, 0, -0.5), (1, 9.5, 1), **mc('rib'), faces=ribface(1, 9.5, 200 + i * 5))
+        if i == 0:
+            # the bone padlock that locks the cell hangs from the foot of the front left rib, where the ribs meet
+            lock = low.part('lock', pivot=(0, 9.5, -0.5), rot=(0, 0, -1.25))
+            lock.cube((-1, 0, -0.25), (2, 1.5, 0.5), **mc('chain_d', clusters=0.0, rim=False))
+            lock.cube((-2, 1.5, -1), (4, 3.5, 1.5), **mc('bone'), faces={
+                'north': dict(mc('bone', clusters=0.1), hd=True, map=['hhhhhhhh', 'h......c', '...gg...', '...gg...', '....g...', 'c......c',
+                                                                      'cccccccc'], keys={'h': 'bone_l', 'c': 'bone_d', 'g': 'soul'}, glow_keys='g')})
+        if i in CHAIN_RIBS:
+            # a chain hangs from the bend of each corner rib, just in front of (or behind) it, swinging as it moves
+            front = RIB_Z[i % 6] < 0
+            ch = bar.part(f'chain_{CHAIN_RIBS.index(i)}', pivot=(0, 7.5, -1.25 if front else 1.25), rot=(0, 0, 1.15 * sx))
+            for n in range(5):
+                if n % 2 == 0:
+                    ch.cube((-0.5, n * 2, -0.25), (1, 2.5, 0.5), **mc('chain', clusters=0.0, rim=False), faces={'north': mc('chain_l', clusters=0.0, rim=False)})
+                else:
+                    ch.cube((-0.25, n * 2, -0.5), (0.5, 2.5, 1), **mc('chain_d', clusters=0.0, rim=False))
     # its heart, a sac of soul light hanging from the backbone inside the ribcage, on sculk strands
     heart = cage.part('heart', pivot=(0, 1, -1))
     for hx, hz in ((-1.25, -1.25), (1.25, 1.25), (1.25, -1.25)):
@@ -315,14 +323,6 @@ def jailer() -> Model:
     for fz in (-6, -2, 2, 6):
         floor.cube((-HALF + 1.5, 0, fz - 0.75), (HALF * 2 - 3, 1, 1.5), **mc('rib', clusters=0.2, rim=False))
     floor.cube((-HALF + 1.5, 0.25, -9), (HALF * 2 - 3, 0.5, 18), **mc('flesh', clusters=0.3, rim=False), faces={'up': skin(HALF * 2 - 3, 18, 90)})
-    # chains hanging from the backbone, front and back, swinging as it moves
-    for k, (cx, cz) in enumerate(((12.5, -11), (-12.5, -11), (10.5, 10.5), (-10.5, 10.5))):
-        ch = cage.part(f'chain_{k}', pivot=(cx, 1.5 if k < 2 else 2.5, cz))
-        for n in range(5):
-            if n % 2 == 0:
-                ch.cube((-0.5, n * 2, -0.25), (1, 2.5, 0.5), **mc('chain', clusters=0.0, rim=False), faces={'north': mc('chain_l', clusters=0.0, rim=False)})
-            else:
-                ch.cube((-0.25, n * 2, -0.5), (0.5, 2.5, 1), **mc('chain_d', clusters=0.0, rim=False))
 
     # ---- the shoulders: a great hunched mass over the front of the ribcage, scaled with bone plates
     cage.cube((-12, -6, -14), (24, 8, 8), **mc('flesh'), faces=skinned((24, 8, 8), 100, **{'up': skin(24, 8, 101, veins=3)}))
