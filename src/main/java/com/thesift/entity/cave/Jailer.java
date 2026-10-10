@@ -42,11 +42,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Jailer: a tall, skinny, blind kin of the Warden that haunts the deepest, darkest caves of the
- * Sift carrying a giant cell of sculk-iron bars. It cannot see. It hears: footsteps that are not
- * sneaking, fighting and music (every note draws it to the player). It creeps towards a sound,
- * listening, and charges once it is sure; when it reaches you it heaves the cell over its head and
- * slams it down over you.
+ * The Jailer (CAVE v4, model in tools/jailer.py): a hulking, eyeless sculk warden of the deepest, darkest caves
+ * of the Sift that walks on its knuckles, its vast hollow ribcage a cell with its heart of soul light hanging
+ * inside (the twelve ribs are the cell's bars). It cannot see. It hears: footsteps that are not sneaking,
+ * fighting and music (every note draws it to the player). It creeps towards a sound, listening, and charges
+ * once it is sure; when it reaches you it rears, spreads its ribs and crashes down over you.
  *
  * <p>CR4: the cell is hard to get out of, but never hopeless.
  * <ul>

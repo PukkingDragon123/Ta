@@ -205,7 +205,7 @@ FIELD_NOTES = {
     'sculk_fish': 'Habitat: Sculk Ocean, Sculk Water|Temper: Hostile schools|Diet: Anything that moves|Drops: Sculk fish',
     'coral_organ': 'Habitat: Sculk Ocean floor|Temper: Hostile, rooted - all eyes and mouth|Diet: Anything that swims near|Drops: Echo shards, teeth, glowing eyes',
     'swifter': 'Habitat: White Forest|Temper: Neutral, defends its family|Diet: Bulbs, alien chickens|Drops: Swifter Fluff',
-    'jailer': 'Habitat: Deep caves|Temper: Hostile, blind|Diet: Souls|Drops: Sculkite',
+    'jailer': 'Habitat: Sculk caves, Sculk Swamp|Temper: Hostile, eyeless, hunts by sound|Diet: Souls|Drops: Sculkite',
     'sculkling': 'Habitat: Dark caves|Temper: Hostile packs, thieves|Diet: Shiny things|Drops: What it stole',
     'cypole': 'Habitat: Sculk Swamp|Temper: Neutral, territorial|Diet: Swamp flies|Drops: Brass plates',
     'mini_creator': 'Habitat: Wherever you are|Temper: Kind and talkative|Diet: Songs, mostly|Drops: Advice',

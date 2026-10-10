@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
-/** The Jailer: its soul, tendril tips and the sculk on its cell glow, pulsing faster while it hunts. */
+/** The Jailer (CAVE v4): its heart of soul light, its veins, tendril tips and Sculkite crystals glow, pulsing faster while it hunts. */
 public class JailerRenderer extends SiftMobRenderer<Jailer, JailerRenderState, JailerModel> {
     private static final Identifier TEXTURE = TheSift.id("textures/entity/jailer/jailer.png");
     private static final Identifier GLOW = TheSift.id("textures/entity/jailer/jailer_glow.png");

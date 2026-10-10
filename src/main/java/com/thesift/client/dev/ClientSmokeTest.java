@@ -361,6 +361,8 @@ public final class ClientSmokeTest {
         scene("mob_closeup_caravan", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN.get(), 52, 0.0, 2.3, 0.4));
         scene("mob_closeup_caravan_queen", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_QUEEN.get(), 64, 0.0, 6.0, 1.4));
         scene("mob_closeup_caravan_larva", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_LARVA.get(), 78, 0.0, 1.5, 0.25));
+        // CAVE v4: the remade Jailer (its ribcage is the cell, in front of it), from in front and a little to one side
+        scene("mob_closeup_jailer", 40, c -> closeup(c, com.thesift.registry.ModCaveCreatures.JAILER.get(), 96, 0.0, 7.0, 1.3));
         // S1 land creatures: close-ups of the remade Swifter (and a cub), Sculk Harmoner, Mini Creator and Sky Whale
         scene("mob_closeup_swifter", 50, c -> landStage(c, 0));
         scene("mob_closeup_sculk_harmoner", 40, c -> landStage(c, 1));
