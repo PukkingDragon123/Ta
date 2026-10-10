@@ -210,6 +210,28 @@ public final class CodexEntries {
             if (e instanceof com.thesift.entity.swamp.Cypole c) c.codexPose(t);
         }));
         l.add(thing(ITEMS, "sushi", ModItems.SUSHI_PLATTER));
+        // P4 Cave Jungle: its creatures act out a move on their pages; the Giant Pitcher, the Glow Lamp and Magnesium
+        l.add(mob(CREATURES, "glow_fly", com.thesift.registry.ModCaveJungle.GLOW_FLY, (e, t) -> {
+            if (e instanceof com.thesift.entity.jungle.GlowFly g && t % 80 == 30) g.absorbAnimation.start(g.tickCount);
+        }));
+        l.add(mob(CREATURES, "crocotodo", com.thesift.registry.ModCaveJungle.CROCOTODO, (e, t) -> {
+            if (e instanceof com.thesift.entity.jungle.Crocotodo c && t % 60 == 20) c.peckAnimation.start(c.tickCount);
+        }));
+        l.add(mob(CREATURES, "mantis", com.thesift.registry.ModCaveJungle.MANTIS, (e, t) -> {
+            if (e instanceof com.thesift.entity.jungle.Mantis m && t % 70 == 25) m.strikeAnimation.start(m.tickCount);
+        }));
+        l.add(mob(CREATURES, "colossus_ponder", com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER, (e, t) -> {
+            if (e instanceof com.thesift.entity.jungle.ColossusPonder p && t % 90 == 30) p.croakAnimation.start(p.tickCount);
+        }));
+        l.add(mob(CREATURES, "ponder_tadpole", com.thesift.registry.ModCaveJungle.PONDER_TADPOLE, (e, t) -> {
+            if (e instanceof com.thesift.entity.jungle.PonderTadpole p && t % 50 == 15) p.biteAnimation.start(p.tickCount);
+        }));
+        l.add(mob(CREATURES, "cruncher", com.thesift.registry.ModCaveJungle.CRUNCHER, (e, t) -> {
+            if (e instanceof com.thesift.entity.jungle.Cruncher c && t % 60 == 20) c.crunchAnimation.start(c.tickCount);
+        }));
+        l.add(thing(ITEMS, "giant_pitcher", ModItems.PITCHER_POD));
+        l.add(thing(ITEMS, "glow_lamp", ModItems.GLOW_LAMP));
+        l.add(thing(ITEMS, "magnesium", ModItems.MAGNESIUM));
         // ---- items
         l.add(thing(ITEMS, "prism", ModItems.PRISM_GEM)); // C
         l.add(thing(ITEMS, "skysong_gem", ModItems.SKYSONG_GEM));

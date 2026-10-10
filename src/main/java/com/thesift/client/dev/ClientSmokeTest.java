@@ -366,6 +366,13 @@ public final class ClientSmokeTest {
         scene("mob_closeup_sculk_harmoner", 40, c -> landStage(c, 1));
         scene("mob_closeup_mini_creator", 40, c -> landStage(c, 2));
         scene("mob_closeup_sky_whale", 60, c -> landStage(c, 3));
+        // P4 Cave Jungle: each creature on a pad of Lumen Moss north of the stage (a Giant Pitcher Plant beside the Glow Fly)
+        scene("mob_closeup_glow_fly", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.GLOW_FLY.get(), -60, 1.0));
+        scene("mob_closeup_crocotodo", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.CROCOTODO.get(), -48, 1.3));
+        scene("mob_closeup_mantis", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.MANTIS.get(), -34, 2.6));
+        scene("mob_closeup_colossus_ponder", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER.get(), -14, 3.4));
+        scene("mob_closeup_ponder_tadpole", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), 4, 0.6));
+        scene("mob_closeup_cruncher", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.CRUNCHER.get(), 14, 1.0));
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -551,6 +558,24 @@ public final class ClientSmokeTest {
         c.spawn(type, x0 + mid, STAGE_Y + (depth > 2 ? 0.6 : 0.4), z0 + mid, 200.0F, false);
         c.camera(x0 + mid + size * 0.55 + 0.6, STAGE_Y + depth + 0.7 + size * 0.3, z0 - 0.4 - size * 0.25, x0 + mid, STAGE_Y + depth * 0.4,
                 z0 + mid);
+    }
+
+    /** P4 Cave Jungle: a creature (no AI) on a pad of Lumen Moss well north of the stage, seen three-quarters from the front. */
+    private static void junglePad(Ctx c, net.minecraft.world.entity.EntityType<?> type, int x0, double size) {
+        int z0 = STAGE_Z + 44;
+        int r = (int) Math.ceil(size) + 2;
+        c.fill(x0 - r, STAGE_Y - 1, z0 - r, x0 + r, STAGE_Y - 1, z0 + r, ModBlocks.LUMEN_MOSS_BLOCK.get().defaultBlockState());
+        c.fill(x0 - r, STAGE_Y, z0 - r, x0 + r, STAGE_Y + 4 + (int) (size * 2), z0 + r, Blocks.AIR.defaultBlockState());
+        boolean fly = type == com.thesift.registry.ModCaveJungle.GLOW_FLY.get();
+        if (fly) {
+            net.minecraft.world.level.block.state.BlockState pitcher = ModBlocks.GIANT_PITCHER.get().defaultBlockState()
+                    .setValue(com.thesift.block.GiantPitcherBlock.PODS, true);
+            c.set(x0 + 2, STAGE_Y, z0 + 1, pitcher);
+            c.set(x0 + 2, STAGE_Y + 1, z0 + 1, pitcher.setValue(com.thesift.block.GiantPitcherBlock.HALF,
+                    net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER));
+        }
+        c.spawn(type, x0 + 0.5, STAGE_Y + (fly ? 1.0 : 0.0), z0 + 0.5, 200.0F, false);
+        c.camera(x0 + 1.5 + 1.4 * size, STAGE_Y + 1.0 + 0.8 * size, z0 - 0.7 - 1.6 * size, x0 + 0.5, STAGE_Y + 0.45 * size, z0 + 0.5);
     }
 
     /** S2: a Cypole squatting on a pad of swamp grass, seen from the front. */

@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "thesift:giant_pitcher",
+    "thesift:pitcher_sprout",
     "thesift:lumen_moss_block",
     "thesift:lumen_moss_carpet",
     "thesift:lullwood_leaves",

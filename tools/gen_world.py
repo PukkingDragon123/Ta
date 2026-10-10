@@ -539,5 +539,6 @@ def generate():
     __import__('sky_islands').world(sys.modules[__name__])  # W-sky: Sky Island biome (was the Sound Garden), vines, roots, sky trees, fruit
     __import__('sea_reefs').world(sys.modules[__name__])  # W-sea: Brass Coral Reef, Chrome Coral Ocean, water/Chrome blend, clearer seas
     __import__('caves').world(sys.modules[__name__])  # W-deep: cave biomes by depth, crystals, no grass in caves (after every biome)
+    __import__('cave_jungle').world(sys.modules[__name__])  # P4 Cave Jungle: Giant Pitcher Plants (the pitcher spots), bored stumps
     carver_tags()
     print(f'world ok: {len(FEATURES)} features, {len(PLACED)} placed')

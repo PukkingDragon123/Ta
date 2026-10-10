@@ -1,0 +1,43 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "thesift:cave_jungle",
+  "spawners": [
+    {
+      "type": "thesift:glow_fly",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 2,
+        "max_inclusive": 4
+      },
+      "weight": 20
+    },
+    {
+      "type": "thesift:crocotodo",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 2,
+        "max_inclusive": 4
+      },
+      "weight": 12
+    },
+    {
+      "type": "thesift:colossus_ponder",
+      "count": 1,
+      "weight": 2
+    },
+    {
+      "type": "thesift:mantis",
+      "count": 1,
+      "weight": 4
+    },
+    {
+      "type": "thesift:cruncher",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 1,
+        "max_inclusive": 3
+      },
+      "weight": 6
+    }
+  ]
+}

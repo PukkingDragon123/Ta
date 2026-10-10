@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "thesift:bored_log",
     "#thesift:lullwood_logs",
     "#thesift:wishwood_logs",
     "#thesift:blightwood_logs",

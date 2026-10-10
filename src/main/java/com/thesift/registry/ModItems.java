@@ -267,6 +267,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> HALO_LILY = ITEMS.registerSimpleBlockItem(ModBlocks.HALO_LILY);
     public static final DeferredItem<BlockItem> SNOWGLOBE_BLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.SNOWGLOBE_BLOOM);
     public static final DeferredItem<BlockItem> SHIVER_THISTLE = ITEMS.registerSimpleBlockItem(ModBlocks.SHIVER_THISTLE);
+    public static final DeferredItem<BlockItem> BORED_LOG = ITEMS.registerSimpleBlockItem(ModBlocks.BORED_LOG);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -413,6 +414,21 @@ public final class ModItems {
     public static final DeferredItem<Item> SKYRIND = ITEMS.registerItem("skyrind", Item::new, () -> new Item.Properties().food(com.thesift.world.sky.SkyFoods.SKYRIND, com.thesift.world.sky.SkyFoods.SKYRIND_CONSUMABLE));
     public static final DeferredItem<Item> DRIFTFRUIT_SLICE = ITEMS.registerItem("driftfruit_slice", Item::new, () -> new Item.Properties().food(com.thesift.world.sky.SkyFoods.DRIFTFRUIT_SLICE, com.thesift.world.sky.SkyFoods.DRIFTFRUIT_SLICE_CONSUMABLE));
     public static final DeferredItem<Item> TUNING_FRUIT = ITEMS.registerItem("tuning_fruit", Item::new, () -> new Item.Properties().food(ModWorldLand.TUNING_FRUIT, ModWorldLand.TUNING_FRUIT_CONSUMABLE));
+    public static final DeferredItem<BlockItem> PITCHER_POD = ITEMS.registerItem("pitcher_pod", p -> new BlockItem(ModBlocks.PITCHER_SPROUT.get(), p), () -> new Item.Properties().food(ModCaveJungle.PITCHER_POD_FOOD).useItemDescriptionPrefix());
+    public static final DeferredItem<Item> ROASTED_PITCHER_POD = ITEMS.registerItem("roasted_pitcher_pod", Item::new, () -> new Item.Properties().food(ModCaveJungle.ROASTED_PITCHER_POD_FOOD));
+    public static final DeferredItem<Item> GLOW_GLAND = ITEMS.registerItem("glow_gland", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<GlowLampItem> GLOW_LAMP = ITEMS.registerItem("glow_lamp", GlowLampItem::new, () -> new Item.Properties().durability(128));
+    public static final DeferredItem<Item> MANTIS_SCYTHE = ITEMS.registerItem("mantis_scythe", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PONDER_EGG = ITEMS.registerItem("ponder_egg", Item::new, () -> new Item.Properties().stacksTo(16));
+    public static final DeferredItem<Item> BAKED_PONDER_EGG = ITEMS.registerItem("baked_ponder_egg", Item::new, () -> new Item.Properties().stacksTo(16).food(ModCaveJungle.BAKED_PONDER_EGG_FOOD, ModCaveJungle.BAKED_PONDER_EGG_CONSUMABLE));
+    public static final DeferredItem<Item> MAGNESIUM = ITEMS.registerItem("magnesium", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<Item> CRUNCHER_TOOTH = ITEMS.registerItem("cruncher_tooth", Item::new, () -> new Item.Properties());
+    public static final DeferredItem<SpawnEggItem> GLOW_FLY_SPAWN_EGG = ITEMS.registerItem("glow_fly_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.GLOW_FLY.get()));
+    public static final DeferredItem<SpawnEggItem> CROCOTODO_SPAWN_EGG = ITEMS.registerItem("crocotodo_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.CROCOTODO.get()));
+    public static final DeferredItem<SpawnEggItem> MANTIS_SPAWN_EGG = ITEMS.registerItem("mantis_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.MANTIS.get()));
+    public static final DeferredItem<SpawnEggItem> COLOSSUS_PONDER_SPAWN_EGG = ITEMS.registerItem("colossus_ponder_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.COLOSSUS_PONDER.get()));
+    public static final DeferredItem<SpawnEggItem> PONDER_TADPOLE_SPAWN_EGG = ITEMS.registerItem("ponder_tadpole_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.PONDER_TADPOLE.get()));
+    public static final DeferredItem<SpawnEggItem> CRUNCHER_SPAWN_EGG = ITEMS.registerItem("cruncher_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.CRUNCHER.get()));
 
     private ModItems() {}
 }

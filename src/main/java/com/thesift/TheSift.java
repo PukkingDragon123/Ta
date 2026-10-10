@@ -58,6 +58,7 @@ public class TheSift {
         com.thesift.registry.ModSeaReefs.register(modBus); // W-sea: Brass Coral Reef & Chrome Coral Ocean: Trumpet Coral and reef features, sounds
         com.thesift.world.sky.SkyIslands.register(modBus); // W-sky: Sky Islands features, the swinging rope, swing packets
         com.thesift.registry.ModWorldLand.register(modBus); // W-land: Rocky Dunes formations + Tuning Cactus, White Forest trees + Rainbow Snow
+        com.thesift.registry.ModCaveJungle.register(modBus); // P4 Cave Jungle: its creatures, sounds, spawn rules, band voices, foods
         ModParticles.PARTICLES.register(modBus);
         ModFeatures.FEATURE_TYPES.register(modBus);
         ModCreativeTabs.TABS.register(modBus);

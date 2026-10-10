@@ -1,0 +1,57 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pitcher_pod",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "thesift:giant_pitcher",
+        "state": {
+          "half": "lower"
+        }
+      }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:pitcher_pod",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            }
+          }
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "thesift:giant_pitcher",
+        "state": {
+          "half": "lower",
+          "pods": "true"
+        }
+      }
+    }
+  ],
+  "random_sequence": "thesift:blocks/giant_pitcher"
+}

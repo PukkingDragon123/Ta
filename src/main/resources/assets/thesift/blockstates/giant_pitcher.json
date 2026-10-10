@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "half=lower,pods=false": {
+      "model": "thesift:block/giant_pitcher_lower"
+    },
+    "half=lower,pods=true": {
+      "model": "thesift:block/giant_pitcher_lower"
+    },
+    "half=upper,pods=false": {
+      "model": "thesift:block/giant_pitcher_upper"
+    },
+    "half=upper,pods=true": {
+      "model": "thesift:block/giant_pitcher_upper_pods"
+    }
+  }
+}

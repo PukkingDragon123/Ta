@@ -354,3 +354,4 @@ ALL.update(__import__('materials').MODELS)  # F1: the Europhy Table's clockwork 
 ALL.update(__import__('echoer_drill').MODELS)  # RR: the Echoer Drill's gun - barrel, coils, bit, horn, drum (tools/echoer_drill.py)
 ALL.update(__import__('band_table').MODELS)  # F2 Band Table: the Music Band Table (tools/band_table.py)
 ALL.update(__import__('mini_creator').MODELS)  # F3 Knowledge and lore: the Mini Creator (tools/mini_creator.py)
+ALL.update(__import__('jungle_mobs').MODELS)  # P4 Cave Jungle: Glow Fly, Crocotodo, Mantis, Colossus Ponder + tadpole, Cruncher

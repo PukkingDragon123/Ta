@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "thesift:block/giant_pitcher_side",
+    "side": "thesift:block/giant_pitcher_side",
+    "rim": "thesift:block/giant_pitcher_rim",
+    "lid": "thesift:block/giant_pitcher_lid",
+    "juice": "thesift:block/giant_pitcher_juice",
+    "leaves": "thesift:block/giant_pitcher_leaves",
+    "pod": "thesift:block/giant_pitcher_pod"
+  },
+  "elements": [
+    {
+      "from": [
+        0.8,
+        0,
+        8
+      ],
+      "to": [
+        15.2,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaves",
+          "uv": [
+            0,
+            4,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#leaves",
+          "uv": [
+            0,
+            4,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      }
+    },
+    {
+      "from": [
+        0.8,
+        0,
+        8
+      ],
+      "to": [
+        15.2,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaves",
+          "uv": [
+            0,
+            4,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#leaves",
+          "uv": [
+            0,
+            4,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": true
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        11,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "uv": [
+            3,
+            5,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            3,
+            5,
+            13,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            3,
+            5,
+            13,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            3,
+            5,
+            13,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#side",
+          "uv": [
+            3,
+            5,
+            13,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        11,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "uv": [
+            4,
+            0,
+            12,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            4,
+            0,
+            12,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            4,
+            0,
+            12,
+            5
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            4,
+            0,
+            12,
+            5
+          ]
+        }
+      }
+    }
+  ]
+}

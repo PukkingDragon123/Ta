@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "age=0,watered=false": {
+      "model": "thesift:block/pitcher_sprout_stage0"
+    },
+    "age=0,watered=true": {
+      "model": "thesift:block/pitcher_sprout_stage0"
+    },
+    "age=1,watered=false": {
+      "model": "thesift:block/pitcher_sprout_stage1"
+    },
+    "age=1,watered=true": {
+      "model": "thesift:block/pitcher_sprout_stage1"
+    },
+    "age=2,watered=false": {
+      "model": "thesift:block/pitcher_sprout_stage2"
+    },
+    "age=2,watered=true": {
+      "model": "thesift:block/pitcher_sprout_stage2"
+    }
+  }
+}

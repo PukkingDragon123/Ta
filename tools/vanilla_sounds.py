@@ -246,6 +246,19 @@ FILES = FILES | frozenset({
     'music/game/komorebi', 'music/game/infinite_amethyst',
 })
 
+# P4 Cave Jungle: the jungle creatures' and the Giant Pitcher's voices
+EVENTS = EVENTS | frozenset({
+    'entity.bee.loop', 'entity.bee.hurt', 'entity.bee.pollinate', 'entity.allay.hurt', 'entity.allay.death', 'entity.firework_rocket.blast',
+    'block.beacon.power_select', 'entity.parrot.hurt', 'entity.parrot.death', 'entity.parrot.eat', 'entity.chicken.step',
+    'entity.evoker_fangs.attack', 'entity.fox.bite', 'entity.silverfish.ambient', 'entity.silverfish.hurt', 'entity.silverfish.death',
+    'block.amethyst_cluster.break', 'entity.player.attack.strong', 'entity.generic.eat', 'entity.frog.ambient', 'entity.frog.hurt',
+    'entity.frog.death', 'entity.frog.lay_spawn', 'item.mace.smash_ground', 'entity.ravager.step', 'block.slime_block.place',
+    'entity.tadpole.flop', 'entity.tadpole.hurt', 'entity.tadpole.death', 'block.wood.break', 'block.rooted_dirt.break',
+    'entity.hoglin.ambient', 'entity.hoglin.hurt', 'entity.hoglin.death', 'entity.hoglin.attack', 'entity.hoglin.step', 'block.calcite.break',
+    'block.stone.break', 'block.tuff.break', 'block.big_dripleaf.tilt_down', 'block.bubble_column.bubble_pop',
+})
+
+
 def vanilla_names(sounds_json):
     """(events, files) defined by a vanilla sounds.json."""
     with open(sounds_json) as f:

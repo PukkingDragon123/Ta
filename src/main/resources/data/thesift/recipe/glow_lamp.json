@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "n": "minecraft:copper_nugget",
+    "G": "thesift:glow_gland"
+  },
+  "pattern": [
+    " n ",
+    "nGn",
+    " n "
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:glow_lamp"
+  }
+}

@@ -407,6 +407,9 @@ public final class SmokeTest {
                 com.thesift.registry.ModSculkSea.SCULK_FISH.get(), com.thesift.registry.ModSculkSea.CORAL_ORGAN.get(), // CR3 Fish & Coral Organs
                 com.thesift.registry.ModCaveCreatures.CYPOLE.get(), // CR4 the Cypole
                 com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get(), // E1 the Sift Sniffer (the vanilla Sniffer above blooms into one)
+                com.thesift.registry.ModCaveJungle.GLOW_FLY.get(), com.thesift.registry.ModCaveJungle.CROCOTODO.get(), // P4 Cave Jungle
+                com.thesift.registry.ModCaveJungle.MANTIS.get(), com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER.get(),
+                com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), com.thesift.registry.ModCaveJungle.CRUNCHER.get(),
                 com.thesift.registry.ModKnowledge.MINI_CREATOR.get()); // F3 the Mini Creator (no player to guide: he just wanders)
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);

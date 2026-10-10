@@ -95,6 +95,7 @@ public class TheSiftClient {
         com.thesift.client.knowledge.KnowledgeClient.register(modBus); // F3 Knowledge & lore: Mini Creator, lore reading, sheet art tooltips
         CavesClient.register(modBus); // W-deep caves: the Sculk Grasper's tendril, acid drops and fizz
         com.thesift.world.sky.SkySwingClient.register(modBus); // W-sky: swinging on Sky Vines (rope physics) and the rope's renderer
+        CaveJungleClient.register(modBus); // P4 Cave Jungle: Glow Fly, Crocotodo, Mantis, Colossus Ponder + tadpoles, Cruncher
         if (Boolean.getBoolean("thesift.clientsmoke")) {
             ClientSmokeTest.registerIfEnabled(); // CI only; never loaded in normal play
         }

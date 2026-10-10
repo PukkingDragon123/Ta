@@ -611,6 +611,12 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY).lightLevel(s -> 5));
     public static final DeferredBlock<FrostFlowerBlock.ShiverThistle> SHIVER_THISTLE = BLOCKS.registerBlock("shiver_thistle", FrostFlowerBlock.ShiverThistle::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POPPY));
+    public static final DeferredBlock<GiantPitcherBlock> GIANT_PITCHER = BLOCKS.registerBlock("giant_pitcher", GiantPitcherBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().noOcclusion().strength(0.5F).sound(SoundType.BIG_DRIPLEAF).lightLevel(s -> 4).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
+    public static final DeferredBlock<PitcherSproutBlock> PITCHER_SPROUT = BLOCKS.registerBlock("pitcher_sprout", PitcherSproutBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().noOcclusion().instabreak().sound(SoundType.CROP).randomTicks().pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
+    public static final DeferredBlock<BoredLogBlock> BORED_LOG = BLOCKS.registerBlock("bored_log", BoredLogBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_LOG).randomTicks());
 
     private ModBlocks() {}
 }

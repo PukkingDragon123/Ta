@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "cookingtime": 150,
+  "experience": 0.5,
+  "ingredient": "thesift:ponder_egg",
+  "result": {
+    "id": "thesift:baked_ponder_egg"
+  }
+}

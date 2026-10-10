@@ -3,7 +3,7 @@
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 3
+      "count": 4
     },
     {
       "type": "minecraft:in_square"
@@ -48,10 +48,20 @@
             "tag": "minecraft:air"
           },
           {
+            "type": "minecraft:matching_block_tag",
+            "tag": "minecraft:air",
+            "offset": [
+              0,
+              1,
+              0
+            ]
+          },
+          {
             "type": "minecraft:matching_blocks",
             "blocks": [
               "thesift:lumen_moss_block",
-              "minecraft:moss_block"
+              "minecraft:moss_block",
+              "minecraft:rooted_dirt"
             ],
             "offset": [
               0,

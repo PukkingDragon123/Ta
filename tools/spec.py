@@ -371,3 +371,4 @@ __import__("sea_reefs").declare(block, item)
 __import__("sky_islands").declare(block, item)
 # ---------------------------------------------------------------- W-land: Rocky Dunes rock, sand and plants; White Forest snow and flowers (tools/wland.py)
 __import__("wland").declare(block, item)
+__import__("cave_jungle").declare(block, item)  # P4 Cave Jungle: Giant Pitcher Plants, bored logs, jungle foods and drops, spawn eggs

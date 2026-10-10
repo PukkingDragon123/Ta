@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "thesift:pitcher_pod",
+    "thesift:roasted_pitcher_pod",
+    "minecraft:pitcher_pod",
+    "minecraft:torchflower",
+    "minecraft:pink_petals"
+  ]
+}

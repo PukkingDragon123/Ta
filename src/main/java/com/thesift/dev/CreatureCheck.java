@@ -362,7 +362,10 @@ final class CreatureCheck {
                 ModSeaSky.GOBBLER.get(), ModSculkSea.SCULK_FISH.get(), // CR3: the Coral Organ is rooted, so it has no pen
                 ModCaveCreatures.CYPOLE.get(), // CR4: the Cypole
                 com.thesift.registry.ModSiftSniffer.SIFT_SNIFFER.get(), // E1: the Sift Sniffer
-                ModCaravans.CARAVAN_QUEEN.get()); // CR2: the Caravan Queen (she roams until she finds a cave to settle in)
+                ModCaravans.CARAVAN_QUEEN.get(), // CR2: the Caravan Queen (she roams until she finds a cave to settle in)
+                com.thesift.registry.ModCaveJungle.GLOW_FLY.get(), com.thesift.registry.ModCaveJungle.CROCOTODO.get(), // P4 Cave Jungle
+                com.thesift.registry.ModCaveJungle.MANTIS.get(), com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER.get(),
+                com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), com.thesift.registry.ModCaveJungle.CRUNCHER.get());
     }
 
     private static boolean swims(EntityType<?> type) {

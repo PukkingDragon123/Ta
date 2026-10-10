@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "thesift:block/pitcher_sprout_stage1"
+  }
+}

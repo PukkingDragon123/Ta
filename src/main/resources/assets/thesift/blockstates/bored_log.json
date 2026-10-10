@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "axis=y,tadpoles=0": {
+      "model": "thesift:block/bored_log"
+    },
+    "axis=z,tadpoles=0": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90
+    },
+    "axis=x,tadpoles=0": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,tadpoles=1": {
+      "model": "thesift:block/bored_log"
+    },
+    "axis=z,tadpoles=1": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90
+    },
+    "axis=x,tadpoles=1": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,tadpoles=2": {
+      "model": "thesift:block/bored_log"
+    },
+    "axis=z,tadpoles=2": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90
+    },
+    "axis=x,tadpoles=2": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y,tadpoles=3": {
+      "model": "thesift:block/bored_log"
+    },
+    "axis=z,tadpoles=3": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90
+    },
+    "axis=x,tadpoles=3": {
+      "model": "thesift:block/bored_log_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

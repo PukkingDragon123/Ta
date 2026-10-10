@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "thesift:nib"
+    "thesift:nib",
+    "thesift:glow_fly"
   ]
 }

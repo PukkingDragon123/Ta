@@ -321,6 +321,8 @@ def gen_block(b):
         __import__('sea_reefs').gen_block(sys.modules[__name__], b)
     elif k.startswith('sky_'):  # W-sky: the Sky Vine, Fluffbush, Driftfruit and Skyrind bunch (tools/sky_islands.py)
         __import__('sky_islands').gen_block(sys.modules[__name__], b)
+    elif k.startswith('jl_'):  # P4 Cave Jungle: the Giant Pitcher Plant, its sprout, the tadpole-bored log
+        __import__('cave_jungle').gen_block(sys.modules[__name__], b)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -1176,6 +1178,9 @@ def check_sounds():
         with open(os.path.join(os.path.dirname(java), 'ModSiftSniffer.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         # W-sea: Trumpet Coral voices and the two new seas' music and ambience are registered in ModSeaReefs.java
+        # P4 Cave Jungle: the jungle creatures' and the Giant Pitcher's sounds are registered in ModCaveJungle.java
+        with open(os.path.join(os.path.dirname(java), 'ModCaveJungle.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         with open(os.path.join(os.path.dirname(java), 'ModSeaReefs.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
@@ -1342,6 +1347,7 @@ def generate():
     __import__('sculk_sea').assets(sys.modules[__name__])  # CR3 Fish & Coral Organs: sounds, loot, tags, text (before gen_sounds)
     __import__('slumbler').assets(sys.modules[__name__])  # CR2: the Slumbler's family: sounds, loot, tags, text (before gen_sounds)
     __import__('sea_reefs').assets(sys.modules[__name__])  # W-sea: reef sounds, recipes, loot, tags, text (before gen_sounds)
+    __import__('cave_jungle').assets(sys.modules[__name__])  # P4 Cave Jungle: sounds, loot, tags, recipes, spawns, text (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)
