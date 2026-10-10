@@ -162,7 +162,7 @@ def _mask(rows):
 def scythe_arm():
     """The Mantis's raptorial arm: a thick, segmented green limb (a crystal growing from it) ending in a great curved,
     serrated blade of pale chitin - shaded by the vanilla item rule, the arm and the blade each in its own material."""
-    import mcitems as MI
+    import maskshade as MI
     rows = [
         '................',
         '....######......',
@@ -195,7 +195,7 @@ def scythe_arm():
 
 def cruncher_tooth():
     """A Cruncher's fang: a curved cone of bone, yellowed at the root, worn white at the tip."""
-    import mcitems as MI
+    import maskshade as MI
     g = _mask([
         '................',
         '................',
