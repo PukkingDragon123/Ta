@@ -122,6 +122,9 @@ public final class SmokeTest {
             return;
         }
         ticks++;
+        if (ticks == 40) {
+            MansionTest.later(event.getServer(), SmokeTest::check); // MANSION: the guards, the horn blasts and the Bard, once their chunks tick
+        }
         if (mechanics != null && !mechanics.done()) {
             mechanics.tick();
         }

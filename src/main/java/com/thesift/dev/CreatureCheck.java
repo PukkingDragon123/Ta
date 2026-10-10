@@ -166,7 +166,8 @@ final class CreatureCheck {
                         w.name, w.mob.isAlive(), String.format(Locale.ROOT, "%.1f", w.moved), String.format(Locale.ROOT, "%.1f", w.path), String.format(Locale.ROOT, "%.1f", w.movedAlone),
                         ALONE_TICKS, w.mob.tickCount - w.startTick, resting ? ", resting" : "");
                 this.check.accept(w.mob.isAlive(), "never frozen: " + w.name + " died in its pen");
-                this.check.accept(w.moved >= 1.5 || w.path >= 3.0 || resting, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked");
+                this.check.accept(w.moved >= 1.5 || w.path >= 3.0 || resting, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked"
+                        + " (" + state(w) + ")");
                 this.check.accept(w.mob.tickCount - w.startTick >= WATCH_TICKS / 2, "never frozen: " + w.name + " stopped ticking");
             }
             this.done = true;
@@ -433,6 +434,18 @@ final class CreatureCheck {
         }
     }
 
+    /** What a creature that stood still was doing, for the failure message (the full smoke log is not in the job log). */
+    private static String state(Watch w) {
+        Mob m = w.mob;
+        String s = String.format(Locale.ROOT, "moved %.1f, travelled %.1f, at %s, target %s, path %s", w.moved, w.path, m.blockPosition().toShortString(),
+                m.getTarget() == null ? "none" : BuiltInRegistries.ENTITY_TYPE.getKey(m.getTarget().getType()).getPath(),
+                m.getNavigation().isDone() ? "done" : "walking");
+        if (m instanceof com.thesift.entity.Stomper st) {
+            s += ", busy " + st.isBusy() + ", dancing " + st.isDancing() + ", drinking " + st.isDrinking() + ", sitting " + st.isInSittingPose();
+        }
+        return s;
+    }
+
     /** After the first five seconds on its own, a creature that has not gone anywhere yet is walked about its pen. */
     private void walk(Watch w, RandomSource random) {
         if (w.moved >= 1.5 || w.path >= 3.0) {
@@ -444,6 +457,8 @@ final class CreatureCheck {
         if (w.mob instanceof SiftFish fish) {
             fish.setSwimTarget(new Vec3(x, SKY_Y - 2.5, z));
         } else if (w.mob instanceof PathfinderMob walker) {
+            // a creature squaring up to a neighbour across its fence is calmed first, so the walk is a real one
+            walker.setTarget(null);
             // S1 land: a path it has not got anywhere along in a second is dropped and walked afresh (a big creature's path
             // could hang on, never done and never followed)
             boolean stuck = !walker.getNavigation().isDone() && w.mob.position().distanceTo(w.lastWalk) < 0.3;

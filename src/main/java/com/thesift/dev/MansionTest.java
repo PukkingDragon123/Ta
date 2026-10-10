@@ -43,6 +43,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
  * MANSION: CI checks for the Woodland Mansion's secret room and its people.
@@ -59,15 +60,35 @@ final class MansionTest {
     private MansionTest() {
     }
 
+    /** Where the Hornblower, the giant horn and the Bard are tried out. */
+    private static final BlockPos PEOPLE = new BlockPos(900, 230, 940);
+    private static @Nullable MansionVaultPiece vaultPiece;
+
     static void run(MinecraftServer server, BiConsumer<Boolean, String> check) {
         try {
             ServerLevel level = server.overworld();
             located(level, check);
             vault(server, level, check);
-            people(level, check);
+            // the guards and the horn/bard checks need their chunks entity-ticking, which a forced chunk only is once the
+            // server has ticked: they run a couple of seconds in (later())
+            level.setChunkForced(PEOPLE.getX() >> 4, PEOPLE.getZ() >> 4, true);
         } catch (RuntimeException e) {
             TheSift.LOGGER.warn("SMOKE: mansion test threw", e);
             check.accept(false, "mansion: the test ran without throwing (" + e + ")");
+        }
+    }
+
+    /** Called by the smoke test a couple of seconds after start, once the forced chunks see their entities. */
+    static void later(MinecraftServer server, BiConsumer<Boolean, String> check) {
+        try {
+            ServerLevel level = server.overworld();
+            if (vaultPiece != null) {
+                guards(level, vaultPiece, check);
+            }
+            people(level, check);
+        } catch (RuntimeException e) {
+            TheSift.LOGGER.warn("SMOKE: mansion test threw", e);
+            check.accept(false, "mansion: the later checks ran without throwing (" + e + ")");
         }
     }
 
@@ -126,12 +147,17 @@ final class MansionTest {
             pull(level, player, b);
         }
         check.accept(level.getBlockState(door).getValue(SecretBookshelfBlock.OPEN), "mansion: the books pulled from the lowest up open the door");
-        // its guards
-        AABB box = AABB.of(piece.getBoundingBox()).inflate(2.0);
+        TheSift.LOGGER.info("SMOKE: vault built at {} door {} chest {}", cell, door, chest);
+        vaultPiece = piece;
+    }
+
+    /** The vault's guards (they may have stepped about a little since they were placed). */
+    private static void guards(ServerLevel level, MansionVaultPiece piece, BiConsumer<Boolean, String> check) {
+        AABB box = AABB.of(piece.getBoundingBox()).inflate(8.0);
         int horns = level.getEntitiesOfClass(Hornblower.class, box).size();
         int bards = level.getEntitiesOfClass(Bard.class, box).size();
-        TheSift.LOGGER.info("SMOKE: vault built at {} door {} chest {} guards {} + {}", cell, door, chest, horns, bards);
-        check.accept(horns >= 1 && bards >= 1, "mansion: the vault's Hornblower and Bard stand guard");
+        TheSift.LOGGER.info("SMOKE: vault guards {} + {}", horns, bards);
+        check.accept(horns >= 1 && bards >= 1, "mansion: the vault's Hornblower and Bard stand guard (" + horns + " + " + bards + ")");
         level.getEntitiesOfClass(Mob.class, box).forEach(Mob::discard);
     }
 
@@ -140,8 +166,7 @@ final class MansionTest {
     }
 
     private static void people(ServerLevel level, BiConsumer<Boolean, String> check) {
-        BlockPos at = new BlockPos(900, 230, 940);
-        level.setChunkForced(at.getX() >> 4, at.getZ() >> 4, true);
+        BlockPos at = PEOPLE;
         for (BlockPos p : BlockPos.betweenClosed(at.offset(-6, -1, -6), at.offset(6, 4, 6))) {
             level.setBlock(p, p.getY() < at.getY() ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
         }
