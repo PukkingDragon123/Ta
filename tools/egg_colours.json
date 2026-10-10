@@ -1,0 +1,162 @@
+{
+ "bulb": [
+  "#243d6d",
+  "#5dc6f1"
+ ],
+ "caravan": [
+  "#d2a878",
+  "#543622"
+ ],
+ "caravan_larva": [
+  "#8a5a36",
+  "#ffb43a"
+ ],
+ "caravan_queen": [
+  "#2a2322",
+  "#c99e84"
+ ],
+ "colossus_ponder": [
+  "#b0ac6a",
+  "#316333"
+ ],
+ "coral_organ": [
+  "#1d5a64",
+  "#29dfeb"
+ ],
+ "crocotodo": [
+  "#5c6232",
+  "#c45224"
+ ],
+ "cruncher": [
+  "#53575a",
+  "#d3c7b8"
+ ],
+ "cypole": [
+  "#b4c0b0",
+  "#1b3836"
+ ],
+ "dictator": [
+  "#3a1322",
+  "#e3ddcc"
+ ],
+ "enchoer": [
+  "#3aa894",
+  "#ece4cf"
+ ],
+ "fanfare_eel": [
+  "#3d723a",
+  "#c8b42c"
+ ],
+ "glow_fly": [
+  "#ffde4c",
+  "#8a6412"
+ ],
+ "gobbler": [
+  "#1e464e",
+  "#647a7a"
+ ],
+ "grub": [
+  "#a3626c",
+  "#2e1424"
+ ],
+ "harmoner": [
+  "#ff9ab4",
+  "#c4466e"
+ ],
+ "jaberora": [
+  "#f2a6c4",
+  "#c2507e"
+ ],
+ "jailer": [
+  "#566872",
+  "#e2dac4"
+ ],
+ "kazoo_fish": [
+  "#2f948f",
+  "#0a2a34"
+ ],
+ "kerkorer": [
+  "#4e2435",
+  "#a3626c"
+ ],
+ "mantis": [
+  "#316b2e",
+  "#c6da88"
+ ],
+ "mini_creator": [
+  "#f2ecdc",
+  "#a8916a"
+ ],
+ "monarch_reservoir": [
+  "#2c45a4",
+  "#3a1a10"
+ ],
+ "nib": [
+  "#2f6e9c",
+  "#9ff4ff"
+ ],
+ "ponder_tadpole": [
+  "#444a2a",
+  "#8c8c6a"
+ ],
+ "reservoir": [
+  "#4268bc",
+  "#3a1230"
+ ],
+ "sculk_fish": [
+  "#173e46",
+  "#7ff6f0"
+ ],
+ "sculk_parasite": [
+  "#0b7c78",
+  "#2aa8ae"
+ ],
+ "sculkling": [
+  "#10353e",
+  "#a8fff6"
+ ],
+ "sift_sniffer": [
+  "#97466d",
+  "#ddcbc1"
+ ],
+ "sifter": [
+  "#d9a65e",
+  "#3d2312"
+ ],
+ "sky_whale": [
+  "#8db4f0",
+  "#f6f8ff"
+ ],
+ "slumbler": [
+  "#1b1a37",
+  "#5d68a0"
+ ],
+ "slumbler_tadpole": [
+  "#1b1a37",
+  "#5d68a0"
+ ],
+ "soul_golem": [
+  "#c4733e",
+  "#4fa88c"
+ ],
+ "stomper": [
+  "#8a5a6a",
+  "#ee7a86"
+ ],
+ "strumling": [
+  "#7a4ab0",
+  "#3c2159"
+ ],
+ "strummer": [
+  "#6ac84a",
+  "#44286a"
+ ],
+ "swifter": [
+  "#eef3ff",
+  "#4a5288"
+ ],
+ "thumper": [
+  "#3fa442",
+  "#0e2a16"
+ ]
+}

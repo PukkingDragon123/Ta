@@ -1517,6 +1517,7 @@ def main():
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     __import__('blockart').paint(TEX)  # Block art: every Sift block in Mojang's 16x style on Sift ramps, and the 16x Sift Drum (after C1)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)
+    __import__('old_eggs').repaint(TEX)  # user: classic two-colour spawn eggs for every Sift creature (after every egg is painted)
     need = os.path.join(ROOT, 'build/textures_needed.txt')
     if os.path.exists(need):
         missing = [n for n in open(need).read().split() if not os.path.exists(os.path.join(TEX, n + '.png'))]
