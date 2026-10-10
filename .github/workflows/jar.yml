@@ -29,13 +29,13 @@ jobs:
           name: jar
           path: build/libs/*.jar
 
-  # The jar's base64 is printed in six slices, one job each, so each job log stays small enough to fetch.
+  # The jar's base64 is printed in ten slices, one job each, so each job log stays small enough to fetch.
   part:
     needs: jar
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        part: [0, 1, 2, 3, 4, 5]
+        part: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -44,6 +44,6 @@ jobs:
         run: |
           f=$(ls *.jar | head -1)
           base64 -w 6000 "$f" > jar.b64
-          n=$(wc -l < jar.b64); per=$(( (n + 5) / 6 )); k=${{ matrix.part }}
-          echo "JARNAME $(basename $f)"; echo "JARPART $k of 6, lines $n, sha256 $(sha256sum "$f" | cut -c1-64)"
+          n=$(wc -l < jar.b64); per=$(( (n + 9) / 10 )); k=${{ matrix.part }}
+          echo "JARNAME $(basename $f)"; echo "JARPART $k of 10, lines $n, sha256 $(sha256sum "$f" | cut -c1-64)"
           sed -n "$((k * per + 1)),$(((k + 1) * per))p" jar.b64 | sed 's/^/JARB64 /'
