@@ -175,10 +175,15 @@ public class MansionVaultPiece extends StructurePiece {
         }
     }
 
+    /** Red carpet (26.3 dropped the per-colour Blocks.*_CARPET fields, so look it up by id). */
+    private static BlockState redCarpet() {
+        return net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace("red_carpet")).defaultBlockState();
+    }
+
     /** Builds the whole piece at once (CI tests, the client smoke scene). */
     public void placeWhole(ServerLevel level) {
         this.postProcess(level, level.structureManager(), level.getChunkSource().getGenerator(), level.getRandom(), this.getBoundingBox(),
-                new ChunkPos(this.origin), this.origin);
+                new ChunkPos(this.origin.getX() >> 4, this.origin.getZ() >> 4), this.origin);
     }
 
     private void buildVault(WorldGenLevel level, BoundingBox chunk, RandomSource random) {
@@ -198,7 +203,7 @@ public class MansionVaultPiece extends StructurePiece {
         }
         // a dark oak floor down the middle and a red rug before the chest
         this.fill(level, chunk, -9, -6, 1, -2, -6, 7, planks);
-        this.fill(level, chunk, -7, -5, 1, -5, -5, 2, Blocks.RED_CARPET.defaultBlockState());
+        this.fill(level, chunk, -7, -5, 1, -5, -5, 2, redCarpet());
         // the library wall (north) and the chest that keeps the Sift Symphony
         this.fill(level, chunk, -9, -5, 0, -2, -3, 0, shelf);
         this.container(level, chunk, random, -6, -5, 0, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH),
@@ -244,7 +249,7 @@ public class MansionVaultPiece extends StructurePiece {
         this.set(level, chunk, 1, 3, 1, loose);
         this.set(level, chunk, 4, 5, 1, loose); // and the highest last
         // a reading rug in front of it
-        this.fill(level, chunk, 1, 1, 2, 4, 1, 3, Blocks.RED_CARPET.defaultBlockState());
+        this.fill(level, chunk, 1, 1, 2, 4, 1, 3, redCarpet());
 
         // ---- its guards
         this.spawn(level, chunk, ModMansion.HORNBLOWER.get(), -3, -5, 6);
