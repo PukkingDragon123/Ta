@@ -26,6 +26,7 @@ SONGS = {
     'canon': ([6, 13, 11, 16, 13, 18, 16, 21], '#e8b040'),
     'requiem': ([18, 15, 13, 8, 10, 6, 8, 6], '#1f8a8a'),
     'hymn': ([8, 10, 13, 10, 8, 13, 10, 8], '#e8c050'),  # S1 land: the Creator's Hymn (summons the Mini Creator)
+    'symphony': ([13, 8, 10, 6, 13, 10, 8, 13], '#2fd6c8'),  # MANSION: the Sift Symphony opens the gates (any instrument)
 }
 # M1 instrument play: a drum song's rhythm (half-beats per note) and a Prism song's lights (0 rose, 1 amber, 2 cyan,
 # 3 violet) - mirrors music/Song.java
@@ -45,6 +46,7 @@ SONG_DESC = {
     'canon': 'Each phrase answers the last. At the Band Table it binds Reverb and Fortissimo into an instrument.',
     'requiem': "The Ancient Cities' lament. At the Band Table it binds Sculk Ward and Echo Strike.",
     'hymn': "Carved into the dais of a Creator's Ruin. Play it there, on any instrument, and the Mini Creator rises.",
+    'symphony': 'The song that wakes a Sift gate: play it at a Sculk Summoner, on any instrument. Its sheet hides in the Woodland Mansions.',
 }
 
 # Where the sheets are found: chest table -> [(song, weight)], plus how often a sheet turns up at all.
@@ -62,10 +64,11 @@ SHEET_LOOT = {
 # C4 songs: what each song must be played on (mirrors Song.java; None = any instrument)
 SONG_INSTRUMENT = {'offering': 'chimes', 'nib': 'strings', 'golem': None, 'crystal': 'chimes', 'whale': 'flute',
                    'lullaby': 'strings', 'aurora': 'prism', 'heartbeat': 'drum', 'dolphin': 'flute', 'canon': 'strings', 'requiem': 'chimes',
-                   'hymn': None}
+                   'hymn': None,
+                   'symphony': None}
 INSTRUMENT_NAMES = {
     'any': 'any instrument', 'flute': 'a flute (Crane, Serbim or Prism Flute)', 'drum': 'a drum (Conga, Thunder or Prism Drum)',
-    'strings': "strings (Guitar, Star Lute, Weaver's Guitar or Prism Harp)", 'chimes': 'chimes (Wind Chimes, Glass Bells or Prism Chimes)',
+    'strings': "strings (Guitar, Weaver's Guitar or Prism Harp)", 'chimes': 'chimes (Wind Chimes, Glass Bells or Prism Chimes)',
     'prism': 'a Prism instrument, each note in its light',
 }
 INSTRUMENT_SHORT = {'any': 'Any instrument', 'flute': 'Flute', 'drum': 'Drum', 'strings': 'Strings', 'chimes': 'Chimes', 'prism': 'Prism'}
@@ -120,10 +123,10 @@ def lang():
         f'music.{NS}.guide.needs': 'Needs %s',
         f'music.{NS}.guide.done': 'Played!',
         f'item.{NS}.wind_chimes.desc': 'Hold use to raise them; 1-9 strike the chimes.',
-        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Eleven songs, eleven sheets',
-        f'codex.{NS}.songs.body': 'Sheets lie in relics, castles, the Drum Pit, Ancient Cities, libraries and sunken treasure. Play a carried sheet\'s notes in order on the right instrument; one slip is forgiven. Chimes: Offering, Crystal, Requiem. Strings: Nibs, Lullaby, Canon. Flute: Whale, Dolphin. Drum, on the beat: Heartbeat. Prism: Aurora. Golem Hymn: any.',
+        f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Twelve songs, twelve sheets',
+        f'codex.{NS}.songs.body': 'Sheets lie in relics, castles, the Drum Pit, Ancient Cities, libraries and sunken treasure. Play a carried sheet\'s notes in order on the right instrument; one slip is forgiven. Chimes: Offering, Crystal, Requiem. Strings: Nibs, Lullaby, Canon. Flute: Whale, Dolphin. Drum, on the beat: Heartbeat. Prism: Aurora. Any instrument: the Golem Hymn, and the Sift Symphony (in a Woodland Mansion\'s secret room) that opens the gates.',
         f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Notes of light',
-        f'codex.{NS}.prism_instruments.body': 'Ring an upgraded instrument with prism gems: Star Lute to Prism Harp (a string for every note), Serbim Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - sneak and turn the mouse wheel to choose it - and lights the air. Prism songs such as the Aurora ask for the lights too.',
+        f'codex.{NS}.prism_instruments.body': 'Ring an instrument with prism gems: a Guitar to the Prism Harp (a string for every note), the Silver Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - sneak and turn the mouse wheel to choose it - and lights the air. Prism songs such as the Aurora ask for the lights too.',
     })
     L.update({f'instrument.{NS}.{k}': v for k, v in INSTRUMENT_NAMES.items()})
     L.update({f'instrument.{NS}.{k}.short': v for k, v in INSTRUMENT_SHORT.items()})

@@ -61,6 +61,7 @@ public class TheSiftClient {
         WorldLandClient.register(modBus); // W-land: the rainbow snowflake
         CaveCreaturesClient.register(modBus); // A4 cave creatures: the Jailer and Sculklings
         DunesClient.register(modBus); // P4-DESERT: the Rocky Dunes creatures, and what Deafened does to your ears
+        MansionClient.register(modBus); // MANSION: the Hornblower and the Bard (the vanilla illager model, re-dressed)
         SiftSnifferClient.register(modBus); // E1 Sniffer & rot: the Sift Sniffer
         com.thesift.client.bandtable.BandTableClient.register(modBus); // F2 Band Table: the animated table, its score screen, Sift books
         modBus.addListener(ClientEffects::registerOverlays);

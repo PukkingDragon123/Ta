@@ -8,6 +8,24 @@
                 "class": "com/thesift/client/music/InstrumentPoses$EnumParams",
                 "field": "STANCE"
             }
+        },
+        {
+            "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+            "name": "THESIFT_HORNBLOWER",
+            "constructor": "(Ljava/util/function/Supplier;[I)V",
+            "parameters": {
+                "class": "com/thesift/registry/ModMansion$RaidParams",
+                "field": "HORNBLOWER"
+            }
+        },
+        {
+            "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+            "name": "THESIFT_BARD",
+            "constructor": "(Ljava/util/function/Supplier;[I)V",
+            "parameters": {
+                "class": "com/thesift/registry/ModMansion$RaidParams",
+                "field": "BARD"
+            }
         }
     ]
 }

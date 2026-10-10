@@ -1,29 +1,20 @@
 package com.thesift.block;
 
-import com.thesift.block.entity.SiftDrumBlockEntity;
 import com.thesift.music.Resonance;
-import com.thesift.registry.ModBlockEntities;
-import com.thesift.registry.ModItems;
 import com.thesift.registry.ModParticles;
 import com.thesift.registry.ModSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -40,29 +31,27 @@ import org.jspecify.annotations.Nullable;
 /**
  * The Sift Drum: a hide-and-lullwood drum. Hitting it (either mouse button, or a redstone pulse)
  * plays a beat whose tone depends on the block beneath, sends a resonance pulse through the world,
- * and sets off sculk sensors like a note block does. Slotting a
- * Warden Core into a drum next to a portal frame and sculk sensors starts the rhythm ritual that
- * opens the way to The Sift.
+ * and sets off sculk sensors like a note block does. (MANSION: it no
+ * longer opens the gates - a Sculk Summoner hears the Sift Symphony, played on any instrument.)
  *
  * <p>Left-clicking plays the drum instead of breaking it (sneak to break it), in survival and
  * creative alike - see {@link com.thesift.event.GameBusEvents#onLeftClickBlock}. Every beat
  * presses the head in, lets it spring back and settles again: {@link #HIT} 1, 2, then 0.</p>
  */
-public class SiftDrumBlock extends BaseEntityBlock {
+public class SiftDrumBlock extends Block {
     /** 0 at rest, 1 the head pressed in by a hit, 2 springing back out. */
     public static final IntegerProperty HIT = IntegerProperty.create("hit", 0, 2);
-    public static final BooleanProperty CORE = BooleanProperty.create("core");
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     private static final VoxelShape SHAPE = Block.column(14.0, 0.0, 14.0);
 
     public SiftDrumBlock(BlockBehaviour.Properties properties) {
-        super(properties.lightLevel(s -> s.getValue(CORE) ? 7 : 0));
-        this.registerDefaultState(this.stateDefinition.any().setValue(HIT, 0).setValue(CORE, false).setValue(POWERED, false));
+        super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(HIT, 0).setValue(POWERED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HIT, CORE, POWERED);
+        builder.add(HIT, POWERED);
     }
 
     @Override
@@ -73,19 +62,6 @@ public class SiftDrumBlock extends BaseEntityBlock {
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new SiftDrumBlockEntity(pos, state);
-    }
-
-    @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        // the client follows a waking gate so the camera can watch it (see GateAwakening)
-        return level.isClientSide()
-                ? createTickerHelper(type, ModBlockEntities.SIFT_DRUM.get(), SiftDrumBlockEntity::clientTick)
-                : createTickerHelper(type, ModBlockEntities.SIFT_DRUM.get(), SiftDrumBlockEntity::serverTick);
     }
 
     /**
@@ -119,7 +95,7 @@ public class SiftDrumBlock extends BaseEntityBlock {
         };
     }
 
-    /** Plays one beat of the drum with nobody behind it (redstone, an altar, the ritual's own call). */
+    /** Plays one beat of the drum with nobody behind it (redstone, an altar). */
     public static void beat(ServerLevel level, BlockPos pos, float strength) {
         beat(level, pos, strength, null);
     }
@@ -162,13 +138,7 @@ public class SiftDrumBlock extends BaseEntityBlock {
     /** A player (or redstone, with no player) plays the drum. */
     public static void strike(Level level, BlockPos pos, @Nullable Player player) {
         if (level instanceof ServerLevel server) {
-            BlockState state = server.getBlockState(pos);
-            // with a Warden Core inside, the drum speaks for you: sensors hear the beat, shriekers can't tell who played it
-            Entity source = state.getBlock() instanceof SiftDrumBlock && state.getValue(CORE) ? null : player;
-            beat(server, pos, 0.8F, source);
-            if (server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
-                drum.onPlayerBeat(player);
-            }
+            beat(server, pos, 0.8F, player);
             // Stompers can't resist a drum
             com.thesift.entity.Stomper.hearDrum(server, net.minecraft.world.phys.Vec3.atCenterOf(pos), 16.0);
         }
@@ -180,30 +150,7 @@ public class SiftDrumBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-            BlockHitResult hit) {
-        if (stack.is(ModItems.WARDEN_CORE.get()) && !state.getValue(CORE)) {
-            if (level instanceof ServerLevel server && server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
-                if (drum.tryInsertCore(server, player)) {
-                    stack.consume(1, player);
-                } else {
-                    return InteractionResult.FAIL;
-                }
-            }
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
-    }
-
-    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (player.isShiftKeyDown() && state.getValue(CORE)) {
-            if (level instanceof ServerLevel server && server.getBlockEntity(pos) instanceof SiftDrumBlockEntity drum) {
-                boolean removed = drum.ejectCore(server);
-                player.sendOverlayMessage(Component.translatable(removed ? "message.thesift.drum.core_removed" : "message.thesift.drum.core_spent"));
-            }
-            return InteractionResult.SUCCESS;
-        }
         return this.hit(level, pos, player);
     }
 
@@ -221,13 +168,5 @@ public class SiftDrumBlock extends BaseEntityBlock {
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
         super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
-    }
-
-    @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (state.getValue(CORE) && random.nextInt(3) == 0) {
-            level.addParticle(net.minecraft.core.particles.ParticleTypes.SCULK_SOUL, pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.6,
-                    pos.getY() + 0.9, pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.6, 0.0, 0.03, 0.0);
-        }
     }
 }

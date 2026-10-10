@@ -1,22 +1,13 @@
 {
   "variants": {
-    "hit=0,core=false": {
+    "hit=0": {
       "model": "thesift:block/sift_drum"
     },
-    "hit=0,core=true": {
-      "model": "thesift:block/sift_drum_core"
-    },
-    "hit=1,core=false": {
+    "hit=1": {
       "model": "thesift:block/sift_drum_hit1"
     },
-    "hit=1,core=true": {
-      "model": "thesift:block/sift_drum_hit1_core"
-    },
-    "hit=2,core=false": {
+    "hit=2": {
       "model": "thesift:block/sift_drum_hit2"
-    },
-    "hit=2,core=true": {
-      "model": "thesift:block/sift_drum_hit2_core"
     }
   }
 }

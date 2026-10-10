@@ -34,7 +34,7 @@ public final class Notes {
     public static final int MAX_PITCH = 24;
     /** {@link #play} flag: the player already heard the note (free play sounded it at once). */
     public static final int HEARD = 1;
-    /** {@link #play} flag: strum the major chord on the note (the Star Lute); only the note itself counts for songs. */
+    /** {@link #play} flag: strum the major chord on the note (the Weaver's Guitar); only the note itself counts for songs. */
     public static final int CHORD = 2;
     /** {@link #play} flag: struck with weight (an accent, a perfectly timed chime) - a little louder. */
     public static final int STRONG = 4;
@@ -151,7 +151,6 @@ public final class Notes {
             if (instrument.family() == Instrument.Family.DRUM) {
                 // Stompers love a drum
                 com.thesift.entity.Stomper.hearDrum(server, player.position(), 16.0);
-                HandDrumRitual.hear(server, player); // INS free play: a hand drum answers a gate's rhythm ritual too
             }
             SongEvents.note(server, player, at, p, instrument, colour, clock);
         } else {

@@ -74,6 +74,7 @@ public class TheSift {
         NeoForge.EVENT_BUS.addListener(GameBusEvents::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(com.thesift.world.TemporaryBlocks::onLevelTick);
         com.thesift.music.SongTracker.init(); // songs (agent D): the song tracker + Lullaby/Whale effects
+        com.thesift.registry.ModMansion.register(modBus); // MANSION: Hornblower & Bard, the mansion vault, the Sculk Summoner (after the tracker: it reads its progress)
         com.thesift.music.band.Bands.register(modBus); // M2 band: creatures join your band, play along, follow; band registry
         com.thesift.music.InstrumentPlay.register(modBus); // INS free play: notes played in the world reach the server and the watchers
         com.thesift.registry.ModInstrumentFx.register(modBus); // INS free play: notes, rings and breath flying from instruments

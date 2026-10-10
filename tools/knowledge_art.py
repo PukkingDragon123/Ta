@@ -450,8 +450,9 @@ SHEET_THEME = {
     'offering': ('#d9a72c', 'chimes'), 'nib': ('#e07ab8', 'butterflies'), 'golem': ('#2aa8a4', 'lamps'),
     'crystal': ('#8f86e0', 'crystals'), 'whale': ('#4fb2d8', 'waves'), 'lullaby': ('#a88ad8', 'moons'), 'aurora': ('#e070c8', 'rays'),
     'hymn': ('#e0b23a', 'rays'),  # S1 land: the Creator's Hymn
+    'symphony': ('#1fa8a0', 'gates'),  # MANSION
 }
-SONG_INSTRUMENT_ITEM = {'chimes': 'wind_chimes', 'strings': 'star_lute', 'flute': 'crane_flute', 'drum': 'conga_drum', 'prism': 'prism_harp',
+SONG_INSTRUMENT_ITEM = {'chimes': 'wind_chimes', 'strings': 'guitar', 'flute': 'crane_flute', 'drum': 'conga_drum', 'prism': 'prism_harp',
                         'any': 'guitar'}
 SONG_CREATURE_MODEL = {'offering': ('enchoer', 'enchoer'), 'nib': ('nib', 'nib'), 'golem': ('soul_golem', 'soul_golem'),
                        'crystal': ('caravan', 'caravan_amber'), 'whale': ('sky_whale', 'sky_whale'), 'lullaby': ('gobbler', 'gobbler'),
@@ -530,6 +531,7 @@ def _motif(img, kind, col, rnd):
         'waves': ['.##..', '#..#.', '....#'],
         'moons': ['.##', '#..', '#..', '.##'],
         'rays': ['#...#', '.#.#.', '..#..'],
+        'gates': ['###', '#.#', '#.#'],  # MANSION: little gate frames
     }[kind]
     spots = [(x, 3) for x in range(6, W - 8, 14)] + [(x, H - 8) for x in range(12, W - 8, 14)]
     for i, (x, y) in enumerate(spots):
@@ -612,6 +614,8 @@ def sheet_art(song, notes, colours, instrument_family, tex_root):
         sk = _creature_sketch(tex_root, model, tex, (84, 34))
         if sk:
             img.alpha_composite(sk, (70 + (96 - sk.width) // 2, 60 + (34 - sk.height) // 2))
+    elif song == 'symphony':
+        _summoner_sketch(img)  # MANSION: the gate, the summoner and its sensors
     else:
         # the Aurora: rays of its four lights spreading over a dark horizon
         for k, lc in enumerate(['#ff5fa2', '#ffc341', '#3fe6e0', '#a67bff']):
@@ -622,6 +626,35 @@ def sheet_art(song, notes, colours, instrument_family, tex_root):
         for x in range(76, 160):
             put(img, x, 93, SEPIA[0])
     return img
+
+
+def _summoner_sketch(img):
+    """MANSION: an ink sketch for the Sift Symphony: a gate frame, the Sculk Summoner before it and four sensors round it."""
+    ink, mid, cyan = SEPIA[0], SEPIA[1], hx('#2fb6ac')
+    x0, y0 = 128, 62  # the gate: a frame of blocks 5 wide, 6 tall
+    for i in range(6):
+        for j in range(7):
+            if i in (0, 5) or j in (0, 6):
+                for dx in range(5):
+                    for dy in range(5):
+                        put(img, x0 + i * 5 + dx, y0 + j * 5 + dy, ink if dx in (0, 4) or dy in (0, 4) else mid)
+            elif (i + j) % 2 == 0:
+                put(img, x0 + i * 5 + 2, y0 + j * 5 + 2, cyan)
+    sx, sy = 96, 88  # the summoner: a block with a glowing core
+    for dx in range(9):
+        for dy in range(9):
+            put(img, sx + dx, sy + dy, ink if dx in (0, 8) or dy in (0, 8) else mid)
+    for dx in range(3, 6):
+        for dy in range(1, 4):
+            put(img, sx + dx, sy + dy, cyan)
+    for cx in (78, 86, 108, 116):  # four sensors, each with its tendrils
+        for dx in range(5):
+            put(img, cx + dx, 96, ink)
+            put(img, cx + dx, 92 + (dx % 2), mid)
+        put(img, cx + 1, 90, cyan)
+        put(img, cx + 3, 90, cyan)
+    for x in range(74, 166):
+        put(img, x, 97, SEPIA[0])
 
 
 def sheets(out, tex_root):

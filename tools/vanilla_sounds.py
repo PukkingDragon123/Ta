@@ -16,6 +16,9 @@ import sys
 
 # Vanilla sound events used with 'event:...' (and the note block events 'block/note_block/x' becomes).
 EVENTS = frozenset({
+    # MANSION: the Hornblower and the Bard, the secret bookcase
+    'entity.pillager.ambient', 'entity.pillager.hurt', 'entity.pillager.death', 'entity.evoker.prepare_attack', 'block.piston.extend',
+    'block.chiseled_bookshelf.pickup',
     'block.anvil.land', 'block.beacon.activate', 'block.note_block.basedrum', 'block.note_block.bass', 'block.note_block.bell',
     'block.note_block.bit', 'block.note_block.chime', 'block.note_block.didgeridoo', 'block.note_block.flute', 'block.note_block.guitar',
     'block.note_block.harp', 'block.note_block.hat', 'block.note_block.snare', 'block.note_block.trumpet',
@@ -63,6 +66,7 @@ EVENTS = EVENTS | frozenset({
 
 # Vanilla sound files (assets/minecraft/sounds/<name>.ogg) used directly.
 FILES = frozenset({
+    'entity/wind_charge/wind_burst3',  # MANSION: the giant horn's gust
     'random/fizz', 'random/fuse',  # F1: the Europhy Table fizzling, Bauxite's hiss
     # F3 Knowledge and lore: whispers, pages, the Mini Creator
     'ambient/nether/soulsand_valley/voices1', 'ambient/nether/soulsand_valley/voices3', 'ambient/nether/soulsand_valley/voices5',

@@ -4534,6 +4534,191 @@
     ],
     "subtitle": "subtitles.thesift.entity.cypole.death"
   },
+  "entity.hornblower.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.pillager.ambient",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.82
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.hornblower.ambient"
+  },
+  "entity.hornblower.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.pillager.hurt",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.82
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.hornblower.hurt"
+  },
+  "entity.hornblower.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.pillager.death",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.hornblower.death"
+  },
+  "entity.hornblower.windup": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.evoker.prepare_attack",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.62
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.hornblower.windup"
+  },
+  "entity.bard.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.pillager.ambient",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.12
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.bard.ambient"
+  },
+  "entity.bard.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.pillager.hurt",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.12
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.bard.hurt"
+  },
+  "entity.bard.death": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.pillager.death",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.bard.death"
+  },
+  "entity.bard.heal": {
+    "sounds": [
+      {
+        "name": "minecraft:block/amethyst/resonate1",
+        "volume": 1.0,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:block/amethyst/resonate2",
+        "volume": 1.0,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:block/amethyst/resonate3",
+        "volume": 1.0,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.thesift.entity.bard.heal"
+  },
+  "item.giant_goat_horn.blast": {
+    "sounds": [
+      {
+        "name": "minecraft:item/goat_horn/call0",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:item/goat_horn/call1",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:item/goat_horn/call2",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:item/goat_horn/call3",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:item/goat_horn/call5",
+        "volume": 1.0,
+        "pitch": 0.5
+      },
+      {
+        "name": "minecraft:item/goat_horn/call7",
+        "volume": 1.0,
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.thesift.item.giant_goat_horn.blast"
+  },
+  "item.giant_goat_horn.gust": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst1",
+        "volume": 1.0,
+        "pitch": 0.62
+      },
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst2",
+        "volume": 1.0,
+        "pitch": 0.62
+      },
+      {
+        "name": "minecraft:entity/wind_charge/wind_burst3",
+        "volume": 1.0,
+        "pitch": 0.62
+      }
+    ],
+    "subtitle": "subtitles.thesift.item.giant_goat_horn.gust"
+  },
+  "block.sculk_summoner.arm": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.warden.heartbeat",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.sculk_summoner.arm"
+  },
+  "block.secret_bookshelf.open": {
+    "sounds": [
+      {
+        "name": "minecraft:block.piston.extend",
+        "type": "event",
+        "volume": 0.6,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.secret_bookshelf.open"
+  },
+  "block.loose_bookshelf.pull": {
+    "sounds": [
+      {
+        "name": "minecraft:block.chiseled_bookshelf.pickup",
+        "type": "event",
+        "volume": 1.0,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.thesift.block.loose_bookshelf.pull"
+  },
   "music.sculk_swamp": {
     "sounds": [
       {

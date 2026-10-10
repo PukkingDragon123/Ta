@@ -34,7 +34,7 @@ final class CodexFx {
                 "sculk_castle", "sift_drum", "sculk_bloom", "gobbler", "musical_cobweb", "sculk_fish", "coral_organ"}) { // CR3: sculk fish, coral organ
             THEMES.put(k, Theme.SCULK);
         }
-        for (String k : new String[]{"instruments", "wind_chimes", "star_lute", "serbim_flute", "thunder_drums", "glass_bells", "prism_chimes"}) {
+        for (String k : new String[]{"instruments", "wind_chimes", "serbim_flute", "thunder_drums", "glass_bells", "prism_chimes"}) {
             THEMES.put(k, Theme.MUSIC); // M1 instrument play
         }
         for (String k : new String[]{"harmoner", "enchoer", "songs", "prism_instruments", "music", "music_crystal", "conga_drum", "crane_flute",

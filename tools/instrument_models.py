@@ -223,59 +223,6 @@ def guitar(variant='guitar'):
     return els
 
 
-LUTE_ROWS = [(0.0, 0.5, 2.2), (0.5, 1.3, 3.0), (1.3, 2.5, 3.55), (2.5, 4.0, 3.75), (4.0, 5.5, 3.6), (5.5, 6.8, 3.2), (6.8, 7.9, 2.6),
-             (7.9, 8.9, 1.95), (8.9, 9.7, 1.35)]
-
-
-def ribs_paint(rows, light='#d8b078', dark='#5a3418'):
-    """A lute's bowl: ribs of pale maple and dark walnut fanning from the neck, with fine dark seams."""
-    lc, dc = hexc(light), hexc(dark)
-
-    def paint(col, X, Y, Z, c):
-        if c.face == 'south':
-            return col
-        hw = np.maximum(_rows_hw(rows, Y), 0.3)
-        u = (X - 8.0) / hw
-        rib = np.floor((u + 1.0) * 4.5)
-        base = np.where((rib % 2 == 0)[..., None], lc, dc)
-        grain = fbm(X * 6, Y * 0.6, Z * 6, 91, 2)
-        base = base * (0.85 + 0.3 * grain[..., None])
-        seam = np.abs(((u + 1.0) * 4.5) % 1.0 - 0.5) > 0.44
-        return np.where(seam[..., None], base * 0.45, base)
-    return paint
-
-
-def star_lute():
-    """The Star Lute: a round-backed lute - a bowl of maple and walnut ribs, a spruce top with a glowing star-shard
-    rosette, six silver strings over gold frets, and the pegbox bent sharply back with its ivory pegs."""
-    rows = LUTE_ROWS
-    els = []
-    top = guitar_top(rows, hole=(8.0, 6.1, 0.85), guard=False, star=True, burst=('#8a5a24', 0.45), binding='#3a2414', purfling='#efe2c4')
-    els += profile_slab(8.0, rows, 8.4, 9.0, 'walnut', mats={'south': 'spruce'}, paint=chain(top, ribs_paint(rows)))
-    for z0, z1, k in ((7.4, 8.4, 0.92), (6.6, 7.4, 0.76), (6.0, 6.6, 0.52)):
-        rr = [(a, b, max(0.3, w * k)) for a, b, w in rows]
-        els += profile_slab(8.0, rr, z0, z1, 'walnut', paint=ribs_paint(rows))
-    nut, scale = 15.6, 12.4
-    els.append(El((7.2, 9.4, 7.7), (8.8, 15.6, 8.95), 'walnut', faces=('north', 'west', 'east')))
-    els.append(El((7.1, 7.4, 8.95), (8.9, 15.6, 9.25), 'ebony', faces=('south', 'west', 'east', 'down'),
-                  paint=frets_paint(nut, scale, 7.1, 8.9, fret_col='#f0c23e', dot_col='#fff2a0', n=10)))
-    for k in range(1, 9):
-        yf = nut - scale * (1 - 2 ** (-k / 12.0))
-        els.append(El((7.1, yf - 0.04, 9.25), (8.9, yf + 0.04, 9.31), 'gold_x', faces=('south', 'up', 'down'), key='fret'))
-    els.append(El((7.1, 15.6, 8.9), (8.9, 15.85, 9.4), 'ivory', faces=('south', 'up', 'west', 'east')))
-    prot = ('x', -60.0, (8.0, 15.85, 8.6))
-    els.append(El((7.15, 15.85, 7.9), (8.85, 19.2, 8.85), 'walnut', rot=prot, mats={'south': 'ebony'}))
-    for i, yk in enumerate((16.6, 17.5, 18.4)):
-        for sx in (-1, 1):
-            x0, x1 = (6.45, 7.15) if sx < 0 else (8.85, 9.55)
-            els.append(El((x0, yk - 0.17, 8.2), (x1, yk + 0.17, 8.55), 'ivory', rot=prot, key='peg'))
-    els += K.cyl_y(8.0, 8.35, 0.42, 19.2, 19.7, 'star', n=3, rot=prot, glow=13, shade=False)
-    els.append(El((6.4, 1.6, 9.0), (9.6, 2.3, 9.35), 'ebony', faces=('south', 'up', 'down', 'west', 'east')))
-    xs = [7.35 + i * 0.26 for i in range(6)]
-    els += strings(xs, 1.95, 15.7, 9.36, 9.43, 'wire', w=0.06, splits=(5.6, 11.5))
-    return els
-
-
 def prism_harp():
     """The Prism Harp: a golden lyre-harp - a pearl soundbox, a curved golden neck, a forepillar crowned with a
     prism gem, and a string of light for every note, warm red at the bass to violet at the top."""
@@ -579,8 +526,6 @@ INSTRUMENTS = {
                    carry=(8.0, 14.5, 8.2), gui=(10, 30, -45)),
     'weaver_guitar': dict(build=lambda: guitar('weaver'), fam='strings', anchor=(8.0, 4.2, 9.45), grips={'lo': (8.0, 16.3, 9.0), 'hi': (8.0, 12.2, 9.0)},
                           carry=(8.0, 14.5, 8.2), gui=(10, 30, -45)),
-    'star_lute': dict(build=star_lute, fam='strings', anchor=(8.0, 3.8, 9.4), grips={'lo': (8.0, 14.9, 9.0), 'hi': (8.0, 11.0, 9.0)},
-                      carry=(8.0, 13.5, 8.3), gui=(10, 30, -45)),
     'prism_harp': dict(build=prism_harp, fam='harp', anchor=(10.4, 6.0, 8.0), grips={'lo': (4.6, 7.5, 8.0), 'hi': (9.8, 7.5, 8.0)},
                        carry=(7.0, 15.2, 8.0), gui=(5, -25, 0)),
     'crane_flute': dict(build=crane_flute, fam='flute', anchor=(8.0, 4.0, 8.4), grips={'lo': (8.0, 8.0, 8.4), 'hi': (8.0, 10.0, 8.4)},

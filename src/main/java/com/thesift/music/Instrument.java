@@ -55,9 +55,7 @@ public enum Instrument {
     SERBIM_FLUTE(SoundEvents.NOTE_BLOCK_FLUTE, SoundEvents.NOTE_BLOCK_BELL, 0xA9D8FF, Family.FLUTE, 2, false, Layouts.G_MAJOR, 1),
     /** The Thunder Drums: four drums, eight pads, and a held pad rolls. */
     THUNDER_DRUMS(SoundEvents.NOTE_BLOCK_BASEDRUM, SoundEvents.NOTE_BLOCK_BASS, 0xD8A070, Family.DRUM, 2, false, Layouts.EIGHT_PADS, 1),
-    /** The Star Lute: six strings over the whole range, and strummed chords. */
-    LUTE(SoundEvents.NOTE_BLOCK_GUITAR, SoundEvents.NOTE_BLOCK_HARP, 0xFFD27A, Family.STRINGS, 2, false, Layouts.SIX_STRINGS, 5),
-    /** The Weaver's Guitar (a boss's instrument): plays like the Star Lute. */
+    /** The Weaver's Guitar (a boss's instrument): six strings over the whole range, and strummed chords. */
     WEAVER_GUITAR(SoundEvents.NOTE_BLOCK_GUITAR, SoundEvents.NOTE_BLOCK_BIT, 0x9FFBFF, Family.STRINGS, 2, false, Layouts.SIX_STRINGS, 5),
     /** The Glass Bells: ten chimes of chime glass, and a gust to swing them. */
     GLASS_BELLS(SoundEvents.NOTE_BLOCK_CHIME, SoundEvents.NOTE_BLOCK_BELL, 0xC8F0FF, Family.CHIMES, 2, false, Layouts.TEN_CHIMES, 1),
@@ -73,7 +71,7 @@ public enum Instrument {
         FLUTE,
         /** Rhythm: Conga Drum, Thunder Drums, Prism Drum. */
         DRUM,
-        /** Picked notes: Guitar, Star Lute, Weaver's Guitar, Prism Harp. */
+        /** Picked notes: Guitar, Weaver's Guitar, Prism Harp. */
         STRINGS,
         /** Timing: Wind Chimes, Glass Bells, Prism Chimes. */
         CHIMES;
@@ -222,7 +220,7 @@ public enum Instrument {
         return this.family == Family.STRINGS ? this.tier == 2 : this.extra > 0;
     }
 
-    /** True for the strings that strum chords (the Star Lute and the Weaver's Guitar). */
+    /** True for the strings that strum chords (the Weaver's Guitar). */
     public boolean chords() {
         return this.family == Family.STRINGS && this.tier == 2;
     }

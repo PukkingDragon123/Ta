@@ -1,8 +1,8 @@
 package com.thesift.dev;
 
 import com.thesift.TheSift;
-import com.thesift.block.SiftDrumBlock;
-import com.thesift.block.entity.SiftDrumBlockEntity;
+import com.thesift.block.SculkSummonerBlock;
+import com.thesift.block.entity.SculkSummonerBlockEntity;
 import com.thesift.entity.Enchoer;
 import com.thesift.entity.GlowballEntity;
 import com.thesift.entity.Harmoner;
@@ -14,7 +14,6 @@ import com.thesift.registry.ModEffects;
 import com.thesift.registry.ModEntities;
 import com.thesift.registry.ModItems;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +43,10 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Gameplay checks for the CI smoke test: plays the Warden Core rhythm ritual at a real Ancient City
- * gate in the Overworld (including one deliberate mistake), walks a pig through the portal it
- * opens, flings a Glowball at a Warden and soaks a hurt Bulb in Chrome (it comes out Rainbow Dazed, not healed).
+ * Gameplay checks for the CI smoke test: arms a Sculk Summoner (a Warden Core in a Sculk Catalyst,
+ * four Sculk Sensors) before a real Ancient City gate in the Overworld, plays the Sift Symphony on a
+ * Conga Drum (first without its sheet, which must do nothing; then with it, the sensors lighting
+ * note by note), walks a pig through the portal it opens, flings a Glowball at a Warden and soaks a hurt Bulb in Chrome (it comes out Rainbow Dazed, not healed).
  */
 final class MechanicsTest {
     private enum Stage { RITUAL, PIG, DONE }
@@ -58,16 +58,17 @@ final class MechanicsTest {
     private Stage stage = Stage.RITUAL;
     private int ticks;
 
-    private @Nullable SiftDrumBlockEntity drum;
+    // MANSION: the Sculk Summoner and the Sift Symphony (the drum's rhythm ritual is gone)
+    private @Nullable SculkSummonerBlockEntity summoner;
+    private BlockPos summonerPos = BlockPos.ZERO;
     private @Nullable FakePlayer player;
     private PortalFrames.@Nullable Frame gate;
     private final List<String> phases = new ArrayList<>();
     private String lastPhase = "";
-    private long[] hits = new long[0];
-    private int nextHit;
-    private boolean mistakeMade;
-    /** INS free play: beats answered on a hand drum instead of the drum block. */
-    private int handBeats;
+    private int ritualTicks;
+    private int nextNote;
+    private int maxLit;
+    private int litWithoutSheet = -1;
     private @Nullable UUID pig;
     private int pigTicks;
 
@@ -321,34 +322,39 @@ final class MechanicsTest {
             this.stage = Stage.DONE;
             return;
         }
-        // The drum stands on the floor a few blocks in front of the gate, ringed by sculk sensors.
+        // MANSION: the summoner (a Sculk Catalyst) stands on the floor a few blocks in front of the gate, four sensors round it
         Direction.Axis axis = this.gate.axis();
         int minY = this.gate.interior().stream().mapToInt(BlockPos::getY).min().orElse(this.gate.center().getY());
         Direction out = axis == Direction.Axis.Z ? Direction.EAST : Direction.SOUTH;
         Direction side = out.getClockWise();
-        BlockPos drumPos = new BlockPos(this.gate.center().getX(), minY, this.gate.center().getZ()).relative(out, 3);
-        for (BlockPos p : BlockPos.betweenClosed(drumPos.relative(side, -2).below(), drumPos.relative(side, 2).relative(out, 1).above(2))) {
-            this.overworld.setBlock(p, p.getY() < drumPos.getY() ? Blocks.DEEPSLATE_TILES.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+        BlockPos at = new BlockPos(this.gate.center().getX(), minY, this.gate.center().getZ()).relative(out, 3);
+        for (BlockPos p : BlockPos.betweenClosed(at.relative(side, -2).below(), at.relative(side, 2).relative(out, 2).above(2))) {
+            this.overworld.setBlock(p, p.getY() < at.getY() ? Blocks.DEEPSLATE_TILES.defaultBlockState() : Blocks.AIR.defaultBlockState(),
                     Block.UPDATE_CLIENTS);
         }
-        this.overworld.setBlock(drumPos, ModBlocks.SIFT_DRUM.get().defaultBlockState(), Block.UPDATE_ALL);
-        for (BlockPos s : new BlockPos[] {drumPos.relative(side, 2), drumPos.relative(side, -2), drumPos.relative(out, 1)}) {
-            this.overworld.setBlock(s, Blocks.SCULK_SENSOR.defaultBlockState(), Block.UPDATE_ALL);
+        this.overworld.setBlock(at, Blocks.SCULK_CATALYST.defaultBlockState(), Block.UPDATE_ALL);
+        for (BlockPos sensorPos : new BlockPos[] {at.relative(side, 2), at.relative(side, -2), at.relative(out, 2), at.relative(side, 2).relative(out, 2)}) {
+            this.overworld.setBlock(sensorPos, Blocks.SCULK_SENSOR.defaultBlockState(), Block.UPDATE_ALL);
         }
-        if (!(this.overworld.getBlockEntity(drumPos) instanceof SiftDrumBlockEntity d)) {
-            check(false, "ritual: drum block entity");
+        this.player = FakePlayerFactory.get(this.overworld, new com.mojang.authlib.GameProfile(
+                UUID.fromString("5f2b6c1d-7a3e-4b9f-8c2d-1e3f4a5b6c7d"), "[SiftSummoner]"));
+        this.player.snapTo(at.relative(out, 1).relative(side, -1).getX() + 0.5, at.getY(), at.relative(out, 1).relative(side, -1).getZ() + 0.5, 0.0F, 0.0F);
+        this.player.getInventory().clearContent();
+        boolean armed = SculkSummonerBlock.arm(this.overworld, at, this.player);
+        check(armed, "summoner: a Warden Core arms the Sculk Catalyst");
+        if (!armed || !(this.overworld.getBlockEntity(at) instanceof SculkSummonerBlockEntity s)) {
+            check(false, "summoner: block entity");
             this.stage = Stage.DONE;
             return;
         }
-        this.drum = d;
-        this.player = FakePlayerFactory.getMinecraft(this.overworld);
-        this.player.snapTo(drumPos.getX() + 0.5, drumPos.getY(), drumPos.getZ() + 2.5, 0.0F, 0.0F);
-        boolean inserted = d.tryInsertCore(this.overworld, this.player);
-        check(inserted, "ritual: warden core accepted by the drum");
-        TheSift.LOGGER.info("SMOKE: ritual drum at {} gate {} cells {} axis {}", drumPos, this.gate.center(), this.gate.interior().size(), axis);
-        if (!inserted) {
-            this.stage = Stage.DONE;
-        }
+        this.summoner = s;
+        this.summonerPos = at;
+        SculkSummonerBlockEntity.SummonerState st = s.summonerState();
+        TheSift.LOGGER.info("SMOKE: summoner at {} gate {} cells {} axis {} state {}", at, this.gate.center(), this.gate.interior().size(), axis, st);
+        check(st.sensors() >= SculkSummonerBlockEntity.SENSORS && st.frame(), "summoner: finds its four sensors and the gate (" + st + ")");
+        check(this.overworld.getBlockState(at).getValue(SculkSummonerBlock.READY), "summoner: blooms (ready) with its sensors and gate");
+        // the instrument: any will do - a Conga Drum
+        this.player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(ModItems.CONGA_DRUM.get()));
     }
 
     private void startGlowball() {
@@ -439,62 +445,58 @@ final class MechanicsTest {
     }
 
     private void tickRitual() {
-        SiftDrumBlockEntity d = this.drum;
-        if (d == null || this.player == null || this.gate == null) {
+        SculkSummonerBlockEntity s = this.summoner;
+        FakePlayer p = this.player;
+        if (s == null || p == null || this.gate == null) {
             this.stage = Stage.DONE;
             return;
         }
-        SiftDrumBlockEntity.RitualState st = d.ritualState();
+        this.ritualTicks++;
         long now = this.overworld.getGameTime();
+        if (s.isRemoved() || !this.overworld.getBlockState(this.summonerPos).is(ModBlocks.SCULK_SUMMONER.get())) {
+            this.finishRitual();
+            return;
+        }
+        SculkSummonerBlockEntity.SummonerState st = s.summonerState();
         if (!st.phase().equals(this.lastPhase)) {
             this.lastPhase = st.phase();
-            this.phases.add(st.phase() + "@r" + st.round());
-            TheSift.LOGGER.info("SMOKE: ritual phase {} round {} pattern {}", st.phase(), st.round(), Arrays.toString(st.pattern()));
-            if (st.phase().equals("ANSWER")) {
-                // answer the call: a downbeat, then one hit per interval of the pattern
-                int[] pattern = st.pattern();
-                this.hits = new long[pattern.length + 1];
-                this.hits[0] = now + 4;
-                for (int i = 1; i <= pattern.length; i++) {
-                    this.hits[i] = this.hits[i - 1] + pattern[i - 1];
-                }
-                if (!this.mistakeMade) {
-                    // the very first answer comes in late on purpose: the sculk should shriek and the round restart
-                    this.mistakeMade = true;
-                    this.hits[1] += 8;
-                }
-                this.nextHit = 0;
-            }
-            if (st.phase().equals("IDLE")) {
-                this.finishRitual(d);
-                return;
-            }
+            this.phases.add(st.phase() + "@" + this.ritualTicks);
+            TheSift.LOGGER.info("SMOKE: summoner phase {} at tick {} (lit {})", st.phase(), this.ritualTicks, st.lit());
         }
-        if (st.phase().equals("ANSWER") && this.nextHit < this.hits.length && now >= this.hits[this.nextHit]) {
-            if (st.round() >= 1) {
-                // INS free play: the later rounds are answered on a Conga Drum played in the hands, beside the ritual drum
-                this.player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(ModItems.CONGA_DRUM.get()));
-                boolean sounded = com.thesift.music.InstrumentPlay.serverPlay(this.player, net.minecraft.world.InteractionHand.MAIN_HAND, 6, -1,
-                        now, com.thesift.music.Notes.HEARD);
-                check(sounded, "ritual: the hand drum sounds");
-                this.handBeats++;
-            } else {
-                SiftDrumBlock.beat(this.overworld, d.getBlockPos(), 0.8F);
-                d.onPlayerBeat(this.player);
+        this.maxLit = Math.max(this.maxLit, st.lit());
+        com.thesift.music.Song symphony = com.thesift.music.Song.SYMPHONY;
+        int[] notes = symphony.notes();
+        if (this.ritualTicks == 10) {
+            // without the sheet the sculk does not know the song: nothing lights
+            for (int n : new int[]{notes[0], notes[1], notes[2]}) {
+                com.thesift.music.InstrumentPlay.serverPlay(p, net.minecraft.world.InteractionHand.MAIN_HAND, n, -1, now, com.thesift.music.Notes.HEARD);
             }
-            this.nextHit++;
+            this.litWithoutSheet = s.summonerState().lit();
+            com.thesift.music.SongTracker.forget(p);
+            p.getInventory().add(new ItemStack(ModItems.MUSIC_SHEET_SYMPHONY.get()));
+        }
+        if (this.ritualTicks >= 30 && this.nextNote < notes.length && this.ritualTicks % 4 == 0 && st.phase().equals("IDLE")) {
+            boolean sounded = com.thesift.music.InstrumentPlay.serverPlay(p, net.minecraft.world.InteractionHand.MAIN_HAND, notes[this.nextNote], -1, now,
+                    com.thesift.music.Notes.HEARD);
+            check(sounded, "summoner: the drum sounds note " + notes[this.nextNote]);
+            this.nextNote++;
+            int lit = s.summonerState().lit();
+            if (this.nextNote < notes.length) {
+                check(lit == this.nextNote, "summoner: the sensors light note by note (" + lit + " after " + this.nextNote + ")");
+            }
         }
     }
 
-    private void finishRitual(SiftDrumBlockEntity d) {
+    private void finishRitual() {
         PortalFrames.Frame g = this.gate;
-        long lit = g.interior().stream().filter(p -> this.overworld.getBlockState(p).is(ModBlocks.SIFT_PORTAL.get())).count();
-        TheSift.LOGGER.info("SMOKE: ritual finished, phases {} portal blocks {}/{}", this.phases, lit, g.interior().size());
-        check(this.phases.stream().anyMatch(p -> p.startsWith("FAILED")), "ritual: a late answer fails the round");
-        check(this.phases.stream().anyMatch(p -> p.startsWith("OPENING")), "ritual: three rounds open the gate");
-        check(this.handBeats > 0, "ritual: answered on a hand drum (free play)");
+        long lit = g.interior().stream().filter(q -> this.overworld.getBlockState(q).is(ModBlocks.SIFT_PORTAL.get())).count();
+        TheSift.LOGGER.info("SMOKE: ritual finished, phases {} portal blocks {}/{} lit {} without sheet {}", this.phases, lit, g.interior().size(),
+                this.maxLit, this.litWithoutSheet);
+        check(this.litWithoutSheet == 0, "summoner: without the sheet the Symphony lights nothing");
+        check(this.maxLit >= com.thesift.music.Song.SYMPHONY.length() - 1, "summoner: the sensors lit the Symphony note by note");
+        check(this.phases.stream().anyMatch(q -> q.startsWith("OPENING")), "summoner: the Sift Symphony opens the gate");
         check(lit == g.interior().size(), "ritual: the whole gate is filled with portal");
-        check(!d.getBlockState().getValue(SiftDrumBlock.CORE), "ritual: drum releases the spent core");
+        check(this.overworld.getBlockState(this.summonerPos).is(Blocks.SCULK_CATALYST), "summoner: the core is spent (a plain catalyst again)");
         // send a pig through
         BlockPos c = g.center();
         BlockPos spot = g.interior().stream()

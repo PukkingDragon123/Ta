@@ -85,8 +85,7 @@ def generate(GA):
     tag('block', 'minecraft:wither_immune', rl('sift_gate_frame'))
     tag('block', 'minecraft:dragon_immune', rl('sift_gate_frame'))
     LANG.update({
-        f'message.{NS}.drum.already_open': 'This gate is already open. Keep the core for another one.',
-        f'message.{NS}.drum.gate_broken': 'The frame broke while the gate closed! Mend it and strike the drum again.',
+        # MANSION: the drum's ritual messages are gone (the Sculk Summoner's are in tools/mansion.py)
         f'codex.{NS}.pitcher_planter.title': 'Pitcher Planter', f'codex.{NS}.pitcher_planter.tagline': 'Soup grows on it',
         f'codex.{NS}.pitcher_planter.body': 'Pot a Pitcher Pod in this planter of wet mud: it grows anywhere into a full Pitcher Plant. Pick the bloom by hand - now and then a pod drops with it - and the plant grows back. A Pitcher Plant in a bowl with a Lullaby Bell and a Soulpetal: Lullaby Soup (heals, golden hearts). With an Echo Orchid and a Glowcap: Echo Chowder (night vision, haste). With Chrome Reeds and a Glowing Slime Ball: Chrome Bisque (breathe and glide in water).',
         f'codex.{NS}.sift_gardening.title': 'Sift Gardening', f'codex.{NS}.sift_gardening.tagline': 'Every seed has its place',

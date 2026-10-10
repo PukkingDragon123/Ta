@@ -96,7 +96,6 @@ public final class InstrumentPoses {
     private static float[] grips(Instrument ins) {
         return switch (ins) {
             case GUITAR, WEAVER_GUITAR -> new float[]{6.91F, 3.82F, -11.02F, 4.14F, 5.66F, -9.43F};
-            case LUTE -> new float[]{6.21F, 4.26F, -10.67F, 3.58F, 6.02F, -9.16F};
             case HARP -> new float[]{1.65F, 5.28F, -9.94F, -2.13F, 4.98F, -9.02F};
             case FLUTE, SERBIM_FLUTE, PRISM_FLUTE -> new float[]{-3.14F, -3.26F, -6.68F, -1.9F, -2.79F, -6.02F};
             case DRUM -> new float[]{1.71F, 8.77F, -8.22F, 1.71F, 8.77F, -8.22F};

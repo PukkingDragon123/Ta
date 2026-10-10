@@ -101,6 +101,7 @@ public final class SmokeTest {
             TheSift.LOGGER.info("SMOKE: generated {} chunks in {} ms", (2 * RADIUS + 1) * (2 * RADIUS + 1), System.currentTimeMillis() - t0);
             maps(sift);
             structures(sift);
+            MansionTest.run(server, SmokeTest::check); // MANSION: the vault rides with every mansion; its door puzzle, chest and guards
             validateLoot(server);
             portals(server, sift);
             spawnMobs(sift);
@@ -413,7 +414,8 @@ public final class SmokeTest {
                 com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), com.thesift.registry.ModCaveJungle.CRUNCHER.get(),
                 com.thesift.registry.ModDunes.KERKORER.get(), com.thesift.registry.ModDunes.JABERORA.get(), // P4-DESERT: the Rocky Dunes creatures
                 com.thesift.registry.ModDunes.RESERVOIR.get(), com.thesift.registry.ModDunes.MONARCH_RESERVOIR.get(), com.thesift.registry.ModDunes.GRUB.get(),
-                com.thesift.registry.ModKnowledge.MINI_CREATOR.get()); // F3 the Mini Creator (no player to guide: he just wanders)
+                com.thesift.registry.ModKnowledge.MINI_CREATOR.get(), // F3 the Mini Creator (no player to guide: he just wanders)
+                com.thesift.registry.ModMansion.HORNBLOWER.get(), com.thesift.registry.ModMansion.BARD.get()); // MANSION: the two new Pillagers
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);
         sift.setChunkForced(1, 0, true);

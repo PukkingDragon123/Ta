@@ -269,6 +269,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> SNOWGLOBE_BLOOM = ITEMS.registerSimpleBlockItem(ModBlocks.SNOWGLOBE_BLOOM);
     public static final DeferredItem<BlockItem> SHIVER_THISTLE = ITEMS.registerSimpleBlockItem(ModBlocks.SHIVER_THISTLE);
     public static final DeferredItem<BlockItem> BORED_LOG = ITEMS.registerSimpleBlockItem(ModBlocks.BORED_LOG);
+    public static final DeferredItem<BlockItem> SECRET_BOOKSHELF = ITEMS.registerSimpleBlockItem(ModBlocks.SECRET_BOOKSHELF);
+    public static final DeferredItem<BlockItem> LOOSE_BOOKSHELF = ITEMS.registerSimpleBlockItem(ModBlocks.LOOSE_BOOKSHELF);
 
     // ---- items
     public static final DeferredItem<GlowingSlimeBallItem> GLOWING_SLIME_BALL = ITEMS.registerItem("glowing_slime_ball", GlowingSlimeBallItem::new, () -> new Item.Properties().food(ModFoods.GLOWING_SLIME_BALL, ModFoods.GLOWING_SLIME_BALL_CONSUMABLE));
@@ -329,6 +331,7 @@ public final class ModItems {
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_CANON = ITEMS.registerItem("music_sheet_canon", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_REQUIEM = ITEMS.registerItem("music_sheet_requiem", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_HYMN = ITEMS.registerItem("music_sheet_hymn", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<MusicSheetItem> MUSIC_SHEET_SYMPHONY = ITEMS.registerItem("music_sheet_symphony", MusicSheetItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<SiftInstrumentItem> PRISM_FLUTE = ITEMS.registerItem("prism_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftInstrumentItem> PRISM_HARP = ITEMS.registerItem("prism_harp", p -> new SiftInstrumentItem(com.thesift.music.Instrument.HARP, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<SiftInstrumentItem> PRISM_DRUM = ITEMS.registerItem("prism_drum", p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_DRUM, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
@@ -384,7 +387,6 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> SCULKLING_SPAWN_EGG = ITEMS.registerItem("sculkling_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveCreatures.SCULKLING.get()));
     public static final DeferredItem<Item> SCULKITE = ITEMS.registerItem("sculkite", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<SpawnEggItem> CYPOLE_SPAWN_EGG = ITEMS.registerItem("cypole_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveCreatures.CYPOLE.get()));
-    public static final DeferredItem<SiftInstrumentItem> STAR_LUTE = ITEMS.registerItem("star_lute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.LUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<SiftInstrumentItem> SERBIM_FLUTE = ITEMS.registerItem("serbim_flute", p -> new SiftInstrumentItem(com.thesift.music.Instrument.SERBIM_FLUTE, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<SiftInstrumentItem> THUNDER_DRUMS = ITEMS.registerItem("thunder_drums", p -> new SiftInstrumentItem(com.thesift.music.Instrument.THUNDER_DRUMS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredItem<SiftInstrumentItem> GLASS_BELLS = ITEMS.registerItem("glass_bells", p -> new SiftInstrumentItem(com.thesift.music.Instrument.GLASS_BELLS, p), () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
@@ -438,6 +440,9 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> GRUB_SPAWN_EGG = ITEMS.registerItem("grub_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModDunes.GRUB.get()));
     public static final DeferredItem<Item> KERKORER_SCALE = ITEMS.registerItem("kerkorer_scale", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> KERKORER_CLOAK = ITEMS.registerItem("kerkorer_cloak", Item::new, () -> new Item.Properties().humanoidArmor(ModDunes.CLOAK_MATERIAL, ArmorType.CHESTPLATE).rarity(Rarity.RARE));
+    public static final DeferredItem<GiantGoatHornItem> GIANT_GOAT_HORN = ITEMS.registerItem("giant_goat_horn", GiantGoatHornItem::new, () -> new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<SpawnEggItem> HORNBLOWER_SPAWN_EGG = ITEMS.registerItem("hornblower_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModMansion.HORNBLOWER.get()));
+    public static final DeferredItem<SpawnEggItem> BARD_SPAWN_EGG = ITEMS.registerItem("bard_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModMansion.BARD.get()));
 
     private ModItems() {}
 }

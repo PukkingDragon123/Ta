@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  *   hotbar stays where it is;</li>
  *   <li>the mouse wheel shifts the register up or down (a soft note tells you where you are); with
  *   sneak held it turns a Prism instrument's light instead;</li>
- *   <li>attack accents the last note - or, on a chord instrument (the Star Lute, the Weaver's
+ *   <li>attack accents the last note - or, on a chord instrument (the Weaver's
  *   Guitar), strums its whole chord.</li>
  * </ul>
  * and each family adds its own flourish: hold attack and sweep the mouse sideways across strings

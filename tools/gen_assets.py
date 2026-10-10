@@ -323,6 +323,8 @@ def gen_block(b):
         __import__('sky_islands').gen_block(sys.modules[__name__], b)
     elif k.startswith('jl_'):  # P4 Cave Jungle: the Giant Pitcher Plant, its sprout, the tadpole-bored log
         __import__('cave_jungle').gen_block(sys.modules[__name__], b)
+    elif k.startswith('mansion_'):  # MANSION: the Sculk Summoner, the Bookshelf Door, the Loose Bookshelf
+        __import__('mansion').gen_block(sys.modules[__name__], b)
     elif k == 'none':
         write(os.path.join(A, 'models/block', bid + '.json'), {'textures': {'particle': f'{NS}:block/glow_particle'}})
         TEXTURES.add('block/glow_particle')
@@ -353,13 +355,12 @@ def faces(side, top, bottom, uv_side=None, uv_top=None):
 def gen_drum(bid):
     import blockart as BA  # the 16x Mojang-style drum model (the old 32x sheet model is gone)
     variants = {}
-    for hit in (0, 1, 2):
-        for core in (False, True):
-            name = bid + ('' if hit == 0 else f'_hit{hit}') + ('_core' if core else '')
-            m = BA.drum_model(hit, core, NS, bid)
-            note_textures(m)
-            write(os.path.join(A, 'models/block', name + '.json'), m)
-            variants[f'hit={hit},core={str(core).lower()}'] = {'model': f'{NS}:block/{name}'}
+    for hit in (0, 1, 2):  # MANSION: no Warden Core in the drum any more (a Sculk Summoner holds it)
+        name = bid + ('' if hit == 0 else f'_hit{hit}')
+        m = BA.drum_model(hit, NS, bid)
+        note_textures(m)
+        write(os.path.join(A, 'models/block', name + '.json'), m)
+        variants[f'hit={hit}'] = {'model': f'{NS}:block/{name}'}
     write(os.path.join(A, 'blockstates', bid + '.json'), {'variants': variants})
     item_block(bid)
 
@@ -708,12 +709,12 @@ def gen_lang():
         f'codex.{NS}.slingshot.body': 'Fires Glowing Slime Balls. A fully drawn shot bursts into light where it lands - and a direct hit on a Warden leaves it Deafened, unable to hear you for a while.',
         f'codex.{NS}.chrome.title': 'Chrome', f'codex.{NS}.chrome.tagline': 'Liquid rainbow',
         f'codex.{NS}.chrome.body': 'A thick, shimmering liquid rainbow. Waves of colour roll across every lake, rings spread behind anything that swims or wades, and the surface bursts into colour when music plays nearby. It no longer heals: a soak leaves you Rainbow Dazed, the world swaying and turning through the colours until it wears off. It is thick like quicksand - hold Shift to rise. Where Chrome meets flowing water it settles into Chime Sand, which tinkles underfoot and smelts into Chime Glass: every block rings its own note, so a wall of it plays like a xylophone. Scoop Kazoo Fish and Fanfare Eels up in a Chrome Bucket to carry them home.',
-        f'codex.{NS}.warden_core.title': 'Warden Core', f'codex.{NS}.warden_core.tagline': 'The heart of the ritual',
-        f'codex.{NS}.warden_core.body': "Taken from a Warden or found in the Sculk Castle. In a Sift Drum it leads the ritual that opens the way to The Sift, and speaks for you: sensors hear the beats, shriekers can't tell who played. Sneak and use the drum to take it out.",
+        f'codex.{NS}.warden_core.title': 'Warden Core', f'codex.{NS}.warden_core.tagline': 'The heart of the summoner',
+        f'codex.{NS}.warden_core.body': "Taken from a Warden, or found in Ancient City chests, a Woodland Mansion's vault or the Sculk Castle. Use it on a Sculk Catalyst near a Sift gate: it settles in the catalyst's claws and beats - a Sculk Summoner, which wakes the gate to the Sift Symphony. Sneak and use the summoner to take it back.",  # MANSION
         f'codex.{NS}.sift_cake.title': 'Sift Cake', f'codex.{NS}.sift_cake.tagline': 'A treat from the plains',
         f'codex.{NS}.sift_cake.body': 'Baked from Glowing Slime Balls and Sift produce. Each slice restores a little hunger and leaves you glowing softly for a moment.',
-        f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A rhythm at the Ancient City',
-        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Set a Sift Drum near it with three Sculk Sensors around and slot in a Warden Core. The drum calls a rhythm, a rising note per beat: play it back on the drum. Three rounds right and the gate wakes: cyan light floods the place, the world bends towards the gate, a blinding flash - and the portal opens with a shockwave. Look into it: it is a window onto the Sift\'s own sky, clouds and stars drifting deep behind the frame.',
+        f'codex.{NS}.portal.title': 'The Way In', f'codex.{NS}.portal.tagline': 'A symphony at the gate',  # MANSION: the Sculk Summoner
+        f'codex.{NS}.portal.body': 'Find the great gate in an Ancient City, or build a frame of Sift Gate Frames. Use a Warden Core on a Sculk Catalyst near it and place four Sculk Sensors round it: a Sculk Summoner. Then play the Sift Symphony - its sheet hides in a Woodland Mansion\'s secret room - on any instrument: the sensors light note by note and the gate wakes. Cyan light floods the place, a blinding flash, and the portal opens: a window onto the Sift\'s own sky.',
         f'codex.{NS}.sculk_castle.title': 'The Sculk Castle', f'codex.{NS}.sculk_castle.tagline': 'Climb, if you dare',
         f'codex.{NS}.sculk_castle.body': "A tower of sculk and hushslate. Inside, a spiral of steps climbs the wall - jump the gaps, mind the crumbling ones, rest at the lantern ledges. Slime catches you if you fall. On the roof waits the Grand Stage.",
         f'codex.{NS}.sift_drum.title': 'Sift Drum', f'codex.{NS}.sift_drum.tagline': 'Play it with either hand',
@@ -737,7 +738,7 @@ def gen_lang():
         f'codex.{NS}.guitar.title': 'Guitar', f'codex.{NS}.guitar.tagline': 'Strung with Sculk String',
         f'codex.{NS}.guitar.body': 'Planks and Sculk String from the Sculk Spiders. Use it to pick notes on its fretboard: click a string between two frets, or over the body for the open string - or hold a fret with Q W E R and pick J K L ;. Four strings, nineteen notes. Carry a Music Sheet and play its song.',
         f'codex.{NS}.weaver_guitar.title': "Weaver's Guitar", f'codex.{NS}.weaver_guitar.tagline': "The Weaver's own instrument",
-        f'codex.{NS}.weaver_guitar.body': "The Weaver's own guitar, and being a boss's spoils it keeps a power. It plays like the Star Lute: six strings, and chords. Sneak and use it to weave: Musical Cobwebs spring up around you and every hostile creature near is snared in silk. Only the Weaver drops it; only it sounds on the Grand Stage.",
+        f'codex.{NS}.weaver_guitar.body': "The Weaver's own guitar, and being a boss's spoils it keeps a power. Six strings reach both octaves, and attack strums the chord. Sneak and use it to weave: Musical Cobwebs spring up around you and every hostile creature near is snared in silk. Only the Weaver drops it; only it sounds on the Grand Stage.",
         f'codex.{NS}.musical_cobweb.title': 'Musical Cobweb', f'codex.{NS}.musical_cobweb.tagline': 'Tuned silk',
         f'codex.{NS}.musical_cobweb.body': "The Weaver's glowing webs. They barely hold you - a little drag and a springy bounce - but every strand is tuned and plays its note when touched, so a web plays runs as you push through it. Shears or Silk Touch keep the web; otherwise it leaves Sculk String.",
         f'codex.{NS}.stage.title': 'The Grand Stage', f'codex.{NS}.stage.tagline': 'Three instruments, one performance',
@@ -787,19 +788,7 @@ def gen_lang():
         f'fluid_type.{NS}.chrome': 'Chrome',
         f'item.{NS}.music_disc_lullaby.desc': 'Sift - Lullaby of the Deep',
         f'jukebox_song.{NS}.lullaby': 'Sift - Lullaby of the Deep',
-        f'message.{NS}.drum.need_sensors': 'The drum needs three Sculk Sensors within 8 blocks to listen (%s found).',
-        f'message.{NS}.drum.need_core': 'The gate is listening! Slot a Warden Core into the drum to begin the ritual.',
-        f'message.{NS}.drum.no_frame': 'No portal frame answers the drum. Build one of Sift Gate Frames or find an Ancient City gate.',
-        f'message.{NS}.drum.listen': 'Listen... (round %s of %s)',
-        f'message.{NS}.drum.your_turn': 'Your turn! Play the rhythm back on the drum (round %s of %s)',
-        f'message.{NS}.drum.too_early': 'Too early! The sculk shrieks.',
-        f'message.{NS}.drum.too_late': 'Too slow! The sculk shrieks.',
-        f'message.{NS}.drum.round_done': 'The sculk hums in harmony... %s of %s',
-        f'message.{NS}.drum.opening': 'The Sift is waking!',
-        f'message.{NS}.drum.opened': 'The way to The Sift is open.',
-        f'message.{NS}.drum.core_removed': 'The Warden Core slips free.',
-        f'message.{NS}.drum.core_spent': 'The Warden Core is pouring itself into the gate.',
-        f'message.{NS}.drum.waiting': 'The drum falls quiet. Strike it when you are ready to play.',
+        # MANSION: the drum's rhythm ritual is gone (the Sculk Summoner's messages are in tools/mansion.py)
         f'title.{NS}.awakening': 'The Sift Awakens',
         f'title.{NS}.awakening.sub': 'The way is open',
     })
@@ -1165,6 +1154,9 @@ def check_sounds():
         # A4 cave creatures: Jailer and Sculkling sounds are registered in ModCaveCreatures.java
         with open(os.path.join(os.path.dirname(java), 'ModCaveCreatures.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # MANSION: the Hornblower's, the Bard's, the giant horn's and the summoner's sounds are registered in ModMansion.java
+        with open(os.path.join(os.path.dirname(java), 'ModMansion.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         # W1 World & terrain: the Sculk Swamp's music, ambience and Sculk Water are registered in ModSculkSwamp.java
         with open(os.path.join(os.path.dirname(java), 'ModSculkSwamp.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
@@ -1346,6 +1338,7 @@ def generate():
     __import__('sift_sniffer').assets(sys.modules[__name__])  # E1 Sniffer & rot: sounds, loot, the Zombified Sniffer's name, codex
     __import__('knowledge').assets(sys.modules[__name__])  # F3 Knowledge and lore: sounds, lore loot, item models, recipe, text
     __import__('cave_creatures').sounds(sys.modules[__name__])  # A4 cave creatures (before gen_sounds)
+    __import__('mansion').sounds(sys.modules[__name__])  # MANSION: Hornblower, Bard, the giant horn, the summoner (before gen_sounds)
     __import__('sculk_world').assets(sys.modules[__name__])  # W1 World & terrain: swamp sounds, recipes, loot, tags, text (before gen_sounds)
     __import__('sculk_sea').assets(sys.modules[__name__])  # CR3 Fish & Coral Organs: sounds, loot, tags, text (before gen_sounds)
     __import__('slumbler').assets(sys.modules[__name__])  # CR2: the Slumbler's family: sounds, loot, tags, text (before gen_sounds)
@@ -1383,6 +1376,7 @@ def generate():
     __import__('sky_islands').assets(sys.modules[__name__])  # W-sky: Sky Islands text, Codex, Sky Whale / Swinger food tags, recipes, loot
     __import__('wland').assets(sys.modules[__name__])  # W-land: Rocky Dunes plants and rock, White Forest snow and flowers
     __import__('dunes_creatures').data(sys.modules[__name__])  # P4-DESERT: dunes creatures' loot, cloak recipe/equipment, spawns, text
+    __import__('mansion').data(sys.modules[__name__])  # MANSION: loot, recipes, tags, the vault structure, the giant horn's models, text
 
 
 def finalize():

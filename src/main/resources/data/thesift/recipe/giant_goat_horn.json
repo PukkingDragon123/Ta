@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "HCH",
+    " L ",
+    " H "
+  ],
+  "key": {
+    "H": "minecraft:goat_horn",
+    "C": "minecraft:copper_ingot",
+    "L": "minecraft:leather"
+  },
+  "result": {
+    "count": 1,
+    "id": "thesift:giant_goat_horn"
+  }
+}

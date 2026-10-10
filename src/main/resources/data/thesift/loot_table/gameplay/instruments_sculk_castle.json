@@ -16,11 +16,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:star_lute",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
           "name": "thesift:prism_harp",
           "weight": 1
         },

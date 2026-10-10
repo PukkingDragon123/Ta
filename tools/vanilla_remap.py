@@ -583,7 +583,7 @@ SKIP |= set(__import__('echoer_drill').TEXTURES)  # RR: the Echoer Drill's housi
 SKIP |= {f'sift_sniffer_egg_{s}_{f}' for s in ('not_cracked', 'slightly_cracked', 'very_cracked')
          for f in ('north', 'east', 'south', 'west', 'top', 'bottom')}
 # Block art: the Sift Drum is a 16x Mojang-style model painted in tools/blockart.py (the 32x drum sheet is gone)
-SKIP |= {'sift_drum_' + p for p in ('side', 'side_core', 'head', 'head_struck', 'hoop', 'base', 'glow', 'head_glow')}
+SKIP |= {'sift_drum_' + p for p in ('side', 'head', 'head_struck', 'hoop', 'base')}
 
 
 def _edits(name, a):

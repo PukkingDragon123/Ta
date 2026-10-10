@@ -294,6 +294,18 @@ final class SongTest {
             this.check.accept(ok, "songs: " + song.id() + " forgives a semitone off, a double tap and a stray note (heard " + this.heard + ")");
         }
 
+        // MANSION: the Sift Symphony opens the gates, so any instrument plays it - each family's first version
+        Song symphony = Song.SYMPHONY;
+        this.check.accept(symphony.instrument() == null && !symphony.prism() && !symphony.rhythmic(), "songs: the Sift Symphony takes any instrument");
+        for (Instrument ins : new Instrument[]{Instrument.DRUM, Instrument.FLUTE, Instrument.GUITAR, Instrument.WIND_CHIMES}) {
+            int[] notes = symphony.notes();
+            for (int i = 0; i < notes.length; i++) {
+                notes[i] = playable(ins, notes[i]);
+            }
+            this.check.accept(this.performs(player, ins, symphony, notes, new int[notes.length], onBeat(symphony)),
+                    "songs: the Sift Symphony is performed on " + ins + " (heard " + this.heard + ")");
+        }
+
         // rhythm: every drum song (F2: the Heartbeat) in its rhythm on the Conga Drum - forgiving, but never without its beat
         for (Song drum : Song.values()) {
             if (!drum.rhythmic()) {

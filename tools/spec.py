@@ -257,7 +257,8 @@ SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "
                # F2 Band Table & songs: a drum song, the Dolphin's symphony and the two enchanting songs
                "heartbeat": "The Heartbeat", "dolphin": "Symphony of the Dolphin", "canon": "The Enchanter's Canon",
                "requiem": "Sculk Requiem",
-               "hymn": "The Creator's Hymn"}  # S1 land: summons the Mini Creator at a Creator's Ruin
+               "hymn": "The Creator's Hymn",  # S1 land: summons the Mini Creator at a Creator's Ruin
+               "symphony": "The Sift Symphony"}  # MANSION: the song that opens the Sift gates
 for _s, _t in SONG_TITLES.items():
     item(f"music_sheet_{_s}", cls="MusicSheetItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name=f"Music Sheet: {_t}")
 item("prism_flute", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")
@@ -376,3 +377,5 @@ __import__("wland").declare(block, item)
 __import__("cave_jungle").declare(block, item)  # P4 Cave Jungle: Giant Pitcher Plants, bored logs, jungle foods and drops, spawn eggs
 # ---------------------------------------------------------------- P4-DESERT: Rocky Dunes creatures - eggs, Camouflage Scale, Kerkorer Cloak (tools/dunes_creatures.py)
 __import__("dunes_creatures").declare(block, item)
+# ---------------------------------------------------------------- MANSION: the mansion's secret room, Hornblower & Bard, Giant Goat Horn, Sculk Summoner (tools/mansion.py)
+__import__("mansion").declare(block, item)

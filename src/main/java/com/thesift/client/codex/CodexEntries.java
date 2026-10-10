@@ -189,6 +189,9 @@ public final class CodexEntries {
             }
         }));
         // A2 Swifter & White Forest: the three-tailed cloud fox (acting out its poses), and its pale forest
+        // MANSION: the Woodland Mansion's two new Pillagers
+        l.add(mob(CREATURES, "hornblower", com.thesift.registry.ModMansion.HORNBLOWER, (e, t) -> { }));
+        l.add(mob(CREATURES, "bard", com.thesift.registry.ModMansion.BARD, (e, t) -> { }));
         l.add(mob(CREATURES, "swifter", com.thesift.registry.ModSwifter.SWIFTER, (e, t) -> {
             if (e instanceof com.thesift.entity.Swifter s) s.codexPose(t);
         }));
@@ -259,6 +262,7 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "slingshot", ModItems.SLINGSHOT));
         l.add(thing(ITEMS, "chrome", ModItems.CHROME_BUCKET));
         l.add(thing(ITEMS, "warden_core", ModItems.WARDEN_CORE));
+        l.add(thing(ITEMS, "giant_goat_horn", ModItems.GIANT_GOAT_HORN)); // MANSION
         l.add(thing(ITEMS, "sift_cake", ModItems.SIFT_CAKE));
         l.add(thing(ITEMS, "staff", ModItems.CONDUCTORS_STAFF));
         // songs & instruments (agent D)
@@ -266,15 +270,15 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "prism_instruments", ModItems.PRISM_HARP));
         l.add(thing(ITEMS, "band", ModItems.WIND_CHIMES)); // M2 band: every creature has a voice and may join your band
         // M1 instrument play: the four ways to play, and the versions you find or craft
-        l.add(thing(ITEMS, "instruments", ModItems.STAR_LUTE));
+        l.add(thing(ITEMS, "instruments", ModItems.GUITAR));
         l.add(thing(ITEMS, "wind_chimes", ModItems.WIND_CHIMES));
-        l.add(thing(ITEMS, "star_lute", ModItems.STAR_LUTE));
         l.add(thing(ITEMS, "serbim_flute", ModItems.SERBIM_FLUTE));
         l.add(thing(ITEMS, "thunder_drums", ModItems.THUNDER_DRUMS));
         l.add(thing(ITEMS, "glass_bells", ModItems.GLASS_BELLS));
         l.add(thing(ITEMS, "prism_chimes", ModItems.PRISM_CHIMES));
         // ---- places
-        l.add(thing(PLACES, "portal", ModItems.SIFT_DRUM));
+        l.add(thing(PLACES, "portal", ModItems.WARDEN_CORE)); // MANSION: the gate wakes to the Sift Symphony at a Sculk Summoner
+        l.add(thing(PLACES, "woodland_mansion", () -> net.minecraft.world.item.Items.BOOKSHELF)); // MANSION: the secret room
         // W1 World & terrain: the Sculk Swamp and the Sculk Ocean; the old ruins live on as buried relics
         l.add(thing(PLACES, "sculk_swamp", ModItems.BLIGHTWOOD_SAPLING));
         l.add(thing(PLACES, "sculk_ocean", ModItems.SCULK_CORAL_FAN));
@@ -292,6 +296,7 @@ public final class CodexEntries {
         l.add(thing(PLACES, "sculk_caves", ModItems.SCULK_GRASPER));
         // ---- blocks & magic
         l.add(thing(MAGIC, "sift_drum", ModItems.SIFT_DRUM));
+        l.add(thing(MAGIC, "sculk_summoner", () -> net.minecraft.world.item.Items.SCULK_CATALYST)); // MANSION: the new way in
         l.add(thing(MAGIC, "europhy_table", ModItems.EUROPHY_TABLE)); // F1: crafting by music (replaces the Euphory Altar)
         l.add(thing(MAGIC, "echoer_device", ModItems.ECHOER_DEVICE)); // A2 Echoer
         l.add(thing(MAGIC, "music", ModItems.SOUL_CHIME));

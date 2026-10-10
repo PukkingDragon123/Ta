@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "ready=false": {
+      "model": "thesift:block/sculk_summoner"
+    },
+    "ready=true": {
+      "model": "thesift:block/sculk_summoner_ready"
+    }
+  }
+}

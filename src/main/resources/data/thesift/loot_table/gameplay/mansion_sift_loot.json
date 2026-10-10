@@ -1,0 +1,135 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:star_shard",
+          "weight": 6,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 4
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:chrome_pearl",
+          "weight": 4,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:glowing_slime_ball",
+          "weight": 5,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 6
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:sculk_string",
+          "weight": 4,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 5
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_golem",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_lullaby",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_whale",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:music_sheet_canon",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:guitar",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:crane_flute",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:conga_drum",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:wind_chimes",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:giant_goat_horn",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:echo_shard",
+          "weight": 3,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
+            }
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:sculk_sensor",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:warden_core",
+          "weight": 1
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.55
+      }
+    }
+  ],
+  "random_sequence": "thesift:gameplay/mansion_sift_loot"
+}

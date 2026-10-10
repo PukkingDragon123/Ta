@@ -619,6 +619,12 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().noOcclusion().instabreak().sound(SoundType.CROP).randomTicks().pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
     public static final DeferredBlock<BoredLogBlock> BORED_LOG = BLOCKS.registerBlock("bored_log", BoredLogBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_LOG).randomTicks());
+    public static final DeferredBlock<SculkSummonerBlock> SCULK_SUMMONER = BLOCKS.registerBlock("sculk_summoner", SculkSummonerBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.SCULK_CATALYST).lightLevel(s -> 9));
+    public static final DeferredBlock<SecretBookshelfBlock> SECRET_BOOKSHELF = BLOCKS.registerBlock("secret_bookshelf", SecretBookshelfBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BOOKSHELF).noOcclusion());
+    public static final DeferredBlock<LooseBookshelfBlock> LOOSE_BOOKSHELF = BLOCKS.registerBlock("loose_bookshelf", LooseBookshelfBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.BOOKSHELF));
 
     private ModBlocks() {}
 }

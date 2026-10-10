@@ -151,7 +151,8 @@ QUESTS = [
      'Listen to that! Now you have a voice the Sift can hear.'),
     ('sheet', 'A Song on Paper', 'Find a Music Sheet',
      "Instruments are only half of it. The Creator wrote every song down on Music Sheets. They're buried in relics, kept in "
-     "old armouries, even swallowed by Sifters. Find one!",
+     "old armouries, even swallowed by Sifters - and the greatest, the Sift Symphony that wakes the gates, hides behind a "
+     "bookcase in the Woodland Mansions. Find one!",
      'A real sheet! I remember that one. Hum it with me...'),
     ('perform', 'Play for the Sift', 'Perform a song',
      "Carry the sheet, take up the right instrument and play its notes in order. Creatures will gather round - some might even "

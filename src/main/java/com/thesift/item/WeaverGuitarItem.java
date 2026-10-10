@@ -20,7 +20,7 @@ import net.minecraft.world.phys.AABB;
 
 /**
  * The Weaver's Guitar, the Weaver's own instrument - a boss's spoils, so unlike the normal
- * instruments it keeps a power. Use it and it plays like the Star Lute (six strings, chords: M1
+ * instruments it keeps a power. Use it and it plays six strings over the whole range (chords: M1
  * instrument play), but strum it while sneaking and it weaves: a ring of Musical Cobwebs springs up
  * around you, and every hostile creature nearby is snared in silk where it stands - bounced, bound
  * and slowed. Then the strings need a while to settle.

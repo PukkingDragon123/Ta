@@ -53,7 +53,7 @@ final class KnowledgePages {
     }
 
     /** Always-known pages: the basics of getting into and around the Sift. */
-    private static final String[] ALWAYS = {"portal", "music", "band", "instruments", "songs", "sift_drum", "warden_core", "sculk_corruption", "vocals",
+    private static final String[] ALWAYS = {"portal", "music", "band", "instruments", "songs", "sift_drum", "warden_core", "sculk_summoner", "sculk_corruption", "vocals",
             "prism_instruments"};
     /** Pages recorded by being somewhere rather than by holding their icon. */
     private static final Map<String, String[]> KEYS = new HashMap<>();
@@ -66,6 +66,7 @@ final class KnowledgePages {
         KEYS.put("sculk_ocean", new String[]{"biome:thesift:deep_dark_ocean"});
         KEYS.put("relics", new String[]{"item:thesift:suspicious_chime_sand", sift});
         KEYS.put("sculk_castle", new String[]{"structure:thesift:sculk_castle"});
+        KEYS.put("woodland_mansion", new String[]{"structure:minecraft:mansion", "structure:thesift:mansion_vault", "item:thesift:music_sheet_symphony"}); // MANSION
         KEYS.put("stage", new String[]{"structure:thesift:sculk_castle"});
         KEYS.put("caravan_colony", new String[]{"structure:thesift:caravan_colony"});
         KEYS.put("sift_sky", new String[]{sift});

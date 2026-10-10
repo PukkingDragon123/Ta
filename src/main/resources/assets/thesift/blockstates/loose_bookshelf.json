@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,pulled=false": {
+      "model": "thesift:block/loose_bookshelf"
+    },
+    "facing=north,pulled=true": {
+      "model": "thesift:block/loose_bookshelf_pulled"
+    },
+    "facing=east,pulled=false": {
+      "model": "thesift:block/loose_bookshelf",
+      "y": 90
+    },
+    "facing=east,pulled=true": {
+      "model": "thesift:block/loose_bookshelf_pulled",
+      "y": 90
+    },
+    "facing=south,pulled=false": {
+      "model": "thesift:block/loose_bookshelf",
+      "y": 180
+    },
+    "facing=south,pulled=true": {
+      "model": "thesift:block/loose_bookshelf_pulled",
+      "y": 180
+    },
+    "facing=west,pulled=false": {
+      "model": "thesift:block/loose_bookshelf",
+      "y": 270
+    },
+    "facing=west,pulled=true": {
+      "model": "thesift:block/loose_bookshelf_pulled",
+      "y": 270
+    }
+  }
+}

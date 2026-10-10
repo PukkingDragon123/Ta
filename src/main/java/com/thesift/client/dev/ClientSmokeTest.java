@@ -392,6 +392,11 @@ public final class ClientSmokeTest {
         scene("portal", 80, ClientSmokeTest::portalStage);
         scene("europhy", 60, ClientSmokeTest::europhyStage);
         scene("drums", 40, ClientSmokeTest::drumStage);
+        // MANSION: the mansion's secret room (the bookcase, the vault), the Sculk Summoner, the Hornblower and the Bard
+        scene("mansion_bookcase", 60, c -> mansion(c, MansionScenes.bookcase(c.sift(), STAGE_Y)));
+        scene("mansion_vault", 60, c -> mansion(c, MansionScenes.vaultInside(c.sift(), STAGE_Y)));
+        scene("summoner", 60, c -> mansion(c, MansionScenes.summoner(c.sift(), STAGE_Y)));
+        scene("mansion_pillagers", 40, c -> mansion(c, MansionScenes.pillagers(c.sift(), STAGE_Y)));
         scene("bosses", 60, ClientSmokeTest::bossStage);
         scene("bosses_close", 40, c -> c.camera(-118.5, STAGE_Y + 4.5, -9.0, -120.5, STAGE_Y + 2.0, 0.5));
         // the Thumper with its vents open below a cannon tower; then the gunner's view from the tower top
@@ -409,7 +414,7 @@ public final class ClientSmokeTest {
         });
         // INS free play: a player raising and playing instruments - from the front in third person, and through their eyes
         String[][] plays = {{"guitar", "front"}, {"conga_drum", "front"}, {"crane_flute", "front"}, {"wind_chimes", "front"}, {"prism_harp", "front"},
-                {"star_lute", "first"}, {"thunder_drums", "first"}, {"serbim_flute", "first"}};
+                {"weaver_guitar", "first"}, {"thunder_drums", "first"}, {"serbim_flute", "first"}};
         for (String[] play : plays) {
             boolean third = play[1].equals("front");
             SCENES.add(new Scene("play_" + play[0] + "_" + play[1], 40, c -> {
@@ -773,15 +778,21 @@ public final class ClientSmokeTest {
         c.camera(x0 + 4.5, STAGE_Y + 3.5, z - 7.5, x0 + 1.5, STAGE_Y + 2.5, z + 0.5);
     }
 
-    /** Three drums: at rest, mid-beat and with a glowing Warden Core inside. */
+    /** Three drums: at rest, mid-beat and springing back (MANSION: the drum holds no Warden Core any more). */
     private static void drumStage(Ctx c) {
         int x0 = -84, z0 = 0;
         floor(c, x0 - 4, z0 - 4, x0 + 4, z0 + 4);
         BlockState drum = ModBlocks.SIFT_DRUM.get().defaultBlockState();
         c.set(x0 - 2, STAGE_Y, z0, drum);
         c.set(x0, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.HIT, 1));
-        c.set(x0 + 2, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.CORE, true));
+        c.set(x0 + 2, STAGE_Y, z0, drum.setValue(com.thesift.block.SiftDrumBlock.HIT, 2));
         c.camera(x0 + 0.5, STAGE_Y + 2.6, z0 - 3.2, x0 + 0.5, STAGE_Y + 0.4, z0 + 0.5);
+    }
+
+    /** MANSION: a scene built by {@link MansionScenes}, seen from the camera it returns. */
+    private static void mansion(Ctx c, double[] cam) {
+        c.run("gamemode spectator @a");
+        c.camera(cam[0], cam[1], cam[2], cam[3], cam[4], cam[5]);
     }
 
     /** The mini-bosses with their young and the Mask (RR: the Grand Stage has no altars any more). */

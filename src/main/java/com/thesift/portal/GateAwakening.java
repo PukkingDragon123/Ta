@@ -9,14 +9,15 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The awakening of a gate once the rhythm ritual is won: its timeline and its music, shared by the
- * server (the drum plays it, see {@link com.thesift.block.entity.SiftDrumBlockEntity}) and the
- * client (the camera follows it). Ticks count from the moment the third round is won.
+ * The awakening of a gate once the Sift Symphony is played at a Sculk Summoner: its timeline and its
+ * music, shared by the server (the summoner plays it, see
+ * {@link com.thesift.block.entity.SculkSummonerBlockEntity}) and the client (the camera follows it).
+ * Ticks count from the Symphony's last note.
  *
  * <ol>
  *   <li>the rim lights up, a stretch at a time climbing both sides of the frame, each with a note of
  *   an arpeggio in A minor (Am - F - G - E) over a walking bass;</li>
- *   <li>souls stream in from the sculk sensors and the drum and spiral into a vortex;</li>
+ *   <li>souls stream in from the sculk sensors and the summoner's core and spiral into a vortex;</li>
  *   <li>cyan light gathers ring by ring from the rim inward, a chime per ring climbing to the
  *   leading tone, while the world bends towards the gate;</li>
  *   <li>the last ring closes on an A major chord - the minor song resolves - in a blinding flash,
@@ -48,7 +49,7 @@ public final class GateAwakening {
     /** A falling sparkle after the chord. */
     public static final int TAIL_START = CLIMAX + 8;
     public static final int TAIL_STEP = 6;
-    /** The camera is home again and the drum is quiet. */
+    /** The camera is home again and the summoner is quiet. */
     public static final int LENGTH = 200;
     /** Players this close to the gate see it through the cinematic camera. */
     public static final double CINEMATIC_RANGE = 32.0;
@@ -63,13 +64,8 @@ public final class GateAwakening {
     public static final int[] TAIL = {15, 10, 7, 3};
     /** The rings climb A harmonic minor to its leading tone, G#, which the final chord resolves. */
     private static final int[] RING_SCALE = {3, 5, 6, 8, 10, 11, 14};
-    /** The rhythm's calls climb the A minor pentatonic: a step higher with every beat and every round. */
-    private static final int[] PENTATONIC = {3, 6, 8, 10, 13, 15, 18, 20, 22};
-    /** A chord for each round won: A minor, C major, then E major - the gate's song takes it from there. */
-    private static final int[][] ROUND_CHORDS = {{3, 6, 10}, {6, 10, 13}, {10, 14, 17}};
-
-    // Client side: the gate waking nearby, refreshed every tick by its drum's block entity.
-    public static @Nullable BlockPos clientDrum;
+    // Client side: the gate waking nearby, refreshed every tick by its summoner's block entity.
+    public static @Nullable BlockPos clientSource;
     public static @Nullable Vec3 clientCentre;
     public static float clientSpan;
     public static int clientTick;
@@ -83,19 +79,9 @@ public final class GateAwakening {
         return (float) Math.pow(2.0, (Math.max(0, Math.min(24, n)) - 12) / 12.0);
     }
 
-    /** Plays one note of the ritual's music for everyone nearby. */
+    /** Plays one note of the awakening's music for everyone nearby. */
     public static void note(ServerLevel level, Vec3 at, Holder<SoundEvent> instrument, int n, float volume) {
         level.playSound(null, at.x, at.y, at.z, instrument.value(), SoundSource.BLOCKS, volume, pitch(n));
-    }
-
-    /** The note of beat {@code beat} (0 = the first) of a call in round {@code round} (0 = the first). */
-    public static int callNote(int round, int beat) {
-        return PENTATONIC[Math.max(0, Math.min(PENTATONIC.length - 1, round + beat))];
-    }
-
-    /** The chord for having won round {@code roundsWon} (1..3). */
-    public static int[] roundChord(int roundsWon) {
-        return ROUND_CHORDS[Math.max(0, Math.min(ROUND_CHORDS.length - 1, roundsWon - 1))];
     }
 
     /** The chime for step {@code ring} of {@code rings} as the portal closes: a climb that always ends on the leading tone. */

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "B",
+    "L"
+  ],
+  "key": {
+    "B": "minecraft:bookshelf",
+    "L": "minecraft:lever"
+  },
+  "result": {
+    "count": 1,
+    "id": "thesift:loose_bookshelf"
+  }
+}

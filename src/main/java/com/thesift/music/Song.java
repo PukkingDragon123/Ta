@@ -46,7 +46,12 @@ public enum Song {
     REQUIEM(new int[]{18, 15, 13, 8, 10, 6, 8, 6}, Instrument.Family.CHIMES),
     /** S1 land: the Creator's Hymn, carved into the dais of a Creator's Ruin - played there, on any instrument, it summons
      *  the Mini Creator (knowledge/CreatorShrine). Only notes every instrument reaches, and no other song hides in it. */
-    HYMN(new int[]{8, 10, 13, 10, 8, 13, 10, 8}, null);
+    HYMN(new int[]{8, 10, 13, 10, 8, 13, 10, 8}, null),
+    /**
+     * MANSION: the Sift Symphony - G, D, E, C, G, E, D, G - on any instrument: played at a Sculk Summoner it wakes a Sift
+     * gate. Its sheet hides in the Woodland Mansions' secret rooms.
+     */
+    SYMPHONY(new int[]{13, 8, 10, 6, 13, 10, 8, 13}, null);
 
     /** Ticks in one half-beat of a song's rhythm (120 beats a minute). */
     public static final int STEP = 5;
@@ -153,6 +158,7 @@ public enum Song {
             case DOLPHIN -> 0x5AF0E0;
             case CANON -> 0xFFB45A;
             case REQUIEM -> 0x2EE6D6;
+            case SYMPHONY -> 0x2FD6C8;
             default -> 0xFFF4D6;
         };
     }

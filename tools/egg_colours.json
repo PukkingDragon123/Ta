@@ -1,4 +1,8 @@
 {
+ "bard": [
+  "#1f504e",
+  "#83293d"
+ ],
  "bulb": [
   "#243d6d",
   "#5dc6f1"
@@ -62,6 +66,10 @@
  "harmoner": [
   "#ff9ab4",
   "#c4466e"
+ ],
+ "hornblower": [
+  "#2f3a50",
+  "#d9d0b8"
  ],
  "jaberora": [
   "#e8a2bc",

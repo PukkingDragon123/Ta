@@ -721,6 +721,7 @@ def all_items():
     out.update(__import__('sculk_sea').item_sprites())  # CR3 Fish & Coral Organs: fish meats, sushi, fish buckets, eggs (replaces older art)
     out.update(__import__('slumbler').items())  # CR2: Slumbler gill, tadpole bucket, Slumbler and tadpole eggs (replace older art)
     out.update(__import__('sky_whale').items())  # CR2: a Sky Whale egg that matches the whale
+    out.update(__import__('mansion').items())  # MANSION: Hornblower and Bard eggs, the Giant Goat Horn's sprite
     out.update(__import__('land_eggs').items())  # S1 land: Stomper, Sifter, Swifter, Harmoner and Sky Whale eggs (tools/land_eggs.py)
     out.update(__import__('dunes_creatures').items())  # P4-DESERT: dunes creature eggs, Camouflage Scale, Kerkorer Cloak
     return out

@@ -464,14 +464,6 @@ def drum_textures():
     band = opaque(b) & (s < 0.2)
     side = remap(remap(b, DRUM_WOOD, ~band, 0.5), DRUM_HOOP, band, 0.45)
     o['sift_drum_side'] = side
-    core = side.copy()
-    win = box_mask(5, 5, 10, 9)
-    glow = remap(van('sea_lantern', 0), CYAN_GLOW, at=0.3, k=1.8)
-    core[win] = glow[win]
-    o['sift_drum_side_core'] = core
-    g = np.zeros((16, 16, 4))
-    g[win] = glow[win]
-    o['sift_drum_glow'] = g
     head = remap(van('white_wool'), HIDE, at=0.6)
     yy, xx = np.mgrid[0:16, 0:16]
     d = np.maximum(np.abs(xx - 7.5), np.abs(yy - 7.5))
@@ -483,20 +475,15 @@ def drum_textures():
     o['sift_drum_head_struck'] = remap(head.copy(), HIDE, ripple, 0.8, mv=lum(van('white_wool')).mean())
     o['sift_drum_hoop'] = remap(van('iron_block'), DRUM_HOOP, at=0.55)
     o['sift_drum_base'] = remap(van('iron_block'), DRUM_HOOP, at=0.4)
-    w = van('white_wool')
-    spark = (r < 4.0) & (lum(w) >= np.quantile(lum(w)[r < 4.0], 0.7))
-    rune = np.zeros((16, 16, 4))
-    rune[spark] = remap(w, CYAN_GLOW, spark, 0.7)[spark]
-    o['sift_drum_head_glow'] = rune
     return o
 
 
-def drum_model(hit, core, ns=NS, bid='sift_drum'):
+def drum_model(hit, ns=NS, bid='sift_drum'):
     """The drum: a hooped foot, a lacquered stave shell laced with rope, a hide head inside four cyan hoop bars.
-    hit: 0 at rest, 1 struck (head pressed in), 2 rebound; core: a glowing window in the shell (and a rune on the head)."""
+    hit: 0 at rest, 1 struck (head pressed in), 2 rebound. (MANSION: no Warden Core window any more.)"""
     def f(tex, uv):
         return {'texture': tex, 'uv': uv}
-    shell = '#core_side' if core else '#side'
+    shell = '#side'
     head_top = {0: 13.25, 1: 12.5, 2: 13.75}[hit]
     head = '#struck' if hit else '#head'
     side_uv = [1.5, 3, 14.5, 13]
@@ -512,15 +499,9 @@ def drum_model(hit, core, ns=NS, bid='sift_drum'):
         faces = {outer: f('#hoop', [1, 5.5, 15, 8]), inner: f('#hoop', [1, 8, 15, 10.5]), 'up': f('#hoop', [1, 6, 15, 7]),
                  'down': f('#hoop', [1, 9, 15, 10]), ends[0]: f('#hoop', [0, 5.5, 1, 8]), ends[1]: f('#hoop', [15, 5.5, 16, 8])}
         els.append({'from': frm, 'to': to, 'faces': faces})
-    if core:
-        els.append({'from': [1.49, 2, 1.49], 'to': [14.51, 12, 14.51], 'shade': False, 'light_emission': 15,
-                    'faces': {d: f('#glow', side_uv) for d in ('north', 'south', 'east', 'west')}})
-        els.append({'from': [2, head_top + 0.02, 2], 'to': [14, head_top + 0.02, 14], 'shade': False, 'light_emission': 15,
-                    'faces': {'up': f('#head_glow', [2, 2, 14, 14])}})
-    tex = {'particle': f'{ns}:block/{bid}_side', 'side': f'{ns}:block/{bid}_side', 'core_side': f'{ns}:block/{bid}_side_core',
+    tex = {'particle': f'{ns}:block/{bid}_side', 'side': f'{ns}:block/{bid}_side',
            'head': f'{ns}:block/{bid}_head', 'struck': f'{ns}:block/{bid}_head_struck', 'hoop': f'{ns}:block/{bid}_hoop',
-           'base': f'{ns}:block/{bid}_base', 'glow': f'{ns}:block/{bid}_glow',
-           'head_glow': f'{ns}:block/{bid}_head_glow'}
+           'base': f'{ns}:block/{bid}_base'}
     return {'parent': 'minecraft:block/block', 'textures': tex, 'elements': els}
 
 
@@ -712,11 +693,12 @@ def paint(tex_root):
     for name, a in drum_textures().items():
         save(name, a)
         meta = os.path.join(block, name + '.png.mcmeta')
-        if name in ('sift_drum_glow', 'sift_drum_head_glow'):  # a cutout overlay: keep its holes crisp in the mipmaps
-            with open(meta, 'w') as f:
-                json.dump(CUTOUT, f, indent=2)
-        elif os.path.exists(meta):
+        if os.path.exists(meta):
             os.remove(meta)
+    for name in ('sift_drum_side_core', 'sift_drum_glow', 'sift_drum_head_glow'):  # MANSION: the drum's core window is gone
+        for ext in ('.png', '.png.mcmeta'):
+            if os.path.exists(os.path.join(block, name + ext)):
+                os.remove(os.path.join(block, name + ext))
     if 'sift_portal' in old:
         save('sift_portal', portal())
         with open(os.path.join(block, 'sift_portal.png.mcmeta'), 'w') as f:

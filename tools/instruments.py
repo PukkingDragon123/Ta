@@ -8,7 +8,7 @@ strings, a flute note that breathes on, a drum roll, chimes that swing and ring)
 in versions found or crafted further into the Sift - more notes, a new way to play, and at the top the
 Prism versions, whose every note is a colour of light:
 
-  strings: Guitar -> Star Lute (six strings, chords) -> Prism Harp (a string a note, lit)
+  strings: Guitar -> Prism Harp (a string a note, lit); the Weaver's Guitar (a boss's) strums chords
   flute:   Crane Flute -> Silver Flute (an octave more) -> Prism Flute (lit)
   drum:    Conga Drum -> Thunder Drums (eight pads, rolls) -> Prism Drum (lit)
   chimes:  Wind Chimes -> Glass Bells (ten chimes) -> Prism Chimes (lit)
@@ -31,7 +31,6 @@ NS = 'thesift'
 
 # item id -> (music.Instrument constant, name, rarity, item model)
 NEW = {
-    'star_lute': ('LUTE', 'Star Lute', 'RARE', 'handheld'),
     'serbim_flute': ('SERBIM_FLUTE', 'Silver Flute', 'RARE', 'handheld'),  # F1: the Serbim metal is retired (id kept); made of iron now
     'thunder_drums': ('THUNDER_DRUMS', 'Thunder Drums', 'RARE', 'handheld'),
     'glass_bells': ('GLASS_BELLS', 'Glass Bells', 'RARE', 'generated'),
@@ -42,7 +41,7 @@ NEW = {
 FACTORY = 'p -> new SiftInstrumentItem(com.thesift.music.Instrument.{}, p)'
 
 # every version, for the #thesift:instruments tag
-ALL = ['guitar', 'star_lute', 'prism_harp', 'crane_flute', 'serbim_flute', 'prism_flute', 'conga_drum', 'thunder_drums', 'prism_drum',
+ALL = ['guitar', 'prism_harp', 'crane_flute', 'serbim_flute', 'prism_flute', 'conga_drum', 'thunder_drums', 'prism_drum',
        'wind_chimes', 'glass_bells', 'prism_chimes']
 # every instrument with a 3D model (the Weaver's Guitar is another agent's item, but plays here)
 MODELS = ALL + ['weaver_guitar']
@@ -57,7 +56,6 @@ RECIPES = {
     # two staved hand drums: leather heads laced with string, a copper hoop, planks
     'conga_drum': (['LSL', 'P P', 'PCP'], {'L': 'minecraft:leather', 'S': 'minecraft:string', 'P': '#minecraft:planks',
                                            'C': 'minecraft:copper_ingot'}),
-    'star_lute': ([' S ', 'TGT', 'ISI'], {'S': 'star_shard', 'T': 'sculk_string', 'G': 'guitar', 'I': 'minecraft:iron_ingot'}),
     'serbim_flute': ([' I ', 'IFI', ' E '], {'I': 'minecraft:iron_ingot', 'F': 'crane_flute', 'E': 'minecraft:echo_shard'}),
     'thunder_drums': (['HHH', 'IDI', 'WSW'], {'H': 'thick_hide', 'I': 'minecraft:iron_ingot', 'D': 'conga_drum', 'W': 'lullwood_planks',
                                               'S': 'star_shard'}),
@@ -67,7 +65,7 @@ RECIPES = {
 PRISM_RECIPES = {
     'prism_flute': ([' G ', 'GFG', ' G '], {'G': 'prism_gem', 'F': 'serbim_flute'}),
     'prism_drum': ([' G ', 'GDG', ' G '], {'G': 'prism_gem', 'D': 'thunder_drums'}),
-    'prism_harp': (['GIG', 'ILI', 'GIG'], {'G': 'prism_gem', 'I': 'minecraft:gold_ingot', 'L': 'star_lute'}),
+    'prism_harp': (['GIG', 'ILI', 'GIG'], {'G': 'prism_gem', 'I': 'minecraft:gold_ingot', 'L': 'guitar'}),  # MANSION: a Guitar ringed with prism gems
     'prism_chimes': ([' G ', 'GBG', ' G '], {'G': 'prism_gem', 'B': 'glass_bells'}),
 }
 
@@ -75,7 +73,7 @@ PRISM_RECIPES = {
 # (CLEAN: the ruins, towers, temples, Echoer huts, shrines and wells these also stocked were removed in W1)
 LOOT = {
     'chests/drum_pit_armory': ([('conga_drum', 3), ('thunder_drums', 2)], 0.3),
-    'chests/sculk_castle': ([('thunder_drums', 2), ('star_lute', 2), ('prism_harp', 1), ('prism_drum', 1), ('prism_flute', 1),
+    'chests/sculk_castle': ([('thunder_drums', 2), ('prism_harp', 1), ('prism_drum', 1), ('prism_flute', 1),
                              ('prism_chimes', 1)], 0.2),
 }
 
@@ -203,11 +201,9 @@ def lang():
         f'{c}.crane_flute.title': 'Crane Flute', f'{c}.crane_flute.tagline': 'Bamboo, bone and amethyst',
         f'{c}.crane_flute.body': 'A side-blown cane flute with crane-bone caps and an amethyst ring by the mouth hole. Raise it to your lips; 1-7 play its seven notes. Hold a key and the note breathes on. Bamboo, a bone and an amethyst shard.',
         f'{c}.conga_drum.title': 'Conga Drum', f'{c}.conga_drum.tagline': 'Rhythm in two drums',
-        f'{c}.conga_drum.body': 'Two hand drums on a strap: the low tumba under the hand that holds them, the high quinto under the other. 1-6 play the six strokes, attack accents. Drum songs keep a rhythm, and a gate\'s drum ritual hears a hand drum too. Stompers love it. Leather, string, planks and copper.',
+        f'{c}.conga_drum.body': 'Two hand drums on a strap: the low tumba under the hand that holds them, the high quinto under the other. 1-6 play the six strokes, attack accents. Drum songs keep a rhythm, and any instrument can play the Sift Symphony at a Sculk Summoner. Stompers love it. Leather, string, planks and copper.',
         f'{c}.weaver_guitar.title': "Weaver's Guitar", f'{c}.weaver_guitar.tagline': "The Weaver's own instrument",
-        f'{c}.weaver_guitar.body': "The Weaver's own guitar, black chitin webbed with light - a boss's spoils, so it keeps a power. Raise it and it plays like the Star Lute: three registers, and attack strums the chord. Sneak and use it to weave: Musical Cobwebs spring up around you and every hostile creature near is snared in silk.",
-        f'{c}.star_lute.title': 'Star Lute', f'{c}.star_lute.tagline': 'Six strings and a star',
-        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings reach every note of both octaves - three registers on the wheel - and attack strums the whole chord on the last note. Found in the Sculk Castle, or made from a Guitar with star shards, Iron and Sculk String.',
+        f'{c}.weaver_guitar.body': "The Weaver's own guitar, black chitin webbed with light - a boss's spoils, so it keeps a power. Raise it and its six strings reach both octaves over three registers, and attack strums the chord. Sneak and use it to weave: Musical Cobwebs spring up around you and every hostile creature near is snared in silk.",
         f'{c}.serbim_flute.title': 'Silver Flute', f'{c}.serbim_flute.tagline': 'Silver breath',
         f'{c}.serbim_flute.body': 'A concert flute of bright iron whose keys close as you finger lower notes. Turn the wheel up and it overblows an octave higher - fifteen notes in all. Made from a Crane Flute, Iron and an Echo Shard.',
         f'{c}.thunder_drums.title': 'Thunder Drums', f'{c}.thunder_drums.tagline': 'Four drums, eight voices',
@@ -230,35 +226,6 @@ def lang():
 def _grid(rows, pal, no_ol=''):
     import items16 as I
     return I.grid([(r + '.' * 16)[:16] for r in rows], pal, ol=True, no_ol=no_ol)
-
-
-def star_lute():
-    """A round-backed lute held like the guitar: a pear-shaped spruce top shaded from its lit edge,
-    a dark binding, a star-shard rosette, a dark bridge, glinting strings up a walnut neck, and the
-    pegbox bent sharply back with its white pegs - one star twinkling at its tip."""
-    rows = [
-        '..............w.',
-        '............pkpW',
-        '...........kKKkw',
-        '..........NnPp..',
-        '.........Nn.....',
-        '.....bbbNn......',
-        '...bbaasNcc.....',
-        '..baaaasscc.....',
-        '.baaasaYsscc....',
-        '.baasYoYsscc....',
-        'baasssaYsscc....',
-        'baasssssBccc....',
-        'baasssBBsccc....',
-        '.bssBBssccc.....',
-        '..bsscccccc.....',
-        '...bcccc........',
-    ]
-    pal = {'a': ('#f8e2a8', '#4a2414'), 's': ('#e8c27a', '#4a2414'), 'b': ('#c88a4a', '#4a2414'), 'c': ('#a8682a', '#4a2414'),
-           'Y': ('#fff0a0', '#6a3a14'), 'o': ('#3a1e14', '#24120c'), 'B': ('#5a3420', '#24120c'),
-           'N': ('#8a5a32', '#24120c'), 'n': ('#5a3420', '#24120c'), 'k': ('#4a2a1a', '#24120c'), 'K': ('#6a4026', '#24120c'),
-           'p': ('#f4f0e6', '#3a3a4a'), 'P': ('#fff6c8', '#24120c'), 'w': '#fff2a8', 'W': '#ffffff'}
-    return _grid(rows, pal, no_ol='wW')
 
 
 def serbim_flute():
@@ -405,5 +372,5 @@ def conga_drum():
 
 
 def art():
-    return {'star_lute': star_lute(), 'serbim_flute': serbim_flute(), 'thunder_drums': thunder_drums(), 'glass_bells': glass_bells(),
+    return {'serbim_flute': serbim_flute(), 'thunder_drums': thunder_drums(), 'glass_bells': glass_bells(),
             'prism_chimes': prism_chimes(), 'conga_drum': conga_drum()}

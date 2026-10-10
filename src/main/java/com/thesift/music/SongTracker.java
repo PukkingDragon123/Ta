@@ -110,6 +110,12 @@ public final class SongTracker {
         return best;
     }
 
+    /** MANSION: how many notes of {@code song} the player has played in a row so far (0 if none or the tune was lost). */
+    public static int progress(Player player, Song song, long now) {
+        SongMatcher m = PLAYERS.get(player.getUUID());
+        return m == null ? 0 : m.progress(song, now);
+    }
+
     /** Forgets a player's progress through every song (tests start from a clean slate). */
     public static void forget(Player player) {
         PLAYERS.remove(player.getUUID());

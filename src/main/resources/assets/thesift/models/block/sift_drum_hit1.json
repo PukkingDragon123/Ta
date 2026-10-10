@@ -3,13 +3,10 @@
   "textures": {
     "particle": "thesift:block/sift_drum_side",
     "side": "thesift:block/sift_drum_side",
-    "core_side": "thesift:block/sift_drum_side_core",
     "head": "thesift:block/sift_drum_head",
     "struck": "thesift:block/sift_drum_head_struck",
     "hoop": "thesift:block/sift_drum_hoop",
-    "base": "thesift:block/sift_drum_base",
-    "glow": "thesift:block/sift_drum_glow",
-    "head_glow": "thesift:block/sift_drum_head_glow"
+    "base": "thesift:block/sift_drum_base"
   },
   "elements": [
     {
