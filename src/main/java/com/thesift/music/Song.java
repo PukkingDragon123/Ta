@@ -135,4 +135,22 @@ public enum Song {
     public String id() {
         return this.name().toLowerCase(Locale.ROOT);
     }
+
+    /** INS free play: the colour this song's notes fly in while it is being played (RGB). */
+    public int tint() {
+        return switch (this) {
+            case OFFERING -> 0xFFD27A;
+            case NIB -> 0xFF9AD8;
+            case GOLEM -> 0x8FF0C8;
+            case CRYSTAL -> 0xC79BFF;
+            case WHALE -> 0x8FD8FF;
+            case LULLABY -> 0xB9A8FF;
+            case AURORA -> 0xF59AF0;
+            case HEARTBEAT -> 0xFF6A5A;
+            case DOLPHIN -> 0x5AF0E0;
+            case CANON -> 0xFFB45A;
+            case REQUIEM -> 0x2EE6D6;
+            default -> 0xFFF4D6;
+        };
+    }
 }

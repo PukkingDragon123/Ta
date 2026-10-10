@@ -2,11 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "S": "thesift:sculk_string",
+    "S": "minecraft:string",
+    "C": "minecraft:copper_ingot",
     "P": "#minecraft:planks"
   },
   "pattern": [
-    "  S",
+    " SC",
     "PS ",
     "PP "
   ],

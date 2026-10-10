@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "E": "minecraft:echo_shard",
     "A": "minecraft:amethyst_shard",
+    "M": "minecraft:bamboo",
     "B": "minecraft:bone"
   },
   "pattern": [
-    "  E",
-    " A ",
+    "  A",
+    " M ",
     "B  "
   ],
   "result": {

@@ -1,6 +1,53 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "thesift:item/weaver_guitar"
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf",
+          "head"
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/weaver_guitar"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:condition",
+      "property": "minecraft:using_item",
+      "on_true": {
+        "type": "minecraft:range_dispatch",
+        "property": "thesift:instrument_play",
+        "entries": [
+          {
+            "threshold": 1.0,
+            "model": {
+              "type": "minecraft:model",
+              "model": "thesift:item/weaver_guitar_play_a"
+            }
+          },
+          {
+            "threshold": 2.0,
+            "model": {
+              "type": "minecraft:model",
+              "model": "thesift:item/weaver_guitar_play_b"
+            }
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "thesift:item/weaver_guitar_play"
+        }
+      },
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "thesift:item/weaver_guitar"
+      }
+    }
   }
 }

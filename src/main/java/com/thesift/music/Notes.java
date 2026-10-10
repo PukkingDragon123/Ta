@@ -19,11 +19,12 @@ import org.jspecify.annotations.Nullable;
 /**
  * Playing single notes on a hand-held instrument - the one call every instrument makes.
  *
- * <p>M1 instrument play: using an instrument opens its play screen (client
- * {@code InstrumentScreen}: strings to pick, drums to beat, chimes to strike on the swing, a
- * flute to finger and blow), which sounds each note at once for the player and sends it to the
- * server ({@link InstrumentPlay.PlayNote}); the server plays it through {@link #play} for everyone
- * else and on to {@link SongEvents#note}, so the song tracker and every listener hear it.
+ * <p>INS free play: holding use raises an instrument into its playing stance and the player plays
+ * it right there in the world (client {@code FreePlay}: the number keys, the mouse wheel, attack).
+ * Each note sounds at once for the player and goes to the server ({@link InstrumentPlay.PlayNote});
+ * the server plays it through {@link #play} for everyone else and on to {@link SongEvents#note},
+ * so the song tracker and every listener hear it, and tells the players watching
+ * ({@link InstrumentPlay.Shown}) so they see the hands move and the notes fly.
  *
  * <p>Pitches are note-block pitches, 0 (F#3) to 24 (F#5); {@link #lookPitch} (the old look-angle
  * scale) is kept for anything that still picks a note by gaze.
@@ -31,12 +32,16 @@ import org.jspecify.annotations.Nullable;
 public final class Notes {
     public static final TagKey<Item> INSTRUMENTS = TagKey.create(Registries.ITEM, TheSift.id("instruments"));
     public static final int MAX_PITCH = 24;
-    /** {@link #play} flag: the player already heard the note (their play screen sounded it). */
+    /** {@link #play} flag: the player already heard the note (free play sounded it at once). */
     public static final int HEARD = 1;
     /** {@link #play} flag: strum the major chord on the note (the Star Lute); only the note itself counts for songs. */
     public static final int CHORD = 2;
     /** {@link #play} flag: struck with weight (an accent, a perfectly timed chime) - a little louder. */
     public static final int STRONG = 4;
+    /** INS free play, {@link #play} flag: the clients draw this note themselves (notes flying from the instrument). */
+    public static final int SHOWN = 8;
+    /** INS free play, play-note flag: a held flute note breathing on - heard and seen, but not a new note for the songs. */
+    public static final int SUSTAIN = 16;
     /** The look angle (degrees above/below the horizon) that reaches the top/bottom note. */
     private static final float RANGE_DEG = 60.0F;
     /** Degrees of look angle per semitone. */
@@ -136,14 +141,17 @@ public final class Notes {
                     server.playSound(except, at.x, at.y, at.z, layer, SoundSource.PLAYERS, n == p ? 0.45F : 0.25F, sp);
                 }
             }
-            server.sendParticles(ModParticles.SIFT_NOTE.get(), at.x, at.y + 0.35, at.z, 0, p / 24.0, 0.0, 0.0, 1.0);
-            server.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, at.x, at.y + 0.6, at.z, 0, p / 24.0, 0.0, 0.0, 1.0);
+            if ((flags & SHOWN) == 0) {
+                server.sendParticles(ModParticles.SIFT_NOTE.get(), at.x, at.y + 0.35, at.z, 0, p / 24.0, 0.0, 0.0, 1.0);
+                server.sendParticles(net.minecraft.core.particles.ParticleTypes.NOTE, at.x, at.y + 0.6, at.z, 0, p / 24.0, 0.0, 0.0, 1.0);
+            }
             if (colour >= 0 && instrument.prism()) {
                 PrismLight.flash(server, player, at, colour);
             }
             if (instrument.family() == Instrument.Family.DRUM) {
                 // Stompers love a drum
                 com.thesift.entity.Stomper.hearDrum(server, player.position(), 16.0);
+                HandDrumRitual.hear(server, player); // INS free play: a hand drum answers a gate's rhythm ritual too
             }
             SongEvents.note(server, player, at, p, instrument, colour, clock);
         } else {
@@ -155,7 +163,7 @@ public final class Notes {
         }
     }
 
-    /** Client: sounds a note for the local player only, at once (the play screens). */
+    /** Client: sounds a note for the local player only, at once (free play). */
     public static void hearLocally(Player player, Instrument instrument, int pitch, int flags) {
         float vol = (flags & STRONG) != 0 ? 1.0F : 0.85F;
         for (int n : (flags & CHORD) != 0 ? chord(pitch) : new int[]{pitch}) {

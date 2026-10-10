@@ -66,6 +66,8 @@ final class MechanicsTest {
     private long[] hits = new long[0];
     private int nextHit;
     private boolean mistakeMade;
+    /** INS free play: beats answered on a hand drum instead of the drum block. */
+    private int handBeats;
     private @Nullable UUID pig;
     private int pigTicks;
 
@@ -460,8 +462,17 @@ final class MechanicsTest {
             }
         }
         if (st.phase().equals("ANSWER") && this.nextHit < this.hits.length && now >= this.hits[this.nextHit]) {
-            SiftDrumBlock.beat(this.overworld, d.getBlockPos(), 0.8F);
-            d.onPlayerBeat(this.player);
+            if (st.round() >= 1) {
+                // INS free play: the later rounds are answered on a Conga Drum played in the hands, beside the ritual drum
+                this.player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(ModItems.CONGA_DRUM.get()));
+                boolean sounded = com.thesift.music.InstrumentPlay.serverPlay(this.player, net.minecraft.world.InteractionHand.MAIN_HAND, 6, -1,
+                        now, com.thesift.music.Notes.HEARD);
+                check(sounded, "ritual: the hand drum sounds");
+                this.handBeats++;
+            } else {
+                SiftDrumBlock.beat(this.overworld, d.getBlockPos(), 0.8F);
+                d.onPlayerBeat(this.player);
+            }
             this.nextHit++;
         }
     }
@@ -472,6 +483,7 @@ final class MechanicsTest {
         TheSift.LOGGER.info("SMOKE: ritual finished, phases {} portal blocks {}/{}", this.phases, lit, g.interior().size());
         check(this.phases.stream().anyMatch(p -> p.startsWith("FAILED")), "ritual: a late answer fails the round");
         check(this.phases.stream().anyMatch(p -> p.startsWith("OPENING")), "ritual: three rounds open the gate");
+        check(this.handBeats > 0, "ritual: answered on a hand drum (free play)");
         check(lit == g.interior().size(), "ritual: the whole gate is filled with portal");
         check(!d.getBlockState().getValue(SiftDrumBlock.CORE), "ritual: drum releases the spent core");
         // send a pig through

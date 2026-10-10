@@ -4,13 +4,13 @@
   "key": {
     "S": "minecraft:stick",
     "T": "minecraft:string",
-    "I": "minecraft:iron_ingot",
+    "C": "minecraft:copper_ingot",
     "A": "minecraft:amethyst_shard"
   },
   "pattern": [
     "SSS",
     "T T",
-    "IAI"
+    "CAC"
   ],
   "result": {
     "count": 1,

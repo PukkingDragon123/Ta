@@ -1510,6 +1510,7 @@ def main():
     __import__('sky_islands').textures(out)  # W-sky: Sky Islands blocks, Driftfruit, Skyrind, the swinging rope (tools/sky_art.py)
     __import__('wland_art').textures(out)  # W-land: Rocky Dunes rock/sand/plants, White Lullwood, Rainbow Snow, frost flowers
     __import__('itemart').textures(out)  # I1 items: every Sift item sprite in the vanilla manner, the worn Prism armour
+    __import__('instruments').textures(out)  # INS free play: the 3D instruments' textures and the notes/rings/breath particles
     __import__('vanilla_remap').remap(TEX)  # C1 Block art: every Sift block/plant texture rebuilt from its vanilla reference (keep last)
     __import__('blockart').paint(TEX)  # Block art: every Sift block in Mojang's 16x style on Sift ramps, and the 16x Sift Drum (after C1)
     __import__('sift_sniffer').rot_textures(TEX)  # E1 Sniffer & rot: a rot overlay for every creature texture (after all of them exist)

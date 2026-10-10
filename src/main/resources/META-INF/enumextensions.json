@@ -1,0 +1,13 @@
+{
+    "entries": [
+        {
+            "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+            "name": "THESIFT_INSTRUMENT_STANCE",
+            "constructor": "(ZZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+            "parameters": {
+                "class": "com/thesift/client/music/InstrumentPoses$EnumParams",
+                "field": "STANCE"
+            }
+        }
+    ]
+}

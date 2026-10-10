@@ -813,6 +813,7 @@ def gen_lang():
         f'cutscene.{NS}.dictator.2': 'The Second Movement', f'cutscene.{NS}.dictator.3': 'The Colossus Unmasked',
         f'cutscene.{NS}.dictator.0': 'The Baton Falls',
     })
+    LANG.update(__import__('instruments').lang())  # INS free play: the instruments' text replaces the old play-screen lines above
     # sound subtitles
     for s in SOUNDS:
         LANG[f'subtitles.{NS}.{s}'] = subtitle(s)

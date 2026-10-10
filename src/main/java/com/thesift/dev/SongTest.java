@@ -31,11 +31,12 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jspecify.annotations.Nullable;
 
 /**
- * CI checks for the song system (C4 songs, M1 instrument play). Every note goes through the very
- * path the play screens use - {@link InstrumentPlay#serverPlay} with the instrument item in hand -
- * and on through the real song tracker:
+ * CI checks for the song system (C4 songs, INS free play). Every note goes through the very path
+ * free play uses - {@link InstrumentPlay#serverPlay} with the instrument item in hand, each note the
+ * one a number key plays - and on through the real song tracker:
  * <ul>
- *   <li>every instrument version reaches every note of the songs of its family;</li>
+ *   <li>every instrument version reaches every note of the songs of its family, with its keys, and
+ *   its keys rise through its registers;</li>
  *   <li>every song is performed on every version that plays it - a drum song in its rhythm, a
  *   Prism song in its lights;</li>
  *   <li>it is forgiven a semitone off, a double tap and a stray note; a drum song a sloppy beat
@@ -118,8 +119,15 @@ final class SongTest {
         return null;
     }
 
-    /** What a player would play for a written note: the playable note within tolerance of it. */
+    /**
+     * What a player would play for a written note (INS free play): the note of the number key that
+     * plays it - in the home register if it can, else after a turn of the wheel.
+     */
     private static int playable(Instrument ins, int note) {
+        int[] key = ins.keyFor(note, ins.homeRegister());
+        if (key != null) {
+            return ins.keyNote(key[0], key[1]);
+        }
         int n = ins.nearest(note);
         return n < 0 ? note : n;
     }
@@ -155,7 +163,7 @@ final class SongTest {
     }
 
     /**
-     * Plays the notes on {@code instrument} (held in the main hand) through the play screens' path.
+     * Plays the notes on {@code instrument} (held in the main hand) through free play's path.
      *
      * @return true if any song was performed (they are in {@link #heard})
      */
@@ -208,8 +216,27 @@ final class SongTest {
             for (Song song : Song.values()) {
                 if (song.accepts(ins)) {
                     this.check.accept(ins.reaches(song), "songs: " + ins + " reaches every note of " + song.id());
+                    // INS free play: and a number key plays every one of them
+                    boolean byKeys = true;
+                    for (int written : song.notes()) {
+                        byKeys &= ins.keyFor(written, ins.homeRegister()) != null;
+                    }
+                    this.check.accept(byKeys, "songs: the keys of " + ins + " play every note of " + song.id());
                 }
             }
+            // INS free play: the keys walk up the scale, every register within reach of the wheel
+            boolean rising = ins.registerCount() >= 1 && ins.homeRegister() < ins.registerCount();
+            for (int reg = 0; reg < ins.registerCount(); reg++) {
+                rising &= ins.keyNote(reg, 0) >= 0;
+                for (int kk = 1; kk < Instrument.KEYS; kk++) {
+                    int below = ins.keyNote(reg, kk - 1);
+                    int above = ins.keyNote(reg, kk);
+                    if (below >= 0 && above >= 0) {
+                        rising &= above > below && ins.canPlay(below) && ins.canPlay(above);
+                    }
+                }
+            }
+            this.check.accept(rising, "songs: the keys of " + ins + " rise through its registers");
         }
 
         // every song, note for note (in its rhythm and its lights), on every version that plays it

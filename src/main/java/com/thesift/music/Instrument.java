@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -13,10 +14,13 @@ import org.jspecify.annotations.Nullable;
  * layer), the colour of its flourish, its {@link Family} (what a {@link Song} asks for and how it is
  * played), its tier and the notes it can reach.
  *
- * <p>M1 instrument play: each family is played in its own way, on its own screen (client
- * {@code InstrumentScreen}). Normal instruments have no powers; progression is finding the better
- * versions - more notes, a new way to play, and at the top the Prism versions, whose every note is
- * also a coloured light ({@link PrismLight}) that Prism songs ask for.
+ * <p>INS free play: there are no play screens. Holding use raises the instrument into its playing
+ * stance and every family is played the same way - the number keys 1-9 play the notes of
+ * {@link #scale()} in the current {@linkplain #registerCount() register} (the mouse wheel shifts
+ * it), attack accents or strums - with its own flourishes (client {@code FreePlay}). Normal
+ * instruments have no powers; progression is finding the better versions - more notes, a new way
+ * to play, and at the top the Prism versions, whose every note is also a coloured light
+ * ({@link PrismLight}) that Prism songs ask for.
  *
  * <ul>
  *   <li>STRINGS - pick notes: {@link #layout()} is the open strings, {@link #extra()} the frets per
@@ -89,6 +93,12 @@ public enum Instrument {
     private final int[] layout;
     private final int extra;
     private final int[] notes;
+    /** INS free play: what the number keys play, and where each register's window of keys starts. */
+    private final int[] scale;
+    private final int[] registers;
+
+    /** INS free play: the number keys 1-9 play nine notes of the scale at a time. */
+    public static final int KEYS = 9;
 
     Instrument(Holder<SoundEvent> sound, @Nullable Holder<SoundEvent> layer, int colour, Family family, int tier, boolean prism, int[] layout,
             int extra) {
@@ -101,6 +111,46 @@ public enum Instrument {
         this.layout = layout;
         this.extra = extra;
         this.notes = reach(family, layout, extra);
+        this.scale = freeScale(family, this.notes);
+        this.registers = windows(family, this.scale);
+    }
+
+    /** The playable notes the keys walk through: every note, but only the white keys of a chromatic string instrument. */
+    private static int[] freeScale(Family family, int[] notes) {
+        if (family != Family.STRINGS || notes.length <= 12) {
+            return notes.clone();
+        }
+        return Arrays.stream(notes).filter(n -> {
+            int pc = Math.floorMod(n, 12);
+            return pc == 1 || pc == 3 || pc == 5 || pc == 6 || pc == 8 || pc == 10 || pc == 11;
+        }).toArray();
+    }
+
+    /** Where each register's nine keys start in the scale: G3, C4 and G4 for chromatic strings, else an octave apart. */
+    private static int[] windows(Family family, int[] scale) {
+        int last = Math.max(0, scale.length - KEYS);
+        TreeSet<Integer> starts = new TreeSet<>();
+        if (scale.length <= KEYS) {
+            starts.add(0);
+        } else if (family == Family.STRINGS) {
+            for (int root : new int[]{1, 6, 13}) {
+                int i = Arrays.binarySearch(scale, root);
+                if (i >= 0) {
+                    starts.add(Math.min(i, last));
+                }
+            }
+            if (starts.isEmpty()) {
+                starts.add(0);
+            }
+        } else {
+            for (int i = 0; ; i += 7) {
+                starts.add(Math.min(i, last));
+                if (i >= last) {
+                    break;
+                }
+            }
+        }
+        return starts.stream().mapToInt(Integer::intValue).toArray();
     }
 
     /** Every note a layout reaches, sorted, without repeats. */
@@ -215,6 +265,102 @@ public enum Instrument {
         for (int n : this.notes) {
             if (SongMatcher.matches(pitch, n) && (best < 0 || Math.abs(n - pitch) < Math.abs(best - pitch))) {
                 best = n;
+            }
+        }
+        return best;
+    }
+
+    // ------------------------------------------------------------------ INS free play: the keys
+
+    /** The notes the number keys play, low to high. */
+    public int[] scale() {
+        return this.scale.clone();
+    }
+
+    /** How many registers (windows of nine keys) the mouse wheel moves between. */
+    public int registerCount() {
+        return this.registers.length;
+    }
+
+    /** The register an instrument is raised in: the one that starts on middle C, else the first that holds it. */
+    public int homeRegister() {
+        for (int r = 0; r < this.registers.length; r++) {
+            if (this.scale[this.registers[r]] == 6) {
+                return r;
+            }
+        }
+        for (int r = 0; r < this.registers.length; r++) {
+            for (int k = 0; k < KEYS; k++) {
+                if (this.keyNote(r, k) == 6) {
+                    return r;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /** The note number key {@code key} (0-8) plays in {@code register}, or -1 if that key has none. */
+    public int keyNote(int register, int key) {
+        if (register < 0 || register >= this.registers.length || key < 0 || key >= KEYS) {
+            return -1;
+        }
+        int i = this.registers[register] + key;
+        return i < this.scale.length ? this.scale[i] : -1;
+    }
+
+    /**
+     * The key that plays {@code pitch} (or the nearest note the songs accept for it): {register, key},
+     * preferring {@code register}, then the home register; null if no key comes close enough.
+     */
+    public int @Nullable [] keyFor(int pitch, int register) {
+        int[] best = null;
+        int bestCost = Integer.MAX_VALUE;
+        int home = this.homeRegister();
+        for (int r = 0; r < this.registers.length; r++) {
+            for (int k = 0; k < KEYS; k++) {
+                int n = this.keyNote(r, k);
+                if (n < 0 || !SongMatcher.matches(pitch, n)) {
+                    continue;
+                }
+                int cost = Math.abs(n - pitch) * 4 + (r == register ? 0 : r == home ? 1 : 2);
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    best = new int[]{r, k};
+                }
+            }
+        }
+        return best;
+    }
+
+    /** The register whose keys play the most of {@code notes} (ties go to {@code prefer}): where to play a whole song. */
+    public int registerFor(int[] notes, int prefer) {
+        int best = Mth.clamp(prefer, 0, this.registers.length - 1);
+        int bestCount = -1;
+        for (int r = 0; r < this.registers.length; r++) {
+            int count = 0;
+            for (int n : notes) {
+                for (int k = 0; k < KEYS; k++) {
+                    int kn = this.keyNote(r, k);
+                    if (kn >= 0 && SongMatcher.matches(n, kn)) {
+                        count++;
+                        break;
+                    }
+                }
+            }
+            if (count > bestCount || count == bestCount && r == prefer) {
+                bestCount = count;
+                best = r;
+            }
+        }
+        return best;
+    }
+
+    /** Which of the layout's pads / strings / chimes / holes sounds {@code pitch} (the closest), for the animations. */
+    public int padIndex(int pitch) {
+        int best = 0;
+        for (int i = 1; i < this.layout.length; i++) {
+            if (Math.abs(this.layout[i] - pitch) < Math.abs(this.layout[best] - pitch)) {
+                best = i;
             }
         }
         return best;

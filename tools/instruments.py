@@ -1,16 +1,25 @@
-"""M1 instrument play: the instrument versions.
+"""INS free play: the instrument versions.
 
-Every family is played its own way (music/Instrument.java, client/music/*Screen.java) and comes
-in versions found or crafted further into the Sift - more notes, a new way to play, and at the top
-the Prism versions, whose every note is a colour of light:
+There are no play screens. Hold use and an instrument is raised into its playing stance; while it is
+raised every family plays the same way (music/Instrument.java, client/music/FreePlay.java): the
+number keys 1-9 play the notes of the current register, the mouse wheel shifts the register (with
+sneak: a Prism instrument's light), attack accents or strums - plus each family's flourish (sweep the
+strings, a flute note that breathes on, a drum roll, chimes that swing and ring). Every family comes
+in versions found or crafted further into the Sift - more notes, a new way to play, and at the top the
+Prism versions, whose every note is a colour of light:
 
   strings: Guitar -> Star Lute (six strings, chords) -> Prism Harp (a string a note, lit)
-  flute:   Crane Flute -> Silver Flute (seventh hole, overblowing) -> Prism Flute (lit)
+  flute:   Crane Flute -> Silver Flute (an octave more) -> Prism Flute (lit)
   drum:    Conga Drum -> Thunder Drums (eight pads, rolls) -> Prism Drum (lit)
-  chimes:  Wind Chimes -> Glass Bells (ten chimes, the gust) -> Prism Chimes (lit)
+  chimes:  Wind Chimes -> Glass Bells (ten chimes) -> Prism Chimes (lit)
+
+Every basic instrument is crafted in the Overworld from vanilla things (planks, string, copper,
+leather, bamboo, bone, amethyst); the upgrades keep their Sift materials. Every instrument is a real
+3D model, its inventory icon included (tools/instrument_models.py, built with tools/instruments3d.py).
 
 declare() adds the new items to spec.py; generate() (from songs.generate()) writes their recipes,
-chest loot and text; art() (from songs.art()) draws them.
+chest loot, text, 3D models and particles; art() (from songs.art()) draws the flat sprites the Music
+Sheet art sketches; textures() (from gen_textures) paints the 3D models' textures and the particles.
 """
 import math
 import os
@@ -35,10 +44,19 @@ FACTORY = 'p -> new SiftInstrumentItem(com.thesift.music.Instrument.{}, p)'
 # every version, for the #thesift:instruments tag
 ALL = ['guitar', 'star_lute', 'prism_harp', 'crane_flute', 'serbim_flute', 'prism_flute', 'conga_drum', 'thunder_drums', 'prism_drum',
        'wind_chimes', 'glass_bells', 'prism_chimes']
+# every instrument with a 3D model (the Weaver's Guitar is another agent's item, but plays here)
+MODELS = ALL + ['weaver_guitar']
 
-# recipes: the plain ones from common things, each upgrade from the one below and rare Sift materials
+# recipes. The basic four are made in the Overworld from vanilla things (the Wind Chimes' recipe is
+# songs.WIND_CHIMES_RECIPE); each upgrade from the one below and rare Sift materials.
 RECIPES = {
-    'conga_drum': (['LSL', 'P P', 'PPP'], {'L': 'minecraft:leather', 'S': 'minecraft:string', 'P': '#minecraft:planks'}),
+    # a parlour guitar: planks for the body, string up the neck, a copper ingot for the frets and tuners
+    'guitar': ([' SC', 'PS ', 'PP '], {'S': 'minecraft:string', 'C': 'minecraft:copper_ingot', 'P': '#minecraft:planks'}),
+    # a side-blown cane flute: bamboo, crane-bone caps, an amethyst ring by the mouth hole
+    'crane_flute': (['  A', ' M ', 'B  '], {'A': 'minecraft:amethyst_shard', 'M': 'minecraft:bamboo', 'B': 'minecraft:bone'}),
+    # two staved hand drums: leather heads laced with string, a copper hoop, planks
+    'conga_drum': (['LSL', 'P P', 'PCP'], {'L': 'minecraft:leather', 'S': 'minecraft:string', 'P': '#minecraft:planks',
+                                           'C': 'minecraft:copper_ingot'}),
     'star_lute': ([' S ', 'TGT', 'ISI'], {'S': 'star_shard', 'T': 'sculk_string', 'G': 'guitar', 'I': 'minecraft:iron_ingot'}),
     'serbim_flute': ([' I ', 'IFI', ' E '], {'I': 'minecraft:iron_ingot', 'F': 'crane_flute', 'E': 'minecraft:echo_shard'}),
     'thunder_drums': (['HHH', 'IDI', 'WSW'], {'H': 'thick_hide', 'I': 'minecraft:iron_ingot', 'D': 'conga_drum', 'W': 'lullwood_planks',
@@ -61,6 +79,10 @@ LOOT = {
                              ('prism_chimes', 1)], 0.2),
 }
 
+# INS free play: the particles drawn when an instrument is played (registry/ModInstrumentFx)
+PARTICLES = {'instrument_note': 'instrument_note', 'instrument_notes': 'instrument_notes', 'sound_ring': 'sound_ring',
+             'instrument_breath': 'instrument_breath'}
+
 
 def declare(block, item):
     """spec.py: the new versions (the older ones keep their own lines there)."""
@@ -78,7 +100,7 @@ def _key(v):
 
 
 def generate():
-    """Recipes, chest loot, the instruments tag and every line of text (from songs.generate())."""
+    """Recipes, chest loot, the instruments tag, every line of text, the 3D models and the particles (from songs.generate())."""
     import gen_assets as GA
     D = os.path.join(GA.RES, 'data', NS)
     recipe_dir = os.path.join(D, 'recipe')
@@ -104,6 +126,49 @@ def generate():
     for i in ALL:
         GA.tag('item', f'{NS}:instruments', rl(i))
     GA.LANG.update(lang())
+    models(GA)
+
+
+def models(GA):
+    """INS free play: every instrument's 3D models (rest, play, frames) and item definition; the particles' definitions."""
+    import instrument_models as IM
+    for iid in MODELS:
+        b = IM.build(iid)
+        inst = b['inst']
+        rest = inst.model(inst.els, b['rest'])
+        play_display = dict(b['rest'])
+        play_display.update(b['play'])
+        play = inst.model(inst.els, play_display)
+        GA.note_textures(rest)
+        mdir = os.path.join(GA.A, 'models', 'item')
+        GA.write(os.path.join(mdir, iid + '.json'), rest)
+        GA.write(os.path.join(mdir, iid + '_play.json'), play)
+        entries = []
+        for i, fname in enumerate(IM.FRAMES[b['fam']]):
+            if fname not in b['frames']:
+                continue
+            GA.write(os.path.join(mdir, f'{iid}_play_{fname}.json'), inst.model(b['frames'][fname], play_display))
+            entries.append({'threshold': float(i + 1), 'model': {'type': 'minecraft:model', 'model': f'{NS}:item/{iid}_play_{fname}'}})
+        rest_ref = {'type': 'minecraft:model', 'model': f'{NS}:item/{iid}'}
+        play_ref = {'type': 'minecraft:model', 'model': f'{NS}:item/{iid}_play'}
+        playing = {'type': 'minecraft:range_dispatch', 'property': f'{NS}:instrument_play', 'entries': entries, 'fallback': play_ref} \
+            if entries else play_ref
+        GA.write(os.path.join(GA.A, 'items', iid + '.json'), {'model': {
+            'type': 'minecraft:select', 'property': 'minecraft:display_context',
+            'cases': [{'when': ['gui', 'ground', 'fixed', 'on_shelf', 'head'], 'model': rest_ref}],
+            'fallback': {'type': 'minecraft:condition', 'property': 'minecraft:using_item', 'on_true': playing, 'on_false': rest_ref}}})
+    for pid, tex in PARTICLES.items():
+        GA.write(os.path.join(GA.A, 'particles', pid + '.json'), {'textures': [f'{NS}:{tex}']})
+
+
+def textures(out):
+    """INS free play (from gen_textures): the 3D models' textures and the particles'."""
+    import instrument_models as IM
+    import instruments3d as K
+    for iid in MODELS:
+        out(f'{K.TEX_DIR}/{iid}', IM.build(iid)['inst'].paint())
+    for name, img in K.particle_textures().items():
+        out(f'particle/{name}', img)
 
 
 # ============================================================================ text
@@ -113,63 +178,50 @@ def lang():
     p = f'instrument.{NS}'
     L.update({
         # how each family plays (tooltips)
-        f'{p}.play.strings': 'Use to play: pick its strings on the fretboard',
-        f'{p}.play.flute': 'Use to play: hold your breath, finger the holes',
-        f'{p}.play.drum': 'Use to play: beat its pads in rhythm',
-        f'{p}.play.chimes': 'Use to play: strike the chimes as they swing past the mark',
+        f'{p}.play.raise': 'Hold use to raise it and play',
+        f'{p}.play.strings': '1-9: notes · wheel: register · hold attack and sweep: strum',
+        f'{p}.play.flute': '1-9: notes · hold a key and the note breathes on · wheel: register',
+        f'{p}.play.drum': '1-9: pads - low drum in the holding hand, high drum in the other',
+        f'{p}.play.chimes': '1-9: chimes - struck, they swing and ring on',
         f'{p}.range': '%s notes, %s to %s',
-        f'{p}.mechanic.strings': 'Shift-pick strums a chord',
-        f'{p}.mechanic.flute': 'Overblows an octave higher',
-        f'{p}.mechanic.drum': 'A held pad rolls',
-        f'{p}.mechanic.chimes': 'Blow a gust to swing them faster',
-        f'{p}.mechanic.prism': 'Every note is a light: plays Prism songs',
-        # the play screens
-        f'{p}.controls.strings': 'Click a string at a fret · keys: hold Q W E R (fret), pick J K L ;',
-        f'{p}.controls.strings.more': 'Click a string at a fret · hold Q W E R, pick H J K L ; \' · Shift: chord',
-        f'{p}.controls.flute': 'Hold Space (or the mouse) to blow · cover the holes: A S D, J K L',
-        f'{p}.controls.flute.more': 'Hold Space to blow · holes A S D F, J K L · Shift / right mouse: overblow',
-        f'{p}.controls.drum': 'Strike S D F J K L (or click the heads) on the beat · Shift: accent',
-        f'{p}.controls.drum.more': 'Strike A S D F J K L ; on the beat · hold a pad to roll · Shift: accent',
-        f'{p}.controls.chimes': 'Strike a chime (A S D F G H J) as it swings past its mark',
-        f'{p}.controls.chimes.more': 'Strike A S D F G H J K L ; as a chime passes its mark · hold Space: gust',
-        f'{p}.controls.harp': 'Click a string, or sweep the mouse across them for a glissando',
-        f'{p}.controls.with_light': '%s · 1-4 or the mouse wheel: the colour of light',
-        f'{p}.controls.close': 'Esc: put it away',
-        f'{p}.open': 'open',
-        f'{p}.guide.no_sheet': 'Carry a Music Sheet and its song is written here',
-        f'{p}.light': 'Light',
-        f'{p}.chord': 'Shift: chord',
-        f'{p}.gust': 'Space: gust',
-        f'{p}.overblow': 'Shift: overblow',
-        f'{p}.breath': 'Breath',
-        f'{p}.judge.perfect': 'Perfect!',
-        f'{p}.judge.good': 'Good',
-        f'{p}.judge.early': 'Good - a little early',
-        f'{p}.judge.late': 'Good - a little late',
-        f'{p}.judge.off': 'Off the beat!',
-        f'{p}.judge.lost': 'The rhythm is lost',
-        f'{p}.judge.wait': 'Wait for the mark...',
-        f'{p}.judge.breath': 'Out of breath - let go',
+        f'{p}.registers': '%s registers (mouse wheel)',
+        f'{p}.mechanic.strings': 'Attack strums the whole chord',
+        f'{p}.mechanic.flute': 'Overblows an octave higher (wheel up)',
+        f'{p}.mechanic.drum': 'Hold a pad and it rolls',
+        f'{p}.mechanic.chimes': 'Ten chimes over two registers',
+        f'{p}.mechanic.prism': 'Every note is a light (sneak + wheel): plays Prism songs',
         f'music.{NS}.light.rose': 'Rose', f'music.{NS}.light.amber': 'Amber', f'music.{NS}.light.cyan': 'Cyan', f'music.{NS}.light.violet': 'Violet',
+        f'music.{NS}.guide.key': 'Next: key %s (%s)',
     })
-    # Codex: the instruments page and one page per new version (each well under the 15 lines a page holds)
+    # Codex: the instruments page and one page per version (each well under the 15 lines a page holds)
     c = f'codex.{NS}'
     L.update({
-        f'{c}.instruments.title': 'Instruments', f'{c}.instruments.tagline': 'Four ways to play',
-        f'{c}.instruments.body': 'Use an instrument to play it. Strings: pick notes on a fretboard. Flutes: hold your breath, finger the holes. Drums: beat the pads in rhythm. Chimes: strike each as it swings past its mark. Instruments have no powers - better ones play more notes or in new ways. Prism ones play every note as a light.',
+        f'{c}.instruments.title': 'Instruments', f'{c}.instruments.tagline': 'Played in the world',
+        f'{c}.instruments.body': 'Hold use to raise an instrument and play it where you stand - everyone sees and hears you. The number keys 1-9 play its notes (the hotbar stays put), the mouse wheel shifts the register, attack accents. Sweep the mouse with attack held across strings; hold a flute note and it breathes on; chimes swing and ring. Every basic one is crafted in the Overworld.',
+        f'{c}.guitar.title': 'Guitar', f'{c}.guitar.tagline': 'Spruce, mahogany and copper',
+        f'{c}.guitar.body': 'A little parlour guitar: planks, string and a copper ingot. Raise it and it sits across your body; 1-9 pick the notes of the scale, the wheel moves up or down, and with attack held a sweep of the mouse runs across the strings. Four gut strings, nineteen notes.',
+        f'{c}.crane_flute.title': 'Crane Flute', f'{c}.crane_flute.tagline': 'Bamboo, bone and amethyst',
+        f'{c}.crane_flute.body': 'A side-blown cane flute with crane-bone caps and an amethyst ring by the mouth hole. Raise it to your lips; 1-7 play its seven notes. Hold a key and the note breathes on. Bamboo, a bone and an amethyst shard.',
+        f'{c}.conga_drum.title': 'Conga Drum', f'{c}.conga_drum.tagline': 'Rhythm in two drums',
+        f'{c}.conga_drum.body': 'Two hand drums on a strap: the low tumba under the hand that holds them, the high quinto under the other. 1-6 play the six strokes, attack accents. Drum songs keep a rhythm, and a gate\'s drum ritual hears a hand drum too. Stompers love it. Leather, string, planks and copper.',
+        f'{c}.weaver_guitar.title': "Weaver's Guitar", f'{c}.weaver_guitar.tagline': "The Weaver's own instrument",
+        f'{c}.weaver_guitar.body': "The Weaver's own guitar, black chitin webbed with light - a boss's spoils, so it keeps a power. Raise it and it plays like the Star Lute: three registers, and attack strums the chord. Sneak and use it to weave: Musical Cobwebs spring up around you and every hostile creature near is snared in silk.",
         f'{c}.star_lute.title': 'Star Lute', f'{c}.star_lute.tagline': 'Six strings and a star',
-        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings tuned a third apart reach every note of both octaves, and Shift (or the right mouse button) strums the whole chord on a note. Found in the Sculk Castle, or made from a Guitar with star shards, Iron and Sculk String.',
+        f'{c}.star_lute.body': 'A round-backed lute with a star-shard rosette. Six strings reach every note of both octaves - three registers on the wheel - and attack strums the whole chord on the last note. Found in the Sculk Castle, or made from a Guitar with star shards, Iron and Sculk String.',
         f'{c}.serbim_flute.title': 'Silver Flute', f'{c}.serbim_flute.tagline': 'Silver breath',
-        f'{c}.serbim_flute.body': 'A transverse flute of bright iron with a seventh hole and a longer breath. Hold Shift (or the right mouse button) while you blow to overblow it an octave higher - fifteen notes in all. Made from a Crane Flute, Iron and an Echo Shard.',
+        f'{c}.serbim_flute.body': 'A concert flute of bright iron whose keys close as you finger lower notes. Turn the wheel up and it overblows an octave higher - fifteen notes in all. Made from a Crane Flute, Iron and an Echo Shard.',
         f'{c}.thunder_drums.title': 'Thunder Drums', f'{c}.thunder_drums.tagline': 'Four drums, eight voices',
-        f'{c}.thunder_drums.body': 'Four lacquered drums, a low and a high stroke on each: eight pads on A S D F J K L ;. Hold a pad and it rolls. The drum pits keep them, and the castle; or hoop a Conga Drum with Thick Hide, Iron and lullwood. Drum songs keep a rhythm - land each beat on the line.',
+        f'{c}.thunder_drums.body': 'Four lacquered war drums on an iron frame: eight strokes on 1-8, the big drums under the holding hand. Hold a key and it rolls. The drum pits keep them, and the castle; or hoop a Conga Drum with Thick Hide, Iron and lullwood.',
         f'{c}.glass_bells.title': 'Glass Bells', f'{c}.glass_bells.tagline': 'Ten chimes of chime glass',
-        f'{c}.glass_bells.body': 'Ten tubes of Chime Glass on an iron bar - two octaves. Hold Space and a gust sets them swinging wider and twice as fast: they pass their marks twice as often, but the moment to strike is shorter. Made from Wind Chimes, Chime Glass and Iron.',
+        f'{c}.glass_bells.body': 'Ten tubes of Chime Glass on silk from an iron bar - two octaves over two registers. Struck, they swing and ring on and glitter in the light. Made from Wind Chimes, Chime Glass and Iron.',
         f'{c}.prism_chimes.title': 'Prism Chimes', f'{c}.prism_chimes.tagline': 'Bells of light',
-        f'{c}.prism_chimes.body': 'Glass Bells hung from a halo of prism gems. They play the Glass Bells\' way - and every chime rings in a colour of light: choose it with the keys 1-4 or the mouse wheel. Prism songs ask for their lights as well as their notes. Rarely found in the Sculk Castle.',
+        f'{c}.prism_chimes.body': 'Pearl tubes hung round a golden halo, each tipped with a facet of light. They play like the Glass Bells - and every chime rings in a colour of light: sneak and turn the wheel to choose it. Prism songs ask for their lights as well as their notes.',
         f'{c}.wind_chimes.title': 'Wind Chimes', f'{c}.wind_chimes.tagline': "The Echoer's voice",
-        f'{c}.wind_chimes.body': 'Seven tuned tubes on a stick crossbar, swinging in the wind - the long low ones slowly, the short high ones fast. A chime only rings true when you strike it as it swings past its mark below. The Offering and the Crystal Hymn are rung on chimes.',
+        f'{c}.wind_chimes.body': 'Seven copper tubes on string from an oak crossbar, an amethyst striker and a wind-sail. Raise them by their ring; 1-7 strike them, and they swing and ring on. Sticks, string, copper and an amethyst shard. The Offering and the Crystal Hymn are rung on chimes.',
     })
+    L[f'quest.{NS}.instrument.line'] = ("The Sift listens to music before it listens to anything else. Make yourself an instrument - "
+                                        "a Guitar, a Crane Flute, a Conga Drum or Wind Chimes, all from things of your own world - "
+                                        "then hold use to raise it and play. Better ones lie in old ruins.")
     return L
 
 

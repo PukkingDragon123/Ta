@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * Sheet, the song is performed: a flourish and a chord ring out and {@link SongEvents#played}
  * fires. Playing a known song's notes on the wrong instrument earns a hint on the action bar.
  *
- * <p>Every note goes through {@link Notes#play} (the play screens send theirs as
+ * <p>Every note goes through {@link Notes#play} (free play sends its notes as
  * {@link InstrumentPlay.PlayNote}) and the forgiving {@link SongMatcher}, which also follows a drum
  * song's rhythm and a Prism song's colours.
  */
@@ -85,6 +85,29 @@ public final class SongTracker {
     public static int tune(Player player, Instrument instrument, int pitch, long now) {
         SongMatcher m = PLAYERS.get(player.getUUID());
         return m == null ? pitch : m.tune(pitch, now, instrument, s -> carriesSheet(player, s));
+    }
+
+    /** INS free play: the song this player is in the middle of (two notes or more) or has just finished, or null. */
+    public static @Nullable Song leading(Player player, long now) {
+        SongMatcher m = PLAYERS.get(player.getUUID());
+        return m == null ? null : leading(m, now);
+    }
+
+    /** The song a matcher is in the middle of (two notes or more) or has just finished, or null (the client uses it too). */
+    public static @Nullable Song leading(SongMatcher m, long now) {
+        if (m.lastCompleted != null && now - m.completedAt <= 4) {
+            return m.lastCompleted;
+        }
+        Song best = null;
+        int most = 1;
+        for (Song s : Song.values()) {
+            int n = m.progress(s, now);
+            if (n > most) {
+                most = n;
+                best = s;
+            }
+        }
+        return best;
     }
 
     /** Forgets a player's progress through every song (tests start from a clean slate). */

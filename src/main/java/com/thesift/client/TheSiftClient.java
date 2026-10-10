@@ -65,6 +65,7 @@ public class TheSiftClient {
         modBus.addListener(ClientEffects::registerOverlays);
         modBus.addListener(com.thesift.client.music.InstrumentHud::registerOverlays); // songs (agent D)
         com.thesift.client.music.BandClient.register(modBus); // M2 band: the band panel, members' sway and hop on the beat
+        com.thesift.client.music.FreePlay.register(modBus); // INS free play: keys, stances, moving parts, notes flying from instruments
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onClientTick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onPlaySound);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(ClientEffects::onFogColor);

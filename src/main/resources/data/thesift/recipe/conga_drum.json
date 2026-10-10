@@ -4,12 +4,13 @@
   "key": {
     "L": "minecraft:leather",
     "S": "minecraft:string",
-    "P": "#minecraft:planks"
+    "P": "#minecraft:planks",
+    "C": "minecraft:copper_ingot"
   },
   "pattern": [
     "LSL",
     "P P",
-    "PPP"
+    "PCP"
   ],
   "result": {
     "count": 1,

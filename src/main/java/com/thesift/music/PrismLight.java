@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * M1 instrument play: the four colours of light a Prism instrument plays its notes in - Rose,
  * Amber, Cyan and Violet. A Prism song ({@link Song#prism()}) asks for a colour with every note; the
- * play screens pick the colour with the keys 1-4 or the mouse wheel.
+ * player picks the colour in free play with sneak and the mouse wheel.
  *
  * <p>In the world every Prism note is a little light show: a ring and a shaft of coloured light
  * round the player, sparkles - and real light, for a moment, where the player stands.

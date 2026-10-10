@@ -89,7 +89,7 @@ public class BandTableBlock extends BaseEntityBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
             BlockHitResult hit) {
-        // while the song is being played, an instrument in hand plays (its own use opens its play screen)
+        // while the song is being played, an instrument in hand plays (its own use raises it: INS free play)
         if (stack.getItem() instanceof SiftInstrumentItem && level.getBlockEntity(pos) instanceof BandTableBlockEntity table && table.isPerforming()) {
             return InteractionResult.PASS;
         }

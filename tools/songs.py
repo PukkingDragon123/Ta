@@ -67,8 +67,8 @@ INSTRUMENT_NAMES = {
 }
 INSTRUMENT_SHORT = {'any': 'Any instrument', 'flute': 'Flute', 'drum': 'Drum', 'strings': 'Strings', 'chimes': 'Chimes', 'prism': 'Prism'}
 # Wind Chimes: a stick crossbar, two strings, an iron and an amethyst tube
-WIND_CHIMES_RECIPE = (['SSS', 'T T', 'IAI'], {'S': 'minecraft:stick', 'T': 'minecraft:string', 'I': 'minecraft:iron_ingot',
-                                              'A': 'minecraft:amethyst_shard'})
+WIND_CHIMES_RECIPE = (['SSS', 'T T', 'CAC'], {'S': 'minecraft:stick', 'T': 'minecraft:string', 'C': 'minecraft:copper_ingot',
+                                              'A': 'minecraft:amethyst_shard'})  # INS free play: copper tubes, like the model
 OPTIONAL_INSTRUMENTS = ['weaver_guitar']  # another agent's; tagged as optional
 
 
@@ -103,7 +103,7 @@ def lang():
     L.update({f'song.{NS}.{s}.desc': t for s, t in SONG_DESC.items()})
     L.update({
         # C4 songs: which instrument, which notes, where to look
-        f'item.{NS}.music_sheet.hint': 'Carry it and use the instrument: its play screen writes the song out its own way. Use the sheet to pin it.',
+        f'item.{NS}.music_sheet.hint': 'Carry it and raise an instrument: its song is read out, key by key. Use the sheet to pin it.',
         f'item.{NS}.music_sheet.instrument': 'Play on %s',
         f'item.{NS}.music_sheet.scale': 'Notes from F#3 to F#5.',
         f'item.{NS}.music_sheet.rhythm': 'Keep its rhythm: ♩ one beat, ♪ half a beat',
@@ -112,15 +112,15 @@ def lang():
         f'message.{NS}.song.wrong_instrument': '%s must be played on %s',
         f'music.{NS}.aim.up': '%s° up', f'music.{NS}.aim.down': '%s° down', f'music.{NS}.aim.ahead': 'straight ahead',
         f'music.{NS}.guide.next': 'Next: %s, look %s',
-        f'music.{NS}.guide.play': 'Use the instrument to play - next: %s',
+        f'music.{NS}.guide.play': 'Raise the instrument (hold use) - next: %s',
         f'music.{NS}.guide.next_note': 'Next: %s',
         f'music.{NS}.guide.needs': 'Needs %s',
         f'music.{NS}.guide.done': 'Played!',
-        f'item.{NS}.wind_chimes.desc': 'Use to play: strike the chimes as they swing past the mark.',
+        f'item.{NS}.wind_chimes.desc': 'Hold use to raise them; 1-9 strike the chimes.',
         f'codex.{NS}.songs.title': 'Songs & Music Sheets', f'codex.{NS}.songs.tagline': 'Eleven songs, eleven sheets',
         f'codex.{NS}.songs.body': 'Sheets lie in relics, castles, the Drum Pit, Ancient Cities, libraries and sunken treasure. Play a carried sheet\'s notes in order on the right instrument; one slip is forgiven. Chimes: Offering, Crystal, Requiem. Strings: Nibs, Lullaby, Canon. Flute: Whale, Dolphin. Drum, on the beat: Heartbeat. Prism: Aurora. Golem Hymn: any.',
         f'codex.{NS}.prism_instruments.title': 'Prism Instruments', f'codex.{NS}.prism_instruments.tagline': 'Notes of light',
-        f'codex.{NS}.prism_instruments.body': 'Ring an upgraded instrument with prism gems: Star Lute to Prism Harp (a string for every note), Serbim Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - keys 1-4 or the mouse wheel - and lights the air. Prism songs such as the Aurora ask for the lights too.',
+        f'codex.{NS}.prism_instruments.body': 'Ring an upgraded instrument with prism gems: Star Lute to Prism Harp (a string for every note), Serbim Flute, Thunder Drums and Glass Bells to their Prism kin. Every note is played in a colour of light - sneak and turn the mouse wheel to choose it - and lights the air. Prism songs such as the Aurora ask for the lights too.',
     })
     L.update({f'instrument.{NS}.{k}': v for k, v in INSTRUMENT_NAMES.items()})
     L.update({f'instrument.{NS}.{k}.short': v for k, v in INSTRUMENT_SHORT.items()})

@@ -7,6 +7,8 @@ issueTrackerURL="https://github.com/PukkingDragon123/Ta/issues"
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
+# INS free play: the instrument playing stance is an ArmPose added by enum extension
+enumExtensions="META-INF/enumextensions.json"
 authors="${mod_authors}"
 iconFile="thesift_logo.png"
 credits="Inspired by the dreamy side of Minecraft."

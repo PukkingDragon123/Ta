@@ -396,6 +396,20 @@ public final class ClientSmokeTest {
             c.run("effect clear @a");
             c.camera(307.5, 178, -186.0, 307.5, 145, -236.5);
         });
+        // INS free play: a player raising and playing instruments - from the front in third person, and through their eyes
+        String[][] plays = {{"guitar", "front"}, {"conga_drum", "front"}, {"crane_flute", "front"}, {"wind_chimes", "front"}, {"prism_harp", "front"},
+                {"star_lute", "first"}, {"thunder_drums", "first"}, {"serbim_flute", "first"}};
+        for (String[] play : plays) {
+            boolean third = play[1].equals("front");
+            SCENES.add(new Scene("play_" + play[0] + "_" + play[1], 40, c -> {
+                c.run("gamemode creative @a");
+                floor(c, -108, 20, -100, 28);
+                c.run(String.format(Locale.ROOT, "execute in %s run tp @a -103.5 %d 24.5 facing -103.5 %d 31.5", ModDimensions.THE_SIFT.identifier(),
+                        STAGE_Y, STAGE_Y + 1));
+                c.run("item replace entity @a weapon.mainhand with thesift:" + play[0]);
+                target = new Vec3(-103.5, STAGE_Y, 24.5);
+            }, () -> InstrumentSmoke.play(third)));
+        }
         // F3: the Knowledge Book, opened at a few spreads (contents, live creatures, a song sheet, lore, the guide's goals)
         String[] codexPages = {"contents_0", "harmoner", "mini_creator", "song_whale", "lore_creator_rifts", "quest_arrival", "dictator", "staff"};
         for (String page : codexPages) {

@@ -85,7 +85,7 @@ final class BandTest {
 
     private void perform(FakePlayer p, Instrument instrument, Song song) {
         SongTracker.forget(p);
-        // in the song's own rhythm (drum songs are judged on it), else half a second apart, as the play screens do
+        // in the song's own rhythm (drum songs are judged on it), else half a second apart, as free play does
         double clock = 1000.0;
         for (int i = 0; i < song.length(); i++) {
             Notes.play(this.sift, p, instrument, song.note(i), Math.max(-1, song.colour(i)), clock, 0);

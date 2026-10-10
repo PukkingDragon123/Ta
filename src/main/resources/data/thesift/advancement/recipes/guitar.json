@@ -12,12 +12,22 @@
       "conditions": {
         "items": [
           {
-            "items": "thesift:sculk_string"
+            "items": "minecraft:string"
           }
         ]
       }
     },
     "has_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:copper_ingot"
+          }
+        ]
+      }
+    },
+    "has_2": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -32,7 +42,8 @@
     [
       "has_the_recipe",
       "has_0",
-      "has_1"
+      "has_1",
+      "has_2"
     ]
   ],
   "rewards": {

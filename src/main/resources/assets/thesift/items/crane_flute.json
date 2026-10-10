@@ -1,6 +1,33 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "thesift:item/crane_flute"
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "on_shelf",
+          "head"
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "thesift:item/crane_flute"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:condition",
+      "property": "minecraft:using_item",
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "thesift:item/crane_flute_play"
+      },
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "thesift:item/crane_flute"
+      }
+    }
   }
 }

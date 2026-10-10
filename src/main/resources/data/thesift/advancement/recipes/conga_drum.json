@@ -36,6 +36,16 @@
           }
         ]
       }
+    },
+    "has_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:copper_ingot"
+          }
+        ]
+      }
     }
   },
   "requirements": [
@@ -43,7 +53,8 @@
       "has_the_recipe",
       "has_0",
       "has_1",
-      "has_2"
+      "has_2",
+      "has_3"
     ]
   ],
   "rewards": {

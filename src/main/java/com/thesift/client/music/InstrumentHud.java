@@ -4,7 +4,6 @@ import com.thesift.TheSift;
 import com.thesift.item.SiftInstrumentItem;
 import com.thesift.item.MusicSheetItem;
 import com.thesift.music.Instrument;
-import com.thesift.music.InstrumentPlay;
 import com.thesift.music.Notes;
 import com.thesift.music.PrismLight;
 import com.thesift.music.Song;
@@ -26,11 +25,11 @@ import org.jspecify.annotations.Nullable;
  * instrument - the carried sheet that instrument can play. Its notes sit on a parchment staff in the
  * top-left corner, lighting up as you play them; the next one is boxed. A drum song's notes carry
  * their lengths under the staff, a Prism song's its lamps of coloured light. The bottom line says
- * to use the instrument (its play screen then takes over the guide), or which instrument the song
- * needs if yours will not do.
+ * which key plays the next note, or which instrument the song needs if yours will not do.
  *
- * <p>M1 instrument play: this is also where the client hooks {@link InstrumentPlay#clientOpen} up
- * to {@link InstrumentScreen#open}, so using an instrument opens its play screen.
+ * <p>INS free play: there is no play screen and no clutter - a carried sheet is only read out on its
+ * own while the instrument is raised to play, and under every note stands the number key that plays
+ * it in the current register (an arrow when the wheel must move first).
  */
 public final class InstrumentHud {
     private static final int NOTE_W = 18;
@@ -41,8 +40,21 @@ public final class InstrumentHud {
     }
 
     public static void registerOverlays(RegisterGuiLayersEvent event) {
-        InstrumentPlay.clientOpen = InstrumentScreen::open; // M1 instrument play: using an instrument opens its play screen
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, TheSift.id("music_sheet"), InstrumentHud::drawSheet);
+    }
+
+    /**
+     * The number key that plays {@code pitch} on {@code ins}, in the register the song is best played in:
+     * "3", or "▲3" / "▼3" when the wheel must move first.
+     */
+    private static String keyLabel(Instrument ins, int pitch, int songReg) {
+        int reg = FreePlay.register(ins);
+        int[] k = ins.keyFor(pitch, songReg);
+        if (k == null) {
+            return "-";
+        }
+        String n = String.valueOf(k[1] + 1);
+        return k[0] == reg ? n : (k[0] > reg ? "▲" : "▼") + n;
     }
 
     /** The instrument in hand (main hand first), or null. */
@@ -77,7 +89,8 @@ public final class InstrumentHud {
             }
             Notes.clientPinned = null;
         }
-        if (held == null) {
+        if (held == null || FreePlay.playing(p) == null) {
+            // INS free play: a carried sheet is read out only while the instrument is raised
             return null;
         }
         long now = p.level().getGameTime();
@@ -105,7 +118,7 @@ public final class InstrumentHud {
     private static void drawSheet(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
-        if (p == null || mc.gui.screen() instanceof InstrumentScreen) {
+        if (p == null) {
             return;
         }
         Instrument held = heldInstrument(p);
@@ -119,6 +132,7 @@ public final class InstrumentHud {
         boolean justPlayed = Notes.CLIENT.lastCompleted == song && now - Notes.CLIENT.completedAt < 50;
         boolean fits = fits(song, held);
         int next = done >= song.length() ? 0 : done;
+        int songReg = held == null ? 0 : held.registerFor(song.notes(), FreePlay.register(held));
         Component title = Component.translatable("song.thesift." + song.id());
         Component on = Component.literal("♪ ").append(Component.translatable(song.instrumentKey() + ".short"));
         // the guide line: what to do next, or what the song needs
@@ -131,7 +145,7 @@ public final class InstrumentHud {
             guide = Component.translatable("music.thesift.guide.needs", Component.translatable(song.instrumentKey()));
             guideColour = 0xFFB0302A;
         } else if (held != null) {
-            guide = Component.translatable("music.thesift.guide.play", Notes.name(song.note(next)));
+            guide = Component.translatable("music.thesift.guide.key", keyLabel(held, song.note(next), songReg), Notes.name(song.note(next)));
             guideColour = INK;
         } else {
             guide = Component.translatable("music.thesift.guide.next_note", Notes.name(song.note(next)));
@@ -175,7 +189,7 @@ public final class InstrumentHud {
             if (played) {
                 g.fill(cx + 1, cy - 1, cx + 2, cy, 0xFFFFFFFF);
             }
-            String name = Notes.name(n);
+            String name = held != null && fits ? keyLabel(held, n, songReg) : Notes.name(n);
             g.text(font, name, cx + 2 - font.width(name) / 2, staffTop + 32, played ? 0xFF000000 | col : (i == next ? INK : FADED), false);
             int below = staffTop + 42;
             if (song.rhythmic()) {

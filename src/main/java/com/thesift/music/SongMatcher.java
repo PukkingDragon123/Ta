@@ -5,7 +5,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * One player's progress through every song, note by note. The server keeps one per player (the
- * {@link SongTracker}), the client one for the local player (the play screens' guides), and both
+ * {@link SongTracker}), the client one for the local player (free play's guide), and both
  * run the same rules, so the guide always shows what the server will accept.
  *
  * <p>Forgiving on purpose:
@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
  * playing the right notes on the wrong instrument, so it can say so.
  *
  * <p>Times: {@code now} is the game time (for the pauses); {@code clock} is when the note was
- * played on the player's own clock, in ticks with fractions (for rhythm) - the play screens send it
+ * played on the player's own clock, in ticks with fractions (for rhythm) - free play sends it
  * with every note, so the network's delay never spoils a beat.
  */
 public final class SongMatcher {
