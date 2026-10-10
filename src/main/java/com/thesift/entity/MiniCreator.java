@@ -1,6 +1,8 @@
 package com.thesift.entity;
 
+import com.thesift.knowledge.Knowledge;
 import com.thesift.knowledge.KnowledgeTracker;
+import com.thesift.knowledge.Quest;
 import com.thesift.registry.ModKnowledge;
 import java.util.EnumSet;
 import java.util.List;
@@ -16,6 +18,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -38,11 +44,13 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * F3 Knowledge &amp; lore: the Mini Creator, a small platypus in the Creator's white and gold with four little blocks
- * floating over his back. He guides one player: he appears beside them on their first steps in the Sift, gives
- * them the Knowledge Book and their first goal, and pops back to cheer and give the next goal each time one is met
- * ({@link KnowledgeTracker}). Use him to hear your current goal again. He waddles after you for a while, then waves,
- * spins and vanishes in a swirl of his blocks. He cannot be hurt.
+ * F3 Knowledge &amp; lore: the Mini Creator, a small platypus in the Creator's white and gold. S1 land: an avatar, a
+ * saint - he floats cross-legged in meditation, eyes glowing, a halo behind his head and rune blocks circling him.
+ * He is summoned: play The Creator's Hymn at the dais of a Creator's Ruin and he rises out of it in a column of light
+ * ({@link #summonAt}, {@link com.thesift.knowledge.CreatorShrine}), gives the player the Knowledge Book and their
+ * first goal, and from then on pops back to cheer and give the next goal each time one is met ({@link KnowledgeTracker}).
+ * Use him to hear your current goal again. He glides after you for a while, then waves, spins and vanishes in a swirl
+ * of his blocks. He cannot be hurt.
  *
  * <p>Animations (entity events, ids 100..104 - none used by PathfinderMob): talk (he rears up on his tail and his
  * bill clacks), wave, celebrate (a hop and a spin, his blocks flung wide), appear and vanish.
@@ -53,6 +61,9 @@ public class MiniCreator extends PathfinderMob {
     public static final byte EVENT_CELEBRATE = 102;
     public static final byte EVENT_APPEAR = 103;
     public static final byte EVENT_POOF = 104;
+    /** S1 land: how long his rise out of the dais takes (ticks); a synced flag starts the rise on every client. */
+    public static final int RISE_TICKS = 60;
+    private static final EntityDataAccessor<Boolean> RISING = SynchedEntityData.defineId(MiniCreator.class, EntityDataSerializers.BOOLEAN);
     /** How long he keeps you company after his last words (5 minutes). */
     private static final int LINGER = 6000;
 
@@ -61,10 +72,14 @@ public class MiniCreator extends PathfinderMob {
     public final AnimationState celebrateAnimation = new AnimationState();
     public final AnimationState appearAnimation = new AnimationState();
     public final AnimationState poofAnimation = new AnimationState();
+    public final AnimationState riseAnimation = new AnimationState();
 
     private java.util.@Nullable UUID guiding;
     private int linger = LINGER;
     private int poof = -1;
+    private int rise = -1;
+    /** Who sang him up (kept while he rises, so he greets them even before the world lists them as a player). */
+    private @Nullable ServerPlayer summoner;
 
     public MiniCreator(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -87,6 +102,86 @@ public class MiniCreator extends PathfinderMob {
     @Override
     public int getNoActionTime() {
         return 0;
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(RISING, false);
+    }
+
+    // ------------------------------------------------------------------ the summoning (S1 land)
+
+    /**
+     * The Creator's Hymn was played at a Creator's Dais: he rises out of it in a column of light (it takes
+     * {@link #RISE_TICKS}), then greets the player - a Knowledge Book and the first goal, or the goal they are on.
+     * An earlier Mini Creator of theirs goes. Null if he is already rising for them.
+     */
+    public static @Nullable MiniCreator summonAt(ServerLevel level, BlockPos dais, ServerPlayer player) {
+        for (MiniCreator old : level.getEntitiesOfClass(MiniCreator.class, player.getBoundingBox().inflate(96.0), g -> g.isGuiding(player))) {
+            if (old.rise >= 0) {
+                return null;
+            }
+            old.discard();
+        }
+        MiniCreator guide = ModKnowledge.MINI_CREATOR.get().create(level, EntitySpawnReason.TRIGGERED);
+        if (guide == null) {
+            return null;
+        }
+        double dx = player.getX() - (dais.getX() + 0.5);
+        double dz = player.getZ() - (dais.getZ() + 0.5);
+        float yaw = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0F;
+        guide.snapTo(dais.getX() + 0.5, dais.getY() + 1.0, dais.getZ() + 0.5, yaw, 0.0F);
+        guide.setYHeadRot(yaw);
+        guide.yBodyRot = yaw;
+        guide.guiding = player.getUUID();
+        guide.summoner = player;
+        guide.rise = RISE_TICKS;
+        guide.entityData.set(RISING, true);
+        level.addFreshEntity(guide);
+        level.playSound(null, dais, SoundEvents.BEACON_ACTIVATE, SoundSource.NEUTRAL, 1.6F, 1.2F);
+        level.playSound(null, dais, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.NEUTRAL, 1.4F, 0.6F);
+        return guide;
+    }
+
+    public boolean isRising() {
+        return this.entityData.get(RISING);
+    }
+
+    /** Server: the column of light while he rises, then the greeting. */
+    private void tickRise(ServerLevel level) {
+        this.getNavigation().stop();
+        double x = this.getX();
+        double y = this.getY() - 1.0;
+        double z = this.getZ();
+        if (this.rise % 2 == 0) {
+            for (int i = 0; i < 6; i++) {
+                level.sendParticles(ParticleTypes.END_ROD, x + (this.random.nextDouble() - 0.5) * 0.6, y + this.random.nextDouble() * 12.0,
+                        z + (this.random.nextDouble() - 0.5) * 0.6, 1, 0.0, 0.05, 0.0, 0.02);
+            }
+            level.sendParticles(ParticleTypes.ENCHANT, x, y + 1.5, z, 12, 1.2, 0.8, 1.2, 0.8);
+        }
+        if (this.rise == RISE_TICKS - 1) {
+            level.sendParticles(ParticleTypes.END_ROD, x, y + 1.2, z, 30, 0.2, 0.2, 0.2, 0.25);
+        }
+        if (--this.rise > 0) {
+            return;
+        }
+        this.rise = -1;
+        this.entityData.set(RISING, false);
+        level.sendParticles(ParticleTypes.END_ROD, x, y + 1.6, z, 40, 0.6, 0.6, 0.6, 0.12);
+        level.sendParticles(ParticleTypes.CLOUD, x, y + 1.0, z, 12, 0.6, 0.2, 0.6, 0.02);
+        this.playSound(ModKnowledge.GUIDE_APPEAR.get(), 1.0F, 1.0F);
+        Player greeted = this.summoner != null ? this.summoner : this.guided();
+        this.summoner = null;
+        if (greeted instanceof ServerPlayer sp) {
+            if (!Knowledge.has(sp, Quest.ARRIVAL.doneKey())) {
+                KnowledgeTracker.meet(sp, this);
+            } else {
+                this.wave();
+                KnowledgeTracker.tellCurrent(sp, this);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ the guide
@@ -184,6 +279,9 @@ public class MiniCreator extends PathfinderMob {
     public void tick() {
         super.tick();
         if (this.level().isClientSide()) {
+            if (this.isRising() && !this.riseAnimation.isStarted()) {
+                this.riseAnimation.start(this.tickCount);
+            }
             // a faint sparkle trails off his floating blocks
             if (this.random.nextFloat() < 0.14F) {
                 double a = this.tickCount * 0.08 + this.random.nextInt(4) * Math.PI / 2.0;
@@ -199,6 +297,10 @@ public class MiniCreator extends PathfinderMob {
                 this.level().addParticle(ParticleTypes.ENCHANT, this.getX(), this.getY() + 0.9, this.getZ(), (this.random.nextDouble() - 0.5) * 2.0,
                         this.random.nextDouble() * 0.6, (this.random.nextDouble() - 0.5) * 2.0);
             }
+            return;
+        }
+        if (this.rise >= 0 && this.level() instanceof ServerLevel rising) {
+            this.tickRise(rising);
             return;
         }
         if (this.poof >= 0) {
@@ -292,9 +394,9 @@ public class MiniCreator extends PathfinderMob {
         return 240;
     }
 
+    /** S1 land: he floats - no footsteps. */
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModKnowledge.GUIDE_STEP.get(), 0.4F, 1.0F + this.random.nextFloat() * 0.3F);
     }
 
     @Override

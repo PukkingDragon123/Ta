@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "thesift:block/creator_dais_top",
+    "side": "thesift:block/creator_dais_side"
+  }
+}

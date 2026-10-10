@@ -43,7 +43,10 @@ public enum Song {
     /** The Enchanter's Canon on strings, each phrase answering the last a fifth higher: binds songs into instruments. */
     CANON(new int[]{6, 13, 11, 16, 13, 18, 16, 21}, Instrument.Family.STRINGS),
     /** The Sculk Requiem, rung on chimes: the Ancient Cities' lament, which wards against the Sculk. */
-    REQUIEM(new int[]{18, 15, 13, 8, 10, 6, 8, 6}, Instrument.Family.CHIMES);
+    REQUIEM(new int[]{18, 15, 13, 8, 10, 6, 8, 6}, Instrument.Family.CHIMES),
+    /** S1 land: the Creator's Hymn, carved into the dais of a Creator's Ruin - played there, on any instrument, it summons
+     *  the Mini Creator (knowledge/CreatorShrine). Only notes every instrument reaches, and no other song hides in it. */
+    HYMN(new int[]{8, 10, 13, 10, 8, 13, 10, 8}, null);
 
     /** Ticks in one half-beat of a song's rhythm (120 beats a minute). */
     public static final int STEP = 5;

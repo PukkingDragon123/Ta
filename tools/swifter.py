@@ -55,26 +55,26 @@ def _fur(color='fur', glints=0.0, size=(8, 8), seed=0, **kw):
 
 FACE_KEYS = {'l': 'lid', 'E': 'eye', 'P': 'pupil', 'w': 'white', 'T': 'tear', 'b': 'blush'}
 
-# the adult's face: 14 x 12 texels, the snout covers the lower middle. Fierce almond eyes under
-# brows that slant down towards the nose, ice-blue irises, slit pupils.
+# S1 land: small vanilla-style eyes, the fox's way (a dark pupil beside an ice-blue iris under a dark lid line) - never
+# cartoon eyes. The adult's face: 14 x 12 texels, the snout covers the lower middle; brows slant for its moods.
 ADULT_FACE = {
-    'neutral': {3: '.ll........ll.', 4: '..lll....lll..', 5: '.wEEPl..lPEEw.', 6: '..EEPl..lPEE..', 7: '...ll....ll...'},
-    'blink': {3: '.ll........ll.', 4: '..lll....lll..', 5: '.lllll..lllll.'},
-    'angry': {3: '.l..........l.', 4: '.lll......lll.', 5: '..llll..llll..', 6: '..wEPl..lPEw..', 7: '...ll....ll...'},
-    'sleep': {5: '.l...l..l...l.', 6: '..lll....lll..'},
-    'hurt': {4: '.l..........l.', 5: '..ll......ll..', 6: '.l..........l.'},
-    'happy': {4: '...ll....ll...', 5: '..l..l..l..l..', 7: '.bb........bb.'},
-    'dead': {4: '.l.l......l.l.', 5: '..l........l..', 6: '.l.l......l.l.'},
+    'neutral': {4: '..llll..llll..', 5: '..EEP....PEE..'},
+    'blink': {5: '..llll..llll..'},
+    'angry': {3: '..l........l..', 4: '...lll..lll...', 5: '..lEP....PEl..'},
+    'sleep': {5: '..llll..llll..'},
+    'hurt': {4: '..l..l..l..l..', 5: '..llll..llll..'},
+    'happy': {4: '..llll..llll..', 5: '..EEP....PEE..', 6: '..llll..llll..'},
+    'dead': {5: '..llll..llll..'},
 }
-# the cub's face: 10 x 9 texels, big round eyes; crying, it screws them shut and the tears run
+# the cub's face: 10 x 9 texels, the same small eyes a little lower on a rounder face
 CUB_FACE = {
-    'neutral': {3: '.EEE..EEE.', 4: '.wPE..wPE.', 5: '.EPE..EPE.'},
+    'neutral': {3: '.lll..lll.', 4: '.EEP..PEE.'},
     'blink': {4: '.lll..lll.'},
-    'angry': {3: '.l......l.', 4: '..ll..ll..', 5: '.EPE..EPE.'},
-    'sleep': {4: '.l.l..l.l.', 5: '..l....l..'},
-    'hurt': {3: '.l......l.', 4: '..l....l..', 5: '.l......l.', 6: '.T......T.', 7: '.T......T.', 8: 'T........T'},
-    'happy': {4: '..l....l..', 5: '.l.l..l.l.', 6: 'b........b'},
-    'dead': {3: '.l.l..l.l.', 4: '..l....l..', 5: '.l.l..l.l.'},
+    'angry': {3: '.l......l.', 4: '.lEP..PEl.'},
+    'sleep': {4: '.lll..lll.'},
+    'hurt': {3: '.l.l..l.l.', 4: '.lll..lll.'},
+    'happy': {3: '.lll..lll.', 4: '.EEP..PEE.', 5: '.lll..lll.'},
+    'dead': {4: '.lll..lll.'},
 }
 SIDES = (('left', 1), ('right', -1))
 TAILS = (('left', 1.0), ('middle', 0.0), ('right', -1.0))

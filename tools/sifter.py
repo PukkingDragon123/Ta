@@ -132,7 +132,6 @@ def merge(base, top):
 
 def sifter() -> Model:
     """The Sifter as a living bell (see the notes at the top of this file)."""
-    from mobs_wild import eye
     m = Model('sifter', (128, 128), dict(PAL), {'sifter': {}}, res=2, expressions=EXPRS, materials=MATERIALS)
     seed = [11]
 
@@ -185,12 +184,14 @@ def sifter() -> Model:
     loop.cube((-2.5, -3, -1), (5, 1, 2), **lk, faces={'up': mc('sand', clusters=0.5, spots=0.3, accent='grit')})
 
     # ---- eyes on its shoulder, bulging a little, rimmed with bronze lids
-    ek = {'r': 'lid', 'i': 'iris', 'I': 'iris_d', 'p': 'eye', 'h': 'eye_hi', 'l': 'lid', 'd': 'lid_d'}
+    # S1 land: small vanilla-style eyes (a dark pupil beside an amber iris under a bronze lid line) - never cartoon eyes
+    from landkit import small_eye
+    ek = {'i': 'iris', 'I': 'iris_d', 'p': 'eye', 'd': 'lid_d'}
     for side, sx in (('left', 1), ('right', -1)):
         e = bell.part(f'{side}_eye', pivot=(2.6 * sx, -12.4, -4.6), rot=(-0.2, 0.24 * sx, 0))
-        e.cube((-2, -2, -1.5), (4, 4, 2), **mc('lid', clusters=0.0, rim=False), faces={
-            'north': mc('lid', clusters=0.0, rim=False, hd=True, map=eye(8, 8, '', sx < 0, pupil='dot', rim=0.66), keys=ek,
-                        expr={x: eye(8, 8, x, sx < 0, pupil='dot', rim=0.66) for x in EXPRS})})
+        e.cube((-1.5, -1.25, -1.0), (3, 2, 1.25), **mc('lid', clusters=0.0, rim=False), faces={
+            'north': mc('lid', clusters=0.0, rim=False, hd=True, map=small_eye('', 6, 4, sx < 0), keys=ek,
+                        expr={x: small_eye(x, 6, 4, sx < 0) for x in EXPRS})})
 
     # ---- the clapper: an iron tongue hung inside, its bob swinging just below the lip
     clap = bell.part('clapper', pivot=(0, CLAPPER_PIVOT, 0))

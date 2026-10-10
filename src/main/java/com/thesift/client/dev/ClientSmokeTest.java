@@ -365,6 +365,7 @@ public final class ClientSmokeTest {
         scene("mob_closeup_swifter", 50, c -> landStage(c, 0));
         scene("mob_closeup_sculk_harmoner", 40, c -> landStage(c, 1));
         scene("mob_closeup_mini_creator", 40, c -> landStage(c, 2));
+        scene("mob_closeup_mini_creator_ruin", 60, ClientSmokeTest::ruinStage); // S1 land: meditating on his dais at a Creator's Ruin
         scene("mob_closeup_sky_whale", 60, c -> landStage(c, 3));
         // P4 Cave Jungle: each creature on a pad of Lumen Moss north of the stage (a Giant Pitcher Plant beside the Glow Fly)
         scene("mob_closeup_glow_fly", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.GLOW_FLY.get(), -60, 1.0));
@@ -603,6 +604,20 @@ public final class ClientSmokeTest {
 
     /** S1 land: the land creatures' close-ups stand on their own lawns north of the live pen, clear of every other stage. */
     private static final int LAND_Z = STAGE_Z + 42;
+
+    /** S1 land: a Creator's Ruin stamped from its template west of the land lawn, the Mini Creator meditating over its dais. */
+    private static void ruinStage(Ctx c) {
+        c.run("gamemode spectator @a");
+        int x0 = -134;
+        int z0 = LAND_Z - 3;
+        floor(c, x0 - 4, z0 - 6, x0 + 20, z0 + 20);
+        c.fill(x0 - 4, STAGE_Y + 7, z0 - 6, x0 + 20, STAGE_Y + 12, z0 + 20, Blocks.AIR.defaultBlockState());
+        c.run(String.format(Locale.ROOT, "execute in %s run place template thesift:creators_ruin/creators_ruin_0 %d %d %d",
+                ModDimensions.THE_SIFT.identifier(), x0, STAGE_Y - 1, z0));
+        // the dais is at (8, 3, 8) in the template: he floats just over it, facing the way in (south)
+        c.spawn(com.thesift.registry.ModKnowledge.MINI_CREATOR.get(), x0 + 8.5, STAGE_Y + 3, z0 + 8.5, 0.0F, false);
+        c.camera(x0 + 11.5, STAGE_Y + 5.2, z0 + 15.5, x0 + 8.5, STAGE_Y + 3.6, z0 + 8.5);
+    }
 
     /** S1 land creatures: each close-up sets its creature down on a shared lawn and frames it three-quarters from the front. */
     private static void landStage(Ctx c, int which) {

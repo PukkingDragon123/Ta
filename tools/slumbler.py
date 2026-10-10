@@ -122,7 +122,7 @@ def slumbler() -> Model:
         cheek.cube(((0 if sx > 0 else -2), -2, -3), (2, 4, 6), back=-1, **S)
         eye = head.part(f'{side}_eye', pivot=(6 * sx, -5, -10))
         eye.cube((-2.5, -3, -2), (5, 3, 4), back=99, **S, faces={
-            'north': dict(decal=['.llllllll.', 'oJJJJJJIio', 'JHHJJJJIii', 'JHPPPPPPPi', 'IPPPPPPPPi', 'oiIIIIiiio'], keys=EYE, mirror=sx < 0),
+            'north': dict(decal=['.llllllll.', 'oJJJJJJIio', 'JJJJJJJIii', 'JJPPPPPPPi', 'IPPPPPPPPi', 'oiIIIIiiio'], keys=EYE, mirror=sx < 0),
             out: dict(decal=['lllll...', 'oJJIo...', 'IPPio...', 'oiiio...'], keys=EYE, at=(0, 1) if sx > 0 else (0, 1), mirror=sx < 0)})
         lid = eye.part(f'{side}_eyelid', pivot=(0, -3, 0))  # the model scales it down over the eye
         lid.cube((-2.5, 0, -2), (5, 2, 4), inflate=0.2, back=99, **S, faces={'north': dict(decal=['L' * 10, 'l' * 10], keys=EYE, at='bottom'),
@@ -183,7 +183,7 @@ def slumbler_tadpole() -> Model:
     body.cube((-3, -1, -4), (6, 2, 8), **S, faces={'down': dict(mat='belly')})
     body.cube((-2, -2, -3), (4, 1, 5), **S)
     for side, sx in (('left', 1), ('right', -1)):
-        body.cube(((1 if sx > 0 else -2), -3, -3), (1, 1, 1), **S, faces={'up': dict(decal=['oo', 'JH'] if sx > 0 else ['oo', 'HJ'], keys=EYE), 'north': dict(decal=['IJ', 'PP'], keys=EYE)})
+        body.cube(((1 if sx > 0 else -2), -3, -3), (1, 1, 1), **S, faces={'up': dict(decal=['oo', 'JJ'] if sx > 0 else ['oo', 'JJ'], keys=EYE), 'north': dict(decal=['IJ', 'PP'], keys=EYE)})
         wing = body.part(f'{side}_wing', pivot=(3 * sx, 0, 0))
         wing.cube(((0 if sx > 0 else -3), -1, -3), (3, 1, 6), **S, faces={'down': dict(mat='belly')})
         tip = wing.part(f'{side}_wing_tip', pivot=(3 * sx, 0, 0))

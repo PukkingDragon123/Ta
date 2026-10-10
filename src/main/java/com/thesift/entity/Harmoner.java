@@ -74,8 +74,8 @@ public class Harmoner extends Animal implements MusicListener, Resting {
 
     public static final String[] NAMES = {"rose", "azure", "gold", "violet", "jade", "coral", "night"};
     /** The structure each colour leads to (W1: the old ruins are gone - the Drum Pit or the Sculk Castle; CR2: the Caravan colony is gone too). */
-    public static final String[] STRUCTURES = {"thumper_arena", "sculk_castle", "thumper_arena", "sculk_castle", "thumper_arena", "thumper_arena",
-            "sculk_castle"};
+    public static final String[] STRUCTURES = {"thumper_arena", "sculk_castle", "creators_ruin", "sculk_castle", "thumper_arena", "thumper_arena",
+            "sculk_castle"}; // S1 land: the Gold Harmoner leads to the Creator's Ruin
     public static final int[] COLORS = {0xE8577F, 0x3F8FE8, 0xF2B632, 0x8C5AE0, 0x35C28F, 0xFF7A4A, 0x2EF2E2};
     public static final int VARIANTS = NAMES.length;
     /** Each colour's song, in semitones above F#3 (the note block's lowest note). */

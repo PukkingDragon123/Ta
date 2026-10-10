@@ -3,6 +3,7 @@ package com.thesift.dev;
 import com.mojang.authlib.GameProfile;
 import com.thesift.TheSift;
 import com.thesift.entity.MiniCreator;
+import com.thesift.knowledge.CreatorShrine;
 import com.thesift.knowledge.Glyphs;
 import com.thesift.knowledge.Knowledge;
 import com.thesift.knowledge.KnowledgeTracker;
@@ -13,6 +14,7 @@ import com.thesift.registry.ModKnowledge;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
@@ -24,6 +26,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 
@@ -31,7 +35,8 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
  * F3 Knowledge &amp; lore checks for the CI smoke test: discoveries are recorded once, survive a save and load of the
  * player and a death (the attachment is copied to the respawned player), the inventory scan records items, reading a
  * Lore Scroll records it and deciphers more of the ancient script, a placed Lore Book keeps its text, and meeting the
- * Mini Creator starts the quests and hands over a Knowledge Book.
+ * Mini Creator starts the quests and hands over a Knowledge Book. S1 land: the Creator's Dais gives the Creator's Hymn,
+ * and the hymn played beside it summons the Mini Creator, who rises out of the dais and greets the player.
  */
 final class KnowledgeTest {
     private KnowledgeTest() {
@@ -43,6 +48,7 @@ final class KnowledgeTest {
             unlocks(sift, player, check);
             lore(sift, player, check);
             guide(sift, player, check);
+            shrine(sift, check);
         } catch (RuntimeException e) {
             TheSift.LOGGER.error("SMOKE: knowledge test threw", e);
             check.accept(false, "knowledge: no exception (" + e + ")");
@@ -123,5 +129,48 @@ final class KnowledgeTest {
         check.accept(Quest.current(player) == Quest.INSTRUMENT, "knowledge: the first goal is an instrument");
         check.accept(!guide.hurtServer(sift, sift.damageSources().generic(), 5.0F), "knowledge: the mini creator cannot be hurt");
         guide.discard();
+    }
+
+    /** S1 land: the Creator's Dais gives the hymn; the hymn played beside it summons the Mini Creator, who rises and greets. */
+    private static void shrine(ServerLevel sift, BiConsumer<Boolean, String> check) {
+        FakePlayer player = FakePlayerFactory.get(sift, new GameProfile(UUID.fromString("5f3a0c1e-6b0d-4e8e-9a3c-0d1f2e3a4b60"), "shrine_test"));
+        int x = 36;
+        int z = -36;
+        int y = sift.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) + 1;
+        for (BlockPos p : BlockPos.betweenClosed(x - 3, y - 1, z - 3, x + 3, y + 4, z + 3)) {
+            sift.setBlock(p, p.getY() == y - 1 ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        }
+        BlockPos dais = new BlockPos(x, y, z);
+        sift.setBlock(dais, com.thesift.registry.ModBlocks.CREATOR_DAIS.get().defaultBlockState(), Block.UPDATE_ALL);
+        player.snapTo(x + 2.5, y, z + 0.5, 90.0F, 0.0F);
+        player.getInventory().clearContent();
+        sift.getBlockState(dais).useWithoutItem(sift, player, new BlockHitResult(Vec3.atCenterOf(dais), Direction.UP, dais, false));
+        boolean sheet = false;
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            sheet |= player.getInventory().getItem(i).is(ModItems.MUSIC_SHEET_HYMN.get());
+        }
+        check.accept(sheet, "knowledge: the Creator's Dais gives the Creator's Hymn");
+        check.accept(CreatorShrine.findDais(sift, player.blockPosition(), 8) != null, "knowledge: the dais is found beside the player");
+        check.accept(MiniCreator.guideOf(player, false) == null, "knowledge: no Mini Creator before the hymn");
+        com.thesift.music.SongEvents.played(sift, player, player.position(), com.thesift.music.Song.HYMN);
+        MiniCreator guide = MiniCreator.guideOf(player, false);
+        check.accept(guide != null && guide.isRising(), "knowledge: the hymn at the dais summons the Mini Creator, rising");
+        if (guide == null) {
+            return;
+        }
+        check.accept(guide.blockPosition().distManhattan(dais) <= 2, "knowledge: he rises out of the dais");
+        for (int i = 0; i <= MiniCreator.RISE_TICKS + 1 && guide.isAlive(); i++) {
+            guide.tick();
+        }
+        check.accept(!guide.isRising(), "knowledge: the rise ends");
+        check.accept(Knowledge.has(player, Quest.ARRIVAL.doneKey()), "knowledge: summoning the mini creator starts the quests");
+        boolean book = false;
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            book |= player.getInventory().getItem(i).is(ModItems.KNOWLEDGE_BOOK.get());
+        }
+        check.accept(book, "knowledge: the summoned mini creator hands over a knowledge book");
+        check.accept(guide.isGuiding(player), "knowledge: the summoned mini creator guides the player who sang");
+        guide.discard();
+        sift.setBlock(dais, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
     }
 }

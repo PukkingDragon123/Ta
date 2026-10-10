@@ -6,11 +6,12 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * F3: the Mini Creator (geometry from tools/mini_creator.py). A platypus waddle - diagonal legs together, the body
- * rolling over each step, the flat tail swinging the other way - and four little blocks circling over his back,
- * tumbling and bobbing out of step. Talking he rears up on his tail, paws up, and his bill clacks; waving, a front
- * paw paddles the air; celebrating he hops and spins while his blocks fly out wide and back; appearing, the blocks
- * spiral in; leaving, he spins down to nothing.
+ * F3: the Mini Creator (geometry from tools/mini_creator.py). S1 land: an avatar, a saint - he sits cross-legged in the
+ * air in meditation, the whole figure floating up and down in a slow bob, leaning a little into the glide when he
+ * follows you; a halo of light turns slowly behind his head; four rune blocks circle him, tumbling and bobbing out of
+ * step, and two rune plates wheel the other way. Talking, his paws open and his head nods as his bill moves; waving,
+ * he raises a paw in blessing; celebrating, he rises and spins while his blocks fly out wide and back; summoned, he
+ * rises out of the dais (the rise); appearing, the blocks spiral in; leaving, he spins down to nothing.
  */
 public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
     private final ModelPart body;
@@ -27,6 +28,8 @@ public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
     /** S1 land: two glowing rune plates circling the other way, and the halo over his explorer's hat. */
     private final ModelPart[] runes = new ModelPart[2];
     private final ModelPart halo;
+    /** How long the rise out of the dais lasts (seconds; MiniCreator.RISE_TICKS). */
+    private static final float RISE_SECONDS = 3.0F;
 
     public MiniCreatorModel(ModelPart root) {
         super(root);
@@ -51,88 +54,75 @@ public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
     @Override
     public void setupAnim(MiniCreatorRenderState s) {
         super.setupAnim(s);
-        float age = s.ageInTicks;
-        float walk = Math.min(1.0F, s.walkAnimationSpeed * 2.0F);
-        float pos = s.walkAnimationPos * 1.2F;
+        float age = s.ageInTicks + s.seed * 20.0F;
+        float glide = Math.min(1.0F, s.walkAnimationSpeed * 2.0F);
 
-        // --- the waddle
-        float step = Mth.sin(pos) * 0.7F * walk;
-        this.frontLeft.xRot += step;
-        this.backRight.xRot += step;
-        this.frontRight.xRot -= step;
-        this.backLeft.xRot -= step;
-        this.body.zRot += Mth.sin(pos) * 0.09F * walk;
-        this.body.y -= Math.abs(Mth.cos(pos)) * 0.6F * walk;
-        this.tail.yRot += Mth.sin(pos) * -0.35F * walk + Mth.sin(age * 0.11F) * 0.12F;
-        this.tail.xRot += Mth.sin(age * 0.07F) * 0.04F;
+        // --- floating in meditation: a slow bob of the whole figure (the arms and legs are root parts, so they move too)
+        float lift = 0.0F;
+        float rs = Anim.seconds(s.rise, s.ageInTicks);
+        if (rs >= 0.0F && rs < RISE_SECONDS) {
+            // summoned: he rises out of the dais, slowing as he comes to rest
+            lift = 20.0F * (1.0F - Anim.smooth(Anim.clamp01(rs / RISE_SECONDS)));
+        }
+        float dy = Mth.sin(age * 0.06F) * 0.9F + lift;
+        this.body.xRot += 0.14F * glide;
+        this.tail.yRot += Mth.sin(age * 0.05F) * 0.08F;
+        this.tail.xRot += Mth.sin(age * 0.04F) * 0.04F;
         for (int i = 0; i < 4; i++) {
-            this.tassels[i].zRot += Mth.sin(pos + i) * 0.3F * walk + Mth.sin(age * 0.1F + i) * 0.05F;
-            this.tassels[i].xRot += Mth.cos(pos * 0.5F + i) * 0.2F * walk;
+            this.tassels[i].zRot += Mth.sin(age * 0.08F + i) * 0.06F;
+            this.tassels[i].xRot += 0.25F * glide + Mth.cos(age * 0.07F + i) * 0.04F;
         }
-        // --- looking about; now and then he dabbles his bill
-        this.head.yRot += s.yRot * Anim.DEG * 0.7F;
-        this.head.xRot += Mth.clamp(s.xRot * Anim.DEG * 0.5F, -0.35F, 0.35F);
-        float dab = (age + s.seed * 13.0F) % 160.0F;
-        if (dab < 20.0F) {
-            float e = Mth.sin(dab / 20.0F * Mth.PI);
-            this.head.xRot += 0.35F * e;
-            this.jaw.xRot += 0.25F * Math.abs(Mth.sin(dab * 0.9F)) * e;
-        }
-        this.crown.zRot += Mth.sin(age * 0.05F) * 0.03F;
+        // --- looking about, calmly
+        this.head.yRot += Mth.clamp(s.yRot * Anim.DEG * 0.6F, -0.8F, 0.8F);
+        this.head.xRot += Mth.clamp(s.xRot * Anim.DEG * 0.4F, -0.3F, 0.3F);
+        this.halo.zRot += age * 0.015F;
+        this.crown.zRot += Mth.sin(age * 0.05F) * 0.02F;
 
-        float radius = 6.5F;
+        float radius = 9.0F;
         float spin = 0.0F;
-        float orbitSpeed = 0.06F;
+        float orbitSpeed = 0.035F;
 
-        // --- talking: up on his tail, paws raised, bill clacking
+        // --- talking: the paws open, the head nods, the bill moves
         float tk = Anim.seconds(s.talk, s.ageInTicks);
         if (tk >= 0.0F) {
             float e = Anim.envelope(tk, 0.0F, 0.3F, 2.2F, 0.4F);
-            this.body.xRot -= 0.6F * e;
-            this.body.y -= 2.0F * e;
-            this.head.xRot += 0.45F * e;
-            this.frontLeft.xRot -= (0.9F + Mth.sin(tk * 7.0F) * 0.25F) * e;
-            this.frontRight.xRot -= (0.9F + Mth.cos(tk * 7.0F) * 0.25F) * e;
-            this.frontLeft.y -= 2.5F * e;
-            this.frontRight.y -= 2.5F * e;
-            this.frontLeft.z -= 1.0F * e;
-            this.frontRight.z -= 1.0F * e;
-            this.jaw.xRot += 0.4F * Math.abs(Mth.sin(tk * 11.0F)) * e;
-            this.tail.xRot += 0.5F * e;
-            orbitSpeed += 0.04F * e;
+            this.frontLeft.zRot -= 0.5F * e;
+            this.frontRight.zRot += 0.5F * e;
+            this.frontLeft.xRot -= 0.35F * e;
+            this.frontRight.xRot -= 0.35F * e;
+            this.head.xRot += (0.12F + Mth.sin(tk * 5.0F) * 0.08F) * e;
+            this.jaw.xRot += 0.35F * Math.abs(Mth.sin(tk * 11.0F)) * e;
+            orbitSpeed += 0.03F * e;
         }
-        // --- waving: a front paw paddles the air
+        // --- waving: a paw raised in blessing
         float wv = Anim.seconds(s.wave, s.ageInTicks);
         if (wv >= 0.0F) {
             float e = Anim.envelope(wv, 0.0F, 0.2F, 1.2F, 0.3F);
-            this.frontRight.xRot -= 1.3F * e;
-            this.frontRight.zRot += (0.4F + Mth.sin(wv * 12.0F) * 0.45F) * e;
-            this.frontRight.y -= 2.0F * e;
-            this.body.zRot -= 0.12F * e;
-            this.head.zRot += 0.15F * e;
+            this.frontRight.xRot -= 1.6F * e;
+            this.frontRight.zRot += (0.15F + Mth.sin(wv * 6.0F) * 0.12F) * e;
+            this.head.zRot += 0.1F * e;
         }
-        // --- celebrating: a hop and a spin, the blocks flung wide
+        // --- celebrating: he rises and spins, the blocks flung wide
         float cb = Anim.seconds(s.celebrate, s.ageInTicks);
         if (cb >= 0.0F && cb < 2.0F) {
-            float hop = cb < 0.8F ? Mth.sin(cb / 0.8F * Mth.PI) : 0.0F;
-            this.body.y -= 7.0F * hop;
-            for (ModelPart leg : new ModelPart[]{this.frontLeft, this.frontRight, this.backLeft, this.backRight}) {
-                leg.y -= 7.0F * hop;
-                leg.zRot += (leg == this.frontLeft || leg == this.backLeft ? -0.5F : 0.5F) * hop;
-            }
-            this.body.yRot += Mth.TWO_PI * Anim.smooth(Anim.clamp01(cb / 0.8F));
-            this.jaw.xRot += 0.5F * hop;
-            this.tail.xRot -= 0.6F * hop;
+            float hop = cb < 1.0F ? Mth.sin(cb * Mth.PI) : 0.0F;
+            dy -= 5.0F * hop;
+            this.body.yRot += Mth.TWO_PI * Anim.smooth(Anim.clamp01(cb / 1.0F));
             float fling = Mth.sin(Anim.clamp01(cb / 1.6F) * Mth.PI);
             radius += 6.0F * fling;
             spin = 4.0F * fling;
         }
-        // --- appearing: the blocks spiral in from far out
+        // --- appearing: the blocks spiral in from far out (and when summoned, as he rises)
         float ap = Anim.seconds(s.appear, s.ageInTicks);
         if (ap >= 0.0F && ap < 1.2F) {
             float k = 1.0F - Anim.smooth(Anim.clamp01(ap / 1.2F));
             radius += 10.0F * k;
             spin += 6.0F * k;
+        }
+        if (rs >= 0.0F && rs < RISE_SECONDS) {
+            float k = 1.0F - Anim.smooth(Anim.clamp01(rs / RISE_SECONDS));
+            radius += 8.0F * k;
+            spin += 5.0F * k;
         }
         // --- leaving: he spins down to nothing in a swirl of his blocks
         float pf = Anim.seconds(s.poof, s.ageInTicks);
@@ -141,29 +131,29 @@ public class MiniCreatorModel extends EntityModel<MiniCreatorRenderState> {
             this.body.yRot += 9.0F * k * k;
             radius *= 1.0F - k;
             spin += 8.0F * k;
-            this.frontRight.xRot -= 1.2F * Math.min(1.0F, pf * 4.0F);
+        }
+        for (ModelPart p : new ModelPart[]{this.body, this.frontLeft, this.frontRight, this.backLeft, this.backRight}) {
+            p.y += dy;
         }
 
-        // --- the floating blocks: a slow ring over his back, each tumbling and bobbing out of step
+        // --- the rune blocks: a slow ring round him, each tumbling and bobbing out of step
         for (int i = 0; i < 4; i++) {
             float a = age * orbitSpeed + i * Mth.HALF_PI + spin;
             ModelPart o = this.orbs[i];
             o.x = Mth.cos(a) * radius;
             o.z = Mth.sin(a) * radius;
-            o.y = 9.0F + Mth.sin(age * 0.09F + i * 1.7F) * 1.2F - (tk >= 0.0F ? 2.0F : 0.0F);
+            o.y = 8.0F + dy + Mth.sin(age * 0.09F + i * 1.7F) * 1.2F;
             o.yRot = age * 0.05F + i;
             o.xRot = age * 0.03F * (i % 2 == 0 ? 1 : -1);
         }
-        // S1 land: the rune plates wheel the other way, lower and closer, turning as they go; the halo floats and turns slowly
+        // the rune plates wheel the other way, closer and lower, turning as they go
         for (int i = 0; i < 2; i++) {
             float a = -age * orbitSpeed * 1.4F + i * Mth.PI - spin;
             ModelPart r = this.runes[i];
             r.x = Mth.cos(a) * radius * 0.7F;
             r.z = Mth.sin(a) * radius * 0.7F;
-            r.y = 12.5F + Mth.sin(age * 0.12F + i * 2.1F) * 0.8F - (tk >= 0.0F ? 2.0F : 0.0F);
+            r.y = 13.0F + dy + Mth.sin(age * 0.12F + i * 2.1F) * 0.8F;
             r.yRot = -a;
         }
-        this.halo.y -= 0.4F + Mth.sin(age * 0.1F) * 0.4F;
-        this.halo.yRot = age * 0.03F;
     }
 }

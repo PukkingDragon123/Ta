@@ -141,9 +141,10 @@ RELIC_LORE = {'common': [('creator_songs', 1), ('pillager_stranded', 1)], 'rare'
 
 # the Mini Creator's quest lines (order = com.thesift.knowledge.Quest)
 QUESTS = [
-    ('arrival', 'A Small Hello', 'Meet the Mini Creator',
-     "Oh! A visitor through the Rift! Don't be frightened - I'm only a little piece of the Creator's song that slipped free "
-     "when the big one was taken. Here, take this Knowledge Book: it writes itself as you discover things.", ''),
+    # S1 land: the first goal is to find a Creator's Ruin and play his hymn at its dais (knowledge/CreatorShrine.java)
+    ('arrival', "The Creator's Ruin", "Find a Creator's Ruin and play The Creator's Hymn at its dais",
+     "You sang my hymn! Don't be frightened - I'm only a little piece of the Creator's song that slipped free when the big "
+     "one was taken. Here, take this Knowledge Book: it writes itself as you discover things.", ''),
     ('instrument', 'Something to Play', 'Hold an instrument',
      "The Sift listens to music before it listens to anything else. Find yourself an instrument - Wind Chimes are easy: "
      "sticks, string, iron and an amethyst shard. Better ones lie in old ruins.",
@@ -463,12 +464,13 @@ def lang(GA):
         f'entity.{NS}.mini_creator.says': '<%s> %s',
         f'band.{NS}.instrument.creator_bells': 'Creator Bells',
         f'codex.{NS}.mini_creator.title': 'Mini Creator',
-        f'codex.{NS}.mini_creator.tagline': 'Your guide - a small piece of a big song',
-        f'codex.{NS}.mini_creator.body': 'A small platypus dressed for exploring in the Creator\'s white and gold - field coat, '  # S1 land
-                                         'satchel and a wide-brimmed hat under a floating halo - with rune-carved blocks circling him. He says he is a piece of the Creator\'s song that slipped free when the Creator was '
-                                         'taken. He appears when you first arrive in the Sift, gives you this book and tells you '
-                                         'what to look for next; he pops back whenever you finish a goal. Talk to him (use him) to '
-                                         'hear your current goal again. He cannot be hurt, and he plays bells in your band.',
+        f'codex.{NS}.mini_creator.tagline': 'Your guide - a small saint of a big song',
+        f'codex.{NS}.mini_creator.body': 'A small platypus saint in the Creator\'s white and gold, floating cross-legged in '  # S1 land
+                                         'meditation, eyes alight, a halo behind his head and rune-carved blocks circling him. He says he '
+                                         'is a piece of the Creator\'s song that slipped free when the Creator was taken. To meet him, '
+                                         'find a Creator\'s Ruin and play The Creator\'s Hymn at its dais: he rises out of it, gives you '
+                                         'this book and tells you what to look for next; he pops back whenever you finish a goal. Talk to '
+                                         'him (use him) to hear your current goal again. He cannot be hurt, and he plays bells in your band.',
     })
     for key, (name, intro) in CHAPTERS.items():
         L[f'knowledge.{NS}.chapter.{key}'] = name

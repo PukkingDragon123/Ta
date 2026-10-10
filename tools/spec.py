@@ -249,13 +249,15 @@ for _d in ITEMS:
     if _d["id"] in ("strummer_spawn_egg", "strumling_spawn_egg"):
         _d["name"] = {"strummer_spawn_egg": "Weaver Spawn Egg", "strumling_spawn_egg": "Sculk Spider Spawn Egg"}[_d["id"]]
 __import__("knowledge").declare(block, item)  # F3 Knowledge and lore: the Knowledge Book, Lore Books/Scrolls, the Mini Creator egg
+__import__("creators_ruin").declare(block, item)  # S1 land: the Creator's Dais at the Creator's Ruin (tools/creators_ruin.py)
 item("music_disc_lullaby", props="new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(ModSounds.LULLABY_SONG)")
 # --- songs & instruments (agent D): a Music Sheet per Song (music/Song.java) and the gem-inlaid instruments
 SONG_TITLES = {"offering": "The Offering", "nib": "Song of the Nibs", "golem": "Golem Hymn", "crystal": "Crystal Hymn", "aurora": "Aurora",
                "whale": "Whale Song", "lullaby": "Lullaby",  # CLEAN: the Tide Song is gone
                # F2 Band Table & songs: a drum song, the Dolphin's symphony and the two enchanting songs
                "heartbeat": "The Heartbeat", "dolphin": "Symphony of the Dolphin", "canon": "The Enchanter's Canon",
-               "requiem": "Sculk Requiem"}
+               "requiem": "Sculk Requiem",
+               "hymn": "The Creator's Hymn"}  # S1 land: summons the Mini Creator at a Creator's Ruin
 for _s, _t in SONG_TITLES.items():
     item(f"music_sheet_{_s}", cls="MusicSheetItem", props="new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)", name=f"Music Sheet: {_t}")
 item("prism_flute", cls="SiftInstrumentItem", factory="p -> new SiftInstrumentItem(com.thesift.music.Instrument.PRISM_FLUTE, p)", props="new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)", model="handheld", tab="combat")

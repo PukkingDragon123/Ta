@@ -26,12 +26,12 @@ EXPRS = ['blink', 'happy', 'angry', 'hurt', 'dead']
 # the Sift Plains: mauve turf earth (coral turf side / sift soil), pink coral turf, teal Sift grass, pink blushgrass
 PAL = tones(hide='#8d5e6d', shin='#7f5363', belly='#6a4454', turf='#ec717f', moss='#c95566', teal='#43bcb1', bone='#e6dac0',
             pad='#3e2232', ear='#dc7d8e', tuftw='#f89fc3')
-PAL.update({'turf_d': '#cf6474', 'turf_l': '#ff9cab', 'eye': '#1c0f18', 'eye_hi': '#ffffff', 'iris': '#e8902e', 'iris_l': '#ffc860', 'lash': '#2a1422', 'vein': '#b4566c',
+PAL.update({'turf_d': '#cf6474', 'turf_l': '#ff9cab', 'eye': '#1c0f18', 'iris': '#b8742a', 'iris_d': '#8a5220', 'lash': '#2a1422', 'vein': '#b4566c',
             'mouth': '#7a2c44', 'mouth_l': '#a8455e', 'mouth_d': '#46182c', 'nostril': '#2a1020', 'flower': '#fff4ec', 'pollen': '#ffd64e'})
 # the White Forest coat: frost-pale lilac earth under snowy turf with icy-blue grass
 WHITE = tones(hide='#a39bb6', shin='#938aa8', belly='#7c7394', turf='#eef0fa', moss='#c8c8de', teal='#86bedc', bone='#f2eee4',
               pad='#3e3650', ear='#d8b8d8', tuftw='#ffffff')
-WHITE.update({'turf_d': '#c8c6dc', 'iris': '#6cb8e6', 'iris_l': '#bfe6ff', 'vein': '#b090b4', 'mouth': '#7e5672', 'mouth_l': '#a07898', 'mouth_d': '#4a2a40',
+WHITE.update({'turf_d': '#c8c6dc', 'iris': '#5a8ab8', 'iris_d': '#3e6890', 'vein': '#b090b4', 'mouth': '#7e5672', 'mouth_l': '#a07898', 'mouth_d': '#4a2a40',
               'lash': '#2e2440', 'flower': '#ffffff', 'pollen': '#c8e8ff'})
 MATERIALS = {'hide': 'skin', 'shin': 'skin', 'belly': 'skin', 'turf': 'plant', 'moss': 'plant', 'teal': 'plant', 'ear': 'skin',
              'pad': 'stone', 'tuftw': 'plant'}
@@ -87,28 +87,16 @@ def _sprite(kind, w, h, seed, coat):
 
 
 # --------------------------------------------------------------------------- texel maps
-EYE_KEYS = {'K': 'eye', 'w': 'eye_hi', 'i': 'iris', 'I': 'iris_l', 'L': 'lash', 'l': 'hide_l', 'd': 'hide_d', 'm': 'belly_d', 'h': 'hide'}
-# 9 x 8 texels, the front of the face on the left (east face); mirrored for the right side
-EYES = {
-    'neutral': ['..lllll..', '.ddKKKKd.', 'dKKwKKKKL', 'dKiKKKKKL', 'dKIiiKKd.', '.dKIIKdL.', '..ddddd..', '...lll...'],
-    'blink': ['..lllll..', '.ddddddd.', 'dddddddd.', 'dKKKKKKKL', '.dLdLdLdL', '..ddddd..', '...lll...', '.........'],
-    'happy': ['..lllll..', '.........', '..KKKKK..', '.K.....KL', 'K.......L', '.........', '..lllll..', '.........'],
-    'angry': ['KKl......', '.KKKllll.', 'dKKKKKKdL', 'dKiKKKKKL', 'dKIiiKKd.', '.dKIIKdL.', '..ddddd..', '...lll...'],
-    'hurt': ['..lllll..', '.dd...dd.', '..KK.KK..', '....K....', '..KK.KK..', '.dd...dd.', '..lllll..', '.........'],
-    'dead': ['..lllll..', '.K.....K.', '..K...K..', '...K.K...', '..K...K..', '.K.....K.', '..lllll..', '.........'],
-}
+EYE_KEYS = {'p': 'eye', 'i': 'iris', 'I': 'iris_d', 'd': 'lash', 'l': 'hide_l', 'f': 'hide_d'}
 
 
 def eye_face(w, h, x0, y0, expr, flip):
-    """A side of the skull: wrinkle folds round the eye socket and the eye itself at (x0, y0) texels from the front edge."""
+    """A side of the skull: wrinkle folds round the eye socket and a small elephant eye (vanilla-style: a dark pupil
+    beside an amber iris under a dark lid line, with a lit fold above it) at (x0, y0) texels from the front edge."""
+    from landkit import place, small_eye
     base = creases(w, h, period=6, seed=31 + flip, wob=0.8, gap=0.25, start=3)
-    glyph = EYES[expr]
-    grid = [list(r) for r in base]
-    for j, row in enumerate(glyph):
-        for i, ch in enumerate(row):
-            if ch != '.' and 0 <= y0 + j < h and 0 <= x0 + i < w:
-                grid[y0 + j][x0 + i] = ch
-    out = [''.join(r) for r in grid]
+    base = place(base, ['.lllll.', 'f.....f'], x0 - 1, y0 - 2)  # the lit fold of skin over the eye
+    out = place(base, small_eye('' if expr == 'neutral' else expr, 5, 3), x0, y0)
     return [r[::-1] for r in out] if flip else out
 
 
@@ -265,8 +253,8 @@ def stomper() -> Model:
     head = body.part('head', pivot=rel(HP, BP))
     eyes = {}
     for flip, face in ((0, 'east'), (1, 'west')):
-        eyes[face] = dict(color='hide', pattern='mc', clusters=0.2, hd=True, map=eye_face(24, 30, 6, 11, 'neutral', flip), keys=dict(EYE_KEYS, **WRINKLE),
-                          expr={e: eye_face(24, 30, 6, 11, e, flip) for e in EXPRS})
+        eyes[face] = dict(color='hide', pattern='mc', clusters=0.2, hd=True, map=eye_face(24, 30, 7, 13, 'neutral', flip),
+                          keys=dict(WRINKLE, **EYE_KEYS), expr={e: eye_face(24, 30, 7, 13, e, flip) for e in EXPRS})
     box(head, HP, (-8, -23, -30), (16, 15, 12), color='hide', pattern='mc', clusters=0.15, faces={
         'north': hide(seed=50, period=5, w=16, h=15), 'east': eyes['east'], 'west': eyes['west']})
     box(head, HP, (-9, -14, -28), (18, 6, 9), color='hide', pattern='mc', clusters=0.15, faces={

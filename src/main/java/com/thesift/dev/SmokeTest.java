@@ -229,7 +229,8 @@ public final class SmokeTest {
 
     // W1 World & terrain: the towers, temples, wells, altars, stone instruments, bridges, settlements, statues, shrines,
     // ruins and the Echoer's Hut are gone (their relics are buried in relic caches now)
-    private static final String[] STRUCTURES = {"sculk_castle", "thumper_arena"}; // CR2: the Caravan colony is gone, Caravans are nomads
+    private static final String[] STRUCTURES = {"sculk_castle", "thumper_arena", // CR2: the Caravan colony is gone, Caravans are nomads
+            "creators_ruin"}; // S1 land: the Creator's Ruin, where the Mini Creator is summoned
 
     private static void structures(ServerLevel sift) {
         // every template parses and can be stamped into the world

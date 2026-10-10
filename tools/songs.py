@@ -25,6 +25,7 @@ SONGS = {
     'dolphin': ([10, 15, 13, 18, 15, 10, 13, 18], '#4ab8e8'),
     'canon': ([6, 13, 11, 16, 13, 18, 16, 21], '#e8b040'),
     'requiem': ([18, 15, 13, 8, 10, 6, 8, 6], '#1f8a8a'),
+    'hymn': ([8, 10, 13, 10, 8, 13, 10, 8], '#e8c050'),  # S1 land: the Creator's Hymn (summons the Mini Creator)
 }
 # M1 instrument play: a drum song's rhythm (half-beats per note) and a Prism song's lights (0 rose, 1 amber, 2 cyan,
 # 3 violet) - mirrors music/Song.java
@@ -43,6 +44,7 @@ SONG_DESC = {
     'dolphin': 'Dolphins dance to it, and the Clam Chests of the deep open for it.',
     'canon': 'Each phrase answers the last. At the Band Table it binds Reverb and Fortissimo into an instrument.',
     'requiem': "The Ancient Cities' lament. At the Band Table it binds Sculk Ward and Echo Strike.",
+    'hymn': "Carved into the dais of a Creator's Ruin. Play it there, on any instrument, and the Mini Creator rises.",
 }
 
 # Where the sheets are found: chest table -> [(song, weight)], plus how often a sheet turns up at all.
@@ -59,7 +61,8 @@ SHEET_LOOT = {
 
 # C4 songs: what each song must be played on (mirrors Song.java; None = any instrument)
 SONG_INSTRUMENT = {'offering': 'chimes', 'nib': 'strings', 'golem': None, 'crystal': 'chimes', 'whale': 'flute',
-                   'lullaby': 'strings', 'aurora': 'prism', 'heartbeat': 'drum', 'dolphin': 'flute', 'canon': 'strings', 'requiem': 'chimes'}
+                   'lullaby': 'strings', 'aurora': 'prism', 'heartbeat': 'drum', 'dolphin': 'flute', 'canon': 'strings', 'requiem': 'chimes',
+                   'hymn': None}
 INSTRUMENT_NAMES = {
     'any': 'any instrument', 'flute': 'a flute (Crane, Serbim or Prism Flute)', 'drum': 'a drum (Conga, Thunder or Prism Drum)',
     'strings': "strings (Guitar, Star Lute, Weaver's Guitar or Prism Harp)", 'chimes': 'chimes (Wind Chimes, Glass Bells or Prism Chimes)',

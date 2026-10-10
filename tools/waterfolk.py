@@ -26,8 +26,8 @@ CREAM = ('#6f7f7a', '#94a69c', '#bccbbd', '#d9e4d3', '#ecf2e4', '#f7faf0', '#fff
 MOUTH = ('#1c0610', '#330b1c', '#4f1426', '#6e2032', '#8f3240', '#ae4c52', '#c86a68')
 EYE = {'P': '#0d0b16', 'I': '#e8b03a', 'J': '#f8d26a', 'i': '#a8701e', 'H': '#fff6d6', 'G': '#c8fff8', 'g': '#29dfeb', 'W': '#e9f6f4',
        'w': '#b9b2a2', 'm': '#2a0a16', 'o': '#120f1c', 'K': '#06090c', 'd': 0.6, 'D': 0.45, 'l': 1.25, 'L': 1.4}
-# a round fish eye, 4 x 4 texels: a gold ring, a black pupil with a highlight
-FISH_EYE = ['.ii.', 'iPHi', 'IPPJ', '.II.']
+# a small fish eye, 4 x 4 texels: a gold ring round a black pupil
+FISH_EYE = ['.ii.', 'iPPi', 'IPPJ', '.II.']  # S1 land: no white highlight (never cartoon eyes)
 
 
 def _disc(n, rings):
@@ -685,7 +685,7 @@ def cypole() -> Model:
     eye.cube((-2.5, -6, -2.5), (5, 1, 5), **W)
     eye.cube((-2, -4.5, -4), (4, 4, 1), mat='cornea')
     iris = eye.part('iris', pivot=(0, -2.5, -4.1))
-    iris.cube((-2, -2, 0), (4, 4, 0), mat='iris', faces={'north': dict(decal=['ooJJJJoo', 'oJHHJJIo', 'JHJJJJIi', 'PPPPPPPP', 'oPPPPPPo', 'IIJJJIii', 'oiIIIiio', 'ooiiiioo'],
+    iris.cube((-2, -2, 0), (4, 4, 0), mat='iris', faces={'north': dict(decal=['ooJJJJoo', 'oJJJJJIo', 'JJJJJJIi', 'PPPPPPPP', 'oPPPPPPo', 'IIJJJIii', 'oiIIIiio', 'ooiiiioo'],
                                                           keys=EYE, at=(0, 0)),
                                                           'south': dict(skip=True)})
     upper = eye.part('upper_lid', pivot=(0, -5, -4.2))

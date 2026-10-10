@@ -158,33 +158,16 @@ def swirls(w, h, seed, lines=2, dots=0.004):
 
 
 def eye_glyph(n, expr):
-    """A round, glowing sky-whale eye on an n x n plate: a dark lid ring, a glowing cyan iris, a deep
-    pupil and a white glint (the glint and iris glow). Expressions move the lid."""
-    c = (n - 1) / 2
-    r = n / 2 - 0.3
-
-    def px(x, y):
-        d = math.hypot(x - c, y - c)
-        if d > r:
-            return '.'
-        if expr in ('blink', 'sleep'):
-            return 'd' if abs(y - c - 0.5) < 0.7 else ('l' if y < c else '.')
-        if expr == 'happy':
-            return 'd' if abs(d - r * 0.7) < 0.6 and y < c + 0.2 else ('l' if y < c else '.')
-        if expr == 'dead':
-            return 'd' if abs(abs(x - c) - abs(y - c)) < 0.7 else 'l'
-        if expr == 'hurt':
-            return 'd' if abs(y - c) < 0.6 or (abs(y - c) < 1.6 and abs(x - c) > r * 0.6) else 'l'
-        if expr == 'angry' and y < c - (x - c) * 0.6 - 0.5:
-            return 'l'
-        if d > r - 0.9:
-            return 'd'
-        if x - c < -r * 0.25 and y - c < -r * 0.25 and d > r * 0.25:
-            return 'w'
-        if d < r * 0.35:
-            return 'p'
-        return 'I' if y < c else 'i'
-    return _rows(n, n, px)
+    """S1 land (never cartoon eyes): a small whale eye on an n x n plate - a dark lid line over a softly glowing
+    cyan iris with a dark pupil, the vanilla way; expressions move the lid."""
+    from landkit import small_eye
+    h = max(3, n - 1)
+    glyph = small_eye('' if expr == '' else expr, n, h)
+    rows_ = ['.' * n for _ in range(n)]
+    top = (n - h) // 2
+    for j, r in enumerate(glyph):
+        rows_[top + j] = r
+    return rows_
 
 
 def wing(parent, name, side, sx, pivot, rot, size, tip_size, seed, cloud=True):
@@ -285,14 +268,14 @@ def sky_whale() -> Model:
         'west': mc('baleen', clusters=0.0, rim=False, hd=True, map=[bal] * 4 + [bal.replace('b', '_')] * 2, keys={'B': 'baleen', 'b': 'baleen_d'}),
         'up': dict(skip=True), 'south': dict(skip=True), 'down': dict(skip=True)})
     # six eyes, three a side in a gentle arc, the front one the biggest; each a glowing iris on a plate
-    ek = {'d': 'lid_d', 'l': 'lid', 'w': 'eye_hi', 'p': 'eye', 'I': 'iris', 'i': 'iris_d'}
+    ek = {'d': 'lid_d', 'p': 'eye', 'i': 'iris', 'I': 'iris_d'}
     for side, sx in (('left', 1), ('right', -1)):
-        for k, (y, z, n) in enumerate(((-1.0, -11.0, 4), (-4.2, -6.6, 3), (-0.8, -3.4, 2.5))):
+        for k, (y, z, n) in enumerate(((-1.0, -11.0, 2), (-3.6, -7.0, 1.5), (-0.8, -3.6, 1.5))):
             e = head.part(f'{side}_eye' if k == 0 else f'{side}_eye_{k + 1}', pivot=(13.5 * sx, y, z))
             face = 'east' if sx > 0 else 'west'
             tn = int(math.ceil(n)) * 2
             e.cube((0 if sx > 0 else -0.3, -n / 2, -n / 2), (0.3, n, n), **mc('hide', clusters=0.0, rim=False), faces={
-                face: mc('hide', clusters=0.0, rim=False, hd=True, map=eye_glyph(tn, ''), keys=ek, glow_keys='wIi',
+                face: mc('hide', clusters=0.0, rim=False, hd=True, map=eye_glyph(tn, ''), keys=ek, glow_keys='Ii',
                          expr={x: eye_glyph(tn, x) for x in EXPRS})})
     # ---- the lower jaw: long and heavy, the mouth line curving up towards the eyes; pleats begin under the chin
     jaw = head.part('jaw', pivot=(0, 4, 0))

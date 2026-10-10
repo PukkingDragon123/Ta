@@ -298,6 +298,7 @@ STRUCTURES = {
     'thumper_arena': ([thumper_arena, lambda s: thumper_arena(s + 5)], ['sift_plains', 'rocky_dunes', 'wishing_grove', 'forest_mountains'],
                       'surface_structures', 'beard_thin', -7, 34, 12),
 }
+STRUCTURES.update(__import__('creators_ruin').STRUCTURES)  # S1 land: the Creator's Ruin (tools/creators_ruin.py)
 # W1: the two that stayed keep their old places in the list for their template seeds and placement salts (unchanged worlds)
 KEPT_INDEX = {'sculk_castle': 9, 'thumper_arena': 11}
 

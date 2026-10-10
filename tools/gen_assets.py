@@ -697,7 +697,7 @@ def gen_lang():
         f'codex.{NS}.bulb.title': 'Bulb', f'codex.{NS}.bulb.tagline': 'Squishy jelly bunny',
         f'codex.{NS}.bulb.body': 'A little jelly cube that is all head, with two tall ears and four stubby feet. Bulbs squat before every hop and splat on every landing, sniff the air, groom their ears, sleep at night and bounce to any note you play. Pitcher Pods make them breed and plop out Glowing Slime Balls. Each carries one to three flowers on its back: give it any small flower and it tucks it in among them, then plucks one of its own for you - sometimes a rare Sculk Bloom. White Forest Bulbs are snowy white with pink-lined ears.',
         f'codex.{NS}.harmoner.title': 'Harmoner', f'codex.{NS}.harmoner.tagline': 'Songbird and guide',
-        f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose, Gold, Jade and Coral - the Drum Pit, where the Thumper sleeps. Azure, Violet and the rare Night - the Sculk Castle.',
+        f'codex.{NS}.harmoner.body': 'Harmoners peck for seeds by day, preen each other and roost with their heads under a wing at night; when one sings, the flock joins in harmony. Feed one seeds and it sings, takes off and leads you somewhere, waiting if you fall behind. Its colour tells you where: Rose, Jade and Coral - the Drum Pit, where the Thumper sleeps. Gold - a Creator\'s Ruin. Azure, Violet and the rare Night - the Sculk Castle.',
         # A2 Echoer: the Echoer's codex page is in tools/echoer_world.py
         f'codex.{NS}.slumbler.title': 'Slumbler', f'codex.{NS}.slumbler.tagline': 'Neutral - a big, sleepy swamp amphibian',  # S2: the remade Slumbler
         f'codex.{NS}.slumbler.body': 'A huge, soft amphibian of the Sift swamps and Chrome lakes that sits up like a toad: blue-grey skin mottled lavender and teal, a broad flat head with heavy-lidded golden eyes, a wide red mouth and three frilled coral gills behind each cheek that rise and fall as it breathes. It sleeps a great deal, often half-submerged in shallow Chrome, and wakes with an enormous yawn. Hit one and it bites - and puffs its cheeks to spit gobs of Chrome that leave you dizzy. Feed two of them fish and they lay a clutch of jelly eggs that hatch into little stingray-like tadpoles. Drops Thick Hide and its gills, which make a helmet for breathing in Chrome.',
@@ -753,7 +753,7 @@ def gen_lang():
         f'message.{NS}.harmoner.lost': 'The Harmoner tilts its head. It cannot sense any place of its colour nearby.',
         f'message.{NS}.harmoner.guide.rose': 'The Rose Harmoner sings and takes off towards the Drum Pit!',
         f'message.{NS}.harmoner.guide.azure': 'The Azure Harmoner sings and takes off towards the Sculk Castle!',
-        f'message.{NS}.harmoner.guide.gold': 'The Gold Harmoner sings and takes off towards the Drum Pit!',
+        f'message.{NS}.harmoner.guide.gold': 'The Gold Harmoner sings a hymn and takes off towards a Creator\'s Ruin!',  # S1 land
         f'message.{NS}.harmoner.guide.violet': 'The Violet Harmoner sings a wary tune and takes off towards the Sculk Castle!',
         f'message.{NS}.harmoner.guide.jade': 'The Jade Harmoner sings and takes off towards the Drum Pit!',
         f'message.{NS}.harmoner.guide.coral': 'The Coral Harmoner sings and takes off towards the Drum Pit!',
@@ -1376,6 +1376,7 @@ def generate():
     __import__('conductor').assets(sys.modules[__name__])  # C3 Conductor: the 3D Conductor's Staff (flat sprite kept in the GUI)
     __import__('band').assets(sys.modules[__name__])  # M2 band: band panel text, creature instrument names, Codex page
     __import__('sifter').assets(sys.modules[__name__])  # CR1: bell and echo ring particles, the living bell's Codex page
+    __import__('creators_ruin').assets(sys.modules[__name__])  # S1 land: the Creator's Ruin text, the hymn's messages
     __import__('band_table').assets(sys.modules[__name__])  # F2 Band Table: Sift enchantments, their books, recipe, sheet loot, text
     __import__('knowledge').item_models(sys.modules[__name__])  # F3 Knowledge and lore: the open Lore Book in the hand
     __import__('caves').assets(sys.modules[__name__])  # W-deep caves: crystal/speleothem tags, damage types, acid particles, recipes, text

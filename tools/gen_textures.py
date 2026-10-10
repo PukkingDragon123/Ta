@@ -1500,6 +1500,7 @@ def main():
     __import__('conductor').textures(out)  # C3 Conductor: texture of the 3D Conductor's Staff
     __import__('sculk_world').textures(out)  # W1 World & terrain: Blightwood, Sculk Mud/Water/Coral (+ their vanilla references)
     __import__('sifter').textures(out)  # CR1: the bell-ring and echolocation-ring particles
+    __import__('creators_ruin').textures(out)  # S1 land: the Creator's Dais
     __import__('sculk_sea').textures(out)  # CR3 Fish & Coral Organs: the Coral Organ's barb
     __import__('sift_sniffer').textures(out)  # E1 Sniffer & rot: the fluffy egg
     __import__('materials').textures(out)  # F1 Materials & Europhy Table: ore seeds, materials, the table's plinth, item sprites, GUI

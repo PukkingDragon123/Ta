@@ -341,6 +341,8 @@ public final class ModBlocks {
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.METAL));
     public static final DeferredBlock<LoreBookBlock> SOUL_LORE_BOOK = BLOCKS.registerBlock("soul_lore_book", LoreBookBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.LECTERN).strength(0.5F).noOcclusion().mapColor(MapColor.COLOR_BLUE));
+    public static final DeferredBlock<CreatorDaisBlock> CREATOR_DAIS = BLOCKS.registerBlock("creator_dais", CreatorDaisBlock::new,
+            () -> BlockBehaviour.Properties.ofFullCopy(Blocks.POLISHED_DEEPSLATE).mapColor(MapColor.QUARTZ).strength(3.0F, 1200.0F).lightLevel(s -> 7));
     public static final DeferredBlock<BandTableBlock> BAND_TABLE = BLOCKS.registerBlock("band_table", BandTableBlock::new,
             () -> BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK).mapColor(MapColor.WOOD).strength(2.5F).lightLevel(s -> 6).noOcclusion());
     public static final DeferredBlock<PitcherPlanterBlock> PITCHER_PLANTER = BLOCKS.registerBlock("pitcher_planter", PitcherPlanterBlock::new,

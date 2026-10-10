@@ -35,8 +35,9 @@ import org.jspecify.annotations.Nullable;
  * enchantments), the land and dimension they stand in and any Sift structure around them. Songs are recorded when
  * played or heard nearby; lore when read ({@link #read}).
  *
- * <p>Quests: on the first steps in the Sift the Mini Creator appears, gives you this book and your first goal. When
- * a goal is met he pops up (in the Sift) to cheer and give the next one ({@link Quest}).
+ * <p>Quests: S1 land - on the first steps in the Sift a faint hymn on the wind points to the nearest Creator's Ruin
+ * ({@link CreatorShrine#hint}); play The Creator's Hymn at its dais and the Mini Creator rises, gives you this book
+ * and your first goal. When a goal is met he pops up (in the Sift) to cheer and give the next one ({@link Quest}).
  */
 public final class KnowledgeTracker {
     private static final String SIFT = TheSift.MODID;
@@ -46,6 +47,7 @@ public final class KnowledgeTracker {
 
     public static void register() {
         NeoForge.EVENT_BUS.addListener(KnowledgeTracker::onPlayerTick);
+        CreatorShrine.register(); // S1 land: the Creator's Hymn at a Creator's Dais summons the Mini Creator
         SongEvents.listenSongs((level, player, at, song) -> {
             String key = "song:" + song.id();
             if (player instanceof ServerPlayer sp) {
@@ -149,12 +151,12 @@ public final class KnowledgeTracker {
     private static void quests(ServerPlayer player) {
         boolean inSift = player.level().dimension() == ModDimensions.THE_SIFT;
         if (!Knowledge.has(player, Quest.ARRIVAL.doneKey())) {
-            // first steps in the Sift (and on solid ground, once any arrival cinematic is over): he appears
-            if (inSift && player.onGround() && Knowledge.has(player, "dim:" + ModDimensions.THE_SIFT.identifier())) {
-                MiniCreator guide = MiniCreator.guideOf(player, true);
-                if (guide != null) {
-                    meet(player, guide);
-                }
+            // S1 land: he no longer appears on his own. On the first steps in the Sift (on solid ground, once any arrival
+            // cinematic is over) a hymn on the wind points to the nearest Creator's Ruin: the first goal is to summon him there
+            if (inSift && player.onGround() && Knowledge.has(player, "dim:" + ModDimensions.THE_SIFT.identifier())
+                    && !Knowledge.has(player, Quest.ARRIVAL.key())) {
+                Knowledge.unlock(player, Quest.ARRIVAL.key(), true);
+                CreatorShrine.hint(player);
             }
             return;
         }

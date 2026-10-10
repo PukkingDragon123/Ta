@@ -167,6 +167,9 @@ def _gifts():
                     i('minecraft:trident', 1), i('minecraft:prismarine_crystals', 5, count=(4, 8))],
         'canon': [i('minecraft:experience_bottle', 8, count=(6, 12)), i('minecraft:lapis_lazuli', 6, count=(8, 16)), i('minecraft:diamond', 4),
                   i('minecraft:amethyst_shard', 4, count=(4, 8))],
+        # S1 land: the Creator's Hymn - the Echoer gives back something of the Creator's
+        'hymn': [i('minecraft:golden_apple', 4), i('minecraft:gold_ingot', 8, count=(2, 5)), i('minecraft:experience_bottle', 6, count=(3, 6)),
+                 i('minecraft:amethyst_shard', 4, count=(3, 6)), i('minecraft:enchanted_golden_apple', 1)],
         'requiem': [i('minecraft:echo_shard', 8, count=(1, 3)), i('minecraft:disc_fragment_5', 6, count=(1, 2)),
                     i('minecraft:recovery_compass', 2), i('sculkite', 6, count=(1, 2)), i('minecraft:sculk_catalyst', 3)],
     }

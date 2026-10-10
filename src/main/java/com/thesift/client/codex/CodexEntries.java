@@ -283,6 +283,7 @@ public final class CodexEntries {
         l.add(thing(PLACES, "chrome_coral_ocean", ModItems.ROSE_BUBBLE_CORAL_FAN));
         l.add(thing(PLACES, "relics", ModItems.SUSPICIOUS_CHIME_SAND));
         l.add(thing(PLACES, "sculk_castle", ModItems.HUSHSLATE_BRICKS)); // RR: the podium is gone
+        l.add(thing(PLACES, "creators_ruin", ModItems.CREATOR_DAIS)); // S1 land: where the Mini Creator is summoned
         l.add(thing(PLACES, "sift_sky", ModItems.SKYSONG_GEM)); // B1 Portal & sky FX: rainbows, ribbons, shooting stars
         // W-deep caves: the normal caves and their crystal, the Cave Jungle, the Sculk Caves
         l.add(thing(PLACES, "sift_caves", ModItems.POINTED_AZURE_CRYSTAL));

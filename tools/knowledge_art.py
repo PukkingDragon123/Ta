@@ -449,11 +449,13 @@ SHEET_W, SHEET_H = 176, 112
 SHEET_THEME = {
     'offering': ('#d9a72c', 'chimes'), 'nib': ('#e07ab8', 'butterflies'), 'golem': ('#2aa8a4', 'lamps'),
     'crystal': ('#8f86e0', 'crystals'), 'whale': ('#4fb2d8', 'waves'), 'lullaby': ('#a88ad8', 'moons'), 'aurora': ('#e070c8', 'rays'),
+    'hymn': ('#e0b23a', 'rays'),  # S1 land: the Creator's Hymn
 }
 SONG_INSTRUMENT_ITEM = {'chimes': 'wind_chimes', 'strings': 'star_lute', 'flute': 'crane_flute', 'drum': 'conga_drum', 'prism': 'prism_harp',
                         'any': 'guitar'}
 SONG_CREATURE_MODEL = {'offering': ('enchoer', 'enchoer'), 'nib': ('nib', 'nib'), 'golem': ('soul_golem', 'soul_golem'),
-                       'crystal': ('caravan', 'caravan_amber'), 'whale': ('sky_whale', 'sky_whale'), 'lullaby': ('gobbler', 'gobbler')}
+                       'crystal': ('caravan', 'caravan_amber'), 'whale': ('sky_whale', 'sky_whale'), 'lullaby': ('gobbler', 'gobbler'),
+                       'hymn': ('mini_creator', 'mini_creator')}
 SEPIA = [hx('#3a2614'), hx('#5a3e22'), hx('#7a5a34'), hx('#9a7a4c')]
 
 

@@ -1,46 +1,43 @@
 """F3 Knowledge & lore: the Mini Creator, the small platypus who guides you through the Sift.
-S1 land: remade as a godly little explorer in the Sculk-mob pipeline (modelkit res=2 + x2 detail + materials).
+S1 land: an avatar, a saint - remade in the Sculk-mob pipeline (modelkit res=2 + x2 detail + materials).
 
-A low, long platypus on four splayed legs with webbed feet, olive-brown fur, a wide flat bill and a broad
-tail - dressed for exploring in the Creator's ceremonial white and gold: a white explorer's hat with a
-wide brim, a gold band and a glowing sun gem under a floating halo; a white field coat with gold trim,
-pockets and buttons; a gold neckerchief; a leather satchel with a gold buckle on a strap across his back;
-gold tassels. Floating round him: four magical blocks with glowing runes (gold, prism, chrome, quartz)
-and two glowing rune plates circling the other way. His gold trims, gems and runes glow softly.
+He sits cross-legged in the air, meditating, floating a little over the ground: a platypus in the Creator's
+white and gold - a robe with a gold-trimmed V-neck and hem, a gold sash, a mantle over his shoulders with
+gold tassels, a string of prayer beads - paws resting on his crossed knees, his broad tail behind him. His
+eyes glow (small slits of light, never cartoon eyes); a gold circlet on his brow, a halo of light behind his
+head, four rune-carved blocks and two glowing rune plates circling him. He waits at the Creator's Ruin until
+his hymn is played at its dais (tools/creators_ruin.py, knowledge/CreatorShrine.java).
 
 Hooked in from one line in mobs.py. Part names are what client/knowledge/MiniCreatorModel.java animates
-(body, head, jaw, crown = the hat, tail, tassel_0..3, the legs, orb_0..3, rune_0..1).
+(body, head, jaw, crown + halo, tail, tassel_0..3, the four legs, orb_0..3, rune_0..1).
 Top-level imports stay light: mobs.py imports this module while it is loading.
 """
 from modelkit import Model
 
-# the head's front at res 2 (7 x 5 units = 14 x 10 texels): small dark eyes with a golden glint, a gold-lined lid
-FACE_W, FACE_H = 14, 10
+FACE_W, FACE_H = 12, 10
 
 
 def _face(blink=False):
+    """The head's front (12 x 10 texels): two small slits of light for eyes (closed: dark lines), a pale brow line."""
     g = [['.'] * FACE_W for _ in range(FACE_H)]
-    for x0 in (1, 11):
+    for x0 in (2, 8):
+        g[2][x0] = g[2][x0 + 1] = 'l'
         if blink:
             g[4][x0] = g[4][x0 + 1] = 'd'
-            g[5][x0] = g[5][x0 + 1] = 'L'
         else:
-            g[2][x0] = g[2][x0 + 1] = 'd'
-            g[3][x0], g[3][x0 + 1] = 'E', 'G'
-            g[4][x0] = g[4][x0 + 1] = 'E'
-            g[5][x0] = g[5][x0 + 1] = 'L'
+            g[4][x0] = g[4][x0 + 1] = 'G'
+            g[5][x0] = g[5][x0 + 1] = 'g'
     return [''.join(r) for r in g]
 
 
 def _side_eye(blink=False):
-    """The eye seen from the side: the platypus's eyes sit on the sides of its head."""
+    """The eye seen from the side, at the front edge: a small slit of light."""
     g = [['.'] * 10 for _ in range(10)]
     if blink:
         g[4][1] = g[4][2] = 'd'
     else:
-        g[3][1], g[3][2] = 'G', 'E'
-        g[4][1] = g[4][2] = 'E'
-        g[5][1] = g[5][2] = 'L'
+        g[4][1], g[4][2] = 'G', 'g'
+        g[5][1] = 'g'
     return [''.join(r) for r in g]
 
 
@@ -61,27 +58,27 @@ def _rune_face(i, frame=True):
     return [''.join(r) for r in g]
 
 
-def _coat_side(w, h, flip):
-    """The coat's flank: a gold sun on a pocket flap, gold buttons along the hem line, stitching."""
+def _robe_front(w, h):
+    """The robe's front (hd): a V-neck showing the fur of his chest, edged in gold, a gold sash from the left shoulder
+    to the right hip, a gold hem with a row of little suns."""
+    cx = (w - 1) / 2
     g = [['.'] * w for _ in range(h)]
     for y in range(h):
         for x in range(w):
-            if y in (1,) and x % 3 == 1:
-                g[y][x] = 's'  # stitching under the collar
-    # the pocket: an outline with a gold sun on the flap
-    px0, py0 = (3, 3)
-    for y in range(py0, py0 + 4):
-        for x in range(px0, px0 + 6):
-            if y == py0 or x in (px0, px0 + 5) or y == py0 + 3:
-                g[y][x] = 'p'
-    g[py0 + 1][px0 + 2] = g[py0 + 1][px0 + 3] = 'G'
-    g[py0 + 2][px0 + 2] = g[py0 + 2][px0 + 3] = 'g'
-    for k, sy in enumerate(SUN):
-        for x, ch in enumerate(sy):
-            if ch != '.' and 0 <= 2 + k < h and 0 <= w - 9 + x < w:
-                g[2 + k][w - 9 + x] = ch
-    out = [''.join(r) for r in g]
-    return [r[::-1] for r in out] if flip else out
+            dx = abs(x - cx)
+            v = 5.5 - y * 0.75  # the V-neck narrows downwards
+            if y < 7 and dx < v - 0.6:
+                g[y][x] = 'f'
+            elif y < 8 and dx < v + 0.6:
+                g[y][x] = 'G'
+            if y >= h - 3:
+                g[y][x] = 'G' if y == h - 3 else ('g' if (x + y) % 4 == 0 else 'G')
+    for y in range(3, h - 3):  # the sash
+        x = int(round(2 + (y - 3) * (w - 5) / max(1, h - 7)))
+        for k in (0, 1):
+            if 0 <= x + k < w and g[y][x + k] != 'f':
+                g[y][x + k] = 's'
+    return [''.join(r) for r in g]
 
 
 def mini_creator() -> Model:
@@ -93,87 +90,85 @@ def mini_creator() -> Model:
         'tail': '#6a5338', 'tail_l': '#7f6646', 'tail_d': '#4f3d29',
         'robe': '#f2ecdc', 'robe_l': '#fffaf0', 'robe_d': '#cfc4a8',
         'gold': '#e0b23a', 'gold_l': '#ffd86a', 'gold_d': '#a07818',
-        'leather': '#8a5a32', 'leather_l': '#a8743e', 'leather_d': '#5e3a1e',
+        'bead': '#5a3a22', 'bead_l': '#7a5232',
         'gem': '#ff7ad0', 'gem_l': '#ffc0ec', 'gem_d': '#b03c8c',
-        'eye': '#16100d', 'lid': '#a08a66',
+        'eye': '#16100d', 'lid': '#a08a66', 'eyeglow': '#fff4b0', 'eyeglow_d': '#ffcf5a',
         'q': '#efeae0', 'q_l': '#fffdf8', 'q_d': '#c8c0b0',
         'prism': '#d870c0', 'prism_l': '#f2a6de', 'prism_d': '#9a3e86',
         'chrome': '#6fc9ae', 'chrome_l': '#a6e8d2', 'chrome_d': '#3f8f7a',
         'rune': '#fff2a8', 'halo': '#ffe27a', 'halo_l': '#fff6c8',
     }
-    materials = {'robe': 'cloth', 'leather': 'cloth', 'gold': 'metal', 'q': 'stone', 'prism': 'crystal', 'chrome': 'metal', 'tail': 'skin',
-                 'bill': 'skin', 'web': 'skin'}
-    m = Model('mini_creator', (128, 64), pal, {'mini_creator': {}}, res=2, expressions=['blink'], materials=materials)
+    materials = {'robe': 'cloth', 'gold': 'metal', 'q': 'stone', 'prism': 'crystal', 'chrome': 'metal', 'tail': 'skin',
+                 'bill': 'skin', 'web': 'skin', 'bead': 'wood'}
+    m = Model('mini_creator', (128, 128), pal, {'mini_creator': {}}, res=2, expressions=['blink'], materials=materials)
     fur = dict(color='fur', pattern='mc', clusters=0.3, streaks=0.35, noise=0.8)
     robe = dict(color='robe', pattern='mc', clusters=0.2)
     gold = dict(color='gold', pattern='mc', clusters=0.25)
-    eyes = {'E': 'eye', 'L': 'lid', 'd': 'fur_d', 'G': 'gold_l'}
-    coat_keys = {'s': 'robe_d', 'p': 'robe_d', 'G': 'gold_l', 'g': 'gold', 'R': 'rune'}
+    eyes = {'G': 'eyeglow', 'g': 'eyeglow_d', 'd': 'fur_d', 'l': 'fur_l'}
+    rk = {'f': 'belly', 'G': 'gold', 'g': 'gold_d', 's': 'gold_l'}
 
-    body = m.part('body', pivot=(0, 19, 0))
-    body.cube((-4, -3.5, -6), (8, 6, 12), **dict(fur, bands=[(5, 'belly')]))
-    # the field coat: white with a gold hem, pockets, stitching and a gold sun on each flank
-    coat = dict(robe, bands=[(4, 'gold')])
-    body.cube((-4.5, -4.25, -4.75), (9, 5, 10), **coat, faces={
-        'east': dict(coat, hd=True, map=_coat_side(20, 10, False), keys=coat_keys, glow_keys='G'),
-        'west': dict(coat, hd=True, map=_coat_side(20, 10, True), keys=coat_keys, glow_keys='G'),
-        'south': dict(coat, hd=True, map=['......................'] * 2 + ['.....s.s.s.s.s.s......'] + ['..........gg..........'] * 2, keys=coat_keys),
-        'up': dict(robe, hd=True, map=['..................'] * 3 + ['ssssssssssssssssss'] + ['..................'] * 16, keys=coat_keys),
+    # ---- the seated body: fur under a white robe, a mantle over the shoulders with gold tassels, prayer beads
+    body = m.part('body', pivot=(0, 18, 0))
+    body.cube((-3.5, -8.5, -3), (7, 9, 6), **dict(fur, bands=[(6, 'belly')]))
+    body.cube((-3.8, -8.7, -3.3), (7.6, 9.2, 6.6), **robe, faces={
+        'north': dict(robe, hd=True, map=_robe_front(16, 20), keys=rk, map_material=True),
+        'south': dict(robe, hd=True, map=['.' * 16] * 17 + ['G' * 16] * 3, keys=rk),
+        'east': dict(robe, hd=True, map=['.' * 14] * 17 + ['G' * 14] * 3, keys=rk),
+        'west': dict(robe, hd=True, map=['.' * 14] * 17 + ['G' * 14] * 3, keys=rk),
         'down': dict(skip=True)})
-    # the coat's tails, hanging a little lower at the back
-    body.cube((-4.25, 0.75, 2.5), (8.5, 1.5, 3), **coat, faces={'up': dict(skip=True), 'down': dict(skip=True), 'north': dict(skip=True)})
-    # the satchel's strap across his back, the satchel on his right flank with a gold buckle
-    body.cube((-4.75, -4.6, -0.75), (9.5, 0.5, 1.5), color='leather', pattern='mc', clusters=0.2, faces={'down': dict(skip=True)})
-    body.cube((-6.0, -2.0, -2.25), (1.5, 3, 4.5), color='leather', pattern='mc', clusters=0.3, faces={
-        'west': dict(color='leather', pattern='mc', clusters=0.3, hd=True, map=['.........', 'lllllllll', '...ggg...', '...gGg...', '...ggg...', '.........'],
-                     keys={'l': 'leather_d', 'g': 'gold', 'G': 'gold_l'}, glow_keys='G'),
-        'up': dict(color='leather_l', pattern='mc', clusters=0.1)})
-    for i, (x, z) in enumerate(((-4.75, -4.5), (4.25, -4.5), (-4.75, 4.75), (4.25, 4.75))):
-        tassel = body.part(f'tassel_{i}', pivot=(x + 0.25, 0.75, z), rot=(0, 0, 0))
+    body.cube((-4.3, -9.0, -3.6), (8.6, 3.0, 7.2), color='robe_l', pattern='mc', clusters=0.15, bands=[(2, 'gold')], faces={
+        'down': dict(skip=True)})
+    body.cube((-2.6, -8.4, -3.9), (5.2, 0.6, 0.5), color='bead', pattern='mc', clusters=0.0, rim=False, faces={
+        'north': dict(color='bead', pattern='mc', clusters=0.0, rim=False, hd=True, map=['bGbGbGbGbGb'], keys={'b': 'bead_l', 'G': 'gold'})})
+    body.cube((-0.5, -7.9, -4.0), (1, 1, 0.6), color='gold', pattern='mc', clusters=0.0, rim=False, glow=True)  # the bead's sun pendant
+    for i, (x, z) in enumerate(((-4.5, -3.6), (4.0, -3.6), (-4.5, 3.4), (4.0, 3.4))):
+        tassel = body.part(f'tassel_{i}', pivot=(x + 0.25, -6.0, z), rot=(0, 0, 0))
         tassel.cube((-0.25, 0, -0.25), (0.5, 1.5, 0.5), **gold)
         tassel.cube((-0.4, 1.5, -0.4), (0.8, 0.8, 0.8), color='gold_l', pattern='mc', clusters=0.0, glow=True)
-    tail = body.part('tail', pivot=(0, -0.5, 6), rot=(0.2, 0, 0))
+    # the broad tail behind him
+    tail = body.part('tail', pivot=(0, -0.5, 2.5), rot=(0.25, 0, 0))
     hatch = ['t.t.t.t.t.t.', '.t.t.t.t.t.t'] * 7
     tail.cube((-3, -0.75, 0), (6, 1.5, 7), color='tail', pattern='mc', clusters=0.3,
               faces={'up': dict(color='tail', pattern='mc', clusters=0.1, hd=True, map_material=True, map=hatch, keys={'t': 'tail_d'})})
 
-    head = body.part('head', pivot=(0, -0.5, -6))
-    head.cube((-3.5, -3, -5), (7, 5, 5), **fur,
-              faces={'north': dict(fur, clusters=0.2, hd=True, map=_face(), keys=eyes, glow_keys='G', expr={'blink': _face(True)}),
-                     'east': dict(fur, hd=True, map=_side_eye(), keys=eyes, at=(0, 0), center=False, glow_keys='G', expr={'blink': _side_eye(True)}),
-                     'west': dict(fur, hd=True, map=[r[::-1] for r in _side_eye()], keys=eyes, at=(0, 0), center=False, glow_keys='G',
+    # ---- the head: glowing eyes, the wide bill, a gold circlet, a halo of light behind it
+    head = body.part('head', pivot=(0, -8.6, -0.5))
+    head.cube((-3, -5, -3), (6, 5, 5.5), **fur,
+              faces={'north': dict(fur, clusters=0.2, hd=True, map=_face(), keys=eyes, glow_keys='Gg', expr={'blink': _face(True)}),
+                     'east': dict(fur, hd=True, map=_side_eye(), keys=eyes, at=(0, 0), center=False, glow_keys='Gg', expr={'blink': _side_eye(True)}),
+                     'west': dict(fur, hd=True, map=[r[::-1] for r in _side_eye()], keys=eyes, at=(0, 0), center=False, glow_keys='Gg',
                                   expr={'blink': [r[::-1] for r in _side_eye(True)]})})
-    # the gold neckerchief, knotted at his throat
-    head.cube((-3.75, -0.5, -1.25), (7.5, 2.75, 1.25), **gold)
-    head.cube((-1, 1.75, -1.75), (2, 1.5, 1), color='gold_d', pattern='mc', clusters=0.0)
-    bill = head.part('bill', pivot=(0, 0.5, -5))
-    bill.cube((-3, -0.75, -5), (6, 1.25, 5), color='bill', pattern='mc', clusters=0.3, faces={
-        'up': dict(color='bill', pattern='mc', clusters=0.2, hd=True, map=['............'] * 3 + ['...d....d...'] + ['............'] * 6, keys={'d': 'bill_d'})})
-    bill.cube((-3.5, -0.75, -6), (7, 1.25, 1.5), color='bill', pattern='mc', clusters=0.3)
-    jaw = head.part('jaw', pivot=(0, 1, -5))
-    jaw.cube((-2.75, -0.25, -5), (5.5, 0.75, 5), color='bill_d', pattern='mc', clusters=0.2)
-    # the explorer's hat: a wide white brim edged in gold, a domed crown, a gold band with a glowing sun gem, a halo floating over it
-    crown = head.part('crown', pivot=(0, -3, -2.5))
-    crown.cube((-5, -0.6, -4.5), (10, 0.6, 9), **robe, faces={
-        'up': dict(robe, hd=True, map=[('g' * 20)] + ['g' + '.' * 18 + 'g'] * 16 + [('g' * 20)], keys={'g': 'gold'}),
-        'down': dict(color='robe_d', pattern='mc', clusters=0.1),
-        'north': dict(color='gold', pattern='mc', clusters=0.0), 'south': dict(color='gold', pattern='mc', clusters=0.0),
-        'east': dict(color='gold', pattern='mc', clusters=0.0), 'west': dict(color='gold', pattern='mc', clusters=0.0)})
-    crown.cube((-3, -3.4, -2.5), (6, 2.8, 5), **robe, faces={'up': dict(robe, hd=True, map=['..........'] * 4 + ['....ss....'] + ['..........'] * 5, keys={'s': 'robe_d'})})
-    crown.cube((-3.1, -1.6, -2.6), (6.2, 1.0, 5.2), **gold, faces={
+    bill = head.part('bill', pivot=(0, -1.0, -3))
+    bill.cube((-2.5, -0.5, -4.5), (5, 1.1, 4.5), color='bill', pattern='mc', clusters=0.3, faces={
+        'up': dict(color='bill', pattern='mc', clusters=0.2, hd=True, map=['..........'] * 2 + ['..d....d..'] + ['..........'] * 6, keys={'d': 'bill_d'})})
+    bill.cube((-3, -0.5, -5.5), (6, 1.1, 1.2), color='bill', pattern='mc', clusters=0.3)
+    jaw = head.part('jaw', pivot=(0, 0.1, -3))
+    jaw.cube((-2.25, 0, -4.2), (4.5, 0.6, 4.2), color='bill_d', pattern='mc', clusters=0.2)
+    crown = head.part('crown', pivot=(0, -5, -0.25))
+    # a thin gold circlet round his brow, a gem at the front
+    crown.cube((-3.15, 0.6, -3.15), (6.3, 0.7, 0.3), **gold, faces={
         'north': dict(gold, hd=True, map=['.....GG.....', '.....GG.....'], keys={'G': 'gem'}, glow_keys='G')})
-    crown.cube((-0.6, -2.0, -3.0), (1.2, 1.4, 0.5), color='gem', pattern='mc', clusters=0.0, glow=True)
-    halo = crown.part('halo', pivot=(0, -5.0, 0))
-    for (x, z, w, d) in ((-3, -3, 6, 0.6), (-3, 2.4, 6, 0.6), (-3, -2.4, 0.6, 4.8), (2.4, -2.4, 0.6, 4.8)):
-        halo.cube((x, -0.3, z), (w, 0.6, d), color='halo', pattern='mc', clusters=0.0, rim=False, glow=True)
+    crown.cube((-3.15, 0.6, 2.35), (6.3, 0.7, 0.3), **gold)
+    for sx in (1, -1):
+        crown.cube((3.0 if sx > 0 else -3.3, 0.6, -2.85), (0.3, 0.7, 5.2), **gold)
+    halo = crown.part('halo', pivot=(0, -1.0, 3.4))
+    for (x, y, w, h) in ((-4, -4.4, 8, 0.8), (-4, 3.6, 8, 0.8), (-4.4, -4, 0.8, 8), (3.6, -4, 0.8, 8)):
+        halo.cube((x, y, 0), (w, h, 0.5), color='halo', pattern='mc', clusters=0.0, rim=False, glow=True)
+    for (x, y) in ((-0.4, -6.0), (-0.4, 5.2), (-6.0, -0.4), (5.2, -0.4)):  # four rays
+        halo.cube((x, y, 0.1), (0.8, 0.8, 0.3), color='halo_l', pattern='mc', clusters=0.0, rim=False, glow=True)
 
+    # ---- arms resting on the knees, sleeves edged in gold; legs crossed in front, webbed feet up
     for side, sx in (('left', 1), ('right', -1)):
-        for end, z in (('front', -3.5), ('back', 3.5)):
-            leg = m.part(f'{end}_{side}_leg', pivot=(3.5 * sx, 21, z), rot=(0, 0, -0.25 * sx))
-            leg.cube((-1, 0, -1), (2, 2.5, 2), **fur)
-            leg.cube((-1.5, 2.5, -2.5), (3, 0.5, 3.5), color='web', pattern='mc', clusters=0.2, faces={
-                'up': dict(color='web', pattern='mc', clusters=0.1, hd=True, map=['d.d.d.', 'd.d.d.', '......', '......', '......', '......', '......'],
-                           keys={'d': 'web_l'})})
+        arm = m.part(f'front_{side}_leg', pivot=(3.7 * sx, 11.8, -1.0), rot=(-0.55, 0, 0.18 * sx))
+        arm.cube((-1.3, 0, -1.3), (2.6, 3.4, 2.6), **robe, bands=[(2, 'gold')], faces={'down': dict(skip=True)})
+        arm.cube((-0.9, 3.2, -0.9), (1.8, 2.2, 1.8), **fur)
+        arm.cube((-1.2, 5.2, -1.6), (2.4, 0.6, 2.4), color='web', pattern='mc', clusters=0.2)
+        leg = m.part(f'back_{side}_leg', pivot=(2.2 * sx, 17.6 - 0.4 * (sx > 0), -1.2), rot=(-1.42, 0.75 * sx, 0))
+        leg.cube((-1.1, 0, -1.1), (2.2, 4.4, 2.2), **fur)
+        # the webbed foot lies flat at the end of the crossed leg, toes forward
+        leg.cube((-1.6, 3.8, -0.9), (3.2, 2.6, 0.6), color='web', pattern='mc', clusters=0.2, faces={
+            'north': dict(color='web', pattern='mc', clusters=0.1, hd=True, map=['......', '......', '......', 'd.d.d.', 'd.d.d.', 'd.d.d.'],
+                          keys={'d': 'web_l'})})
 
     # the four magical blocks, each carved with a glowing rune
     for i, mat in enumerate(('gold', 'prism', 'chrome', 'q')):

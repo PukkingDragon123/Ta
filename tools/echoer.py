@@ -75,13 +75,15 @@ ECHOER_EXPRS = ['blink', 'happy', 'sleep', 'hurt', 'dead']
 SCALE_KEYS = {'o': 'coat_o', 'h': 'coat_h', 'm': 'coat_m', 'n': 'coat_n', 'g': 'glow', 'G': 'glow_l'}
 
 # the left eye on the mask (outer corner at column 0); the right eye is its mirror image
+# S1 land (the user's rule: never cartoon eyes): small almond eyes of light in dark sockets, the warden's way - no
+# white core, no smiling arcs, no crosses; moods only move the lids
 DEER_EYES = {
-    '': ['.ss.', 'sIIs', 'sHIs', '.ss.'],
-    'blink': ['....', '....', 'llll', '.ll.'],
-    'happy': ['....', '.ll.', 'l..l', '....'],
+    '': ['....', 'sIIs', 'sIIs', '....'],
+    'blink': ['....', '....', 'llll', '....'],
+    'happy': ['....', 'llll', 'sIIs', '....'],
     'sleep': ['....', '....', 'llll', '....'],
-    'hurt': ['ll..', '..ll', 'll..', '....'],
-    'dead': ['s..s', '.ss.', '.ss.', 's..s'],
+    'hurt': ['....', 'llll', 'llll', '....'],
+    'dead': ['....', 'ssss', 'ssss', '....'],
 }
 STAR7 = ['___g___', '_g_G_g_', '__GWG__', 'gGWWWGg', '__GWG__', '_g_G_g_', '___g___']
 SPIRAL7 = ['.ggggg.', 'g.....g', 'g.ggg.g', 'g.g.g.g', 'g.g..g.', 'g..gg..', '.g.....']
@@ -300,13 +302,14 @@ def enchoer() -> Model:
 
 
 # =========================================================================== SOUL GOLEM
+# S1 land (never cartoon eyes): a narrow slot of soul-light behind a stone lid, like a lantern's - moods move the lid
 GOLEM_EYE = {
-    'neutral': {1: '.EEEE.', 2: 'EEIIEE', 3: 'EEIhEE', 4: '.EEEE.'},
-    'blink': {3: '.llll.', 4: 'l....l'},
-    'happy': {2: '.EEEE.', 3: 'E....E'},
-    'sleep': {4: '.llll.'},
-    'hurt': {1: 'E....E', 2: '.E..E.', 3: '..EE..', 4: '.E..E.'},
-    'dead': {1: 'l....l', 2: '.l..l.', 3: '..ll..', 4: '.l..l.'},
+    'neutral': {2: 'llllll', 3: '.EIIE.', 4: '.EEEE.'},
+    'blink': {2: 'llllll', 3: 'llllll'},
+    'happy': {2: 'llllll', 3: 'llllll', 4: '.EIIE.'},
+    'sleep': {3: 'llllll', 4: 'llllll'},
+    'hurt': {2: 'llllll', 3: 'llllll', 4: '.E..E.'},
+    'dead': {2: 'llllll', 3: 'llllll', 4: 'llllll'},
 }
 GOLEM_PAL = {
     'stone': '#6c5a4b', 'stone_l': '#8a745f', 'stone_d': '#4a3d33',

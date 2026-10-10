@@ -1,7 +1,6 @@
 package com.thesift.client.knowledge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.thesift.TheSift;
 import com.thesift.client.Expression;
 import com.thesift.client.model.Anim;
 import com.thesift.client.renderer.ExpressionTextures;
@@ -16,11 +15,12 @@ import net.minecraft.util.Mth;
 /** F3: the Mini Creator - he blinks, his gems and Prism block glow, and he pops in and spins away to nothing. */
 public class MiniCreatorRenderer extends SiftMobRenderer<MiniCreator, MiniCreatorRenderState, MiniCreatorModel> {
     private static final ExpressionTextures TEXTURES = ExpressionTextures.single("mini_creator", Expression.BLINK);
-    private static final Identifier GLOW = TheSift.id("textures/entity/mini_creator/mini_creator_glow.png");
+    /** S1 land: his eyes glow (and close with the blink), with his halo, runes and gold. */
+    private static final ExpressionTextures GLOW = new ExpressionTextures("mini_creator", new String[]{"mini_creator"}, "_glow", Expression.BLINK);
 
     public MiniCreatorRenderer(EntityRendererProvider.Context context) {
         super(context, new MiniCreatorModel(context.bakeLayer(KnowledgeClient.MINI_CREATOR)), 0.4F);
-        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW, (s, age) -> 0.8F + 0.2F * Mth.sin(age * 0.15F), this.model,
+        this.addLayer(new LivingEntityEmissiveLayer<>(this, s -> GLOW.get(0, s.expression), (s, age) -> 0.8F + 0.2F * Mth.sin(age * 0.15F), this.model,
                 RenderTypes::entityTranslucentEmissive, false));
     }
 
@@ -47,6 +47,7 @@ public class MiniCreatorRenderer extends SiftMobRenderer<MiniCreator, MiniCreato
         state.celebrate.copyFrom(entity.celebrateAnimation);
         state.appear.copyFrom(entity.appearAnimation);
         state.poof.copyFrom(entity.poofAnimation);
+        state.rise.copyFrom(entity.riseAnimation);
         state.seed = (entity.getId() * 37) % 100 / 10.0F;
     }
 

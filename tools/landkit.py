@@ -295,3 +295,50 @@ def egg(rows_, pal, outline=None, light=True):
                     po[x, y] = hexc(outline)
         img = out
     return img
+
+
+# --------------------------------------------------------------------------- small vanilla-style eyes
+# The user's rule: never cartoon eyes (no big round eyes, no white highlights, no blush). Eyes are small pixel eyes
+# in the manner of the vanilla fox, frog, parrot and warden: a dark pupil beside a coloured iris under a lid line;
+# moods only move the lids.
+
+def small_eye(expr='', w=4, h=3, mirror=False, glow=False):
+    """A small eye of w x h texels (front edge on the left; mirror for the other side).
+    Keys: d lid line / closed lid, i iris, I lower iris, p pupil, '.' the skin around it.
+    glow=True: an eye of light (warden-like) - i/I are the light, the pupil is left out."""
+    if expr in ('blink', 'sleep', 'dead'):
+        out = ['.' * w for _ in range(h)]
+        out[h // 2] = 'd' * w
+        return out
+    if expr == 'hurt':
+        out = ['.' * w for _ in range(h)]
+        out[h // 2] = 'd' * w
+        out[max(0, h // 2 - 1)] = ''.join('d' if x in (0, w - 1) else '.' for x in range(w))
+        return [r[::-1] for r in out] if mirror else out
+    rows_ = []
+    for y in range(h):
+        row = ''
+        for x in range(w):
+            back = x >= w // 2  # the pupil sits towards the back of the eye
+            if y == 0:
+                row += 'd'
+            elif expr == 'angry' and y == 1 and x < (w + 1) // 2:
+                row += 'd'  # the lid drops at the front: a glare
+            elif expr == 'happy' and y == h - 1:
+                row += 'd'  # a contented, half-closed eye
+            elif not glow and back and x < w // 2 + max(1, w // 3):
+                row += 'p'
+            else:
+                row += 'i' if y < h - 1 else 'I'
+        rows_.append(row)
+    return [r[::-1] for r in rows_] if mirror else rows_
+
+
+def place(base, glyph, x0, y0):
+    """Draws a glyph ('.' see-through) into a copy of a map at (x0, y0)."""
+    g = [list(r) for r in base]
+    for j, row in enumerate(glyph):
+        for i, ch in enumerate(row):
+            if ch != '.' and 0 <= y0 + j < len(g) and 0 <= x0 + i < len(g[0]):
+                g[y0 + j][x0 + i] = ch
+    return [''.join(r) for r in g]
