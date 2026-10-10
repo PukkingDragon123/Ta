@@ -21,6 +21,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -53,6 +55,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -78,6 +81,11 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
     private static final EntityDataAccessor<Boolean> CROUCH = SynchedEntityData.defineId(Jaberora.class, EntityDataSerializers.BOOLEAN);
     private static final byte EVENT_PULSE = 101;
     private static final byte EVENT_EAT = 102;
+    /** Its colour: 0 pink (the commonest), 1 sand, 2 peach, 3 lilac, 4 snow (JaberoraRenderer picks the texture). */
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Jaberora.class, EntityDataSerializers.INT);
+    public static final int VARIANTS = 5;
+    /** How often each colour turns up in the wild, out of 100. */
+    private static final int[] VARIANT_WEIGHTS = {40, 18, 16, 14, 12};
 
     public final AnimationState pulseAnimation = new AnimationState();
     public final AnimationState eatAnimation = new AnimationState();
@@ -116,6 +124,7 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
         builder.define(SINGING, false);
         builder.define(NAPPING, false);
         builder.define(CROUCH, false);
+        builder.define(VARIANT, 0);
     }
 
     @Override
@@ -164,6 +173,35 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
         this.entityData.set(NAPPING, b);
     }
 
+    public int getVariant() {
+        return Mth.clamp(this.entityData.get(VARIANT), 0, VARIANTS - 1);
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(VARIANT, Mth.clamp(variant, 0, VARIANTS - 1));
+    }
+
+    /** A wild one's colour: pink most often, then sand, peach, lilac and (rarest) snow. */
+    private int rollVariant() {
+        int r = this.random.nextInt(100);
+        for (int i = 0; i < VARIANTS; i++) {
+            r -= VARIANT_WEIGHTS[i];
+            if (r < 0) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+            @Nullable SpawnGroupData data) {
+        if (reason != EntitySpawnReason.BREEDING) {
+            this.setVariant(this.rollVariant());
+        }
+        return super.finalizeSpawn(level, difficulty, reason, data);
+    }
+
     public boolean isWindingUp() {
         return this.entityData.get(CROUCH);
     }
@@ -180,7 +218,12 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
-        return ModDunes.JABERORA.get().create(level, EntitySpawnReason.BREEDING);
+        Jaberora baby = ModDunes.JABERORA.get().create(level, EntitySpawnReason.BREEDING);
+        if (baby != null) {
+            // a baby takes after one of its parents
+            baby.setVariant(partner instanceof Jaberora other && this.random.nextBoolean() ? other.getVariant() : this.getVariant());
+        }
+        return baby;
     }
 
     @Override
@@ -715,6 +758,9 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
 
     /** The Codex page: it sings, then pulses. */
     public void codexPose(int t) {
+        if (t % 60 == 0) {
+            this.setVariant((t / 60) % VARIANTS); // the page shows every colour in turn
+        }
         if (t % 100 == 5) {
             this.singAnimation.start(this.tickCount);
         }
@@ -753,6 +799,7 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
         super.addAdditionalSaveData(output);
         output.putInt("Fed", this.fed);
         output.putInt("Voice", this.voice);
+        output.putInt("Variant", this.getVariant());
     }
 
     @Override
@@ -760,5 +807,6 @@ public class Jaberora extends TamableAnimal implements DunesNative, Resting, Hop
         super.readAdditionalSaveData(input);
         this.fed = input.getIntOr("Fed", 0);
         this.voice = input.getIntOr("Voice", this.voice);
+        this.setVariant(input.getIntOr("Variant", 0));
     }
 }

@@ -232,19 +232,67 @@ def kerkorer() -> Model:
 
 # ================================================================ the Jaberora
 
-J_FUR = ('#7a3a52', '#96506a', '#b26a84', '#c9849c', '#dc9eb2', '#ebbaca', '#f6d6e0')   # soft pink fur
-J_BACK = ('#5e2a40', '#783650', '#924662', '#aa5a76', '#c0708a', '#d2889e', '#e2a2b4')  # deeper rose along its back
-J_PALE = ('#a88a9e', '#bea2b4', '#d2bcc8', '#e4d4dc', '#f0e6ec', '#f8f2f5', '#fffcfd')  # its pale pink-white belly and legs
 J_EAR = ('#7a2244', '#9a3058', '#ba4470', '#d45e88', '#e880a2', '#f4a6be', '#fcd0de')
-J_EYE = ('#030306', '#07070c', '#0d0c16', '#161424', '#221e36', '#36304e', '#4c4668')
-J_TUFT = ('#4a1630', '#5e1e3e', '#78284e', '#923662', '#ac4a78', '#c46690', '#da88aa')  # the tuft: deep shimmering magenta
-J_SHEEN_A = ('#6a2a48', '#8a3a5e', '#ac5076', '#cc6c90', '#e48eaa', '#f4b4c6', '#fde0e8')  # the tail's sheen: pink ...
-J_SHEEN_B = ('#4a3462', '#60447e', '#7a5a9c', '#9676b8', '#b496d0', '#d2bae4', '#eeddf4')  # ... and lilac, in turn
-J_GLINT = ('#ff9ed0', '#d8b0ff', '#a8e8f4', '#fff0f8')
+J_EYE = ('#08050c', '#0e0a14', '#16101e', '#20182a', '#2c2238', '#3c3048', '#50425e')
+J_WHISKER = ('#9c94a4', '#b4acba', '#c8c2cc', '#dcd6de', '#ece8ee', '#f6f4f8', '#ffffff')
+# The colour variants (JaberoraRenderer picks the texture by Jaberora.getVariant(); the first is the main, commonest one):
+# fur, back, pale belly/legs, tuft, the tail's two sheens, and the glint ramp of its glowing sheen and antenna bobbles.
+J_VARIANTS = {
+    'jaberora': dict(  # pink: soft pink fur, rose back, a pink-and-lilac shimmering tail with a magenta tuft
+        fur=('#8a3a5c', '#a84e72', '#c4688c', '#d884a4', '#e8a2bc', '#f4c0d2', '#fcdce8'),
+        back=('#6a2a48', '#843858', '#9e4a6c', '#b65e82', '#ca7698', '#dc90ae', '#eaaec4'),
+        pale=('#b098a8', '#c6b0be', '#dac8d2', '#eadce4', '#f4ecf0', '#faf5f8', '#fffdfe'),
+        tuft=('#4a1630', '#5e1e3e', '#78284e', '#923662', '#ac4a78', '#c46690', '#da88aa'),
+        sheen_a=('#6a2a48', '#8a3a5e', '#ac5076', '#cc6c90', '#e48eaa', '#f4b4c6', '#fde0e8'),
+        sheen_b=('#4a3462', '#60447e', '#7a5a9c', '#9676b8', '#b496d0', '#d2bae4', '#eeddf4'),
+        glint=('#ff9ed0', '#d8b0ff', '#a8e8f4', '#fff0f8')),
+    'jaberora_sand': dict(  # sandy tan, a cream belly, a teal-and-gold shimmering tail with a deep teal tuft
+        fur=('#6a4426', '#86583a', '#a2704c', '#bc8a62', '#d0a47a', '#e2c098', '#f0dab8'),
+        back=('#4e3020', '#664030', '#7e5440', '#966a52', '#ac8064', '#c09678', '#d4ae90'),
+        pale=('#9c8e7e', '#b4a694', '#cabeac', '#ded4c4', '#ece6da', '#f6f2ea', '#fefcf8'),
+        tuft=('#0e2a30', '#143a40', '#1c4c52', '#286268', '#367a80', '#4a9498', '#68b0b0'),
+        sheen_a=('#1e4a52', '#286068', '#367a80', '#4a9698', '#68b2b0', '#92cecc', '#c4ece6'),
+        sheen_b=('#5a4418', '#7a5c20', '#9c782c', '#bc963e', '#d6b45a', '#ead080', '#f8eab8'),
+        glint=('#5ee8e0', '#ffe08a', '#bff8f0', '#fffbe6')),
+    'jaberora_peach': dict(  # peach-orange, a cream belly, a rose-gold tail with a deep rose tuft
+        fur=('#7a3a1e', '#9a4e28', '#b86636', '#d08048', '#e29c62', '#f0b882', '#f8d4aa'),
+        back=('#5e2a16', '#7a3820', '#96482a', '#ae5c36', '#c27246', '#d48a5a', '#e4a476'),
+        pale=('#a8907e', '#c0a894', '#d4c0ac', '#e6d6c6', '#f2e8de', '#f8f2ec', '#fffcf8'),
+        tuft=('#4a1428', '#641c36', '#802646', '#9c345a', '#b84a72', '#cc668c', '#e08aa8'),
+        sheen_a=('#6a2a3a', '#8a3c4c', '#ac5462', '#c8707a', '#de9294', '#eeb6b0', '#fadcd2'),
+        sheen_b=('#6a4a1c', '#8a6226', '#ac7e34', '#c89a48', '#deb662', '#eed088', '#faeabc'),
+        glint=('#ffb08a', '#ffd8a0', '#ffe8f0', '#fff8ea')),
+    'jaberora_lilac': dict(  # lilac, a pale belly, a gold-and-rose shimmering tail with a gold tuft
+        fur=('#5a4478', '#705890', '#8870a8', '#a08ac0', '#b8a4d4', '#d0c0e6', '#e8dcf4'),
+        back=('#44325e', '#584276', '#6c548e', '#8268a4', '#987eba', '#ae96cc', '#c6b0de'),
+        pale=('#a49cb4', '#bab2c8', '#cec8da', '#e0dcea', '#eeeaf4', '#f6f4fa', '#fefdff'),
+        tuft=('#5a3c10', '#7a5216', '#9c6c1e', '#bc882c', '#d8a842', '#ecc86a', '#f8e4a4'),
+        sheen_a=('#5a4418', '#7a5c20', '#9c782c', '#bc963e', '#d6b45a', '#ead080', '#f8eab8'),
+        sheen_b=('#6a2a48', '#8a3a5e', '#ac5076', '#cc6c90', '#e48eaa', '#f4b4c6', '#fde0e8'),
+        glint=('#ffd870', '#ffb0d8', '#fff4c0', '#ffffff')),
+    'jaberora_snow': dict(  # snow white, an ice-blue and lilac shimmering tail with an ice-blue tuft
+        fur=('#8a8a9e', '#a2a2b4', '#babacb', '#d0d0de', '#e2e2ec', '#f0f0f6', '#fcfcff'),
+        back=('#76788e', '#8c8ea4', '#a2a4b8', '#b8bacc', '#cccede', '#dee0ec', '#eef0f8'),
+        pale=('#a8a8b8', '#c0c0ce', '#d6d6e0', '#e8e8f0', '#f4f4f8', '#fafafc', '#ffffff'),
+        tuft=('#2a3a6a', '#34508a', '#4468a8', '#5c86c4', '#7ea6da', '#a8c8ee', '#d6e8fa'),
+        sheen_a=('#3a5280', '#4c6a9c', '#6486b8', '#80a4d0', '#a2c2e4', '#c8dcf2', '#ecf4fc'),
+        sheen_b=('#5a4a80', '#6e5c9c', '#8676b6', '#a092cc', '#bcb0e0', '#d8d0f0', '#f2eefc'),
+        glint=('#a8e8ff', '#d8c8ff', '#ffffff', '#e8f8ff')),
+}
+# the eyes: big, glossy and dark, a deep plum shine low in them, a big sparkle and a small second glint (both glowing)
+J_EYE_KEYS = {'o': '#1a0e1e', 'K': '#100818', 'k': '#2e1a3c', 'q': '#4a2c5c', 'W': '#ffffff', 'w': '#f2e6ff', 'G': '#d8c4ff'}
+J_EYE_DECAL = ['.oooooo.',
+               'oKKWKKKo',
+               'oKWWWKKo',
+               'oKKWKKKo',
+               'oKKKKKKo',
+               'oKKKKKGo',
+               'oKkkqkKo',
+               '.oooooo.']
 
 
 def _sheen(k):
-    """Iridescent rings along the tail: rose-gold, plain, blue-lilac, plain (cube-local length)."""
+    """Iridescent rings along the tail: one sheen, plain, the other sheen, plain (cube-local length)."""
     def f(c):
         return np.floor(c['loc'][..., 2] / 1.25) % 4 == k
     return f
@@ -259,37 +307,76 @@ def _tail_glints(c):
     return top & (np.floor(loc[..., 2] * 2) % 3 != 0)
 
 
+def _whiskers(lx, ly, lz):
+    """Two thin whiskers on a plane, fanning out from the snout and thinning to their tips."""
+    along = np.abs(lx - (lx.min() if lx.min() >= -0.01 else lx.max())) / max(np.ptp(lx), 1e-6)
+    row = np.floor((ly - ly.min()) * 2)
+    return ((row == 0) | (row == 2)) & (along < 1.0 - 0.15 * row / 2)
+
+
+def _j_mats(v):
+    fur = M([v['fur']], base=0.56, noise=0.06, cell=1.6, mottle=None, mottle2=None, back=v['back'], belly=v['pale'], material='fur')
+    tl = M([v['fur']], base=0.6, noise=0.04, cell=1.2, mottle=None, rim=0.6, ao=0.2, light=v['glint'], gloss='#ffffff', gloss_rate=0.12,
+           material='scales')
+    tl.sheen_a = v['sheen_a']
+    tl.sheen_b = v['sheen_b']
+    return {
+        'fur': fur,
+        'pale': M([v['pale']], base=0.58, noise=0.06, cell=1.6, mottle=None, material='fur', ao=0.6),
+        'ear': M([J_EAR], base=0.6, noise=0.04, cell=1.5, rim=0.4, ao=0.0, mottle=None, flat=True, material='membrane'),
+        'eye': M([J_EYE], base=0.42, noise=0.0, rim=0.3, ao=0.0, mottle=None, gloss='#ffffff', gloss_rate=0.1),
+        'mouth': M([MOUTH], base=0.35, noise=0.03, rim=0.2, ao=0.3),
+        'tongue': M([TONGUE], base=0.55, noise=0.04, rim=0.3, ao=0.0),
+        'tail': tl,
+        'tuft': M([v['tuft']], base=0.5, noise=0.08, cell=1.0, mottle=None, material='fur', light=v['glint'], gloss='#ffffff', gloss_rate=0.1),
+        'antenna': M([v['back']], base=0.5, noise=0.03, cell=1.0, mottle=None, rim=0.5, ao=0.0),
+        'bobble': M([v['sheen_a']], base=0.62, noise=0.03, cell=0.8, mottle=None, rim=0.6, ao=0.0, light=v['glint'], gloss='#ffffff',
+                    gloss_rate=0.15, material='crystal'),
+        'whisker': M([J_WHISKER], base=0.86, noise=0.0, rim=0.0, ao=0.0, mottle=None, flat=True),
+    }
+
+
 def jaberora() -> Model:
-    """The Jaberora (JaberoraModel animates it), modelled on the real jerboa: a tiny round body sitting up on very
-    long hind legs with long hopping feet, tiny forearms, large rounded ears, big dark eyes set on the sides (drawn
-    the vanilla way), no nose, a wide mouth for its arias, and a very long thin shining tail - iridescent rings and a
-    glowing sheen - ending in a dark tuft with a white tip. The renderer draws it at 0.7 scale."""
-    m = Model('jaberora', (80, 64), {}, {'jaberora': {}}, res=2)
+    """The Jaberora (JaberoraModel animates it): a cute jerboa in the chunky, hand-shaded Blockbench manner - a big round
+    head with massive sparkly eyes (the one creature allowed them), whiskers on its snout, tall rounded ears and two
+    bobbled antennae, a tiny round body sitting up on very long hind legs with long hopping feet, tiny forearms, a
+    wide mouth for its arias, and a very long shining tail ending in a shimmering tuft. Five colour variants
+    (J_VARIANTS; pink is the main one). The renderer draws it at 0.7 scale."""
+    m = Model('jaberora', (96, 64), {}, {'jaberora': {}}, res=2)
     F = dict(mat='fur', back=-3.0, belly=0.0, tone=_fur())
     body = m.part('body', pivot=(0, 17.5, 1.5), rot=(-0.4, 0, 0))
     body.cube((-2.5, -4.5, -2.5), (5, 5, 5.5), **F, faces={'north': dict(mat='pale')})
     body.cube((-2, -5, -2), (4, 0.5, 4.5), **F)
     body.cube((-3, -3.25, -2), (6, 3, 4.5), **F, faces={'north': dict(mat='pale'), 'down': dict(mat='pale')})
+    # a big round head: a core, a domed crown, round cheeks and a little snout
     head = body.part('head', pivot=(0, -4.5, -0.5), rot=(0.4, 0, 0))
-    head.cube((-2.5, -4.5, -3), (5, 4.5, 5), mat='fur', back=-3.0, belly=-0.4, tone=_fur(), faces={'down': dict(mat='mouth')})
-    head.cube((-2, -5, -2.5), (4, 0.5, 4), mat='fur', back=99, tone=_fur())
-    head.cube((-1.75, -2.2, -3.9), (3.5, 2.2, 1), mat='fur', back=-99, belly=-0.6, tone=_fur(0.05, 5),
+    head.cube((-3.25, -5.5, -3.5), (6.5, 5.5, 6), mat='fur', back=-3.5, belly=-0.6, tone=_fur(), faces={'down': dict(mat='mouth')})
+    head.cube((-2.75, -6.25, -3), (5.5, 0.75, 5), mat='fur', back=99, tone=_fur())
+    head.cube((-2, -6.75, -2.25), (4, 0.5, 3.5), mat='fur', back=99, tone=_fur())
+    for sx in (1, -1):
+        head.cube(((3.25 if sx > 0 else -3.75), -3.75, -2.75), (0.5, 3, 4.5), mat='fur', back=-99, belly=-1.5, tone=_fur(0.08, 5))
+    head.cube((-1.75, -2.0, -4.4), (3.5, 2.0, 1), mat='fur', back=-99, belly=-0.8, tone=_fur(0.05, 5),
               faces={'north': dict(decal=['.......', '.......', 'mmmmmmm', '.m...m.'], keys=EYE, at=(0, 0))})
     for side, sx in (('left', 1), ('right', -1)):
-        # small dark dot eyes, vanilla style: a single dark pixel-dot each, no glint
-        eye = head.part(f'{side}_eye', pivot=(1.35 * sx, -2.9, -3.02), rot=(0, 0.3 * sx, 0))
-        eye.cube((-0.5, -0.5, -0.1), (1, 1, 0.2), mat='eye', faces={'north': dict(decal=['KK', 'KK'], keys=EYE, at=(0, 0))})
-        lid = eye.part(f'{side}_eyelid', pivot=(0, 0, -0.12))
-        lid.cube((-0.6, -0.6, -0.05), (1.2, 1.2, 0.05), mat='fur', tone=_fur())
+        # massive sparkly eyes on the front corners of the face (glossy, dark, a big sparkle and a little glint that glow)
+        eye = head.part(f'{side}_eye', pivot=(1.75 * sx, -3.5, -3.55), rot=(0, 0.32 * sx, 0))
+        eye.cube((-1.75, -1.75, -0.35), (3.5, 3.5, 0.5), mat='eye',
+                 faces={'north': dict(decal=J_EYE_DECAL if sx > 0 else [r[::-1] for r in J_EYE_DECAL], keys=J_EYE_KEYS, at=(0, 0),
+                                      glow_keys='WwG')})
+        lid = eye.part(f'{side}_eyelid', pivot=(0, 0, -0.4))
+        lid.cube((-1.85, -1.85, -0.05), (3.7, 3.7, 0.05), mat='fur', tone=_fur())
+        # whiskers fanning out from the snout
+        wh = head.part(f'{side}_whiskers', pivot=(1.6 * sx, -1.5, -4.3), rot=(0, 0.35 * sx, 0.12 * sx))
+        wh.cube(((0 if sx > 0 else -4), -0.75, 0), (4, 1.5, 0), mat='whisker', shape=_whiskers)
+        # tall rounded ears, pink inside
+        ear = head.part(f'{side}_ear', pivot=(2.0 * sx, -5.6, 1.0), rot=(-0.3, -0.3 * sx, 0.42 * sx))
+        ear.cube((-1.6, -4.5, 0), (3.2, 4.5, 0), mat='ear', shape=_round_plane(3.2, 4.5), faces={'south': dict(mat='fur', tone=_fur())})
         # a pair of thin antennae with shimmering bobbles, springing from the crown
-        ant = head.part(f'{side}_antenna', pivot=(0.55 * sx, -4.9, -2.2), rot=(0.3, 0, 0.22 * sx))
-        ant.cube((-0.2, -2.8, -0.2), (0.4, 2.8, 0.4), mat='antenna')
-        atip = ant.part(f'{side}_antenna_tip', pivot=(0, -2.8, 0), rot=(0.35, 0, 0.12 * sx))
-        atip.cube((-0.18, -1.9, -0.18), (0.36, 1.9, 0.36), mat='antenna')
-        atip.cube((-0.55, -3.0, -0.55), (1.1, 1.1, 1.1), mat='bobble', lights=lambda c: AK.fbm(c['wp'] * 4.0, 0.7, 23, 1) > 0.55)
-        # large rounded ears, pink inside
-        ear = head.part(f'{side}_ear', pivot=(1.6 * sx, -4.4, 1.0), rot=(-0.3, -0.3 * sx, 0.42 * sx))
-        ear.cube((-1.5, -4, 0), (3, 4, 0), mat='ear', shape=_round_plane(3, 4), faces={'south': dict(mat='fur', tone=_fur())})
+        ant = head.part(f'{side}_antenna', pivot=(0.6 * sx, -6.6, -1.6), rot=(0.3, 0, 0.22 * sx))
+        ant.cube((-0.2, -2.6, -0.2), (0.4, 2.6, 0.4), mat='antenna')
+        atip = ant.part(f'{side}_antenna_tip', pivot=(0, -2.6, 0), rot=(0.35, 0, 0.12 * sx))
+        atip.cube((-0.18, -1.8, -0.18), (0.36, 1.8, 0.36), mat='antenna')
+        atip.cube((-0.55, -2.9, -0.55), (1.1, 1.1, 1.1), mat='bobble', lights=lambda c: AK.fbm(c['wp'] * 4.0, 0.7, 23, 1) > 0.55)
         # tiny forearms held to the chest
         arm = body.part(f'{side}_arm', pivot=(1.2 * sx, -1.2, -2.4), rot=(-0.6, 0, -0.1 * sx))
         arm.cube((-0.35, 0, -0.35), (0.7, 1.8, 0.7), mat='pale')
@@ -303,9 +390,9 @@ def jaberora() -> Model:
         foot.cube((-0.7, -0.6, -5), (1.4, 0.6, 5.5), mat='pale')
         foot.cube((-0.6, -0.5, -5.6), (1.2, 0.5, 0.6), mat='fur', back=-99, belly=99)
     jaw = head.part('jaw', pivot=(0, -0.4, 0.6))
-    jaw.cube((-2, 0, -4.4), (4, 1, 4.8), mat='fur', back=-99, belly=0.5, tone=_fur(0.06, 7), faces={'up': dict(mat='mouth')})
-    jaw.cube((-1.4, -0.4, -3.8), (2.8, 0.4, 3.4), mat='tongue')
-    # the very long shining tail, out straight behind for balance, ending in a dark tuft tipped white
+    jaw.cube((-2.25, 0, -4.8), (4.5, 1, 5.2), mat='fur', back=-99, belly=0.5, tone=_fur(0.06, 7), faces={'up': dict(mat='mouth')})
+    jaw.cube((-1.5, -0.4, -4.2), (3, 0.4, 3.6), mat='tongue')
+    # the very long shining tail, out straight behind for balance, ending in a shimmering tuft tipped pale
     T = dict(mat='tail', marks=[(_sheen(0), 'sheen_a', 0), (_sheen(2), 'sheen_b', 0)], lights=_tail_glints)
     tail = m.part('tail', pivot=(0, 19.0, 5.0), rot=(0.05, 0, 0))
     tail.cube((-0.4, -0.4, 0), (0.8, 0.8, 7), **T)
@@ -314,25 +401,7 @@ def jaberora() -> Model:
     tip = mid.part('tail_tip', pivot=(0, 0, 6.5), rot=(0.15, 0, 0))
     tip.cube((-1, -1, 0), (2, 2, 2.8), mat='tuft', tone=_fur(0.1, 13), lights=lambda c: AK.fbm(c['wp'] * 3.0, 0.8, 19, 1) > 0.72)
     tip.cube((-0.8, -0.8, 2.8), (1.6, 1.6, 1.4), mat='pale', tone=_fur(0.1, 14))
-    fur = M([J_FUR], base=0.55, noise=0.07, cell=1.6, mottle=None, mottle2=None, back=J_BACK, belly=J_PALE, material='fur')
-    tl = M([J_FUR], base=0.6, noise=0.04, cell=1.2, mottle=None, rim=0.6, ao=0.2, light=J_GLINT, gloss='#ffffff', gloss_rate=0.12,
-           material='scales')
-    tl.sheen_a = J_SHEEN_A
-    tl.sheen_b = J_SHEEN_B
-    mats = {
-        'fur': fur,
-        'pale': M([J_PALE], base=0.58, noise=0.06, cell=1.6, mottle=None, material='fur', ao=0.6),
-        'ear': M([J_EAR], base=0.6, noise=0.04, cell=1.5, rim=0.4, ao=0.0, mottle=None, flat=True, material='membrane'),
-        'eye': M([J_EYE], base=0.42, noise=0.0, rim=0.3, ao=0.0, mottle=None),
-        'mouth': M([MOUTH], base=0.35, noise=0.03, rim=0.2, ao=0.3),
-        'tongue': M([TONGUE], base=0.55, noise=0.04, rim=0.3, ao=0.0),
-        'tail': tl,
-        'tuft': M([J_TUFT], base=0.5, noise=0.08, cell=1.0, mottle=None, material='fur', light=J_GLINT, gloss='#ffe8f4', gloss_rate=0.1),
-        'antenna': M([J_BACK], base=0.5, noise=0.03, cell=1.0, mottle=None, rim=0.5, ao=0.0),
-        'bobble': M([J_SHEEN_A], base=0.62, noise=0.03, cell=0.8, mottle=None, rim=0.6, ao=0.0, light=J_GLINT, gloss='#ffffff',
-                    gloss_rate=0.15, material='crystal'),
-    }
-    return AK.finish(m, {'jaberora': mats})
+    return AK.finish(m, {name: _j_mats(v) for name, v in J_VARIANTS.items()})
 
 
 # ================================================================ the Reservoir
@@ -669,7 +738,7 @@ def lang():
                                'curled against it. Its scales make the Kerkorer Cloak.'),
         f'{c}.kerkorer.notes': 'Habitat: Rocky Dunes|Temper: Ambush hunter|Diet: Sifters, the curious|Drops: Camouflage Scales, its bait (sometimes)',
         f'{c}.jaberora.title': 'Jaberora', f'{c}.jaberora.tagline': 'The diva of the dunes',
-        f'{c}.jaberora.body': ('A jerboa of the dunes - pink, with tall ears, two bobbled antennae, small dot eyes, no nose, a mouth made for opera and a long shining tail. They live in noisy groups, bound '
+        f'{c}.jaberora.body': ('A jerboa of the dunes with huge sparkling eyes, whiskers, tall ears, two bobbled antennae, a mouth made for opera and a long shining tail - most are pink, some sand, peach, lilac or snow white. They live in noisy groups, bound '
                                'across the sand and sing arias at dusk - songs that lure prey to the Kerkorers they live with. Threaten '
                                'one and it lets out a single piercing note that stuns and Deafens. Sifters hunt them. Feed one Tuning Fruit '
                                'to tame it: it follows you, sings in your band and stuns your foes. Sneak-use to make it sit. It drops '

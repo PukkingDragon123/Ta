@@ -15,6 +15,8 @@ public class JaberoraRenderState extends SiftRenderState {
     /** On a Kerkorer's back. */
     public boolean riding;
     public float seed;
+    /** Its colour (Jaberora#getVariant). */
+    public int variant;
     public final AnimationState pulse = new AnimationState();
     public final AnimationState eat = new AnimationState();
     public final AnimationState sing = new AnimationState();

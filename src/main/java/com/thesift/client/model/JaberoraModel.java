@@ -21,6 +21,7 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
     private final ModelPart[] ears = new ModelPart[2];
     private final ModelPart[] antennae = new ModelPart[2];
     private final ModelPart[] antennaTips = new ModelPart[2];
+    private final ModelPart[] whiskers = new ModelPart[2];
     private final ModelPart[] lids = new ModelPart[2];
     private final ModelPart[] arms = new ModelPart[2];
     private final ModelPart[] thighs = new ModelPart[2];
@@ -41,6 +42,7 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
             this.ears[i] = this.head.getChild(s + "_ear");
             this.antennae[i] = this.head.getChild(s + "_antenna");
             this.antennaTips[i] = this.antennae[i].getChild(s + "_antenna_tip");
+            this.whiskers[i] = this.head.getChild(s + "_whiskers");
             this.lids[i] = this.head.getChild(s + "_eye").getChild(s + "_eyelid");
             this.arms[i] = this.body.getChild(s + "_arm");
             this.thighs[i] = root.getChild(s + "_thigh");
@@ -107,6 +109,14 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
             this.antennae[i].zRot += sx * (Mth.sin(age * 0.05F + i) * 0.06F + atw * 0.15F);
             this.antennaTips[i].xRot += Mth.sin(age * 0.07F + i * 1.9F - 0.9F) * 0.14F - 0.5F * air + 0.35F * crouch;
             this.antennaTips[i].zRot += sx * atw * 0.25F;
+        }
+
+        // ---- whiskers: a constant faint quiver, a sniffing twitch now and then, swept back as it bounds
+        for (int i = 0; i < 2; i++) {
+            float wsx = i == 0 ? 1.0F : -1.0F;
+            float sniff = Math.max(0.0F, Mth.sin(age * 0.23F + i * 0.4F + s.seed * 0.5F) - 0.8F) * 5.0F;
+            this.whiskers[i].yRot += wsx * (Mth.sin(age * 0.9F + i) * 0.03F + sniff * 0.18F + 0.25F * air);
+            this.whiskers[i].zRot += wsx * (sniff * 0.12F - 0.1F * crouch);
         }
 
         // ---- sitting (told to, or riding a Kerkorer): settled on its haunches
