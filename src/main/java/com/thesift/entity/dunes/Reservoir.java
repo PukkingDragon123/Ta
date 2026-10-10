@@ -248,7 +248,7 @@ public class Reservoir extends PathfinderMob implements DunesNative, Resting {
     private static void swap(Player player, InteractionHand hand, ItemStack used, ItemStack result) {
         if (player.isCreative()) {
             if (!player.getInventory().add(result)) {
-                player.drop(result, false);
+                if (player.level() instanceof net.minecraft.server.level.ServerLevel dropLevel) player.spawnAtLocation(dropLevel, result); // 26.3: Player.drop needs a Prediction
             }
             return;
         }
@@ -256,7 +256,7 @@ public class Reservoir extends PathfinderMob implements DunesNative, Resting {
         if (used.isEmpty()) {
             player.setItemInHand(hand, result);
         } else if (!player.getInventory().add(result)) {
-            player.drop(result, false);
+            if (player.level() instanceof net.minecraft.server.level.ServerLevel dropLevel) player.spawnAtLocation(dropLevel, result); // 26.3: Player.drop needs a Prediction
         }
     }
 

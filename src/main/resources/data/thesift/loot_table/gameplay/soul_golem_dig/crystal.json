@@ -5,20 +5,25 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:flint",
+          "name": "thesift:prism_gem",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:amethyst_shard",
           "weight": 10,
           "modifier": {
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+              "min": 2,
+              "max": 4
             }
           }
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:clay_ball",
+          "name": "minecraft:quartz",
           "weight": 8,
           "modifier": {
             "type": "minecraft:set_count",
@@ -31,59 +36,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone",
-          "weight": 6,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
-          "weight": 8,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:raw_copper",
-          "weight": 8,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:coal",
-          "weight": 6,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:amethyst_shard",
+          "name": "minecraft:raw_gold",
           "weight": 4,
           "modifier": {
             "type": "minecraft:set_count",
@@ -96,39 +49,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "thesift:soul_dust",
-          "weight": 6,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:glow_berries",
-          "weight": 3,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 4
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "thesift:chrome_pearl",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:emerald",
-          "weight": 2
+          "name": "minecraft:diamond",
+          "weight": 1
         }
       ],
       "rolls": 1
@@ -227,5 +149,5 @@
       }
     }
   ],
-  "random_sequence": "thesift:gameplay/soul_golem_dig"
+  "random_sequence": "thesift:gameplay/soul_golem_dig/crystal"
 }

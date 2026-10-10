@@ -27,7 +27,10 @@ POSES = {
                              left_hind_leg={'rot': (0.75, 0, 0)}, right_hind_leg={'rot': (0.65, 0, 0)}),
                 'bow': Pose(body={'rot': (0.2, 0, 0), 'pos': (0, 1.6, 0)}, neck={'rot': (0.85, 0, 0)}, head={'rot': (0.15, 0, 0)},
                             left_front_leg={'rot': (-0.7, 0, 0)}, right_front_leg={'rot': (-0.1, 0, 0)}, right_front_shin={'rot': (1.5, 0, 0)})},
-    'soul_golem': {'rest': Pose(), 'slump': Pose(body={'rot': (0.5, 0, 0), 'pos': (0, 1, 0)}, stalk={'rot': (0.75, 0, 0)}, jaw={'rot': (-0.5, 0, 0)})},
+    # CAVE v4 Soul Golem (copper mole): scrabbling in, and burrowed with only its antenna showing
+    'soul_golem': {'rest': Pose(), 'dig': Pose(body={'rot': (0.25, 0, 0)}, head={'rot': (0.35, 0, 0)}, left_arm={'rot': (-1.2, 0, -0.35)},
+                                             right_arm={'rot': (0.2, 0, 0.35)}),
+                   'burrow': Pose(body={'pos': (0, 11, 0)}, left_leg={'pos': (3, 32, 4)}, right_leg={'pos': (-3, 32, 4)})},
     'nib': {'rest': Pose(), 'fold': Pose(left_wing={'rot': (0, 0, -1.25)}, right_wing={'rot': (0, 0, 1.25)},
                                          left_wing_low={'rot': (0, 0, -1.1)}, right_wing_low={'rot': (0, 0, 1.1)})},  # CAVE
     'harmoner': {'rest': Pose(), 'fly': Pose(left_wing={'rot': (0, 0, -1.3)}, right_wing={'rot': (0, 0, 1.3)}, left_leg={'rot': (0.9, 0, 0)},

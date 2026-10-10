@@ -189,11 +189,35 @@ def generate(GA):
     rare = {'type': 'minecraft:loot_table', 'value': f'{NS}:gameplay/echoer_gift/rare', 'weight': 1}
     for song, entries in ECHOER_GIFTS.items():
         D.table('gift', f'gameplay/echoer_gift/{song}', [D.pool(entries + [book]), D.pool([rare], condition=D.chance(0.05))])
-    D.table('gift', 'gameplay/soul_golem_dig', [D.pool([
-        D.item('minecraft:gold_nugget', 10, count=(2, 5)), D.item('minecraft:lapis_lazuli', 8, count=(2, 4)),
-        D.item('minecraft:amethyst_shard', 8, count=(1, 3)), D.item('minecraft:quartz', 6, count=(1, 3)),
-        D.item('minecraft:emerald', 6), D.item('star_shard', 3), D.item('siftite_dust', 3), D.item('chrome_pearl', 2), D.item('soul_dust', 8, count=(1, 3)),
-        D.item('minecraft:diamond', 1)])])
+    # CAVE v4: what the copper-mole Soul Golem digs up, by where it burrows (ModEchoer.golemDigTable); each table has a small
+    # chance of a relic and a smaller one of a music sheet as well
+    i = D.item
+    relics = [i('minecraft:archer_pottery_sherd', 2), i('minecraft:prize_pottery_sherd', 2), i('minecraft:skull_pottery_sherd', 2),
+              i('minecraft:arms_up_pottery_sherd', 2), i('minecraft:heart_pottery_sherd', 1), i('minecraft:disc_fragment_5', 2),
+              i('minecraft:name_tag', 1), i('minecraft:golden_horse_armor', 1), i('star_shard', 2)]
+    sheets = [i(f'music_sheet_{song}', 1) for song in ('offering', 'nib', 'golem', 'crystal', 'whale', 'lullaby')]
+    extra = [D.pool(relics, condition=D.chance(0.06)), D.pool(sheets, condition=D.chance(0.025))]
+    digs = {
+        '': [i('minecraft:flint', 10, count=(1, 3)), i('minecraft:clay_ball', 8, count=(2, 5)), i('minecraft:bone', 6, count=(1, 2)),
+             i('minecraft:gold_nugget', 8, count=(2, 5)), i('minecraft:raw_copper', 8, count=(1, 3)), i('minecraft:coal', 6, count=(1, 3)),
+             i('minecraft:amethyst_shard', 4, count=(1, 2)), i('soul_dust', 6, count=(1, 3)), i('minecraft:glow_berries', 3, count=(2, 4)),
+             i('chrome_pearl', 2), i('minecraft:emerald', 2)],
+        '/deep': [i('minecraft:raw_iron', 10, count=(1, 3)), i('minecraft:raw_copper', 8, count=(2, 4)), i('minecraft:raw_gold', 5, count=(1, 2)),
+                  i('minecraft:coal', 8, count=(2, 4)), i('minecraft:redstone', 6, count=(2, 5)), i('minecraft:lapis_lazuli', 6, count=(2, 5)),
+                  i('galena', 4, count=(1, 2)), i('minecraft:emerald', 2), i('minecraft:diamond', 1)],
+        '/deepslate': [i('minecraft:diamond', 6), i('minecraft:redstone', 8, count=(3, 6)), i('minecraft:lapis_lazuli', 8, count=(3, 6)),
+                       i('minecraft:raw_gold', 8, count=(1, 3)), i('minecraft:emerald', 4), i('raw_sculkite', 3), i('minecraft:echo_shard', 2),
+                       i('minecraft:ancient_debris', 1)],
+        '/crystal': [i('prism_gem', 8), i('minecraft:amethyst_shard', 10, count=(2, 4)), i('minecraft:quartz', 8, count=(2, 5)),
+                     i('minecraft:raw_gold', 4, count=(1, 2)), i('minecraft:diamond', 1)],
+        '/sculk': [i('raw_sculkite', 8), i('minecraft:echo_shard', 3), i('minecraft:sculk', 8, count=(1, 3)), i('minecraft:bone', 8, count=(1, 3)),
+                   i('soul_dust', 8, count=(1, 3)), i('minecraft:experience_bottle', 4)],
+        '/sands': [i('minecraft:bone', 10, count=(1, 3)), i('minecraft:bone_meal', 6, count=(2, 4)), i('minecraft:gold_nugget', 8, count=(2, 5)),
+                   i('minecraft:flint', 6, count=(1, 2)), i('minecraft:archer_pottery_sherd', 3), i('minecraft:prize_pottery_sherd', 3),
+                   i('minecraft:emerald', 2), i('minecraft:gold_ingot', 2)],
+    }
+    for zone, entries in digs.items():
+        D.table('gift', f'gameplay/soul_golem_dig{zone}', [D.pool(entries)] + extra)
     D.table('gift', 'gameplay/nib_transform', [D.pool([
         D.item('nib_dust', 60, count=(1, 2)), D.item('minecraft:gold_nugget', 12, count=(2, 4)), D.item('minecraft:gold_ingot', 5),
         D.item('minecraft:emerald', 6), D.item('minecraft:amethyst_shard', 8, count=(1, 2)), D.item('minecraft:echo_shard', 3),
@@ -220,8 +244,8 @@ def lang():
         f'message.{NS}.soul_golem_core.needs_soil': 'The core needs a body: use it on a block of soul soil.',
         f'codex.{NS}.enchoer.title': 'Echoer', f'codex.{NS}.enchoer.tagline': 'The deer spirit that sings',  # M3 Echoer
         f'codex.{NS}.enchoer.body': 'A deer spirit of the meadows with great pale antlers whose tines glow as it sings - and it sings all the time, so you hear one long before you see it, skipping through the air on glints of light. Play near it and it stops to listen. Finish a song and it comes to you, bows its antlers, and a gift rises out of them for you to take: each song has gifts of its own, and once in a while something truly rare comes with it. An Echoer gives each player one gift every ten minutes; until then it only dances to your songs.',
-        f'codex.{NS}.soul_golem.title': 'Soul Golem', f'codex.{NS}.soul_golem.tagline': 'A little digger of the old days',
-        f'codex.{NS}.soul_golem.body': 'Round soulstone constructs with lamp-lit eyes that keep house for Echoers at their pale hearths in the meadows, picking up anything shiny and peering at suspicious blocks. Use one empty-handed to be shown its find. Set a Soul Golem Core into soul soil to build your own: it follows you and sifts the ground nearby, now and then turning up a gem. It runs on soul energy, which drains as it works; at zero it slumps. Any music recharges it a little - the Golem Hymn completely.',
+        f'codex.{NS}.soul_golem.title': 'Soul Golem', f'codex.{NS}.soul_golem.tagline': 'The copper mole that digs',  # CAVE v4
+        f'codex.{NS}.soul_golem.body': 'Copper moles built like copper golems - riveted plates gone green in the seams, a lightning rod on the head with a soul lamp in its cap, a drill for a nose and great spade paws. Now and then one burrows out of sight and comes up holding a find: topsoil treasures, ores deeper down, prism gems in the cavern, relics in the sands, rarely a music sheet. It can feel ore through the ground. Set a Soul Golem Core into soul soil to build your own: it digs near you and carries its finds to a chest or barrel nearby, or to you. It runs on soul energy - any music recharges it, the Golem Hymn completely.',
         f'codex.{NS}.nib.title': 'Nibs', f'codex.{NS}.nib.tagline': 'Wisps of the flower meadows',
         f'codex.{NS}.nib.body': 'Tiny glowing butterfly-wisps that flutter in loose flocks over the Sift\'s meadows, trailing sparkles and resting on flowers. Play the Song of the Nibs and every Nib within twelve blocks swirls up around you and turns into treasure: mostly Nib Dust, sometimes gold, emeralds, amethyst or echo shards, and once in a long while a diamond.',
         f'block.{NS}.echoer_hut_heart': 'Echoer\'s Hearthstone',

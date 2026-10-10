@@ -326,3 +326,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+# CAVE v4 Soul Golem (copper mole): the Copper Golem's voice, digging and burrowing
+EVENTS = EVENTS | frozenset({'entity.copper_golem.spin', 'entity.copper_golem.hurt', 'entity.copper_golem.death', 'entity.copper_golem.step',
+                             'entity.copper_golem.spawn', 'entity.copper_golem.item_drop', 'block.rooted_dirt.break', 'block.gravel.break',
+                             'block.mud.break', 'block.copper_bulb.turn_on', 'entity.sniffer.digging'})

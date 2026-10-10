@@ -272,6 +272,15 @@ final class MechanicsTest {
         TheSift.LOGGER.info("SMOKE: echoer rewards and nib treasure {}", got);
         check(songs == com.thesift.music.Song.values().length, "echoer: every song's gift table gives a gift (" + songs + ")");
         check(got.size() >= songs + 16, "echoer: the gift and nib transform loot tables give items");
+        // CAVE v4: the Soul Golem digs up something from every kind of ground (topsoil, deep, deepslate, cavern, sculk, sands)
+        int digs = 0;
+        for (var table : com.thesift.registry.ModEchoer.GOLEM_DIG_TABLES) {
+            List<ItemStack> dug = new ArrayList<>();
+            e.dropFromGiftLootTable(this.sift, table, (l, stack) -> dug.add(stack));
+            digs += dug.isEmpty() ? 0 : 1;
+        }
+        TheSift.LOGGER.info("SMOKE: soul golem dig tables giving finds: {}/{}", digs, com.thesift.registry.ModEchoer.GOLEM_DIG_TABLES.size());
+        check(digs == com.thesift.registry.ModEchoer.GOLEM_DIG_TABLES.size(), "soul golem: every dig table gives a find (" + digs + ")");
         e.discard();
     }
 

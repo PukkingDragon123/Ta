@@ -302,111 +302,174 @@ def enchoer() -> Model:
 
 
 # =========================================================================== SOUL GOLEM
-# S1 land (never cartoon eyes): a narrow slot of soul-light behind a stone lid, like a lantern's - moods move the lid
-GOLEM_EYE = {
-    'neutral': {2: 'llllll', 3: '.EIIE.', 4: '.EEEE.'},
-    'blink': {2: 'llllll', 3: 'llllll'},
-    'happy': {2: 'llllll', 3: 'llllll', 4: '.EIIE.'},
-    'sleep': {3: 'llllll', 4: 'llllll'},
-    'hurt': {2: 'llllll', 3: 'llllll', 4: '.E..E.'},
-    'dead': {2: 'llllll', 3: 'llllll', 4: 'llllll'},
-}
+# CAVE v4: a copper mole. The Soul Golem is built like vanilla's Copper Golem - riveted copper plates going to
+# green patina in the seams and drips, small dark button eyes with a glint of soul light, a lightning-rod
+# antenna on its head with a soul lamp in its cap - but in the shape of a mole: low and wide, a tapered head
+# with a copper drill for a nose, huge spade forepaws turned out with polished claws, stubby hind legs, a
+# riveted stub of a tail and a soul-fire vent on its back. It burrows into the ground and brings up finds.
 GOLEM_PAL = {
-    'stone': '#6c5a4b', 'stone_l': '#8a745f', 'stone_d': '#4a3d33',
-    'belly': '#7d6a58', 'belly_l': '#9a856f', 'belly_d': '#5c4c3f',
-    'moss': '#3f9e8c', 'moss_l': '#72cfb8', 'moss_d': '#235f55',
-    'crack': '#5fe9ff', 'crack_d': '#2aa9c8', 'crack_l': '#d8fdff', 'mouth': '#1c1410',
-    'eye': '#a9faff', 'eye_core': '#ffffff', 'lid': '#3a2f27',
-    'lamp': '#7ff3ff', 'lamp_l': '#d6fdff', 'lamp_d': '#3cc3dc',
-    'iron': '#3d444b', 'iron_l': '#646e77', 'iron_d': '#22272c',
+    'copper': '#c87456', 'copper_l': '#e3826c', 'copper_d': '#9a5038',
+    'plate': '#b8664a', 'plate_l': '#d67b5b', 'plate_d': '#8a4632',
+    'seam': '#6b3424', 'rivet': '#f0a888', 'rivet_d': '#7a3e2a',
+    'patina': '#59b292', 'patina_l': '#7ac5a6', 'patina_d': '#396e59',
+    'claw': '#f2c9a8', 'claw_l': '#fff0e0', 'claw_d': '#b07a58',
+    'drill': '#d98a68', 'drill_l': '#f6b896', 'drill_d': '#8a4632', 'groove': '#4e2418',
+    'eye': '#26181a', 'eye_l': '#d6fdff', 'socket': '#5a2a1c',
+    'soul': '#5fe9ff', 'soul_l': '#d6fdff', 'soul_d': '#2aa9c8', 'vent': '#2a1410',
 }
-GOLEM_MATERIALS = {'stone': 'stone', 'belly': 'stone', 'moss': 'plant', 'iron': 'metal', 'lamp': 'crystal'}
+GOLEM_MATERIALS = {'copper': 'metal', 'plate': 'metal', 'drill': 'metal', 'claw': 'metal', 'patina': 'stone', 'soul': 'flat'}
+GOLEM_EXPRS = ['blink', 'happy', 'sleep', 'hurt', 'dead']
+PLATE_KEYS = {'s': 'seam', 'r': 'rivet', 'R': 'rivet_d', 'p': 'patina', 'P': 'patina_l', 'q': 'patina_d', 'h': 'copper_l',
+              'g': 'soul', 'G': 'soul_l', 'v': 'vent'}
+# the left button eye (3 x 3 texels; the right one is its mirror image)
+MOLE_EYES = {
+    '': ['.e.', 'eie', '.e.'],
+    'blink': ['...', 'eee', '...'],
+    'happy': ['...', '.e.', 'e.e'],
+    'sleep': ['...', '...', 'eee'],
+    'hurt': ['e..', '.ee', 'e..'],
+    'dead': ['e.e', '.e.', 'e.e'],
+}
 
 
-def _cracks(w, h, seed, n=3):
-    """Glowing soul cracks wandering over a stone face (hd map): bright (c) with a dimmer halo (C)."""
+def _plates(w, h, seed, every=10, patina=0.14, vent=None, spine=False):
+    """Riveted copper plates (hd map): a dark seam every `every` rows with a domed rivet (lit r over a dark R)
+    every four texels along it, a vertical seam staggered between the rows, brushed highlights along the top
+    of each plate, and patina - the oxidation creeps out of the seams (q in them, p / P beside them) and runs
+    down in short drips. `vent` puts the glowing soul-fire grille (g / G) at that rectangle."""
     rnd = random.Random(seed)
     g = [['.'] * w for _ in range(h)]
-    for _ in range(n):
-        x, y = rnd.randrange(w), rnd.randrange(h)
-        for _ in range(rnd.randrange(4, 8)):
-            if 0 <= x < w and 0 <= y < h:
-                g[y][x] = 'c'
-                for dx, dy in ((1, 0), (-1, 0), (0, 1)):
-                    if 0 <= x + dx < w and 0 <= y + dy < h and g[y + dy][x + dx] == '.' and rnd.random() < 0.35:
-                        g[y + dy][x + dx] = 'C'
-            x += rnd.choice((-1, 0, 1))
-            y += 1 if rnd.random() < 0.7 else 0
+    for y in range(h):
+        band = y // every
+        if y % every == every - 1:
+            for x in range(w):
+                g[y][x] = 's'
+            for x in range(2 + (band % 2) * 2, w, 5):
+                g[y - 1][x] = 'r'
+                g[y][x] = 'R'
+        elif y % every == 0:
+            for x in range(w):
+                if rnd.random() < 0.3:
+                    g[y][x] = 'h'
+        vx = (band * 7 + 5) % 14
+        for x in range(vx, w, 14):
+            if g[y][x] == '.':
+                g[y][x] = 's'
+    for y in range(h):
+        for x in range(w):
+            if g[y][x] == 's' and rnd.random() < patina * 1.6:
+                g[y][x] = 'q'
+                for dy in range(1, rnd.randrange(2, 4)):
+                    if y + dy < h and g[y + dy][x] in '.h':
+                        g[y + dy][x] = 'p' if dy == 1 else 'P'
+            elif g[y][x] in '.h' and rnd.random() < patina * 0.05:
+                g[y][x] = 'P' if rnd.random() < 0.4 else 'p'
+    if spine:
+        cx = w // 2
+        for y in range(h):
+            g[y][cx - 1] = g[y][cx] = 's' if y % 4 else 'r'
+    if vent:
+        x0, y0, vw, vh = vent
+        for y in range(y0, y0 + vh):
+            for x in range(x0, x0 + vw):
+                if 0 <= y < h and 0 <= x < w:
+                    g[y][x] = 'v' if (y - y0) % 2 == 0 else ('G' if x in (x0, x0 + vw - 1) else 'g')
+    return [''.join(r) for r in g]
+
+
+def _mole_face(expr):
+    """The front of the head (14 x 10 texels; the snout covers the lower middle): two small dark button eyes
+    with a glint of soul light just above the snout, riveted brow plates and patina in the seams."""
+    g = [list(r) for r in _plates(14, 10, 77, every=10, patina=0.1)]
+    for j, row in enumerate(MOLE_EYES[expr]):
+        for i, ch in enumerate(row):
+            if ch != '.':
+                g[1 + j][2 + i] = ch
+                g[1 + j][11 - i] = ch
+    for x in (1, 5, 8, 12):
+        g[0][x] = 'r'
     return [''.join(r) for r in g]
 
 
 def soul_golem() -> Model:
-    """A small ancient construct of carved soulstone - a round frog-like body, two big domed eyes lit by the
-    soul fire inside under heavy stone brows, a wide carved grin with a stone lower lip that drops open when it
-    hums, stubby arms with three-fingered hands, stubby legs with toed feet, cyan cracks glowing along its
-    seams, a cap of teal Sift moss hanging over its top, a carved soul spiral on its back, and a little soul
-    lantern hanging from a bent stalk over its face like an angler's lure."""
-    m = Model('soul_golem', (64, 64), dict(GOLEM_PAL), {'soul_golem': {}}, res=2, expressions=['blink', 'happy', 'sleep', 'hurt', 'dead'],
-              materials=GOLEM_MATERIALS)
+    """CAVE v4: the copper mole (see the notes above). Model space: it stands low, the top of its back at
+    y = 15, the antenna's lamp at about y = 5, its drill nose reaching z = -14."""
+    m = Model('soul_golem', (96, 64), dict(GOLEM_PAL), {'soul_golem': {}}, res=2, expressions=GOLEM_EXPRS, materials=GOLEM_MATERIALS)
     m.exact_uv = True
-    ck = {'c': 'crack', 'C': 'crack_d', 'm': 'mouth', 'g': 'crack_l', 'o': 'stone_d', 'l': 'stone_l'}
-    # the front: cracks up top, the carved grin (a soul glow deep in it), a rune ring round the core below
-    front = overlay(_cracks(16, 14, 3, 2), hd_rows({5: '.o............o.', 6: '.om..........mo.', 7: '..mmmmmmmmmmmm..', 8: '...mmmCggCmmm...',
-                                                     9: '....mmmmmmmm....', 11: '......CC......', 12: '.....CccC.....', 13: '......CC......'}, 16, 14))
-    side = _cracks(14, 14, 5, 3)
-    back = overlay(_cracks(16, 14, 9, 2), hd_rows({3: '.....cccc.......', 4: '....c....c......', 5: '...c..cc..c.....', 6: '...c.c..c.c.....',
-                                                    7: '...c.c.cc.c.....', 8: '...c..c...c.....', 9: '....c....c......', 10: '.....cccc.......'}, 16, 14), (3, 0))
-    for side_name, sx in (('left', 1), ('right', -1)):
-        leg = m.part(f'{side_name}_leg', pivot=(2 * sx, 21, 0.5))
-        leg.cube((-1.5, 0, -1.5), (3, 2, 3), **mc('stone', clusters=0.2, rim=False))
-        foot = leg.part(f'{side_name}_foot', pivot=(0, 2, 0))
-        foot.cube((-1.75, 0, -2.5), (3.5, 1, 4), **mc('stone_d', clusters=0.1, rim=False), faces={
-            'north': dict(mc('stone_d', clusters=0.0, rim=False), hd=True, map=['.c.c.c.'], keys=ck, glow_keys='c'),
-            'up': dict(mc('stone_d', clusters=0.1, rim=False), hd=True, map=['.......'] * 5 + ['.o.o.o.', '.o.o.o.', '.......'], keys=ck)})
-    body = m.part('body', pivot=(0, 21, 0))
-    body.cube((-4, -7, -3.5), (8, 7, 7), **mc('stone', clusters=0.25, bands=[(4, 'belly')]), faces={
-        'north': dict(mc('stone', clusters=0.0, bands=[(4, 'belly')]), hd=True, map=front, keys=ck, glow_keys='cCg'),
-        'west': dict(mc('stone', clusters=0.2, bands=[(4, 'belly')]), hd=True, map=side, keys=ck, glow_keys='cC'),
-        'east': dict(mc('stone', clusters=0.2, bands=[(4, 'belly')]), hd=True, map=flip(side), keys=ck, glow_keys='cC'),
-        'south': dict(mc('stone', clusters=0.2, bands=[(4, 'belly')]), hd=True, map=back, keys=ck, glow_keys='cC')})
-    # a rounder silhouette: cheeks bulging out at the sides, a belly under the grin
-    body.cube((-4.5, -5.5, -3), (9, 4.5, 6), **mc('stone', clusters=0.2, rim=False), faces={'north': SKIP, 'south': SKIP})
-    body.cube((-3.5, -1, -3.75), (7, 1, 7.5), **mc('belly_d', clusters=0.2, rim=False))
-    # the cap of moss over its head, hanging down the sides in tufts
-    body.cube((-4.25, -7.75, -3.75), (8.5, 2, 7.5), **mc('moss', clusters=0.3, fringe=2, rim=False, streaks=0.6))
-    jaw = body.part('jaw', pivot=(0, -3.0, -3.25))
-    jaw.cube((-2.5, 0, -1), (5, 1, 1), **mc('belly_l', clusters=0.1, rim=False), faces={
-        'up': mc('mouth', clusters=0.0, rim=False), 'north': dict(mc('belly_l', clusters=0.0, rim=False), hd=True, map=['..........', '.o......o.'], keys=ck)})
-    eyes = {k: hd_rows(v, 6, 6) for k, v in GOLEM_EYE.items()}
-    for side_name, sx in (('left', 1), ('right', -1)):
-        eye = body.part(f'{side_name}_eye', pivot=(2.2 * sx, -7, -1))
-        eye.cube((-1.5, -2.5, -1.5), (3, 3, 3), **mc('stone', clusters=0.0, rim=False), faces={
-            'north': dict(mc('stone', clusters=0.0, rim=False), hd=True, map=eyes['neutral'],
-                          keys={'E': 'eye', 'I': 'eye_core', 'h': 'eye_core', 'l': 'lid'}, glow_keys='EIh',
-                          expr={k: v for k, v in eyes.items() if k != 'neutral'})})
-        brow = eye.part(f'{side_name}_brow', pivot=(0, -2.5, -0.5), rot=(0.25, 0, -0.12 * sx))
-        brow.cube((-1.5, -0.5, -1), (3, 0.5, 2), **mc('stone_l', clusters=0.2, rim=False), faces={
-            'up': dict(mc('moss', clusters=0.2, rim=False))})
-        arm = body.part(f'{side_name}_arm', pivot=(4.25 * sx, -4.5, 0), rot=(0, 0, -0.15 * sx))
-        arm.cube((0 if sx > 0 else -1.5, -0.5, -1), (1.5, 3, 2), **mc('stone', clusters=0.15, rim=False), faces={
-            'down': mc('stone_d', clusters=0.0)})
-        hand = arm.part(f'{side_name}_hand', pivot=(0.75 * sx, 2.5, 0))
-        hand.cube((-1, 0, -1.25), (2, 1.5, 2.5), **mc('stone_d', clusters=0.1, rim=False), faces={
-            'north': dict(mc('stone_d', clusters=0.0, rim=False), hd=True, map=['....', '....', 'c..c'], keys=ck, glow_keys='c'),
-            'down': dict(mc('stone_d', clusters=0.0, rim=False), hd=True, map=['o.o.', '....', '....', '....', 'o.o.'], keys=ck)})
-    # the lantern: a stone stalk bending forward over its face, a little iron-caged soul lamp hanging from it
-    stalk = body.part('stalk', pivot=(0, -7.75, 1.0), rot=(-0.15, 0, 0))
-    stalk.cube((-0.5, -3, -0.5), (1, 3, 1), **mc('stone_d', clusters=0.1, rim=False))
-    tip = stalk.part('stalk_tip', pivot=(0, -3, 0), rot=(0.9, 0, 0))
-    tip.cube((-0.5, -2.5, -0.5), (1, 2.5, 1), **mc('stone_d', clusters=0.1, rim=False), faces={'up': mc('moss', clusters=0.0, rim=False)})
-    lamp = tip.part('lamp', pivot=(0, -2.5, 0), rot=(-0.75, 0, 0))
-    lamp.cube((-0.25, 0, -0.25), (0.5, 0.5, 0.5), **mc('iron', clusters=0.0, rim=False))
-    lamp.cube((-1.25, 0.5, -1.25), (2.5, 0.5, 2.5), **mc('iron', clusters=0.1, rim=False))
-    lamp.cube((-1, 1, -1), (2, 2, 2), **mc('lamp', clusters=0.3, rim=False, glow=True), faces={
-        'north': dict(mc('lamp', clusters=0.0, rim=False, glow=True), hd=True, map=['.ll.', 'lLLl', 'lLLl', '.ll.'], keys={'l': 'lamp', 'L': 'lamp_l'}, glow_keys='lL')})
-    lamp.cube((-1.25, 3, -1.25), (2.5, 0.5, 2.5), **mc('iron', clusters=0.1, rim=False))
-    for bx, bz in ((-1.25, -1.25), (0.75, -1.25), (-1.25, 0.75), (0.75, 0.75)):
-        lamp.cube((bx, 1, bz), (0.5, 2, 0.5), **mc('iron_d', clusters=0.0, rim=False))
+
+    def plates(wu, hu, seed, color='copper', **kw):
+        d = dict(color=color, pattern='mc', clusters=0.15, hd=True, map=_plates(int(wu * 2), int(hu * 2), seed, **kw), keys=PLATE_KEYS,
+                 glow_keys='gG', map_material=True)
+        return d
+
+    # ---- stubby hind legs (from the root, so they stay planted while the body rolls)
+    for side, sx in (('left', 1), ('right', -1)):
+        leg = m.part(f'{side}_leg', pivot=(3 * sx, 21, 4))
+        leg.cube((-1, 0, -1.25), (2, 2, 2.5), **mc('copper_d', clusters=0.2), faces={'east': plates(2.5, 2, 90 + sx), 'west': plates(2.5, 2, 92 + sx)})
+        foot = leg.part(f'{side}_foot', pivot=(0, 2, 0))
+        foot.cube((-1.25, 0, -2), (2.5, 1, 3), **mc('copper_d', clusters=0.1, rim=False), faces={
+            'north': dict(mc('claw', clusters=0.0, rim=False), hd=True, map=['c.c.c'], keys={'c': 'claw_d'})})
+
+    # ---- the body: a low, wide riveted barrel, a hump of plates over the shoulders, a soul-fire vent on its back
+    body = m.part('body', pivot=(0, 19, 0))
+    # a stepped dome of plates: the barrel, a narrower course over it, the hump over the shoulders
+    body.cube((-4.5, -3, -5.5), (9, 6, 11), **mc('copper'), faces={
+        'east': plates(11, 6, 1), 'west': plates(11, 6, 2), 'south': plates(9, 6, 3),
+        'up': plates(9, 11, 4), 'down': plates(9, 11, 5, color='plate_d', patina=0.3), 'north': plates(9, 6, 6)})
+    body.cube((-3.5, -4.5, -5), (7, 1.5, 10), **mc('plate'), faces={
+        'up': plates(7, 10, 7, color='plate', spine=True, vent=(4, 12, 6, 5)), 'north': plates(7, 1.5, 8, color='plate'),
+        'east': plates(10, 1.5, 9, color='plate'), 'west': plates(10, 1.5, 10, color='plate'), 'south': plates(7, 1.5, 12, color='plate')})
+    body.cube((-2.5, -5.5, -4.5), (5, 1, 5), **mc('plate_l'), faces={'up': plates(5, 5, 13, color='plate_l')})
+    body.cube((-3.5, -2.5, 5.5), (7, 5, 1), **mc('plate_d', clusters=0.2), faces={'south': plates(7, 5, 11, color='plate_d', patina=0.25)})
+    tail = body.part('tail', pivot=(0, -0.5, 6.5), rot=(-0.35, 0, 0))
+    tail.cube((-0.5, -0.5, 0), (1, 1, 2.5), **mc('copper_d', clusters=0.0, rim=False), faces={'south': mc('rivet', clusters=0.0, rim=False)})
+
+    # ---- the head: tapered, riveted, button eyes, a drill for a nose and a lightning rod on top
+    head = body.part('head', pivot=(0, -0.5, -5.5))
+    head.cube((-3.5, -3.5, -3.5), (7, 5, 3.5), **mc('copper'), faces={
+        'north': dict(mc('copper', clusters=0.1), hd=True, map=_mole_face(''), keys=dict(PLATE_KEYS, e='eye', i='eye_l'), glow_keys='i',
+                      map_material=True, expr={e: _mole_face(e) for e in GOLEM_EXPRS}),
+        'up': plates(7, 3.5, 21), 'east': plates(3.5, 5, 22), 'west': plates(3.5, 5, 23), 'down': mc('plate_d', clusters=0.2)})
+    head.cube((-2.5, -2, -6), (5, 3, 2.5), **mc('copper'), faces={
+        'up': plates(5, 2.5, 24), 'east': plates(2.5, 3, 25), 'west': plates(2.5, 3, 26), 'down': mc('plate_d', clusters=0.2),
+        'north': dict(mc('copper_d', clusters=0.1), hd=True, map=['..........', '.r......r.', '..........', '..........', '.r......r.', '..........'],
+                      keys=PLATE_KEYS)})
+    for side, sx in (('left', 1), ('right', -1)):
+        # rivet bosses on its cheeks, where a mole's whiskers would be
+        head.cube((2.5 * sx - 0.5, -1.25, -5.5), (1, 1, 1), **mc('rivet', clusters=0.0, rim=False))
+    drill = head.part('drill', pivot=(0, -0.5, -6))
+    spiral = lambda w, h, ph: grid(w, h, lambda x, y: 'g' if (x + y + ph) % 4 == 0 else 'l' if (x + y + ph) % 4 == 2 else '.')
+    dk = {'g': 'groove', 'l': 'drill_l'}
+    for i, (s, d, z) in enumerate(((3, 1.5, 0), (2, 1.5, -1.5), (1, 1, -3))):
+        side_map = dict(mc('drill', clusters=0.0, rim=False), hd=True, map=spiral(int(s * 2), int(d * 2), i), keys=dk)
+        drill.cube((-s / 2, -s / 2, z - d), (s, s, d), **mc('drill', clusters=0.0, rim=False), faces={
+            'up': side_map, 'down': side_map, 'east': side_map, 'west': side_map,
+            'north': mc('drill_l' if i == 2 else 'drill_d', clusters=0.0, rim=False)})
+    antenna = head.part('antenna', pivot=(0, -3.5, -1.5), rot=(-0.12, 0, 0))
+    antenna.cube((-0.75, -0.5, -0.75), (1.5, 0.5, 1.5), **mc('copper_d', clusters=0.0, rim=False))
+    antenna.cube((-0.5, -5, -0.5), (1, 4.5, 1), **mc('copper_l', clusters=0.0, rim=False), faces={
+        'north': dict(mc('copper_l', clusters=0.0, rim=False), hd=True, map=['..', 'ss', '..', '..', 'qq', '..', '..', 'ss', '..'], keys=PLATE_KEYS),
+        'south': dict(mc('copper_l', clusters=0.0, rim=False), hd=True, map=['..', 'ss', '..', '..', 'qq', '..', '..', 'ss', '..'], keys=PLATE_KEYS)})
+    cap = antenna.part('antenna_tip', pivot=(0, -5, 0))
+    lamp = ['rssr', 'sGGs', 'sgGs', 'rssr']
+    cap.cube((-1, -2, -1), (2, 2, 2), **mc('copper', clusters=0.0, rim=False), faces={
+        'north': dict(mc('copper', clusters=0.0, rim=False), hd=True, map=lamp, keys=PLATE_KEYS, glow_keys='gG'),
+        'south': dict(mc('copper', clusters=0.0, rim=False), hd=True, map=lamp, keys=PLATE_KEYS, glow_keys='gG'),
+        'east': dict(mc('copper', clusters=0.0, rim=False), hd=True, map=lamp, keys=PLATE_KEYS, glow_keys='gG'),
+        'west': dict(mc('copper', clusters=0.0, rim=False), hd=True, map=lamp, keys=PLATE_KEYS, glow_keys='gG'),
+        'up': dict(mc('soul', clusters=0.0, rim=False, glow=True))})
+
+    # ---- the forepaws: huge spades turned out to the sides, palms patinated, four polished claws each
+    for side, sx in (('left', 1), ('right', -1)):
+        arm = body.part(f'{side}_arm', pivot=(4.25 * sx, 0.5, -3.5), rot=(0, 0, -0.35 * sx))
+        arm.cube((0 if sx > 0 else -2.5, -1, -1.5), (2.5, 3, 3), **mc('copper'), faces={
+            'up': plates(2.5, 3, 30 + sx), 'north': plates(2.5, 3, 32 + sx), 'south': plates(2.5, 3, 34 + sx)})
+        paw = arm.part(f'{side}_paw', pivot=(1.75 * sx, 2.25, -0.5), rot=(0, -0.3 * sx, 0.3 * sx))
+        paw.cube((-1.75, 0, -2.5), (3.5, 1.5, 4), **mc('copper_d'), faces={
+            'up': plates(3.5, 4, 36 + sx, color='copper_d', patina=0.3), 'down': mc('patina_d', clusters=0.3)})
+        for k, cx in enumerate((-1.5, -0.5, 0.5, 1.5)):
+            paw.cube((cx - 0.25, 0.5, -4.5 + abs(cx) * 0.3), (0.5, 0.75, 2), **mc('claw', clusters=0.0, rim=False), faces={
+                'north': mc('claw_d', clusters=0.0, rim=False), 'up': mc('claw_l', clusters=0.0, rim=False)})
     return m
 
 
@@ -654,27 +717,29 @@ def echoer_egg():
 
 
 def golem_egg():
-    """The Soul Golem: a round soulstone body under a cap of teal moss dripping down its sides, two domed eyes
-    glowing on top, a carved grin, cyan cracks, and its little soul lantern hanging over its head."""
+    """CAVE v4: the Soul Golem, the copper mole, face on: a low riveted copper mound with patina in its seams,
+    small dark button eyes, the copper drill of its nose, the lightning-rod antenna with its soul lamp on top
+    and the great spade forepaws spread at its sides, polished claws below."""
     return ascii_egg([
-        '.......L',
-        '......iL',
-        '.......i',
-        '..aaa..s',
-        '.aEEEa.s',
-        '.aEIEaaa',
-        'avvvVvvv',
-        'aBvBBvBv',
-        'aBBcBBBB',
-        'aBBCqBBB',
-        'aBBBBqqq',
-        'aBBBBBBB',
-        'aBBBBBcB',
-        '.aBBBBCB',
-        '..aaBBBB',
-        '....aaaa',
-    ], {'B': ('#9a856f', '#6c5a4b', '#4a3d33'), 'a': '#211a15', 'v': '#3f9e8c', 'V': '#72cfb8', 'E': '#a9faff', 'I': '#ffffff',
-        'q': '#1c1410', 'c': '#5fe9ff', 'C': '#2aa9c8', 'i': '#3d444b', 'L': '#d6fdff', 's': '#4a3d33'})
+        '......aL',
+        '......aL',
+        '.......k',
+        '.......k',
+        '...aaaaB',
+        '..aBrBBB',
+        '.aBBiBBB',
+        '.aBpeeDD',
+        'aBBBBBgD',
+        'aBrBBBDD',
+        'aBBBBBgD',
+        'aPPPaBTT',
+        'aPPPPaBB',
+        'acPcPcaa',
+        '.c.c.c..',
+        '........',
+    ], {'B': ('#e3826c', '#c87456', '#9a5038'), 'P': ('#c87456', '#9a5038', '#7a3e2a'), 'a': '#4a2418', 'L': '#5fe9ff',
+        'k': '#e3826c', 'r': '#f0a888', 'e': '#1c1012', 'i': '#d6fdff', 'p': '#59b292', 'D': '#d98a68', 'g': '#4e2418', 'T': '#f6b896',
+        'c': '#f2c9a8'}, body=('B', 'P'))
 
 
 def nib_egg():
@@ -778,12 +843,17 @@ POSES = {}
 
 # --------------------------------------------------------------------------- sounds (vanilla files)
 SOUNDS = {
-    'entity.soul_golem.ambient': [('block/amethyst/resonate1', 0.5, 1.6), ('block/amethyst/resonate3', 0.5, 1.7),
-                                  ('mob/allay/idle_without_item1', 0.4, 1.3)],
-    'entity.soul_golem.hurt': [('block/basalt/break1', 0.8, 1.3), ('block/basalt/break2', 0.8, 1.4)],
-    'entity.soul_golem.death': [('block/basalt/break3', 1.0, 0.9), ('block/amethyst_cluster/break1', 0.8, 1.2)],
-    'entity.soul_golem.step': [('block/basalt/step1', 0.3, 1.6), ('block/basalt/step3', 0.3, 1.7)],
-    'entity.soul_golem.dig': [('item/brush/brushing_sand1', 0.6, 1.2), ('item/brush/brushing_sand2', 0.6, 1.3)],
+    # CAVE v4: the copper mole - the Copper Golem's own voice and steps, soil and gravel as it burrows, a copper bulb's
+    # ping when it feels ore
+    'entity.soul_golem.ambient': [('event:entity.copper_golem.spin', 0.4, 1.3), ('block/amethyst/resonate1', 0.35, 1.6)],
+    'entity.soul_golem.hurt': [('event:entity.copper_golem.hurt', 1.0, 1.1)],
+    'entity.soul_golem.death': [('event:entity.copper_golem.death', 1.0, 1.0)],
+    'entity.soul_golem.step': [('event:entity.copper_golem.step', 0.6, 1.2)],
+    'entity.soul_golem.dig': [('event:entity.sniffer.digging', 0.6, 1.4), ('event:block.rooted_dirt.break', 0.7, 1.1)],
+    'entity.soul_golem.burrow': [('event:block.rooted_dirt.break', 1.0, 0.8), ('event:block.gravel.break', 0.8, 0.9)],
+    'entity.soul_golem.emerge': [('event:block.mud.break', 1.0, 1.0), ('event:entity.copper_golem.spawn', 0.6, 1.3)],
+    'entity.soul_golem.ping': [('event:block.copper_bulb.turn_on', 1.0, 1.5), ('block/amethyst/resonate2', 0.6, 1.8)],
+    'entity.soul_golem.deliver': [('event:entity.copper_golem.item_drop', 1.0, 1.0)],
     'entity.soul_golem.find': [('block/amethyst/shimmer', 1.0, 1.4), ('mob/allay/item_given1', 0.8, 1.3)],
     'entity.soul_golem.slump': [('block/beacon/deactivate', 0.6, 1.6)],
     'entity.soul_golem.recharge': [('block/beacon/power2', 0.6, 1.8), ('block/amethyst/resonate2', 0.8, 1.5)],
@@ -807,8 +877,10 @@ SOUNDS = {
 }
 SUBTITLES = {
     'entity.soul_golem.ambient': 'Soul Golem hums', 'entity.soul_golem.hurt': 'Soul Golem chips', 'entity.soul_golem.death': 'Soul Golem crumbles',
-    'entity.soul_golem.step': 'Soul Golem waddles', 'entity.soul_golem.dig': 'Soul Golem digs', 'entity.soul_golem.find': 'Soul Golem finds something',
+    'entity.soul_golem.step': 'Soul Golem clanks', 'entity.soul_golem.dig': 'Soul Golem digs', 'entity.soul_golem.find': 'Soul Golem finds something',
     'entity.soul_golem.slump': 'Soul Golem runs down', 'entity.soul_golem.recharge': 'Soul Golem recharges',
+    'entity.soul_golem.burrow': 'Soul Golem burrows', 'entity.soul_golem.emerge': 'Soul Golem digs its way out',
+    'entity.soul_golem.ping': 'Soul Golem senses ore', 'entity.soul_golem.deliver': 'Soul Golem puts a find away',
     'entity.nib.ambient': 'Nib twinkles', 'entity.nib.hurt': 'Nib flickers', 'entity.nib.transform': 'Nib turns to treasure',
     'entity.enchoer.ambient': 'Echoer calls', 'entity.enchoer.hum': 'Echoer hums', 'entity.enchoer.trade': 'Echoer waits, humming',
     'entity.enchoer.yes': 'Echoer answers your song', 'entity.enchoer.no': 'Echoer sighs', 'entity.enchoer.hurt': 'Echoer hurts',

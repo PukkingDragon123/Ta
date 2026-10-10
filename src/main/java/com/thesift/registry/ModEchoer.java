@@ -8,6 +8,7 @@ import com.thesift.entity.Enchoer;
 import com.thesift.entity.Nib;
 import com.thesift.entity.SoulGolem;
 import com.thesift.music.Song;
+import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -37,7 +38,7 @@ public final class ModEchoer {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, TheSift.MODID);
 
     public static final DeferredHolder<EntityType<?>, EntityType<SoulGolem>> SOUL_GOLEM = ENTITIES.registerEntityType("soul_golem", SoulGolem::new,
-            MobCategory.CREATURE, b -> b.sized(0.6F, 0.75F).eyeHeight(0.55F).clientTrackingRange(10));
+            MobCategory.CREATURE, b -> b.sized(0.8F, 0.65F).eyeHeight(0.45F).clientTrackingRange(10)); // CAVE v4: a low, wide copper mole
     public static final DeferredHolder<EntityType<?>, EntityType<Nib>> NIB = ENTITIES.registerEntityType("nib", Nib::new,
             MobCategory.AMBIENT, b -> b.sized(0.35F, 0.3F).eyeHeight(0.15F).clientTrackingRange(8));
 
@@ -54,6 +55,11 @@ public final class ModEchoer {
     public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_FIND = reg("entity.soul_golem.find");
     public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_SLUMP = reg("entity.soul_golem.slump");
     public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_RECHARGE = reg("entity.soul_golem.recharge");
+    /** CAVE v4: the copper mole burrowing in, coming up again, pinging at ore it feels and setting a find down. */
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_BURROW = reg("entity.soul_golem.burrow");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_EMERGE = reg("entity.soul_golem.emerge");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_PING = reg("entity.soul_golem.ping");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GOLEM_DELIVER = reg("entity.soul_golem.deliver");
     public static final DeferredHolder<SoundEvent, SoundEvent> NIB_AMBIENT = reg("entity.nib.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> NIB_HURT = reg("entity.nib.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> NIB_TRANSFORM = reg("entity.nib.transform");
@@ -79,6 +85,34 @@ public final class ModEchoer {
 
     private ModEchoer() {
     }
+
+    /**
+     * CAVE v4: what a Soul Golem digs up where it burrows ({@code thesift:gameplay/soul_golem_dig[/zone]}): prism gems in
+     * the Caravans' cavern, sculk finds in sculk country, relics in sand and dunes, rich ores below y 0, ores below y 48,
+     * topsoil finds above that.
+     */
+    public static ResourceKey<LootTable> golemDigTable(net.minecraft.server.level.ServerLevel level, net.minecraft.core.BlockPos at) {
+        String biome = level.getBiome(at).unwrapKey().map(k -> k.identifier().getPath()).orElse("");
+        if (biome.contains("caravans")) {
+            return loot("gameplay/soul_golem_dig/crystal");
+        }
+        if (biome.contains("sculk") || biome.contains("deep_dark")) {
+            return loot("gameplay/soul_golem_dig/sculk");
+        }
+        if (level.getBlockState(at).is(net.minecraft.tags.BlockTags.SAND) || biome.contains("dunes") || biome.contains("desert")
+                || biome.contains("badlands") || biome.contains("beach")) {
+            return loot("gameplay/soul_golem_dig/sands");
+        }
+        if (at.getY() < 0) {
+            return loot("gameplay/soul_golem_dig/deepslate");
+        }
+        return at.getY() < 48 ? loot("gameplay/soul_golem_dig/deep") : GOLEM_DIG_LOOT;
+    }
+
+    /** CAVE v4: every Soul Golem dig table (the mechanics test checks each gives something). */
+    public static final List<ResourceKey<LootTable>> GOLEM_DIG_TABLES = List.of(GOLEM_DIG_LOOT, loot("gameplay/soul_golem_dig/deep"),
+            loot("gameplay/soul_golem_dig/deepslate"), loot("gameplay/soul_golem_dig/crystal"), loot("gameplay/soul_golem_dig/sculk"),
+            loot("gameplay/soul_golem_dig/sands"));
 
     /** M3: the gifts an Echoer gives for a song ({@code thesift:gameplay/echoer_gift/<song>}; each may add a rare one). */
     public static ResourceKey<LootTable> giftTable(Song song) {

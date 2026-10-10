@@ -356,7 +356,7 @@ public final class ClientSmokeTest {
         scene("mob_closeup_dictator", 40, c -> c.camera(20.0, STAGE_Y + 2.8, STAGE_Z - 3.0, 20.0, STAGE_Y + 2.0, STAGE_Z + 5.5));
         scene("mob_closeup_stomper", 60, ClientSmokeTest::stomperStage); // S1: the Stomper elephant and a Stompling
         // CAVE: the remade Soul Golem, Nib and Caravans, each on a little floor of its own east of the stage
-        scene("mob_closeup_soul_golem", 40, c -> closeup(c, com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), 32, 0.0, 1.9, 0.5));
+        scene("mob_closeup_soul_golem", 40, c -> closeup(c, com.thesift.registry.ModEchoer.SOUL_GOLEM.get(), 32, 0.0, 2.1, 0.4)); // CAVE v4: the copper mole
         scene("mob_closeup_nib", 40, c -> closeup(c, com.thesift.registry.ModEchoer.NIB.get(), 42, 0.5, 1.0, 0.65));
         scene("mob_closeup_caravan", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN.get(), 52, 0.0, 2.3, 0.4));
         scene("mob_closeup_caravan_queen", 40, c -> closeup(c, com.thesift.registry.ModCaravans.CARAVAN_QUEEN.get(), 64, 0.0, 6.0, 1.4));

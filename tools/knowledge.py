@@ -192,7 +192,7 @@ FIELD_NOTES = {
     'harmoner': 'Habitat: Sift Plains, Wishing Grove|Temper: Friendly guide|Diet: Seeds|Drops: Nothing - it leads you instead',
     'sniffer': 'Habitat: Plains, Forest Mountains, Rocky Dunes|Temper: Neutral, rams when hit|Diet: Pink grass, Torchflower seeds|Drops: Flowers from its back',
     'enchoer': 'Habitat: Plains and meadows|Temper: Peaceful, gives gifts for songs|Diet: Music|Drops: Chrome Pearls, Star Shards',
-    'soul_golem': 'Habitat: Echoer hearths|Temper: Helpful|Diet: Soul energy|Drops: Its core',
+    'soul_golem': 'Habitat: Echoer hearths|Temper: Helpful, digs for you|Diet: Soul energy|Drops: Its core, and whatever it digs up',
     'nib': 'Habitat: Flower meadows, Sound Garden|Temper: Shy|Diet: Nectar of light|Drops: Nib Dust and treasure (by song)',
     'slumbler': 'Habitat: Chrome Lakes|Temper: Sleepy, bites when woken|Diet: Chrome plankton|Drops: Thick Hide, Chrome Pearls',
     'sifter': 'Habitat: Rocky Dunes, Deep Sift|Temper: Neutral, calls its neighbours|Diet: Sand it sifts|Drops: Chime Sand, Star Shards, lost sheets',

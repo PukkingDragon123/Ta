@@ -38,7 +38,7 @@ public class CreatorDaisBlock extends Block {
             if (!has) {
                 ItemStack sheet = new ItemStack(ModItems.MUSIC_SHEET_HYMN.get());
                 if (!player.getInventory().add(sheet)) {
-                    player.drop(sheet, false);
+                    if (player.level() instanceof net.minecraft.server.level.ServerLevel dropLevel) player.spawnAtLocation(dropLevel, sheet); // 26.3: Player.drop needs a Prediction
                 }
                 player.sendOverlayMessage(Component.translatable("message.thesift.dais.sheet").withStyle(ChatFormatting.GOLD));
                 server.playSound(null, pos, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.0F);

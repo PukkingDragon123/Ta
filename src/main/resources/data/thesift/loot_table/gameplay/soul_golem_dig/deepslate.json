@@ -5,59 +5,38 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:flint",
-          "weight": 10,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
-            }
-          }
+          "name": "minecraft:diamond",
+          "weight": 6
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:clay_ball",
+          "name": "minecraft:redstone",
           "weight": 8,
           "modifier": {
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+              "min": 3,
+              "max": 6
             }
           }
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bone",
-          "weight": 6,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
+          "name": "minecraft:lapis_lazuli",
           "weight": 8,
           "modifier": {
             "type": "minecraft:set_count",
             "count": {
               "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+              "min": 3,
+              "max": 6
             }
           }
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:raw_copper",
+          "name": "minecraft:raw_gold",
           "weight": 8,
           "modifier": {
             "type": "minecraft:set_count",
@@ -67,68 +46,26 @@
               "max": 3
             }
           }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:coal",
-          "weight": 6,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:amethyst_shard",
-          "weight": 4,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "thesift:soul_dust",
-          "weight": 6,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:glow_berries",
-          "weight": 3,
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 4
-            }
-          }
-        },
-        {
-          "type": "minecraft:item",
-          "name": "thesift:chrome_pearl",
-          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:emerald",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "thesift:raw_sculkite",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:echo_shard",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ancient_debris",
+          "weight": 1
         }
       ],
       "rolls": 1
@@ -227,5 +164,5 @@
       }
     }
   ],
-  "random_sequence": "thesift:gameplay/soul_golem_dig"
+  "random_sequence": "thesift:gameplay/soul_golem_dig/deepslate"
 }

@@ -256,7 +256,7 @@ public final class ModDunes {
         }
         Vec3 last = CLOAK_LAST.get(p);
         Vec3 now = p.position();
-        boolean still = last != null && last.distanceToSqr(now) < 1.0E-4 && !p.swinging && !p.isUsingItem();
+        boolean still = last != null && last.distanceToSqr(now) < 1.0E-4 && !p.isSwinging() && !p.isUsingItem();
         CLOAK_LAST.put(p, now);
         int ticks = still ? CLOAK_STILL_TICKS.getOrDefault(p, 0) + 1 : 0;
         CLOAK_STILL_TICKS.put(p, ticks);
