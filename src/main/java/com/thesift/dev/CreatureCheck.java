@@ -76,9 +76,9 @@ final class CreatureCheck {
     private static final class Watch {
         final String name;
         final Mob mob;
-        final Vec3 start;
+        Vec3 start;
         final BlockPos centre;
-        final int startTick;
+        int startTick;
         double moved;
         double movedAlone;
         /** Every block it has travelled, back and forth included. */
@@ -96,6 +96,17 @@ final class CreatureCheck {
             this.centre = centre;
             this.startTick = mob.tickCount;
         }
+
+        /** The watch starts over once the creature's chunk ticks (a forced chunk takes a moment to start ticking). */
+        void restart() {
+            this.start = this.mob.position();
+            this.last = this.start;
+            this.lastWalk = this.start;
+            this.startTick = this.mob.tickCount;
+            this.moved = 0.0;
+            this.movedAlone = 0.0;
+            this.path = 0.0;
+        }
     }
 
     /** The spawn lab: chunk (7, -8), inside the smoke test's generated patch, well away from every Jailer. */
@@ -107,6 +118,8 @@ final class CreatureCheck {
     /** Spawn rules are checked once the lab's light has settled; the pens are watched this long. */
     private static final int RULES_AT = 20;
     private static final int WATCH_TICKS = 180;
+    /** The longest the watch waits for every pen's chunk to start ticking its creature. */
+    private static final int SETTLE_MAX = 300;
     private static final int ALONE_TICKS = 100;
 
     private final ServerLevel level;
@@ -114,6 +127,9 @@ final class CreatureCheck {
     private final List<Watch> watches = new ArrayList<>();
     private int ticks;
     private boolean done;
+    /** Whether every pen's creature has ticked yet (the watch only starts then), and how long that took. */
+    private boolean settled;
+    private int waited;
 
     CreatureCheck(ServerLevel level, BiConsumer<Boolean, String> check) {
         this.level = level;
@@ -133,6 +149,18 @@ final class CreatureCheck {
     void tick() {
         if (this.done) {
             return;
+        }
+        if (!this.settled) {
+            // the pens' chunks are forced at start, but only tick their creatures a moment later (and not all at once
+            // while the server is busy generating): the watch starts when every creature has ticked
+            this.waited++;
+            boolean all = this.watches.stream().allMatch(w -> !w.mob.isAlive() || w.mob.tickCount > w.startTick);
+            if (!all && this.waited < SETTLE_MAX) {
+                return;
+            }
+            this.settled = true;
+            TheSift.LOGGER.info("SMOKE: never frozen: every pen ticking after {} ticks{}", this.waited, all ? "" : " (not all of them)");
+            this.watches.forEach(Watch::restart);
         }
         this.ticks++;
         if (this.ticks == RULES_AT) {
@@ -168,7 +196,8 @@ final class CreatureCheck {
                 this.check.accept(w.mob.isAlive(), "never frozen: " + w.name + " died in its pen");
                 this.check.accept(w.moved >= 1.5 || w.path >= 3.0 || resting, "never frozen: " + w.name + " stood still for " + WATCH_TICKS + " ticks, even when walked"
                         + " (" + state(w) + ")");
-                this.check.accept(w.mob.tickCount - w.startTick >= WATCH_TICKS / 2, "never frozen: " + w.name + " stopped ticking");
+                this.check.accept(w.mob.tickCount - w.startTick >= WATCH_TICKS / 2, "never frozen: " + w.name + " stopped ticking (ticked "
+                        + (w.mob.tickCount - w.startTick) + " of " + WATCH_TICKS + ")");
             }
             this.done = true;
         }
