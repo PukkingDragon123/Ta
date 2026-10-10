@@ -6,7 +6,7 @@ detail and the C2 material pass: 4 texels per model unit), skinned with tools/aq
   like the Banded Dunestone, a bone casque and dorsal crest, turret eyes that roll on their own, a curled
   tail - that lies still in the sand until it vanishes into it (`kerkorer_camo`, the same skin in Chime Sand
   colours, fades in over it), with a valuable stuck to the pad of its tongue as bait.
-* Jaberora (`thesift:jaberora`): a jerboa of the dunes (modelled on the real one) - sandy fur, tall ears, big dark
+* Jaberora (`thesift:jaberora`): a jerboa of the dunes (modelled on the real one) - pink fur, tall ears, antennae, dot
   glossy black eyes, no nose at all, an enormous mouth that opens for its operatic arias, long jumping feet
   and a tufted tail.
 * Reservoir (`thesift:reservoir`, `thesift:monarch_reservoir`): a worm-cactus of stacked ribbed segments
@@ -232,15 +232,15 @@ def kerkorer() -> Model:
 
 # ================================================================ the Jaberora
 
-J_FUR = ('#5e3a2c', '#7a4e3a', '#97654a', '#b27e5e', '#c99876', '#dcb494', '#ecd0b6')   # sandy jerboa fur, a rose cast from the dunes
-J_BACK = ('#4a2c24', '#613a30', '#7a4c3c', '#92604c', '#a8745e', '#bc8a72', '#d0a28a')
-J_PALE = ('#8e8296', '#a79cb0', '#c0b6c8', '#d6cedc', '#e8e2ec', '#f4f0f6', '#fdfcff')  # its belly and legs, Chime Sand white
-J_EAR = ('#6e2a40', '#8f3a52', '#b24f68', '#cc6a80', '#e08c9c', '#eeb0ba', '#f8d4d8')
+J_FUR = ('#7a3a52', '#96506a', '#b26a84', '#c9849c', '#dc9eb2', '#ebbaca', '#f6d6e0')   # soft pink fur
+J_BACK = ('#5e2a40', '#783650', '#924662', '#aa5a76', '#c0708a', '#d2889e', '#e2a2b4')  # deeper rose along its back
+J_PALE = ('#a88a9e', '#bea2b4', '#d2bcc8', '#e4d4dc', '#f0e6ec', '#f8f2f5', '#fffcfd')  # its pale pink-white belly and legs
+J_EAR = ('#7a2244', '#9a3058', '#ba4470', '#d45e88', '#e880a2', '#f4a6be', '#fcd0de')
 J_EYE = ('#030306', '#07070c', '#0d0c16', '#161424', '#221e36', '#36304e', '#4c4668')
-J_TUFT = ('#140a10', '#1e1018', '#2a1822', '#38222e', '#4a2e3c', '#5e3c4c', '#744c5e')
-J_SHEEN_A = ('#5e3440', '#7c4652', '#9c5c64', '#b8767a', '#d09494', '#e4b4ae', '#f4d6cc')  # the tail's sheen: a rose-gold shimmer ...
-J_SHEEN_B = ('#3c3a58', '#504c70', '#686490', '#8480ac', '#a29ec4', '#c2bedc', '#e2def0')  # ... and a lilac-blue one, in turn
-J_GLINT = ('#8ad6e6', '#c8b0ff', '#ffd2f0', '#fff6dc')
+J_TUFT = ('#4a1630', '#5e1e3e', '#78284e', '#923662', '#ac4a78', '#c46690', '#da88aa')  # the tuft: deep shimmering magenta
+J_SHEEN_A = ('#6a2a48', '#8a3a5e', '#ac5076', '#cc6c90', '#e48eaa', '#f4b4c6', '#fde0e8')  # the tail's sheen: pink ...
+J_SHEEN_B = ('#4a3462', '#60447e', '#7a5a9c', '#9676b8', '#b496d0', '#d2bae4', '#eeddf4')  # ... and lilac, in turn
+J_GLINT = ('#ff9ed0', '#d8b0ff', '#a8e8f4', '#fff0f8')
 
 
 def _sheen(k):
@@ -276,16 +276,20 @@ def jaberora() -> Model:
     head.cube((-1.75, -2.2, -3.9), (3.5, 2.2, 1), mat='fur', back=-99, belly=-0.6, tone=_fur(0.05, 5),
               faces={'north': dict(decal=['.......', '.......', 'mmmmmmm', '.m...m.'], keys=EYE, at=(0, 0))})
     for side, sx in (('left', 1), ('right', -1)):
-        # big dark eyes on the sides of the head, drawn the vanilla way (no white glint)
-        eye = head.part(f'{side}_eye', pivot=(2.35 * sx, -2.8, -1.3), rot=(0, 0.95 * sx, 0))
-        eye.cube((-1.1, -1.1, -0.2), (2.2, 2.2, 0.4), mat='eye',
-                 faces={'north': dict(decal=['.oooo.', 'oKKKKo', ('oKKgKo' if sx > 0 else 'oKgKKo'), 'oKKKKo', 'oKKKKo', '.oooo.'],
-                                      keys=EYE, at=(0, 0))})
-        lid = eye.part(f'{side}_eyelid', pivot=(0, 0, -0.25))
-        lid.cube((-1.2, -1.2, -0.05), (2.4, 2.4, 0.05), mat='fur', tone=_fur())
+        # small dark dot eyes, vanilla style: a single dark pixel-dot each, no glint
+        eye = head.part(f'{side}_eye', pivot=(1.35 * sx, -2.9, -3.02), rot=(0, 0.3 * sx, 0))
+        eye.cube((-0.5, -0.5, -0.1), (1, 1, 0.2), mat='eye', faces={'north': dict(decal=['KK', 'KK'], keys=EYE, at=(0, 0))})
+        lid = eye.part(f'{side}_eyelid', pivot=(0, 0, -0.12))
+        lid.cube((-0.6, -0.6, -0.05), (1.2, 1.2, 0.05), mat='fur', tone=_fur())
+        # a pair of thin antennae with shimmering bobbles, springing from the crown
+        ant = head.part(f'{side}_antenna', pivot=(0.55 * sx, -4.9, -2.2), rot=(0.3, 0, 0.22 * sx))
+        ant.cube((-0.2, -2.8, -0.2), (0.4, 2.8, 0.4), mat='antenna')
+        atip = ant.part(f'{side}_antenna_tip', pivot=(0, -2.8, 0), rot=(0.35, 0, 0.12 * sx))
+        atip.cube((-0.18, -1.9, -0.18), (0.36, 1.9, 0.36), mat='antenna')
+        atip.cube((-0.55, -3.0, -0.55), (1.1, 1.1, 1.1), mat='bobble', lights=lambda c: AK.fbm(c['wp'] * 4.0, 0.7, 23, 1) > 0.55)
         # large rounded ears, pink inside
-        ear = head.part(f'{side}_ear', pivot=(1.5 * sx, -4.4, 0.4), rot=(-0.12, -0.3 * sx, 0.28 * sx))
-        ear.cube((-1.5, -4.5, 0), (3, 4.5, 0), mat='ear', shape=_round_plane(3, 4.5), faces={'south': dict(mat='fur', tone=_fur())})
+        ear = head.part(f'{side}_ear', pivot=(1.6 * sx, -4.4, 1.0), rot=(-0.3, -0.3 * sx, 0.42 * sx))
+        ear.cube((-1.5, -4, 0), (3, 4, 0), mat='ear', shape=_round_plane(3, 4), faces={'south': dict(mat='fur', tone=_fur())})
         # tiny forearms held to the chest
         arm = body.part(f'{side}_arm', pivot=(1.2 * sx, -1.2, -2.4), rot=(-0.6, 0, -0.1 * sx))
         arm.cube((-0.35, 0, -0.35), (0.7, 1.8, 0.7), mat='pale')
@@ -323,7 +327,10 @@ def jaberora() -> Model:
         'mouth': M([MOUTH], base=0.35, noise=0.03, rim=0.2, ao=0.3),
         'tongue': M([TONGUE], base=0.55, noise=0.04, rim=0.3, ao=0.0),
         'tail': tl,
-        'tuft': M([J_TUFT], base=0.5, noise=0.08, cell=1.0, mottle=None, material='fur', light=J_GLINT),
+        'tuft': M([J_TUFT], base=0.5, noise=0.08, cell=1.0, mottle=None, material='fur', light=J_GLINT, gloss='#ffe8f4', gloss_rate=0.1),
+        'antenna': M([J_BACK], base=0.5, noise=0.03, cell=1.0, mottle=None, rim=0.5, ao=0.0),
+        'bobble': M([J_SHEEN_A], base=0.62, noise=0.03, cell=0.8, mottle=None, rim=0.6, ao=0.0, light=J_GLINT, gloss='#ffffff',
+                    gloss_rate=0.15, material='crystal'),
     }
     return AK.finish(m, {'jaberora': mats})
 
@@ -662,7 +669,7 @@ def lang():
                                'curled against it. Its scales make the Kerkorer Cloak.'),
         f'{c}.kerkorer.notes': 'Habitat: Rocky Dunes|Temper: Ambush hunter|Diet: Sifters, the curious|Drops: Camouflage Scales, its bait (sometimes)',
         f'{c}.jaberora.title': 'Jaberora', f'{c}.jaberora.tagline': 'The diva of the dunes',
-        f'{c}.jaberora.body': ('A jerboa of the dunes - tall ears, big dark eyes, no nose, a mouth made for opera and a long shining tail. They live in noisy groups, bound '
+        f'{c}.jaberora.body': ('A jerboa of the dunes - pink, with tall ears, two bobbled antennae, small dot eyes, no nose, a mouth made for opera and a long shining tail. They live in noisy groups, bound '
                                'across the sand and sing arias at dusk - songs that lure prey to the Kerkorers they live with. Threaten '
                                'one and it lets out a single piercing note that stuns and Deafens. Sifters hunt them. Feed one Tuning Fruit '
                                'to tame it: it follows you, sings in your band and stuns your foes. Sneak-use to make it sit. It drops '

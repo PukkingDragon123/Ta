@@ -6,7 +6,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 
 /**
- * Jaberora, a jerboa of the dunes. It bounds like a kangaroo-rat: a deep crouch on its springy legs, then legs flung out behind, tail up
+ * Jaberora, a pink jerboa of the dunes with two bobbled antennae. It bounds like a kangaroo-rat: a deep crouch on its springy legs, then legs flung out behind, tail up
  * for balance, hands tucked; each landing squashes. Sitting up it twitches its round ears and sways its long tail.
  * Its aria: head thrown back, the vast jaw wide and trembling with vibrato, little arms spread like a diva's. Its
  * piercing note: ears flat, jaw snapped wide, the whole body shuddering. Napping it curls up with its tail round it.
@@ -19,6 +19,8 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
     private final ModelPart tailMid;
     private final ModelPart tailTip;
     private final ModelPart[] ears = new ModelPart[2];
+    private final ModelPart[] antennae = new ModelPart[2];
+    private final ModelPart[] antennaTips = new ModelPart[2];
     private final ModelPart[] lids = new ModelPart[2];
     private final ModelPart[] arms = new ModelPart[2];
     private final ModelPart[] thighs = new ModelPart[2];
@@ -37,6 +39,8 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
         for (int i = 0; i < 2; i++) {
             String s = sides[i];
             this.ears[i] = this.head.getChild(s + "_ear");
+            this.antennae[i] = this.head.getChild(s + "_antenna");
+            this.antennaTips[i] = this.antennae[i].getChild(s + "_antenna_tip");
             this.lids[i] = this.head.getChild(s + "_eye").getChild(s + "_eyelid");
             this.arms[i] = this.body.getChild(s + "_arm");
             this.thighs[i] = root.getChild(s + "_thigh");
@@ -94,6 +98,17 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
             this.thighs[i].y += 1.4F * crouch;
         }
 
+        // ---- the antennae: a slow sway of their own, a twitch now and then, whipped back by each bound and bobbing as it lands
+        for (int i = 0; i < 2; i++) {
+            float sx = i == 0 ? 1.0F : -1.0F;
+            float sway = Mth.sin(age * 0.07F + i * 1.9F);
+            float atw = Math.max(0.0F, Mth.sin(age * 0.17F + i * 2.6F + s.seed) - 0.9F) * 5.0F;
+            this.antennae[i].xRot += sway * 0.08F - 0.45F * air + 0.25F * crouch + atw * 0.2F;
+            this.antennae[i].zRot += sx * (Mth.sin(age * 0.05F + i) * 0.06F + atw * 0.15F);
+            this.antennaTips[i].xRot += Mth.sin(age * 0.07F + i * 1.9F - 0.9F) * 0.14F - 0.5F * air + 0.35F * crouch;
+            this.antennaTips[i].zRot += sx * atw * 0.25F;
+        }
+
         // ---- sitting (told to, or riding a Kerkorer): settled on its haunches
         if (rest) {
             for (int i = 0; i < 2; i++) {
@@ -141,6 +156,9 @@ public class JaberoraModel extends EntityModel<JaberoraRenderState> {
                 this.arms[i].xRot -= 0.9F * sing;
                 this.arms[i].zRot -= sx * 0.7F * sing;
                 this.ears[i].xRot += 0.3F * sing;
+                // the antennae quiver with its vibrato
+                this.antennaTips[i].zRot += sx * Mth.sin(age * 1.6F + i * Mth.PI) * 0.18F * sing;
+                this.antennae[i].xRot += 0.25F * sing;
             }
         }
 
