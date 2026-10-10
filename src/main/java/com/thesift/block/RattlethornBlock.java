@@ -49,7 +49,8 @@ public class RattlethornBlock extends VegetationBlock {
 
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
-        if (!(entity instanceof LivingEntity) || entity instanceof com.thesift.entity.Sifter) {
+        if (!(entity instanceof LivingEntity) || entity instanceof com.thesift.entity.Sifter
+                || entity instanceof com.thesift.entity.dunes.DunesNative) { // P4-DESERT: the dunes' creatures know the way through too
             return;
         }
         entity.makeStuckInBlock(state, new Vec3(0.8F, 0.75, 0.8F));

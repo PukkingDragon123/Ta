@@ -69,6 +69,10 @@ public final class SongEvents {
      */
     public static void note(ServerLevel level, @Nullable Player player, Vec3 at, int pitch, @Nullable Instrument instrument, int colour,
             double clock) {
+        // P4-DESERT Deafened: a deafened player cannot hear what they play - the note goes astray and nothing hears it
+        if (player != null && com.thesift.effect.DeafenedEffect.fumbles(level, player, at)) {
+            return;
+        }
         Instrument outer = current;
         int outerColour = currentColour;
         double outerClock = currentClock;

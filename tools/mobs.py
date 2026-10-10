@@ -355,3 +355,4 @@ ALL.update(__import__('echoer_drill').MODELS)  # RR: the Echoer Drill's gun - ba
 ALL.update(__import__('band_table').MODELS)  # F2 Band Table: the Music Band Table (tools/band_table.py)
 ALL.update(__import__('mini_creator').MODELS)  # F3 Knowledge and lore: the Mini Creator (tools/mini_creator.py)
 ALL.update(__import__('jungle_mobs').MODELS)  # P4 Cave Jungle: Glow Fly, Crocotodo, Mantis, Colossus Ponder + tadpole, Cruncher
+ALL.update(__import__('dunes_creatures').MODELS)  # P4-DESERT: Kerkorer, Jaberora, Reservoir, Grub (tools/dunes_creatures.py)

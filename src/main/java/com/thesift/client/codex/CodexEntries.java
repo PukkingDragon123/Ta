@@ -232,6 +232,21 @@ public final class CodexEntries {
         l.add(thing(ITEMS, "giant_pitcher", ModItems.PITCHER_POD));
         l.add(thing(ITEMS, "glow_lamp", ModItems.GLOW_LAMP));
         l.add(thing(ITEMS, "magnesium", ModItems.MAGNESIUM));
+        // P4-DESERT: the Rocky Dunes creatures act out their tricks on the page; the Kerkorer Cloak; Deafened
+        l.add(mob(CREATURES, "kerkorer", com.thesift.registry.ModDunes.KERKORER, (e, t) -> {
+            if (e instanceof com.thesift.entity.dunes.Kerkorer k) k.codexPose(t);
+        }));
+        l.add(mob(CREATURES, "jaberora", com.thesift.registry.ModDunes.JABERORA, (e, t) -> {
+            if (e instanceof com.thesift.entity.dunes.Jaberora j) j.codexPose(t);
+        }));
+        l.add(mob(CREATURES, "reservoir", com.thesift.registry.ModDunes.RESERVOIR, (e, t) -> {
+            if (e instanceof com.thesift.entity.dunes.Reservoir r) r.codexPose(t);
+        }));
+        l.add(mob(CREATURES, "grub", com.thesift.registry.ModDunes.GRUB, (e, t) -> {
+            if (e instanceof com.thesift.entity.dunes.Grub g) g.codexPose(t);
+        }));
+        l.add(thing(ITEMS, "kerkorer_cloak", ModItems.KERKORER_CLOAK));
+        l.add(thing(MAGIC, "deafened", ModItems.KERKORER_SCALE));
         // ---- items
         l.add(thing(ITEMS, "prism", ModItems.PRISM_GEM)); // C
         l.add(thing(ITEMS, "skysong_gem", ModItems.SKYSONG_GEM));

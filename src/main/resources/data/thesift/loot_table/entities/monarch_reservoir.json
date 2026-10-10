@@ -1,0 +1,56 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:cactus",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 6
+            }
+          }
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:chrome_pearl",
+          "weight": 1,
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 4
+            }
+          }
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:star_shard",
+          "weight": 1
+        }
+      ],
+      "rolls": 1,
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.5
+      }
+    }
+  ],
+  "random_sequence": "thesift:entities/monarch_reservoir"
+}

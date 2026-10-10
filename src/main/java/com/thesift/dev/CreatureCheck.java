@@ -365,7 +365,9 @@ final class CreatureCheck {
                 ModCaravans.CARAVAN_QUEEN.get(), // CR2: the Caravan Queen (she roams until she finds a cave to settle in)
                 com.thesift.registry.ModCaveJungle.GLOW_FLY.get(), com.thesift.registry.ModCaveJungle.CROCOTODO.get(), // P4 Cave Jungle
                 com.thesift.registry.ModCaveJungle.MANTIS.get(), com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER.get(),
-                com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), com.thesift.registry.ModCaveJungle.CRUNCHER.get());
+                com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), com.thesift.registry.ModCaveJungle.CRUNCHER.get(),
+                com.thesift.registry.ModDunes.KERKORER.get(), com.thesift.registry.ModDunes.JABERORA.get(), // P4-DESERT (the Monarch is rooted: no pen)
+                com.thesift.registry.ModDunes.RESERVOIR.get(), com.thesift.registry.ModDunes.GRUB.get());
     }
 
     private static boolean swims(EntityType<?> type) {

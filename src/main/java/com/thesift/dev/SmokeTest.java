@@ -410,6 +410,8 @@ public final class SmokeTest {
                 com.thesift.registry.ModCaveJungle.GLOW_FLY.get(), com.thesift.registry.ModCaveJungle.CROCOTODO.get(), // P4 Cave Jungle
                 com.thesift.registry.ModCaveJungle.MANTIS.get(), com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER.get(),
                 com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), com.thesift.registry.ModCaveJungle.CRUNCHER.get(),
+                com.thesift.registry.ModDunes.KERKORER.get(), com.thesift.registry.ModDunes.JABERORA.get(), // P4-DESERT: the Rocky Dunes creatures
+                com.thesift.registry.ModDunes.RESERVOIR.get(), com.thesift.registry.ModDunes.MONARCH_RESERVOIR.get(), com.thesift.registry.ModDunes.GRUB.get(),
                 com.thesift.registry.ModKnowledge.MINI_CREATOR.get()); // F3 the Mini Creator (no player to guide: he just wanders)
         // no player is in The Sift, so force the test chunks to stay loaded and entity-ticking
         sift.setChunkForced(0, 0, true);

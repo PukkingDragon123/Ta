@@ -429,6 +429,13 @@ public final class ModItems {
     public static final DeferredItem<SpawnEggItem> COLOSSUS_PONDER_SPAWN_EGG = ITEMS.registerItem("colossus_ponder_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.COLOSSUS_PONDER.get()));
     public static final DeferredItem<SpawnEggItem> PONDER_TADPOLE_SPAWN_EGG = ITEMS.registerItem("ponder_tadpole_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.PONDER_TADPOLE.get()));
     public static final DeferredItem<SpawnEggItem> CRUNCHER_SPAWN_EGG = ITEMS.registerItem("cruncher_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModCaveJungle.CRUNCHER.get()));
+    public static final DeferredItem<SpawnEggItem> KERKORER_SPAWN_EGG = ITEMS.registerItem("kerkorer_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModDunes.KERKORER.get()));
+    public static final DeferredItem<SpawnEggItem> JABERORA_SPAWN_EGG = ITEMS.registerItem("jaberora_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModDunes.JABERORA.get()));
+    public static final DeferredItem<SpawnEggItem> RESERVOIR_SPAWN_EGG = ITEMS.registerItem("reservoir_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModDunes.RESERVOIR.get()));
+    public static final DeferredItem<SpawnEggItem> MONARCH_RESERVOIR_SPAWN_EGG = ITEMS.registerItem("monarch_reservoir_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModDunes.MONARCH_RESERVOIR.get()));
+    public static final DeferredItem<SpawnEggItem> GRUB_SPAWN_EGG = ITEMS.registerItem("grub_spawn_egg", SpawnEggItem::new, () -> new Item.Properties().spawnEgg(ModDunes.GRUB.get()));
+    public static final DeferredItem<Item> KERKORER_SCALE = ITEMS.registerItem("kerkorer_scale", Item::new, () -> new Item.Properties().rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> KERKORER_CLOAK = ITEMS.registerItem("kerkorer_cloak", Item::new, () -> new Item.Properties().humanoidArmor(ModDunes.CLOAK_MATERIAL, ArmorType.CHESTPLATE).rarity(Rarity.RARE));
 
     private ModItems() {}
 }

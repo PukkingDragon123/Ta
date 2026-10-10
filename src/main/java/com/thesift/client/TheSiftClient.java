@@ -60,6 +60,7 @@ public class TheSiftClient {
         SwifterClient.register(modBus); // A2 Swifter & White Forest: the Swifter, drifting fluff, the forest's white mist
         WorldLandClient.register(modBus); // W-land: the rainbow snowflake
         CaveCreaturesClient.register(modBus); // A4 cave creatures: the Jailer and Sculklings
+        DunesClient.register(modBus); // P4-DESERT: the Rocky Dunes creatures, and what Deafened does to your ears
         SiftSnifferClient.register(modBus); // E1 Sniffer & rot: the Sift Sniffer
         com.thesift.client.bandtable.BandTableClient.register(modBus); // F2 Band Table: the animated table, its score screen, Sift books
         modBus.addListener(ClientEffects::registerOverlays);

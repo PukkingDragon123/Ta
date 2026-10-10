@@ -45,6 +45,7 @@ public class TheSift {
         com.thesift.registry.ModSwifter.register(modBus); // A2 Swifter & White Forest: the Swifter, its dens, white lullwood, fluff
         com.thesift.registry.ModChrome.register(modBus); // A3 Chrome: Rainbow Daze, Chrome particles, Chime Sand reaction, note bursts
         com.thesift.registry.ModCaveCreatures.register(modBus); // A4 cave creatures: the Jailer and its cell, Sculklings
+        com.thesift.registry.ModDunes.register(modBus); // P4-DESERT: Kerkorer, Jaberora, Reservoirs, Grubs, the Kerkorer Cloak
         com.thesift.registry.ModSiftSniffer.register(modBus); // E1 Sniffer & rot: the Sift Sniffer, its fluffy egg, the rot outside the Sift
         com.thesift.registry.ModGateFx.register(modBus); // B1 Portal & sky FX: the portal's sky-window block entity
         com.thesift.registry.ModSculkSwamp.register(modBus); // W1 World & terrain: Sculk Water, biome blending, relic caches, swamp crawlers

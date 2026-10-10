@@ -373,6 +373,7 @@ public final class ClientSmokeTest {
         scene("mob_closeup_colossus_ponder", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.COLOSSUS_PONDER.get(), -14, 3.4));
         scene("mob_closeup_ponder_tadpole", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.PONDER_TADPOLE.get(), 4, 0.6));
         scene("mob_closeup_cruncher", 40, c -> junglePad(c, com.thesift.registry.ModCaveJungle.CRUNCHER.get(), 14, 1.0));
+        scene("mob_closeup_dunes", 60, ClientSmokeTest::dunesStage); // P4-DESERT: the Rocky Dunes creatures on Chime Sand
         scene("mobs_live", 100, ClientSmokeTest::livePen);
         for (int part = 0; part < 3; part++) {
             int p = part;
@@ -576,6 +577,19 @@ public final class ClientSmokeTest {
         }
         c.spawn(type, x0 + 0.5, STAGE_Y + (fly ? 1.0 : 0.0), z0 + 0.5, 200.0F, false);
         c.camera(x0 + 1.5 + 1.4 * size, STAGE_Y + 1.0 + 0.8 * size, z0 - 0.7 - 1.6 * size, x0 + 0.5, STAGE_Y + 0.45 * size, z0 + 0.5);
+    }
+
+    /** P4-DESERT: a Kerkorer melting into Chime Sand with its bait out, a Jaberora, a Reservoir and a Grub - a Monarch behind. */
+    private static void dunesStage(Ctx c) {
+        int x0 = 70, z0 = STAGE_Z;
+        c.fill(x0 - 9, STAGE_Y - 1, z0 - 4, x0 + 9, STAGE_Y - 1, z0 + 14, ModBlocks.CHIME_SAND.get().defaultBlockState());
+        c.fill(x0 - 9, STAGE_Y, z0 - 4, x0 + 9, STAGE_Y + 10, z0 + 14, Blocks.AIR.defaultBlockState());
+        c.spawn(com.thesift.registry.ModDunes.MONARCH_RESERVOIR.get(), x0 + 4.5, STAGE_Y, z0 + 10.5, 200.0F, false);
+        c.spawn(com.thesift.registry.ModDunes.KERKORER.get(), x0 + 0.5, STAGE_Y, z0 + 2.5, 200.0F, false);
+        c.spawn(com.thesift.registry.ModDunes.JABERORA.get(), x0 - 2.5, STAGE_Y, z0 + 0.5, 160.0F, false);
+        c.spawn(com.thesift.registry.ModDunes.RESERVOIR.get(), x0 + 3.5, STAGE_Y, z0 + 1.5, 200.0F, false);
+        c.spawn(com.thesift.registry.ModDunes.GRUB.get(), x0 - 0.5, STAGE_Y, z0 - 1.0, 180.0F, false);
+        c.camera(x0 + 1.0, STAGE_Y + 3.6, z0 - 6.5, x0 + 0.5, STAGE_Y + 1.0, z0 + 2.5);
     }
 
     /** S2: a Cypole squatting on a pad of swamp grass, seen from the front. */

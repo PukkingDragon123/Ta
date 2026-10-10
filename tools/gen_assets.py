@@ -1183,6 +1183,9 @@ def check_sounds():
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         with open(os.path.join(os.path.dirname(java), 'ModSeaReefs.java')) as f:
             registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
+        # P4-DESERT: the Rocky Dunes creatures' sounds are registered in ModDunes.java
+        with open(os.path.join(os.path.dirname(java), 'ModDunes.java')) as f:
+            registered |= set(re.findall(r'\breg\("([^"]+)"\)', f.read()))
         for ev in sorted(registered - set(SOUNDS)):
             problems.append(f'{ev}: registered in ModSounds but has no sounds.json entry (silent!)')
         for ev in sorted(set(SOUNDS) - registered):
@@ -1348,6 +1351,7 @@ def generate():
     __import__('slumbler').assets(sys.modules[__name__])  # CR2: the Slumbler's family: sounds, loot, tags, text (before gen_sounds)
     __import__('sea_reefs').assets(sys.modules[__name__])  # W-sea: reef sounds, recipes, loot, tags, text (before gen_sounds)
     __import__('cave_jungle').assets(sys.modules[__name__])  # P4 Cave Jungle: sounds, loot, tags, recipes, spawns, text (before gen_sounds)
+    __import__('dunes_creatures').sounds(sys.modules[__name__])  # P4-DESERT: Rocky Dunes creature sounds (before gen_sounds)
     for b in spec.BLOCKS:
         gen_block(b)
         gen_loot(b)
@@ -1377,6 +1381,7 @@ def generate():
     __import__('caves').assets(sys.modules[__name__])  # W-deep caves: crystal/speleothem tags, damage types, acid particles, recipes, text
     __import__('sky_islands').assets(sys.modules[__name__])  # W-sky: Sky Islands text, Codex, Sky Whale / Swinger food tags, recipes, loot
     __import__('wland').assets(sys.modules[__name__])  # W-land: Rocky Dunes plants and rock, White Forest snow and flowers
+    __import__('dunes_creatures').data(sys.modules[__name__])  # P4-DESERT: dunes creatures' loot, cloak recipe/equipment, spawns, text
 
 
 def finalize():

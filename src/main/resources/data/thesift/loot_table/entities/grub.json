@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "thesift:chime_sand",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:flint",
+          "weight": 1
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "thesift:entities/grub"
+}

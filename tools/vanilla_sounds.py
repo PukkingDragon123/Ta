@@ -245,6 +245,18 @@ FILES = FILES | frozenset({
     'music/game/water/dragon_fish', 'music/game/water/shuniji', 'music/game/left_to_bloom', 'music/game/floating_dream',
     'music/game/komorebi', 'music/game/infinite_amethyst',
 })
+# P4-DESERT: the Rocky Dunes creatures (Kerkorer, Jaberora, Reservoir, Grub) - checked against the 26.3 sounds.json
+EVENTS = EVENTS | frozenset({
+    'entity.frog.ambient', 'entity.camel.ambient', 'entity.cat.purr', 'entity.evoker_fangs.attack', 'entity.player.attack.strong',
+    'entity.frog.tongue', 'entity.item.pickup', 'entity.frog.hurt', 'entity.armadillo.hurt', 'entity.frog.death', 'entity.camel.death',
+    'entity.camel.step_sand', 'item.brush.brushing.sand', 'entity.cat.hiss', 'entity.allay.ambient_with_item', 'entity.rabbit.ambient',
+    'entity.allay.item_thrown', 'entity.rabbit.jump', 'entity.rabbit.hurt', 'entity.rabbit.death', 'entity.allay.death', 'entity.generic.eat',
+    'entity.fox.sleep', 'block.bubble_column.bubble_pop', 'entity.slime.squish_small', 'item.bucket.fill', 'item.bucket.empty',
+    'entity.generic.splash', 'entity.slime.squish', 'entity.puffer_fish.blow_out', 'entity.slime.hurt', 'entity.puffer_fish.sting',
+    'entity.slime.death', 'block.big_dripleaf.tilt_up', 'block.beacon.ambient', 'block.conduit.ambient', 'entity.silverfish.ambient',
+    'block.gravel.step', 'entity.silverfish.step', 'entity.silverfish.hurt', 'block.stone.hit', 'entity.silverfish.death',
+    'block.amethyst_cluster.break', 'block.stone.break', 'block.suspicious_sand.break', 'block.amethyst_block.hit', 'entity.puffer_fish.blow_up',
+})
 
 # P4 Cave Jungle: the jungle creatures' and the Giant Pitcher's voices
 EVENTS = EVENTS | frozenset({

@@ -121,6 +121,10 @@ public class Sifter extends PathfinderMob implements MusicListener, BandPlayer {
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         // neutral: it only ever turns on whoever hit it, and its clang calls its neighbours
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
+        // P4-DESERT: it hunts the dunes' wild Jaberoras now and then
+        this.targetSelector.addGoal(3, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this,
+                com.thesift.entity.dunes.Jaberora.class, true,
+                (target, level) -> target instanceof com.thesift.entity.dunes.Jaberora j && !j.isTame() && Sifter.this.random.nextInt(8) == 0));
     }
 
     @Override

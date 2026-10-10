@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "thesift:kerkorer_scale",
+    "L": "minecraft:leather"
+  },
+  "pattern": [
+    "S S",
+    "SLS",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "thesift:kerkorer_cloak"
+  }
+}
